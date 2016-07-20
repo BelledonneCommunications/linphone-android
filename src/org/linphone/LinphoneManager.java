@@ -1112,11 +1112,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void startEcCalibration(LinphoneCoreListener l) throws LinphoneCoreException {
 		routeAudioToSpeaker();
+		Compatibility.setAudioManagerInCallMode((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE));
+		Log.i("Set audio mode on 'Voice Communication'");
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
 		mLc.startEchoCalibration(l);
-
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
 	}
 
@@ -1505,8 +1506,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
 			int delay_ms, Object data) {
-		// TODO Auto-generated method stub
-
+		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+		Log.i("Set audio mode on 'Normal'");
 	}
 	
 	@Override

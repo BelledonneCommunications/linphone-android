@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -40,8 +41,10 @@ import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -82,14 +85,20 @@ public class SettingsFragment extends PreferencesListFragment {
 					echoCancellerCalibration.setSummary(R.string.no_echo);
 					echoCancellation.setChecked(false);
 					LinphonePreferences.instance().setEchoCancellation(false);
+					((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Done) {
 					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
+					((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Failed) {
 					echoCancellerCalibration.setSummary(R.string.failed);
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
+					((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					Log.i("Set audio mode on 'Normal'");
 				}
 			}
 		};
