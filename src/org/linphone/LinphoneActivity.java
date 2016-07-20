@@ -355,9 +355,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		switch (newFragmentType) {
 		case HISTORY_LIST:
 			fragment = new HistoryListFragment();
-			if (isTablet()) {
-				((HistoryListFragment) fragment).displayFirstLog();
-			}
 			break;
 		case HISTORY_DETAIL:
 			fragment = new HistoryDetailFragment();
@@ -365,15 +362,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		case CONTACTS_LIST:
 			checkAndRequestReadContactsPermission();
 			fragment = new ContactsListFragment();
-			if (isTablet()) {
-				((ContactsListFragment) fragment).displayFirstContact();
-			}
 			break;
 		case CONTACT_DETAIL:
 			fragment = new ContactDetailsFragment();
 			break;
-			case CONTACT_EDITOR:
-				fragment = new ContactEditorFragment();
+		case CONTACT_EDITOR:
+			fragment = new ContactEditorFragment();
 			break;
 		case DIALER:
 			fragment = new DialerFragment();
@@ -395,9 +389,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			break;
 		case CHAT_LIST:
 			fragment = new ChatListFragment();
-			if (isTablet()) {
-				((ChatListFragment) fragment).displayFirstChat();
-			}
 			break;
 		case CHAT:
 			fragment = new ChatFragment();
@@ -410,6 +401,17 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			fragment.setArguments(extras);
 			if (isTablet()) {
 				changeFragmentForTablets(fragment, newFragmentType, withoutAnimation);
+				switch (newFragmentType) {
+				case HISTORY_LIST:
+					((HistoryListFragment) fragment).displayFirstLog();
+					break;
+				case CONTACTS_LIST:
+					((ContactsListFragment) fragment).displayFirstContact();
+					break;
+				case CHAT_LIST:
+					((ChatListFragment) fragment).displayFirstChat();
+					break;
+				}
 			} else {
 				changeFragment(fragment, newFragmentType, withoutAnimation);
 			}
