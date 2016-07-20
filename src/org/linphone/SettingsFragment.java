@@ -804,13 +804,30 @@ public class SettingsFragment extends PreferencesListFragment {
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 	}
 
+	public void enableDeviceRingtone(boolean enabled) {
+		LinphonePreferences.instance().enableDeviceRingtone(enabled);
+		LinphoneManager.getInstance().enableDeviceRingtone(enabled);
+		((CheckBoxPreference)findPreference(getString(R.string.pref_device_ringtone_key))).setChecked(enabled);
+	}
+
 	private void setCallPreferencesListener() {
 		findPreference(getString(R.string.pref_device_ringtone_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean use = (Boolean) newValue;
-				mPrefs.enableDeviceRingtone(use);
-				LinphoneManager.getInstance().enableDeviceRingtone(use);
+				if (use) {
+					int readExternalStorage = getActivity().getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getActivity().getPackageName());
+					if (readExternalStorage == PackageManager.PERMISSION_GRANTED) {
+						mPrefs.enableDeviceRingtone(true);
+						LinphoneManager.getInstance().enableDeviceRingtone(true);
+					} else {
+						LinphoneActivity.instance().checkAndRequestReadExternalStoragePermissionForDeviceRingtone();
+					}
+				} else {
+					mPrefs.enableDeviceRingtone(false);
+					LinphoneManager.getInstance().enableDeviceRingtone(false);
+				}
+				
 				return true;
 			}
 		});

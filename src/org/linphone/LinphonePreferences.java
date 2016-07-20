@@ -43,7 +43,9 @@ import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.Purchasable;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 /**
  * @author Sylvain Berfini
@@ -1339,7 +1341,8 @@ public class LinphonePreferences {
 	}
 	
 	public boolean isDeviceRingtoneEnabled() {
-		return getConfig().getBool("app", "device_ringtone", true);
+		int readExternalStorage = mContext.getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, mContext.getPackageName());
+		return getConfig().getBool("app", "device_ringtone", true) && readExternalStorage == PackageManager.PERMISSION_GRANTED;
 	}
 	
 	public void enableDeviceRingtone(boolean enable) {
