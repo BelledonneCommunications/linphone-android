@@ -331,7 +331,6 @@ public class ContactEditorFragment extends Fragment {
 		final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
 		pickedPhotoForContactUri = Uri.fromFile(file);
-		captureIntent.putExtra("crop", "true");
 		captureIntent.putExtra("outputX", PHOTO_SIZE);
 		captureIntent.putExtra("outputY", PHOTO_SIZE);
 		captureIntent.putExtra("aspectX", 0);
