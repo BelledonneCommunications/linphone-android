@@ -1133,4 +1133,10 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		}
 	}
+	
+	@Override
+	public void onPause() {
+		LinphoneActivity.instance().hideTopBar();
+		super.onPause();
+	}
 }
