@@ -200,6 +200,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		currentFragment = nextFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, getIntent().getExtras());
+		} else {
+			currentFragment = (FragmentsAvailable) savedInstanceState.getSerializable("currentFragment");
 		}
 
 		mListener = new LinphoneCoreListenerBase(){
@@ -1284,6 +1286,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			checkAndRequestReadContactsPermission();
 		}
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putSerializable("currentFragment", currentFragment);
+		super.onSaveInstanceState(outState);
+	}
 
 	@Override
 	protected void onResume() {
@@ -1296,6 +1304,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
+		}
+		
+		if (isTablet()) {
+			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+			if (currentFragment == FragmentsAvailable.DIALER) {
+				ll.setVisibility(View.GONE);
+			}
 		}
 
 		refreshAccounts();
