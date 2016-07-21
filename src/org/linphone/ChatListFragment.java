@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 import java.util.List;
 
+import org.linphone.HistoryListFragment.CallHistoryAdapter;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
@@ -55,7 +56,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
 	private List<String> mConversations;
 	private ListView chatList;
@@ -193,6 +194,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onResume() {
 		super.onResume();
+		ContactsManager.addContactsListener(this);
 
 		if (LinphoneManager.getLc().getCallsNb() > 0) {
 			backInCall.setVisibility(View.VISIBLE);
@@ -219,7 +221,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
+		ContactsManager.removeContactsListener(this);
 		super.onPause();
+	}
+
+	@Override
+	public void onContactsUpdated() {
+		hideAndDisplayMessageIfNoChat();
 	}
 
 	@Override
