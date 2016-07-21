@@ -1143,6 +1143,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		super.onPause();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isApplicationBroughtToBackground(final Activity activity) {
 		ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
 		List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
