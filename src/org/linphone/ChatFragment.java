@@ -61,6 +61,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -183,7 +184,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			initNewChatConversation();
 		}
 
-		//Manage multiline
 		message = (EditText) view.findViewById(R.id.message);
 
 		sendImage = (ImageView) view.findViewById(R.id.send_picture);

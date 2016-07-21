@@ -512,7 +512,9 @@ public class ContactEditorFragment extends Fragment {
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
 
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
-		noa.setInputType(isSIP ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
+		if (!isSIP) {
+			noa.setInputType(InputType.TYPE_CLASS_PHONE);
+		}
 		noa.setText(numberOrAddress);
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -558,7 +560,9 @@ public class ContactEditorFragment extends Fragment {
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
 		numbersAndAddresses.add(nounoa);
 		noa.setHint(isSip ? getString(R.string.sip_address) : getString(R.string.phone_number));
-		noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
+		if (!isSip) {
+			noa.setInputType(InputType.TYPE_CLASS_PHONE);
+		}
 		noa.requestFocus();
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
