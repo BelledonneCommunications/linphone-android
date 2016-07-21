@@ -478,5 +478,50 @@ public final class LinphoneUtils {
 			}
 		}
 	}
+	
+	public static String getDisplayableUsernameFromAddress(String sipAddress) {
+		String username = sipAddress;
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) return username;
+		
+		if (username.startsWith("sip:")) {
+			username = username.substring(4);
+		}
+
+		if (username.contains("@")) {
+			String domain = username.split("@")[1];
+			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			if (lpc != null) {
+				if (domain.equals(lpc.getDomain())) {
+					return username.split("@")[0];
+				}
+			} else {
+				if (domain.equals(LinphoneManager.getInstance().getContext().getString(R.string.default_domain))) {
+					return username.split("@")[0];
+				}
+			}
+		}
+		return username;
+	}
+	
+	public static String getFullAddressFromUsername(String username) {
+		String sipAddress = username;
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) return sipAddress;
+		
+		if (!sipAddress.startsWith("sip:")) {
+			sipAddress = "sip:" + sipAddress;
+		}
+
+		if (!sipAddress.contains("@")) {
+			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			if (lpc != null) {
+				sipAddress = sipAddress + "@" + lpc.getDomain();
+			} else {
+				sipAddress = sipAddress + "@" + LinphoneManager.getInstance().getContext().getString(R.string.default_domain);
+			}
+		}
+		return sipAddress;
+	}
 }
 

@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
@@ -366,16 +367,8 @@ private static AssistantActivity instance;
 		if (accountCreated)
 			return;
 
-		if(username.startsWith("sip:")) {
-			username = username.substring(4);
-		}
-
-		if (username.contains("@"))
-			username = username.split("@")[0];
-
-		if(domain.startsWith("sip:")) {
-			domain = domain.substring(4);
-		}
+		username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
+		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
 
 		String identity = "sip:" + username + "@" + domain;
 		try {
