@@ -61,7 +61,6 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.Gravity;

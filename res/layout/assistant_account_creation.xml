@@ -50,7 +50,7 @@
 					android:background="@drawable/resizable_textfield"
 					android:textColor="@color/colorB"
 					android:contentDescription="@string/content_description_username_field"
-					android:inputType="text|textEmailAddress"
+					android:inputType="text|textNoSuggestions"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
 					android:singleLine="true"/>
@@ -153,7 +153,7 @@
 					android:id="@+id/email"
 					android:background="@drawable/resizable_textfield"
 					android:textColor="@color/colorB"
-					android:inputType="text|textEmailAddress"
+					android:inputType="textEmailAddress"
 					android:contentDescription="@string/content_description_email_field"
 					android:textCursorDrawable="@null"
 					android:layout_width="match_parent"
