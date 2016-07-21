@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 package org.linphone;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +40,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
@@ -93,11 +95,7 @@ public class ContactsManager extends ContentObserver {
 	
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
-		List<LinphoneContact> contacts = fetchContactsAsync();
-		Message msg = handler.obtainMessage();
-		msg.what = CONTACTS_UPDATED;
-		msg.obj = contacts;
-		handler.sendMessage(msg);
+		fetchContactsAsync();
 	}
 	
 	public ContentResolver getContentResolver() {
@@ -223,12 +221,12 @@ public class ContactsManager extends ContentObserver {
 			}
 		}
 	}
-
-	public synchronized void fetchContacts() {
-		setContacts(fetchContactsAsync());
+	
+	public synchronized void fetchContactsAsync() {
+		new ContactsFetchTask().execute();
 	}
 	
-	public List<LinphoneContact> fetchContactsAsync() {
+	public List<LinphoneContact> fetchContactsSync() {
 		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		
 		if (hasContactsAccess()) {
@@ -283,9 +281,22 @@ public class ContactsManager extends ContentObserver {
 		return contacts;
 	}
 	
+	private class ContactsFetchTask extends AsyncTask<Void, Void, List<LinphoneContact>> {
+		protected List<LinphoneContact> doInBackground(Void... params) {
+			return fetchContactsSync();
+		}
+		
+		protected void onPostExecute(List<LinphoneContact> result) {
+			setContacts(result);
+			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+				listener.onContactsUpdated();
+			}
+		}
+	}
+	
 	public static String getAddressOrNumberForAndroidContact(ContentResolver resolver, Uri contactUri) {
 		// Phone Numbers
-		String[] projection = new String[]{ ContactsContract.CommonDataKinds.Phone.NUMBER };
+		String[] projection = new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER };
 		Cursor c = resolver.query(contactUri, projection, null, null, null);
 		if (c != null) {
 			while (c.moveToNext()) {

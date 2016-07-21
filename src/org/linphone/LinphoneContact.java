@@ -400,7 +400,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				if (lc.findFriendByAddress(friend.getAddress().asString()) == null) {
 					try {
 						lc.addFriend(friend);
-						ContactsManager.getInstance().fetchContacts();
+						ContactsManager.getInstance().fetchContactsAsync();
 					} catch (LinphoneCoreException e) {
 						Log.e(e);
 					}

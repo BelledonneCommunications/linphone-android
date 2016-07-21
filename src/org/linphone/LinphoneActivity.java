@@ -1264,7 +1264,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					ContactsManager.getInstance().enableContactsAccess();
 				}
-				ContactsManager.getInstance().fetchContacts();
+				ContactsManager.getInstance().fetchContactsAsync();
 				fetchedContactsOnce = true;
 				break;
 			case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
@@ -1289,7 +1289,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		
 		if (contacts == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
 			ContactsManager.getInstance().enableContactsAccess();
-			ContactsManager.getInstance().fetchContacts();
+			ContactsManager.getInstance().fetchContactsAsync();
 			fetchedContactsOnce = true;
 		} else {
 			checkAndRequestReadContactsPermission();
