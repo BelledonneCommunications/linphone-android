@@ -478,7 +478,13 @@ public class SettingsFragment extends PreferencesListFragment {
 		setListPreferenceValues(pref, entries, values);
 
 		LinphoneLimeState lime = mPrefs.getLimeEncryption();
-		pref.setSummary(lime.toString());
+		if (lime == LinphoneLimeState.Disabled) {
+			pref.setSummary(getString(R.string.lime_encryption_entry_disabled));
+		} else if (lime == LinphoneLimeState.Mandatory) {
+			pref.setSummary(getString(R.string.lime_encryption_entry_mandatory));
+		} else if (lime == LinphoneLimeState.Preferred) {
+			pref.setSummary(getString(R.string.lime_encryption_entry_preferred));
+		}
 		pref.setValue(lime.toString());
 	}
 

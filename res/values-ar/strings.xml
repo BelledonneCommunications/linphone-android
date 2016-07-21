@@ -9,9 +9,15 @@
   <string name="notification_registered">‫%s مُسجَّل‬</string>
   <string name="notification_register_failure">‫فشل %s في التسجيل‬</string>
   <string name="tunnel_host"></string>
+  <string name="about_version">لِنْفُونْ أندرويد %s</string>
+  <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_text">رخصة جْنُو العمومية الإصدار 2\n © 2010-2016 Belledonne Communications</string>
+  <string name="about_link">www.linphone.org</string>
+  <string name="sync_account_name">جهات اتصال Linphone</string>
+  <string name="today_date_format">HH:mm</string>
   <!--Common-->
-  <string name="username">إسم المستخدم</string>
-  <string name="display_name">الإسم المعروض</string>
+  <string name="username">اسم المستخدم</string>
+  <string name="display_name">الاسم المعروض</string>
   <string name="password">كلمة السر</string>
   <string name="confirm_password">تأكيد كلمة السر</string>
   <string name="domain">النطاق</string>
@@ -42,20 +48,20 @@
   <string name="assistant_create_account">إنشاء الحساب</string>
   <string name="assistant_finish">أنهِ التهئية</string>
   <string name="assistant_validate_account">لقد أُنشِيء حسابك. يُرجى الاطلاع على رسائل بريدك الإلكتروني لتأكيد حسابك. حالما تنتهي من ذلك، عُد إلى هنا واضغط على الزر.</string>
-  <string name="assistant_welcome_desc">سيمكنك هذا المرشد من إعداد حسابك SIP لإجراء المكالمات.</string>
+  <string name="assistant_welcome_desc">سيمكنك هذا المرشد من إعداد حساب SIP لإجراء المكالمات.</string>
   <string name="assistant_linphone_login_desc">أدخِل اسم المستخدم وكلمة السر لحساب لِنْفُونْ</string>
   <string name="assistant_login_desc">‫أدخِل اسم المستخدم وكلمة السر الحساب مع نطاق SIP‬</string>
   <string name="assistant_remote_provisioning_desc">يٌرجى إدخال عنوان التهئية البعيدة</string>
   <string name="transport">النقل</string>
   <string name="assistant_login_linphone">استخدم حساب لِنْفُونْ</string>
   <string name="assistant_login_generic">استخدم حساب SIP</string>
-  <string name="assistant_remote_provisioning">اجذب التهئية البعيدة</string>
+  <string name="assistant_remote_provisioning">اجذب التهيئة البعيدة</string>
   <string name="assistant_create_account_part_1">1/2</string>
   <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">الاسم المعروض (اختياري)</string>
   <string name="assistant_linphone_account">هيِّءْ حساب لِنْفُونْ</string>
   <string name="assistant_generic_account">هيِّءْ حساب SIP</string>
-  <string name="assistant_remote_provisioning_title">اجذب التهئية البعيدة</string>
+  <string name="assistant_remote_provisioning_title">اجذب التهيئة البعيدة</string>
   <string name="assistant_fetch_apply">اجذبْ وطبِّق</string>
   <string name="assistant_login">الولوج</string>
   <string name="assistant_ec_calibration">معايرة مزيل الصدى في طور الإنجاز</string>
@@ -71,7 +77,7 @@
   <string name="wizard_password_incorrect">كلمة السر غير صحيحة.</string>
   <string name="wizard_passwords_unmatched">كلمتا السر غير متطابقتين.</string>
   <string name="setup_confirm_username">سيكون اسم المستخدم هو %s.\r\n\r\nقد يختلف عما أدخلته ليوافق المعايير.\r\nأتقبل ذلك ؟</string>
-  <string name="first_launch_no_login_password">يُرجى إدخال إسم المستخدم وكلمة السر</string>
+  <string name="first_launch_no_login_password">يُرجى إدخال اسم المستخدم وكلمة السر</string>
   <!--Dailer-->
   <string name="address_bar_hint">أدخل رقما أو عنوانا</string>
   <!--History-->
@@ -132,7 +138,7 @@
   <string name="call_stats_download">صبيب التنزيل :</string>
   <string name="call_stats_ice">توصيل ICE :</string>
   <string name="call_stats_video_resolution">مقاس الفيديو :</string>
-  <string name="call">مكالمة</string>
+  <string name="call">المكالمة</string>
   <!--About-->
   <string name="menu_send_log">إرسال السجل</string>
   <string name="menu_reset_log">إعادة تعيين السجل</string>
@@ -212,6 +218,7 @@
   <string name="pref_echo_cancellation_summary">إزالة الصدى المسموع من الطرف الآخر</string>
   <string name="pref_echo_canceller_calibration">معايرة مزيل الصدى</string>
   <string name="ec_calibrating">يُعايِر...</string>
+  <string name="ec_calibrated">‫جرت المعايرة بـ ‪%s ms‬‬</string>
   <string name="no_echo">لا وجود لصدى</string>
   <string name="failed">فشِل</string>
   <string name="pref_adaptive_rate_control">التحكم في ملائمة الصبيب</string>
@@ -224,15 +231,19 @@
   <string name="pref_video_initiate_call_with_video">أرسِل دائما طلبات الفيديو</string>
   <string name="pref_video_automatically_accept_video_title">قبول طلبات الفيديو الواردة</string>
   <string name="pref_video_automatically_accept_video">قبول طلبات الفيديو دائما</string>
+  <string name="pref_video_preset">إعداد الفيديو المسبق</string>
   <string name="pref_preferred_video_size">حجم الفيديو المفضل</string>
   <string name="pref_preferred_fps">معدل الإطارات المفضل</string>
   <string name="pref_bandwidth_limit">حد سعة القناة بـ ك.بِتْ/ثانية</string>
   <string name="pref_video_codecs_title">المراميز</string>
   <!--Call settings-->
-  <string name="pref_call_title">مكالمة</string>
+  <string name="pref_call_title">المكالمة</string>
   <string name="pref_rfc2833_dtmf">إرسال RFC2833 DTMFs</string>
   <string name="pref_sipinfo_dtmf">إرسال SIP INFO DTMFs</string>
   <string name="pref_voice_mail">عنوان العلبة الصوتية</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">المحادثة</string>
+  <string name="pref_image_sharing_server_title">خادم المشاركة</string>
   <!--Network settings-->
   <string name="pref_network_title">الشبكة</string>
   <string name="pref_wifi_only">استخدم WiFi فقط</string>
@@ -255,7 +266,6 @@
   <string name="pref_animation_enable_title">تشغيل التحريكات</string>
   <string name="pref_autostart">البدء خلال الإقلاع</string>
   <string name="pref_incoming_call_timeout_title">مهلة الانتظار قبل رفض المكالمة (بالثواني)</string>
-  <string name="pref_image_sharing_server_title">خادم المشاركة</string>
   <string name="pref_remote_provisioning_title">التهيئة عن بعد</string>
   <string name="pref_primary_account_title">الحساب اﻷوَّلي</string>
   <string name="pref_display_name_title">الإسم المعروض</string>
@@ -269,18 +279,22 @@
   <!--Content description-->
   <string name="content_description_back">الرجوع</string>
   <string name="content_description_dialer">لوحة المفاتيح</string>
+  <string name="content_description_menu">القائمة</string>
   <string name="content_description_toggle_micro">تبديل الميكروفون</string>
   <string name="content_description_toggle_speaker">تبديل مكبر الصوت</string>
   <string name="content_description_decline">رفض</string>
   <string name="content_description_hang_up">ضع السماعة</string>
   <string name="content_description_accept">قبول</string>
   <string name="content_description_edit">تحرير</string>
+  <string name="content_description_edit_list">حرر القائمة</string>
+  <string name="content_description_valid">صحيح</string>
   <string name="content_description_add_contact">إضافة إلى جهات الاتصال</string>
   <string name="content_description_new_contact">جهة اتصال جديدة</string>
-  <string name="content_description_call">مكالمة</string>
+  <string name="content_description_call">المكالمة</string>
   <string name="content_description_backspace">مسافة</string>
   <string name="content_description_chat">المحادثة</string>
   <string name="content_description_dial_back">إعادة الاتصال</string>
+  <string name="content_description_dialer_back">الرجوع إلى لوحة المفاتيح</string>
   <string name="content_description_contact_picture">صورة جهة الاتصال</string>
   <string name="content_description_send_message">إرسال رسالة</string>
   <string name="content_description_detail">التفاصيل</string>
@@ -288,6 +302,7 @@
   <string name="content_description_add">إضافة مكالمة</string>
   <string name="content_description_new_discussion">محادثة جديدة</string>
   <string name="content_description_search">بحث</string>
+  <string name="content_description_search_contact">ابحث عن جهة الاتصال</string>
   <string name="content_description_all_contacts">كل جهات الاتصال</string>
   <string name="content_description_linphone_contacts">جهات اتصال Linphone</string>
   <string name="content_description_call_direction">اتجاه الاتصال</string>
@@ -306,9 +321,26 @@
   <string name="content_description_cancel_button">زر الإلغاء</string>
   <string name="content_description_message_status">حالة الرسالة</string>
   <string name="content_description_conference">اجتماع</string>
+  <string name="content_description_username_field">حقل اسم المستخدم</string>
+  <string name="content_description_display_field">اعرض حقل الاسم</string>
+  <string name="content_description_domain_field">حقل النطاق</string>
+  <string name="content_description_url_field">حقل التهيئة البعيدة</string>
+  <string name="content_description_confirm_password_field">حقل تأكيد كلمة السر</string>
+  <string name="content_description_email_field">حقل البريد الإلكتروني</string>
   <string name="content_description_default_account">الحساب الافتراضي</string>
+  <string name="content_description_deselect_all">أزل تحديد الكل</string>
+  <string name="content_description_select_all">حدد الكل</string>
+  <string name="content_description_delete_selection">احذف التحديد</string>
   <string name="content_description_contact_first_name">اﻹسم</string>
   <string name="content_description_contact_last_name">اللقب</string>
+  <string name="content_description_back_call">ارجع إلى المكالمة</string>
+  <string name="content_description_send_file">أرسل ملفا</string>
+  <string name="content_description_message">رسالة</string>
+  <string name="content_description_unread_chat_message">الرسائل غير المقروءة</string>
   <string name="content_description_transfer">تحويل</string>
+  <string name="content_description_earpiece">سماعة الأذن</string>
   <string name="content_description_bluetooth">بلوتوث</string>
+  <string name="content_description_call_options">خيارات المكالمة</string>
+  <string name="content_description_audio_route">توجيه الصوت</string>
+  <string name="content_description_exit_conference">مغادرة الاجتماع</string>
 </resources>

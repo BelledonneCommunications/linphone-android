@@ -7,6 +7,8 @@
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Iniciando</string>
   <string name="tunnel_host"></string>
+  <string name="sync_account_name">contactos linphone</string>
+  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Nombre de usuario</string>
   <string name="display_name">Nombre a mostrar</string>
@@ -144,6 +146,8 @@
   <!--Call settings-->
   <string name="pref_call_title">Llamar</string>
   <string name="pref_rfc2833_dtmf">Enviar DTMS RFC2833</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Chat</string>
   <!--Network settings-->
   <string name="pref_network_title">Red</string>
   <string name="pref_stun_server">Servidor STUN</string>

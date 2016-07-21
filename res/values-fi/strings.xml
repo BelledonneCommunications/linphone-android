@@ -9,6 +9,12 @@
   <string name="notification_registered">Rekisteröity kohteeseen %s</string>
   <string name="notification_register_failure">Epäonnistui rekisteröidä kohteeseen %s</string>
   <string name="tunnel_host"></string>
+  <string name="sync_account_name">linphone yhteystiedot</string>
+  <string name="history_date_format">VVV, p KKK esim. Maanantai, 1 Tam</string>
+  <string name="history_detail_date_format">vvvv/KK/dd - TT:mm - esim 2012/11/22 - 12:34</string>
+  <string name="messages_date_format">pp/KK, TT:mm esim 22/11, 12:34</string>
+  <string name="messages_list_date_format">pp/KK esim 22/11</string>
+  <string name="today_date_format">TT:mm esim. 11:11</string>
   <!--Common-->
   <string name="username">Käyttäjätunnus</string>
   <string name="display_name">Näytä nimi</string>
@@ -232,6 +238,9 @@
   <string name="pref_rfc2833_dtmf">Lähetä RFC2833 DTMFs</string>
   <string name="pref_sipinfo_dtmf">Lähetä SIP INFO DTMFs</string>
   <string name="pref_voice_mail">Ääni postin URI-osoite</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Keskustelu</string>
+  <string name="pref_image_sharing_server_title">Jaa palvelin</string>
   <!--Network settings-->
   <string name="pref_network_title">Verkko</string>
   <string name="pref_wifi_only">Käytä vain wifiä</string>
@@ -254,7 +263,6 @@
   <string name="pref_animation_enable_title">Salli animaatiot</string>
   <string name="pref_autostart">Käynnistä laitteen käynnistyessä</string>
   <string name="pref_incoming_call_timeout_title">Saapuva puhelu aikakatkaisu (sekunneissa)</string>
-  <string name="pref_image_sharing_server_title">Jaa palvelin</string>
   <string name="pref_remote_provisioning_title">Vastapuoli hakee asetuksia</string>
   <string name="pref_primary_account_title">Pääasiallinen tili</string>
   <string name="pref_display_name_title">Näytä nimi</string>

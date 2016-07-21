@@ -6,46 +6,95 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Başlatılıyor</string>
+  <string name="notification_registered">%s kayıtlı</string>
+  <string name="notification_register_failure">%s kaydedilemedi</string>
   <string name="tunnel_host"></string>
+  <string name="sync_account_name">Linphone bağlantıları</string>
+  <string name="today_date_format">SS:dd</string>
   <!--Common-->
   <string name="username">Kullanıcı adı</string>
   <string name="display_name">Görünen ad</string>
   <string name="password">Parola</string>
+  <string name="confirm_password">Parola doğrulama</string>
+  <string name="domain">Alan adı</string>
+  <string name="remote_provisioning_url">URL</string>
+  <string name="email">Eposta</string>
+  <string name="delete_text">Seçimlerinizi silmek istediğinizden emin misiniz?</string>
   <string name="delete">Sil</string>
   <string name="retry">Yeniden dene</string>
   <string name="cancel">İptal</string>
   <string name="accept">Kabul et</string>
-  <string name="continue_text">Sürdürmek</string>
+  <string name="continue_text">Sürdür</string>
   <string name="about">Hakkında</string>
   <string name="deny">Yoksay</string>
+  <string name="no_account">Yapılandırılmış hesap yok</string>
   <string name="search">Arama</string>
   <string name="outgoing">Giden</string>
   <string name="incoming">Gelen</string>
   <string name="missed">Yanıtsız</string>
   <string name="settings">Ayarlar</string>
+  <string name="connect">Bağlantı</string>
   <string name="decline">Reddet</string>
   <string name="conference">Çoklu görüşme</string>
   <!--Launch screen-->
+  <string name="app_description"><i>özgür</i> SIP istemcisi</string>
   <!--Assistant-->
+  <string name="welcome">Hoş geldiniz</string>
+  <string name="assistant">Yardımcı</string>
+  <string name="assistant_create_account">Hesap Oluştur</string>
+  <string name="assistant_finish">Yapılandırmayı bitir</string>
+  <string name="assistant_validate_account">Hesabınız oluşturuldu.Hesabınız için geçerli posta adresinize bakın lütfen.Onu yapınca geri dön ve düğmeyi tıkla.</string>
   <string name="assistant_welcome_desc">Bu yardımcı, aramalarınız için bir SİP hesabı kullanmanıza yardım edecek.</string>
+  <string name="assistant_linphone_login_desc">Linphone hesabınızın kullanıcı adı ve parolasını girin</string>
+  <string name="assistant_login_desc">SIP alan adı ile kullanıcı adınız ve parolanızı girin</string>
+  <string name="assistant_remote_provisioning_desc">Lütfen yetkilendirme adresinizi girin</string>
   <string name="transport">Taşıma</string>
+  <string name="assistant_login_linphone">Linphone hesabı kullan</string>
+  <string name="assistant_login_generic">SIP hesabı kullan</string>
+  <string name="assistant_remote_provisioning">Uzaktan yapılandırma al</string>
+  <string name="assistant_create_account_part_1">1/2</string>
+  <string name="assistant_create_account_part_2">2/2</string>
+  <string name="assistant_display_name_optional">Görünen ad (isteğe bağlı)</string>
+  <string name="assistant_linphone_account">Linphone hesabı yapılandır</string>
+  <string name="assistant_generic_account">SIP hesabı yapılandır</string>
+  <string name="assistant_remote_provisioning_title">Uzaktan yapılandırma al</string>
+  <string name="assistant_fetch_apply">Al ve uygula</string>
+  <string name="assistant_login">Giriş</string>
+  <string name="assistant_ec_calibration">Yankı giderme ayarlaması sürüyor</string>
+  <string name="assistant_remote_provisioning_login">Giriş bilgilerinizi girin</string>
   <string name="assistant_account_not_validated">Hesabınız henüz onaylanmadı.</string>
   <string name="assistant_account_validated">Hesabınız onaylandı.</string>
+  <string name="assistant_error_bad_credentials">Geçersiz kullanıcı adı ve parola</string>
   <string name="wizard_failed">Bir hata oluştu,daha sonra tekrar deneyin.</string>
+  <string name="wizard_server_unavailable">Sunucuya ulaşılamıyor,ağ bağlantınızı kontrol edin.</string>
   <string name="wizard_username_unavailable">Bu kullanıcı adı zaten kullanılıyor.</string>
+  <string name="wizard_username_incorrect">Kullanıcı adınız geçersiz.</string>
+  <string name="wizard_email_incorrect">Epostanız geçersiz.</string>
+  <string name="wizard_password_incorrect">Parolanız geçersiz.</string>
+  <string name="wizard_passwords_unmatched">Parolalar eşleşmiyor.</string>
+  <string name="setup_confirm_username">Kullanıcı adınız %s olacak.\r\n\r\nGereklilikleri sağlaması için sizin girdiğinizden farklı olabilir.\r\nKabul ediyor musunuz?</string>
   <string name="first_launch_no_login_password">Lütfen giriş adınızı ve parolanızı girin</string>
   <!--Dailer-->
+  <string name="address_bar_hint">Numara veya adres girin</string>
   <!--History-->
+  <string name="no_call_history">Çağrı geçmişiniz boş</string>
+  <string name="no_missed_call_history">Geçmişinizde yanıtsız çağrı yok</string>
+  <string name="delete_history_log">Seçilmiş çağrı kayıtlarını silmek ister misin?</string>
   <string name="today">Bugün</string>
   <string name="yesterday">Dün</string>
   <!--Contacts-->
   <string name="no_contact">Adres defterinizde kimse yok</string>
   <string name="no_sip_contact">Adres defterinizde SİP bağlantısı yok</string>
+  <string name="delete_contacts">Seçilen bağlantıları silmek ister misiniz?</string>
+  <string name="delete_contact">Seçilen bağlantıyı silmek ister misiniz?</string>
   <string name="sip_address">SİP adresi</string>
   <string name="phone_number">Telefon numarası</string>
   <string name="contact_first_name">Ad</string>
   <string name="contact_last_name">Soyadı</string>
   <!--Chat-->
+  <string name="no_chat_history">görüşme yok</string>
+  <string name="delete_conversation">Seçilen görüşmeyi silmek ister misiniz?</string>
+  <string name="delete_message">Seçilen iletiyi silmek ister misiniz?</string>
   <string name="remote_composing">Karşıdan yazılıyor...</string>
   <string name="share_picture_size_small">Küçük</string>
   <string name="share_picture_size_medium">Orta</string>
@@ -57,15 +106,26 @@
   <string name="image_saved">Resim kaydedildi</string>
   <string name="image_not_saved">Hata,resim kaydedilmedi</string>
   <string name="wait">Lütfen bekleyin...</string>
+  <string name="processing_image">Görüntü işleniyor, dosyanın boyutuna bağlı olarak bir kaç saniye sürebilir</string>
   <!--Status Bar-->
   <string name="status_connected">Kayıtlı</string>
+  <string name="status_not_connected">Kayıtsız</string>
   <string name="status_in_progress">Kayıt sürüyor</string>
   <string name="status_error">Kayıt başarısız</string>
   <string name="voicemail_unread">okunmamış iletiler</string>
   <!--Side Menu-->
+  <string name="menu_assistant">Yardımcı</string>
   <string name="menu_settings">Ayarlar</string>
   <string name="menu_about">Hakkında</string>
+  <string name="quit">Çık</string>
   <!--Call-->
+  <string name="incoming_call">Gelen çağrı</string>
+  <string name="outgoing_call">Giden çağrı</string>
+  <string name="add_video_dialog">Görüştüğünüz kişi görüntüyü açmak istiyor</string>
+  <string name="no_current_call">Etkin arama yok</string>
+  <string name="call_paused_by_remote">Görüştüğünüz kişi aramayı duraklattı</string>
+  <string name="couldnt_accept_call">Gelen aramanın kabulünde bir hata oluştu</string>
+  <string name="zrtp_dialog">ZRTP fişiniz %s\nBunu sadece görüştüğünüz kişinin fişiyle aynıysa kabul etmelisiniz</string>
   <string name="unknown_incoming_call_name">Bilinmeyen</string>
   <string name="call_stats_audio">Ses</string>
   <string name="call_stats_video">Görüntü</string>
@@ -87,15 +147,20 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Uyarı: hizmet hazır değil</string>
   <string name="error">Hata</string>
+  <string name="warning_wrong_destination_address">%s dan gidilecek adres inşa edilemiyor</string>
   <string name="error_unknown">Tanımlanmayan hata</string>
   <string name="error_call_declined">Reddedilen çağrı</string>
   <string name="error_user_not_found">Kullanıcı bulunamadı</string>
   <string name="error_incompatible_media">Uyumsuz ortam değişkenleri</string>
+  <string name="error_low_bandwidth">Görüştüğünüz kişinin bant genişliği düşük, görüntü başlatılamaz.</string>
   <string name="error_network_unreachable">Ağa erişim yok</string>
   <string name="error_bad_credentials">Referansı kötü</string>
   <string name="error_unauthorized">Kimlik doğrulanmadı</string>
   <string name="error_io_error">Ağ hatası</string>
+  <string name="download_image_failed">İndirme başarısız. Lütfen ağ bağlantınızı gözden geçirin ya da daha sonra tekrar deneyin.</string>
+  <string name="remote_provisioning_failure">Uzaktan yetkilendirme profili indirilirmesi ya da uygulanması başarısız...</string>
   <string name="remote_provisioning_again_title">Uzaktan yetkilendirme</string>
+  <string name="remote_provisioning_again_message">Uzaktan yetkilendirme adresinizi değiştirmek istiyor musunuz?</string>
   <!--Account Settings-->
   <string name="pref_sipaccount">SİP Hesabı</string>
   <string name="pref_manage_title">Yönetme</string>
@@ -108,11 +173,16 @@
   <string name="pref_help_proxy">SİP vekil sunucu makine adı veya ip adresi (isteğe bağlı)</string>
   <string name="pref_help_outbound_proxy">Bütün çağrıları SİP vekil sunucuya yönlendir</string>
   <string name="pref_help_username">Örneğin: John  eğer sizin hesabınız john@sip.example.org ise</string>
+  <string name="pref_help_domain">eğer hesabınız john@sip.example.org ise sip.example.org</string>
   <string name="pref_help_password">Kullanıcı adı veya alan adı oluşturduysanız parolanızı tekrar girmeniz gerekir</string>
   <string name="pref_expire_title">Süresi dolmak</string>
   <string name="pref_avpf">AVPF</string>
+  <string name="pref_avpf_rr_interval">AVPF düzenli RTCP aralığında ( 1 ile 5 saniye arasında)</string>
+  <string name="pref_escape_plus">+\'yı 00 ile değiştir</string>
   <string name="pref_auth_userid">Kullanıcı kimliği yetkisi</string>
+  <string name="pref_help_auth_userid">Kullanıcı kimliği doğrulumayı girin (isteğe bağlı)</string>
   <string name="pref_display_name">Görünen ad</string>
+  <string name="pref_help_display_name">Görünen adı girin (isteğe bağlı)</string>
   <string name="pref_prefix">Önek</string>
   <string name="pref_transport">Taşıma</string>
   <string name="pref_transport_udp">UDP</string>
@@ -142,8 +212,10 @@
   <string name="pref_audio_title">Ses</string>
   <string name="pref_echo_cancellation">Yankı giderme</string>
   <string name="pref_echo_cancellation_summary">Karşıdan gelen yankılı sesi kaldır</string>
+  <string name="pref_echo_canceller_calibration">Yankı giderme ayarı</string>
   <string name="ec_calibrating">Ayarlama...</string>
-  <string name="no_echo">Eko yok</string>
+  <string name="ec_calibrated">%s ms\'de ayarlandı</string>
+  <string name="no_echo">Yankı yok</string>
   <string name="failed">başarısız</string>
   <string name="pref_adaptive_rate_control">Uyarlanabilir oran denetimi</string>
   <string name="pref_codec_bitrate_limit">Çözücü bitrate sınırı</string>
@@ -155,15 +227,22 @@
   <string name="pref_video_initiate_call_with_video">Görüntü isteğini her zaman gönder</string>
   <string name="pref_video_automatically_accept_video_title">Gelen görüntü isteklerini kabul et</string>
   <string name="pref_video_automatically_accept_video">Görüntü isteklerini her zaman kabul et</string>
+  <string name="pref_video_preset">Görüntü ön ayarı</string>
   <string name="pref_preferred_video_size">Yeğlenen görüntü boyutu</string>
+  <string name="pref_preferred_fps">Yeğlenen FPS</string>
   <string name="pref_bandwidth_limit">kbits/s olarak bant genişliği</string>
   <string name="pref_video_codecs_title">Çözücüler</string>
   <!--Call settings-->
   <string name="pref_call_title">Çağrı</string>
   <string name="pref_rfc2833_dtmf">RFC2833 DTMF\'yi gönder</string>
   <string name="pref_sipinfo_dtmf">SIP INFO DTMF\'yi gönder</string>
+  <string name="pref_voice_mail">Sesli posta adresi</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Sohbet</string>
+  <string name="pref_image_sharing_server_title">Sunucu paylaşımı</string>
   <!--Network settings-->
   <string name="pref_network_title">Ağ</string>
+  <string name="pref_wifi_only">Sadece WİFİ kullan</string>
   <string name="pref_stun_server">Stun sunucusu</string>
   <string name="pref_ice_enable">İCE Etkin</string>
   <string name="pref_upnp_enable">UPNP Etkin</string>
@@ -175,13 +254,14 @@
   <string name="pref_audio_port_description">Ses bağlantı noktası veya bağlantı noktası aralığı (minport-maxport)</string>
   <string name="pref_media_encryption">Ortam şifreleme</string>
   <string name="pref_push_notification">Anlık bildirim etkin</string>
+  <string name="pref_ipv6_title">IPv6 ya izin ver</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Gelişmiş</string>
   <string name="pref_debug">Hata ayıklama</string>
   <string name="pref_background_mode">Artalan kipi</string>
   <string name="pref_animation_enable_title">Animasyonlar etkin</string>
   <string name="pref_autostart">Başlangıçta çalıştır</string>
-  <string name="pref_image_sharing_server_title">Sunucu paylaşımı</string>
+  <string name="pref_incoming_call_timeout_title">Gelen çağrı kapandı (anında)</string>
   <string name="pref_remote_provisioning_title">Uzaktan yetkilendirme</string>
   <string name="pref_primary_account_title">Ana hesap</string>
   <string name="pref_display_name_title">Görünen ad</string>
@@ -189,28 +269,36 @@
   <!--Audio hack settings-->
   <string name="pref_audio_hacks_title">Ses kesme</string>
   <string name="pref_audio_use_specific_mode_title">Özgün kesme kipi kullan</string>
+  <string name="pref_audio_use_specific_mode_summary">0=NORMAL_KİP (öntanımlı), 2=GELEN_ÇAĞRI_KİPİ</string>
+  <string name="pref_audio_hacks_use_routing_api_title">API hack yönlendirmesini kullanın</string>
   <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy S ses kesmeyi kullan</string>
   <!--Content description-->
   <string name="content_description_back">Geri</string>
   <string name="content_description_dialer">Telefon numarası çevirici</string>
+  <string name="content_description_menu">Menü</string>
   <string name="content_description_toggle_micro">Mikrofon düğmesi</string>
   <string name="content_description_toggle_speaker">Hoparlör düğmesi</string>
   <string name="content_description_decline">Reddet</string>
   <string name="content_description_hang_up">Telefonu kapat</string>
   <string name="content_description_accept">Kabul et</string>
   <string name="content_description_edit">Düzenle</string>
+  <string name="content_description_edit_list">Liste Düzenle</string>
+  <string name="content_description_valid">Geçerli</string>
   <string name="content_description_add_contact">Bağlantılara ekle</string>
   <string name="content_description_new_contact">Yeni bağlantı</string>
   <string name="content_description_call">Çağrı</string>
   <string name="content_description_backspace">Geri alma</string>
   <string name="content_description_chat">Sohbet</string>
   <string name="content_description_dial_back">Geri aramalı</string>
+  <string name="content_description_dialer_back">Çeviriciye dön</string>
   <string name="content_description_contact_picture">Kayıtlı kişinin resmi</string>
   <string name="content_description_send_message">İleti gönder</string>
+  <string name="content_description_detail">Ayrıntılar</string>
   <string name="content_description_delete">Sil</string>
   <string name="content_description_add">Arama ekle</string>
   <string name="content_description_new_discussion">Yeni tartışma</string>
   <string name="content_description_search">Arama</string>
+  <string name="content_description_search_contact">Bağlantı ara</string>
   <string name="content_description_all_contacts">Tüm bağlantılar</string>
   <string name="content_description_linphone_contacts">Linphone bağlantıları</string>
   <string name="content_description_call_direction">Çağrı yönlendirme</string>
@@ -229,9 +317,26 @@
   <string name="content_description_cancel_button">İptal düğmesi</string>
   <string name="content_description_message_status">İleti durumu</string>
   <string name="content_description_conference">Çoklu görüşme</string>
+  <string name="content_description_username_field">Kullanıcı adı alanı</string>
+  <string name="content_description_display_field">Görünen ad alanı</string>
+  <string name="content_description_domain_field">Alan adı alanı</string>
+  <string name="content_description_url_field">Uzaktan yetkilendirme alanı</string>
+  <string name="content_description_confirm_password_field">Parola onaylama alanı</string>
+  <string name="content_description_email_field">Eposta alanı</string>
   <string name="content_description_default_account">Öntanımlı hesap</string>
+  <string name="content_description_deselect_all">Tüm seçilenleri iptal et</string>
+  <string name="content_description_select_all">Tümünü seç</string>
+  <string name="content_description_delete_selection">Şeçimi Sil</string>
   <string name="content_description_contact_first_name">Ad</string>
   <string name="content_description_contact_last_name">Soyadı</string>
+  <string name="content_description_back_call">Aramaya dön</string>
+  <string name="content_description_send_file">Bir dosya gönder</string>
+  <string name="content_description_message">İleti</string>
+  <string name="content_description_unread_chat_message">Okunmamış sohbet iletisi</string>
   <string name="content_description_transfer">Aktarma</string>
+  <string name="content_description_earpiece">Kulaklık</string>
   <string name="content_description_bluetooth">Bluetooth</string>
+  <string name="content_description_call_options">Çağrı seçenekleri</string>
+  <string name="content_description_audio_route">Ses yolu</string>
+  <string name="content_description_exit_conference">Görüşmeden çık</string>
 </resources>

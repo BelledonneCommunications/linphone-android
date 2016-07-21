@@ -7,6 +7,7 @@
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startar upp</string>
   <string name="tunnel_host"></string>
+  <string name="sync_account_name">linphone-kontakter</string>
   <!--Common-->
   <string name="username">Användarnamn</string>
   <string name="display_name">Visningsnamn</string>
@@ -132,6 +133,9 @@
   <!--Call settings-->
   <string name="pref_call_title">Ring</string>
   <string name="pref_rfc2833_dtmf">Skicka RFC2833 DTMF</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Chatt</string>
+  <string name="pref_image_sharing_server_title">Delar server</string>
   <!--Network settings-->
   <string name="pref_network_title">Nätverk</string>
   <string name="pref_stun_server">Stun-server</string>
@@ -145,7 +149,6 @@
   <string name="pref_background_mode">Bakgrundsläge</string>
   <string name="pref_animation_enable_title">Aktivera animeringar</string>
   <string name="pref_autostart">Starta vid uppstart</string>
-  <string name="pref_image_sharing_server_title">Delar server</string>
   <string name="pref_primary_account_title">Primärt konto</string>
   <string name="pref_display_name_title">Visningsnamn</string>
   <string name="pref_user_name_title">Användarnamn</string>
