@@ -447,6 +447,27 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 		}
 	}
+	
+	public void minimalRefresh() {
+		hasSipAddress = false;
+		
+		if (isAndroidContact()) {
+			getContactNames();
+			setThumbnailUri(getContactThumbnailPictureUri());
+			setPhotoUri(getContactPictureUri());
+			
+			if (isLinphoneFriend()) {
+				hasSipAddress = friend.getAddress() != null;
+			}
+		} else if (isLinphoneFriend()) {
+			fullName = friend.getName();
+			lastName = friend.getFamillyName();
+			firstName = friend.getGivenName();
+			thumbnailUri = null;
+			photoUri = null;
+			hasSipAddress = friend.getAddress() != null;
+		}
+	}
 
 	public void refresh() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
@@ -454,18 +475,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		
 		if (isAndroidContact()) {
 			getContactNames();
-			setThumbnailUri(getContactPictureUri());
-			setPhotoUri(getContactPhotoUri());
+			setThumbnailUri(getContactThumbnailPictureUri());
+			setPhotoUri(getContactPictureUri());
+
 			androidRawId = findRawContactID();
-			
+
 			if (LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
 				androidTagId = findLinphoneRawContactId();
 			}
-			
+
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact()) {
 				addNumberOrAddress(noa);
 			}
-			
+
 			createOrUpdateFriend();
 		} else if (isLinphoneFriend()) {
 			fullName = friend.getName();
@@ -513,12 +535,12 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return firstLetter.compareTo(contactfirstLetter);
 	}
 
-	private Uri getContactPictureUri() {
+	private Uri getContactThumbnailPictureUri() {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(getAndroidId()));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
 	}
 
-	private Uri getContactPhotoUri() {
+	private Uri getContactPictureUri() {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(getAndroidId()));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
 	}

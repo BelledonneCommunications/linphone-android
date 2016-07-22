@@ -19,7 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 package org.linphone;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -50,8 +52,6 @@ interface ContactsUpdatedListener {
 }
 
 public class ContactsManager extends ContentObserver {
-	private static final int CONTACTS_UPDATED = 543;
-	
 	private static ContactsManager instance;
 	private List<LinphoneContact> contacts, sipContacts;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
@@ -67,16 +67,9 @@ public class ContactsManager extends ContentObserver {
 	}
 	
 	private static Handler handler = new Handler() {
-		@SuppressWarnings("unchecked")
 		@Override
 		public void handleMessage (Message msg) {
-			if (msg.what == CONTACTS_UPDATED && msg.obj instanceof List<?>) {
-				List<LinphoneContact> c = (List<LinphoneContact>) msg.obj;
-				ContactsManager.getInstance().setContacts(c);
-				for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
-					listener.onContactsUpdated();
-				}
-			}
+			
 		}
 	};
 
@@ -225,64 +218,78 @@ public class ContactsManager extends ContentObserver {
 		new ContactsFetchTask().execute();
 	}
 	
-	public List<LinphoneContact> fetchContactsSync() {
-		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
-		
-		if (hasContactsAccess()) {
-			Cursor c = Compatibility.getContactsCursor(contentResolver, null);
-			if (c != null) {
-				while (c.moveToNext()) {
-					String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
-					LinphoneContact contact = new LinphoneContact();
-					contact.setAndroidId(id);
-					contacts.add(contact);
-				}
-				c.close();
-			}
-		}
-
-		for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
-			String refkey = friend.getRefKey();
-			if (refkey != null) {
-				boolean found = false;
-				for (LinphoneContact contact : contacts) {
-					if (refkey.equals(contact.getAndroidId())) {
-						// Native matching contact found, link the friend to it
-						contact.setFriend(friend);
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					if (hasContactAccess) {
-						// If refkey != null and hasContactAccess but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
-						LinphoneManager.getLc().removeFriend(friend);
-					} else {
-						// Refkey not null but no contact access => can't link it to native contact so display it on is own
+	
+	private class ContactsFetchTask extends AsyncTask<Void, List<LinphoneContact>, List<LinphoneContact>> {
+		@SuppressWarnings("unchecked")
+		protected List<LinphoneContact> doInBackground(Void... params) {
+			List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
+			
+			if (hasContactsAccess()) {
+				Cursor c = Compatibility.getContactsCursor(contentResolver, null);
+				if (c != null) {
+					while (c.moveToNext()) {
+						String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
 						LinphoneContact contact = new LinphoneContact();
-						contact.setFriend(friend);
+						contact.setAndroidId(id);
 						contacts.add(contact);
 					}
+					c.close();
 				}
-			} else {
-				// No refkey so it's a standalone contact
-				LinphoneContact contact = new LinphoneContact();
-				contact.setFriend(friend);
-				contacts.add(contact);
 			}
+
+			for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
+				String refkey = friend.getRefKey();
+				if (refkey != null) {
+					boolean found = false;
+					for (LinphoneContact contact : contacts) {
+						if (refkey.equals(contact.getAndroidId())) {
+							// Native matching contact found, link the friend to it
+							contact.setFriend(friend);
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						if (hasContactAccess) {
+							// If refkey != null and hasContactAccess but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
+							LinphoneManager.getLc().removeFriend(friend);
+						} else {
+							// Refkey not null but no contact access => can't link it to native contact so display it on is own
+							LinphoneContact contact = new LinphoneContact();
+							contact.setFriend(friend);
+							contacts.add(contact);
+						}
+					}
+				} else {
+					// No refkey so it's a standalone contact
+					LinphoneContact contact = new LinphoneContact();
+					contact.setFriend(friend);
+					contacts.add(contact);
+				}
+			}
+
+			for (LinphoneContact contact : contacts) {
+				// This will only get name & picture informations to be able to quickly display contacts list
+				contact.minimalRefresh();
+			}
+			Collections.sort(contacts);
+			
+			// Public the current list of contacts without all the informations populated
+			publishProgress(contacts);
+
+			for (LinphoneContact contact : contacts) {
+				// This time fetch all informations including phone numbers and SIP addresses
+				contact.refresh();
+			}
+			
+			return contacts;
 		}
 		
-		for (LinphoneContact contact : contacts) {
-			contact.refresh();
-		}
-		Collections.sort(contacts);
-		
-		return contacts;
-	}
-	
-	private class ContactsFetchTask extends AsyncTask<Void, Void, List<LinphoneContact>> {
-		protected List<LinphoneContact> doInBackground(Void... params) {
-			return fetchContactsSync();
+		protected void onProgressUpdate(List<LinphoneContact>... result) {
+			setContacts(result[0]);
+			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+				listener.onContactsUpdated();
+			}
 		}
 		
 		protected void onPostExecute(List<LinphoneContact> result) {
