@@ -55,6 +55,7 @@ public class ContactsManager extends ContentObserver {
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
 	private ContentResolver contentResolver;
 	private Context context;
+	private ContactsFetchTask contactsFetchTask;
 	
 	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
 	public static void addContactsListener(ContactsUpdatedListener listener) {
@@ -76,6 +77,13 @@ public class ContactsManager extends ContentObserver {
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
 		contacts = new ArrayList<LinphoneContact>();
 		sipContacts = new ArrayList<LinphoneContact>();
+	}
+	
+	public void destroy() {
+		if (contactsFetchTask != null && !contactsFetchTask.isCancelled()) {
+			contactsFetchTask.cancel(true);
+		}
+		instance = null;
 	}
 	
 	@Override
@@ -213,7 +221,11 @@ public class ContactsManager extends ContentObserver {
 	}
 	
 	public synchronized void fetchContactsAsync() {
-		new ContactsFetchTask().execute();
+		if (contactsFetchTask != null && !contactsFetchTask.isCancelled()) {
+			contactsFetchTask.cancel(true);
+		}
+		contactsFetchTask = new ContactsFetchTask();
+		contactsFetchTask.execute();
 	}
 	
 	

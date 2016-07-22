@@ -805,6 +805,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public static synchronized void destroy() {
 		if (instance == null) return;
+		ContactsManager.getInstance().destroy();
 		getInstance().changeStatusToOffline();
 		sExited = true;
 		instance.doDestroy();
