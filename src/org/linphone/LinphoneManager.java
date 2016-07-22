@@ -288,40 +288,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void setUploadingImageStream(ByteArrayInputStream array){
 		this.mUploadingImageStream = array;
 	}
-	
-	private void storeImage(LinphoneChatMessage msg) {
-		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppData() == null) return;
-		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
-		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
-		if (bm == null) return;
-		
-		ContentValues values = new ContentValues();
-        values.put(Images.Media.TITLE, file.getName());
-        String extension = msg.getFileTransferInformation().getSubtype();
-        values.put(Images.Media.MIME_TYPE, "image/" + extension);
-        ContentResolver cr = getContext().getContentResolver();
-        Uri path = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        
-        OutputStream stream;
-		try {
-			stream = cr.openOutputStream(path);
-			if (extension != null && extension.toLowerCase(Locale.getDefault()).equals("png")) {
-				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-			} else {
-				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-			}
-			
-			stream.close();
-			file.delete();
-	        bm.recycle();
-
-	        msg.setAppData(path.toString());
-		} catch (FileNotFoundException e) {
-			Log.e(e);
-		} catch (IOException e) {
-			Log.e(e);
-		}
-	}
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
@@ -330,7 +296,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
-				storeImage(msg);
+				LinphoneUtils.storeImage(getContext(), msg);
 				removePendingMessage(msg);
 			}
 		}

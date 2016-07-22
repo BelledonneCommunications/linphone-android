@@ -24,10 +24,12 @@ import static android.view.View.VISIBLE;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -43,6 +45,7 @@ import java.util.zip.ZipOutputStream;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
@@ -51,6 +54,8 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -60,7 +65,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -522,6 +529,40 @@ public final class LinphoneUtils {
 			}
 		}
 		return sipAddress;
+	}
+	
+	public static void storeImage(Context context, LinphoneChatMessage msg) {
+		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppData() == null) return;
+		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
+		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
+		if (bm == null) return;
+		
+		ContentValues values = new ContentValues();
+        values.put(Images.Media.TITLE, file.getName());
+        String extension = msg.getFileTransferInformation().getSubtype();
+        values.put(Images.Media.MIME_TYPE, "image/" + extension);
+        ContentResolver cr = context.getContentResolver();
+        Uri path = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        
+        OutputStream stream;
+		try {
+			stream = cr.openOutputStream(path);
+			if (extension != null && extension.toLowerCase(Locale.getDefault()).equals("png")) {
+				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			} else {
+				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+			}
+			
+			stream.close();
+			file.delete();
+	        bm.recycle();
+
+	        msg.setAppData(path.toString());
+		} catch (FileNotFoundException e) {
+			Log.e(e);
+		} catch (IOException e) {
+			Log.e(e);
+		}
 	}
 }
 
