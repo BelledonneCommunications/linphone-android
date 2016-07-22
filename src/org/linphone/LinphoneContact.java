@@ -372,7 +372,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		if (lc == null) return;
 		
 		friend.edit();
-		friend.setFamillyName(lastName);
+		friend.setFamilyName(lastName);
 		friend.setGivenName(firstName);
 		
 		for (LinphoneAddress address : friend.getAddresses()) {
@@ -461,7 +461,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		} else if (isLinphoneFriend()) {
 			fullName = friend.getName();
-			lastName = friend.getFamillyName();
+			lastName = friend.getFamilyName();
 			firstName = friend.getGivenName();
 			thumbnailUri = null;
 			photoUri = null;
@@ -491,7 +491,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			createOrUpdateFriend();
 		} else if (isLinphoneFriend()) {
 			fullName = friend.getName();
-			lastName = friend.getFamillyName();
+			lastName = friend.getFamilyName();
 			firstName = friend.getGivenName();
 			thumbnailUri = null;
 			photoUri = null;

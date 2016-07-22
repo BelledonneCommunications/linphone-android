@@ -1,15 +1,13 @@
 package org.linphone.xmlrpc;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.core.LinphoneXmlRpcRequest;
+import org.linphone.core.LinphoneXmlRpcRequest.LinphoneXmlRpcRequestListener;
+import org.linphone.core.LinphoneXmlRpcRequestImpl;
+import org.linphone.core.LinphoneXmlRpcSession;
+import org.linphone.core.LinphoneXmlRpcSessionImpl;
 import org.linphone.mediastream.Log;
-
-import de.timroes.axmlrpc.XMLRPCCallback;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
-import de.timroes.axmlrpc.XMLRPCServerException;
 
 public class XmlRpcHelper {
     public static final String SERVER_ERROR_INVALID_ACCOUNT = "ERROR_INVALID_ACCOUNT";
@@ -22,259 +20,119 @@ public class XmlRpcHelper {
     
     public static final String CLIENT_ERROR_INVALID_SERVER_URL = "INVALID_SERVER_URL";
     public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
-    
-    private XMLRPCClient mXmlRpcClient;
+
+	private LinphoneXmlRpcSession xmlRpcSession;
 
     public XmlRpcHelper() {
-    	try {
-    		mXmlRpcClient = new XMLRPCClient(new URL(LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl()));
-		} catch (MalformedURLException e) {
-			Log.e(e);
-		}
+		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl());
     }
 	
 	public void createAccountAsync(final XmlRpcListener listener, String username, String email, String password) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("createAccountAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("create_account", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
 						return;
 					}
-					
 					listener.onAccountCreated(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "create_account", username, email, password == null ? "" : password);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String createAccount(String username, String email, String password) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("create_account", username, email, password == null ? "" : password);
-				String result = (String)object;
-				Log.d("createAccount: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(email);
+		xmlRpcRequest.addStringArg(password == null ? "" : password);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void getAccountExpireAsync(final XmlRpcListener listener, String username, String password) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("getAccountExpireAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("get_expiration_for_account", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
 						return;
 					}
-					
 					listener.onAccountExpireFetched(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "get_expiration_for_account", username, password);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String getAccountExpire(String username, String password) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("get_expiration_for_account", username, password);
-				String result = (String)object;
-				Log.d("getAccountExpire: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void updateAccountExpireAsync(final XmlRpcListener listener, String username, String password, String payload, String signature) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("updateAccountExpireAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("update_expiration_date", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
 						return;
 					}
-					
 					listener.onAccountExpireUpdated(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "update_expiration_date", username, password, payload, signature);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String updateAccountExpire(String username, String password, String payload, String signature) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("update_expiration_date", username, password, payload, signature);
-				String result = (String)object;
-				Log.d("updateAccountExpire: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcRequest.addStringArg(payload);
+		xmlRpcRequest.addStringArg(signature);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void activateAccountAsync(final XmlRpcListener listener, String username, String password) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("activateAccountAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("activate_account", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
 						return;
 					}
-					
 					listener.onAccountActivated(result);
-			    	return;
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "activate_account", username, password);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String activateAccount(String gmailAccount, String username, String password) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("activate_account", username, password);
-				String result = (String)object;
-				Log.d("activateAccount: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void isAccountActivatedAsync(final XmlRpcListener listener, String username) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("isAccountActivatedAsync: " + result);
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_activated", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if ("OK".equals(result)) {
 						listener.onAccountActivatedFetched(true);
 						return;
@@ -283,100 +141,45 @@ public class XmlRpcHelper {
 						listener.onError(result);
 					}
 					listener.onAccountActivatedFetched(false);
-				}
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "check_account_activated", username);
-		}
-	}
-	
-	public boolean isAccountActivated(String username) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("check_account_activated", username);
-				String result = (String)object;
-				Log.d("isAccountActivated: " + result);
-				
-				if ("OK".equals(result)) {
-					return true;
-				} else if (!"ERROR_ACCOUNT_NOT_ACTIVATED".equals(result)) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
+					listener.onError(result);
 				}
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return false;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void isTrialAccountAsync(final XmlRpcListener listener, String username, String password) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("isTrialAccountAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_trial", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (!"NOK".equals(result) && !"OK".equals(result)) {
 						listener.onError(result);
 					}
 					listener.onAccountFetched("OK".equals(result));
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
+					Log.e(result);
+					listener.onError(result);
 				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "check_account_trial", username, password);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public boolean isTrialAccount(String username, String password) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("check_account_trial", username, password);
-				String result = (String)object;
-				Log.d("isTrialAccount: " + result);
-				
-				return "OK".equals(result);
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return false;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void isAccountAsync(final XmlRpcListener listener, String username) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("isAccountAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_activated", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if ("OK".equals(result)) {
 						listener.onAccountFetched(true);
 						return;
@@ -385,55 +188,23 @@ public class XmlRpcHelper {
 						listener.onError(result);
 					}
 					listener.onAccountFetched(false);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "check_account_activated", username);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public boolean isAccount(String username) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("check_account_activated", username);
-				String result = (String)object;
-				Log.d("isAccount: " + result);
-				
-				if ("OK".equals(result)) {
-					return true;
-				} else if (!"ERROR_ACCOUNT_DOESNT_EXIST".equals(result)) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
+					listener.onError(result);
 				}
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return false;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void changeAccountEmailAsync(final XmlRpcListener listener, String username, String password, String newEmail) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("changeAccountEmailAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("change_email", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -441,56 +212,25 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountEmailChanged(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "change_email", username, password, newEmail);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String changeAccountEmail(String username, String password, String newEmail) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("change_email", username, password, newEmail);
-				String result = (String)object;
-				Log.d("changeAccountEmail: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcRequest.addStringArg(newEmail);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void changeAccountPasswordAsync(final XmlRpcListener listener, String username, String oldPassword, String newPassword) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("changeAccountPasswordAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("change_password", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -498,56 +238,25 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountPasswordChanged(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "change_password", username, oldPassword, newPassword);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String changeAccountPassword(String username, String oldPassword, String newPassword) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("change_password", username, oldPassword, newPassword);
-				String result = (String)object;
-				Log.d("changeAccountPassword: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(oldPassword);
+		xmlRpcRequest.addStringArg(newPassword);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void changeAccountHashPasswordAsync(final XmlRpcListener listener, String username, String oldPassword, String newPassword) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("changeAccountHashPasswordAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("change_hash", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -555,56 +264,25 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onAccountPasswordChanged(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "change_hash", username, oldPassword, newPassword);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String changeAccountHashPassword(String username, String oldPassword, String newPassword) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("change_hash", username, oldPassword, newPassword);
-				String result = (String)object;
-				Log.d("changeAccountHashPassword: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(oldPassword);
+		xmlRpcRequest.addStringArg(newPassword);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void sendRecoverPasswordLinkByEmailAsync(final XmlRpcListener listener, String usernameOrEmail) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("sendRecoverPasswordLinkByEmailAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("send_reset_account_password_email", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -612,56 +290,23 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onRecoverPasswordLinkSent(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "send_reset_account_password_email", usernameOrEmail);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String sendRecoverPasswordLinkByEmail(String usernameOrEmail) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("send_reset_account_password_email", usernameOrEmail);
-				String result = (String)object;
-				Log.d("sendRecoverPasswordLinkByEmail: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(usernameOrEmail);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void sendActivateAccountLinkByEmailAsync(final XmlRpcListener listener, String usernameOrEmail) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("sendActivateAccountLinkByEmailAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("resend_activation_email", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -669,56 +314,23 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onActivateAccountLinkSent(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "resend_activation_email", usernameOrEmail);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String sendActivateAccountLinkByEmail(String usernameOrEmail) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("resend_activation_email", usernameOrEmail);
-				String result = (String)object;
-				Log.d("sendActivateAccountLinkByEmail: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(usernameOrEmail);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void sendUsernameByEmailAsync(final XmlRpcListener listener, String email) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("sendUsernameByEmailAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("recover_username_from_email", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -726,56 +338,23 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onUsernameSent(result);
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "recover_username_from_email", email);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public String sendUsernameByEmail(String email) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("recover_username_from_email", email);
-				String result = (String)object;
-				Log.d("sendUsernameByEmail: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return null;
+					listener.onError(result);
 				}
-				return result;
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return null;
+		});
+		xmlRpcRequest.addStringArg(email);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	public void verifySignatureAsync(final XmlRpcListener listener, String payload, String signature) {
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-				
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("verifySignatureAsync: " + result);
-					
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("verify_payload_signature", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -783,56 +362,24 @@ public class XmlRpcHelper {
 					}
 					
 					listener.onSignatureVerified("OK".equals(result));
-				}
-				
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "verify_payload_signature", payload, signature);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-	}
-	
-	public boolean verifySignature(String payload, String signature) {
-		if (mXmlRpcClient != null) {
-			try {
-				Object object = mXmlRpcClient.call("verify_payload_signature", payload, signature);
-				String result = (String)object;
-				Log.d("verifySignature: " + result);
-				
-				if (result.startsWith("ERROR_")) {
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
-					return false;
+					listener.onError(result);
 				}
-				return "OK".equals(result);
-				
-			} catch (XMLRPCException e) {
-				Log.e(e);
 			}
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
-		return false;
+		});
+		xmlRpcRequest.addStringArg(payload);
+		xmlRpcRequest.addStringArg(signature);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 
-	public void getRemoteProvisioningFilenameAsync(final XmlRpcListener listener,String username, String domain, String password){
-		if (mXmlRpcClient != null) {
-			mXmlRpcClient.callAsync(new XMLRPCCallback() {
-				@Override
-				public void onServerError(long id, XMLRPCServerException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-
-				@Override
-				public void onResponse(long id, Object object) {
-					String result = (String)object;
-					Log.d("getRemoteProvisioningFilenameAsync: " + result);
-
+	public void getRemoteProvisioningFilenameAsync(final XmlRpcListener listener,String username, String domain, String password) {
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("get_remote_provisioning_filename", LinphoneXmlRpcRequest.ArgType.String);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				String result = request.getStringResponse();
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);
@@ -840,17 +387,15 @@ public class XmlRpcHelper {
 					}
 
 					listener.onRemoteProvisioningFilenameSent(result);
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
+					Log.e(result);
+					listener.onError(result);
 				}
-
-				@Override
-				public void onError(long id, XMLRPCException error) {
-					Log.e(error);
-					listener.onError(error.toString());
-				}
-			}, "get_remote_provisioning_filename", username, domain, password);
-		} else {
-			Log.e(CLIENT_ERROR_INVALID_SERVER_URL);
-			listener.onError(CLIENT_ERROR_INVALID_SERVER_URL);
-		}
+			}
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(domain);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 }

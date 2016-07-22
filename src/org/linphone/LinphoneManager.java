@@ -25,16 +25,13 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,14 +78,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -99,13 +93,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -220,14 +211,19 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		routeAudioToSpeakerHelper(true);
 	}
 
-	public String getUserAgent() throws NameNotFoundException {
-		StringBuilder userAgent = new StringBuilder();
-		userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
-		userAgent.append(" (");
-		userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
-		userAgent.append(Build.DEVICE + " " + Build.MODEL + " Android/" + Build.VERSION.SDK_INT);
-		userAgent.append(")");
-		return userAgent.toString();
+	public String getUserAgent() {
+		try {
+			StringBuilder userAgent = new StringBuilder();
+			userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
+			userAgent.append(" (");
+			userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
+			userAgent.append(Build.DEVICE + " " + Build.MODEL + " Android/" + Build.VERSION.SDK_INT);
+			userAgent.append(")");
+			return userAgent.toString();
+		} catch (NameNotFoundException nnfe) {
+			Log.e(nnfe);
+		}
+		return null;
 	}
 
 	public void routeAudioToReceiver() {

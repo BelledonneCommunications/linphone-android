@@ -339,7 +339,8 @@ public class InAppPurchaseHelper {
 	}
 	
 	private Purchasable verifySignature(String payload, String signature) {
-		XmlRpcHelper helper = new XmlRpcHelper();
+		// TODO FIXME rework to be async
+		/*XmlRpcHelper helper = new XmlRpcHelper();
 		if (helper.verifySignature(payload, signature)) {
 			try {
 				JSONObject json = new JSONObject(payload);
@@ -350,7 +351,7 @@ public class InAppPurchaseHelper {
 			} catch (JSONException e) {
 				Log.e(e);
 			}
-		}
+		}*/
 		return null;
 	}
 	
