@@ -46,3 +46,4 @@ liblinphone_tester/tests.output
 tests/linphonetester_*
 tests/tests.output
 WORK
+.d
