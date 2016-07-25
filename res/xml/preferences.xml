@@ -330,11 +330,6 @@
 					android:persistent="false"/>
 	
 				<CheckBoxPreference
-					android:title="@string/pref_animation_enable_title"
-					android:key="@string/pref_animation_enable_key"
-					android:persistent="false"/>
-	
-				<CheckBoxPreference
 				    android:title="@string/pref_autostart"
 					android:key="@string/pref_autostart_key"
 					android:persistent="false"/>

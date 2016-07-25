@@ -82,7 +82,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -116,12 +115,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private View contacts_selected, history_selected, dialer_selected, chat_selected;
 	private RelativeLayout mTopBar;
 	private ImageView cancel;
-	private FragmentsAvailable pendingFragmentTransaction, currentFragment, nextFragment;
+	private FragmentsAvailable pendingFragmentTransaction, currentFragment;
 	private Fragment fragment;
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
-	private boolean isAnimationDisabled = true, emptyFragment = false;
+	private boolean emptyFragment = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -198,7 +197,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		initButtons();
 		initSideMenu();
 
-		currentFragment = nextFragment = FragmentsAvailable.EMPTY;
+		currentFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, getIntent().getExtras());
 		} else {
@@ -279,8 +278,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		LinphoneManager.getLc().setDeviceRotation(rotation);
 		mAlwaysChangingPhoneAngle = rotation;
-
-		updateAnimationsState();
 	}
 
 	private void initButtons() {
@@ -343,7 +340,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
 			return;
 		}
-		nextFragment = newFragmentType;
 
 		if (currentFragment == FragmentsAvailable.DIALER) {
 			try {
@@ -419,10 +415,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				changeFragment(fragment, newFragmentType, withoutAnimation);
 			}
 		}
-	}
-
-	private void updateAnimationsState() {
-		isAnimationDisabled = !LinphonePreferences.instance().areAnimationsEnabled();
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
@@ -789,12 +781,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		changeCurrentFragment(FragmentsAvailable.SETTINGS, null);
 	}
 
-	public void applyConfigChangesIfNeeded() {
-		if (nextFragment != FragmentsAvailable.SETTINGS && nextFragment != FragmentsAvailable.ACCOUNT_SETTINGS) {
-			updateAnimationsState();
-		}
-	}
-
 	public void displayDialer() {
 		changeCurrentFragment(FragmentsAvailable.DIALER, null);
 	}
@@ -861,9 +847,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (missedCallsCount > 0) {
 			missedCalls.setText(missedCallsCount + "");
 			missedCalls.setVisibility(View.VISIBLE);
-			if (!isAnimationDisabled) {
-				missedCalls.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
-			}
 		} else {
 			LinphoneManager.getLc().resetMissedCallsCount();
 			missedCalls.clearAnimation();
@@ -875,12 +858,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (missedChatCount > 0) {
 			missedChats.setText(missedChatCount + "");
 			missedChats.setVisibility(View.VISIBLE);
-			if (!isAnimationDisabled) {
-				missedChats.startAnimation(AnimationUtils.loadAnimation(LinphoneActivity.this, R.anim.bounce));
-			}
-			if(missedChatCount > 99){
-				//TODO
-			}
 		} else {
 			missedChats.clearAnimation();
 			missedChats.setVisibility(View.GONE);
@@ -1436,12 +1413,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					finish();
 				} else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
 					return true;
-				}
-			} else {
-				if (isTablet()) {
-					if (currentFragment == FragmentsAvailable.SETTINGS) {
-						updateAnimationsState();
-					}
 				}
 			}
 		}
