@@ -161,7 +161,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
-		mRingSoundFile = basePath + "/notes_of_the_optimistic.mkv";
+		mRingSoundFile = basePath + "/ringtone.mkv";
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/hold.mkv";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
@@ -1100,6 +1100,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	private synchronized void startRinging()  {
 		if (!LinphonePreferences.instance().isDeviceRingtoneEnabled()) {
+			// Enable speaker audio route, linphone library will do the ringing itself automatically
 			routeAudioToSpeaker();
 			return;
 		}

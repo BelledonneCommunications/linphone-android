@@ -20,6 +20,7 @@ package org.linphone;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,6 +64,15 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		changesToCommit = new ArrayList<ContentProviderOperation>();
 		changesToCommit2 = new ArrayList<ContentProviderOperation>();
 		hasSipAddress = false;
+	}
+	
+	@Override
+	public int compareTo(LinphoneContact contact) {
+		String fullName = getFullName();
+		String contactFullName = contact.getFullName();
+		String firstLetter = fullName == null || fullName.isEmpty() ? "" : fullName.substring(0, 1).toUpperCase(Locale.getDefault());
+		String contactfirstLetter = contactFullName == null || contactFullName.isEmpty() ? "" : contactFullName.substring(0, 1).toUpperCase(Locale.getDefault());
+		return firstLetter.compareTo(contactfirstLetter);
 	}
 
 	public void setFullName(String name) {
@@ -496,8 +506,20 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			thumbnailUri = null;
 			photoUri = null;
 			
-			LinphoneAddress addr = friend.getAddress();
-			if (addr != null) {
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null && lc.isVCardSupported()) {
+				for (LinphoneAddress addr : friend.getAddresses()) {
+					if (addr != null) {
+						addNumberOrAddress(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
+					}
+				}
+				for (String tel : friend.getPhoneNumbers()) {
+					if (tel != null) {
+						addNumberOrAddress(new LinphoneNumberOrAddress(tel, false));
+					}
+				}
+			} else {
+				LinphoneAddress addr = friend.getAddress();
 				addNumberOrAddress(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
 			}
 		}
@@ -524,15 +546,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			return createAndroidContact();
 		}
 		return createLinphoneFriend();
-	}
-	
-	@Override
-	public int compareTo(LinphoneContact contact) {
-		String fullName = getFullName();
-		String contactFullName = contact.getFullName();
-		String firstLetter = fullName == null || fullName.isEmpty() ? "" : fullName.substring(0, 1).toUpperCase(Locale.getDefault());
-		String contactfirstLetter = contactFullName == null || contactFullName.isEmpty() ? "" : contactFullName.substring(0, 1).toUpperCase(Locale.getDefault());
-		return firstLetter.compareTo(contactfirstLetter);
 	}
 
 	private Uri getContactThumbnailPictureUri() {
@@ -610,7 +623,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 			c.close();
 		}
-		
+		Collections.sort(result);
 		return result;
 	}
 
