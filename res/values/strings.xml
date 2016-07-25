@@ -107,6 +107,7 @@
 	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
 	<string name="contact_last_name">Last name</string>
+	<string name="contact_organization">Organization</string>
 
 	<!-- Chat -->
 	<string name="no_chat_history">No conversations</string>
@@ -376,6 +377,7 @@
 	<string name="content_description_delete_selection">Delete selection</string>
 	<string name="content_description_contact_first_name">First name</string>
 	<string name="content_description_contact_last_name">Last name</string>
+	<string name="content_description_contact_organization">Organization</string>
 	<string name="content_description_back_call">Back to call</string>
 	<string name="content_description_send_file">Send a file</string>
 	<string name="content_description_message">Message</string>

@@ -38,6 +38,7 @@ import android.widget.TextView;
 public class ContactDetailsFragment extends Fragment implements OnClickListener {
 	private LinphoneContact contact;
 	private ImageView editContact, deleteContact, back;
+	private TextView organization;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -75,6 +76,14 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		
 		deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
 		deleteContact.setOnClickListener(this);
+		
+		organization = (TextView) view.findViewById(R.id.contactOrganization);
+		String org = contact.getOrganization();
+		if (org != null && !org.isEmpty()) {
+			organization.setText(org);
+		} else {
+			organization.setVisibility(View.GONE);
+		}
 
 		back = (ImageView) view.findViewById(R.id.back);
 		if(getResources().getBoolean(R.bool.isTablet)){

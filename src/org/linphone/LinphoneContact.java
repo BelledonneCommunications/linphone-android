@@ -49,7 +49,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private static final long serialVersionUID = 9015568163905205244L;
 
 	private transient LinphoneFriend friend;
-	private String fullName, firstName, lastName, androidId, androidRawId, androidTagId;
+	private String fullName, firstName, lastName, androidId, androidRawId, androidTagId, organization;
 	private transient Uri photoUri, thumbnailUri;
 	private List<LinphoneNumberOrAddress> addresses;
 	private transient ArrayList<ContentProviderOperation> changesToCommit;
@@ -125,6 +125,41 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	
 	public String getLastName() {
 		return lastName;
+	}
+	
+	public String getOrganization() {
+		return organization;
+	}
+	
+	public void setOrganization(String org) {
+		if (isAndroidContact()) {
+			if (androidRawId != null) {
+				String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE + "'";
+				String[] args = new String[]{ getAndroidId() };
+	
+				if (organization != null) {
+					changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+						.withSelection(select, args)
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Organization.COMPANY, org)
+						.build());
+				} else {
+					changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+						.withValue(ContactsContract.Data.RAW_CONTACT_ID, androidRawId)
+						.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+						.withValue(ContactsContract.CommonDataKinds.Organization.COMPANY, org)
+						.build());
+				}
+			} else {
+				changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+			        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+			        .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+			        .withValue(ContactsContract.CommonDataKinds.Organization.COMPANY, org)
+			        .build());
+			}
+		}
+		
+		organization = org;
 	}
 	
 	public boolean hasPhoto() {
@@ -391,6 +426,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		for (String phone : friend.getPhoneNumbers()) {
 			friend.removePhoneNumber(phone);
 		}
+		if (organization != null && !organization.isEmpty()) {
+			friend.setOrganization(organization);
+		}
 		for (LinphoneNumberOrAddress noa : addresses) {
 			if (noa.isSIPAddress()) {
 				try {
@@ -465,6 +503,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			getContactNames();
 			setThumbnailUri(getContactThumbnailPictureUri());
 			setPhotoUri(getContactPictureUri());
+			getNativeContactOrganization();
 			
 			if (isLinphoneFriend()) {
 				hasSipAddress = friend.getAddress() != null;
@@ -476,6 +515,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			thumbnailUri = null;
 			photoUri = null;
 			hasSipAddress = friend.getAddress() != null;
+			organization = friend.getOrganization();
 		}
 	}
 
@@ -569,6 +609,20 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				firstName = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
 				lastName = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
 	        	fullName = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+			}
+			c.close();
+		}
+	}
+	
+	private void getNativeContactOrganization() {
+		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
+		String[] proj = new String[]{ ContactsContract.CommonDataKinds.Organization.COMPANY };
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?";
+		String[] args = new String[]{ getAndroidId(), ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE };
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, proj, select, args, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				organization = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Organization.COMPANY));
 			}
 			c.close();
 		}

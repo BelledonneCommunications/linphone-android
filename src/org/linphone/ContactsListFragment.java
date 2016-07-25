@@ -485,7 +485,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				}
 			}
 
-			if(contact.isInLinphoneFriendList()){
+			if (contact.isInLinphoneFriendList()) {
 				linphoneFriend.setVisibility(View.VISIBLE);
 			} else {
 				linphoneFriend.setVisibility(View.GONE);
@@ -498,6 +498,14 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				icon.setImageURI(contact.getPhotoUri());
 			} else {
 				icon.setImageResource(R.drawable.avatar);
+			}
+			
+			TextView organization = (TextView) view.findViewById(R.id.contactOrganization);
+			String org = contact.getOrganization();
+			if (org != null && !org.isEmpty()) {
+				organization.setText(org);
+			} else {
+				organization.setVisibility(View.GONE);
 			}
 
 			if (isEditMode) {

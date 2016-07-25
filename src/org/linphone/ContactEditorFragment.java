@@ -62,7 +62,7 @@ public class ContactEditorFragment extends Fragment {
 	private ImageView cancel, deleteContact, ok;
 	private ImageView addNumber, addSipAddress, contactPicture;
 	private LinearLayout phoneNumbersSection, sipAddressesSection;
-	private EditText firstName, lastName;
+	private EditText firstName, lastName, organization;
 	private LayoutInflater inflater;
 	
 	private static final int ADD_PHOTO = 1337;
@@ -148,6 +148,7 @@ public class ContactEditorFragment extends Fragment {
 					}
 					contact.addOrUpdateNumberOrAddress(noa);
 				}
+				contact.setOrganization(organization.getText().toString());
 				contact.save();
 				getFragmentManager().popBackStackImmediate();
 			}
@@ -202,6 +203,11 @@ public class ContactEditorFragment extends Fragment {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+		
+		organization = (EditText) view.findViewById(R.id.contactOrganization);
+		if (!isNewContact) {
+			organization.setText(contact.getOrganization());
+		}
 
 		if (!isNewContact) {
 			String fn = contact.getFirstName();
