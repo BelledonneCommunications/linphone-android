@@ -260,6 +260,11 @@
 					android:persistent="false"/>
 	
 				<CheckBoxPreference
+				    android:title="@string/pref_turn_enable"
+					android:key="@string/pref_turn_enable_key"
+					android:persistent="false"/>
+	
+				<CheckBoxPreference
 				    android:title="@string/pref_upnp_enable"
 					android:key="@string/pref_upnp_enable_key"
 					android:persistent="false"/>

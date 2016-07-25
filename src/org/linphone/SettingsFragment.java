@@ -949,16 +949,10 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
+		CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
 		CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
 		ice.setChecked(mPrefs.isIceEnabled());
-		if (mPrefs.isIceEnabled()) {
-			upnp.setEnabled(false);
-		} else {
-			upnp.setChecked(mPrefs.isUpnpEnabled());
-			if (mPrefs.isUpnpEnabled()) {
-				ice.setEnabled(false);
-			}
-		}
+		turn.setChecked(mPrefs.isTurnEnabled());
 
 		CheckBoxPreference randomPort = (CheckBoxPreference) findPreference(getString(R.string.pref_transport_use_random_ports_key));
 		randomPort.setChecked(mPrefs.isUsingRandomPort());
@@ -1000,9 +994,17 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
 				boolean value = (Boolean) newValue;
-				upnp.setChecked(false);
-				upnp.setEnabled(!value);
 				mPrefs.setIceEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_turn_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
+				boolean value = (Boolean) newValue;
+				mPrefs.setTurnEnabled((Boolean) newValue);
 				return true;
 			}
 		});
@@ -1012,8 +1014,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 				boolean value = (Boolean) newValue;
-				ice.setChecked(false);
-				ice.setEnabled(!value);
 				mPrefs.setUpnpEnabled(value);
 				return true;
 			}

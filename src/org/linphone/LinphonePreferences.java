@@ -909,47 +909,45 @@ public class LinphonePreferences {
 	public boolean isWifiOnlyEnabled() {
 		return getConfig().getBool("app", "wifi_only", false);
 	}
-
-	public String getStunServer() {
-		LinphoneNatPolicy nat = getLc().getNatPolicy();
-		if (nat == null) return null;
-		return nat.getStunServer();
-	}
-
-	public void setStunServer(String stun) {
+	
+	private LinphoneNatPolicy getOrCreateNatPolicy() {
 		LinphoneNatPolicy nat = getLc().getNatPolicy();
 		if (nat == null) {
 			nat = getLc().createNatPolicy();
 		}
-		nat.setStunServer(stun);
+		return nat;
 	}
 
-	public void setIceEnabled(boolean enabled) {
-		LinphoneNatPolicy nat = getLc().createNatPolicy();
-		
-		if (enabled) {
-			nat.enableIce(true);
-		} else {
-			String stun = getStunServer();
-			if (stun != null && stun.length() > 0) {
-				nat.enableStun(true);
-			}
+	public String getStunServer() {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.getStunServer();
+	}
+
+	public void setStunServer(String stun) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.setStunServer(stun);
+		if (stun != null && !stun.isEmpty()) {
+			nat.enableStun(true);
 		}
 		getLc().setNatPolicy(nat);
 	}
 
+	public void setIceEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableIce(enabled);
+		getLc().setNatPolicy(nat);
+	}
+
+	public void setTurnEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableTurn(enabled);
+		getLc().setNatPolicy(nat);
+	}
+
 	public void setUpnpEnabled(boolean enabled) {
-		LinphoneNatPolicy nat = getLc().getNatPolicy();
-		
-		if (enabled) {
-			nat.enableUpnp(true);
-		}
-		else {
-			String stun = getStunServer();
-			if (stun != null && stun.length() > 0) {
-				nat.enableStun(true);
-			}
-		}
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableUpnp(enabled);
+		getLc().setNatPolicy(nat);
 	}
 
 	public void useRandomPort(boolean enabled) {
@@ -990,15 +988,18 @@ public class LinphonePreferences {
 	}
 
 	public boolean isUpnpEnabled() {
-		LinphoneNatPolicy nat = getLc().getNatPolicy();
-		if (nat == null) return false;
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		return nat.upnpEnabled();
 	}
 
 	public boolean isIceEnabled() {
-		LinphoneNatPolicy nat = getLc().getNatPolicy();
-		if (nat == null) return false;
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		return nat.iceEnabled();
+	}
+
+	public boolean isTurnEnabled() {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.turnEnabled();
 	}
 
 	public MediaEncryption getMediaEncryption() {

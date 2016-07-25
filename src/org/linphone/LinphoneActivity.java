@@ -425,10 +425,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		isAnimationDisabled = !LinphonePreferences.instance().areAnimationsEnabled();
 	}
 
-	public boolean isAnimationDisabled() {
-		return isAnimationDisabled;
-	}
-
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
 
 		FragmentManager fm = getFragmentManager();
