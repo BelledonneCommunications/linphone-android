@@ -31,19 +31,21 @@ import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.AdaptiveRateAlgorithm;
-import org.linphone.core.LinphoneCore.FirewallPolicy;
 import org.linphone.core.LinphoneCore.LinphoneLimeState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
 import org.linphone.core.LinphoneCore.Transports;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneNatPolicy;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LpConfig;
 import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.Purchasable;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 /**
  * @author Sylvain Berfini
@@ -52,6 +54,7 @@ public class LinphonePreferences {
 	private static final int LINPHONE_CORE_RANDOM_PORT = -1;
 	private static LinphonePreferences instance;
 	private Context mContext;
+	private String basePath;
 
 	public static final synchronized LinphonePreferences instance() {
 		if (instance == null) {
@@ -66,6 +69,7 @@ public class LinphonePreferences {
 
 	public void setContext(Context c) {
 		mContext = c;
+		basePath = mContext.getFilesDir().getAbsolutePath();
 	}
 
 	private String getString(int key) {
@@ -90,10 +94,10 @@ public class LinphonePreferences {
 		}
 
 		if (!LinphoneManager.isInstanciated()) {
-			File linphonerc = new File(mContext.getFilesDir().getAbsolutePath() + "/.linphonerc");
+			File linphonerc = new File(basePath + "/.linphonerc");
 			if (linphonerc.exists()) {
 				return LinphoneCoreFactory.instance().createLpConfig(linphonerc.getAbsolutePath());
-			} else {
+			} else if (mContext != null) {
 				InputStream inputStream = mContext.getResources().openRawResource(R.raw.linphonerc_default);
 			    InputStreamReader inputreader = new InputStreamReader(inputStream);
 			    BufferedReader buffreader = new BufferedReader(inputreader);
@@ -105,13 +109,14 @@ public class LinphonePreferences {
 			            text.append('\n');
 			        }
 				} catch (IOException ioe) {
-					
+					Log.e(ioe);
 				}
 			    return LinphoneCoreFactory.instance().createLpConfigFromString(text.toString());
 			}
+		} else {
+			return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
 		}
-
-		return LinphoneCoreFactory.instance().createLpConfig(LinphoneManager.getInstance().mLinphoneConfigFile);
+		return null;
 	}
 
 	public void removePreviousVersionAuthInfoRemoval() {
@@ -904,44 +909,45 @@ public class LinphonePreferences {
 	public boolean isWifiOnlyEnabled() {
 		return getConfig().getBool("app", "wifi_only", false);
 	}
+	
+	private LinphoneNatPolicy getOrCreateNatPolicy() {
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		if (nat == null) {
+			nat = getLc().createNatPolicy();
+		}
+		return nat;
+	}
 
 	public String getStunServer() {
-		return getLc().getStunServer();
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.getStunServer();
 	}
 
 	public void setStunServer(String stun) {
-		getLc().setStunServer(stun);
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.setStunServer(stun);
+		if (stun != null && !stun.isEmpty()) {
+			nat.enableStun(true);
+		}
+		getLc().setNatPolicy(nat);
 	}
 
 	public void setIceEnabled(boolean enabled) {
-		if (enabled) {
-			getLc().setFirewallPolicy(FirewallPolicy.UseIce);
-		} else {
-			String stun = getStunServer();
-			if (stun != null && stun.length() > 0) {
-				getLc().setFirewallPolicy(FirewallPolicy.UseStun);
-			} else {
-				getLc().setFirewallPolicy(FirewallPolicy.NoFirewall);
-			}
-		 }
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableIce(enabled);
+		getLc().setNatPolicy(nat);
+	}
+
+	public void setTurnEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableTurn(enabled);
+		getLc().setNatPolicy(nat);
 	}
 
 	public void setUpnpEnabled(boolean enabled) {
-		if (enabled) {
-			if (isIceEnabled()) {
-				Log.e("Cannot have both ice and upnp enabled, disabling upnp");
-			} else {
-				getLc().setFirewallPolicy(FirewallPolicy.UseUpnp);
-			}
-		}
-		else {
-			String stun = getStunServer();
-			if (stun != null && stun.length() > 0) {
-				getLc().setFirewallPolicy(FirewallPolicy.UseStun);
-			} else {
-				getLc().setFirewallPolicy(FirewallPolicy.NoFirewall);
-			}
-		}
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableUpnp(enabled);
+		getLc().setNatPolicy(nat);
 	}
 
 	public void useRandomPort(boolean enabled) {
@@ -982,11 +988,18 @@ public class LinphonePreferences {
 	}
 
 	public boolean isUpnpEnabled() {
-		return getLc().upnpAvailable() && getLc().getFirewallPolicy() == FirewallPolicy.UseUpnp;
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.upnpEnabled();
 	}
 
 	public boolean isIceEnabled() {
-		return getLc().getFirewallPolicy() == FirewallPolicy.UseIce;
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.iceEnabled();
+	}
+
+	public boolean isTurnEnabled() {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.turnEnabled();
 	}
 
 	public MediaEncryption getMediaEncryption() {
@@ -1074,14 +1087,6 @@ public class LinphonePreferences {
 
 	public boolean isBackgroundModeEnabled() {
 		return getConfig().getBool("app", "background_mode", true);
-	}
-
-	public void setAnimationsEnabled(boolean enabled) {
-		getConfig().setBool("app", "animations", enabled);
-	}
-
-	public boolean areAnimationsEnabled() {
-		return getConfig().getBool("app", "animations", false);
 	}
 
 	public boolean isAutoStartEnabled() {
@@ -1326,5 +1331,30 @@ public class LinphonePreferences {
 			getConfig().setBool("app", permission, false);
 		}
 		return firstTime;
+	}
+	
+	public boolean isDeviceRingtoneEnabled() {
+		int readExternalStorage = mContext.getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, mContext.getPackageName());
+		return getConfig().getBool("app", "device_ringtone", true) && readExternalStorage == PackageManager.PERMISSION_GRANTED;
+	}
+	
+	public void enableDeviceRingtone(boolean enable) {
+		getConfig().setBool("app", "device_ringtone", enable);
+	}
+
+	public boolean isBisFeatureEnabled() {
+		return getConfig().getBool("app", "bis_feature", true);
+	}
+	
+	public void enableBisFeature(boolean enable) {
+		getConfig().setBool("app", "bis_feature", enable);
+	}
+
+	public boolean isAutoAnswerEnabled() {
+		return getConfig().getBool("app", "auto_answer", false);
+	}
+	
+	public void enableAutoAnswer(boolean enable) {
+		getConfig().setBool("app", "auto_answer", enable);
 	}
 }

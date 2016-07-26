@@ -24,6 +24,10 @@
 	<bool name="hide_camera_settings">false</bool>
 	<bool name="hide_wizard">false</bool>
 
+	<bool name="disable_chat">false</bool>
+	<bool name="disable_chat_message_notification">false</bool>
+	<bool name="disable_chat_send_file">false</bool>
+	
 	<bool name="setup_account_validation_mandatory">false</bool>
 	<bool name="hide_linphone_accounts_wizard">false</bool>
 	<bool name="hide_generic_accounts_wizard">false</bool>
@@ -31,42 +35,26 @@
 	<bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
 	<bool name="hide_accounts">false</bool>
 	<bool name="display_account_wizard_at_first_start">true</bool>
-	<bool name="use_linphone_server_ports">false</bool>
 	<bool name="allow_only_phone_numbers_in_wizard">false</bool>
 
-	<bool name="enable_linphone_friends">false</bool>
 	<bool name="use_linphone_tag">true</bool>
-	<bool name="disable_options_in_call">false</bool>
 
 	<bool name="pre_fill_email_in_wizard">true</bool> <!-- Set the email field of the wizard with one of the gmail account registered on the device -->
 
-	<bool name="call_last_log_if_adress_is_empty">true</bool>
-
-	<bool name="allow_ringing_while_early_media">true</bool>
-
-	<bool name="disable_chat">false</bool>
-	<bool name="disable_chat_message_notification">false</bool>
-
-	<bool name="disable_chat_send_file">false</bool>
-	<bool name="auto_answer_calls">false</bool>
-
-	<bool name="allow_transfers">true</bool>
-
 	<bool name="forbid_self_call">false</bool>
-
-	<bool name="disable_animations">false</bool>
+	<bool name="allow_ringing_while_early_media">true</bool>
+	<bool name="allow_transfers">true</bool>
+	<bool name="disable_options_in_call">false</bool>
 
 	<bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool>
 	<!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
 	<bool name="display_sms_remote_provisioning_activity">false</bool>
 	<bool name="forbid_app_usage_until_remote_provisioning_completed">false</bool>
 	<bool name="display_confirmation_popup_after_first_configuration">false</bool>
-	<bool name="enable_log_collect">false</bool>
 	<bool name="disable_every_log">false</bool>
 	<bool name="disable_all_security_features_for_markets">false</bool> <!-- Disable TLS/SRTP/ZRTP -->
 	<bool name="disable_all_patented_codecs_for_markets">false</bool> <!-- Disable MPEG4/H264 -->
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
-	<bool name="use_linphonecore_ringing">false</bool>
 
 	<string name="temp_photo_name">linphone-android-photo-temp</string>
 	<string name="temp_photo_name_with_date">linphone-android-photo-%s</string>
@@ -82,11 +70,8 @@
 	
 	<bool name="setup_cancel_move_to_back">false</bool>
 
-
 	<bool name="enable_call_notification">true</bool>
 	<bool name="kill_service_with_task_manager">true</bool>
-
-	<bool name="hash_images_as_name_before_upload">true</bool>
 
     <!-- Tutorial settings -->
     <bool name="show_tutorials_instead_of_app">false</bool> <!-- Be careful ! Setting this to true prevent the app from working ! It will only display tutorial activities -->

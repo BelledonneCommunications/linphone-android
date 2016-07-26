@@ -43,7 +43,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -57,6 +56,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -66,9 +66,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -103,11 +100,10 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private StatusFragment status;
 	private CallAudioFragment audioCallFragment;
 	private CallVideoFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed, isAnimationDisabled;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed;
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
 	private int cameraNumber;
-	private Animation slideOutLeftToRight, slideInRightToLeft, slideInBottomToTop, slideInTopToBottom, slideOutBottomToTop, slideOutTopToBottom;
 	private CountDownTimer timer;
 	private boolean isVideoCallPaused = false;
 
@@ -150,7 +146,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			BluetoothManager.getInstance().initBluetooth();
 		}
 
-		isAnimationDisabled = getApplicationContext().getResources().getBoolean(R.bool.disable_animations) || !LinphonePreferences.instance().areAnimationsEnabled();
 		cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
 
 		try {
@@ -291,6 +286,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				callFragment = new CallVideoFragment();
 				videoCallFragment = (CallVideoFragment) callFragment;
 				displayVideoCall(false);
+				LinphoneManager.getInstance().routeAudioToSpeaker();
 				isSpeakerEnabled = true;
 			} else {
 				callFragment = new CallAudioFragment();
@@ -419,15 +415,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		if (!isTransferAllowed) {
 			addCall.setBackgroundResource(R.drawable.options_add_call);
-		}
-
-		if (!isAnimationDisabled) {
-			slideInRightToLeft = AnimationUtils.loadAnimation(this, R.anim.slide_in_right_to_left);
-			slideOutLeftToRight = AnimationUtils.loadAnimation(this, R.anim.slide_out_left_to_right);
-			slideInBottomToTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom_to_top);
-			slideInTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_in_top_to_bottom);
-			slideOutBottomToTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom_to_top);
-			slideOutTopToBottom = AnimationUtils.loadAnimation(this, R.anim.slide_out_top_to_bottom);
 		}
 
 		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
@@ -962,31 +949,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	public void displayVideoCallControlsIfHidden() {
 		if (mControlsLayout != null) {
 			if (mControlsLayout.getVisibility() != View.VISIBLE) {
-				if (isAnimationDisabled) {
-					displayVideoCall(true);
-				} else {
-					Animation animation = slideInBottomToTop;
-					animation.setAnimationListener(new AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-							displayVideoCall(true);
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							animation.setAnimationListener(null);
-						}
-					});
-					mControlsLayout.startAnimation(animation);
-					if (cameraNumber > 1) {
-						switchCamera.startAnimation(slideInTopToBottom);
-					}
-					pause.startAnimation(slideInTopToBottom);
-				}
+				displayVideoCall(true);
 			}
 			resetControlsHidingCallBack();
 		}
@@ -1002,45 +965,13 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			mControlsHandler.postDelayed(mControls = new Runnable() {
 				public void run() {
 					hideNumpad();
-
-					if (isAnimationDisabled) {
-						video.setEnabled(true);
-						transfer.setVisibility(View.INVISIBLE);
-						addCall.setVisibility(View.INVISIBLE);
-						conference.setVisibility(View.INVISIBLE);
-						displayVideoCall(false);
-						numpad.setVisibility(View.GONE);
-						options.setImageResource(R.drawable.options_default);
-					} else {
-						Animation animation = slideOutTopToBottom;
-						animation.setAnimationListener(new AnimationListener() {
-							@Override
-							public void onAnimationStart(Animation animation) {
-								video.setEnabled(false); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
-							}
-
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								video.setEnabled(true); // HACK: Used to avoid controls from being hided if video is switched while controls are hiding
-								transfer.setVisibility(View.INVISIBLE);
-								addCall.setVisibility(View.INVISIBLE);
-								conference.setVisibility(View.INVISIBLE);
-								displayVideoCall(false);
-								numpad.setVisibility(View.GONE);
-								options.setImageResource(R.drawable.options_default);
-								animation.setAnimationListener(null);
-							}
-						});
-						mControlsLayout.startAnimation(animation);
-						if (cameraNumber > 1) {
-							switchCamera.startAnimation(slideOutBottomToTop);
-						}
-						pause.startAnimation(slideOutBottomToTop);
-					}
+					video.setEnabled(true);
+					transfer.setVisibility(View.INVISIBLE);
+					addCall.setVisibility(View.INVISIBLE);
+					conference.setVisibility(View.INVISIBLE);
+					displayVideoCall(false);
+					numpad.setVisibility(View.GONE);
+					options.setImageResource(R.drawable.options_default);
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);
 		}
@@ -1059,29 +990,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 
 		dialer.setImageResource(R.drawable.footer_dialer);
-		if (isAnimationDisabled) {
-			numpad.setVisibility(View.GONE);
-		} else {
-			Animation animation = slideOutTopToBottom;
-			animation.setAnimationListener(new AnimationListener() {
-				@Override
-				public void onAnimationStart(Animation animation) {
-
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					numpad.setVisibility(View.GONE);
-					animation.setAnimationListener(null);
-				}
-			});
-			numpad.startAnimation(animation);
-		}
+		numpad.setVisibility(View.GONE);
 	}
 
 	private void hideOrDisplayNumpad() {
@@ -1093,185 +1002,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			hideNumpad();
 		} else {
 			dialer.setImageResource(R.drawable.dialer_alt_back);
-			if (isAnimationDisabled) {
-				numpad.setVisibility(View.VISIBLE);
-			} else {
-				Animation animation = slideInBottomToTop;
-				animation.setAnimationListener(new AnimationListener() {
-					@Override
-					public void onAnimationStart(Animation animation) {
-
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-
-					}
-
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						numpad.setVisibility(View.VISIBLE);
-						animation.setAnimationListener(null);
-					}
-				});
-				numpad.startAnimation(animation);
-			}
+			numpad.setVisibility(View.VISIBLE);
 		}
-	}
-
-	private void hideAnimatedPortraitCallOptions() {
-		Animation animation = slideOutLeftToRight;
-		animation.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				if (isTransferAllowed) {
-					transfer.setVisibility(View.INVISIBLE);
-				}
-				addCall.setVisibility(View.INVISIBLE);
-				conference.setVisibility(View.INVISIBLE);
-				animation.setAnimationListener(null);
-			}
-		});
-		if (isTransferAllowed) {
-			transfer.startAnimation(animation);
-		}
-		addCall.startAnimation(animation);
-		conference.startAnimation(animation);
-	}
-
-	private void hideAnimatedLandscapeCallOptions() {
-		Animation animation = slideOutTopToBottom;
-		if (isTransferAllowed) {
-			animation.setAnimationListener(new AnimationListener() {
-				@Override
-				public void onAnimationStart(Animation animation) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					transfer.setAnimation(null);
-					transfer.setVisibility(View.INVISIBLE);
-
-					animation = AnimationUtils.loadAnimation(CallActivity.this, R.anim.slide_out_top_to_bottom); // Reload animation to prevent transfer button to blink
-					animation.setAnimationListener(new AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							addCall.setVisibility(View.INVISIBLE);
-						}
-					});
-					addCall.startAnimation(animation);
-				}
-			});
-			transfer.startAnimation(animation);
-			conference.startAnimation(animation);
-		} else {
-			animation.setAnimationListener(new AnimationListener() {
-				@Override
-				public void onAnimationStart(Animation animation) {
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-				}
-
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					addCall.setVisibility(View.INVISIBLE);
-					conference.setVisibility(View.INVISIBLE);
-				}
-			});
-			addCall.startAnimation(animation);
-			conference.startAnimation(animation);
-		}
-	}
-
-	private void showAnimatedPortraitCallOptions() {
-		Animation animation = slideInRightToLeft;
-		animation.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				options.setImageResource(R.drawable.options_default);
-				if (isTransferAllowed) {
-					transfer.setVisibility(View.VISIBLE);
-				}
-				addCall.setVisibility(View.VISIBLE);
-				conference.setVisibility(View.VISIBLE);
-				animation.setAnimationListener(null);
-			}
-		});
-		if (isTransferAllowed) {
-			transfer.startAnimation(animation);
-		}
-		conference.startAnimation(animation);
-		addCall.startAnimation(animation);
-	}
-
-	private void showAnimatedLandscapeCallOptions() {
-		Animation animation = slideInBottomToTop;
-		animation.setAnimationListener(new AnimationListener() {
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
-
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				addCall.setAnimation(null);
-				options.setImageResource(R.drawable.options_default);
-				addCall.setVisibility(View.VISIBLE);
-				conference.setVisibility(View.VISIBLE);
-				if (isTransferAllowed) {
-					animation.setAnimationListener(new AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							transfer.setVisibility(View.VISIBLE);
-						}
-					});
-					transfer.startAnimation(animation);
-				}
-				conference.startAnimation(animation);
-			}
-		});
-		addCall.startAnimation(animation);
 	}
 
 	private void hideOrDisplayAudioRoutes()
@@ -1288,40 +1020,21 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	}
 
 	private void hideOrDisplayCallOptions() {
-		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
 		//Hide options
 		if (addCall.getVisibility() == View.VISIBLE) {
 			options.setImageResource(R.drawable.options_default);
-			if (isAnimationDisabled) {
-				if (isTransferAllowed) {
-					transfer.setVisibility(View.INVISIBLE);
-				}
-				addCall.setVisibility(View.INVISIBLE);
-				conference.setVisibility(View.INVISIBLE);
-			} else {
-				if (isOrientationLandscape) {
-					hideAnimatedLandscapeCallOptions();
-				} else {
-					hideAnimatedPortraitCallOptions();
-				}
+			if (isTransferAllowed) {
+				transfer.setVisibility(View.INVISIBLE);
 			}
-			//Display options
-		} else {
-			if (isAnimationDisabled) {
-				if (isTransferAllowed) {
-					transfer.setVisibility(View.VISIBLE);
-				}
-				addCall.setVisibility(View.VISIBLE);
-				conference.setVisibility(View.VISIBLE);
-				options.setImageResource(R.drawable.options_selected);
-			} else {
-				if (isOrientationLandscape) {
-					showAnimatedLandscapeCallOptions();
-				} else {
-					showAnimatedPortraitCallOptions();
-				}
+			addCall.setVisibility(View.INVISIBLE);
+			conference.setVisibility(View.INVISIBLE);
+		} else { //Display options
+			if (isTransferAllowed) {
+				transfer.setVisibility(View.VISIBLE);
 			}
+			addCall.setVisibility(View.VISIBLE);
+			conference.setVisibility(View.VISIBLE);
+			options.setImageResource(R.drawable.options_selected);
 			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
 	}
@@ -1401,7 +1114,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void showAcceptCallUpdateDialog() {
 		final Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
 		d.setAlpha(200);
 		dialog.setContentView(R.layout.dialog);
 		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
@@ -1862,12 +1575,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		if (count > 0) {
 			missedChats.setText(count + "");
 			missedChats.setVisibility(View.VISIBLE);
-			if (!isAnimationDisabled) {
-				missedChats.startAnimation(AnimationUtils.loadAnimation(this, R.anim.bounce));
-			}
-			if(count > 99){
-				//TODO
-			}
 		} else {
 			missedChats.clearAnimation();
 			missedChats.setVisibility(View.GONE);

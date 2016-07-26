@@ -110,6 +110,7 @@
 	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
 	<string name="contact_last_name">Last name</string>
+	<string name="contact_organization">Organization</string>
 
 	<!-- Chat -->
 	<string name="no_chat_history">No conversations</string>
@@ -270,6 +271,8 @@
 
 	<!-- Call settings -->
 	<string name="pref_call_title">Call</string>
+	<string name="pref_device_ringtone">Use device ringtone</string>
+	<string name="pref_auto_answer">Auto answer incoming calls</string>
 	<string name="pref_rfc2833_dtmf">Send RFC2833 DTMFs</string>
 	<string name="pref_sipinfo_dtmf">Send SIP INFO DTMFs</string>
 	<string name="pref_voice_mail">Voice mail URI</string>
@@ -288,6 +291,7 @@
 	<string name="pref_wifi_only">Use WiFi only</string>
 	<string name="pref_stun_server">Stun server</string>
 	<string name="pref_ice_enable">Enable ICE</string>
+	<string name="pref_turn_enable">Enable TURN</string>
 	<string name="pref_upnp_enable">Enable UPNP</string>
 	<string name="pref_transport_use_random_ports">Use random ports</string>
 	<string name="pref_sip_port_title">SIP port to use</string>
@@ -376,6 +380,7 @@
 	<string name="content_description_delete_selection">Delete selection</string>
 	<string name="content_description_contact_first_name">First name</string>
 	<string name="content_description_contact_last_name">Last name</string>
+	<string name="content_description_contact_organization">Organization</string>
 	<string name="content_description_back_call">Back to call</string>
 	<string name="content_description_send_file">Send a file</string>
 	<string name="content_description_message">Message</string>

@@ -21,6 +21,7 @@ package org.linphone;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -35,7 +36,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
@@ -89,11 +89,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		getWindow().addFlags(flags);
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-			isScreenActive = pm.isInteractive();
-		} else {
-			isScreenActive = pm.isScreenOn();
-		}
+		isScreenActive = Compatibility.isScreenOn(pm);
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
 

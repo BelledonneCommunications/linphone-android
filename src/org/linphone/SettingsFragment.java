@@ -42,7 +42,12 @@ import org.linphone.ui.PreferencesListFragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -62,6 +67,10 @@ public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
+	
+	public SettingsFragment() {
+		super(R.xml.preferences);
+	}
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -69,14 +78,8 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		mPrefs = LinphonePreferences.instance();
 		removePreviousPreferencesFile(); // Required when updating the preferences order
-		addPreferencesFromResource(R.xml.preferences);
 
-		// Init the settings page interface
-		initSettings();
-		setListeners();
-		hideSettings();
-
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
@@ -88,22 +91,36 @@ public class SettingsFragment extends PreferencesListFragment {
 					echoCancellerCalibration.setSummary(R.string.no_echo);
 					echoCancellation.setChecked(false);
 					LinphonePreferences.instance().setEchoCancellation(false);
+					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Done) {
 					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
+					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Failed) {
 					echoCancellerCalibration.setSummary(R.string.failed);
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
+					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+					Log.i("Set audio mode on 'Normal'");
 				}
 			}
 		};
+		
+		initSettings();
+		setListeners();
+		hideSettings();
 	}
 	
 	private void removePreviousPreferencesFile() {
-		File dir = new File(LinphoneActivity.instance().getFilesDir().getAbsolutePath() + "shared_prefs");
-		dir.delete();
+		SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
+        editor.clear();
+        editor.commit();
+        
+		File dir = new File(getActivity().getFilesDir().getAbsolutePath() + "shared_prefs");
+		LinphoneUtils.recursiveFileRemoval(dir);
 	}
 
 	// Inits the values or the listener on some settings
@@ -159,11 +176,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			hidePreference(R.string.pref_in_app_store_key);
 		}
 
-
-		if (getResources().getBoolean(R.bool.disable_animations)) {
-			uncheckAndHidePreference(R.string.pref_animation_enable_key);
-		}
-
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			findPreference(getString(R.string.pref_image_sharing_server_key)).setLayoutResource(R.layout.hidden);
 		}
@@ -173,7 +185,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 
 		if (!Version.isVideoCapable() || !LinphoneManager.getLcIfManagerNotDestroyedOrNull().isVideoSupported()) {
-			uncheckAndHidePreference(R.string.pref_video_enable_key);
+			emptyAndHidePreference(R.string.pref_video_key);
 		} else {
 			if (!AndroidCameraConfiguration.hasFrontCamera()) {
 				uncheckAndHidePreference(R.string.pref_video_use_front_camera_key);
@@ -186,7 +198,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		if (getResources().getBoolean(R.bool.hide_camera_settings)) {
 			emptyAndHidePreference(R.string.pref_video_key);
-			hidePreference(R.string.pref_video_enable_key);
 		}
 
 		if (getResources().getBoolean(R.bool.disable_every_log)) {
@@ -245,14 +256,20 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void setPreferenceDefaultValueAndSummary(int pref, String value) {
-		if(value != null) {
+		if (value != null) {
 			EditTextPreference etPref = (EditTextPreference) findPreference(getString(pref));
-			etPref.setText(value);
-			etPref.setSummary(value);
+			if (etPref != null) {
+				etPref.setText(value);
+				etPref.setSummary(value);
+			}
 		}
 	}
 
 	private void initTunnelSettings() {
+		if (!LinphoneManager.getLc().isTunnelAvailable()) {
+			return;
+		}
+		
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
 		ListPreference tunnelModePref = (ListPreference) findPreference(getString(R.string.pref_tunnel_mode_key));
@@ -464,7 +481,13 @@ public class SettingsFragment extends PreferencesListFragment {
 		setListPreferenceValues(pref, entries, values);
 
 		LinphoneLimeState lime = mPrefs.getLimeEncryption();
-		pref.setSummary(lime.toString());
+		if (lime == LinphoneLimeState.Disabled) {
+			pref.setSummary(getString(R.string.lime_encryption_entry_disabled));
+		} else if (lime == LinphoneLimeState.Mandatory) {
+			pref.setSummary(getString(R.string.lime_encryption_entry_mandatory));
+		} else if (lime == LinphoneLimeState.Preferred) {
+			pref.setSummary(getString(R.string.lime_encryption_entry_preferred));
+		}
 		pref.setValue(lime.toString());
 	}
 
@@ -576,16 +599,31 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				synchronized (SettingsFragment.this) {
-					try {
-						LinphoneManager.getInstance().startEcCalibration(mListener);
-						preference.setSummary(R.string.ec_calibrating);
-					} catch (LinphoneCoreException e) {
-						Log.w(e, "Cannot calibrate EC");
+					preference.setSummary(R.string.ec_calibrating);
+					
+					int recordAudio = getActivity().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getActivity().getPackageName());
+					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+						startEchoCancellerCalibration();
+					} else {
+						LinphoneActivity.instance().checkAndRequestRecordAudioPermissionForEchoCanceller();
 					}
 				}
 				return true;
 			}
 		});
+	}
+	
+	public void startEchoCancellerCalibration() {
+		try {
+			LinphoneManager.getInstance().startEcCalibration(mListener);
+		} catch (LinphoneCoreException e) {
+			Log.e(e);
+		}
+	}
+	
+	public void echoCalibrationFail() {
+		Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
+		echoCancellerCalibration.setSummary(R.string.failed);
 	}
 
 	private void initVideoSettings() {
@@ -782,9 +820,14 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initCallSettings() {
+		CheckBoxPreference deviceRingtone = (CheckBoxPreference) findPreference(getString(R.string.pref_device_ringtone_key));
+		CheckBoxPreference autoAnswer = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
 
+		deviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
+		autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
+		
 		if (mPrefs.useRfc2833Dtmfs()) {
 			rfc2833.setChecked(true);
 			sipInfo.setChecked(false);
@@ -798,7 +841,63 @@ public class SettingsFragment extends PreferencesListFragment {
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 	}
 
+	public void enableDeviceRingtone(boolean enabled) {
+		LinphonePreferences.instance().enableDeviceRingtone(enabled);
+		LinphoneManager.getInstance().enableDeviceRingtone(enabled);
+		((CheckBoxPreference)findPreference(getString(R.string.pref_device_ringtone_key))).setChecked(enabled);
+	}
+
 	private void setCallPreferencesListener() {
+		findPreference(getString(R.string.pref_device_ringtone_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean use = (Boolean) newValue;
+				if (use) {
+					int readExternalStorage = getActivity().getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getActivity().getPackageName());
+					if (readExternalStorage == PackageManager.PERMISSION_GRANTED) {
+						mPrefs.enableDeviceRingtone(true);
+						LinphoneManager.getInstance().enableDeviceRingtone(true);
+					} else {
+						LinphoneActivity.instance().checkAndRequestReadExternalStoragePermissionForDeviceRingtone();
+					}
+				} else {
+					mPrefs.enableDeviceRingtone(false);
+					LinphoneManager.getInstance().enableDeviceRingtone(false);
+				}
+				
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = newValue.toString();
+				MediaEncryption menc = MediaEncryption.None;
+				if (value.equals(getString(R.string.pref_media_encryption_key_srtp)))
+					menc = MediaEncryption.SRTP;
+				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
+					menc = MediaEncryption.ZRTP;
+				else if (value.equals(getString(R.string.pref_media_encryption_key_dtls)))
+					menc = MediaEncryption.DTLS;
+				mPrefs.setMediaEncryption(menc);
+
+				preference.setSummary(mPrefs.getMediaEncryption().toString());
+				return true;
+			}
+		});
+		
+		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
+		
+		findPreference(getString(R.string.pref_auto_answer_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean use = (Boolean) newValue;
+				mPrefs.enableAutoAnswer(use);
+				return true;
+			}
+		});
+		
 		findPreference(getString(R.string.pref_rfc2833_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -877,22 +976,14 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initNetworkSettings() {
-		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
-
 		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
 
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
+		CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
 		CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
 		ice.setChecked(mPrefs.isIceEnabled());
-		if (mPrefs.isIceEnabled()) {
-			upnp.setEnabled(false);
-		} else {
-			upnp.setChecked(mPrefs.isUpnpEnabled());
-			if (mPrefs.isUpnpEnabled()) {
-				ice.setEnabled(false);
-			}
-		}
+		turn.setChecked(mPrefs.isTurnEnabled());
 
 		CheckBoxPreference randomPort = (CheckBoxPreference) findPreference(getString(R.string.pref_transport_use_random_ports_key));
 		randomPort.setChecked(mPrefs.isUsingRandomPort());
@@ -934,9 +1025,17 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
 				boolean value = (Boolean) newValue;
-				upnp.setChecked(false);
-				upnp.setEnabled(!value);
 				mPrefs.setIceEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_turn_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
+				boolean value = (Boolean) newValue;
+				mPrefs.setTurnEnabled((Boolean) newValue);
 				return true;
 			}
 		});
@@ -946,8 +1045,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 				boolean value = (Boolean) newValue;
-				ice.setChecked(false);
-				ice.setEnabled(!value);
 				mPrefs.setUpnpEnabled(value);
 				return true;
 			}
@@ -978,24 +1075,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 		});
 
-		findPreference(getString(R.string.pref_media_encryption_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				String value = newValue.toString();
-				MediaEncryption menc = MediaEncryption.None;
-				if (value.equals(getString(R.string.pref_media_encryption_key_srtp)))
-					menc = MediaEncryption.SRTP;
-				else if (value.equals(getString(R.string.pref_media_encryption_key_zrtp)))
-					menc = MediaEncryption.ZRTP;
-				else if (value.equals(getString(R.string.pref_media_encryption_key_dtls)))
-					menc = MediaEncryption.DTLS;
-				mPrefs.setMediaEncryption(menc);
-
-				preference.setSummary(mPrefs.getMediaEncryption().toString());
-				return true;
-			}
-		});
-
 		findPreference(getString(R.string.pref_push_notification_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -1016,7 +1095,6 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initAdvancedSettings() {
 		((CheckBoxPreference)findPreference(getString(R.string.pref_debug_key))).setChecked(mPrefs.isDebugEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_background_mode_key))).setChecked(mPrefs.isBackgroundModeEnabled());
-		((CheckBoxPreference)findPreference(getString(R.string.pref_animation_enable_key))).setChecked(mPrefs.areAnimationsEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_service_notification_key))).setChecked(mPrefs.getServiceNotificationVisibility());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_autostart_key))).setChecked(mPrefs.isAutoStartEnabled());
 		setPreferenceDefaultValueAndSummary(R.string.pref_remote_provisioning_key, mPrefs.getRemoteProvisioningUrl());
@@ -1039,15 +1117,6 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean value = (Boolean) newValue;
 				mPrefs.setBackgroundModeEnabled(value);
-				return true;
-			}
-		});
-
-		findPreference(getString(R.string.pref_animation_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				boolean value = (Boolean) newValue;
-				mPrefs.setAnimationsEnabled(value);
 				return true;
 			}
 		});
@@ -1112,6 +1181,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	public void onResume() {
 		super.onResume();
 
+		// Init the settings page interface
 		initAccounts();
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -1119,7 +1189,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		}
 	}
-
+	
 	@Override
 	public void onPause() {
 		LinphoneActivity.instance().hideTopBar();

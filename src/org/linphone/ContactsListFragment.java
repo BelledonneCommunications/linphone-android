@@ -48,6 +48,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	private String sipAddressToAdd;
 	private ImageView clearSearchField;
 	private EditText searchField;
+	private ProgressBar contactsFetchInProgress;
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,6 +143,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				searchContacts(searchField.getText().toString());
 			}
 		});
+		
+		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
 
 		return view;
     }
@@ -339,6 +343,11 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			edit.setEnabled(true);
 		}
 		ContactsManager.getInstance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
+		if (contactsList.getCount() == 0) {
+			contactsFetchInProgress.setVisibility(View.VISIBLE);
+		} else {
+			contactsFetchInProgress.setVisibility(View.GONE);
+		}
 	}
 	
 	private void changeContactsToggle() {
@@ -476,7 +485,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				}
 			}
 
-			if(contact.isInLinphoneFriendList()){
+			if (contact.isInLinphoneFriendList()) {
 				linphoneFriend.setVisibility(View.VISIBLE);
 			} else {
 				linphoneFriend.setVisibility(View.GONE);
@@ -489,6 +498,15 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				icon.setImageURI(contact.getPhotoUri());
 			} else {
 				icon.setImageResource(R.drawable.avatar);
+			}
+			
+			TextView organization = (TextView) view.findViewById(R.id.contactOrganization);
+			String org = contact.getOrganization();
+			if (org != null && !org.isEmpty()) {
+				organization.setText(org);
+				organization.setVisibility(View.VISIBLE);
+			} else {
+				organization.setVisibility(View.GONE);
 			}
 
 			if (isEditMode) {

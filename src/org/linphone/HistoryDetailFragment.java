@@ -36,11 +36,12 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
-	private ImageView dialBack, chat, addToContacts, back;
+	private ImageView dialBack, chat, addToContacts, goToContact, back;
 	private View view;
 	private ImageView contactPicture, callDirection;
 	private TextView contactName, contactAddress, time, date;
 	private String sipUri, displayName, pictureUri;
+	private LinphoneContact contact;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,6 +72,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		
 		addToContacts = (ImageView) view.findViewById(R.id.add_contact);
 		addToContacts.setOnClickListener(this);
+		
+		goToContact = (ImageView) view.findViewById(R.id.goto_contact);
+		goToContact.setOnClickListener(this);
 		
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 		
@@ -107,17 +111,19 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			Log.e(e);
 		}
 
-		if(lAddress != null) {
+		if (lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
+			contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			if (contact != null) {
 				contactName.setText(contact.getFullName());
 				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
-				addToContacts.setVisibility(View.INVISIBLE);
+				addToContacts.setVisibility(View.GONE);
+				goToContact.setVisibility(View.VISIBLE);
 			} else {
 				contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
 				contactPicture.setImageResource(R.drawable.avatar);
 				addToContacts.setVisibility(View.VISIBLE);
+				goToContact.setVisibility(View.GONE);
 			}
 		} else {
 			contactAddress.setText(sipUri);
@@ -165,6 +171,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				Log.e(e);
 			}
 			LinphoneActivity.instance().displayContactsForEdition(uri);
+		} else if (id == R.id.goto_contact) {
+			LinphoneActivity.instance().displayContact(contact, false);
 		}
 	}
 }

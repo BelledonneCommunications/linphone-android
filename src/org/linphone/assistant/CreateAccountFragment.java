@@ -17,20 +17,22 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import java.net.URL;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LinphoneXmlRpcRequest;
+import org.linphone.core.LinphoneXmlRpcRequest.LinphoneXmlRpcRequestListener;
+import org.linphone.core.LinphoneXmlRpcRequestImpl;
+import org.linphone.core.LinphoneXmlRpcSession;
+import org.linphone.core.LinphoneXmlRpcSessionImpl;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -45,10 +47,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import de.timroes.axmlrpc.XMLRPCCallback;
-import de.timroes.axmlrpc.XMLRPCClient;
-import de.timroes.axmlrpc.XMLRPCException;
-import de.timroes.axmlrpc.XMLRPCServerException;
 /**
  * @author Sylvain Berfini
  */
@@ -63,11 +61,7 @@ public class CreateAccountFragment extends Fragment {
 	private boolean confirmPasswordOk = false;
 	private Button createAccount;
 	private final Pattern UPPER_CASE_REGEX = Pattern.compile("[A-Z]");
-	private char[] acceptedChars = new char[]{ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '_', '-' };
-	private char[] acceptedCharsForPhoneNumbers = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '+' };
-	private String inputFilterCharacters;
+	private LinphoneXmlRpcSession xmlRpcSession;
 	
 	private String getUsername() {
 		String username = usernameEdit.getText().toString();
@@ -96,9 +90,7 @@ public class CreateAccountFragment extends Fragment {
 
     	addXMLRPCUsernameHandler(usernameEdit, null);
 
-    	inputFilterCharacters = new String(acceptedChars);
     	if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
-    		inputFilterCharacters = new String(acceptedCharsForPhoneNumbers);
 			usernameEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
     	}
 
@@ -126,6 +118,8 @@ public class CreateAccountFragment extends Fragment {
     	        }
     	    }
     	}
+		
+		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), getString(R.string.wizard_url));
     	
 		return view;
 	}
@@ -152,58 +146,46 @@ public class CreateAccountFragment extends Fragment {
 	}
 	
 	private void isUsernameRegistred(final String username, final ImageView icon) {
+		final Runnable runNotOk = new Runnable() {
+			public void run() {
+				usernameOk = false;
+				displayError(usernameOk, usernameError, usernameEdit, LinphoneManager.getInstance().getContext().getString(R.string.wizard_username_unavailable));
+				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
+			}
+		};
+		final Runnable runOk = new Runnable() {
+			public void run() {
+				usernameOk = true;
+				displayError(usernameOk, usernameError, usernameEdit, "");
+				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
+			}
+		};
 		final Runnable runNotReachable = new Runnable() {
 			public void run() {
 				usernameOk = false;
-				displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_server_unavailable));
+				displayError(usernameOk, usernameError, usernameEdit, LinphoneManager.getInstance().getContext().getString(R.string.wizard_server_unavailable));
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
 		};
 		
-		try {
-			XMLRPCClient client = new XMLRPCClient(new URL(getString(R.string.wizard_url)));
-			
-			XMLRPCCallback listener = new XMLRPCCallback() {
-				Runnable runNotOk = new Runnable() {
-    				public void run() {
-    					usernameOk = false;
-						displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_username_unavailable));
-						createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
-					}
-	    		};
-	    		
-	    		Runnable runOk = new Runnable() {
-    				public void run() {
-						usernameOk = true;
-						displayError(usernameOk, usernameError, usernameEdit, "");
-						createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
-					}
-	    		};
-				
-			    public void onResponse(long id, Object result) {
-			    	int answer = (Integer) result;
-			    	if (answer != 0) {
-			    		mHandler.post(runNotOk);
-					}
-					else {
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account", LinphoneXmlRpcRequest.ArgType.Int);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
+					int response = request.getIntResponse();
+					if (response != 0) {
+						mHandler.post(runNotOk);
+					} else {
 						mHandler.post(runOk);
 					}
-			    }
-			    
-			    public void onError(long id, XMLRPCException error) {
-			    	mHandler.post(runNotReachable);
-			    }
-			   
-			    public void onServerError(long id, XMLRPCServerException error) {
-			    	mHandler.post(runNotReachable);
-			    }
-			};
-
-		    client.callAsync(listener, "check_account", username);
-		} 
-		catch(Exception ex) {
-			mHandler.post(runNotReachable);
-		}
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
+					mHandler.post(runNotReachable);
+				}
+			}
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	private boolean isEmailCorrect(String email) {
@@ -216,53 +198,43 @@ public class CreateAccountFragment extends Fragment {
 	}
 	
 	private void createAccount(final String username, final String password, String email, boolean suscribe) {
+		final Runnable runNotOk = new Runnable() {
+			public void run() {
+				//TODO errorMessage.setText(R.string.wizard_failed);
+			}
+		};
+		final Runnable runOk = new Runnable() {
+			public void run() {
+				AssistantActivity.instance().displayAssistantConfirm(username, password);
+			}
+		};
 		final Runnable runNotReachable = new Runnable() {
 			public void run() {
-				//TODO errorMessage.setText(R.string.wizard_server_unavailable);
+				//TODO errorMessage.setText(R.string.wizard_not_reachable);
 			}
 		};
 		
-		final Context context = AssistantActivity.instance() == null ? LinphoneService.instance().getApplicationContext() : AssistantActivity.instance();
-		
-		try {
-			XMLRPCClient client = new XMLRPCClient(new URL(context.getString(R.string.wizard_url)));
-			
-			XMLRPCCallback listener = new XMLRPCCallback() {
-				Runnable runNotOk = new Runnable() {
-    				public void run() {
-    					//TODO errorMessage.setText(R.string.wizard_failed);
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("create_account_with_useragent", LinphoneXmlRpcRequest.ArgType.Int);
+		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
+			@Override
+			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
+				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
+					int response = request.getIntResponse();
+					if (response != 0) {
+						mHandler.post(runNotOk);
+					} else {
+						mHandler.post(runOk);
 					}
-	    		};
-	    		
-	    		Runnable runOk = new Runnable() {
-    				public void run() {
-						AssistantActivity.instance().displayAssistantConfirm(username, password);
-					}
-	    		};
-	    		
-			    public void onResponse(long id, Object result) {
-			    	int answer = (Integer) result;
-			    	if (answer != 0) {
-			    		mHandler.post(runNotOk);
-			    	} else {
-			    		mHandler.post(runOk);
-			    	}
-			    }
-			    
-			    public void onError(long id, XMLRPCException error) {
-			    	mHandler.post(runNotReachable);
-			    }
-			   
-			    public void onServerError(long id, XMLRPCServerException error) {
-			    	mHandler.post(runNotReachable);
-			    }
-			};
-
-		    client.callAsync(listener, "create_account_with_useragent", username, password, email, LinphoneManager.getInstance().getUserAgent());
-		} 
-		catch(Exception ex) {
-			mHandler.post(runNotReachable);
-		}
+				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
+					mHandler.post(runNotReachable);
+				}
+			}
+		});
+		xmlRpcRequest.addStringArg(username);
+		xmlRpcRequest.addStringArg(password);
+		xmlRpcRequest.addStringArg(email);
+		xmlRpcRequest.addStringArg(LinphoneManager.getInstance().getUserAgent());
+		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
 	private void addXMLRPCUsernameHandler(final EditText field, final ImageView icon) {

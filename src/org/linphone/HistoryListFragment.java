@@ -52,7 +52,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private ListView historyList;
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
@@ -198,6 +198,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	@Override
 	public void onResume() {
 		super.onResume();
+		ContactsManager.addContactsListener(this);
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_LIST);
@@ -210,6 +211,17 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 		}
+	}
+	
+	@Override
+	public void onPause() {
+		ContactsManager.removeContactsListener(this);
+		super.onPause();
+	}
+
+	@Override
+	public void onContactsUpdated() {
+		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 	}
 
 	@Override
@@ -327,18 +339,20 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		topBar.setVisibility(View.VISIBLE);
 
 		refresh();
-		if (!hideHistoryListAndDisplayMessageIfEmpty()){
+		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
 			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 		}
-		if(getResources().getBoolean(R.bool.isTablet)){
+		if (getResources().getBoolean(R.bool.isTablet)) {
 			displayFirstLog();
 		}
 	}
 
 	class CallHistoryAdapter extends  BaseAdapter {
 		CallHistoryAdapter(Context aContext) {
+		
 		}
+		
 		public int getCount() {
 			return mLogs.size();
 		}

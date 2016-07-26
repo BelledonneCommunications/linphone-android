@@ -21,7 +21,7 @@ package org.linphone;
 
 import java.io.Serializable;
 
-public class LinphoneNumberOrAddress implements Serializable {
+public class LinphoneNumberOrAddress implements Serializable, Comparable<LinphoneNumberOrAddress> {
 	/**
 	 * 
 	 */
@@ -39,6 +39,15 @@ public class LinphoneNumberOrAddress implements Serializable {
 	public LinphoneNumberOrAddress(String v, boolean isSip, String old) {
 		this(v, isSip);
 		oldValueForUpdatePurpose = old;
+	}
+	
+	@Override
+	public int compareTo(LinphoneNumberOrAddress noa) {
+		if (noa.isSIPAddress() == isSIPAddress()) {
+			return noa.getValue().compareTo(getValue());
+		} else {
+			return isSIPAddress() ? -1 : 1;
+		}
 	}
 
 	public boolean isSIPAddress() {

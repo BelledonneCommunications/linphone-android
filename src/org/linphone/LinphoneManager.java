@@ -25,16 +25,13 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -87,15 +84,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -106,7 +100,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -180,7 +173,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
-		mRingSoundFile = basePath + "/oldphone_mono.wav";
+		mRingSoundFile = basePath + "/ringtone.mkv";
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/hold.mkv";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
@@ -290,14 +283,19 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		routeAudioToSpeakerHelper(true);
 	}
 
-	public String getUserAgent() throws NameNotFoundException {
-		StringBuilder userAgent = new StringBuilder();
-		userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
-		userAgent.append(" (");
-		userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
-		userAgent.append(Build.DEVICE + " " + Build.MODEL + " Android/" + Build.VERSION.SDK_INT);
-		userAgent.append(")");
-		return userAgent.toString();
+	public String getUserAgent() {
+		try {
+			StringBuilder userAgent = new StringBuilder();
+			userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
+			userAgent.append(" (");
+			userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
+			userAgent.append(Build.DEVICE + " " + Build.MODEL + " Android/" + Build.VERSION.SDK_INT);
+			userAgent.append(")");
+			return userAgent.toString();
+		} catch (NameNotFoundException nnfe) {
+			Log.e(nnfe);
+		}
+		return null;
 	}
 
 	public void routeAudioToReceiver() {
@@ -358,40 +356,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void setUploadingImageStream(ByteArrayInputStream array){
 		this.mUploadingImageStream = array;
 	}
-	
-	private void storeImage(LinphoneChatMessage msg) {
-		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppData() == null) return;
-		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
-		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
-		if (bm == null) return;
-		
-		ContentValues values = new ContentValues();
-        values.put(Images.Media.TITLE, file.getName());
-        String extension = msg.getFileTransferInformation().getSubtype();
-        values.put(Images.Media.MIME_TYPE, "image/" + extension);
-        ContentResolver cr = getContext().getContentResolver();
-        Uri path = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        
-        OutputStream stream;
-		try {
-			stream = cr.openOutputStream(path);
-			if (extension != null && extension.toLowerCase(Locale.getDefault()).equals("png")) {
-				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-			} else {
-				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-			}
-			
-			stream.close();
-			file.delete();
-	        bm.recycle();
-
-	        msg.setAppData(path.toString());
-		} catch (FileNotFoundException e) {
-			Log.e(e);
-		} catch (IOException e) {
-			Log.e(e);
-		}
-	}
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
@@ -400,7 +364,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mUploadPendingFileMessage = null;
 				mUploadingImageStream = null;
 			} else {
-				storeImage(msg);
+				LinphoneUtils.storeImage(getContext(), msg);
 				removePendingMessage(msg);
 			}
 		}
@@ -761,12 +725,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-		mLc.setRing(mRingSoundFile);
-		if (mR.getBoolean(R.bool.use_linphonecore_ringing)) {
-			disableRinging();
-		} else {
-			mLc.setRing(null); //We'll use the android media player api to play the ringtone
-		}
+		
 		mLc.setRingback(mRingbackSoundFile);
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
@@ -776,6 +735,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setUserCertificatesPath(mUserCertificatePath);
 		subscribeFriendList(mPrefs.isFriendlistsubscriptionEnabled());
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
+		enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 
 		int availableCores = Runtime.getRuntime().availableProcessors();
 		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
@@ -804,7 +764,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
-		copyIfNotExist(R.raw.oldphone_mono, mRingSoundFile);
+		copyIfNotExist(R.raw.notes_of_the_optimistic, mRingSoundFile);
 		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
 		copyIfNotExist(R.raw.hold, mPauseSoundFile);
 		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
@@ -917,6 +877,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public static synchronized void destroy() {
 		if (instance == null) return;
+		ContactsManager.getInstance().destroy();
 		getInstance().changeStatusToOffline();
 		sExited = true;
 		instance.doDestroy();
@@ -1070,7 +1031,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 
-		if (state == State.IncomingReceived && mR.getBoolean(R.bool.auto_answer_calls)) {
+		if (state == State.IncomingReceived && LinphonePreferences.instance().isAutoAnswerEnabled()) {
 			try {
 				mLc.acceptCall(call);
 			} catch (LinphoneCoreException e) {
@@ -1184,20 +1145,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void startEcCalibration(LinphoneCoreListener l) throws LinphoneCoreException {
 		routeAudioToSpeaker();
+		Compatibility.setAudioManagerInCallMode((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE));
+		Log.i("Set audio mode on 'Voice Communication'");
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
 		mLc.startEchoCalibration(l);
-
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
 	}
 
 	private boolean isRinging;
-	private boolean disableRinging = false;
-
-	public void disableRinging() {
-		disableRinging = true;
-	}
 
 	private void requestAudioFocus(){
 		if (!mAudioFocused){
@@ -1206,12 +1163,22 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
 		}
 	}
+	
+	public void enableDeviceRingtone(boolean use) {
+		if (use) {
+			mLc.setRing(null);
+		} else {
+			mLc.setRing(mRingSoundFile);
+		}
+	}
 
 	private synchronized void startRinging()  {
-		if (disableRinging) {
+		if (!LinphonePreferences.instance().isDeviceRingtoneEnabled()) {
+			// Enable speaker audio route, linphone library will do the ringing itself automatically
 			routeAudioToSpeaker();
 			return;
 		}
+		
 		if (mR.getBoolean(R.bool.allow_ringing_while_early_media)) {
 			routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
 		}
@@ -1577,8 +1544,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
 			int delay_ms, Object data) {
-		// TODO Auto-generated method stub
-
+		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+		Log.i("Set audio mode on 'Normal'");
 	}
 	
 	@Override

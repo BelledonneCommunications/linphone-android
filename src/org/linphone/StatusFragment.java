@@ -42,6 +42,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -142,6 +143,20 @@ public class StatusFragment extends Fragment {
 			
 		};
 
+		isAttached = true;
+		Activity activity = getActivity();
+		
+		if (activity instanceof LinphoneActivity) {
+			((LinphoneActivity) activity).updateStatusFragment(this);
+			isInCall = false;
+		} else if (activity instanceof CallActivity) {
+			((CallActivity) activity).updateStatusFragment(this);
+			isInCall = true;
+		} else if (activity instanceof AssistantActivity) {
+			((AssistantActivity) activity).updateStatusFragment(this);
+			isInCall = false;
+		}
+
         return view;
     }
 
@@ -154,23 +169,6 @@ public class StatusFragment extends Fragment {
 			if (lpc != null) {
 				mListener.registrationState(lc, lpc, lpc.getState(), null);
 			}
-		}
-	}
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		isAttached = true;
-		
-		if (activity instanceof LinphoneActivity) {
-			((LinphoneActivity) activity).updateStatusFragment(this);
-			isInCall = false;
-		} else if (activity instanceof CallActivity) {
-			((CallActivity) activity).updateStatusFragment(this);
-			isInCall = true;
-		} else if (activity instanceof AssistantActivity) {
-			((AssistantActivity) activity).updateStatusFragment(this);
-			isInCall = false;
 		}
 	}
 	
@@ -399,7 +397,7 @@ public class StatusFragment extends Fragment {
 		if(ZRTPdialog == null || !ZRTPdialog.isShowing()) {
 			ZRTPdialog = new Dialog(getActivity());
 			ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			Drawable d = new ColorDrawable(getResources().getColor(R.color.colorC));
+			Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
 			d.setAlpha(200);
 			ZRTPdialog.setContentView(R.layout.dialog);
 			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);

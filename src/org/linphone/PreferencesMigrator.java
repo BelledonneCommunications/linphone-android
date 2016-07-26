@@ -84,7 +84,6 @@ public class PreferencesMigrator {
 		mNewPrefs.setPushNotificationRegistrationID(getPrefString(R.string.push_reg_id_key, null));
 		mNewPrefs.setDebugEnabled(getPrefBoolean(R.string.pref_debug_key, false));
 		mNewPrefs.setBackgroundModeEnabled(getPrefBoolean(R.string.pref_background_mode_key, true));
-		mNewPrefs.setAnimationsEnabled(getPrefBoolean(R.string.pref_animation_enable_key, false));
 		mNewPrefs.setAutoStart(getPrefBoolean(R.string.pref_autostart_key, false));
 		mNewPrefs.setSharingPictureServerUrl(getPrefString(R.string.pref_image_sharing_server_key, null));
 		mNewPrefs.setRemoteProvisioningUrl(getPrefString(R.string.pref_remote_provisioning_key, null));

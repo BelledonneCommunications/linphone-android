@@ -70,7 +70,7 @@ public class PreferencesListFragment extends ListFragment {
     }
     
     // Must be provided
-    public PreferencesListFragment(){
+    public PreferencesListFragment() {
         
     }
     
@@ -123,7 +123,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             m.invoke(mPreferenceManager);
         } catch(Exception e) {
-            Log.e(e);
+            Log.e("[PreferencesListFragment] onStop " + e);
         }
     }
 
@@ -136,7 +136,7 @@ public class PreferencesListFragment extends ListFragment {
 	        m.setAccessible(true);
 	        m.invoke(mPreferenceManager);
         } catch(Exception e) {
-        	Log.e(e);
+        	Log.e("[PreferencesListFragment] onDestroy " + e);
         }
     }
 
@@ -154,7 +154,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             m.invoke(mPreferenceManager, requestCode, resultCode, data);
         } catch(Exception e) {
-            Log.e(e);
+            Log.e("[PreferencesListFragment] onActivityResult " + e);
         }
     }
 
@@ -188,7 +188,7 @@ public class PreferencesListFragment extends ListFragment {
             PreferenceManager preferenceManager = c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
             return preferenceManager;
         } catch(Exception e) {
-            Log.e(e);
+            Log.e("[PreferencesListFragment] onCreatePreferenceManager " + e);
             return null;
         }
     }
@@ -215,7 +215,7 @@ public class PreferencesListFragment extends ListFragment {
                 postBindPreferences();
             }
         }catch(Exception e){
-            Log.e(e);
+            Log.e("[PreferencesListFragment] setPreferenceScreen " + e);
         }
     }
     
@@ -231,7 +231,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             return (PreferenceScreen) m.invoke(mPreferenceManager);
         } catch(Exception e) {
-            Log.e(e);
+            Log.e("[PreferencesListFragment] getPreferenceScreen " + e);
         }
         
         return null;
@@ -250,7 +250,7 @@ public class PreferencesListFragment extends ListFragment {
             PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(mPreferenceManager, getActivity(), preferencesResId, getPreferenceScreen());
             setPreferenceScreen(prefScreen);
         } catch(Exception e) {
-            Log.e(e);
+            Log.e("[PreferencesListFragment] addPreferencesFromResource " + e);
         }
     }
     
@@ -263,6 +263,7 @@ public class PreferencesListFragment extends ListFragment {
      */
     public Preference findPreference(CharSequence key) {
         if (mPreferenceManager == null) {
+        	Log.e("[PreferencesListFragment] PreferenceManager is null !");
             return null;
         }
         return mPreferenceManager.findPreference(key);

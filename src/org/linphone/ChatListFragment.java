@@ -55,7 +55,7 @@ import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
-public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
 	private List<String> mConversations;
 	private ListView chatList;
@@ -193,6 +193,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onResume() {
 		super.onResume();
+		ContactsManager.addContactsListener(this);
 
 		if (LinphoneManager.getLc().getCallsNb() > 0) {
 			backInCall.setVisibility(View.VISIBLE);
@@ -219,7 +220,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
+		ContactsManager.removeContactsListener(this);
 		super.onPause();
+	}
+
+	@Override
+	public void onContactsUpdated() {
+		hideAndDisplayMessageIfNoChat();
 	}
 
 	@Override

@@ -17,9 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,20 +37,15 @@ public class CallAudioFragment extends Fragment {
         View view = inflater.inflate(R.layout.audio, container, false);
         return view;
     }
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		incallActvityInstance = (CallActivity) activity;
-		
-		if (incallActvityInstance != null) {
-			incallActvityInstance.bindAudioFragment(this);
-		}
-	}
 	
 	@Override
 	public void onStart() {
 		super.onStart();
+		incallActvityInstance = (CallActivity) getActivity();
+		
+		if (incallActvityInstance != null) {
+			incallActvityInstance.bindAudioFragment(this);
+		}
 
 		// Just to be sure we have incall controls
 		if (incallActvityInstance != null) {

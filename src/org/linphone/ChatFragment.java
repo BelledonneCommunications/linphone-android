@@ -183,7 +183,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			initNewChatConversation();
 		}
 
-		//Manage multiline
 		message = (EditText) view.findViewById(R.id.message);
 
 		sendImage = (ImageView) view.findViewById(R.id.send_picture);
@@ -1027,7 +1026,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if(search != null) {
 			for (ContactAddress c : searchAdapter.contacts) {
 				String address = c.address;
-				if(address.startsWith("sip:")) address = address.substring(4);
+				if (address.startsWith("sip:")) address = address.substring(4);
 				if (c.contact.getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault())) 
 						|| address.toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))) {
 					result.add(c);
@@ -1045,7 +1044,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		SearchContactsListAdapter(List<ContactAddress> contactsList) {
 			mInflater = inflater;
-			if(contactsList == null){
+			if (contactsList == null) {
 				contacts = getContactsList();
 			} else {
 				contacts = contactsList;
@@ -1057,7 +1056,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if(ContactsManager.getInstance().hasContacts()) {
 				for (LinphoneContact con : ContactsManager.getInstance().getContacts()) {
 					for (LinphoneNumberOrAddress noa : con.getNumbersOrAddresses()) {
-						list.add(new ContactAddress(con, noa.getValue()));
+						String value = noa.getValue();
+						// Fix for sip:username compatibility issue
+						if (value.startsWith("sip:") && !value.contains("@")) {
+							value = value.substring(4);
+							value = LinphoneUtils.getFullAddressFromUsername(value);
+						}
+						list.add(new ContactAddress(con, value));
 					}
 				}
 			}
@@ -1095,7 +1100,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			final String a = contact.address;
-			final LinphoneContact c = contact.contact;
+			LinphoneContact c = contact.contact;
 
 			TextView name = (TextView) view.findViewById(R.id.contact_name);
 			name.setText(c.getFullName());

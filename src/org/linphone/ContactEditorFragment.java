@@ -25,8 +25,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
@@ -64,7 +62,7 @@ public class ContactEditorFragment extends Fragment {
 	private ImageView cancel, deleteContact, ok;
 	private ImageView addNumber, addSipAddress, contactPicture;
 	private LinearLayout phoneNumbersSection, sipAddressesSection;
-	private EditText firstName, lastName;
+	private EditText firstName, lastName, organization;
 	private LayoutInflater inflater;
 	
 	private static final int ADD_PHOTO = 1337;
@@ -126,10 +124,6 @@ public class ContactEditorFragment extends Fragment {
 		ok.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				LinphoneProxyConfig lpc = lc != null ? lc.getDefaultProxyConfig() : null;
-				String defaultDomain = lpc != null ? lpc.getDomain() : null;
-				
 				if (isNewContact) {
 					boolean areAllFielsEmpty = true;
 					for (LinphoneNumberOrAddress nounoa : numbersAndAddresses) {
@@ -150,15 +144,11 @@ public class ContactEditorFragment extends Fragment {
 				}
 				for (LinphoneNumberOrAddress noa : numbersAndAddresses) {
 					if (noa.isSIPAddress() && noa.getValue() != null) {
-						if (!noa.getValue().contains("@") && defaultDomain != null) {
-							noa.setValue(noa.getValue() + "@" + defaultDomain);
-						}
-						if (!noa.getValue().startsWith("sip:")) {
-							noa.setValue("sip:" + noa.getValue());
-						}
+						noa.setValue(LinphoneUtils.getFullAddressFromUsername(noa.getValue()));
 					}
 					contact.addOrUpdateNumberOrAddress(noa);
 				}
+				contact.setOrganization(organization.getText().toString());
 				contact.save();
 				getFragmentManager().popBackStackImmediate();
 			}
@@ -213,6 +203,11 @@ public class ContactEditorFragment extends Fragment {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+		
+		organization = (EditText) view.findViewById(R.id.contactOrganization);
+		if (!isNewContact) {
+			organization.setText(contact.getOrganization());
+		}
 
 		if (!isNewContact) {
 			String fn = contact.getFirstName();
@@ -331,7 +326,6 @@ public class ContactEditorFragment extends Fragment {
 		final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
 		pickedPhotoForContactUri = Uri.fromFile(file);
-		captureIntent.putExtra("crop", "true");
 		captureIntent.putExtra("outputX", PHOTO_SIZE);
 		captureIntent.putExtra("outputY", PHOTO_SIZE);
 		captureIntent.putExtra("aspectX", 0);
@@ -485,10 +479,7 @@ public class ContactEditorFragment extends Fragment {
 			if (firstSipAddressIndex == -1) {
 				firstSipAddressIndex = controls.getChildCount();
 			}
-			numberOrAddress = numberOrAddress.replace("sip:", "");
-			if (numberOrAddress.contains("@")) {
-				numberOrAddress = numberOrAddress.split("@")[0];
-			}
+			numberOrAddress = LinphoneUtils.getDisplayableUsernameFromAddress(numberOrAddress);
 		}
 		if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
 			if (forceAddNumber)
@@ -513,7 +504,9 @@ public class ContactEditorFragment extends Fragment {
 		final View view = inflater.inflate(R.layout.contact_edit_row, null);
 
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
-		noa.setInputType(isSIP ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
+		if (!isSIP) {
+			noa.setInputType(InputType.TYPE_CLASS_PHONE);
+		}
 		noa.setText(numberOrAddress);
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -559,7 +552,9 @@ public class ContactEditorFragment extends Fragment {
 		final EditText noa = (EditText) view.findViewById(R.id.numoraddr);
 		numbersAndAddresses.add(nounoa);
 		noa.setHint(isSip ? getString(R.string.sip_address) : getString(R.string.phone_number));
-		noa.setInputType(isSip ? InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS : InputType.TYPE_CLASS_PHONE);
+		if (!isSip) {
+			noa.setInputType(InputType.TYPE_CLASS_PHONE);
+		}
 		noa.requestFocus();
 		noa.addTextChangedListener(new TextWatcher() {
 			@Override

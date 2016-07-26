@@ -35,7 +35,6 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.text.InputType;
 import android.view.WindowManager;
 
 /**
@@ -280,7 +279,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		
     	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
-    	username.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 		username.setOnPreferenceChangeListener(usernameChangedListener);
 		if (!isNewAccount){
 			username.setText(mPrefs.getAccountUsername(n));
@@ -288,7 +286,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
 
     	EditTextPreference userid = (EditTextPreference) account.getPreference(1);
-    	userid.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 		userid.setOnPreferenceChangeListener(useridChangedListener);
 		if (!isNewAccount){
 			userid.setText(mPrefs.getAccountUserId(n));
@@ -296,14 +293,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
     	
     	EditTextPreference password = (EditTextPreference) account.getPreference(2);
-        password.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		password.setOnPreferenceChangeListener(passwordChangedListener);
 		if(!isNewAccount){
 			password.setText(mPrefs.getAccountPassword(n));
 		}
     	
     	EditTextPreference domain = (EditTextPreference) account.getPreference(3);
-    	domain.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
     	domain.setOnPreferenceChangeListener(domainChangedListener);
 		if (!isNewAccount){
 			domain.setText(mPrefs.getAccountDomain(n));
@@ -311,7 +306,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
     	
     	EditTextPreference displayName = (EditTextPreference) account.getPreference(4);
-    	displayName.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 		displayName.setOnPreferenceChangeListener(displayNameChangedListener);
 		if (!isNewAccount){
 			displayName.setText(mPrefs.getAccountDisplayName(n));
@@ -327,7 +321,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
     	
 		mProxyPreference = (EditTextPreference) advanced.getPreference(1);
-		mProxyPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 		mProxyPreference.setOnPreferenceChangeListener(proxyChangedListener);
 		if (!isNewAccount){
 			mProxyPreference.setText(mPrefs.getAccountProxy(n));

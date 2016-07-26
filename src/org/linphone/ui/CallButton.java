@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCallLog;
@@ -54,7 +55,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 				if (mAddress.getText().length() > 0) { 
 					LinphoneManager.getInstance().newOutgoingCall(mAddress);
 				} else {
-					if (getContext().getResources().getBoolean(R.bool.call_last_log_if_adress_is_empty)) {
+					if (LinphonePreferences.instance().isBisFeatureEnabled()) {
 						LinphoneCallLog[] logs = LinphoneManager.getLc().getCallLogs();
 						LinphoneCallLog log = null;
 						for (LinphoneCallLog l : logs) {

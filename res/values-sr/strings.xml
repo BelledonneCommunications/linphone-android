@@ -7,6 +7,8 @@
   <string name="notification_title">Линфон</string>
   <string name="wait_dialog_text">Покрећем се</string>
   <string name="tunnel_host"></string>
+  <string name="sync_account_name">контакти линфона</string>
+  <string name="today_date_format">ЧЧ:мм</string>
   <!--Common-->
   <string name="username">Корисничко име</string>
   <string name="display_name">Приказано име</string>
@@ -167,6 +169,9 @@
   <string name="pref_call_title">Позови</string>
   <string name="pref_rfc2833_dtmf">Пошаљи РФЦ2833 ДТМФ-е</string>
   <string name="pref_sipinfo_dtmf">Пошаљи СИП ИНФО ДТФ-е</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Ћаскање</string>
+  <string name="pref_image_sharing_server_title">Сервер дељења</string>
   <!--Network settings-->
   <string name="pref_network_title">Мрежа</string>
   <string name="pref_stun_server">Стун сервер</string>
@@ -186,7 +191,6 @@
   <string name="pref_background_mode">Режим позадине</string>
   <string name="pref_animation_enable_title">Укључи анимације</string>
   <string name="pref_autostart">Покрени се приликом подизања система</string>
-  <string name="pref_image_sharing_server_title">Сервер дељења</string>
   <string name="pref_remote_provisioning_title">Прибављање удаљеног</string>
   <string name="pref_primary_account_title">Главни налог</string>
   <string name="pref_display_name_title">Приказано име</string>

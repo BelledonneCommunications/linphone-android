@@ -20,6 +20,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
@@ -51,6 +52,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -120,7 +122,7 @@ private static AssistantActivity instance;
 						if (state == RegistrationState.RegistrationOk) {
 							if (progress != null) progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								launchEchoCancellerCalibration(true);
+								success();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							if (progress != null) progress.dismiss();
@@ -272,24 +274,20 @@ private static AssistantActivity instance;
 		}
 	}
 
-	private boolean launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
-		if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-			boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
-			if (needsEchoCalibration && mPrefs.isFirstLaunch() && !echoCancellerAlreadyDone) {
-				EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
-				fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
-				changeFragment(fragment);
-				currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
-				back.setVisibility(View.VISIBLE);
-				cancel.setEnabled(false);
-				echoCancellerAlreadyDone = true;
-				return true;
-			}
-			isEchoCalibrationFinished();
+	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
+		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
+			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
+			changeFragment(fragment);
+			currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
+			back.setVisibility(View.VISIBLE);
+			cancel.setEnabled(false);
 		} else {
 			checkAndRequestAudioPermission();
 		}
-		return false;
 	}
 
 	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
@@ -379,7 +377,6 @@ private static AssistantActivity instance;
 	}
 
 	private void launchDownloadCodec() {
-		Log.i("linphone salut c'est miguel download");
 		OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
 			CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
@@ -388,27 +385,19 @@ private static AssistantActivity instance;
 			back.setVisibility(View.VISIBLE);
 			cancel.setEnabled(false);
 		} else
-			endDownloadCodec();
+			goToLinphoneActivity();
 	}
 
 	public void endDownloadCodec() {
-		success();
+		goToLinphoneActivity();
 	}
 
 	public void saveCreatedAccount(String username, String password, String displayName, String domain, TransportType transport) {
 		if (accountCreated)
 			return;
 
-		if(username.startsWith("sip:")) {
-			username = username.substring(4);
-		}
-
-		if (username.contains("@"))
-			username = username.split("@")[0];
-
-		if(domain.startsWith("sip:")) {
-			domain = domain.substring(4);
-		}
+		username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
+		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
 
 		String identity = "sip:" + username + "@" + domain;
 		try {
@@ -486,7 +475,7 @@ private static AssistantActivity instance;
  	public void displayRegistrationInProgressDialog() {
 		if(LinphoneManager.getLc().isNetworkReachable()) {
 			progress = ProgressDialog.show(this, null, null);
-			Drawable d = new ColorDrawable(getResources().getColor(R.color.colorE));
+			Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
 			d.setAlpha(200);
 			progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 			progress.getWindow().setBackgroundDrawable(d);
@@ -499,7 +488,7 @@ private static AssistantActivity instance;
 		remoteProvisioningInProgress = true;
 		
 		progress = ProgressDialog.show(this, null, null);
-		Drawable d = new ColorDrawable(getResources().getColor(R.color.colorE));
+		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
 		d.setAlpha(200);
 		progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 		progress.getWindow().setBackgroundDrawable(d);
@@ -553,6 +542,15 @@ private static AssistantActivity instance;
 	}
 	
 	public void success() {
+		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
+		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
+			launchEchoCancellerCalibration(true);
+		} else {
+			launchDownloadCodec();
+		}
+	}
+	
+	private void goToLinphoneActivity() {
 		mPrefs.firstLaunchSuccessful();
 		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
 		finish();

@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneContact;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneBuffer;

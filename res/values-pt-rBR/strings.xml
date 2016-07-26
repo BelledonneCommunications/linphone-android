@@ -161,6 +161,9 @@
   <string name="pref_call_title">Ligar</string>
   <string name="pref_rfc2833_dtmf">Enviar RFC2833 DTMFs</string>
   <string name="pref_sipinfo_dtmf">Enviar SIP INFO DTMFs</string>
+  <!--Chat settings-->
+  <string name="pref_chat_title">Chat</string>
+  <string name="pref_image_sharing_server_title">Servidor de compartilhamento</string>
   <!--Network settings-->
   <string name="pref_network_title">Network</string>
   <string name="pref_stun_server">Servidor Stun</string>
@@ -180,7 +183,6 @@
   <string name="pref_background_mode">Em segundo plano</string>
   <string name="pref_animation_enable_title">Ativar Animações</string>
   <string name="pref_autostart">Iniciar na inicialização</string>
-  <string name="pref_image_sharing_server_title">Servidor de compartilhamento</string>
   <string name="pref_remote_provisioning_title">Provisionamento remoto</string>
   <string name="pref_primary_account_title">Conta primária</string>
   <string name="pref_display_name_title">Mostrar nome</string>

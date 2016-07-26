@@ -36,6 +36,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.preference.Preference;
 import android.provider.Settings;
 import android.view.ViewTreeObserver;
@@ -343,5 +344,14 @@ public class Compatibility {
 			return Settings.canDrawOverlays(context);
 		}
 		return true;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean isScreenOn(PowerManager pm) {
+		if (Version.sdkAboveOrEqual(20)) {
+			return pm.isInteractive();
+		} else {
+			return pm.isScreenOn();
+		}
 	}
 }
