@@ -198,6 +198,7 @@ public class LinphonePreferences {
 		private String tempDisplayName;
 		private String tempUserId;
 		private String tempPassword;
+		private String tempHa1;
 		private String tempDomain;
 		private String tempProxy;
 		private String tempRealm;
@@ -235,6 +236,11 @@ public class LinphonePreferences {
 
 		public AccountBuilder setPassword(String password) {
 			tempPassword = password;
+			return this;
+		}
+
+		public AccountBuilder setHa1(String ha1) {
+			tempHa1 = ha1;
 			return this;
 		}
 
@@ -363,7 +369,7 @@ public class LinphonePreferences {
 			if(tempRealm != null)
 				prxCfg.setRealm(tempRealm);
 
-			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, tempHa1, tempRealm, tempDomain);
 
 			lc.addProxyConfig(prxCfg);
 			lc.addAuthInfo(authInfo);
@@ -516,6 +522,13 @@ public class LinphonePreferences {
 	public void setAccountPassword(int n, String password) {
 		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
 			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, null, null, getAccountDomain(n));
+			LinphoneManager.getLc().addAuthInfo(authInfo);
+		}
+	}
+
+	public void setAccountHa1(int n, String ha1) {
+		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, null, ha1, null, getAccountDomain(n));
 			LinphoneManager.getLc().addAuthInfo(authInfo);
 		}
 	}
@@ -1356,5 +1369,9 @@ public class LinphonePreferences {
 	
 	public void enableAutoAnswer(boolean enable) {
 		getConfig().setBool("app", "auto_answer", enable);
+	}
+
+	public int getCodeLength(){
+		return getConfig().getInt("app", "activation_code_length", 0);
 	}
 }

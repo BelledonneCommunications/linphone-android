@@ -11,6 +11,9 @@ import org.linphone.mediastream.Log;
 
 public class XmlRpcHelper {
     public static final String SERVER_ERROR_INVALID_ACCOUNT = "ERROR_INVALID_ACCOUNT";
+    public static final String SERVER_RESPONSE_OK = "OK";
+    public static final String SERVER_ERROR_INCORRECT_PHONE_NUMBER = "ERROR_PHONE_ISNT_E164";
+    public static final String SERVER_ERROR_ACCOUNT_DOESNT_EXIST = "ERROR_ACCOUNT_DOESNT_EXIST";
     public static final String SERVER_ERROR_PURCHASE_CANCELLED = "ERROR_PURCHASE_CANCELLED";
     public static final String SERVER_ERROR_RECEIPT_PARSING_FAILED = "ERROR_RECEIPT_PARSING_FAILED";
     public static final String SERVER_ERROR_UID_ALREADY_IN_USE = "ERROR_UID_ALREADY_IN_USE";
@@ -152,7 +155,7 @@ public class XmlRpcHelper {
 	}
 	
 	public void isTrialAccountAsync(final XmlRpcListener listener, String username, String password) {
-		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_trial", LinphoneXmlRpcRequest.ArgType.String);
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("is_account_trial", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
 			@Override
 			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {

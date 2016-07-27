@@ -23,6 +23,7 @@
 
 	<!-- Common -->
 	<string name="username">Username</string>
+	<string name="phone_number">Phone number</string>
 	<string name="display_name">Display name</string>
 	<string name="password">Password</string>
 	<string name="confirm_password">Password confirmation</string>
@@ -54,8 +55,11 @@
 	<string name="welcome">Welcome</string>
 	<string name="assistant">Assistant</string>
 	<string name="assistant_create_account">Create account</string>
+	<string name="assistant_continue">Continue</string>
+	<string name="assistant_activate">Activate account</string>
 	<string name="assistant_finish">Finish configuration</string>
 	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
+	<string name="assistant_validate_code">Enter your activation code</string>
 	<string name="assistant_welcome_desc">This assistant will help you to use a SIP account for your calls.</string>
 	<string name="assistant_linphone_login_desc">Enter your username and password of Linphone account</string>
 	<string name="assistant_login_desc">Enter your username and password with your SIP domain</string>
@@ -83,13 +87,18 @@
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>
+	<string name="assistant_phone_number_unavailable">This phone number is already in use.</string>
 	<string name="wizard_username_incorrect">Your username is invalid.</string>
+	<string name="assistant_phone_number_incorrect">Your phone number is invalid.</string>
 	<string name="wizard_email_incorrect">Your email is invalid.</string>
 	<string name="wizard_password_incorrect">Your password is invalid</string>
 	<string name="wizard_passwords_unmatched">Passwords do not match.</string>
 	<string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from your input to match requirements.\r\nDo you accept?</string>
 	<string name="first_launch_no_login_password">Please enter your login and password</string>
 	<string name="forgot_password">Forgot password ?</string>
+	<string name="assistant_choose_country">Choose a country</string>
+	<string name="select_your_country">Select your Country</string>
+	<string name="country_code">(%s)</string>
 
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>
@@ -107,7 +116,6 @@
 	<string name="delete_contacts">Do you want to delete selected contacts?</string>
 	<string name="delete_contact">Do you want to delete selected contact?</string>
 	<string name="sip_address">SIP address</string>
-	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
 	<string name="contact_last_name">Last name</string>
 	<string name="contact_organization">Organization</string>
@@ -350,6 +358,7 @@
 	<string name="content_description_new_discussion">New discussion</string>
 	<string name="content_description_search">Search</string>
 	<string name="content_description_search_contact">Search contact</string>
+	<string name="content_description_search_country">Search country</string>
 	<string name="content_description_all_contacts">All contacts</string>
 	<string name="content_description_linphone_contacts">Linphone contacts</string>
 	<string name="content_description_call_direction">Call direction</string>
@@ -369,6 +378,8 @@
 	<string name="content_description_message_status">Message status</string>
 	<string name="content_description_conference">Conference</string>
 	<string name="content_description_username_field">Username field</string>
+	<string name="content_description_activation_code_field">Username field</string>
+	<string name="content_description_phone_number_field">Phone number field</string>
 	<string name="content_description_display_field">Display name field</string>
 	<string name="content_description_domain_field">Domain field</string>
 	<string name="content_description_url_field">Remote provisioning field</string>

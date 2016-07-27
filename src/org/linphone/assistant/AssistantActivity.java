@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
+
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -79,6 +80,12 @@ private static AssistantActivity instance;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
+	private static final int PERMISSIONS_READ_PHONE_STATE = 202;
+
+	public CountryListFragment.Country country;
+	public String phone_number;
+	public String email;
+	public String activation_code;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,9 +111,9 @@ private static AssistantActivity instance;
 			echoCancellerAlreadyDone = false;
 		}
         mPrefs = LinphonePreferences.instance();
-		//if(mPrefs.isFirstLaunch()) {
-			status.enableSideMenu(false);
-		//}
+		status.enableSideMenu(false);
+
+		checkAndRequestReadPhoneState();
         
         mListener = new LinphoneCoreListenerBase() {
         	@Override
@@ -234,6 +241,8 @@ private static AssistantActivity instance;
 			back.setVisibility(View.INVISIBLE);
 		} else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
 			finish();
+		} else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER){
+			displayCreateAccount();
 		}
 	}
 
@@ -245,14 +254,22 @@ private static AssistantActivity instance;
 		}
 	}
 
+	public void checkAndRequestReadPhoneState() {
+		checkAndRequestPermission(Manifest.permission.READ_PHONE_STATE, 0);
+	}
+
 	public void checkAndRequestAudioPermission() {
-		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
-		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-		
-		if (recordAudio != PackageManager.PERMISSION_GRANTED) {
-			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-				Log.i("[Permission] Asking for record audio");
-				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
+		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, 0);
+	}
+
+	public void checkAndRequestPermission(String permission, int result) {
+		int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
+		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+				Log.i("[Permission] Asking for " + permission);
+				ActivityCompat.requestPermissions(this, new String[] { permission }, result);
 			}
 		}
 	}
@@ -262,15 +279,13 @@ private static AssistantActivity instance;
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		}
-		
+
 		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
 			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
 			} else {
 				isEchoCalibrationFinished();
 			}
-		} else {
-			isEchoCalibrationFinished();
 		}
 	}
 
@@ -291,11 +306,11 @@ private static AssistantActivity instance;
 	}
 
 	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
-        saveCreatedAccount(username, password, displayName, domain, transport);
+		saveCreatedAccount(username, password, displayName, null, domain, transport);
 	}
 
 	public void checkAccount(String username, String password, String displayName, String domain) {
-		saveCreatedAccount(username, password, displayName, domain, null);
+		saveCreatedAccount(username, password, displayName, null, domain, null);
 	}
 
 	public void linphoneLogIn(String username, String password, String displayName, boolean validate) {
@@ -311,7 +326,7 @@ private static AssistantActivity instance;
 	}
 
 	public void genericLogIn(String username, String password, String displayName, String domain, TransportType transport) {
-		if(accountCreated) {
+		if (accountCreated) {
 			retryLogin(username, password, displayName, domain, transport);
 		} else {
 			logIn(username, password, displayName, domain, transport, false);
@@ -366,9 +381,16 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
+	public void displayCountryChooser() {
+		fragment = new CountryListFragment();
+		changeFragment(fragment);
+		currentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
+		back.setVisibility(View.VISIBLE);
+	}
+
 	public void retryLogin(String username, String password, String displayName, String domain, TransportType transport) {
 		accountCreated = false;
-		saveCreatedAccount(username, password, displayName, domain, transport);
+		saveCreatedAccount(username, password, displayName, null, domain, transport);
 	}
 
 	public void loadLinphoneConfig(){
@@ -392,7 +414,13 @@ private static AssistantActivity instance;
 		goToLinphoneActivity();
 	}
 
-	public void saveCreatedAccount(String username, String password, String displayName, String domain, TransportType transport) {
+	public String getPhoneWithCountry() {
+		if(country == null || phone_number == null) return "";
+		String phoneNumberWithCountry = country.dial_code + phone_number.replace("\\D", "");
+		return phoneNumberWithCountry;
+	}
+
+	public void saveCreatedAccount(String username, String password, String displayName, String ha1, String domain, TransportType transport) {
 		if (accountCreated)
 			return;
 
@@ -415,6 +443,7 @@ private static AssistantActivity instance;
 		.setUsername(username)
 		.setDomain(domain)
 		.setDisplayName(displayName)
+		.setHa1(ha1)
 		.setPassword(password);
 		
 		if (isMainAccountLinphoneDotOrg) {
@@ -461,6 +490,8 @@ private static AssistantActivity instance;
 			}
 		}
 
+
+
 		try {
 			builder.saveNewAccount();
 			if(!newAccount) {
@@ -506,6 +537,19 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 		
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
+		back.setVisibility(View.INVISIBLE);
+	}
+
+	public void displayAssistantCodeConfirm(String username, String phone) {
+		CreateAccountCodeActivationFragment fragment = new CreateAccountCodeActivationFragment();
+		newAccount = true;
+		Bundle extras = new Bundle();
+		extras.putString("Username", username);
+		extras.putString("Phone", phone);
+		fragment.setArguments(extras);
+		changeFragment(fragment);
+
+		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
 		back.setVisibility(View.INVISIBLE);
 	}
 	

@@ -48,7 +48,7 @@ public class CreateAccountActivationFragment extends Fragment implements Linphon
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.assistant_account_creation_activation, container, false);
+		View view = inflater.inflate(R.layout.assistant_account_creation_email_activation, container, false);
 		
 		username = getArguments().getString("Username");
 		password = getArguments().getString("Password");
@@ -71,7 +71,7 @@ public class CreateAccountActivationFragment extends Fragment implements Linphon
 		runOk = new Runnable() {
 			public void run() {
 				checkAccount.setEnabled(true);
-				AssistantActivity.instance().saveCreatedAccount(username,password,null, getString(R.string.default_domain),null);
+				AssistantActivity.instance().saveCreatedAccount(username, password, null,  null, getString(R.string.default_domain),null);
 				AssistantActivity.instance().isAccountVerified(username);
 			}
 		};

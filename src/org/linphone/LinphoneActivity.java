@@ -968,6 +968,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	private int mAlwaysChangingPhoneAngle = -1;
 
+
+
 	private class LocalOrientationEventListener extends OrientationEventListener {
 		public LocalOrientationEventListener(Context context) {
 			super(context);
