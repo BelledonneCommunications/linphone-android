@@ -35,10 +35,13 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -639,8 +642,9 @@ public class SettingsFragment extends PreferencesListFragment {
 		codecs.removeAll();
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		final OpenH264DownloadHelper mCodecDownloader = LinphoneManager.getInstance().getOpenH264DownloadHelper();
 		for (final PayloadType pt : lc.getVideoCodecs()) {
-			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
+			final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMime());
 
 			if (!pt.getMime().equals("VP8")) {
@@ -655,6 +659,8 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
+			if (pt.getMime().equals("H264") && mCodecDownloader.isCodecFound())
+				codec.setSummary(mCodecDownloader.getLicenseMessage());
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -662,6 +668,31 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
+						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
+								&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
+							LinphoneManager.getInstance().getOpenH264DownloadHelper().setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
+							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(0,LinphoneManager.getInstance().getContext());
+							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(1,codec);
+
+							AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
+							builder.setCancelable(false);
+							AlertDialog.Builder show = builder.setMessage("Do you agree to download "
+									+ mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == DialogInterface.BUTTON_POSITIVE)
+										mCodecDownloader.downloadCodec();
+								}
+							});
+							builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == DialogInterface.BUTTON_NEGATIVE){
+										// Disable H264
+									}
+								}
+							}).show();
+						}
 						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
 					} catch (LinphoneCoreException e) {
 						Log.e(e);

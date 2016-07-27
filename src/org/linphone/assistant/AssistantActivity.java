@@ -33,6 +33,8 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.tools.OpenH264DownloadHelper;
 
 import android.Manifest;
 import android.app.Activity;
@@ -75,6 +77,7 @@ private static AssistantActivity instance;
 	private ProgressDialog progress;
 	private Dialog dialog;
 	private boolean remoteProvisioningInProgress;
+	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,11 @@ private static AssistantActivity instance;
             	currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
             }
         }
+		if (savedInstanceState != null && savedInstanceState.containsKey("echoCanceller")) {
+			echoCancellerAlreadyDone = savedInstanceState.getBoolean("echoCanceller");
+		} else {
+			echoCancellerAlreadyDone = false;
+		}
         mPrefs = LinphonePreferences.instance();
 		//if(mPrefs.isFirstLaunch()) {
 			status.enableSideMenu(false);
@@ -155,6 +163,7 @@ private static AssistantActivity instance;
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable("CurrentFragment", currentFragment);
+		outState.putBoolean("echoCanceller", echoCancellerAlreadyDone);
 		super.onSaveInstanceState(outState);
 	}
 	
@@ -178,6 +187,10 @@ private static AssistantActivity instance;
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment_container, newFragment);
 		transaction.commitAllowingStateLoss();
+	}
+
+	public AssistantFragmentsEnum getCurrentFragment() {
+		return currentFragment;
 	}
 
 	@Override
@@ -254,10 +267,10 @@ private static AssistantActivity instance;
 			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
 			} else {
-				goToLinphoneActivity();
+				isEchoCalibrationFinished();
 			}
 		} else {
-			goToLinphoneActivity();
+			isEchoCalibrationFinished();
 		}
 	}
 
@@ -361,6 +374,22 @@ private static AssistantActivity instance;
 	public void loadLinphoneConfig(){
 		//LinphoneManager.getInstance().loadConfig();
 		//LinphoneManager.getInstance().restartLinphoneCore();
+	}
+
+	private void launchDownloadCodec() {
+		OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
+		if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
+			CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
+			changeFragment(codecFragment);
+			currentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
+			back.setVisibility(View.VISIBLE);
+			cancel.setEnabled(false);
+		} else
+			goToLinphoneActivity();
+	}
+
+	public void endDownloadCodec() {
+		goToLinphoneActivity();
 	}
 
 	public void saveCreatedAccount(String username, String password, String displayName, String domain, TransportType transport) {
@@ -486,7 +515,7 @@ private static AssistantActivity instance;
 	}
 
 	public void isEchoCalibrationFinished() {
-		goToLinphoneActivity();
+		launchDownloadCodec();
 	}
 
 	public Dialog createErrorDialog(LinphoneProxyConfig proxy, String message){
@@ -517,7 +546,7 @@ private static AssistantActivity instance;
 		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
 			launchEchoCancellerCalibration(true);
 		} else {
-			goToLinphoneActivity();
+			launchDownloadCodec();
 		}
 	}
 	

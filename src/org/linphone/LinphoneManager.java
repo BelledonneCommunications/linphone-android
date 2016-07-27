@@ -38,6 +38,8 @@ import java.util.TimerTask;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
+import org.linphone.core.OpenH264DownloadHelperAction;
+import org.linphone.core.OpenH264DownloadHelperListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneCall;
@@ -55,6 +57,7 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
@@ -72,13 +75,17 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.tools.OpenH264DownloadHelper;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -97,6 +104,9 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.preference.CheckBoxPreference;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -130,6 +140,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private Resources mR;
 	private LinphonePreferences mPrefs;
 	private LinphoneCore mLc;
+	private OpenH264DownloadHelper mCodecDownloader;
+	private OpenH264DownloadHelperListener mCodecListener;
 	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
@@ -205,6 +217,66 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		BluetoothManager.getInstance().disableBluetoothSCO();
 
 		mLc.enableSpeaker(speakerOn);
+	}
+
+	public void initOpenH264Helper() {
+		mCodecDownloader = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
+		mCodecListener = new OpenH264DownloadHelperListener() {
+			ProgressDialog progress;
+			int box = 1;
+			int ctxt = 0;
+
+			@Override
+			public void OnProgress(final int current, final int max) {
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						OpenH264DownloadHelper ohcodec = LinphoneManager.getInstance().getOpenH264DownloadHelper();
+						if (progress == null) {
+							progress = new ProgressDialog((Context)ohcodec.getUserData(ctxt));
+							progress.setCanceledOnTouchOutside(false);
+							progress.setCancelable(false);
+							progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+						} else if (current <= max) {
+							progress.setMessage("Downloading OpenH264");
+							progress.setMax(max);
+							progress.setProgress(current);
+							progress.show();
+						} else {
+							progress.dismiss();
+							progress = null;
+							LinphoneManager.getLc().reloadMsPlugins(null);
+							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null)
+								((CheckBoxPreference)ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
+						}
+					}
+				});
+			}
+
+			@Override
+			public void OnError (final String error){
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						if (progress != null) progress.dismiss();
+						AlertDialog.Builder builder = new AlertDialog.Builder((Context)LinphoneManager.getInstance().getOpenH264DownloadHelper().getUserData(ctxt));
+						builder.setMessage("Sorry an error has occurred.");
+						builder.setCancelable(false);
+						builder.setNeutralButton("Ok", null);
+						builder.show();
+					}
+				});
+			}
+		};
+		mCodecDownloader.setOpenH264HelperListener(mCodecListener);
+	}
+
+	public OpenH264DownloadHelperListener getOpenH264HelperListener() {
+		return mCodecListener;
+	}
+
+	public OpenH264DownloadHelper getOpenH264DownloadHelper(){
+		return mCodecDownloader;
 	}
 
 	public void routeAudioToSpeaker() {
@@ -891,6 +963,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == GlobalState.GlobalOn){
 			try {
 				initLiblinphone(lc);
+				initOpenH264Helper();
+
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
