@@ -622,6 +622,7 @@ public final class LinphoneService extends Service {
 		}
 		
 		instance = null;
+		getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
 		LinphoneManager.destroy();
 
 	    // Make sure our notification is gone.
@@ -630,7 +631,6 @@ public final class LinphoneService extends Service {
 	    mNM.cancel(MESSAGE_NOTIF_ID);
 
 	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
-		getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
 		super.onDestroy();
 	}
 	
