@@ -1413,7 +1413,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (sExited || instance == null) {
 			// Can occur if the UI thread play a posted event but in the meantime the LinphoneManager was destroyed
 			// Ex: stop call and quickly terminate application.
-			Log.w("Trying to get linphone core while LinphoneManager already destroyed or not created");
 			return null;
 		}
 		return getLc();

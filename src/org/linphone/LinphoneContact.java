@@ -443,7 +443,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				friend.addPhoneNumber(noa.getValue());
 			}
 		}
-		friend.setName(fullName);
+		if (friend.getAddress() != null) {
+			friend.setName(fullName);
+		}
 		friend.done();
 		
 		if (friend.getAddress() != null) {
