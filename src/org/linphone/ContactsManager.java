@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 package org.linphone;
@@ -247,34 +247,37 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 
-			for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
-				String refkey = friend.getRefKey();
-				if (refkey != null) {
-					boolean found = false;
-					for (LinphoneContact contact : contacts) {
-						if (refkey.equals(contact.getAndroidId())) {
-							// Native matching contact found, link the friend to it
-							contact.setFriend(friend);
-							found = true;
-							break;
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				for (LinphoneFriend friend : lc.getFriendList()) {
+					String refkey = friend.getRefKey();
+					if (refkey != null) {
+						boolean found = false;
+						for (LinphoneContact contact : contacts) {
+							if (refkey.equals(contact.getAndroidId())) {
+								// Native matching contact found, link the friend to it
+								contact.setFriend(friend);
+								found = true;
+								break;
+							}
 						}
-					}
-					if (!found) {
-						if (hasContactAccess) {
-							// If refkey != null and hasContactAccess but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
-							LinphoneManager.getLc().removeFriend(friend);
-						} else {
-							// Refkey not null but no contact access => can't link it to native contact so display it on is own
-							LinphoneContact contact = new LinphoneContact();
-							contact.setFriend(friend);
-							contacts.add(contact);
+						if (!found) {
+							if (hasContactAccess) {
+								// If refkey != null and hasContactAccess but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
+								lc.removeFriend(friend);
+							} else {
+								// Refkey not null but no contact access => can't link it to native contact so display it on is own
+								LinphoneContact contact = new LinphoneContact();
+								contact.setFriend(friend);
+								contacts.add(contact);
+							}
 						}
+					} else {
+						// No refkey so it's a standalone contact
+						LinphoneContact contact = new LinphoneContact();
+						contact.setFriend(friend);
+						contacts.add(contact);
 					}
-				} else {
-					// No refkey so it's a standalone contact
-					LinphoneContact contact = new LinphoneContact();
-					contact.setFriend(friend);
-					contacts.add(contact);
 				}
 			}
 
