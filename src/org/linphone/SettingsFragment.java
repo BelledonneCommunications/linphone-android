@@ -35,15 +35,15 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.purchase.InAppPurchaseActivity;
+import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -668,7 +668,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
-						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
+						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") 
 								&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
 							LinphoneManager.getInstance().getOpenH264DownloadHelper().setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
 							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(0,LinphoneManager.getInstance().getContext());
@@ -676,18 +676,17 @@ public class SettingsFragment extends PreferencesListFragment {
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
 							builder.setCancelable(false);
-							AlertDialog.Builder show = builder.setMessage("Do you agree to download "
-									+ mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+							builder.setMessage("Do you agree to download " + mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									if (which == DialogInterface.BUTTON_POSITIVE)
 										mCodecDownloader.downloadCodec();
 								}
 							});
-							builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+							builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									if (which == DialogInterface.BUTTON_NEGATIVE){
+									if (which == DialogInterface.BUTTON_NEGATIVE) {
 										// Disable H264
 									}
 								}
@@ -981,7 +980,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 		CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
-		CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
 		ice.setChecked(mPrefs.isIceEnabled());
 		turn.setChecked(mPrefs.isTurnEnabled());
 
@@ -1023,8 +1021,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_ice_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
-				boolean value = (Boolean) newValue;
 				mPrefs.setIceEnabled((Boolean) newValue);
 				return true;
 			}
@@ -1033,8 +1029,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_turn_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
-				boolean value = (Boolean) newValue;
 				mPrefs.setTurnEnabled((Boolean) newValue);
 				return true;
 			}
@@ -1043,7 +1037,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_upnp_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 				boolean value = (Boolean) newValue;
 				mPrefs.setUpnpEnabled(value);
 				return true;
