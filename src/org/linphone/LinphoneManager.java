@@ -38,8 +38,6 @@ import java.util.TimerTask;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
-import org.linphone.core.OpenH264DownloadHelperAction;
-import org.linphone.core.OpenH264DownloadHelperListener;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneCall;
@@ -57,13 +55,13 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCore.RemoteProvisioningState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListener;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.LinphoneInfoMessage;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.OpenH264DownloadHelperListener;
 import org.linphone.core.PayloadType;
 import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceModel;
@@ -82,12 +80,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.hardware.Sensor;
@@ -105,8 +99,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.preference.CheckBoxPreference;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -207,10 +199,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mErrorToneFile;
 	private final String mUserCertificatePath;
 	private ByteArrayInputStream mUploadingImageStream;
-
 	private Timer mTimer;
-
-	private  BroadcastReceiver mKeepAliveReceiver = new KeepAliveReceiver();
 
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
 		Log.w("Routing audio to " + (speakerOn ? "speaker" : "earpiece") + ", disabling bluetooth audio route");
@@ -644,11 +633,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
-			try {
-				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
 			mLc = null;
 		}
 	}
@@ -656,10 +640,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void restartLinphoneCore() {
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
-
-		IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
         
 		sExited = false;
 	}
@@ -749,10 +729,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 			Compatibility.initPushNotificationService(mServiceContext);
 		}
-
-		IntentFilter lFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        lFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        mServiceContext.registerReceiver(mKeepAliveReceiver, lFilter);
 
 		updateNetworkReachability();
 
@@ -869,7 +845,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
-			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
 			mLc = null;
 			instance = null;
 		}
