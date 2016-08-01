@@ -80,8 +80,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.hardware.Sensor;
@@ -140,6 +143,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private boolean mAudioFocused;
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
+	private BroadcastReceiver mKeepAliveReceiver;
+	private IntentFilter mKeepAliveIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
@@ -633,6 +638,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
+			try {
+				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
 			mLc = null;
 		}
 	}
@@ -640,7 +650,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void restartLinphoneCore() {
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
-        
+		/* 
+		 You cannot receive this through components declared in manifests, only 
+		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only 
+		 be sent by the system.
+		*/ 
+		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 		sExited = false;
 	}
 
@@ -729,6 +744,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 			Compatibility.initPushNotificationService(mServiceContext);
 		}
+
+		/* 
+		 You cannot receive this through components declared in manifests, only 
+		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only 
+		 be sent by the system.
+		*/ 
+		mKeepAliveIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		mKeepAliveIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+		mKeepAliveReceiver = new KeepAliveReceiver();
+		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 
 		updateNetworkReachability();
 
@@ -845,6 +870,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
+			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
 			mLc = null;
 			instance = null;
 		}
