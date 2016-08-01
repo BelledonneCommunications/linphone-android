@@ -20,7 +20,6 @@ package org.linphone;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Calendar;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
