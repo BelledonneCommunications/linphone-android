@@ -207,7 +207,13 @@
 			<intent-filter><action android:name="android.intent.action.PHONE_STATE" /></intent-filter>
 		</receiver>
 		
-		<receiver android:name="KeepAliveHandler" >
+		<receiver android:name="KeepAliveReceiver">
+		    <intent-filter>
+		        <action android:name="android.intent.action.SCREEN_ON"></action>
+		    </intent-filter>
+		    <intent-filter>
+		        <action android:name="android.intent.action.SCREEN_OFF"></action>
+		    </intent-filter>
         </receiver>
         
 		<!-- Needed for push notification -->

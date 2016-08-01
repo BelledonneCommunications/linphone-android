@@ -20,6 +20,7 @@ package org.linphone;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Calendar;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
@@ -114,7 +115,6 @@ public final class LinphoneService extends Service {
 	private Notification mCustomNotif;
 	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
-	private PendingIntent mkeepAlivePendingIntent;
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
 	private LinphoneCoreListenerBase mListener;
@@ -287,12 +287,11 @@ public final class LinphoneService extends Service {
 		}
 		
 		//make sure the application will at least wakes up every 10 mn
-		Intent intent = new Intent(this, KeepAliveHandler.class);
-	    mkeepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-		((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP
-																							, SystemClock.elapsedRealtime()+600000
-																							, 600000
-																							, mkeepAlivePendingIntent);
+		Intent intent = new Intent(this, KeepAliveReceiver.class);
+		PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+		((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP
+																		, SystemClock.elapsedRealtime() + 600000
+																		, keepAlivePendingIntent);
 		
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 	}
@@ -630,7 +629,6 @@ public final class LinphoneService extends Service {
 	    mNM.cancel(INCALL_NOTIF_ID);
 	    mNM.cancel(MESSAGE_NOTIF_ID);
 
-	    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE)).cancel(mkeepAlivePendingIntent);
 		super.onDestroy();
 	}
 	
