@@ -446,15 +446,18 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		}
 		friend.done();
 		
-		try {
-			LinphoneManager.getLcIfManagerNotDestroyedOrNull().addFriend(friend);
-			if (!ContactsManager.getInstance().hasContactsAccess()) {
-				// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
-				// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
-				ContactsManager.getInstance().fetchContactsAsync();
+		if (!friend.isAlreadyPresentInFriendList()) {
+			try {
+				LinphoneManager.getLcIfManagerNotDestroyedOrNull().addFriend(friend);
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
 			}
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
+		}
+		
+		if (!ContactsManager.getInstance().hasContactsAccess()) {
+			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
+			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
+			ContactsManager.getInstance().fetchContactsAsync();
 		}
 	}
 	
