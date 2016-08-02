@@ -1165,6 +1165,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
 	}
 	
+	private boolean willContactsPermissionBeAsked() {
+		return LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS);
+	}
+	
 	public void checkAndRequestWriteContactsPermission() {
 		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
 	}
@@ -1263,6 +1267,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		
 		if (contacts == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
 			ContactsManager.getInstance().enableContactsAccess();
+			ContactsManager.getInstance().fetchContactsAsync();
+			fetchedContactsOnce = true;
+		} else if (contacts != PackageManager.PERMISSION_GRANTED && !willContactsPermissionBeAsked()) {
 			ContactsManager.getInstance().fetchContactsAsync();
 			fetchedContactsOnce = true;
 		} else {
