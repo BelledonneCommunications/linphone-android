@@ -136,6 +136,7 @@
 					android:inputType="textPersonName|textCapWords"/>
 
 				<TextView
+					android:id="@+id/contactOrganizationTitle"
 					android:text="@string/contact_organization"
 					style="@style/font13"
 					android:textAllCaps="true"

@@ -501,8 +501,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			}
 			
 			TextView organization = (TextView) view.findViewById(R.id.contactOrganization);
+			boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
 			String org = contact.getOrganization();
-			if (org != null && !org.isEmpty()) {
+			if (org != null && !org.isEmpty() && isOrgVisible) {
 				organization.setText(org);
 				organization.setVisibility(View.VISIBLE);
 			} else {

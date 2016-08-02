@@ -204,9 +204,16 @@ public class ContactEditorFragment extends Fragment {
 			}
 		});
 		
+
 		organization = (EditText) view.findViewById(R.id.contactOrganization);
-		if (!isNewContact) {
-			organization.setText(contact.getOrganization());
+		boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+		if (!isOrgVisible) {
+			organization.setVisibility(View.GONE);
+			view.findViewById(R.id.contactOrganizationTitle).setVisibility(View.GONE);
+		} else {
+			if (!isNewContact) {
+				organization.setText(contact.getOrganization());
+			}
 		}
 
 		if (!isNewContact) {
