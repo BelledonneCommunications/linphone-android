@@ -345,6 +345,11 @@
 					android:key="@string/pref_remote_provisioning_key"
 					android:inputType="textUri"
 					android:persistent="false"/>
+				 
+				 <Preference 
+				     android:title="@string/pref_android_app_settings_title"
+				     android:key="@string/pref_android_app_settings_key"
+				     android:persistent="false"/>
 				
 			</PreferenceCategory>
 	

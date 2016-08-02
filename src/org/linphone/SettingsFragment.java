@@ -48,6 +48,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -58,6 +59,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
 
 /**
  * @author Sylvain Berfini
@@ -1143,6 +1145,24 @@ public class SettingsFragment extends PreferencesListFragment {
 				String value = (String) newValue;
 				mPrefs.setRemoteProvisioningUrl(value);
 				preference.setSummary(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_android_app_settings_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				synchronized (SettingsFragment.this) {
+					Context context = SettingsFragment.this.getActivity();
+					Intent i = new Intent();
+				    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+				    i.addCategory(Intent.CATEGORY_DEFAULT);
+				    i.setData(Uri.parse("package:" + context.getPackageName()));
+				    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				    context.startActivity(i);
+				}
 				return true;
 			}
 		});

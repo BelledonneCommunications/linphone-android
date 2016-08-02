@@ -312,6 +312,7 @@
 	<string name="pref_autostart">Start at boot time</string>
 	<string name="pref_incoming_call_timeout_title">Incoming call hangup (in seconds)</string>
 	<string name="pref_remote_provisioning_title">Remote provisioning</string>
+	<string name="pref_android_app_settings_title">Android app settings</string>
 	<string name="pref_primary_account_title">Primary account</string>
 	<string name="pref_display_name_title">Display name</string>
 	<string name="pref_user_name_title">Username</string>
