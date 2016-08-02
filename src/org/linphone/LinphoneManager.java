@@ -1048,10 +1048,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	
 	public void setAudioManagerInCallMode() {
 		if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
-			Log.w("---AudioManager: already in MODE_IN_COMMUNICATION, skipping..."); 
+			Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping..."); 
 			return;
 		}
-		Log.d("---AudioManager: set mode to MODE_IN_COMMUNICATION");
+		Log.d("[AudioManager] Mode: MODE_IN_COMMUNICATION");
 		mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 	}
 	
