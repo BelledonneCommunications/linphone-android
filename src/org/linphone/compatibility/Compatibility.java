@@ -17,18 +17,12 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import java.util.List;
-
 import org.linphone.mediastream.Version;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Html;
@@ -39,61 +33,38 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
  * @author Sylvain Berfini
  */
 public class Compatibility {
-	public static Cursor getContactsCursor(ContentResolver cr, List<String> contactsId) {
-		if (Version.sdkAboveOrEqual(Version.API09_GINGERBREAD_23)) {
-			return ApiNinePlus.getContactsCursor(cr, null, contactsId);
-		} else {
-			return ApiFivePlus.getContactsCursor(cr, contactsId);
-		}
-	}
-	
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
 		Notification notif = null;
-		
 		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
 			return ApiTwentyOnePlus.createSimpleNotification(context, title, text, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createSimpleNotification(context, title, text, intent);
-		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			notif = ApiElevenPlus.createSimpleNotification(context, title, text, intent);
 		} else {
-			notif = ApiFivePlus.createSimpleNotification(context, title, text, intent);
+			notif = ApiElevenPlus.createSimpleNotification(context, title, text, intent);
 		}
 		return notif;
 	}
 	
 	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
-		Notification notif = null;
-		String title;
-		if (msgCount == 1) {
-			title = "Unread message from %s".replace("%s", msgSender);
-		} else {
-			title = "%i unread messages".replace("%i", String.valueOf(msgCount));
-		}
-		
+		Notification notif = null;		
 		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
 			return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
-		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else {
-			notif = ApiFivePlus.createMessageNotification(context, title, msg, intent);
+			notif = ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		}
 		return notif;
 	}
 	
 	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 		Notification notif = null;
-		
 		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
 			return ApiTwentyOnePlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
-		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		} else {
-			notif = ApiFivePlus.createInCallNotification(context, title, msg, iconID, intent);
+			notif = ApiElevenPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
 		}
 		return notif;
 	}
@@ -103,10 +74,8 @@ public class Compatibility {
 			return ApiTwentyOnePlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent,priority);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			return ApiSixteenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent,priority);
-		} else if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			return ApiElevenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
 		} else {
-			return ApiFivePlus.createNotification(context, title, message, icon, iconLevel, intent, isOngoingEvent);
+			return ApiElevenPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent);
 		}
 	}
 
@@ -119,47 +88,12 @@ public class Compatibility {
 		return null;
 	}
 
-	public static void copyTextToClipboard(Context context, String msg) {
-		if(Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			ApiElevenPlus.copyTextToClipboard(context, msg);
-		} else {
-		    ApiFivePlus.copyTextToClipboard(context, msg);
-		}
-	}
-
+	@SuppressWarnings("deprecation")
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
 		if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			ApiSixteenPlus.removeGlobalLayoutListener(viewTreeObserver, keyboardListener);
 		} else {
-			ApiFivePlus.removeGlobalLayoutListener(viewTreeObserver, keyboardListener);
-		}
-	}
-	
-	public static void hideNavigationBar(Activity activity) {
-		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
-			ApiFourteenPlus.hideNavigationBar(activity);
-		}
-	}
-	
-	public static void showNavigationBar(Activity activity) {
-		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
-			ApiFourteenPlus.showNavigationBar(activity);
-		}
-	}
-	
-	public static void setAudioManagerInCallMode(AudioManager manager) {
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			ApiElevenPlus.setAudioManagerInCallMode(manager);
-		} else {
-			ApiFivePlus.setAudioManagerInCallMode(manager);
-		}
-	}
-	
-	public static String getAudioManagerEventForBluetoothConnectionStateChangedEvent() {
-		if (Version.sdkAboveOrEqual(Version.API14_ICE_CREAM_SANDWICH_40)) {
-			return ApiFourteenPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
-		} else {
-			return ApiEightPlus.getAudioManagerEventForBluetoothConnectionStateChangedEvent();
+			viewTreeObserver.removeGlobalOnLayoutListener(keyboardListener);
 		}
 	}
 

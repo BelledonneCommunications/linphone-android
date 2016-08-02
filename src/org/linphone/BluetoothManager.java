@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import java.util.List;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
@@ -81,7 +80,7 @@ public class BluetoothManager extends BroadcastReceiver {
 		
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(BluetoothHeadset.VENDOR_SPECIFIC_HEADSET_EVENT_COMPANY_ID_CATEGORY + "." + BluetoothAssignedNumbers.PLANTRONICS);
-		filter.addAction(Compatibility.getAudioManagerEventForBluetoothConnectionStateChangedEvent());
+		filter.addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED);
 		filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
 		filter.addAction(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT);
 		mContext.registerReceiver(this,  filter);
@@ -278,7 +277,7 @@ public class BluetoothManager extends BroadcastReceiver {
         	return;
 
         String action = intent.getAction();
-        if (Compatibility.getAudioManagerEventForBluetoothConnectionStateChangedEvent().equals(action)) {
+        if (AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED.equals(action)) {
         	int state = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
     		if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
     			Log.d("Bluetooth sco state => connected");

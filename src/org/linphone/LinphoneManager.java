@@ -36,7 +36,6 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
@@ -1046,7 +1045,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		return null;
 	}
-
+	
+	public void setAudioManagerInCallMode() {
+		if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
+			Log.w("---AudioManager: already in MODE_IN_COMMUNICATION, skipping..."); 
+			return;
+		}
+		Log.d("---AudioManager: set mode to MODE_IN_COMMUNICATION");
+		mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+	}
+	
 	@SuppressLint("Wakelock")
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("New call state [",state,"]");
@@ -1082,7 +1090,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
 				requestAudioFocus();
-				Compatibility.setAudioManagerInCallMode(mAudioManager);
+				setAudioManagerInCallMode();
 			}
 
 			if (Hacks.needSoftvolume()) {
@@ -1092,7 +1100,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		if (state == State.OutgoingEarlyMedia) {
-			Compatibility.setAudioManagerInCallMode(mAudioManager);
+			setAudioManagerInCallMode();
 		}
 
 		if (state == State.CallReleased || state == State.Error) {
@@ -1172,7 +1180,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void startEcCalibration(LinphoneCoreListener l) throws LinphoneCoreException {
 		routeAudioToSpeaker();
-		Compatibility.setAudioManagerInCallMode((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE));
+		setAudioManagerInCallMode();
 		Log.i("Set audio mode on 'Voice Communication'");
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
@@ -1390,11 +1398,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (nearby) {
             params.screenBrightness = 0.1f;
             view.setVisibility(View.INVISIBLE);
-            Compatibility.hideNavigationBar(activity);
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 		} else  {
 			params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
             view.setVisibility(View.VISIBLE);
-            Compatibility.showNavigationBar(activity);
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 		}
         window.setAttributes(params);
 	}

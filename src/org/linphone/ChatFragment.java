@@ -44,6 +44,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -827,7 +829,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			txt = message.getText();
 		}
 		if (txt != null) {
-			Compatibility.copyTextToClipboard(getActivity(), txt);
+			ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE); 
+		    ClipData clip = android.content.ClipData.newPlainText("Message", txt);
+		    clipboard.setPrimaryClip(clip);
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT);
 		}
 	}
