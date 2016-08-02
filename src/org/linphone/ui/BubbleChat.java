@@ -31,6 +31,7 @@ import org.linphone.LinphoneContact;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
@@ -52,7 +53,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -312,7 +312,7 @@ public class BubbleChat implements LinphoneChatMessage.LinphoneChatMessageListen
 			text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
 		}
 
-		return Html.fromHtml(text);
+		return Compatibility.fromHtml(text);
 	}
 
 	public String getTextMessage() {
