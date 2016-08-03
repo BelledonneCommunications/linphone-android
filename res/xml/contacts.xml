@@ -3,7 +3,7 @@
 <ContactsSource
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Change package ! -->
+    <!-- Change package, leave vnd.android.cursor.item/ before and .profile at the end. -->
     <ContactsDataKind
         android:mimeType="vnd.android.cursor.item/org.linphone.profile"
         android:icon="@drawable/linphone_logo"
