@@ -116,7 +116,7 @@ public class Compatibility {
 	@SuppressWarnings("deprecation")
 	public static Spanned fromHtml(String text) {
 		if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
-		    return Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
+		    return Html.fromHtml(text, 0); //Html.FROM_HTML_MODE_LEGACY
 		} else {
 		    return Html.fromHtml(text);
 		}
