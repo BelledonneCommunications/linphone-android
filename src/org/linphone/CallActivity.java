@@ -119,6 +119,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private boolean isConferenceRunning = false;
 	private LinphoneCoreListenerBase mListener;
 	private DrawerLayout sideMenu;
+	private boolean mProximitySensingEnabled;
 
 	public static CallActivity instance() {
 		return instance;
@@ -800,8 +801,22 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 	}
 
+	private void enableProximitySensing(boolean enable){
+		if (enable){
+			if (!mProximitySensingEnabled){
+				mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+				mProximitySensingEnabled = true;
+			}
+		}else{
+			if (mProximitySensingEnabled){
+				mSensorManager.unregisterListener(this);
+				mProximitySensingEnabled = false;
+			}
+		}
+	}
+
 	private void showAudioView() {
-		mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+		enableProximitySensing(true);
 		replaceFragmentVideoByAudio();
 		displayAudioCall();
 		showStatusBar();
@@ -816,7 +831,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		}
 		refreshInCallActions();
 
-		mSensorManager.unregisterListener(this);
+		enableProximitySensing(false);
 		replaceFragmentAudioByVideo();
 		hideStatusBar();
 	}
@@ -1173,7 +1188,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		handleViewIntent();
 
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+			enableProximitySensing(true);
 			removeCallbacks();
 		}
 	}
@@ -1223,10 +1238,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
-
-		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			mSensorManager.unregisterListener(this);
-		}
+		enableProximitySensing(false);
 	}
 
 	@Override
@@ -1239,7 +1251,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		mControls = null;
 		mControlsHandler = null;
 
-		mSensorManager.unregisterListener(this);
+		enableProximitySensing(false);
 
 		unbindDrawables(findViewById(R.id.topLayout));
 		instance = null;
@@ -1510,7 +1522,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	private void displayConference(boolean isInConf){
 		if(isInConf) {
 			mControlsLayout.setVisibility(View.VISIBLE);
-			mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+			enableProximitySensing(true);
 			mActiveCallHeader.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
 			conferenceList.removeAllViews();
