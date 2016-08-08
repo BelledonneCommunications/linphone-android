@@ -106,6 +106,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private static final int PERMISSIONS_REQUEST_CONTACTS = 208;
 	private static final int PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER = 209;
 	private static final int PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE = 210;
+	private static final int PERMISSIONS_RECORD_AUDIO_ECHO_TESTER = 211;
 
 	private static LinphoneActivity instance;
 
@@ -1172,6 +1173,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void checkAndRequestRecordAudioPermissionForEchoCanceller() {
 		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER);
 	}
+
+	public void checkAndRequestRecordAudioPermissionsForEchoTester() {
+		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_RECORD_AUDIO_ECHO_TESTER);
+	}
 	
 	public void checkAndRequestReadExternalStoragePermissionForDeviceRingtone() {
 		checkAndRequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE);
@@ -1250,6 +1255,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				break;
 			case PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE:
 				((SettingsFragment) fragment).enableDeviceRingtone(grantResults[0] == PackageManager.PERMISSION_GRANTED);
+				break;
+			case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+					((SettingsFragment) fragment).startEchoTester();
 				break;
 		}
 	}

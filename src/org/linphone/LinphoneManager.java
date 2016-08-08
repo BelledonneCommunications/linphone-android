@@ -114,6 +114,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 /**
@@ -146,6 +147,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private String basePath;
 	private static boolean sExited;
 	private boolean mAudioFocused;
+	private boolean echoTesterIsRunning;
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
 	private Handler mHandler = new Handler();
@@ -167,6 +169,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	protected LinphoneManager(final Context c) {
 		sExited = false;
+		echoTesterIsRunning = false;
 		mServiceContext = c;
 		basePath = c.getFilesDir().getAbsolutePath();
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
@@ -223,8 +226,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mCodecDownloader = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		mCodecListener = new OpenH264DownloadHelperListener() {
 			ProgressDialog progress;
-			int box = 1;
 			int ctxt = 0;
+			int box = 1;
 
 			@Override
 			public void OnProgress(final int current, final int max) {
@@ -246,8 +249,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 							progress.dismiss();
 							progress = null;
 							LinphoneManager.getLc().reloadMsPlugins(null);
-							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null)
-								((CheckBoxPreference)ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
+							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null) {
+								((CheckBoxPreference) ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
+								((CheckBoxPreference) ohcodec.getUserData(box)).setTitle("OpenH264");
+							}
 						}
 					}
 				});
@@ -1152,6 +1157,42 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
 		mLc.startEchoCalibration(l);
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
+	}
+
+	public int startEchoTester() throws LinphoneCoreException {
+		routeAudioToSpeaker();
+		Compatibility.setAudioManagerInCallMode((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE));
+		Log.i("Set audio mode on 'Voice Communication'");
+		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
+		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
+		int sampleRate = 0;
+		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
+		String sampleRateProperty = mAudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+		sampleRate = Integer.parseInt(sampleRateProperty);
+		int status = mLc.startEchoTester(sampleRate);
+		if (status > 0)
+			echoTesterIsRunning = true;
+		else {
+			echoTesterIsRunning = false;
+			routeAudioToReceiver();
+			mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
+			((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+			Log.i("Set audio mode on 'Normal'");
+		}
+		return status;
+	}
+
+	public int stopEchoTester() throws LinphoneCoreException {
+		echoTesterIsRunning = false;
+		int status = mLc.stopEchoTester();
+		routeAudioToReceiver();
+		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+		Log.i("Set audio mode on 'Normal'");
+		return status;
+	}
+
+	public boolean getEchoTesterStatus() {
+		return echoTesterIsRunning;
 	}
 
 	private boolean isRinging;

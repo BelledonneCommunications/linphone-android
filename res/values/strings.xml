@@ -245,6 +245,7 @@
 	<string name="pref_echo_cancellation">Echo cancellation</string>
 	<string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 	<string name="pref_echo_canceller_calibration">Echo canceler calibration</string>
+	<string name="pref_echo_tester">Test echo</string>
 	<string name="ec_calibrating">Calibrating…</string>
 	<string name="ec_calibrated">Calibrated in %s ms</string>
 	<string name="no_echo">No echo</string>
