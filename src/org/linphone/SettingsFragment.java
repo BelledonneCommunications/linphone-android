@@ -660,6 +660,8 @@ public class SettingsFragment extends PreferencesListFragment {
 	
 	public void startEchoCancellerCalibration() {
 		try {
+			if (LinphoneManager.getInstance().getEchoTesterStatus())
+				stopEchoTester();
 			LinphoneManager.getInstance().startEcCalibration(mListener);
 		} catch (LinphoneCoreException e) {
 			Log.e(e);
