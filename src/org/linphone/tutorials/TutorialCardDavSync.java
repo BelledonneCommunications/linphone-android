@@ -162,8 +162,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 	}
 
 	@Override
-	public void onLinphoneFriendSyncStatusChanged(LinphoneFriendList list,
-			org.linphone.core.LinphoneFriendList.State status, String message) {
+	public void onLinphoneFriendSyncStatusChanged(LinphoneFriendList list, LinphoneFriendList.State status, String message) {
 		// TODO Auto-generated method stub
 		String msg = "Sync status changed: " + status.toString() + " (" + message + ")";
 		myLog(msg);

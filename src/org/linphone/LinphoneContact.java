@@ -419,6 +419,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		friend.edit();
 		friend.setFamilyName(lastName);
 		friend.setGivenName(firstName);
+		friend.setName(fullName);
 		
 		for (LinphoneAddress address : friend.getAddresses()) {
 			friend.removeAddress(address);
@@ -443,22 +444,20 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				friend.addPhoneNumber(noa.getValue());
 			}
 		}
-		friend.setName(fullName);
 		friend.done();
 		
-		if (friend.getAddress() != null) {
-			if (lc.findFriendByAddress(friend.getAddress().asString()) == null) {
-				try {
-					lc.addFriend(friend);
-					if (!ContactsManager.getInstance().hasContactsAccess()) {
-						// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
-						// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
-						ContactsManager.getInstance().fetchContactsAsync();
-					}
-				} catch (LinphoneCoreException e) {
-					Log.e(e);
-				}
+		if (!friend.isAlreadyPresentInFriendList()) {
+			try {
+				LinphoneManager.getLcIfManagerNotDestroyedOrNull().addFriend(friend);
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
 			}
+		}
+		
+		if (!ContactsManager.getInstance().hasContactsAccess()) {
+			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
+			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
+			ContactsManager.getInstance().fetchContactsAsync();
 		}
 	}
 	

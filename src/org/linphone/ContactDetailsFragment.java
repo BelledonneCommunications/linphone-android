@@ -78,8 +78,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		deleteContact.setOnClickListener(this);
 		
 		organization = (TextView) view.findViewById(R.id.contactOrganization);
+		boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
 		String org = contact.getOrganization();
-		if (org != null && !org.isEmpty()) {
+		if (org != null && !org.isEmpty() && isOrgVisible) {
 			organization.setText(org);
 		} else {
 			organization.setVisibility(View.GONE);

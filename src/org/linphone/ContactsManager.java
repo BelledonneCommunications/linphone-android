@@ -21,10 +21,11 @@ package org.linphone;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
@@ -38,11 +39,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Data;
 
 interface ContactsUpdatedListener {
@@ -228,14 +231,13 @@ public class ContactsManager extends ContentObserver {
 		contactsFetchTask.execute();
 	}
 	
-	
 	private class ContactsFetchTask extends AsyncTask<Void, List<LinphoneContact>, List<LinphoneContact>> {
 		@SuppressWarnings("unchecked")
 		protected List<LinphoneContact> doInBackground(Void... params) {
 			List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 			
 			if (hasContactsAccess()) {
-				Cursor c = Compatibility.getContactsCursor(contentResolver, null);
+				Cursor c = getContactsCursor(contentResolver);
 				if (c != null) {
 					while (c.moveToNext()) {
 						String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
@@ -247,34 +249,37 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 
-			for (LinphoneFriend friend : LinphoneManager.getLc().getFriendList()) {
-				String refkey = friend.getRefKey();
-				if (refkey != null) {
-					boolean found = false;
-					for (LinphoneContact contact : contacts) {
-						if (refkey.equals(contact.getAndroidId())) {
-							// Native matching contact found, link the friend to it
-							contact.setFriend(friend);
-							found = true;
-							break;
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				for (LinphoneFriend friend : lc.getFriendList()) {
+					String refkey = friend.getRefKey();
+					if (refkey != null) {
+						boolean found = false;
+						for (LinphoneContact contact : contacts) {
+							if (refkey.equals(contact.getAndroidId())) {
+								// Native matching contact found, link the friend to it
+								contact.setFriend(friend);
+								found = true;
+								break;
+							}
 						}
-					}
-					if (!found) {
-						if (hasContactAccess) {
-							// If refkey != null and hasContactAccess but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
-							LinphoneManager.getLc().removeFriend(friend);
-						} else {
-							// Refkey not null but no contact access => can't link it to native contact so display it on is own
-							LinphoneContact contact = new LinphoneContact();
-							contact.setFriend(friend);
-							contacts.add(contact);
+						if (!found) {
+							if (hasContactAccess) {
+								// If refkey != null and hasContactAccess but there isn't a native contact with this value, then this contact has been deleted. Let's do the same with the LinphoneFriend
+								lc.removeFriend(friend);
+							} else {
+								// Refkey not null but no contact access => can't link it to native contact so display it on is own
+								LinphoneContact contact = new LinphoneContact();
+								contact.setFriend(friend);
+								contacts.add(contact);
+							}
 						}
+					} else {
+						// No refkey so it's a standalone contact
+						LinphoneContact contact = new LinphoneContact();
+						contact.setFriend(friend);
+						contacts.add(contact);
 					}
-				} else {
-					// No refkey so it's a standalone contact
-					LinphoneContact contact = new LinphoneContact();
-					contact.setFriend(friend);
-					contacts.add(contact);
 				}
 			}
 
@@ -363,5 +368,39 @@ public class ContactsManager extends ContentObserver {
 	
 	public String getString(int resourceID) {
 		return context.getString(resourceID);
+	}
+	
+	private Cursor getContactsCursor(ContentResolver cr) {
+		String req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
+				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
+				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
+				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
+		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
+		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + req + ")";
+
+		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME + ") COLLATE UNICODE ASC");
+		if (cursor == null) {
+			return cursor;
+		}
+		
+		MatrixCursor result = new MatrixCursor(cursor.getColumnNames());
+		Set<String> groupBy = new HashSet<String>();
+		while (cursor.moveToNext()) {
+		    String name = cursor.getString(cursor.getColumnIndex(Data.DISPLAY_NAME));
+		    if (!groupBy.contains(name)) {
+		    	groupBy.add(name);
+		    	Object[] newRow = new Object[cursor.getColumnCount()];
+		    	
+		    	int contactID = cursor.getColumnIndex(Data.CONTACT_ID);
+		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME);
+		    	
+		    	newRow[contactID] = cursor.getString(contactID);
+		    	newRow[displayName] = cursor.getString(displayName);
+		    	
+		        result.addRow(newRow);
+	    	}
+	    }
+		cursor.close();
+		return result;
 	}
 }

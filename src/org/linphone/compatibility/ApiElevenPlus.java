@@ -3,19 +3,15 @@ package org.linphone.compatibility;
 import java.util.ArrayList;
 
 import org.linphone.R;
-import org.linphone.mediastream.Log;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
@@ -118,21 +114,6 @@ public class ApiElevenPlus {
 		}
 		
 		return notif;
-	}
-
-	public static void copyTextToClipboard(Context context, String msg) {
-		ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); 
-	    ClipData clip = android.content.ClipData.newPlainText("Message", msg);
-	    clipboard.setPrimaryClip(clip);
-	}
-
-	public static void setAudioManagerInCallMode(AudioManager manager) {
-		if (manager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
-			Log.w("---AudioManager: already in MODE_IN_COMMUNICATION, skipping..."); 
-			return;
-		}
-		Log.d("---AudioManager: set mode to MODE_IN_COMMUNICATION");
-		manager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 	}
 	
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {

@@ -48,7 +48,7 @@
 		</condition>
 		<exec executable="bash" unless:set="has.crashed">
 			<arg value="-c"/>
-			<arg value="adb shell run-as org.linphone.tester cat /data/data/org.linphone.tester/files/junit-report.xml > liblinphone-junit-report.xml"/>
+			<arg value="adb shell cat /data/data/org.linphone.tester/files/junit-report.xml > liblinphone-junit-report.xml"/>
 		</exec>
 
 		<zip destfile="${archive.name}.zip">

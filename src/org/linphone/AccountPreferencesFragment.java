@@ -53,8 +53,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		mPrefs = LinphonePreferences.instance();
 	}
 	
-	public void onCreate(Bundle savedInstanceState) 
-	{
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		PreferenceScreen screen = getPreferenceScreen();
@@ -69,7 +68,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 	
-	public static boolean isEditTextEmpty(String s){
+	public static boolean isEditTextEmpty(String s) {
 	      return s.equals("");  // really empty.          
 	}
 	

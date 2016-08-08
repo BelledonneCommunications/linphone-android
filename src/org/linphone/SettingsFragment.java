@@ -35,8 +35,8 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.purchase.InAppPurchaseActivity;
+import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
@@ -44,11 +44,14 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -59,6 +62,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
 
 /**
  * @author Sylvain Berfini
@@ -713,7 +717,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
-						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
+						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") 
 								&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
 							mCodecDownloader.setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
 							mCodecDownloader.setUserData(0,LinphoneManager.getInstance().getContext());
@@ -721,18 +725,17 @@ public class SettingsFragment extends PreferencesListFragment {
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
 							builder.setCancelable(false);
-							AlertDialog.Builder show = builder.setMessage("Do you agree to download "
-									+ mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+							builder.setMessage("Do you agree to download " + mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									if (which == DialogInterface.BUTTON_POSITIVE)
 										mCodecDownloader.downloadCodec();
 								}
 							});
-							builder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+							builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									if (which == DialogInterface.BUTTON_NEGATIVE){
+									if (which == DialogInterface.BUTTON_NEGATIVE) {
 										// Disable H264
 									}
 								}
@@ -1025,7 +1028,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 		CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
-		CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
 		ice.setChecked(mPrefs.isIceEnabled());
 		turn.setChecked(mPrefs.isTurnEnabled());
 
@@ -1067,8 +1069,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_ice_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
-				boolean value = (Boolean) newValue;
 				mPrefs.setIceEnabled((Boolean) newValue);
 				return true;
 			}
@@ -1077,8 +1077,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_turn_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				CheckBoxPreference upnp = (CheckBoxPreference) findPreference(getString(R.string.pref_upnp_enable_key));
-				boolean value = (Boolean) newValue;
 				mPrefs.setTurnEnabled((Boolean) newValue);
 				return true;
 			}
@@ -1087,7 +1085,6 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_upnp_enable_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 				boolean value = (Boolean) newValue;
 				mPrefs.setUpnpEnabled(value);
 				return true;
@@ -1194,6 +1191,24 @@ public class SettingsFragment extends PreferencesListFragment {
 				String value = (String) newValue;
 				mPrefs.setRemoteProvisioningUrl(value);
 				preference.setSummary(value);
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_android_app_settings_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				synchronized (SettingsFragment.this) {
+					Context context = SettingsFragment.this.getActivity();
+					Intent i = new Intent();
+				    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+				    i.addCategory(Intent.CATEGORY_DEFAULT);
+				    i.setData(Uri.parse("package:" + context.getPackageName()));
+				    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				    context.startActivity(i);
+				}
 				return true;
 			}
 		});

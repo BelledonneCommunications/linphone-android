@@ -44,6 +44,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -387,7 +389,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			if(isEditMode) {
 				deleteChatBubble.setVisibility(View.VISIBLE);
-				if(message.isOutgoing()){
+				if (message.isOutgoing()) {
 					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 					layoutParams.setMargins(100, 10, 10, 10);
@@ -419,7 +421,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					}
 				});
 
-				if(messagesList.isItemChecked(position)) {
+				if (messagesList.isItemChecked(position)) {
 					deleteChatBubble.setChecked(true);
 				} else {
 					deleteChatBubble.setChecked(false);
@@ -427,7 +429,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 				rlayout.addView(v);
 			} else {
-				if(message.isOutgoing()){
+				if (message.isOutgoing()) {
 					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 					layoutParams.setMargins(100, 10, 10, 10);
@@ -448,7 +450,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 
 		LinphoneAddress lAddress = null;
-		if(sipUri == null){
+		if (sipUri == null) {
 			initNewChatConversation();
 		} else {
 			try {
@@ -477,7 +479,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void displayMessageList() {
-		if(chatRoom != null) {
+		if (chatRoom != null) {
 			if (adapter != null) {
 				adapter.refreshHistory();
 			} else {
@@ -488,7 +490,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void displayChatHeader(LinphoneAddress address) {
-		if(contact != null) {
+		if (contact != null) {
 			contactName.setText(contact.getFullName());
 		} else if(address != null){
 			contactName.setText(LinphoneUtils.getAddressDisplayName(address));
@@ -618,7 +620,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
 
-		if(!newChatConversation) {
+		if (!newChatConversation) {
 			initChatRoom(sipUri);
 			searchContactField.setVisibility(View.GONE);
 			resultContactsSearch.setVisibility(View.GONE);
@@ -626,10 +628,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	private void selectAllList(boolean isSelectAll){
+	private void selectAllList(boolean isSelectAll) {
 		int size = messagesList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			messagesList.setItemChecked(i,isSelectAll);
+		for (int i = 0; i < size; i++) {
+			messagesList.setItemChecked(i, isSelectAll);
 		}
 	}
 
@@ -642,8 +644,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void removeChats(){
 		int size = messagesList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			if(messagesList.isItemChecked(i)){
+		for (int i = 0; i < size; i++) {
+			if (messagesList.isItemChecked(i)) {
 				LinphoneChatMessage message = (LinphoneChatMessage) messagesList.getAdapter().getItem(i);
 				chatRoom.deleteMessage(message);
 			}
@@ -827,7 +829,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			txt = message.getText();
 		}
 		if (txt != null) {
-			Compatibility.copyTextToClipboard(getActivity(), txt);
+			ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE); 
+		    ClipData clip = android.content.ClipData.newPlainText("Message", txt);
+		    clipboard.setPrimaryClip(clip);
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT);
 		}
 	}

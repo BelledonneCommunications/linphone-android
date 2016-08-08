@@ -69,11 +69,11 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 		sendLogButton = view.findViewById(R.id.send_log);
 		sendLogButton.setOnClickListener(this);
-		sendLogButton.setVisibility(org.linphone.LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+		sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
 		resetLogButton = view.findViewById(R.id.reset_log);
 		resetLogButton.setOnClickListener(this);
-		resetLogButton.setVisibility(org.linphone.LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 		
 		mListener = new LinphoneCoreListenerBase() {
 			@Override
@@ -145,7 +145,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			lc.addListener(mListener);
 		}
 		
-		if (org.linphone.LinphoneActivity.isInstanciated()) {
+		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.ABOUT);
 		}
 		
@@ -154,8 +154,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (org.linphone.LinphoneActivity.isInstanciated()) {
-			LinphoneCore lc = org.linphone.LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (v == sendLogButton) {
 				if (lc != null) {
 					lc.uploadLogCollection();
@@ -174,6 +174,4 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	public void onDestroy() {
 		super.onDestroy();
 	}
-
-	
 }

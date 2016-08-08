@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @TargetApi(16)
 public class ApiSixteenPlus {
 
+	@SuppressWarnings("deprecation")
 	public static Notification createMessageNotification(Context context,
 			int msgCount, String msgSender, String msg, Bitmap contactIcon,
 			PendingIntent intent) {
