@@ -387,7 +387,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
 
-			if(isEditMode) {
+			if (isEditMode) {
 				deleteChatBubble.setVisibility(View.VISIBLE);
 				if (message.isOutgoing()) {
 					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -1043,6 +1043,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	class SearchContactsListAdapter extends BaseAdapter {
+		private class ViewHolder {
+			public TextView name;
+			public TextView address;
+			
+			public ViewHolder(View view) {
+				name = (TextView) view.findViewById(R.id.contact_name);
+				address = (TextView) view.findViewById(R.id.contact_address);
+			}
+		}
+		
 		private List<ContactAddress> contacts;
 		private LayoutInflater mInflater;
 
@@ -1093,24 +1103,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
 			ContactAddress contact;
+			ViewHolder holder = null;
+			
 			do {
 				contact = getItem(position);
 			} while (contact == null);
 
 			if (convertView != null) {
 				view = convertView;
+				holder = (ViewHolder) view.getTag();
 			} else {
 				view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
+				holder = new ViewHolder(view);
+				view.setTag(holder);
 			}
 
 			final String a = contact.address;
 			LinphoneContact c = contact.contact;
 
-			TextView name = (TextView) view.findViewById(R.id.contact_name);
-			name.setText(c.getFullName());
-
-			TextView address = (TextView) view.findViewById(R.id.contact_address);
-			address.setText(a);
+			holder.name.setText(c.getFullName());
+			holder.address.setText(a);
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override
