@@ -1,22 +1,6 @@
 package org.linphone.compatibility;
 
-import java.util.ArrayList;
-
-import org.linphone.R;
-
 import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.SipAddress;
-import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.Intents.Insert;
 import android.widget.TextView;
 
 /*
