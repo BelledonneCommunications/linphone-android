@@ -1167,7 +1167,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 	
 	private boolean willContactsPermissionBeAsked() {
-		return LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS);
+		return LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS, false) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS);
 	}
 	
 	public void checkAndRequestWriteContactsPermission() {
