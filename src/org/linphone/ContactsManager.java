@@ -247,6 +247,8 @@ public class ContactsManager extends ContentObserver {
 					}
 					c.close();
 				}
+			} else {
+				Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
 			}
 
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
