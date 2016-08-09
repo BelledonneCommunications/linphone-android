@@ -18,6 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.linphone;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,8 +40,10 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.provider.ContactsContract.CommonDataKinds;
 
 public class LinphoneContact implements Serializable, Comparable<LinphoneContact> {
@@ -55,6 +59,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private transient ArrayList<ContentProviderOperation> changesToCommit;
 	private transient ArrayList<ContentProviderOperation> changesToCommit2;
 	private boolean hasSipAddress;
+	private Bitmap photoBitmap, thumbnailBitmap;
 	
 	public LinphoneContact() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
@@ -64,6 +69,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		changesToCommit = new ArrayList<ContentProviderOperation>();
 		changesToCommit2 = new ArrayList<ContentProviderOperation>();
 		hasSipAddress = false;
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		if (photoBitmap != null) {
+			photoBitmap.recycle();
+			photoBitmap = null;
+		}
+		if (thumbnailBitmap != null) {
+			thumbnailBitmap.recycle();
+			thumbnailBitmap = null;
+		}
+		super.finalize();
 	}
 	
 	@Override
@@ -167,19 +185,60 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 	
 	public void setPhotoUri(Uri uri) {
+		if (uri.equals(photoUri)) return;
 		photoUri = uri;
+		
+		if (photoBitmap != null) {
+			photoBitmap.recycle();
+		}
+		try {
+			photoBitmap = MediaStore.Images.Media.getBitmap(ContactsManager.getInstance().getContentResolver(), photoUri);
+		} catch (FileNotFoundException e) {
+			// Let's not say anything if the picture doesn't exist, it will pollute the logs
+		} catch (IOException e) {
+			Log.e(e);
+		}
 	}
 	
 	public Uri getPhotoUri() {
 		return photoUri;
 	}
 	
+	public Bitmap getPhotoBitmap() {
+		return photoBitmap;
+	}
+	
 	public void setThumbnailUri(Uri uri) {
+		if (uri.equals(thumbnailUri)) return;
 		thumbnailUri = uri;
+		
+		if (thumbnailBitmap != null) {
+			thumbnailBitmap.recycle();
+		}
+		try {
+			thumbnailBitmap = MediaStore.Images.Media.getBitmap(ContactsManager.getInstance().getContentResolver(), thumbnailUri);
+		} catch (FileNotFoundException e) {
+			// Let's not say anything if the picture doesn't exist, it will pollute the logs
+		} catch (IOException e) {
+			Log.e(e);
+		}
 	}
 
 	public Uri getThumbnailUri() {
 		return thumbnailUri;
+	}
+	
+	public Bitmap getThumbnailBitmap() {
+		return thumbnailBitmap;
+	}
+	
+	public Bitmap getPhoto() {
+		if (photoBitmap != null) {
+			return photoBitmap;
+		} else if (thumbnailBitmap != null) {
+			return thumbnailBitmap;
+		}
+		return null;
 	}
 	
 	public void setPhoto(byte[] photo) {
@@ -419,6 +478,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		friend.edit();
 		friend.setFamilyName(lastName);
 		friend.setGivenName(firstName);
+		friend.setName(fullName);
 		
 		for (LinphoneAddress address : friend.getAddresses()) {
 			friend.removeAddress(address);
@@ -443,24 +503,20 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				friend.addPhoneNumber(noa.getValue());
 			}
 		}
-		if (friend.getAddress() != null) {
-			friend.setName(fullName);
-		}
 		friend.done();
 		
-		if (friend.getAddress() != null) {
-			if (lc.findFriendByAddress(friend.getAddress().asString()) == null) {
-				try {
-					lc.addFriend(friend);
-					if (!ContactsManager.getInstance().hasContactsAccess()) {
-						// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
-						// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
-						ContactsManager.getInstance().fetchContactsAsync();
-					}
-				} catch (LinphoneCoreException e) {
-					Log.e(e);
-				}
+		if (!friend.isAlreadyPresentInFriendList()) {
+			try {
+				LinphoneManager.getLcIfManagerNotDestroyedOrNull().addFriend(friend);
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
 			}
+		}
+		
+		if (!ContactsManager.getInstance().hasContactsAccess()) {
+			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
+			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
+			ContactsManager.getInstance().fetchContactsAsync();
 		}
 	}
 	

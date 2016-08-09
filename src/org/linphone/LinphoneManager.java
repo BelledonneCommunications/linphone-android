@@ -30,13 +30,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
@@ -77,7 +74,6 @@ import org.linphone.tools.OpenH264DownloadHelper;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -87,10 +83,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -105,10 +97,6 @@ import android.preference.CheckBoxPreference;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
@@ -141,6 +129,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private String basePath;
 	private static boolean sExited;
 	private boolean mAudioFocused;
+	private boolean echoTesterIsRunning;
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
 	private BroadcastReceiver mKeepAliveReceiver;
@@ -164,6 +153,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	protected LinphoneManager(final Context c) {
 		sExited = false;
+		echoTesterIsRunning = false;
 		mServiceContext = c;
 		basePath = c.getFilesDir().getAbsolutePath();
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
@@ -217,8 +207,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mCodecDownloader = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		mCodecListener = new OpenH264DownloadHelperListener() {
 			ProgressDialog progress;
-			int box = 1;
 			int ctxt = 0;
+			int box = 1;
 
 			@Override
 			public void OnProgress(final int current, final int max) {
@@ -240,8 +230,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 							progress.dismiss();
 							progress = null;
 							LinphoneManager.getLc().reloadMsPlugins(null);
-							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null)
-								((CheckBoxPreference)ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
+							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null) {
+								((CheckBoxPreference) ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
+								((CheckBoxPreference) ohcodec.getUserData(box)).setTitle("OpenH264");
+							}
 						}
 					}
 				});
@@ -688,6 +680,32 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e, "Cannot start linphone");
 		}
 	}
+	
+	private void initPushNotificationsService() {
+		try {
+            Class<?> GCMRegistrar = Class.forName("com.google.android.gcm.GCMRegistrar");
+            GCMRegistrar.getMethod("checkDevice", Context.class).invoke(null, mServiceContext);
+            try {
+                GCMRegistrar.getMethod("checkManifest", Context.class).invoke(null, mServiceContext);
+            } catch (IllegalStateException e) {
+                Log.e("[Push Notification] No receiver found", e);
+            }
+            final String regId = (String)GCMRegistrar.getMethod("getRegistrationId", Context.class).invoke(null, mServiceContext);
+            String newPushSenderID = mServiceContext.getString(R.string.push_sender_id);
+            String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
+            if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
+                GCMRegistrar.getMethod("register", Context.class, String[].class).invoke(null, mServiceContext, new String[]{newPushSenderID});
+                Log.i("[Push Notification] Storing current sender id = " + newPushSenderID);
+            } else {
+                Log.i("[Push Notification] Already registered with id = " + regId);
+                LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
+            }
+        } catch (java.lang.UnsupportedOperationException e) {
+            Log.i("[Push Notification] Not activated");
+        } catch (Exception e1) {
+            Log.i("[Push Notification] Assuming GCM jar is not provided.");
+        }
+	}
 
 	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
 		mLc = lc;
@@ -742,7 +760,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.migrateCallLogs();
 
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
-			Compatibility.initPushNotificationService(mServiceContext);
+			initPushNotificationsService();
 		}
 
 		/* 
@@ -1020,7 +1038,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		return null;
 	}
-
+	
+	public void setAudioManagerInCallMode() {
+		if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
+			Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping..."); 
+			return;
+		}
+		Log.d("[AudioManager] Mode: MODE_IN_COMMUNICATION");
+		mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+	}
+	
 	@SuppressLint("Wakelock")
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("New call state [",state,"]");
@@ -1056,7 +1083,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
 				requestAudioFocus();
-				Compatibility.setAudioManagerInCallMode(mAudioManager);
+				setAudioManagerInCallMode();
 			}
 
 			if (Hacks.needSoftvolume()) {
@@ -1066,7 +1093,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		if (state == State.OutgoingEarlyMedia) {
-			Compatibility.setAudioManagerInCallMode(mAudioManager);
+			setAudioManagerInCallMode();
 		}
 
 		if (state == State.CallReleased || state == State.Error) {
@@ -1146,13 +1173,49 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void startEcCalibration(LinphoneCoreListener l) throws LinphoneCoreException {
 		routeAudioToSpeaker();
-		Compatibility.setAudioManagerInCallMode((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE));
+		setAudioManagerInCallMode();
 		Log.i("Set audio mode on 'Voice Communication'");
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
 		mLc.startEchoCalibration(l);
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
+	}
+
+	public int startEchoTester() throws LinphoneCoreException {
+		routeAudioToSpeaker();
+		setAudioManagerInCallMode();
+		Log.i("Set audio mode on 'Voice Communication'");
+		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
+		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
+		int sampleRate = 0;
+		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
+		String sampleRateProperty = mAudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+		sampleRate = Integer.parseInt(sampleRateProperty);
+		int status = mLc.startEchoTester(sampleRate);
+		if (status > 0)
+			echoTesterIsRunning = true;
+		else {
+			echoTesterIsRunning = false;
+			routeAudioToReceiver();
+			mAudioManager.setStreamVolume(STREAM_VOICE_CALL, oldVolume, 0);
+			((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+			Log.i("Set audio mode on 'Normal'");
+		}
+		return status;
+	}
+
+	public int stopEchoTester() throws LinphoneCoreException {
+		echoTesterIsRunning = false;
+		int status = mLc.stopEchoTester();
+		routeAudioToReceiver();
+		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+		Log.i("Set audio mode on 'Normal'");
+		return status;
+	}
+
+	public boolean getEchoTesterStatus() {
+		return echoTesterIsRunning;
 	}
 
 	private boolean isRinging;
@@ -1327,88 +1390,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			// starting from ICS, volume must be adjusted by the application, at least for STREAM_VOICE_CALL volume stream
 			mAudioManager.adjustStreamVolume(LINPHONE_VOLUME_STREAM, i < 0 ? AudioManager.ADJUST_LOWER : AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
 	}
-
-	public static Boolean isProximitySensorNearby(final SensorEvent event) {
-		float threshold = 4.001f; // <= 4 cm is near
-
-		final float distanceInCm = event.values[0];
-		final float maxDistance = event.sensor.getMaximumRange();
-		Log.d("Proximity sensor report [",distanceInCm,"] , for max range [",maxDistance,"]");
-
-		if (maxDistance <= threshold) {
-			// Case binary 0/1 and short sensors
-			threshold = maxDistance;
-		}
-
-		return distanceInCm < threshold;
-	}
-
-	private static boolean sLastProximitySensorValueNearby;
-	private static Set<Activity> sProximityDependentActivities = new HashSet<Activity>();
-	private static SensorEventListener sProximitySensorListener = new SensorEventListener() {
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-			if (event.timestamp == 0) return; //just ignoring for nexus 1
-			sLastProximitySensorValueNearby = isProximitySensorNearby(event);
-			proximityNearbyChanged();
-		}
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-	};
-
-
-	private static void simulateProximitySensorNearby(Activity activity, boolean nearby) {
-		final Window window = activity.getWindow();
-		WindowManager.LayoutParams params = window.getAttributes();
-		View view = ((ViewGroup) window.getDecorView().findViewById(android.R.id.content)).getChildAt(0);
-		if (nearby) {
-            params.screenBrightness = 0.1f;
-            view.setVisibility(View.INVISIBLE);
-            Compatibility.hideNavigationBar(activity);
-		} else  {
-			params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
-            view.setVisibility(View.VISIBLE);
-            Compatibility.showNavigationBar(activity);
-		}
-        window.setAttributes(params);
-	}
-
-	private static void proximityNearbyChanged() {
-		boolean nearby = sLastProximitySensorValueNearby;
-		for (Activity activity : sProximityDependentActivities) {
-			simulateProximitySensorNearby(activity, nearby);
-		}
-	}
-
-	public static synchronized void startProximitySensorForActivity(Activity activity) {
-		if (sProximityDependentActivities.contains(activity)) {
-			Log.i("proximity sensor already active for " + activity.getLocalClassName());
-			return;
-		}
-		if (sProximityDependentActivities.isEmpty()) {
-			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
-			Sensor s = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-			if (s != null) {
-				sm.registerListener(sProximitySensorListener,s,SensorManager.SENSOR_DELAY_UI);
-				Log.i("Proximity sensor detected, registering");
-			}
-		} else if (sLastProximitySensorValueNearby){
-			simulateProximitySensorNearby(activity, true);
-		}
-
-		sProximityDependentActivities.add(activity);
-	}
-
-	public static synchronized void stopProximitySensorForActivity(Activity activity) {
-		sProximityDependentActivities.remove(activity);
-		simulateProximitySensorNearby(activity, false);
-		if (sProximityDependentActivities.isEmpty()) {
-			SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
-			sm.unregisterListener(sProximitySensorListener);
-			sLastProximitySensorValueNearby = false;
-		}
-	}
-
 
 	public static synchronized LinphoneCore getLcIfManagerNotDestroyedOrNull() {
 		if (sExited || instance == null) {

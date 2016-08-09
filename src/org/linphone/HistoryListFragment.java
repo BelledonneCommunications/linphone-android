@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneCallLog.CallStatus;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -349,6 +350,22 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	}
 
 	class CallHistoryAdapter extends  BaseAdapter {
+		private class ViewHolder {
+			public TextView contact;
+			public ImageView detail;
+			public CheckBox select;
+			public ImageView callDirection;
+			public ImageView contactPicture;
+			
+			public ViewHolder(View view) {
+				contact = (TextView) view.findViewById(R.id.sip_uri);
+				detail = (ImageView) view.findViewById(R.id.detail);
+				select = (CheckBox) view.findViewById(R.id.delete);
+				callDirection = (ImageView) view.findViewById(R.id.icon);
+				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+			}
+		}
+		
 		CallHistoryAdapter(Context aContext) {
 		
 		}
@@ -401,23 +418,20 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
-			ViewHolder holder;
+			ViewHolder holder = null;
+			
 			if (convertView != null) {
 				view = convertView;
 				holder = (ViewHolder) view.getTag();
 			} else {
 				view = mInflater.inflate(R.layout.history_cell, parent,false);
-				holder = new ViewHolder();
-				holder.contact = (TextView) view.findViewById(R.id.sip_uri);
-				holder.detail = (ImageView) view.findViewById(R.id.detail);
-				holder.select = (CheckBox) view.findViewById(R.id.delete);
-				holder.callDirection = (ImageView) view.findViewById(R.id.icon);
-				holder.contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+				holder = new ViewHolder(view);
+				view.setTag(holder);
 			}
 
 			final LinphoneCallLog log = mLogs.get(position);
 			long timestamp = log.getTimestamp();
-			final LinphoneAddress address;
+			LinphoneAddress address;
 
 			holder.contact.setSelected(true); // For automated horizontal scrolling of long texts
 
@@ -457,9 +471,18 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
 			String displayName = null;
 			final String sipUri = address.asString();
-			if(c != null){
+			if (c != null) {
 				displayName = c.getFullName();
-				LinphoneUtils.setImagePictureFromUri(view.getContext(),holder.contactPicture,c.getPhotoUri(),c.getThumbnailUri());
+				if (c.hasPhoto()) {
+					Bitmap photo = c.getPhoto();
+					if (photo != null) {
+						holder.contactPicture.setImageBitmap(photo);
+					} else {
+						LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, c.getPhotoUri(), c.getThumbnailUri());
+					}
+				} else {
+					LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, c.getPhotoUri(), c.getThumbnailUri());
+				}
 			} else {
 				holder.contactPicture.setImageResource(R.drawable.avatar);
 			}
@@ -469,7 +492,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			} else {
 				holder.contact.setText(displayName);
 			}
-			//view.setTag(sipUri);
 
 			if (isEditMode) {
 				holder.select.setVisibility(View.VISIBLE);
@@ -512,16 +534,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 					}
 				});
 			}
-			view.setTag(holder);
 			return view;
 		}
-	}
-
-	static class ViewHolder {
-		TextView contact;
-		ImageView detail;
-		CheckBox select;
-		ImageView callDirection;
-		ImageView contactPicture;
 	}
 }

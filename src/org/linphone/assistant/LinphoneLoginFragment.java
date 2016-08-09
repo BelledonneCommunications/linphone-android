@@ -18,11 +18,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -53,7 +53,7 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener, 
 		password = (EditText) view.findViewById(R.id.assistant_password);
 		password.addTextChangedListener(this);
 		forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
-		forgotPassword.setText(Html.fromHtml("<a href=\"" + url + "\"'>"+ getString(R.string.forgot_password) + "</a>"));
+		forgotPassword.setText(Compatibility.fromHtml("<a href=\"" + url + "\"'>"+ getString(R.string.forgot_password) + "</a>"));
 		forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
 		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
 		apply = (Button) view.findViewById(R.id.assistant_apply);

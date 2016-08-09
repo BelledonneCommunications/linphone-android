@@ -273,6 +273,7 @@
 	<string name="pref_echo_cancellation">Echo cancellation</string>
 	<string name="pref_echo_cancellation_summary">Removes the echo heard by other end</string>
 	<string name="pref_echo_canceller_calibration">Echo canceler calibration</string>
+	<string name="pref_echo_tester">Test echo</string>
 	<string name="ec_calibrating">Calibrating…</string>
 	<string name="ec_calibrated">Calibrated in %s ms</string>
 	<string name="no_echo">No echo</string>
@@ -340,6 +341,7 @@
 	<string name="pref_autostart">Start at boot time</string>
 	<string name="pref_incoming_call_timeout_title">Incoming call hangup (in seconds)</string>
 	<string name="pref_remote_provisioning_title">Remote provisioning</string>
+	<string name="pref_android_app_settings_title">Android app settings</string>
 	<string name="pref_primary_account_title">Primary account</string>
 	<string name="pref_display_name_title">Display name</string>
 	<string name="pref_user_name_title">Username</string>

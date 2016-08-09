@@ -69,6 +69,11 @@
 					android:title="@string/pref_echo_canceller_calibration"
 				    android:key="@string/pref_echo_canceller_calibration_key"
 					android:persistent="false"/>
+
+				<Preference
+					android:title="@string/pref_echo_tester"
+					android:key="@string/pref_echo_tester_key"
+					android:persistent="false"/>
 	
 				<CheckBoxPreference
 					android:title="@string/pref_adaptive_rate_control"
@@ -345,6 +350,11 @@
 					android:key="@string/pref_remote_provisioning_key"
 					android:inputType="textUri"
 					android:persistent="false"/>
+				 
+				 <Preference 
+				     android:title="@string/pref_android_app_settings_title"
+				     android:key="@string/pref_android_app_settings_key"
+				     android:persistent="false"/>
 				
 			</PreferenceCategory>
 	

@@ -30,6 +30,7 @@ import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -117,15 +118,16 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 	}
 
-	private void removeChatsConversation(){
+	private void removeChatsConversation() {
 		int size = chatList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			if(chatList.isItemChecked(i)){
-				View item = chatList.getAdapter().getView(i, null, null);
-				if(item != null) {
-					LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(item.getTag().toString());
-					if (chatroom != null)
+		for (int i = 0; i < size; i++) {
+			if (chatList.isItemChecked(i)) {
+				String sipUri = chatList.getAdapter().getItem(i).toString();
+				if (sipUri != null) {
+					LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(sipUri);
+					if (chatroom != null) {
 						chatroom.deleteHistory();
+					}
 				}
 			}
 		}
@@ -241,7 +243,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (info == null || info.targetView == null) {
 			return false;
 		}
-		String sipUri = (String) info.targetView.getTag();
+		String sipUri = chatList.getAdapter().getItem(info.position).toString();
 		
 		LinphoneActivity.instance().removeFromChatList(sipUri);
 		mConversations = LinphoneActivity.instance().getChatList();
@@ -331,7 +333,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		String sipUri = (String) view.getTag();
+		String sipUri = chatList.getAdapter().getItem(position).toString();
 
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
 			LinphoneActivity.instance().displayChat(sipUri);
@@ -339,7 +341,24 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	}
 
 	class ChatListAdapter extends BaseAdapter {
-
+		private class ViewHolder {
+			public TextView lastMessageView;
+			public TextView date;
+			public TextView displayName;
+			public TextView unreadMessages;
+			public CheckBox select;
+			public ImageView contactPicture;
+			
+			public ViewHolder(View view) {
+				lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
+				date = (TextView) view.findViewById(R.id.date);
+				displayName = (TextView) view.findViewById(R.id.sipUri);
+				unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
+				select = (CheckBox) view.findViewById(R.id.delete_chatroom);
+				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+			}
+		}
+		
 		ChatListAdapter() {}
 		
 		public int getCount() {
@@ -347,7 +366,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 
 		public Object getItem(int position) {
-			return position;
+			return mConversations.get(position);
 		}
 
 		public long getItemId(int position) {
@@ -356,21 +375,23 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
+			ViewHolder holder = null;
+			String sipUri = mConversations.get(position);
 			
 			if (convertView != null) {
 				view = convertView;
+				holder = (ViewHolder) view.getTag();
 			} else {
 				view = mInflater.inflate(R.layout.chatlist_cell, parent, false);
+				holder = new ViewHolder(view);
+				view.setTag(holder);
 			}
-
-			String sipUri = mConversations.get(position);
-			view.setTag(sipUri);
 			
 			LinphoneAddress address;
 			try {
 				address = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 			} catch (LinphoneCoreException e) {
-				Log.e("Chat view cannot parse address",e);
+				Log.e("Chat view cannot parse address", e);
 				return view;
 			}
 
@@ -378,57 +399,55 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			String message = "";
 			Long time;
 
-			TextView lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
-			TextView date = (TextView) view.findViewById(R.id.date);
-			TextView displayName = (TextView) view.findViewById(R.id.sipUri);
-			TextView unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
-			CheckBox select = (CheckBox) view.findViewById(R.id.delete_chatroom);
-			ImageView contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-
 			LinphoneChatRoom chatRoom = LinphoneManager.getLc().getChatRoom(address);
 			int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 			LinphoneChatMessage[] history = chatRoom.getHistory(1);
 			LinphoneChatMessage msg = history[0];
 
 			if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppData() != null ){
-				lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
+				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 				time = msg.getTime();
-				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
-				lastMessageView.setText("");
+				holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+				holder.lastMessageView.setText("");
 			} else if (msg.getText() != null && msg.getText().length() > 0 ){
 				message = msg.getText();
-				lastMessageView.setBackgroundResource(0);
+				holder.lastMessageView.setBackgroundResource(0);
 				time = msg.getTime();
-				date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
-				lastMessageView.setText(message);
+				holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+				holder.lastMessageView.setText(message);
 			}
 
-			displayName.setSelected(true); // For animation
-			displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getFullName());
+			holder.displayName.setSelected(true); // For animation
+			holder.displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getFullName());
 
 
 			if (contact != null) {
-				LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+				Bitmap photo = contact.getPhoto();
+				if (photo != null) {
+					holder.contactPicture.setImageBitmap(photo);
+				} else {
+					LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+				}
 			} else {
-				contactPicture.setImageResource(R.drawable.avatar);
+				holder.contactPicture.setImageResource(R.drawable.avatar);
 			}
 
 			if (unreadMessagesCount > 0) {
-				unreadMessages.setVisibility(View.VISIBLE);
-				unreadMessages.setText(String.valueOf(unreadMessagesCount));
-				if(unreadMessagesCount > 99){
-					unreadMessages.setTextSize(12);
+				holder.unreadMessages.setVisibility(View.VISIBLE);
+				holder.unreadMessages.setText(String.valueOf(unreadMessagesCount));
+				if (unreadMessagesCount > 99) {
+					holder.unreadMessages.setTextSize(12);
 				}
-				displayName.setTypeface(null, Typeface.BOLD);
+				holder.displayName.setTypeface(null, Typeface.BOLD);
 			} else {
-				unreadMessages.setVisibility(View.GONE);
-				displayName.setTypeface(null, Typeface.NORMAL);
+				holder.unreadMessages.setVisibility(View.GONE);
+				holder.displayName.setTypeface(null, Typeface.NORMAL);
 			}
 
 			if (isEditMode) {
-				unreadMessages.setVisibility(View.GONE);
-				select.setVisibility(View.VISIBLE);
-				select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				holder.unreadMessages.setVisibility(View.GONE);
+				holder.select.setVisibility(View.VISIBLE);
+				holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 						chatList.setItemChecked(position, b);
@@ -450,13 +469,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					}
 				});
 				if(chatList.isItemChecked(position)) {
-					select.setChecked(true);
+					holder.select.setChecked(true);
 				} else {
-					select.setChecked(false);
+					holder.select.setChecked(false);
 				}
 			} else {
 				if (unreadMessagesCount > 0) {
-					unreadMessages.setVisibility(View.VISIBLE);
+					holder.unreadMessages.setVisibility(View.VISIBLE);
 				}
 			}
 			return view;

@@ -71,6 +71,8 @@
 	<bool name="allow_only_one_phone_number">false</bool>
 	<bool name="allow_only_one_sip_address">false</bool>
 	
+	<bool name="display_contact_organization">true</bool>
+	
 	<bool name="setup_cancel_move_to_back">false</bool>
 
 	<bool name="enable_call_notification">true</bool>

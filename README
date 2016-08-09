@@ -7,8 +7,8 @@ COMPILATION INSTRUCTIONS
 
 To build liblinphone for Android, you must:
 -------------------------------------------
-0) download the Android sdk with platform-tools and tools updated to latest revision (at least API 16 is needed), then add both 'tools' and 'platform-tools' folders in your path.
-1) download the Android ndk (version r11) from google and add it to your path (no symlink !!!).
+0) download the Android sdk (API 23 at least) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path.
+1) download the Android ndk (version r11c or 12b) from google and add it to your path (no symlink !!!).
 2) install yasm, nasm, ant, python, cmake and vim-common
 	On 64 bits linux systems you'll need the ia32-libs package
 	With the latest Debian (multiarch), you need this:
@@ -27,11 +27,12 @@ To build liblinphone for Android, you must:
 	$ make mediastreamer2-sdk
 8) (Optional) To generate a signed apk to publish on the Google Play, run
 	$ make release
-Make sure you filled the ant.properties values for version.name, key.store and key.alias in order to correctly sign the generated apk. 
-You also may want to create a file name ant_password.properties with the following:
-key.store.password=[your_password]
-key.alias.password=[your_password]
-If you don't, the passwords will be asked at the signing phase.
+	Make sure you filled the ant.properties values for version.name, key.store and key.alias in order to correctly sign the generated apk. 
+	You also may want to create a file name ant_password.properties with the following:
+	key.store.password=[your_password]
+	key.alias.password=[your_password]
+	If you don't, the passwords will be asked at the signing phase.
+9) (Optional) Once you compiled the libraries succesfully with 'make', you can reduce the compilation time using 'make quick': it will only generate a new APK from java files.
 
 To run the tutorials:
 --------------------

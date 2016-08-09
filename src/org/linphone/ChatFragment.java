@@ -21,8 +21,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,22 +42,29 @@ import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.BubbleChat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,9 +73,10 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,7 +85,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -81,6 +93,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,6 +124,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private SearchContactsListAdapter searchAdapter;
 	private ListView messagesList, resultContactsSearch;
 	private LayoutInflater inflater;
+	private Bitmap defaultBitmap;
 
 	private boolean isEditMode = false;
 	private LinphoneContact contact;
@@ -143,9 +157,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		//Initialize UI
+		defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_picture_over);
+		
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		messagesList = (ListView) view.findViewById(R.id.chat_message_list);
-		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		searchContactField = (EditText) view.findViewById(R.id.search_contact_field);
 		resultContactsSearch = (ListView) view.findViewById(R.id.result_contacts);
 
@@ -214,7 +229,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
 					adapter.addMessage(cr.getHistory(1)[0]);
-					messagesList.setSelection(adapter.getCount()-1);
 					
 					String externalBodyUrl = message.getExternalBodyUrl();
 					LinphoneContent fileTransferContent = message.getFileTransferInformation();
@@ -320,135 +334,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	class ChatMessageAdapter extends BaseAdapter {
-		ArrayList<LinphoneChatMessage> history;
-		Context context;
-
-		public ChatMessageAdapter(Context c) {
-			context = c;
-			history = new ArrayList<LinphoneChatMessage>();
-			refreshHistory();
-		}
-		
-		public void destroy() {
-			if (history != null) {
-				history.clear();
-			}
-		}
-
-		public void refreshHistory() {
-			history.clear();
-			LinphoneChatMessage[] messages = chatRoom.getHistory();
-			history.addAll(Arrays.asList(messages));
-			notifyDataSetChanged();
-		}
-
-		public void addMessage(LinphoneChatMessage message) {
-			history.add(message);
-			notifyDataSetChanged();
-		}
-
-		@Override
-		public int getCount() {
-			return history.size();
-		}
-
-		@Override
-		public LinphoneChatMessage getItem(int position) {
-			return history.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return history.get(position).getStorageId();
-		}
-
-		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
-			LinphoneChatMessage message = history.get(position);
-			RelativeLayout rlayout;
-
-			if (convertView != null) {
-				rlayout = (RelativeLayout) convertView;
-				View bbv = rlayout.getChildAt(0);
-				rlayout.removeAllViews();
-				BubbleChat bbc = (BubbleChat) bbv.getTag();
-				bbc.destroy();
-			} else {
-				rlayout = new RelativeLayout(context);
-			}
-			BubbleChat bubble = new BubbleChat(context, message, contact);
-			View v = bubble.getView();
-			v.setTag(bubble);
-
-			registerForContextMenu(v);
-
-			CheckBox deleteChatBubble = (CheckBox) v.findViewById(R.id.delete_message);
-
-			if(isEditMode) {
-				deleteChatBubble.setVisibility(View.VISIBLE);
-				if(message.isOutgoing()){
-					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-					layoutParams.setMargins(100, 10, 10, 10);
-					v.setLayoutParams(layoutParams);
-				} else {
-					LinearLayout message_layout = (LinearLayout) v.findViewById(R.id.message_content);
-					message_layout.setGravity(Gravity.RIGHT);
-				}
-
-				deleteChatBubble.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-						messagesList.setItemChecked(position, b);
-						if (getNbItemsChecked() == getCount()) {
-							deselectAll.setVisibility(View.VISIBLE);
-							selectAll.setVisibility(View.GONE);
-							enabledDeleteButton(true);
-						} else {
-							if (getNbItemsChecked() == 0) {
-								deselectAll.setVisibility(View.GONE);
-								selectAll.setVisibility(View.VISIBLE);
-								enabledDeleteButton(false);
-							} else {
-								deselectAll.setVisibility(View.GONE);
-								selectAll.setVisibility(View.VISIBLE);
-								enabledDeleteButton(true);
-							}
-						}
-					}
-				});
-
-				if(messagesList.isItemChecked(position)) {
-					deleteChatBubble.setChecked(true);
-				} else {
-					deleteChatBubble.setChecked(false);
-				}
-
-				rlayout.addView(v);
-			} else {
-				if(message.isOutgoing()){
-					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-					layoutParams.setMargins(100, 10, 10, 10);
-					v.setLayoutParams(layoutParams);
-				} else {
-					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-					layoutParams.setMargins(10, 10, 100, 10);
-					v.setLayoutParams(layoutParams);
-				}
-				rlayout.addView(v);
-			}
-			return rlayout;
-		}
-	}
-
 	public void initChatRoom(String sipUri) {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 
 		LinphoneAddress lAddress = null;
-		if(sipUri == null){
+		if (sipUri == null) {
 			initNewChatConversation();
 		} else {
 			try {
@@ -477,7 +367,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void displayMessageList() {
-		if(chatRoom != null) {
+		if (chatRoom != null) {
 			if (adapter != null) {
 				adapter.refreshHistory();
 			} else {
@@ -488,7 +378,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void displayChatHeader(LinphoneAddress address) {
-		if(contact != null) {
+		if (contact != null) {
 			contactName.setText(contact.getFullName());
 		} else if(address != null){
 			contactName.setText(LinphoneUtils.getAddressDisplayName(address));
@@ -580,6 +470,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (adapter != null) {
 			adapter.destroy();
 		}
+		if (defaultBitmap != null) {
+			defaultBitmap.recycle();
+			defaultBitmap = null;
+		}
 		super.onDestroy();
 	}
 
@@ -618,7 +512,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
 
-		if(!newChatConversation) {
+		if (!newChatConversation) {
 			initChatRoom(sipUri);
 			searchContactField.setVisibility(View.GONE);
 			resultContactsSearch.setVisibility(View.GONE);
@@ -626,10 +520,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	private void selectAllList(boolean isSelectAll){
+	private void selectAllList(boolean isSelectAll) {
 		int size = messagesList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			messagesList.setItemChecked(i,isSelectAll);
+		for (int i = 0; i < size; i++) {
+			messagesList.setItemChecked(i, isSelectAll);
 		}
 	}
 
@@ -642,8 +536,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void removeChats(){
 		int size = messagesList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			if(messagesList.isItemChecked(i)){
+		for (int i = 0; i < size; i++) {
+			if (messagesList.isItemChecked(i)) {
 				LinphoneChatMessage message = (LinphoneChatMessage) messagesList.getAdapter().getItem(i);
 				chatRoom.deleteMessage(message);
 			}
@@ -654,7 +548,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-
+		
 		if (id == R.id.back_to_call) {
 			LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			return;
@@ -827,7 +721,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			txt = message.getText();
 		}
 		if (txt != null) {
-			Compatibility.copyTextToClipboard(getActivity(), txt);
+			ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE); 
+		    ClipData clip = android.content.ClipData.newPlainText("Message", txt);
+		    clipboard.setPrimaryClip(clip);
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.text_copied_to_clipboard), Toast.LENGTH_SHORT);
 		}
 	}
@@ -1038,7 +934,492 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		searchAdapter.notifyDataSetChanged();
 	}
 
+	class ChatMessageAdapter extends BaseAdapter {
+		private class ViewHolder implements LinphoneChatMessage.LinphoneChatMessageListener {
+			public int id;
+			public RelativeLayout bubbleLayout;
+			public CheckBox delete;
+			public LinearLayout background;
+			public ImageView contactPicture;
+			public TextView contactName;
+			public TextView messageText;
+			public ImageView messageImage;
+			public RelativeLayout fileTransferLayout;
+			public ProgressBar fileTransferProgressBar;
+			public Button fileTransferAction;
+			public ImageView messageStatus;
+			public ProgressBar messageSendingInProgress;
+			
+			public ViewHolder(View view) {
+				id = view.getId();
+				bubbleLayout = (RelativeLayout) view.findViewById(R.id.bubble);
+				delete = (CheckBox) view.findViewById(R.id.delete_message);
+				background = (LinearLayout) view.findViewById(R.id.background);
+				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+				contactName = (TextView) view.findViewById(R.id.contact_header);
+				messageText = (TextView) view.findViewById(R.id.message);
+				messageImage = (ImageView) view.findViewById(R.id.image);
+				fileTransferLayout = (RelativeLayout) view.findViewById(R.id.file_transfer_layout);
+				fileTransferProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+				fileTransferAction = (Button) view.findViewById(R.id.file_transfer_action);
+				messageStatus = (ImageView) view.findViewById(R.id.status);
+				messageSendingInProgress = (ProgressBar) view.findViewById(R.id.inprogress);
+			}
+
+			@Override
+			public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+				
+			}
+
+			@Override
+			public void onLinphoneChatMessageFileTransferReceived(LinphoneChatMessage msg, LinphoneContent content, LinphoneBuffer buffer) {
+				
+			}
+
+			@Override
+			public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {
+				
+			}
+
+			@Override
+			public void onLinphoneChatMessageFileTransferProgressChanged(LinphoneChatMessage msg, LinphoneContent content, int offset, int total) {
+				if (msg.getStorageId() == id) fileTransferProgressBar.setProgress(offset * 100 / total);
+			}
+		}
+		
+		ArrayList<LinphoneChatMessage> history;
+		Context context;
+
+		public ChatMessageAdapter(Context c) {
+			context = c;
+			history = new ArrayList<LinphoneChatMessage>();
+			refreshHistory();
+		}
+		
+		public void destroy() {
+			if (history != null) {
+				history.clear();
+			}
+		}
+
+		public void refreshHistory() {
+			history.clear();
+			LinphoneChatMessage[] messages = chatRoom.getHistory();
+			history.addAll(Arrays.asList(messages));
+			notifyDataSetChanged();
+		}
+
+		public void addMessage(LinphoneChatMessage message) {
+			history.add(message);
+			notifyDataSetChanged();
+			messagesList.setSelection(getCount() - 1);
+		}
+
+		@Override
+		public int getCount() {
+			return history.size();
+		}
+
+		@Override
+		public LinphoneChatMessage getItem(int position) {
+			return history.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return history.get(position).getStorageId();
+		}
+
+		@Override
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			final LinphoneChatMessage message = history.get(position);
+			View view = null;
+			final ViewHolder holder;
+			boolean sameMessage = false;
+
+			if (convertView != null) {
+				view = convertView;
+				holder = (ViewHolder) view.getTag();
+				LinphoneManager.removeListener(holder);
+			} else {
+				view = LayoutInflater.from(context).inflate(R.layout.chat_bubble, null);
+				holder = new ViewHolder(view);
+				view.setTag(holder);
+			}
+			
+			if (holder.id == message.getStorageId()) {
+				sameMessage = true;
+			} else {
+				holder.id = message.getStorageId();
+			}
+			view.setId(holder.id);
+			registerForContextMenu(view);
+
+			LinphoneChatMessage.State status = message.getStatus();
+			String externalBodyUrl = message.getExternalBodyUrl();
+			LinphoneContent fileTransferContent = message.getFileTransferInformation();
+			
+			holder.delete.setVisibility(View.GONE);
+			holder.messageText.setVisibility(View.GONE);
+			holder.messageImage.setVisibility(View.GONE);
+			holder.fileTransferLayout.setVisibility(View.GONE);
+			holder.fileTransferProgressBar.setProgress(0);
+			holder.fileTransferAction.setEnabled(true);
+			holder.messageStatus.setVisibility(View.INVISIBLE);
+			holder.messageSendingInProgress.setVisibility(View.GONE);
+			
+			String displayName = message.getFrom().getDisplayName();
+			if (displayName == null) {
+				displayName = message.getFrom().getUserName();
+			}
+			if (!message.isOutgoing()) {
+				if (contact != null) {
+					if (contact != null && contact.getFullName() != null) {
+						displayName = contact.getFullName();
+					}
+					if (contact.hasPhoto()) {
+						Bitmap photo = contact.getPhoto();
+						if (photo != null) {
+							holder.contactPicture.setImageBitmap(photo);
+						} else {
+							LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+						}
+					} else {
+						holder.contactPicture.setImageResource(R.drawable.avatar);
+					}
+				} else {
+					holder.contactPicture.setImageResource(R.drawable.avatar);
+				}
+			} else {
+				holder.contactPicture.setImageResource(R.drawable.avatar);
+			}
+			holder.contactName.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
+			
+			if (status == LinphoneChatMessage.State.NotDelivered) {
+				holder.messageStatus.setVisibility(View.VISIBLE);
+				holder.messageStatus.setImageResource(R.drawable.chat_message_not_delivered);
+			} else if (status == LinphoneChatMessage.State.InProgress) {
+				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
+			}
+			
+			if (externalBodyUrl != null || fileTransferContent != null) {
+				String appData = message.getAppData();
+
+				if (message.isOutgoing() && appData != null) {
+					holder.messageImage.setVisibility(View.VISIBLE);
+					if (!sameMessage) loadBitmap(appData, holder.messageImage);
+
+					if (LinphoneManager.getInstance().getMessageUploadPending() != null  && LinphoneManager.getInstance().getMessageUploadPending().getStorageId() == message.getStorageId()) {
+						holder.messageSendingInProgress.setVisibility(View.GONE);
+						holder.fileTransferLayout.setVisibility(View.VISIBLE);
+						LinphoneManager.addListener(holder);
+					}
+				} else {
+					if (appData != null && !LinphoneManager.getInstance().isMessagePending(message) && appData.contains(context.getString(R.string.temp_photo_name_with_date).split("%s")[0])) {
+						appData = null;
+					}
+
+					if (appData == null) {
+						LinphoneManager.addListener(holder);
+						holder.fileTransferLayout.setVisibility(View.VISIBLE);
+					} else {
+						if (LinphoneManager.getInstance().isMessagePending(message)) {
+							LinphoneManager.addListener(holder);
+							holder.fileTransferAction.setEnabled(false);
+							holder.fileTransferLayout.setVisibility(View.VISIBLE);
+						} else {
+							LinphoneManager.removeListener(holder);
+							holder.fileTransferLayout.setVisibility(View.GONE);
+							holder.messageImage.setVisibility(View.VISIBLE);
+							if (!sameMessage) loadBitmap(appData, holder.messageImage);
+						}
+					}
+				}
+			} else {
+				Spanned text = null;
+				String msg = message.getText();
+				if (msg != null) {
+					text = getTextWithHttpLinks(msg);
+					holder.messageText.setText(text);
+					holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+					holder.messageText.setVisibility(View.VISIBLE);
+				}
+			}
+			
+			if (message.isOutgoing()) {
+				holder.fileTransferAction.setText(getString(R.string.cancel));
+				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LinphoneManager.getInstance().getMessageUploadPending() != null) {
+							holder.fileTransferProgressBar.setVisibility(View.GONE);
+							holder.fileTransferProgressBar.setProgress(0);
+							message.cancelFileTransfer();
+							LinphoneManager.getInstance().setUploadPendingFileMessage(null);
+						}
+					}
+				});
+			} else {
+				holder.fileTransferAction.setText(getString(R.string.accept));
+				holder.fileTransferAction.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (context.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+							v.setEnabled(false);
+							String extension = message.getFileTransferInformation().getSubtype();
+							String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())) + "." + extension;
+							File file = new File(Environment.getExternalStorageDirectory(), filename);
+							message.setAppData(filename);
+							LinphoneManager.getInstance().addDownloadMessagePending(message);
+							message.setListener(LinphoneManager.getInstance());
+							message.setFileTransferFilepath(file.getPath());
+							message.downloadFile();
+						} else {
+							Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+							LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+						}
+					}
+				});
+			}
+			
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			if (message.isOutgoing()) {
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				layoutParams.setMargins(100, 10, 10, 10);
+				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
+				holder.contactName.setTextAppearance(R.style.font3);
+				holder.fileTransferAction.setTextAppearance(R.style.font15);
+				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
+			} else {
+				if (isEditMode) {
+					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+					layoutParams.setMargins(100, 10, 10, 10);
+				} else {
+					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+					layoutParams.setMargins(10, 10, 100, 10);
+				}
+				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
+				holder.contactName.setTextAppearance(R.style.font9);
+				holder.fileTransferAction.setTextAppearance(R.style.font8);
+				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+			}
+			holder.bubbleLayout.setLayoutParams(layoutParams);
+			
+			if (isEditMode) {
+				holder.delete.setVisibility(View.VISIBLE);
+				holder.delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+						messagesList.setItemChecked(position, b);
+						if (getNbItemsChecked() == getCount()) {
+							deselectAll.setVisibility(View.VISIBLE);
+							selectAll.setVisibility(View.GONE);
+							enabledDeleteButton(true);
+						} else {
+							if (getNbItemsChecked() == 0) {
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(false);
+							} else {
+								deselectAll.setVisibility(View.GONE);
+								selectAll.setVisibility(View.VISIBLE);
+								enabledDeleteButton(true);
+							}
+						}
+					}
+				});
+
+				if (messagesList.isItemChecked(position)) {
+					holder.delete.setChecked(true);
+				} else {
+					holder.delete.setChecked(false);
+				}
+			}
+			
+			return view;
+		}
+
+		private String timestampToHumanDate(Context context, long timestamp) {
+			try {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(timestamp);
+
+				SimpleDateFormat dateFormat;
+				if (isToday(cal)) {
+					dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format));
+				} else {
+					dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.messages_date_format));
+				}
+
+				return dateFormat.format(cal.getTime());
+			} catch (NumberFormatException nfe) {
+				return String.valueOf(timestamp);
+			}
+		}
+
+		private boolean isToday(Calendar cal) {
+			return isSameDay(cal, Calendar.getInstance());
+		}
+
+		private boolean isSameDay(Calendar cal1, Calendar cal2) {
+			if (cal1 == null || cal2 == null) {
+				return false;
+			}
+
+			return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+					cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+					cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+		}
+
+		private Spanned getTextWithHttpLinks(String text) {
+			if (text.contains("<")) {
+				text = text.replace("<", "&lt;");
+			}
+			if (text.contains(">")) {
+				text = text.replace(">", "&gt;");
+			}
+			if (text.contains("http://")) {
+				int indexHttp = text.indexOf("http://");
+				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+				String link = text.substring(indexHttp, indexFinHttp);
+				String linkWithoutScheme = link.replace("http://", "");
+				text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+			}
+			if (text.contains("https://")) {
+				int indexHttp = text.indexOf("https://");
+				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+				String link = text.substring(indexHttp, indexFinHttp);
+				String linkWithoutScheme = link.replace("https://", "");
+				text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+			}
+
+			return Compatibility.fromHtml(text);
+		}
+
+		public void loadBitmap(String path, ImageView imageView) {
+			if (cancelPotentialWork(path, imageView)) {
+				BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+				final AsyncBitmap asyncBitmap = new AsyncBitmap(context.getResources(), defaultBitmap, task);
+				imageView.setImageDrawable(asyncBitmap);
+				task.execute(path);
+			}
+		}
+
+		private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+			private final WeakReference<ImageView> imageViewReference;
+			public String path;
+
+			public BitmapWorkerTask(ImageView imageView) {
+				path = null;
+				// Use a WeakReference to ensure the ImageView can be garbage collected
+				imageViewReference = new WeakReference<ImageView>(imageView);
+			}
+
+			// Decode image in background.
+			@Override
+			protected Bitmap doInBackground(String... params) {
+				path = params[0];
+				Bitmap bm = null;
+
+				if (path.startsWith("content")) {
+					try {
+						bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(path));
+					} catch (FileNotFoundException e) {
+						Log.e(e);
+					} catch (IOException e) {
+						Log.e(e);
+					}
+				} else {
+					bm = BitmapFactory.decodeFile(path);
+					path = "file://" + path;
+				}
+
+				if (bm != null) {
+					bm = ThumbnailUtils.extractThumbnail(bm, SIZE_MAX, SIZE_MAX);
+				}
+				return bm;
+			}
+
+			// Once complete, see if ImageView is still around and set bitmap.
+			@Override
+			protected void onPostExecute(Bitmap bitmap) {
+				if (isCancelled()) {
+					bitmap = null;
+				}
+
+				if (imageViewReference != null && bitmap != null) {
+					final ImageView imageView = imageViewReference.get();
+					final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+					if (this == bitmapWorkerTask && imageView != null) {
+						imageView.setImageBitmap(bitmap);
+						imageView.setTag(path);
+						imageView.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(Intent.ACTION_VIEW);
+								intent.setDataAndType(Uri.parse((String)v.getTag()), "image/*");
+								context.startActivity(intent);
+							}
+						});
+					}
+				}
+			}
+		}
+
+		class AsyncBitmap extends BitmapDrawable {
+			private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+			public AsyncBitmap(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+				super(res, bitmap);
+				bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+			}
+
+			public BitmapWorkerTask getBitmapWorkerTask() {
+				return bitmapWorkerTaskReference.get();
+			}
+		}
+
+		private boolean cancelPotentialWork(String path, ImageView imageView) {
+			final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+			if (bitmapWorkerTask != null) {
+				final String bitmapData = bitmapWorkerTask.path;
+				// If bitmapData is not yet set or it differs from the new data
+				if (bitmapData == null || bitmapData != path) {
+					// Cancel previous task
+					bitmapWorkerTask.cancel(true);
+				} else {
+					// The same work is already in progress
+					return false;
+				}
+			}
+			// No task associated with the ImageView, or an existing task was cancelled
+			return true;
+		}
+
+		private BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+			if (imageView != null) {
+				final Drawable drawable = imageView.getDrawable();
+				if (drawable instanceof AsyncBitmap) {
+					final AsyncBitmap asyncDrawable = (AsyncBitmap) drawable;
+					return asyncDrawable.getBitmapWorkerTask();
+				}
+			}
+			return null;
+		}
+	}
+
 	class SearchContactsListAdapter extends BaseAdapter {
+		private class ViewHolder {
+			public TextView name;
+			public TextView address;
+			
+			public ViewHolder(View view) {
+				name = (TextView) view.findViewById(R.id.contact_name);
+				address = (TextView) view.findViewById(R.id.contact_address);
+			}
+		}
+		
 		private List<ContactAddress> contacts;
 		private LayoutInflater mInflater;
 
@@ -1089,24 +1470,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = null;
 			ContactAddress contact;
+			ViewHolder holder = null;
+			
 			do {
 				contact = getItem(position);
 			} while (contact == null);
 
 			if (convertView != null) {
 				view = convertView;
+				holder = (ViewHolder) view.getTag();
 			} else {
 				view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
+				holder = new ViewHolder(view);
+				view.setTag(holder);
 			}
 
 			final String a = contact.address;
 			LinphoneContact c = contact.contact;
 
-			TextView name = (TextView) view.findViewById(R.id.contact_name);
-			name.setText(c.getFullName());
-
-			TextView address = (TextView) view.findViewById(R.id.contact_address);
-			address.setText(a);
+			holder.name.setText(c.getFullName());
+			holder.address.setText(a);
 
 			view.setOnClickListener(new OnClickListener() {
 				@Override

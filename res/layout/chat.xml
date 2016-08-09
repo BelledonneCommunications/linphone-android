@@ -128,8 +128,9 @@
 	<ListView
 		android:id="@+id/chat_message_list"
 		android:divider="@android:color/transparent"
+		android:choiceMode="multipleChoice"
 		android:stackFromBottom="true"
-		android:transcriptMode="alwaysScroll"
+		android:transcriptMode="normal"
 		android:dividerHeight="10dp"
 		android:cacheColorHint="@color/transparent"
 		android:layout_above="@id/remote_composing"

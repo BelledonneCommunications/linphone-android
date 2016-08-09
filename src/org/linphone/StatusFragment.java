@@ -478,7 +478,10 @@ public class StatusFragment extends Fragment {
 									PayloadType payloadAudio = params.getUsedAudioCodec();
 									PayloadType payloadVideo = params.getUsedVideoCodec();
 									if (payloadVideo != null && payloadAudio != null) {
-										codec.setText(payloadVideo.getMime() + " / " + payloadAudio.getMime() + (payloadAudio.getRate() / 1000));
+										String videoMime = payloadVideo.getMime();
+										if (payloadVideo.getMime().equals("H264") && LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound())
+											videoMime = "OpenH264";
+										codec.setText(videoMime + " / " + payloadAudio.getMime() + (payloadAudio.getRate() / 1000));
 									}
 									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " / " + (int) audioStats.getDownloadBandwidth() + " kbits/s");
 									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) +  " / " + (int) audioStats.getUploadBandwidth() + " kbits/s");

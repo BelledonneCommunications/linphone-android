@@ -431,7 +431,7 @@ public final class LinphoneUtils {
         StringBuilder sb = new StringBuilder();
 
     	try {
-			p = Runtime.getRuntime().exec(new String[] { "logcat", "-d", "|", "grep", "`adb shell ps | grep org.linphone | cut -c10-15`" });
+			p = Runtime.getRuntime().exec(new String[] { "logcat", "-d", "|", "grep", "`adb shell ps | grep " + context.getPackageName() + " | cut -c10-15`" });
 	    	br = new BufferedReader(new InputStreamReader(p.getInputStream()), 2048);
 
             String line;

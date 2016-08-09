@@ -48,6 +48,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -58,6 +59,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.provider.Settings;
 
 /**
  * @author Sylvain Berfini
@@ -611,10 +613,52 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
+
+		findPreference(getString(R.string.pref_echo_tester_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				synchronized (SettingsFragment.this) {
+					int recordAudio = getActivity().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getActivity().getPackageName());
+					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+						if (LinphoneManager.getInstance().getEchoTesterStatus())
+							stopEchoTester();
+						else
+							startEchoTester();
+					} else {
+						LinphoneActivity.instance().checkAndRequestRecordAudioPermissionsForEchoTester();
+					}
+				}
+				return true;
+			}
+		});
+	}
+
+	public void startEchoTester() {
+		Preference preference = findPreference(getString(R.string.pref_echo_tester_key));
+		try {
+			if (LinphoneManager.getInstance().startEchoTester() > 0) {
+				preference.setSummary("Is running");
+			}
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void stopEchoTester() {
+		Preference preference = findPreference(getString(R.string.pref_echo_tester_key));
+		try {
+			if (LinphoneManager.getInstance().stopEchoTester() > 0) {
+				preference.setSummary("Is stopped");
+			}
+		} catch (LinphoneCoreException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void startEchoCancellerCalibration() {
 		try {
+			if (LinphoneManager.getInstance().getEchoTesterStatus())
+				stopEchoTester();
 			LinphoneManager.getInstance().startEcCalibration(mListener);
 		} catch (LinphoneCoreException e) {
 			Log.e(e);
@@ -642,7 +686,9 @@ public class SettingsFragment extends PreferencesListFragment {
 		codecs.removeAll();
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+
 		final OpenH264DownloadHelper mCodecDownloader = LinphoneManager.getInstance().getOpenH264DownloadHelper();
+
 		for (final PayloadType pt : lc.getVideoCodecs()) {
 			final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMime());
@@ -659,8 +705,10 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
-			if (pt.getMime().equals("H264") && mCodecDownloader.isCodecFound())
+			if (pt.getMime().equals("H264") && mCodecDownloader.isCodecFound()) {
 				codec.setSummary(mCodecDownloader.getLicenseMessage());
+				codec.setTitle("OpenH264");
+			}
 			codec.setChecked(lc.isPayloadTypeEnabled(pt));
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -670,9 +718,9 @@ public class SettingsFragment extends PreferencesListFragment {
 					try {
 						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") 
 								&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
-							LinphoneManager.getInstance().getOpenH264DownloadHelper().setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
-							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(0,LinphoneManager.getInstance().getContext());
-							LinphoneManager.getInstance().getOpenH264DownloadHelper().setUserData(1,codec);
+							mCodecDownloader.setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
+							mCodecDownloader.setUserData(0,LinphoneManager.getInstance().getContext());
+							mCodecDownloader.setUserData(1,codec);
 
 							AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
 							builder.setCancelable(false);
@@ -702,7 +750,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 			codecs.addPreference(codec);
 		}
-
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_enable_key))).setChecked(mPrefs.isVideoEnabled());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_use_front_camera_key))).setChecked(mPrefs.useFrontCam());
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
@@ -1146,6 +1193,24 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
+		
+		findPreference(getString(R.string.pref_android_app_settings_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				synchronized (SettingsFragment.this) {
+					Context context = SettingsFragment.this.getActivity();
+					Intent i = new Intent();
+				    i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+				    i.addCategory(Intent.CATEGORY_DEFAULT);
+				    i.setData(Uri.parse("package:" + context.getPackageName()));
+				    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+				    context.startActivity(i);
+				}
+				return true;
+			}
+		});
 
 		findPreference(getString(R.string.pref_display_name_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
@@ -1182,9 +1247,11 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
+		if (LinphoneManager.getInstance().getEchoTesterStatus())
+			stopEchoTester();
 		LinphoneActivity.instance().hideTopBar();
 		super.onPause();
 	}
