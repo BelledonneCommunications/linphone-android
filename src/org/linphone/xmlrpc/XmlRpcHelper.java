@@ -56,7 +56,7 @@ public class XmlRpcHelper {
 	}
 	
 	public void getAccountExpireAsync(final XmlRpcListener listener, String username, String password) {
-		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("get_expiration_for_account", LinphoneXmlRpcRequest.ArgType.String);
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("get_account_expiration", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
 			@Override
 			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
@@ -79,7 +79,7 @@ public class XmlRpcHelper {
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 	
-	public void updateAccountExpireAsync(final XmlRpcListener listener, String username, String password, String payload, String signature) {
+	public void updateAccountExpireAsync(final XmlRpcListener listener, String username, String password, String domain, String payload, String signature) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("update_expiration_date", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
 			@Override
@@ -100,6 +100,7 @@ public class XmlRpcHelper {
 		});
 		xmlRpcRequest.addStringArg(username);
 		xmlRpcRequest.addStringArg(password);
+		xmlRpcRequest.addStringArg(domain);
 		xmlRpcRequest.addStringArg(payload);
 		xmlRpcRequest.addStringArg(signature);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
@@ -164,7 +165,7 @@ public class XmlRpcHelper {
 					if (!"NOK".equals(result) && !"OK".equals(result)) {
 						listener.onError(result);
 					}
-					listener.onAccountFetched("OK".equals(result));
+					listener.onTrialAccountFetched("OK".equals(result));
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
 					listener.onError(result);
@@ -352,12 +353,13 @@ public class XmlRpcHelper {
 	}
 	
 	public void verifySignatureAsync(final XmlRpcListener listener, String payload, String signature) {
-		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("verify_payload_signature", LinphoneXmlRpcRequest.ArgType.String);
+		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_payload_signature", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
 			@Override
 			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
 				String result = request.getStringResponse();
 				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
+					Log.w(result);
 					if (result.startsWith("ERROR_")) {
 						Log.e(result);
 						listener.onError(result);

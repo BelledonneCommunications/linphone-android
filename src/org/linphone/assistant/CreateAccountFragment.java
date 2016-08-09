@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.LinphoneXmlRpcRequest;
 import org.linphone.core.LinphoneXmlRpcRequest.LinphoneXmlRpcRequestListener;
@@ -30,6 +32,7 @@ import org.linphone.core.LinphoneXmlRpcRequestImpl;
 import org.linphone.core.LinphoneXmlRpcSession;
 import org.linphone.core.LinphoneXmlRpcSessionImpl;
 import org.linphone.xmlrpc.XmlRpcHelper;
+import org.linphone.mediastream.Log;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -54,10 +57,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import static org.linphone.core.LinphoneAccountCreator.*;
+
 /**
  * @author Sylvain Berfini
  */
-public class CreateAccountFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, OnClickListener {
+public class CreateAccountFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, OnClickListener, LinphoneAccountCreatorListener {
 	private Handler mHandler = new Handler();
 	private EditText phoneNumberEdit, usernameEdit, passwordEdit, passwordConfirmEdit, emailEdit, dialCode;
 	private TextView phoneNumberError, usernameError, passwordError, passwordConfirmError, emailError, sipUri;
@@ -73,6 +79,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	private final Pattern UPPER_CASE_REGEX = Pattern.compile("[A-Z]");
 	private LinphoneXmlRpcSession xmlRpcSession;
 	private CountryListFragment.Country country;
+
+	private LinphoneAccountCreator accountCreator;
 	
 	private String getUsername() {
 		String username = usernameEdit.getText().toString();
@@ -93,6 +101,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 
+		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+		accountCreator.setListener(this);
+
 		phoneNumberError = (TextView) view.findViewById(R.id.phone_number_error);
 		phoneNumberEdit = (EditText) view.findViewById(R.id.phone_number);
 		phoneNumberEdit.addTextChangedListener(new TextWatcher() {
@@ -107,7 +118,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			public void afterTextChanged(Editable s) {}
 		});
 		phoneNumberLayout = (LinearLayout) view.findViewById(R.id.phone_number_layout);
-		addXMLRPCPhoneNumberHandler(phoneNumberEdit, null);
+		addPhoneNumberHandler(phoneNumberEdit, null);
 
 		selectCountry = (Button) view.findViewById(R.id.select_country);
 		selectCountry.setOnClickListener(this);
@@ -144,7 +155,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				public void afterTextChanged(Editable s) {}
 			});
 			usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
-			addXMLRPCUsernameHandler(usernameEdit, null);
+			addUsernameHandler(usernameEdit, null);
 		}
 
 		if(getResources().getBoolean(R.bool.isTablet)){
@@ -331,60 +342,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		xmlRpcRequest.addStringArg(username);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-
-	private void isPhoneNumberRegistred(final String username, final ImageView icon) {
-		final Runnable runOk = new Runnable() {
-			public void run() {
-				phoneNumberOk = false;
-				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, LinphoneManager.getInstance().getContext().getString(R.string.assistant_phone_number_unavailable));
-				//createAccount.setEnabled(phoneNumberOk);
-			}
-		};
-		final Runnable runNotOk = new Runnable() {
-			public void run() {
-				phoneNumberOk = true;
-				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, "");
-				createAccount.setEnabled(phoneNumberOk);
-			}
-		};
-		final Runnable runNotReachable = new Runnable() {
-			public void run() {
-				phoneNumberOk = false;
-				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, LinphoneManager.getInstance().getContext().getString(R.string.wizard_server_unavailable));
-				createAccount.setEnabled(phoneNumberOk);
-			}
-		};
-
-		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("is_phone_number_used", LinphoneXmlRpcRequest.ArgType.String);
-		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
-			@Override
-			public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {
-				if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
-					final String response = request.getStringResponse();
-					if (response.equals(XmlRpcHelper.SERVER_RESPONSE_OK)) {
-						mHandler.post(runOk);
-					} else {
-						if(response.startsWith("ERROR")){
-							mHandler.post(new Runnable() {
-								@Override
-								public void run() {
-									phoneNumberOk = false;
-									displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, response);
-									//createAccount.setEnabled(phoneNumberOk);
-								}
-							});
-						} else {
-							mHandler.post(runNotOk);
-						}
-					}
-				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
-					mHandler.post(runNotReachable);
-				}
-			}
-		});
-		xmlRpcRequest.addStringArg(username);
-		xmlRpcSession.sendRequest(xmlRpcRequest);
-	}
 	
 	private boolean isEmailCorrect(String email) {
     	Pattern emailPattern = Patterns.EMAIL_ADDRESS;
@@ -477,29 +434,36 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
 
-	private void addXMLRPCPhoneNumberHandler(final EditText field, final ImageView icon) {
+	private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				if (s.length() > 0) {
 					phoneNumberOk = false;
 					String phoneNumber = getPhoneNumber();
-					if (LinphoneManager.getLc().createProxyConfig().isPhoneNumber(phoneNumber)) {
-						isPhoneNumberRegistred(phoneNumber, icon);
+					String countryCode = dialCode.getText().toString();
+					if(countryCode != null && countryCode.startsWith("+")) {
+						countryCode = countryCode.substring(1);
+					}
+					Status status = accountCreator.setPhoneNumber(phoneNumberEdit.getText().toString(), countryCode);
+					if(status.equals(Status.Ok)){
+						accountCreator.isAccountUsed();
 					} else {
-						displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, getResources().getString(R.string.wizard_username_incorrect));
+						displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, errorForStatus(status));
 					}
 				} else {
 					displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, "");
 				}
 			}
 
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
-			public void onTextChanged(CharSequence s, int start, int count, int after) {}
+			public void onTextChanged(CharSequence s, int start, int count, int after) {
+			}
 		});
 	}
 	
-	private void addXMLRPCUsernameHandler(final EditText field, final ImageView icon) {
+	private void addUsernameHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				Matcher matcher = UPPER_CASE_REGEX.matcher(s);
@@ -510,30 +474,22 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				
+
 			}
 
 			public void onTextChanged(CharSequence s, int start, int count, int after) {
-				field.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							usernameOk = false;
-							String username = field.getText().toString();
-							if (isUsernameCorrect(username)) {
-								if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
-									LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
-									username = lpc.normalizePhoneNumber(username);
-								}
-								isUsernameRegistred(username, icon);
-							} else {
-								displayError(usernameOk, usernameError, usernameEdit, getResources().getString(R.string.wizard_username_incorrect));
-							}
-						} else {
-							displayError(true, usernameError, usernameEdit, "");
-						}
+				if(s.length() > 0){
+					usernameOk = false;
+					Status status = accountCreator.setUsername(field.getText().toString());
+					if(status.equals(Status.Ok)){
+						accountCreator.setPhoneNumber(null,null);
+						accountCreator.isAccountUsed();
+					} else {
+						displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
 					}
-				});
+				} else {
+					displayError(true, usernameError, usernameEdit, "");
+				}
 			}
 		});
 	}
@@ -630,5 +586,97 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		
 		field1.addTextChangedListener(passwordListener);
 		field2.addTextChangedListener(passwordListener);
+	}
+
+	String errorForStatus(Status status) {
+		boolean isPhoneNumber = (phoneNumberEdit.getText().length() > 0);
+		if (status.equals(Status.EmailInvalid))
+				return getString(R.string.invalid_email);
+		if (status.equals(Status.UsernameInvalid)){
+				return getString(R.string.invalid_username);
+		}
+		if (status.equals(Status.UsernameTooShort)){
+				return getString(R.string.username_too_short);
+		}
+		if (status.equals(Status.UsernameTooLong)){
+			return getString(R.string.username_too_long);
+		}
+		if (status.equals(Status.UsernameInvalidSize))
+				return getString(R.string.username_invalid_size);
+		if (status.equals(Status.PhoneNumberTooShort))
+				return getString(R.string.phone_number_too_short);
+		if (status.equals(Status.PhoneNumberTooLong))
+				return getString(R.string.phone_number_too_long);
+		if (status.equals(Status.PhoneNumberInvalid))
+				return getString(R.string.phone_number_invalid);
+		if (status.equals(Status.PasswordTooShort))
+				return getString(R.string.username_too_short);
+		if (status.equals(Status.PasswordTooLong))
+				return getString(R.string.username_too_long);
+		if (status.equals(Status.DomainInvalid))
+				return getString(R.string.invalid_domain);
+		if (status.equals(Status.RouteInvalid))
+				return getString(R.string.invalid_route);
+		if (status.equals(Status.DisplayNameInvalid))
+				return getString(R.string.invalid_route);
+		if (status.equals(Status.Failed))
+				return getString(R.string.request_failed);
+		if (status.equals(Status.TransportNotSupported))
+				return getString(R.string.transport_unsupported);
+		if (status.equals(Status.AccountExist))
+			return getString(R.string.account_already_exist);
+		if (status.equals(Status.AccountCreated)
+		 		|| status.equals(Status.AccountNotCreated)
+				|| status.equals(Status.AccountNotExist)
+				|| status.equals(Status.AccountNotActivated)
+				|| status.equals(Status.AccountAlreadyActivated)
+				|| status.equals(Status.AccountActivated)
+				|| status.equals(Status.Ok)){
+			return "";
+		}
+		return null;
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, final Status status) {
+		if(useUsername.isChecked()){
+			if (status.equals(Status.AccountNotExist)) {
+				usernameOk = true;
+				displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
+			} else {
+				usernameOk = false;
+				displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
+			}
+			createAccount.setEnabled(usernameOk && phoneNumberOk);
+		} else {
+			if (status.equals(Status.AccountNotExist)) {
+				phoneNumberOk = true;
+				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, errorForStatus(status));
+			} else {
+				phoneNumberOk = true;
+				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, errorForStatus(status));
+			}
+			createAccount.setEnabled(phoneNumberOk);
+		}
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
 	}
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/inapp_purchase"
+	android:background="@color/colorH"
+	android:layout_width="match_parent"
+	android:layout_height="60dp">
+
+	<ImageView
+		android:id="@+id/inapp_icon"
+		android:src="@drawable/linphone_logo"
+		android:layout_alignParentLeft="true"
+		android:layout_centerInParent="true"
+		android:layout_margin="5dp"
+		android:layout_width="40dp"
+		android:layout_height="40dp"/>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="5dp"
+		android:layout_centerVertical="true"
+		android:layout_toRightOf="@+id/inapp_icon">
+
+		<TextView
+			android:id="@+id/purchase_title"
+			style="@style/font7"
+			android:textSize="15sp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+		<TextView
+			android:id="@+id/purchase_description"
+			style="@style/font11"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+	</LinearLayout>
+
+	<TextView
+		android:id="@+id/purchase_price"
+		android:layout_margin="5dp"
+		android:layout_alignParentRight="true"
+		android:layout_centerInParent="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
+</RelativeLayout>

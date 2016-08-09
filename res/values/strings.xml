@@ -100,6 +100,26 @@
 	<string name="select_your_country">Select your Country</string>
 	<string name="country_code">(%s)</string>
 
+	<!-- Status -->
+	<string name="invalid_email">Invalid email</string>
+	<string name="account_already_exist">Account already exist</string>
+	<string name="invalid_username">Invalid username</string>
+	<string name="invalid_domain">Invalid domain</string>
+	<string name="invalid_route">Invalid route</string>
+	<string name="username_too_short">Username too short</string>
+	<string name="username_too_long">Username too long</string>
+	<string name="username_invalid_size">Username length invalid</string>
+	<string name="phone_number_too_long">Phone number too long</string>
+	<string name="phone_number_too_short">Phone number too short</string>
+	<string name="phone_number_invalid">Invalid phone number</string>
+	<string name="password_too_short">Password too short</string>
+	<string name="password_too_long">Password too long</string>
+	<string name="request_failed">Failed to query the server. Please try again later</string>
+	<string name="transport_unsupported">Unsupported transport</string>
+
+	<!-- In-app -->
+	<string name="inapp">in-app</string>
+
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>
 

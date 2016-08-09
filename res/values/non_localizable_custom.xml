@@ -16,8 +16,10 @@
 	<bool name="replace_assistant_with_old_interface">false</bool>
 	<bool name="force_use_of_linphone_friends">false</bool>
 	<bool name="in_app_purchase_in_settings">false</bool>
+	<bool name="use_friendlist_subscription">true</bool>
 
-	<string name="wizard_url">https://www.linphone.org/wizard.php</string>
+	<string name="wizard_url">https://sip3.linphone.org:444/inapp.php</string>
+
 
 	<!-- Push notification settings -->
 	<bool name="enable_push_id">true</bool>

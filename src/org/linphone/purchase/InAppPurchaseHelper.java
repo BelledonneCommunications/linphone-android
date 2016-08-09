@@ -126,15 +126,20 @@ public class InAppPurchaseHelper {
 		mContext = context;
 		mListener = listener;
 		mGmailAccount = getGmailAccount();
-		
+
+
+		Log.d("[In-app purchase] creating InAppPurchaseHelper for context "+context.getLocalClassName());
+
 		mServiceConn = new ServiceConnection() {
 		   @Override
 		   public void onServiceDisconnected(ComponentName name) {
+			   Log.d("[In-app purchase] onServiceDisconnected!");
 		       mService = null;
 		   }
 
 		   @Override
 		   public void onServiceConnected(ComponentName name, IBinder service) {
+			   Log.d("[In-app purchase] onServiceConnected!");
 			   mService = IInAppBillingService.Stub.asInterface(service);
 		       String packageName = mContext.getPackageName();
 		       try {
@@ -150,7 +155,7 @@ public class InAppPurchaseHelper {
 		       }
 		   }
 		};
-		
+
 		Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
 		serviceIntent.setPackage("com.android.vending");
         if (!mContext.getPackageManager().queryIntentServices(serviceIntent, 0).isEmpty()) {
@@ -177,7 +182,7 @@ public class InAppPurchaseHelper {
 		} catch (RemoteException e) {
 			Log.e(e);
 		}
-		
+
 		if (skuDetails != null) {
 			int response = skuDetails.getInt(RESPONSE_CODE);
 			if (response == RESPONSE_RESULT_OK) {
@@ -191,6 +196,7 @@ public class InAppPurchaseHelper {
 						String desc = object.getString(SKU_DETAILS_DESC);
 						
 						Purchasable purchasable = new Purchasable(id).setTitle(title).setDescription(desc).setPrice(price);
+						Log.w("Purchasable item " + purchasable.getDescription());
 						products.add(purchasable);
 					} catch (JSONException e) {
 						Log.e(e);
@@ -276,6 +282,10 @@ public class InAppPurchaseHelper {
 			if (resultCode == Activity.RESULT_OK && responseCode == RESPONSE_RESULT_OK) {
 				String payload = data.getStringExtra(RESPONSE_INAPP_PURCHASE_DATA);
 				String signature = data.getStringExtra(RESPONSE_INAPP_SIGNATURE);
+
+				Purchasable item = LinphonePreferences.instance().getInAppPurchasedItem();
+				item.setPayloadAndSignature(payload, signature);
+				LinphonePreferences.instance().setInAppPurchasedItem(item);
 				
 				XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
 				xmlRpcHelper.verifySignatureAsync(new XmlRpcListenerBase() {

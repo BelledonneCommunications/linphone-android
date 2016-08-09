@@ -25,6 +25,8 @@ import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
@@ -112,8 +114,6 @@ private static AssistantActivity instance;
 		}
         mPrefs = LinphonePreferences.instance();
 		status.enableSideMenu(false);
-
-		checkAndRequestReadPhoneState();
         
         mListener = new LinphoneCoreListenerBase() {
         	@Override
@@ -269,7 +269,7 @@ private static AssistantActivity instance;
 		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
 			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
 				Log.i("[Permission] Asking for " + permission);
-				ActivityCompat.requestPermissions(this, new String[] { permission }, result);
+				ActivityCompat.requestPermissions(this, new String[]{permission}, result);
 			}
 		}
 	}
@@ -464,7 +464,8 @@ private static AssistantActivity instance;
 			.setQualityReportingInterval(180)
 			.setRealm("sip.linphone.org")
 			.setNoDefault(false);
-			
+
+			mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
 			
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);

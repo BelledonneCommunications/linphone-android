@@ -37,5 +37,15 @@ max_calls=10
 activation_code_length=4
 
 [in-app-purchase]
-server_url=https://www.linphone.org/xmlrpc.php
+server_url=http://sip3.linphone.org/inapp.php
 purchasable_items_ids=test_account_subscription
+
+[assistant]
+domain=sip.linphone.org
+password_max_length=-1
+password_min_length=1
+username_length=-1
+username_max_length=64
+username_min_length=1
+username_regex=^[a-z0-9_.\-]*$
+xmlrpc_url=https://sip3.linphone.org:444/inapp.php
