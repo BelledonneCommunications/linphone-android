@@ -1187,8 +1187,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 				layoutParams.setMargins(100, 10, 10, 10);
 				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
-				holder.contactName.setTextAppearance(R.style.font3);
-				holder.fileTransferAction.setTextAppearance(R.style.font15);
+				Compatibility.setTextAppearance(holder.contactName, getActivity(), R.style.font3);
+				Compatibility.setTextAppearance(holder.fileTransferAction, getActivity(), R.style.font15);
 				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 			} else {
 				if (isEditMode) {
@@ -1199,8 +1199,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					layoutParams.setMargins(10, 10, 100, 10);
 				}
 				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
-				holder.contactName.setTextAppearance(R.style.font9);
-				holder.fileTransferAction.setTextAppearance(R.style.font8);
+				Compatibility.setTextAppearance(holder.contactName, getActivity(), R.style.font9);
+				Compatibility.setTextAppearance(holder.fileTransferAction, getActivity(), R.style.font8);
 				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
 			}
 			holder.bubbleLayout.setLayoutParams(layoutParams);
