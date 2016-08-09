@@ -59,7 +59,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private transient ArrayList<ContentProviderOperation> changesToCommit;
 	private transient ArrayList<ContentProviderOperation> changesToCommit2;
 	private boolean hasSipAddress;
-	private Bitmap photoBitmap, thumbnailBitmap;
+	private transient Bitmap photoBitmap, thumbnailBitmap;
 	
 	public LinphoneContact() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
