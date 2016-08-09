@@ -77,7 +77,6 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -1065,10 +1064,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			holder.messageStatus.setVisibility(View.INVISIBLE);
 			holder.messageSendingInProgress.setVisibility(View.GONE);
 			
-			String displayName = message.getFrom().getUserName();
+			String displayName = message.getFrom().getDisplayName();
+			if (displayName == null) {
+				displayName = message.getFrom().getUserName();
+			}
 			if (!message.isOutgoing()) {
 				if (contact != null) {
-					displayName = contact.getFullName();
+					if (contact != null && contact.getFullName() != null) {
+						displayName = contact.getFullName();
+					}
 					if (contact.hasPhoto()) {
 						Bitmap photo = contact.getPhoto();
 						if (photo != null) {
@@ -1085,7 +1089,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			} else {
 				holder.contactPicture.setImageResource(R.drawable.avatar);
 			}
-
 			holder.contactName.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
 			
 			if (status == LinphoneChatMessage.State.NotDelivered) {
@@ -1096,8 +1099,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			
 			if (externalBodyUrl != null || fileTransferContent != null) {
-				holder.messageText.setVisibility(View.GONE);
-				holder.fileTransferProgressBar.setProgress(0);
 				String appData = message.getAppData();
 
 				if (message.isOutgoing() && appData != null){
