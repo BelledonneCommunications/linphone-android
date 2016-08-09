@@ -85,7 +85,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -162,7 +161,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		messagesList = (ListView) view.findViewById(R.id.chat_message_list);
-		messagesList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		searchContactField = (EditText) view.findViewById(R.id.search_contact_field);
 		resultContactsSearch = (ListView) view.findViewById(R.id.result_contacts);
 
@@ -231,7 +229,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
 					adapter.addMessage(cr.getHistory(1)[0]);
-					messagesList.setSelection(adapter.getCount()-1);
 					
 					String externalBodyUrl = message.getExternalBodyUrl();
 					LinphoneContent fileTransferContent = message.getFileTransferInformation();
@@ -551,7 +548,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-
+		
 		if (id == R.id.back_to_call) {
 			LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			return;
@@ -1015,6 +1012,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		public void addMessage(LinphoneChatMessage message) {
 			history.add(message);
 			notifyDataSetChanged();
+			messagesList.setSelection(getCount() - 1);
 		}
 
 		@Override
@@ -1037,6 +1035,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			final LinphoneChatMessage message = history.get(position);
 			View view = null;
 			final ViewHolder holder;
+			boolean sameMessage = false;
 
 			if (convertView != null) {
 				view = convertView;
@@ -1047,8 +1046,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				holder = new ViewHolder(view);
 				view.setTag(holder);
 			}
-			view.setId(message.getStorageId());
-			holder.id = message.getStorageId();
+			
+			if (holder.id == message.getStorageId()) {
+				sameMessage = true;
+			} else {
+				holder.id = message.getStorageId();
+			}
+			view.setId(holder.id);
 			registerForContextMenu(view);
 
 			LinphoneChatMessage.State status = message.getStatus();
@@ -1101,9 +1105,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (externalBodyUrl != null || fileTransferContent != null) {
 				String appData = message.getAppData();
 
-				if (message.isOutgoing() && appData != null){
+				if (message.isOutgoing() && appData != null) {
 					holder.messageImage.setVisibility(View.VISIBLE);
-					loadBitmap(appData, holder.messageImage);
+					if (!sameMessage) loadBitmap(appData, holder.messageImage);
 
 					if (LinphoneManager.getInstance().getMessageUploadPending() != null  && LinphoneManager.getInstance().getMessageUploadPending().getStorageId() == message.getStorageId()) {
 						holder.messageSendingInProgress.setVisibility(View.GONE);
@@ -1127,7 +1131,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							LinphoneManager.removeListener(holder);
 							holder.fileTransferLayout.setVisibility(View.GONE);
 							holder.messageImage.setVisibility(View.VISIBLE);
-							loadBitmap(appData, holder.messageImage);
+							if (!sameMessage) loadBitmap(appData, holder.messageImage);
 						}
 					}
 				}
