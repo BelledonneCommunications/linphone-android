@@ -194,7 +194,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		try {
 			photoBitmap = MediaStore.Images.Media.getBitmap(ContactsManager.getInstance().getContentResolver(), photoUri);
 		} catch (FileNotFoundException e) {
-			Log.e(e);
+			// Let's not say anything if the picture doesn't exist, it will pollute the logs
 		} catch (IOException e) {
 			Log.e(e);
 		}
@@ -218,7 +218,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		try {
 			thumbnailBitmap = MediaStore.Images.Media.getBitmap(ContactsManager.getInstance().getContentResolver(), thumbnailUri);
 		} catch (FileNotFoundException e) {
-			Log.e(e);
+			// Let's not say anything if the picture doesn't exist, it will pollute the logs
 		} catch (IOException e) {
 			Log.e(e);
 		}
