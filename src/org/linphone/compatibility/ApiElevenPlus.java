@@ -17,6 +17,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents.Insert;
+import android.widget.TextView;
 
 /*
 ApiElevenPlus.java
@@ -161,5 +162,10 @@ public class ApiElevenPlus {
 		.setWhen(System.currentTimeMillis()).getNotification();
 
 		return notif;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void setTextAppearance(TextView textview, Context context, int style) {
+		textview.setTextAppearance(context, style);
 	}
 }

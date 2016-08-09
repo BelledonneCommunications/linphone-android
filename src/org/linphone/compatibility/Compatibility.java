@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.mediastream.Version;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -29,6 +30,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.TextView;
 /**
  * @author Sylvain Berfini
  */
@@ -119,5 +121,13 @@ public class Compatibility {
 		    return Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
 		}*/
 		return Html.fromHtml(text);
+	}
+
+	public static void setTextAppearance(TextView textview, Context context, int style) {
+		if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+			ApiTwentyThreePlus.setTextAppearance(textview, style);
+		} else {
+			ApiElevenPlus.setTextAppearance(textview, context, style);
+		}
 	}
 }
