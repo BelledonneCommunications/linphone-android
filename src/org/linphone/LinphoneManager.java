@@ -1188,10 +1188,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		Log.i("Set audio mode on 'Voice Communication'");
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
-		int sampleRate = 0;
+		int sampleRate = 44100;
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
-		String sampleRateProperty = mAudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
-		sampleRate = Integer.parseInt(sampleRateProperty);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			String sampleRateProperty = mAudioManager.getProperty(AudioManager.PROPERTY_OUTPUT_SAMPLE_RATE);
+			sampleRate = Integer.parseInt(sampleRateProperty);
+		}
 		int status = mLc.startEchoTester(sampleRate);
 		if (status > 0)
 			echoTesterIsRunning = true;
