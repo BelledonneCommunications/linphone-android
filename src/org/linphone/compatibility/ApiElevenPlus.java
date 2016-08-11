@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.linphone.R;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ContentUris;
@@ -167,5 +168,9 @@ public class ApiElevenPlus {
 	@SuppressWarnings("deprecation")
 	public static void setTextAppearance(TextView textview, Context context, int style) {
 		textview.setTextAppearance(context, style);
+	}
+
+	public static void scheduleAlarm(AlarmManager alarmManager, int type, long triggerAtMillis, PendingIntent operation) {
+		alarmManager.set(type, triggerAtMillis, operation);
 	}
 }

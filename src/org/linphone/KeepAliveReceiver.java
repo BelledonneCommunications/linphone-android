@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package org.linphone;
 
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
@@ -57,9 +58,9 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 					//make sure the application will at least wakes up every 10 mn
 					Intent newIntent = new Intent(context, KeepAliveReceiver.class);
 					PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(context, 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
-					((AlarmManager) context.getSystemService(Context.ALARM_SERVICE)).setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP
-																					, SystemClock.elapsedRealtime() + 600000
-																					, keepAlivePendingIntent);
+
+					AlarmManager alarmManager = ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE));
+					Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
 				}
 			} else if (action.equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
 				Log.i("[KeepAlive] Screen is on, enable");

@@ -1360,11 +1360,19 @@ public class LinphonePreferences {
 	}
 
 	public boolean firstTimeAskingForPermission(String permission) {
+		return firstTimeAskingForPermission(permission, true);
+	}
+
+	public boolean firstTimeAskingForPermission(String permission, boolean toggle) {
 		boolean firstTime = getConfig().getBool("app", permission, true);
-		if (firstTime) {
-			getConfig().setBool("app", permission, false);
+		if (toggle) {
+			permissionHasBeenAsked(permission);
 		}
 		return firstTime;
+	}
+	
+	public void permissionHasBeenAsked(String permission) {
+		getConfig().setBool("app", permission, false);
 	}
 	
 	public boolean isDeviceRingtoneEnabled() {

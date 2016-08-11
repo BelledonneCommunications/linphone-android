@@ -228,6 +228,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				if (from.asStringUriOnly().equals(sipUri)) {
 					LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
+					LinphoneActivity.instance().updateMissedChatCount();
 					adapter.addMessage(cr.getHistory(1)[0]);
 					
 					String externalBodyUrl = message.getExternalBodyUrl();

@@ -1,10 +1,10 @@
 package org.linphone.compatibility;
 
-import android.widget.TextView;
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 
-/*
-ApiTwentyThreePlus.java
+/*ApiNineteenPlus.java
 Copyright (C) 2012  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -24,9 +24,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 /**
  * @author Sylvain Berfini
  */
-@TargetApi(23)
-public class ApiTwentyThreePlus {
-	public static void setTextAppearance(TextView textview, int style) {
-		textview.setTextAppearance(style);
+@TargetApi(19)
+public class ApiNineteenPlus {
+	public static void scheduleAlarm(AlarmManager alarmManager, int type, long triggerAtMillis, PendingIntent operation) {
+		alarmManager.setExact(type, triggerAtMillis, operation);
 	}
 }
