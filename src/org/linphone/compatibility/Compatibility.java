@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.mediastream.Version;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -127,6 +128,14 @@ public class Compatibility {
 			ApiTwentyThreePlus.setTextAppearance(textview, style);
 		} else {
 			ApiElevenPlus.setTextAppearance(textview, context, style);
+		}
+	}
+
+	public static void scheduleAlarm(AlarmManager alarmManager, int type, long triggerAtMillis, PendingIntent operation) {
+		if (Version.sdkAboveOrEqual(Version.API19_KITKAT_44)) {
+			ApiNineteenPlus.scheduleAlarm(alarmManager, type, triggerAtMillis, operation);
+		} else {
+			ApiElevenPlus.scheduleAlarm(alarmManager, type, triggerAtMillis, operation);
 		}
 	}
 }
