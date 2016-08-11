@@ -25,8 +25,6 @@ import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
@@ -82,7 +80,6 @@ private static AssistantActivity instance;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
-	private static final int PERMISSIONS_READ_PHONE_STATE = 202;
 
 	public CountryListFragment.Country country;
 	public String phone_number;
@@ -196,10 +193,6 @@ private static AssistantActivity instance;
 		transaction.commitAllowingStateLoss();
 	}
 
-	public AssistantFragmentsEnum getCurrentFragment() {
-		return currentFragment;
-	}
-
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -207,7 +200,7 @@ private static AssistantActivity instance;
 		if (id == R.id.assistant_cancel) {
 			hideKeyboard();
 			LinphonePreferences.instance().firstLaunchSuccessful();
-			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
+			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				LinphonePreferences.instance().firstLaunchSuccessful();
@@ -224,7 +217,7 @@ private static AssistantActivity instance;
 	public void onBackPressed() {
 		if (currentFragment == firstFragment) {
 			LinphonePreferences.instance().firstLaunchSuccessful();
-			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
+			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				LinphonePreferences.instance().firstLaunchSuccessful();
@@ -252,10 +245,6 @@ private static AssistantActivity instance;
 		if (imm != null && view != null) {
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
-	}
-
-	public void checkAndRequestReadPhoneState() {
-		checkAndRequestPermission(Manifest.permission.READ_PHONE_STATE, 0);
 	}
 
 	public void checkAndRequestAudioPermission() {
@@ -391,11 +380,6 @@ private static AssistantActivity instance;
 	public void retryLogin(String username, String password, String displayName, String domain, TransportType transport) {
 		accountCreated = false;
 		saveCreatedAccount(username, password, displayName, null, domain, transport);
-	}
-
-	public void loadLinphoneConfig(){
-		//LinphoneManager.getInstance().loadConfig();
-		//LinphoneManager.getInstance().restartLinphoneCore();
 	}
 
 	private void launchDownloadCodec() {

@@ -17,6 +17,8 @@
 	<string name="sync_account_name">linphone contacts</string>
 	<string name="history_date_format">EEE, d MMM</string>
 	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
+	<string name="inapp_popup_date_format">yyyy/MM/dd</string>
+	<string name="inapp_popup_date_day">dd</string>
 	<string name="messages_date_format">dd/MM, HH:mm</string>
 	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">HH:mm</string>
@@ -118,7 +120,9 @@
 	<string name="transport_unsupported">Unsupported transport</string>
 
 	<!-- In-app -->
-	<string name="inapp">in-app</string>
+	<string name="inapp">In-app</string>
+	<string name="inapp_notification_title">In-app purchase</string>
+	<string name="inapp_notification_content">The trail period expires on %s</string>
 
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>

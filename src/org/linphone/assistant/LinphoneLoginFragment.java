@@ -69,7 +69,7 @@ public class LinphoneLoginFragment extends Fragment implements OnClickListener, 
 			return;
 		}
 		
-		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), displayName.getText().toString(), getResources().getBoolean(R.bool.setup_account_validation_mandatory));
+		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), displayName.getText().toString(), getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
 	}
 
 	@Override

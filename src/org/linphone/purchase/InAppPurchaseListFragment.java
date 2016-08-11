@@ -95,6 +95,6 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Purchasable item = (Purchasable) view.getTag();
-		InAppPurchaseActivity.instance().displayStore(item);
+		InAppPurchaseActivity.instance().displayPurchase(item);
 	}
 }

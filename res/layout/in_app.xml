@@ -15,6 +15,7 @@
 
 	<LinearLayout
 		android:id="@+id/topbar"
+		android:layout_below="@+id/status"
 		android:background="@color/colorF"
 		android:orientation="horizontal"
 		android:layout_gravity="center_horizontal"

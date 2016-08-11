@@ -36,6 +36,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 /**
@@ -45,6 +46,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	private static InAppPurchaseActivity instance;
 	private InAppPurchaseHelper inAppPurchaseHelper;
 	private ImageView cancel, back;
+	private ProgressBar inProgress;
 
 	private List<Purchasable> purchasedItems;
 	private Fragment fragment;
@@ -56,6 +58,9 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 
 		inAppPurchaseHelper = new InAppPurchaseHelper(this, this);
 		setContentView(R.layout.in_app);
+
+		inProgress = (ProgressBar) findViewById(R.id.purchaseItemsFetchInProgress);
+		inProgress.setVisibility(View.VISIBLE);
 
 		back = (ImageView) findViewById(R.id.back);
 		back.setOnClickListener(this);
@@ -77,7 +82,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		changeFragment(fragment);
 	}
 
-	public void displayStore(Purchasable item) {
+	public void displayPurchase(Purchasable item) {
 		Bundle extra = new Bundle();
 		extra.putString("item_id",item.getId());
 		fragment = new InAppPurchaseFragment();
@@ -136,7 +141,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	@Override
 	public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
 		//purchasableItemsLayout.removeAllViews();
-
+		inProgress.setVisibility(View.GONE);
 		purchasedItems = new ArrayList<Purchasable>();
 		for (Purchasable item : items) {
 			purchasedItems.add(item);
@@ -200,6 +205,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		mHandler.post(new Runnable() {
 			@Override
 			public void run() {
+				inProgress.setVisibility(View.GONE);
 				Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();	
 			}
 		});

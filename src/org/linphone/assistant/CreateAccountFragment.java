@@ -32,7 +32,6 @@ import org.linphone.core.LinphoneXmlRpcRequestImpl;
 import org.linphone.core.LinphoneXmlRpcSession;
 import org.linphone.core.LinphoneXmlRpcSessionImpl;
 import org.linphone.xmlrpc.XmlRpcHelper;
-import org.linphone.mediastream.Log;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -83,8 +82,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	private LinphoneAccountCreator accountCreator;
 	
 	private String getUsername() {
-		String username = usernameEdit.getText().toString();
-		return username.toLowerCase(Locale.getDefault());
+		if(usernameEdit != null) {
+			String username = usernameEdit.getText().toString();
+			return username.toLowerCase(Locale.getDefault());
+		}
+		return null;
 	}
 
 	private String getPhoneNumber(){
@@ -134,27 +136,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 			usernameError = (TextView) view.findViewById(R.id.username_error);
 			usernameEdit = (EditText) view.findViewById(R.id.username);
-			usernameEdit.addTextChangedListener(new TextWatcher() {
-				@Override
-				public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-				@Override
-				public void onTextChanged(CharSequence s, int start, int before, int count) {
-					/*if(useUsername.isChecked() && usernameEdit.getText().length() > 0) {
-						sipUri.setText("Sip uri is sip:" + s.toString() + "@sip.linphone.org");
-					} else {
-						if(phoneNumberEdit.getText().length() > 0){
-							sipUri.setText("Sip uri is sip:" + phoneNumberEdit.getText().toString()+ "@sip.linphone.org");
-						} else {
-							sipUri.setText("");
-						}
-					}*/
-				}
-
-				@Override
-				public void afterTextChanged(Editable s) {}
-			});
 			usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
+
 			addUsernameHandler(usernameEdit, null);
 		}
 
@@ -177,7 +160,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			addXMLRPCConfirmPasswordHandler(passwordEdit, passwordConfirmEdit, null);
 			addXMLRPCEmailHandler(emailEdit, null);
 
-			if (getResources().getBoolean(R.bool.pre_fill_email_in_wizard)) {
+			if (getResources().getBoolean(R.bool.pre_fill_email_in_assistant)) {
 				Account[] accounts = AccountManager.get(getActivity()).getAccountsByType("com.google");
 
 				for (Account account: accounts) {
@@ -199,7 +182,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		updateApplyButton();
 
     	createAccount = (Button) view.findViewById(R.id.assistant_create);
-    	createAccount.setEnabled(true);
+    	createAccount.setEnabled(false);
     	createAccount.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if(getResources().getBoolean(R.bool.isTablet)) {
@@ -207,7 +190,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 						createAccountWithEmail(getUsername(), passwordEdit.getText().toString(), emailEdit.getText().toString(), false);
 					}
 				} else {
-					createAccountWithPhoneNumber(getUsername(), "", getPhoneNumber(), false);
+					if(getResources().getBoolean(R.bool.assistant_allow_username)){
+						createAccountWithPhoneNumber(getUsername(), "", getPhoneNumber(), false);
+					} else {
+						createAccountWithPhoneNumber(getPhoneNumber(), "", getPhoneNumber(), false);
+					}
 				}
 			}
 		});
@@ -292,7 +279,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 	
 	private boolean isUsernameCorrect(String username) {
-		if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_wizard)) {
+		if (getResources().getBoolean(R.bool.allow_only_phone_numbers_in_assistant)) {
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
 			return lpc.isPhoneNumber(username);
 		} else {
@@ -439,7 +426,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			public void afterTextChanged(Editable s) {
 				if (s.length() > 0) {
 					phoneNumberOk = false;
-					String phoneNumber = getPhoneNumber();
 					String countryCode = dialCode.getText().toString();
 					if(countryCode != null && countryCode.startsWith("+")) {
 						countryCode = countryCode.substring(1);
@@ -639,7 +625,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, final Status status) {
-		if(useUsername.isChecked()){
+		if(getResources().getBoolean(R.bool.assistant_allow_username) && useUsername.isChecked()){
 			if (status.equals(Status.AccountNotExist)) {
 				usernameOk = true;
 				displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
@@ -678,5 +664,10 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, Status status) {
+
 	}
 }

@@ -369,7 +369,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		CheckBoxPreference friendlistSubscribe = (CheckBoxPreference) advanced.getPreference(8);
 		friendlistSubscribe.setOnPreferenceChangeListener(friendlistSubscribeListener);
 		if(!isNewAccount){
-			escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
+			friendlistSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 		}
     	
     	PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));

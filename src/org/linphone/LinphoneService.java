@@ -455,6 +455,16 @@ public final class LinphoneService extends Service {
 		
 		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
 	}
+
+	public void displayInappNotification(String message) {
+		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		notifIntent.putExtra("GoToInapp", true);
+
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		mNotif = Compatibility.createSimpleNotification(getApplicationContext(), getString(R.string.inapp_notification_title), message, notifContentIntent);
+
+		notifyWrapper(NOTIF_ID, mNotif);
+	}
 	
 	public void removeMessageNotification() {
 		mNM.cancel(MESSAGE_NOTIF_ID);

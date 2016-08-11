@@ -1311,6 +1311,14 @@ public class LinphonePreferences {
 		return purchasables;
 	}
 
+	public String getLastDateNotificationShown(){
+		return getConfig().getString("app", "notification_date", null);
+	}
+
+	public void setLastDateNotificationShown(String date){
+		getConfig().setString("app", "notification_date", date);
+	}
+
 	public String getXmlRpcServerUrl() {
 		return getConfig().getString("app", "server_url", null);
 	}

@@ -1,6 +1,6 @@
 package org.linphone.assistant;
 /*
-CreateAccountActivationFragment.java
+CreateAccountCodeActivationFragment.java
 Copyright (C) 2015  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -42,9 +42,6 @@ import org.linphone.core.LinphoneXmlRpcSession;
 import org.linphone.core.LinphoneXmlRpcSessionImpl;
 import org.linphone.mediastream.Log;
 
-/**
- * @author Sylvain Berfini
- */
 public class CreateAccountCodeActivationFragment extends Fragment {
 	private String username, phone, ha1;
 	private EditText code;
