@@ -103,14 +103,14 @@
 				android:visibility="gone"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Don't use phone number as username"/>
+				android:text="@string/use_username_instead_or_phone_number"/>
 
 			<CheckBox
 				android:id="@+id/use_email"
 				android:visibility="gone"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Don't use phone number for account activation"/>
+				android:text="@string/use_email_for_validation"/>
 
 
 			<LinearLayout

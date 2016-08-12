@@ -1,0 +1,72 @@
+ 			  **********************************
+              *   LINPHONE customs parameters  *
+              **********************************
+
+In res/values/non_localizable_custom.xml (filled with linphone default options):
+
+1. Global
+
+	* Set the default domain used by the application:
+	<string name="default_domain">sip.linphone.org</string
+
+2. Assistant
+
+	* Server xmlrpc url for accounts
+	<string name="wizard_url">https://sip3.linphone.org:444/inapp.php</string>
+
+	* In CreateAccount, allow username instead of phone number for creating a new account
+	<bool name="assistant_allow_username">true</bool>
+
+	* Hide buttons in assistant menu
+	<bool name="hide_linphone_accounts_in_assistant">false</bool>
+	<bool name="hide_generic_accounts_in_assistant">false</bool>
+	<bool name="hide_remote_provisioning_in_assistant">false</bool>
+
+
+3. Inapp
+
+	* Enabled inapp purchase
+	<bool name="enable_in_app_purchase">true</bool>
+
+	* Days before end of trial period that launch daily notification to remind user to buy an account
+	<integer name="days_notification_shown">5</integer>
+
+	* Time between two inapp notifications in seconds
+	<integer name="time_between_inapp_notification">86400</integer>
+
+	* Hide username field in purchase view (automatically get from default account)
+	<bool name="hide_username_in_inapp">true</bool>
+
+
+In res/raw/linphonerc_factory sections:
+
+	[in-app-purchase]
+	* Server xmlrpc url for inapp
+	server_url=https://sip3.linphone.org:444/inapp.php
+
+	* Item ids from the google play store
+	purchasable_items_ids=test_account_subscription
+
+	[app]
+
+	* Numbers of digits to enter for validation/recover account
+    activation_code_length=4
+
+
+	[assistant]
+
+	* Set the default domain used for account creation :
+	domain=sip.linphone.org
+
+	* Set the default password length (min-max) :
+	password_max_length=-1
+	password_min_length=1
+
+	* Set the default username length (min-max) :
+	username_length=-1
+	username_max_length=64
+	username_min_length=1
+	username_regex=^[a-z0-9_.\-]*$
+
+	* Server xmlrpc url for accounts
+	xmlrpc_url=https://sip3.linphone.org:444/inapp.php

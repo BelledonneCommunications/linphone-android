@@ -125,6 +125,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private Fragment.SavedState dialerSavedState;
 	private boolean newProxyConfig;
 	private boolean emptyFragment = false;
+	private boolean isTrialAccount = false;
 	private OrientationEventListener mOrientationHelper;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout mTabBar;
@@ -201,7 +202,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		initButtons();
 		initSideMenu();
 
-		if(getResources().getBoolean(R.bool.enabled_in_app_purchase)){
+		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
 			isTrialAccount();
 		}
 
@@ -628,7 +629,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayInapp() {
-		checkAndRequestInappPermission();
 		startActivity(new Intent(LinphoneActivity.this, InAppPurchaseActivity.class));
 	}
 
@@ -1470,8 +1470,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void initSideMenu() {
 
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
-		if(getResources().getBoolean(R.bool.in_app_purchase_in_settings)){
-			sideMenuItems = new String[]{getResources().getString(R.string.menu_assistant),getResources().getString(R.string.menu_settings),getResources().getString(R.string.menu_about), getResources().getString(R.string.inapp)};
+		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
+			sideMenuItems = new String[]{getResources().getString(R.string.menu_assistant),getResources().getString(R.string.menu_settings),getResources().getString(R.string.inapp), getResources().getString(R.string.menu_about)};
 		} else {
 			sideMenuItems = new String[]{getResources().getString(R.string.menu_assistant),getResources().getString(R.string.menu_settings),getResources().getString(R.string.menu_about)};
 		}
@@ -1492,7 +1492,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if (sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.menu_assistant))) {
 					LinphoneActivity.instance().displayAssistant();
 				}
-				if(getResources().getBoolean(R.bool.in_app_purchase_in_settings)){
+				if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
 					if (sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.inapp))) {
 						LinphoneActivity.instance().displayInapp();
 					}
@@ -1678,10 +1678,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			helper.isTrialAccountAsync(new XmlRpcListenerBase() {
 				@Override
 				public void onTrialAccountFetched(boolean isTrial) {
-					if (isTrial) {
-						getExpirationAccount();
-					}
+					isTrialAccount = isTrial;
+					getExpirationAccount();
 				}
+
+				@Override
+				public void onError(String error){}
 			}, LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()), LinphonePreferences.instance().getAccountHa1(LinphonePreferences.instance().getDefaultAccountIndex()));
 		}
 	}
@@ -1699,12 +1701,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 						calresult.setTimeInMillis(timestamp);
 
 						int diff = getDiffDays(calresult, Calendar.getInstance());
-						if (diff != -1 && diff <= getResources().getInteger(R.integer.number_days_reminder)) {
+						if (diff != -1 && diff <= getResources().getInteger(R.integer.days_notification_shown)) {
 							displayInappNotification(timestampToHumanDate(calresult));
 						}
 					}
-
 				}
+
+				@Override
+				public void onError(String error){}
 			}, LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()), LinphonePreferences.instance().getAccountHa1(LinphonePreferences.instance().getDefaultAccountIndex()));
 		}
 	}
@@ -1715,7 +1719,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else {
 			LinphonePreferences.instance().setLastDateNotificationShown(timestampToHumanDate(Calendar.getInstance()));
 		}
-		LinphoneService.instance().displayInappNotification(String.format(getString(R.string.inapp_notification_content), date));
+		if(isTrialAccount){
+			LinphoneService.instance().displayInappNotification(String.format(getString(R.string.inapp_notification_trial_expire), date));
+		} else {
+			LinphoneService.instance().displayInappNotification(String.format(getString(R.string.inapp_notification_account_expire), date));
+		}
+
 	}
 
 	private String timestampToHumanDate(Calendar cal) {

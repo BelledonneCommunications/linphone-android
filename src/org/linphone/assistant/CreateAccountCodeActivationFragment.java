@@ -45,6 +45,7 @@ import org.linphone.mediastream.Log;
 public class CreateAccountCodeActivationFragment extends Fragment {
 	private String username, phone, ha1;
 	private EditText code;
+	private boolean recoverAccount;
 	private int code_length;
 	private Handler mHandler = new Handler();
 	private Button checkAccount;
@@ -57,6 +58,7 @@ public class CreateAccountCodeActivationFragment extends Fragment {
 		
 		username = getArguments().getString("Username");
 		phone = getArguments().getString("Phone");
+		recoverAccount = getArguments().getBoolean("RecoverAccount");
 		code_length = LinphonePreferences.instance().getCodeLength();
 
 		if(username == null || username.length() == 0){

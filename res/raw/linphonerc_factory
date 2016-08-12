@@ -12,6 +12,7 @@ register_only_when_network_is_up=1
 auto_net_state_mon=0
 auto_answer_replacing_calls=1
 ping_with_options=0
+rls_uri=sip:rls@sip.linphone.org
 
 [rtp]
 audio_rtp_port=7076
@@ -37,7 +38,7 @@ max_calls=10
 activation_code_length=4
 
 [in-app-purchase]
-server_url=http://sip3.linphone.org/inapp.php
+server_url=https://sip3.linphone.org:444/inapp.php
 purchasable_items_ids=test_account_subscription
 
 [assistant]

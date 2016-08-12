@@ -294,22 +294,22 @@ private static AssistantActivity instance;
 		}
 	}
 
-	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
-		saveCreatedAccount(username, password, displayName, null, domain, transport);
+	private void logIn(String username, String password, String ha1, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
+		saveCreatedAccount(username, password, displayName, ha1, domain, transport);
 	}
 
 	public void checkAccount(String username, String password, String displayName, String domain) {
 		saveCreatedAccount(username, password, displayName, null, domain, null);
 	}
 
-	public void linphoneLogIn(String username, String password, String displayName, boolean validate) {
+	public void linphoneLogIn(String username, String password, String ha1,  String displayName, boolean validate) {
 		if (validate) {
 			checkAccount(username, password, displayName, getString(R.string.default_domain));
 		} else {
 			if(accountCreated) {
 				retryLogin(username, password, displayName, getString(R.string.default_domain), null);
 			} else {
-				logIn(username, password, displayName, getString(R.string.default_domain), null, true);
+				logIn(username, password, ha1,  displayName, getString(R.string.default_domain), null, true);
 			}
 		}
 	}
@@ -318,7 +318,7 @@ private static AssistantActivity instance;
 		if (accountCreated) {
 			retryLogin(username, password, displayName, domain, transport);
 		} else {
-			logIn(username, password, displayName, domain, transport, false);
+			logIn(username, password, null, displayName, domain, transport, false);
 		}
 	}
 
@@ -525,12 +525,13 @@ private static AssistantActivity instance;
 		back.setVisibility(View.INVISIBLE);
 	}
 
-	public void displayAssistantCodeConfirm(String username, String phone) {
+	public void displayAssistantCodeConfirm(String username, String phone, boolean recoverAccount) {
 		CreateAccountCodeActivationFragment fragment = new CreateAccountCodeActivationFragment();
 		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
 		extras.putString("Phone", phone);
+		extras.putBoolean("RecoverAccount", recoverAccount);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 

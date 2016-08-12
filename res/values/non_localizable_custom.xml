@@ -12,7 +12,7 @@
 
 	<!-- Assistant -->
 	<string name="wizard_url">https://sip3.linphone.org:444/inapp.php</string><!-- Url of the xmlrpc script -->
-	<bool name="assistant_allow_username">false</bool> <!-- Allow to use an username instead of the phone number for account creation -->
+	<bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool><!-- Start assistant in loginFragment view instead of menu -->
 	<bool name="replace_assistant_with_old_interface">false</bool>
 	<bool name="hide_assistant">false</bool>
@@ -24,7 +24,6 @@
 	<bool name="hide_generic_accounts_in_assistant">false</bool>
 	<bool name="hide_remote_provisioning_in_assistant">false</bool>
 	<bool name="display_account_assistant_at_first_start">true</bool>
-	<bool name="hide_H264_downloader">false</bool><!-- Set the email field of the wizard with one of the gmail account registered on the device -->
 
 	<!-- Remote provisioning -->
 	<bool name="display_sms_remote_provisioning_activity">false</bool>
@@ -33,9 +32,9 @@
 	<bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
 
 	<!-- Inapp -->
-	<bool name="enabled_in_app_purchase">true</bool>
-	<bool name="in_app_purchase_in_settings">true</bool>
-	<integer name="number_days_reminder">28</integer><!-- Remind to biy account  -->
+	<bool name="enable_in_app_purchase">true</bool>
+	<integer name="days_notification_shown">5</integer><!-- Notification shown before end of trial version in days -->
+	<integer name="time_between_inapp_notification">86400</integer><!-- Time between two inapp notifications in seconds -->
 	<bool name="hide_username_in_inapp">true</bool>
 
 	<!-- Push notification settings -->

@@ -32,6 +32,7 @@ import org.linphone.core.LinphoneXmlRpcRequestImpl;
 import org.linphone.core.LinphoneXmlRpcSession;
 import org.linphone.core.LinphoneXmlRpcSessionImpl;
 import org.linphone.xmlrpc.XmlRpcHelper;
+import org.linphone.mediastream.Log;
 
 import android.Manifest;
 import android.accounts.Account;
@@ -104,21 +105,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 
 		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+		accountCreator.setDomain(getResources().getString(R.string.default_domain));
 		accountCreator.setListener(this);
 
 		phoneNumberError = (TextView) view.findViewById(R.id.phone_number_error);
 		phoneNumberEdit = (EditText) view.findViewById(R.id.phone_number);
-		phoneNumberEdit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {}
-		});
 		phoneNumberLayout = (LinearLayout) view.findViewById(R.id.phone_number_layout);
 		addPhoneNumberHandler(phoneNumberEdit, null);
 
@@ -225,12 +216,10 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			if(isChecked) {
 				usernameLayout.setVisibility(View.VISIBLE);
 				if(usernameEdit.getText().length() > 0){
-					sipUri.setText("Sip uri is sip:" + usernameEdit.getText().toString() + "@sip.linphone.org");
 				}
 			} else {
 				usernameLayout.setVisibility(View.GONE);
 				if(phoneNumberEdit.getText().length() > 0){
-					sipUri.setText("Sip uri is sip:" + phoneNumberEdit.getText().toString() + "@sip.linphone.org");
 				}
 			}
 		} else if(buttonView.getId() == R.id.use_email){
@@ -340,7 +329,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 	
 	private void createAccountWithPhoneNumber(final String username, final String password, final String phone, boolean suscribe) {
-		AssistantActivity.instance().displayAssistantCodeConfirm(username, phone);
+
 		final Runnable runNotOk = new Runnable() {
 			public void run() {
 				//TODO errorMessage.setText(R.string.wizard_failed);
@@ -348,7 +337,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		};
 		final Runnable runOk = new Runnable() {
 			public void run() {
-				AssistantActivity.instance().displayAssistantCodeConfirm(username, phone);
+				AssistantActivity.instance().displayAssistantCodeConfirm(username, phone, false);
 			}
 		};
 		final Runnable runNotReachable = new Runnable() {
@@ -611,6 +600,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				return getString(R.string.transport_unsupported);
 		if (status.equals(Status.AccountExist))
 			return getString(R.string.account_already_exist);
+		if (status.equals(Status.AccountExistWithAlias))
+			return getString(R.string.account_already_exist);
 		if (status.equals(Status.AccountCreated)
 		 		|| status.equals(Status.AccountNotCreated)
 				|| status.equals(Status.AccountNotExist)
@@ -626,18 +617,19 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, final Status status) {
 		if(getResources().getBoolean(R.bool.assistant_allow_username) && useUsername.isChecked()){
-			if (status.equals(Status.AccountNotExist)) {
-				usernameOk = true;
+			if (status.equals(Status.AccountExist) || status.equals(Status.AccountExistWithAlias)) {
+				usernameOk = false;
 				displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
 			} else {
-				usernameOk = false;
+				usernameOk = true;
 				displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
 			}
 			createAccount.setEnabled(usernameOk && phoneNumberOk);
 		} else {
-			if (status.equals(Status.AccountNotExist)) {
-				phoneNumberOk = true;
+			if (status.equals(Status.AccountExist) || status.equals(Status.AccountExistWithAlias)) {
+				phoneNumberOk = false;
 				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, errorForStatus(status));
+				phoneNumberOk = true;
 			} else {
 				phoneNumberOk = true;
 				displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, errorForStatus(status));

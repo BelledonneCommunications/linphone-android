@@ -101,6 +101,9 @@
 	<string name="assistant_choose_country">Choose a country</string>
 	<string name="select_your_country">Select your Country</string>
 	<string name="country_code">(%s)</string>
+	<string name="use_username_instead_or_phone_number">Don\'t use phone number as username</string>
+	<string name="use_email_for_validation">Use email address for account validation</string>
+	<string name="login_with_username">Log in with username</string>
 
 	<!-- Status -->
 	<string name="invalid_email">Invalid email</string>
@@ -122,7 +125,8 @@
 	<!-- In-app -->
 	<string name="inapp">In-app</string>
 	<string name="inapp_notification_title">In-app purchase</string>
-	<string name="inapp_notification_content">The trail period expires on %s</string>
+	<string name="inapp_notification_trial_expire">The trail period expires on %s</string>
+	<string name="inapp_notification_account_expire">The subscription period expires on %s</string>
 
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>
