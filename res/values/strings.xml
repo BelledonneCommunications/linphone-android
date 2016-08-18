@@ -277,6 +277,7 @@
 	<string name="pref_rfc2833_dtmf">Send RFC2833 DTMFs</string>
 	<string name="pref_sipinfo_dtmf">Send SIP INFO DTMFs</string>
 	<string name="pref_voice_mail">Voice mail URI</string>
+	<string name="pref_dynamic_photo_uri">Dynamic Photo URI</string>
 	
 	<!-- Chat settings -->
 	<string name="pref_chat_title">Chat</string>

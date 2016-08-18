@@ -36,10 +36,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.ViewGroup.LayoutParams;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,7 +57,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 	private static CallIncomingActivity instance;
 
 	private TextView name, number;
-	private ImageView contactPicture, accept, decline;
+	private ImageView contactPicture, avatarMaskBorder, accept, decline;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
@@ -71,6 +76,9 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+Log.i("linphone", "CallIncomingActivity.onCreate");
+
 		super.onCreate(savedInstanceState);
 		
 		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
@@ -83,6 +91,7 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 		name = (TextView) findViewById(R.id.contact_name);
 		number = (TextView) findViewById(R.id.contact_number);
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
+		avatarMaskBorder = (ImageView) findViewById(R.id.avatar_mask_border);
 
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
@@ -230,11 +239,40 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			return;
 		}
 		
-		
+		// default avatar border visibility
+		avatarMaskBorder.setVisibility(View.VISIBLE);
+
 		LinphoneAddress address = mCall.getRemoteAddress();
-		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+		final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
-			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+			Uri uri = contact.getPhotoUri();
+			String dynUriPrefix = LinphonePreferences.instance().getDynamicPhotoUri();
+			// no photo specified but dynamic photo loading activated?
+			if (uri == null && dynUriPrefix != null) {
+				contactPicture.setImageResource(R.drawable.avatar);
+				final Uri uriToLoad = Uri.parse(dynUriPrefix)
+					.buildUpon()
+					.appendQueryParameter("caller", address.asStringUriOnly())
+					.build();
+				// load image from URI and display in separate thread
+				new Thread(new Runnable() {
+					public void run() {
+						try {
+							final Bitmap bm = LinphoneUtils.downloadBitmap(uriToLoad);
+							if (bm != null)
+								CallIncomingActivity.this.runOnUiThread(new Runnable() {
+									public void run() {
+										contactPicture.setImageBitmap(bm);
+										// hide border that obscures the image
+										avatarMaskBorder.setVisibility(View.INVISIBLE);
+									}
+								});
+						} catch (Exception e) {}
+					}
+				}).start();
+			} else 			
+				LinphoneUtils.setImagePictureFromUri(this, contactPicture, uri, contact.getThumbnailUri());
+
 			name.setText(contact.getFullName());
 		} else {
 			name.setText(LinphoneUtils.getAddressDisplayName(address));

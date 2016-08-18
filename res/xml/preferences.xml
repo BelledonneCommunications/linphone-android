@@ -215,6 +215,11 @@
 				    android:title="@string/pref_voice_mail"
 					android:key="@string/pref_voice_mail_key"
 					android:persistent="false"/>
+	
+				<EditTextPreference
+				    android:title="@string/pref_dynamic_photo_uri"
+					android:key="@string/pref_dynamic_photo_uri_key"
+					android:persistent="false"/>
 				
 			</PreferenceCategory>
 

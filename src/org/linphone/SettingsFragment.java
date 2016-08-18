@@ -885,6 +885,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
+		setPreferenceDefaultValueAndSummary(R.string.pref_dynamic_photo_uri_key, mPrefs.getDynamicPhotoUri());
 	}
 
 	public void enableDeviceRingtone(boolean enabled) {
@@ -963,6 +964,17 @@ public class SettingsFragment extends PreferencesListFragment {
 				voiceMail.setSummary(newValue.toString());
 				voiceMail.setText(newValue.toString());
 				mPrefs.setVoiceMailUri(newValue.toString());
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_dynamic_photo_uri_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				EditTextPreference dynPhotoUri = (EditTextPreference) findPreference(getString(R.string.pref_dynamic_photo_uri_key));
+				dynPhotoUri.setSummary(newValue.toString());
+				dynPhotoUri.setText(newValue.toString());
+				mPrefs.setDynamicPhotoUri(newValue.toString());
 				return true;
 			}
 		});
