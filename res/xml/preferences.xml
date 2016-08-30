@@ -268,6 +268,18 @@
 				    android:title="@string/pref_turn_enable"
 					android:key="@string/pref_turn_enable_key"
 					android:persistent="false"/>
+				
+				<EditTextPreference 
+					android:key="@string/pref_turn_username_key"
+					android:title="@string/pref_turn_username_title"
+					android:inputType="text|textNoSuggestions"
+					android:persistent="false"/>
+			    
+				<EditTextPreference 
+					android:key="@string/pref_turn_passwd_key"
+					android:title="@string/pref_turn_passwd_title"
+					android:inputType="textPassword"
+					android:persistent="false"/>
 	
 				<CheckBoxPreference
 				    android:title="@string/pref_upnp_enable"

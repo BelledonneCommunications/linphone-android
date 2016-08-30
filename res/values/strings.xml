@@ -290,9 +290,11 @@
 	<!-- Network settings -->
 	<string name="pref_network_title">Network</string>
 	<string name="pref_wifi_only">Use WiFi only</string>
-	<string name="pref_stun_server">Stun server</string>
+	<string name="pref_stun_server">STUN server</string>
 	<string name="pref_ice_enable">Enable ICE</string>
 	<string name="pref_turn_enable">Enable TURN</string>
+	<string name="pref_turn_username_title">STUN / TURN username (optional)</string>
+	<string name="pref_turn_passwd_title">STUN / TURN password (optional)</string>
 	<string name="pref_upnp_enable">Enable UPNP</string>
 	<string name="pref_transport_use_random_ports">Use random ports</string>
 	<string name="pref_sip_port_title">SIP port to use</string>

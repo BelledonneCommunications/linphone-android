@@ -206,4 +206,6 @@
 	<string name="pref_device_ringtone_key">pref_device_ringtone_key</string>
 	<string name="pref_auto_answer_key">pref_auto_answer_key</string>
 	<string name="pref_android_app_settings_key">pref_android_app_settings_key</string>
+	<string name="pref_turn_username_key">pref_turn_username_key</string>
+	<string name="pref_turn_passwd_key">pref_turn_passwd_key</string>
 </resources>

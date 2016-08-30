@@ -1028,7 +1028,15 @@ public class SettingsFragment extends PreferencesListFragment {
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 		CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
 		ice.setChecked(mPrefs.isIceEnabled());
+		turn.setEnabled(mPrefs.getStunServer() != null);
 		turn.setChecked(mPrefs.isTurnEnabled());
+		
+		EditTextPreference turnUsername = (EditTextPreference) findPreference(getString(R.string.pref_turn_username_key));
+		EditTextPreference turnPassword = (EditTextPreference) findPreference(getString(R.string.pref_turn_passwd_key));
+		turnUsername.setEnabled(mPrefs.isTurnEnabled());
+		turnUsername.setSummary(mPrefs.getTurnUsername());
+		turnUsername.setText(mPrefs.getTurnUsername());
+		turnPassword.setEnabled(mPrefs.isTurnEnabled());
 
 		CheckBoxPreference randomPort = (CheckBoxPreference) findPreference(getString(R.string.pref_transport_use_random_ports_key));
 		randomPort.setChecked(mPrefs.isUsingRandomPort());
@@ -1061,6 +1069,9 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setStunServer(newValue.toString());
 				preference.setSummary(newValue.toString());
+				
+				CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
+				turn.setEnabled(mPrefs.getStunServer() != null);
 				return true;
 			}
 		});
@@ -1077,6 +1088,27 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setTurnEnabled((Boolean) newValue);
+				EditTextPreference turnUsername = (EditTextPreference) findPreference(getString(R.string.pref_turn_username_key));
+				EditTextPreference turnPassword = (EditTextPreference) findPreference(getString(R.string.pref_turn_passwd_key));
+				turnUsername.setEnabled(mPrefs.isTurnEnabled());
+				turnPassword.setEnabled(mPrefs.isTurnEnabled());
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_turn_username_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setTurnUsername((String) newValue);
+				preference.setSummary(mPrefs.getTurnUsername());
+				return true;
+			}
+		});
+		
+		findPreference(getString(R.string.pref_turn_passwd_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.setTurnPassword((String) newValue);
 				return true;
 			}
 		});
