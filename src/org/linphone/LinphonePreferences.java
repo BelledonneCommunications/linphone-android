@@ -1011,20 +1011,30 @@ public class LinphonePreferences {
 	public void setTurnUsername(String username) {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		LinphoneAuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
+		
 		if (authInfo != null) {
-			authInfo.setUsername(username);
+			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
+			getLc().removeAuthInfo(authInfo);
+			cloneAuthInfo.setUsername(username);
+			cloneAuthInfo.setUserId(username);
+			getLc().addAuthInfo(cloneAuthInfo);
 		} else {
 			authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, username, null, null, null, null);
 			getLc().addAuthInfo(authInfo);
 		}
 		nat.setStunServerUsername(username);
+		getLc().setNatPolicy(nat);
 	}
 	
 	public void setTurnPassword(String password) {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		LinphoneAuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
+		
 		if (authInfo != null) {
-			authInfo.setPassword(password);
+			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
+			getLc().removeAuthInfo(authInfo);
+			cloneAuthInfo.setPassword(password);
+			getLc().addAuthInfo(cloneAuthInfo);
 		} else {
 			authInfo = LinphoneCoreFactory.instance().createAuthInfo(nat.getStunServerUsername(), nat.getStunServerUsername(), password, null, null, null);
 			getLc().addAuthInfo(authInfo);
