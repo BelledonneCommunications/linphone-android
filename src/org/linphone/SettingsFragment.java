@@ -35,7 +35,6 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
@@ -65,7 +64,6 @@ import android.provider.Settings;
  * @author Sylvain Berfini
  */
 public class SettingsFragment extends PreferencesListFragment {
-	private static final int STORE_INTENT = 2;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;

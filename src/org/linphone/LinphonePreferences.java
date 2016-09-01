@@ -1311,12 +1311,20 @@ public class LinphonePreferences {
 		return purchasables;
 	}
 
-	public String getLastDateNotificationShown(){
-		return getConfig().getString("app", "notification_date", null);
+	public String getInappPopupTime(){
+		return getConfig().getString("app", "inapp_popup_time", null);
 	}
 
-	public void setLastDateNotificationShown(String date){
-		getConfig().setString("app", "notification_date", date);
+	public void setInappPopupTime(String date){
+		getConfig().setString("app", "inapp_popup_time", date);
+	}
+
+	public void setLinkPopupTime(String date){
+		getConfig().setString("app", "link_popup_time", date);
+	}
+
+	public String getLinkPopupTime(){
+		return getConfig().getString("app", "link_popup_time", null);
 	}
 
 	public String getXmlRpcServerUrl() {

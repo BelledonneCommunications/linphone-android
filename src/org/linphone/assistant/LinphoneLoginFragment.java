@@ -27,6 +27,7 @@ import org.linphone.mediastream.Log;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -46,18 +47,15 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class LinphoneLoginFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, OnClickListener, TextWatcher, LinphoneAccountCreator.LinphoneAccountCreatorListener {
-	private EditText login, password, displayName;
-	private Button apply;
+	private EditText login, password, phoneNumberEdit, dialCode, displayName;
+	private Button apply, selectCountry;
 	private CheckBox useUsername, usePassword;
 	private LinearLayout phoneNumberLayout, usernameLayout, passwordLayout;
 	private TextView forgotPassword;
-	private EditText phoneNumberEdit, usernameEdit, passwordEdit, passwordConfirmEdit, emailEdit, dialCode;
-	private TextView phoneNumberError, usernameError, passwordError, passwordConfirmError, emailError, sipUri;
 	private CountryListFragment.Country country;
-	private Boolean recoverAccount = true;
-
+	private Boolean recoverAccount = false;
 	private LinphoneAccountCreator accountCreator;
-
+	private int countryCode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,26 +76,86 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		phoneNumberLayout = (LinearLayout) view.findViewById(R.id.phone_number_layout);
 		addPhoneNumberHandler(phoneNumberEdit, null);
 
-		if(getResources().getBoolean(R.bool.assistant_allow_username)) {
-			useUsername = (CheckBox) view.findViewById(R.id.use_username);
-			useUsername.setVisibility(View.VISIBLE);
-			useUsername.setOnCheckedChangeListener(this);
+		useUsername = (CheckBox) view.findViewById(R.id.use_username);
+		usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
+		passwordLayout = (LinearLayout) view.findViewById(R.id.password_layout);
+		password = (EditText) view.findViewById(R.id.assistant_password);
+		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
 
-			usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
+		forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
+		selectCountry = (Button) view.findViewById(R.id.select_country);
+
+		//Phone number
+		if(getResources().getBoolean(R.bool.use_phone_number_validation)){
+			//Automatically get the country code from the phone
+			TelephonyManager tm = (TelephonyManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().TELEPHONY_SERVICE);
+			String countryIso = tm.getNetworkCountryIso();
+			LinphoneProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
+			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());
+
+			phoneNumberLayout.setVisibility(View.VISIBLE);
+			selectCountry.setOnClickListener(this);
+
+			String previousPhone = AssistantActivity.instance().phone_number;
+			if(previousPhone != null ){
+				phoneNumberEdit.setText(previousPhone);
+			}
+			setCountry(AssistantActivity.instance().country);
+
+			//Allow user to enter a username instead use the phone number as username
+			if(getResources().getBoolean(R.bool.assistant_allow_username) ) {
+				useUsername.setVisibility(View.VISIBLE);
+				useUsername.setOnCheckedChangeListener(this);
+			}
 		}
 
-		password = (EditText) view.findViewById(R.id.assistant_password);
-		password.addTextChangedListener(this);
-		forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
-		forgotPassword.setText(Compatibility.fromHtml("<a href=\"" + url + "\"'>"+ getString(R.string.forgot_password) + "</a>"));
-		forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
-		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
+		if(getResources().getBoolean(R.bool.assistant_allow_username)) {
+			useUsername.setVisibility(View.VISIBLE);
+			useUsername.setOnCheckedChangeListener(this);
+			password.addTextChangedListener(this);
+			forgotPassword.setText(Compatibility.fromHtml("<a href=\"" + url + "\"'>" + getString(R.string.forgot_password) + "</a>"));
+			forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
+		}
+
+		//Hide phone number and display username/email/password
+		if(!getResources().getBoolean(R.bool.use_phone_number_validation)){
+			phoneNumberLayout.setVisibility(View.GONE);
+			useUsername.setVisibility(View.GONE);
+
+			usernameLayout.setVisibility(View.VISIBLE);
+			passwordLayout.setVisibility(View.VISIBLE);
+		}
 
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
 
 		return view;
+	}
+
+	private String getCountryCode() {
+		if(dialCode != null) {
+			String code = dialCode.getText().toString();
+			if(code != null && code.startsWith("+")) {
+				code = code.substring(1);
+			}
+			return code;
+		}
+		return null;
+	}
+
+	public void setCountry(CountryListFragment.Country c) {
+		country = c;
+		if( c!= null) {
+			dialCode.setText(c.dial_code);
+			selectCountry.setText(c.name);
+		} else {
+			if(countryCode != -1){
+				dialCode.setText("+" + countryCode);
+			} else {
+				dialCode.setText("+");
+			}
+		}
 	}
 
 	private String getPhoneNumber(){
@@ -116,8 +174,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
 			return;
 		}
-		
-		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), null, displayName.getText().toString(), getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
+		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), null, null, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
 	}
 
 	private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
@@ -130,12 +187,10 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 						countryCode = countryCode.substring(1);
 					}
 					LinphoneAccountCreator.Status status = accountCreator.setPhoneNumber(phoneNumberEdit.getText().toString(), countryCode);
-					Log.w("Set PhoneNmuber " + status.toString());
 					if (status.equals(LinphoneAccountCreator.Status.Ok)) {
 						status = accountCreator.isAccountUsed();
-						Log.w("Is account activated " + status.toString());
 						if (status.equals(LinphoneAccountCreator.Status.Ok)) {
-
+							recoverAccount = true;
 						}
 					} else {
 						//displayError(phoneNumberOk, phoneNumberError, phoneNumberEdit, errorForStatus(status));
@@ -164,10 +219,14 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 				linphoneLogIn();
 			}
 		}
+		if (id == R.id.select_country) {
+			AssistantActivity.instance().displayCountryChooser();
+		}
 	}
 
 	private void recoverAccount() {
-		accountCreator.recoverPhoneAccount();
+		//accountCreator.recoverPhoneAccount();
+		AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), getCountryCode(), true);
 	}
 
 	@Override
@@ -183,12 +242,20 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+		if(buttonView.getId() == R.id.use_username) {
+			if(isChecked) {
+				usernameLayout.setVisibility(View.VISIBLE);
+				passwordLayout.setVisibility(View.VISIBLE);
+				recoverAccount = false;
+			} else {
+				usernameLayout.setVisibility(View.GONE);
+				passwordLayout.setVisibility(View.INVISIBLE);
+			}
+		}
 	}
 
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		recoverAccount = true;
 		apply.setEnabled(true);
 	}
 
@@ -214,13 +281,11 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		Log.w("IS ACTIVATED " + status.toString());
 		apply.setEnabled(true);
 	}
 
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		AssistantActivity.instance().displayAssistantCodeConfirm(getPhoneNumber(), getPhoneNumber(), true);
-
+		AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), getCountryCode(), true);
 	}
 }

@@ -49,6 +49,8 @@
 	<string name="connect">Connection</string>
 	<string name="decline">Decline</string>
 	<string name="conference">Conference</string>
+	<string name="link">Link</string>
+	<string name="link_account_popup">Do you want to link the account %s with your phone number ?</string>
 
 	<!-- Launch screen -->
 	<string name="app_description">the <i>libre</i> SIP client</string>
@@ -57,6 +59,7 @@
 	<string name="welcome">Welcome</string>
 	<string name="assistant">Assistant</string>
 	<string name="assistant_create_account">Create account</string>
+	<string name="assistant_link_account">Link account</string>
 	<string name="assistant_continue">Continue</string>
 	<string name="assistant_activate">Activate account</string>
 	<string name="assistant_finish">Finish configuration</string>
@@ -104,6 +107,8 @@
 	<string name="use_username_instead_or_phone_number">Don\'t use phone number as username</string>
 	<string name="use_email_for_validation">Use email address for account validation</string>
 	<string name="login_with_username">Log in with username</string>
+	<string name="phone_number_info_title">What is my phone number for?</string>
+	<string name="phone_number_info_content">A SMS code will be sent to your phone number to validate your account.</string>
 
 	<!-- Status -->
 	<string name="invalid_email">Invalid email</string>

@@ -32,6 +32,8 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -100,7 +102,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
+public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int CALL_ACTIVITY = 19;
@@ -201,10 +203,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		initButtons();
 		initSideMenu();
-
-		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
-			isTrialAccount();
-		}
 
 		currentFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
@@ -628,6 +626,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
 	}
 
+	public void displayLinkPhoneNumber() {
+		Intent assistant = new Intent();
+		assistant.setClass(this, AssistantActivity.class);
+		assistant.putExtra("LinkPhoneNumber", true);
+		startActivity(assistant);
+	}
+
 	public void displayInapp() {
 		startActivity(new Intent(LinphoneActivity.this, InAppPurchaseActivity.class));
 	}
@@ -981,8 +986,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	private int mAlwaysChangingPhoneAngle = -1;
 
-
-
 	private class LocalOrientationEventListener extends OrientationEventListener {
 		public LocalOrientationEventListener(Context context) {
 			super(context);
@@ -1120,7 +1123,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
 
-		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
+		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
 			LinphoneManager.getInstance().subscribeFriendList(!isApplicationBroughtToBackground(this));
 		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -1332,6 +1335,16 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		refreshAccounts();
+
+		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
+			isTrialAccount();
+		}
+
+		if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
+			if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null && !LinphonePreferences.instance().getLinkPopupTime().equals(""))){
+				isAccountWithAlias();
+			}
+		}
 
 		updateMissedChatCount();
 		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
@@ -1578,8 +1591,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
-
-
 	public void refreshAccounts(){
 		if (LinphoneManager.getLc().getProxyConfigList().length > 1) {
 			accountsList.setVisibility(View.VISIBLE);
@@ -1671,9 +1682,20 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
+	private void isAccountWithAlias(){
+		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+			LinphoneAccountCreator accountCreator;
+			accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+			accountCreator.setDomain(getResources().getString(R.string.default_domain));
+			accountCreator.setListener(this);
+			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
+			accountCreator.isAccountUsed();
+		}
+	}
+
 	//Inapp Purchase
 	private void isTrialAccount() {
-		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+		if(LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphonePreferences.instance().getInappPopupTime() != null) {
 			XmlRpcHelper helper = new XmlRpcHelper();
 			helper.isTrialAccountAsync(new XmlRpcListenerBase() {
 				@Override
@@ -1683,13 +1705,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 
 				@Override
-				public void onError(String error){}
+				public void onError(String error) {
+				}
 			}, LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()), LinphonePreferences.instance().getAccountHa1(LinphonePreferences.instance().getDefaultAccountIndex()));
 		}
 	}
 
 	private void getExpirationAccount() {
-		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+		if(LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphonePreferences.instance().getInappPopupTime() != null) {
 			XmlRpcHelper helper = new XmlRpcHelper();
 			helper.getAccountExpireAsync(new XmlRpcListenerBase() {
 				@Override
@@ -1708,16 +1731,19 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 
 				@Override
-				public void onError(String error){}
+				public void onError(String error) {
+				}
 			}, LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()), LinphonePreferences.instance().getAccountHa1(LinphonePreferences.instance().getDefaultAccountIndex()));
 		}
 	}
 
 	public void displayInappNotification(String date) {
-		if (LinphonePreferences.instance().getLastDateNotificationShown() != null && timestampToHumanDate(Calendar.getInstance()).equals(LinphonePreferences.instance().getLastDateNotificationShown())) {
+		long now = Calendar.getInstance().getTimeInMillis();
+		if (LinphonePreferences.instance().getInappPopupTime() != null && Long.parseLong(LinphonePreferences.instance().getInappPopupTime()) < now) {
 			return;
 		} else {
-			LinphonePreferences.instance().setLastDateNotificationShown(timestampToHumanDate(Calendar.getInstance()));
+			long newDate = now + (getResources().getInteger(R.integer.time_between_inapp_notification)*60);
+			LinphonePreferences.instance().setInappPopupTime(String.valueOf(newDate));
 		}
 		if(isTrialAccount){
 			LinphoneService.instance().displayInappNotification(String.format(getString(R.string.inapp_notification_trial_expire), date));
@@ -1742,6 +1768,65 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 		return -1;
 	}
+
+	private void askLinkWithPhoneNumber(){
+		long now = Calendar.getInstance().getTimeInMillis();
+		long newDate = now + (getResources().getInteger(R.integer.popup_time_interval)*60);
+		Log.w(LinphonePreferences.instance().getLinkPopupTime());
+		Log.w(now);
+		if (LinphonePreferences.instance().getLinkPopupTime() != null &&  Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
+			return;
+		} else {
+				LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+		}
+		final Dialog dialog = displayDialog(String.format(getResources().getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly()));
+		Button delete = (Button) dialog.findViewById(R.id.delete_button);
+		delete.setText(getResources().getString(R.string.link));
+		Button cancel = (Button) dialog.findViewById(R.id.cancel);
+
+		delete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				displayLinkPhoneNumber();
+				dialog.dismiss();
+			}
+		});
+
+		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+
+		cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if(status.equals(LinphoneAccountCreator.Status.AccountExist)){
+			askLinkWithPhoneNumber();
+		}
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
 }
 
 interface ContactPicked {

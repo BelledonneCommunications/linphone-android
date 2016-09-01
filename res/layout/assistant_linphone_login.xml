@@ -90,20 +90,6 @@
 
 					</LinearLayout>
 
-					<TextView
-						android:id="@+id/phone_number_error"
-						android:text="@string/error"
-						style="@style/font20"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:visibility="invisible"/>
-
-					<TextView
-						android:id="@+id/sip_uri"
-						style="@style/font9"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"/>
-
 				</LinearLayout>
 			</LinearLayout>
 

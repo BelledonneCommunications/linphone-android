@@ -10,10 +10,15 @@
 	<bool name="force_use_of_linphone_friends">false</bool>
 	<bool name="use_linphone_tag">true</bool>
 
+	<!-- Phone numbers -->
+	<bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->
+	<integer name="popup_time_interval">86400</integer><!-- Time between two inapp notifications in seconds -->
+
 	<!-- Assistant -->
-	<string name="wizard_url">https://sip3.linphone.org:444/inapp.php</string><!-- Url of the xmlrpc script -->
+	<string name="wizard_url">https://sip3.linphone.org:444/wizard.php</string><!-- Url of the xmlrpc script -->
 	<bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool><!-- Start assistant in loginFragment view instead of menu -->
+
 	<bool name="replace_assistant_with_old_interface">false</bool>
 	<bool name="hide_assistant">false</bool>
 	<bool name="assistant_cancel_move_to_back">false</bool>
@@ -32,7 +37,7 @@
 	<bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
 
 	<!-- Inapp -->
-	<bool name="enable_in_app_purchase">true</bool>
+	<bool name="enable_in_app_purchase">false</bool>
 	<integer name="days_notification_shown">5</integer><!-- Notification shown before end of trial version in days -->
 	<integer name="time_between_inapp_notification">86400</integer><!-- Time between two inapp notifications in seconds -->
 	<bool name="hide_username_in_inapp">true</bool>

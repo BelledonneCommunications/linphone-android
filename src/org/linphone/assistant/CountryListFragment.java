@@ -75,7 +75,7 @@ public class CountryListFragment extends Fragment implements AdapterView.OnItemC
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Country c = (Country)view.getTag();
 		AssistantActivity.instance().country = c;
-		AssistantActivity.instance().displayCreateAccount();
+		AssistantActivity.instance().onBackPressed();
 	}
 
 	@Override

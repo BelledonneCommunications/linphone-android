@@ -61,6 +61,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 /**
  * @author Sylvain Berfini
  */
@@ -71,7 +72,7 @@ private static AssistantActivity instance;
 	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
-	private boolean accountCreated = false, newAccount = false;
+	private boolean accountCreated = false, newAccount = false, isLink = false;
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
 	private StatusFragment status;
@@ -96,14 +97,19 @@ private static AssistantActivity instance;
 		setContentView(R.layout.assistant);
 		initUI();
 
-		firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
-        if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState == null) {
-            	display(firstFragment);
-            } else {
-            	currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
-            }
-        }
+		if(getIntent().getBooleanExtra("LinkPhoneNumber",false)){
+			isLink = true;
+			displayCreateAccount();
+		} else {
+			firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
+			if (findViewById(R.id.fragment_container) != null) {
+				if (savedInstanceState == null) {
+					display(firstFragment);
+				} else {
+					currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
+				}
+			}
+		}
 		if (savedInstanceState != null && savedInstanceState.containsKey("echoCanceller")) {
 			echoCancellerAlreadyDone = savedInstanceState.getBoolean("echoCanceller");
 		} else {
@@ -358,6 +364,9 @@ private static AssistantActivity instance;
 
 	public void displayCreateAccount() {
 		fragment = new CreateAccountFragment();
+		Bundle extra = new Bundle();
+		extra.putBoolean("LinkPhoneNumber", isLink);
+		fragment.setArguments(extra);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
 		back.setVisibility(View.VISIBLE);
@@ -525,13 +534,15 @@ private static AssistantActivity instance;
 		back.setVisibility(View.INVISIBLE);
 	}
 
-	public void displayAssistantCodeConfirm(String username, String phone, boolean recoverAccount) {
+	public void displayAssistantCodeConfirm(String username, String phone, String dialcode, boolean recoverAccount) {
 		CreateAccountCodeActivationFragment fragment = new CreateAccountCodeActivationFragment();
 		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
 		extras.putString("Phone", phone);
+		extras.putString("Dialcode", dialcode);
 		extras.putBoolean("RecoverAccount", recoverAccount);
+		extras.putBoolean("LinkAccount", isLink);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 
