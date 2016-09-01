@@ -960,16 +960,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		LinphoneManager.getInstance().newOutgoingCall(address);
 	}
 
-	public void startVideoActivity(LinphoneCall currentCall) {
-		Intent intent = new Intent(this, CallActivity.class);
-		intent.putExtra("VideoEnabled", true);
-		startOrientationSensor();
-		startActivityForResult(intent, CALL_ACTIVITY);
-	}
-
 	public void startIncallActivity(LinphoneCall currentCall) {
 		Intent intent = new Intent(this, CallActivity.class);
-		intent.putExtra("VideoEnabled", false);
 		startOrientationSensor();
 		startActivityForResult(intent, CALL_ACTIVITY);
 	}
@@ -1041,8 +1033,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 			if (call.getState() == LinphoneCall.State.IncomingReceived) {
 				startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
-			} else if (call.getCurrentParamsCopy().getVideoEnabled()) {
-				startVideoActivity(call);
 			} else {
 				startIncallActivity(call);
 			}
@@ -1365,11 +1355,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				} else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
 					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
-					if (call.getCurrentParamsCopy().getVideoEnabled()) {
-						startVideoActivity(call);
-					} else {
-						startIncallActivity(call);
-					}
+					startIncallActivity(call);
 				}
 			}
 		}
@@ -1419,11 +1405,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-				if (call.getCurrentParamsCopy().getVideoEnabled()) {
-					startVideoActivity(call);
-				} else {
-					startIncallActivity(call);
-				}
+				startIncallActivity(call);
 			}
 		} else {
 			DialerFragment dialerFragment = DialerFragment.instance();

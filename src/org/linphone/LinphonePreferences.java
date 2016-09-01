@@ -935,46 +935,6 @@ public class LinphonePreferences {
 	public boolean isWifiOnlyEnabled() {
 		return getConfig().getBool("app", "wifi_only", false);
 	}
-	
-	private LinphoneNatPolicy getOrCreateNatPolicy() {
-		LinphoneNatPolicy nat = getLc().getNatPolicy();
-		if (nat == null) {
-			nat = getLc().createNatPolicy();
-		}
-		return nat;
-	}
-
-	public String getStunServer() {
-		LinphoneNatPolicy nat = getOrCreateNatPolicy();
-		return nat.getStunServer();
-	}
-
-	public void setStunServer(String stun) {
-		LinphoneNatPolicy nat = getOrCreateNatPolicy();
-		nat.setStunServer(stun);
-		if (stun != null && !stun.isEmpty()) {
-			nat.enableStun(true);
-		}
-		getLc().setNatPolicy(nat);
-	}
-
-	public void setIceEnabled(boolean enabled) {
-		LinphoneNatPolicy nat = getOrCreateNatPolicy();
-		nat.enableIce(enabled);
-		getLc().setNatPolicy(nat);
-	}
-
-	public void setTurnEnabled(boolean enabled) {
-		LinphoneNatPolicy nat = getOrCreateNatPolicy();
-		nat.enableTurn(enabled);
-		getLc().setNatPolicy(nat);
-	}
-
-	public void setUpnpEnabled(boolean enabled) {
-		LinphoneNatPolicy nat = getOrCreateNatPolicy();
-		nat.enableUpnp(enabled);
-		getLc().setNatPolicy(nat);
-	}
 
 	public void useRandomPort(boolean enabled) {
 		useRandomPort(enabled, true);
@@ -1012,6 +972,47 @@ public class LinphonePreferences {
 		transports.tls = LINPHONE_CORE_RANDOM_PORT;
 		getLc().setSignalingTransportPorts(transports);
 	}
+	
+	private LinphoneNatPolicy getOrCreateNatPolicy() {
+		LinphoneNatPolicy nat = getLc().getNatPolicy();
+		if (nat == null) {
+			nat = getLc().createNatPolicy();
+		}
+		return nat;
+	}
+
+	public String getStunServer() {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.getStunServer();
+	}
+
+	public void setStunServer(String stun) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();		
+		nat.setStunServer(stun);
+		
+		if (stun != null && !stun.isEmpty()) {
+			nat.enableStun(true);
+		}
+		getLc().setNatPolicy(nat);
+	}
+
+	public void setIceEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableIce(enabled);
+		getLc().setNatPolicy(nat);
+	}
+
+	public void setTurnEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableTurn(enabled);
+		getLc().setNatPolicy(nat);
+	}
+
+	public void setUpnpEnabled(boolean enabled) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		nat.enableUpnp(enabled);
+		getLc().setNatPolicy(nat);
+	}
 
 	public boolean isUpnpEnabled() {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
@@ -1026,6 +1027,44 @@ public class LinphonePreferences {
 	public boolean isTurnEnabled() {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		return nat.turnEnabled();
+	}
+	
+	public String getTurnUsername() {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		return nat.getStunServerUsername();
+	}
+	
+	public void setTurnUsername(String username) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		LinphoneAuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
+		
+		if (authInfo != null) {
+			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
+			getLc().removeAuthInfo(authInfo);
+			cloneAuthInfo.setUsername(username);
+			cloneAuthInfo.setUserId(username);
+			getLc().addAuthInfo(cloneAuthInfo);
+		} else {
+			authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, username, null, null, null, null);
+			getLc().addAuthInfo(authInfo);
+		}
+		nat.setStunServerUsername(username);
+		getLc().setNatPolicy(nat);
+	}
+	
+	public void setTurnPassword(String password) {
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
+		LinphoneAuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
+		
+		if (authInfo != null) {
+			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
+			getLc().removeAuthInfo(authInfo);
+			cloneAuthInfo.setPassword(password);
+			getLc().addAuthInfo(cloneAuthInfo);
+		} else {
+			authInfo = LinphoneCoreFactory.instance().createAuthInfo(nat.getStunServerUsername(), nat.getStunServerUsername(), password, null, null, null);
+			getLc().addAuthInfo(authInfo);
+		}
 	}
 
 	public MediaEncryption getMediaEncryption() {

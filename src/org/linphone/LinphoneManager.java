@@ -66,6 +66,7 @@ import org.linphone.core.PublishState;
 import org.linphone.core.SubscriptionState;
 import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.mediastream.MediastreamerAndroidContext;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
@@ -138,6 +139,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private WakeLock mIncallWakeLock;
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
 	private static LinphoneChatMessage mUploadPendingFileMessage;
+
 
 	public String wizardLoginViewDomain = null;
 
@@ -1069,6 +1071,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
+				requestAudioFocus(STREAM_RING);
 				BluetoothManager.getInstance().disableBluetoothSCO(); // Just in case
 
 				ringingCall = call;
@@ -1082,8 +1085,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
-				requestAudioFocus();
-				setAudioManagerInCallMode();
+				mAudioManager.abandonAudioFocus(null);
+				requestAudioFocus(STREAM_VOICE_CALL);
 			}
 
 			if (Hacks.needSoftvolume()) {
@@ -1096,15 +1099,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			setAudioManagerInCallMode();
 		}
 
-		if (state == State.CallReleased || state == State.Error) {
+		if (state == State.CallEnd || state == State.Error) {
 			if (mLc.getCallsNb() == 0) {
+				Context activity = getContext();
 				if (mAudioFocused){
 					int res = mAudioManager.abandonAudioFocus(null);
 					Log.d("Audio focus released a bit later: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
 					mAudioFocused = false;
 				}
-
-				Context activity = getContext();
 				if (activity != null) {
 					TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 					if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
@@ -1113,17 +1115,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						Log.d("All call terminated, routing back to earpiece");
 						routeAudioToReceiver();
 					}
-				}
-			}
-		}
-
-		if (state == State.CallEnd) {
-			if (mLc.getCallsNb() == 0) {
-				if (mIncallWakeLock != null && mIncallWakeLock.isHeld()) {
-					mIncallWakeLock.release();
-					Log.i("Last call ended: releasing incall (CPU only) wake lock");
-				} else {
-					Log.i("Last call ended: no incall (CPU only) wake lock were held");
 				}
 			}
 		}
@@ -1139,6 +1130,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 					Log.e(e);
 				}
 			}
+		}
+		if (state == State.OutgoingInit) {
+			setAudioManagerInCallMode();
+			requestAudioFocus(STREAM_VOICE_CALL);
 		}
 
 		if (state == State.StreamsRunning) {
@@ -1175,6 +1170,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		routeAudioToSpeaker();
 		setAudioManagerInCallMode();
 		Log.i("Set audio mode on 'Voice Communication'");
+		requestAudioFocus(STREAM_VOICE_CALL);
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
 		mAudioManager.setStreamVolume(STREAM_VOICE_CALL, maxVolume, 0);
@@ -1186,6 +1182,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		routeAudioToSpeaker();
 		setAudioManagerInCallMode();
 		Log.i("Set audio mode on 'Voice Communication'");
+		requestAudioFocus(STREAM_VOICE_CALL);
 		int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
 		int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
 		int sampleRate = 44100;
@@ -1222,9 +1219,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	private boolean isRinging;
 
-	private void requestAudioFocus(){
+	private void requestAudioFocus(int stream){
 		if (!mAudioFocused){
-			int res = mAudioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
+			int res = mAudioManager.requestAudioFocus(null, stream, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT );
 			Log.d("Audio focus requested: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
 			if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
 		}
@@ -1259,7 +1256,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mVibrator.vibrate(patern, 1);
 			}
 			if (mRingerPlayer == null) {
-				requestAudioFocus();
+				requestAudioFocus(STREAM_RING);
 				mRingerPlayer = new MediaPlayer();
 				mRingerPlayer.setAudioStreamType(STREAM_RING);
 
@@ -1528,6 +1525,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
 			int delay_ms, Object data) {
 		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
+		mAudioManager.abandonAudioFocus(null);
 		Log.i("Set audio mode on 'Normal'");
 	}
 	

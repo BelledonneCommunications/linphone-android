@@ -101,12 +101,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
-					final LinphoneCallParams remoteParams = mCall.getRemoteParams();
-					if (remoteParams != null && remoteParams.getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-						LinphoneActivity.instance().startVideoActivity(mCall);
-					} else {
-						LinphoneActivity.instance().startIncallActivity(mCall);
-					}
+					LinphoneActivity.instance().startIncallActivity(mCall);
 					finish();
 					return;
 				} else if (state == State.Error) {

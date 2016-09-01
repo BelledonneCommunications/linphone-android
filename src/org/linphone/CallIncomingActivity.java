@@ -305,12 +305,8 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			if (!LinphoneActivity.isInstanciated()) {
 				return;
 			}
-			final LinphoneCallParams remoteParams = mCall.getRemoteParams();
-			if (remoteParams != null && remoteParams.getVideoEnabled() && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
-				LinphoneActivity.instance().startVideoActivity(mCall);
-			} else {
-				LinphoneActivity.instance().startIncallActivity(mCall);
-			}
+			LinphoneManager.getInstance().routeAudioToReceiver();
+			LinphoneActivity.instance().startIncallActivity(mCall);
 		}
 	}
 
