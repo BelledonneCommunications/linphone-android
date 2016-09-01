@@ -300,7 +300,6 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 			callFragment.setArguments(getIntent().getExtras());
 			getFragmentManager().beginTransaction().add(R.id.fragmentContainer, callFragment).commitAllowingStateLoss();
-
 		}
 	}
 
