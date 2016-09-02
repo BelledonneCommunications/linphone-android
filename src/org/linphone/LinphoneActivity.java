@@ -1113,7 +1113,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
 
-		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
+		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
 			LinphoneManager.getInstance().subscribeFriendList(!isApplicationBroughtToBackground(this));
 		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -1337,8 +1337,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		updateMissedChatCount();
-		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
+		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
 			LinphoneManager.getInstance().subscribeFriendList(true);
+		} else {
+			LinphoneManager.getInstance().subscribeFriendList(false);
 		}
 
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
@@ -1549,6 +1551,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			status.setVisibility(View.GONE);
 			address.setText("");
 			statusFragment.resetAccountStatus();
+			LinphoneManager.getInstance().subscribeFriendList(false);
 
 			defaultAccount.setOnClickListener(new OnClickListener() {
 				@Override
@@ -1672,6 +1675,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			accountCreator.setListener(this);
 			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
 			accountCreator.isAccountUsed();
+		} else {
+			LinphonePreferences.instance().setInappPopupTime(null);
 		}
 	}
 
@@ -1754,8 +1759,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void askLinkWithPhoneNumber(){
 		long now = Calendar.getInstance().getTimeInMillis();
 		long newDate = now + (getResources().getInteger(R.integer.popup_time_interval)*60);
-		Log.w(LinphonePreferences.instance().getLinkPopupTime());
-		Log.w(now);
 		if (LinphonePreferences.instance().getLinkPopupTime() != null &&  Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
 			return;
 		} else {
@@ -1765,6 +1768,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		Button delete = (Button) dialog.findViewById(R.id.delete_button);
 		delete.setText(getResources().getString(R.string.link));
 		Button cancel = (Button) dialog.findViewById(R.id.cancel);
+		cancel.setText(getResources().getString(R.string.maybe_later));
 
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
