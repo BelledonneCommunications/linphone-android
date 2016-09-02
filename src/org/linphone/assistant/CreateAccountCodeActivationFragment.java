@@ -130,12 +130,18 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 			checkAccount.setEnabled(true);
 			if (accountCreator.getUsername() != null) {
 				AssistantActivity.instance().saveCreatedAccount(accountCreator.getUsername(), null, null, accountCreator.getHa1(), getString(R.string.default_domain), null);
-				if(!recoverAccount)
+				if(!recoverAccount){
 					AssistantActivity.instance().isAccountVerified(accountCreator.getUsername());
+				} else {
+					AssistantActivity.instance().finish();
+				}
 			} else {
 				AssistantActivity.instance().saveCreatedAccount(accountCreator.getPhoneNumber(), null, null, accountCreator.getHa1(), getString(R.string.default_domain), null);
-				if(!recoverAccount)
+				if(!recoverAccount) {
 					AssistantActivity.instance().isAccountVerified(accountCreator.getPhoneNumber());
+				} else {
+					AssistantActivity.instance().finish();
+				}
 			}
 		} else if (status.equals(LinphoneAccountCreator.Status.Failed)) {
 			Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
