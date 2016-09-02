@@ -73,9 +73,11 @@
 							android:background="@drawable/resizable_textfield"
 							android:textColor="@color/colorB"
 							android:inputType="phone"
+							android:text="+"
 							android:layout_marginRight="10dp"
-							android:layout_width="50dp"
-							android:layout_height="40dp"
+							android:gravity="center"
+							android:layout_width="65dp"
+							android:layout_height="42dp"
 							android:singleLine="true"/>
 
 						<EditText

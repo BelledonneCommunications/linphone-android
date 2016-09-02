@@ -225,8 +225,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	}
 
 	private void recoverAccount() {
-		//accountCreator.recoverPhoneAccount();
-		AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), getCountryCode(), true);
+		accountCreator.recoverPhoneAccount();
 	}
 
 	@Override

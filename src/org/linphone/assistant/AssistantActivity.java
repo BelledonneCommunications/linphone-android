@@ -69,6 +69,7 @@ public class AssistantActivity extends Activity implements OnClickListener, Acti
 private static AssistantActivity instance;
 	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
+	private AssistantFragmentsEnum lastFragment;
 	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
@@ -234,14 +235,15 @@ private static AssistantActivity instance;
 				|| currentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
 				|| currentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
 				|| currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
-			WelcomeFragment fragment = new WelcomeFragment();
-			changeFragment(fragment);
-			currentFragment = AssistantFragmentsEnum.WELCOME;
-			back.setVisibility(View.INVISIBLE);
+			displayMenu();
 		} else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
 			finish();
 		} else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER){
-			displayCreateAccount();
+			if(lastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)){
+				displayLoginLinphone();
+			} else {
+				displayCreateAccount();
+			}
 		}
 	}
 
@@ -344,6 +346,7 @@ private static AssistantActivity instance;
 	public void displayMenu() {
 		fragment = new WelcomeFragment();
 		changeFragment(fragment);
+		country = null;
 		currentFragment = AssistantFragmentsEnum.WELCOME;
 		back.setVisibility(View.INVISIBLE);
 	}
@@ -382,6 +385,7 @@ private static AssistantActivity instance;
 	public void displayCountryChooser() {
 		fragment = new CountryListFragment();
 		changeFragment(fragment);
+		lastFragment = currentFragment;
 		currentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
 		back.setVisibility(View.VISIBLE);
 	}

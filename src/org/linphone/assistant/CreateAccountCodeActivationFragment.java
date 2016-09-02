@@ -22,7 +22,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import org.linphone.mediastream.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,6 +34,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.mediastream.Log;
 import org.linphone.core.LinphoneAccountCreatorImpl;
 
 
@@ -126,20 +126,21 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 
 	@Override
 	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		if(status.equals(Status.AccountActivated)){
+		if (status.equals(Status.AccountActivated)) {
 			checkAccount.setEnabled(true);
-			if(accountCreator.getUsername() != null){
-				AssistantActivity.instance().saveCreatedAccount(accountCreator.getUsername(), null , null, accountCreator.getHa1() , getString(R.string.default_domain), null);
-				AssistantActivity.instance().isAccountVerified(accountCreator.getUsername());
+			if (accountCreator.getUsername() != null) {
+				AssistantActivity.instance().saveCreatedAccount(accountCreator.getUsername(), null, null, accountCreator.getHa1(), getString(R.string.default_domain), null);
+				if(!recoverAccount)
+					AssistantActivity.instance().isAccountVerified(accountCreator.getUsername());
 			} else {
-				AssistantActivity.instance().saveCreatedAccount(accountCreator.getPhoneNumber(), null , null, accountCreator.getHa1() , getString(R.string.default_domain), null);
-				AssistantActivity.instance().isAccountVerified(accountCreator.getPhoneNumber());
+				AssistantActivity.instance().saveCreatedAccount(accountCreator.getPhoneNumber(), null, null, accountCreator.getHa1(), getString(R.string.default_domain), null);
+				if(!recoverAccount)
+					AssistantActivity.instance().isAccountVerified(accountCreator.getPhoneNumber());
 			}
-
-		} else if (status.equals(LinphoneAccountCreator.Status.Failed)){
+		} else if (status.equals(LinphoneAccountCreator.Status.Failed)) {
 			Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
+		}else {
+			Toast.makeText(getActivity(), getString(R.string.assistant_error_confirmation_code), Toast.LENGTH_LONG).show();
 		}
 	}
 

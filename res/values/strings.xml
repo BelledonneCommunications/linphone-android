@@ -51,6 +51,7 @@
 	<string name="conference">Conference</string>
 	<string name="link">Link</string>
 	<string name="link_account_popup">Do you want to link the account %s with your phone number ?</string>
+	<string name="maybe_later">Maybe later</string>
 
 	<!-- Launch screen -->
 	<string name="app_description">the <i>libre</i> SIP client</string>
@@ -84,6 +85,7 @@
 	<string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
 	<string name="assistant_remote_provisioning_login">Enter your login</string>
 	<string name="assistant_account_not_validated">Your account has not been validated yet.</string>
+	<string name="assistant_error_confirmation_code"></string>
 	<string name="assistant_account_validated">Your account has been validated.</string>
 	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
 	<string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>
