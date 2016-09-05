@@ -1140,6 +1140,10 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		return true;
 	}
 	
+	public void checkAndRequestReadPhoneStatePermission() {
+		checkAndRequestPermission(Manifest.permission.READ_PHONE_STATE, 0);
+	}
+	
 	public void checkAndRequestReadExternalStoragePermission() {
 		checkAndRequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 0);
 	}
@@ -1237,6 +1241,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					ContactsManager.getInstance().enableContactsAccess();
 				}
+				checkAndRequestReadPhoneStatePermission();
 				ContactsManager.getInstance().fetchContactsAsync();
 				fetchedContactsOnce = true;
 				break;
@@ -1264,15 +1269,26 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
 		Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		
-		if (contacts == PackageManager.PERMISSION_GRANTED && !fetchedContactsOnce) {
-			ContactsManager.getInstance().enableContactsAccess();
-			ContactsManager.getInstance().fetchContactsAsync();
-			fetchedContactsOnce = true;
-		} else if (contacts != PackageManager.PERMISSION_GRANTED && !willContactsPermissionBeAsked()) {
-			ContactsManager.getInstance().fetchContactsAsync();
-			fetchedContactsOnce = true;
+		int readPhone = getPackageManager().checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
+		Log.i("[Permission] Read phone state permission is " + (readPhone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		
+		if (contacts == PackageManager.PERMISSION_GRANTED) {
+			if (readPhone == PackageManager.PERMISSION_DENIED) {
+				checkAndRequestReadPhoneStatePermission();
+			}
+			if (!fetchedContactsOnce) {
+				ContactsManager.getInstance().enableContactsAccess();
+				ContactsManager.getInstance().fetchContactsAsync();
+				fetchedContactsOnce = true;
+			}
 		} else {
-			checkAndRequestReadContactsPermission();
+			if (!willContactsPermissionBeAsked()) {
+				ContactsManager.getInstance().fetchContactsAsync();
+				fetchedContactsOnce = true;
+				checkAndRequestReadPhoneStatePermission();
+			} else {
+				checkAndRequestReadContactsPermission(); // This will ask for Read_Phone_State permission on it's cb
+			}
 		}
 	}
 	
