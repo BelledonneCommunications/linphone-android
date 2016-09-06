@@ -295,6 +295,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		instance = new LinphoneManager(c);
 		instance.startLibLinphone(c);
+
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
@@ -775,10 +776,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 
 		updateNetworkReachability();
-
-		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
-			BluetoothManager.getInstance().initBluetooth();
-		}
 
 		resetCameraFromPreferences();
 	}
