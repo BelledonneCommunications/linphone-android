@@ -133,12 +133,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private LinearLayout mTabBar;
 
 	private DrawerLayout sideMenu;
-	private String[] sideMenuItems;
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
 	private boolean fetchedContactsOnce = false;
 	private boolean doNotGoToCallActivity = false;
+	private List<String> sideMenuItems;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -234,6 +234,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 
 				refreshAccounts();
+
+				if(state.equals(RegistrationState.RegistrationOk) && LinphonePreferences.instance().getLinkPopupTime() != ""){
+					if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
+						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null && !LinphonePreferences.instance().getLinkPopupTime().equals(""))){
+							isAccountWithAlias();
+						}
+					}
+				}
 
 				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
 					newProxyConfig = false;
@@ -1346,12 +1354,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			isTrialAccount();
 		}
 
-		if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
-			if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null && !LinphonePreferences.instance().getLinkPopupTime().equals(""))){
-				isAccountWithAlias();
-			}
-		}
-
 		updateMissedChatCount();
 		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
 			LinphoneManager.getInstance().subscribeFriendList(true);
@@ -1481,13 +1483,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void initSideMenu() {
-
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
+		sideMenuItems = new ArrayList<String>();
+		sideMenuItems.add(getResources().getString(R.string.menu_assistant));
+		sideMenuItems.add(getResources().getString(R.string.menu_settings));
 		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
-			sideMenuItems = new String[]{getResources().getString(R.string.menu_assistant),getResources().getString(R.string.menu_settings),getResources().getString(R.string.inapp), getResources().getString(R.string.menu_about)};
-		} else {
-			sideMenuItems = new String[]{getResources().getString(R.string.menu_assistant),getResources().getString(R.string.menu_settings),getResources().getString(R.string.menu_about)};
+			sideMenuItems.add(getResources().getString(R.string.inapp));
 		}
+		sideMenuItems.add(getResources().getString(R.string.menu_about));
 		sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
 		sideMenuItemList = (ListView)findViewById(R.id.item_list);
 		menu = (ImageView) findViewById(R.id.side_menu_button);
@@ -1686,7 +1689,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void isAccountWithAlias(){
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			LinphoneAccountCreator accountCreator;
-			accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+			accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 			accountCreator.setDomain(getResources().getString(R.string.default_domain));
 			accountCreator.setListener(this);
 			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));

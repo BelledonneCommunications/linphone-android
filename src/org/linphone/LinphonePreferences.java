@@ -1350,6 +1350,14 @@ public class LinphonePreferences {
 		return purchasables;
 	}
 
+	public String getXmlrpcUrl(){
+		return getConfig().getString("assistant", "xmlrpc_url", null);
+	}
+
+	public void setXmlrpcUrl(String url){
+		getConfig().setString("assistant", "xmlrpc_url", url);
+	}
+
 	public String getInappPopupTime(){
 		return getConfig().getString("app", "inapp_popup_time", null);
 	}

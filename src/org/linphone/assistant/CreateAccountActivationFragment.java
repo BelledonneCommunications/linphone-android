@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneXmlRpcRequest;
 import org.linphone.core.LinphoneXmlRpcRequest.LinphoneXmlRpcRequestListener;
@@ -81,7 +82,7 @@ public class CreateAccountActivationFragment extends Fragment implements Linphon
 			}
 		};
 		
-		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), getString(R.string.wizard_url));
+		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getXmlrpcUrl());
 		xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_validated", LinphoneXmlRpcRequest.ArgType.Int);
 		xmlRpcRequest.setListener(this);
 		

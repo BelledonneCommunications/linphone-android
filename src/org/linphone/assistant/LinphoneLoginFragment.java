@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAccountCreator;
@@ -62,7 +63,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_linphone_login, container, false);
 
-		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 
 		String url = "http://linphone.org/free-sip-service.html&action=recover";

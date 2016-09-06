@@ -28,7 +28,6 @@ import org.linphone.R;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -81,7 +80,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 
 		//Initialize accountCreator
-		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setDomain(getResources().getString(R.string.default_domain));
 		accountCreator.setListener(this);
 
@@ -192,8 +191,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			passwordConfirmLayout.setVisibility(View.GONE);
 			emailLayout.setVisibility(View.GONE);
 
-			createAccount.setText(getResources().getString(R.string.assistant_link_account));
-			assisstantTitle.setText(getResources().getString(R.string.assistant_link_account));
+			createAccount.setText(getResources().getString(R.string.link_account));
+			assisstantTitle.setText(getResources().getString(R.string.link_account));
 		}
 		addUsernameHandler(usernameEdit, null);
 
@@ -570,7 +569,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	@Override
 	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, Status status) {
 		if(status.equals(Status.AccountCreated)) {
-			if(useEmail.isChecked()){
+			if(useEmail.isChecked() || !getResources().getBoolean(R.bool.use_phone_number_validation)){
 				AssistantActivity.instance().displayAssistantConfirm(getUsername(), passwordEdit.getText().toString());
 			} else {
 				AssistantActivity.instance().displayAssistantCodeConfirm(getUsername(), phoneNumberEdit.getText().toString(), getCountryCode(), false);

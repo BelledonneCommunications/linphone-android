@@ -15,7 +15,6 @@
 	<integer name="popup_time_interval">86400</integer><!-- Time between two inapp notifications in seconds -->
 
 	<!-- Assistant -->
-	<string name="wizard_url">https://sip3.linphone.org:444/wizard.php</string><!-- Url of the xmlrpc script -->
 	<bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool><!-- Start assistant in loginFragment view instead of menu -->
 

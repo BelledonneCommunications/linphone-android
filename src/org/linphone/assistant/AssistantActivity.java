@@ -25,6 +25,8 @@ import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
@@ -65,7 +67,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 private static AssistantActivity instance;
 	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
@@ -82,6 +84,7 @@ private static AssistantActivity instance;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
+	private LinphoneAccountCreator accountCreator;
 
 	public CountryListFragment.Country country;
 	public String phone_number;
@@ -118,6 +121,10 @@ private static AssistantActivity instance;
 		}
         mPrefs = LinphonePreferences.instance();
 		status.enableSideMenu(false);
+
+		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator.setDomain(getResources().getString(R.string.default_domain));
+		accountCreator.setListener(this);
         
         mListener = new LinphoneCoreListenerBase() {
         	@Override
@@ -133,7 +140,7 @@ private static AssistantActivity instance;
 						if (state == RegistrationState.RegistrationOk) {
 							if (progress != null) progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								success();
+								accountCreator.isAccountUsed();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							if (progress != null) progress.dismiss();
@@ -222,6 +229,9 @@ private static AssistantActivity instance;
 
 	@Override
 	public void onBackPressed() {
+		if(isLink){
+			return;
+		}
 		if (currentFragment == firstFragment) {
 			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
@@ -435,6 +445,8 @@ private static AssistantActivity instance;
 			address.setDisplayName(displayName);
 		}
 
+
+
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 		.setUsername(username)
@@ -466,6 +478,10 @@ private static AssistantActivity instance;
 			
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
+
+			accountCreator.setPassword(password);
+			accountCreator.setHa1(ha1);
+			accountCreator.setUsername(username);
 		} else {
 			String forcedProxy = "";
 			if (!TextUtils.isEmpty(forcedProxy)) {
@@ -609,5 +625,46 @@ private static AssistantActivity instance;
 		if (status != null) {
 			status.setLinphoneCoreListener();
 		}
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if(status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias)){
+			success();
+		} else {
+			isLink = true;
+			displayCreateAccount();
+		}
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
 	}
 }

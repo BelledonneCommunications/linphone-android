@@ -60,7 +60,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 		linkAccount = getArguments().getBoolean("LinkAccount");
 
 		code_length = LinphonePreferences.instance().getCodeLength();
-		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), getResources().getString(R.string.wizard_url));
+		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setDomain(getResources().getString(R.string.default_domain));
 		accountCreator.setListener(this);
 		accountCreator.setUsername(username);
@@ -160,7 +160,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 		if(status.equals(LinphoneAccountCreator.Status.Ok)){
 			LinphonePreferences.instance().setLinkPopupTime("");
 			AssistantActivity.instance().hideKeyboard();
-			AssistantActivity.instance().finish();
+			AssistantActivity.instance().success();
 		}
 	}
 

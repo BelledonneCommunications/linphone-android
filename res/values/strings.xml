@@ -52,6 +52,7 @@
 	<string name="link">Link</string>
 	<string name="link_account_popup">Do you want to link the account %s with your phone number ?</string>
 	<string name="maybe_later">Maybe later</string>
+	<string name="link_account">Link account</string>
 
 	<!-- Launch screen -->
 	<string name="app_description">the <i>libre</i> SIP client</string>
@@ -60,7 +61,6 @@
 	<string name="welcome">Welcome</string>
 	<string name="assistant">Assistant</string>
 	<string name="assistant_create_account">Create account</string>
-	<string name="assistant_link_account">Link account</string>
 	<string name="assistant_continue">Continue</string>
 	<string name="assistant_activate">Activate account</string>
 	<string name="assistant_finish">Finish configuration</string>
