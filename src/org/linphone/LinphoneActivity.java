@@ -1312,8 +1312,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 		
 		if (isTablet()) {
+			// Prevent fragmentContainer2 to be visible when rotating the device
 			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-			if (currentFragment == FragmentsAvailable.DIALER) {
+			if (currentFragment == FragmentsAvailable.DIALER 
+					|| currentFragment == FragmentsAvailable.ABOUT
+					|| currentFragment == FragmentsAvailable.SETTINGS
+					|| currentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {
 				ll.setVisibility(View.GONE);
 			}
 		}
