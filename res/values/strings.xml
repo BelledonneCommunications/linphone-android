@@ -65,8 +65,7 @@
 	<string name="assistant_activate">Activate account</string>
 	<string name="assistant_finish">Finish configuration</string>
 	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
-	<string name="assistant_validate_code">Enter your activation code</string>
-	<string name="assistant_welcome_desc">This assistant will help you to use a SIP account for your calls.</string>
+	<string name="assistant_welcome_desc">This assistant will help you configure and use your SIP account.</string>
 	<string name="assistant_linphone_login_desc">Enter your username and password of Linphone account</string>
 	<string name="assistant_login_desc">Enter your username and password with your SIP domain</string>
 	<string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
@@ -74,10 +73,10 @@
 	<string name="assistant_login_linphone">Use Linphone account</string>
 	<string name="assistant_login_generic">Use SIP account</string>
 	<string name="assistant_remote_provisioning">Fetch remote configuration</string>
-	<string name="assistant_create_account_part_1">1/2</string>
-	<string name="assistant_create_account_part_2">2/2</string>
+	<string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
+	<string name="assistant_create_account_part_2">We have sent you a SMS with a validation code.\n\nTo complete your phone number verification, please enter the %i digit code below:\n</string>
 	<string name="assistant_display_name_optional">Display name (optional)</string>
-	<string name="assistant_linphone_account">Configure Linphone account</string>
+	<string name="assistant_linphone_account">Use your Linphone account</string>
 	<string name="assistant_generic_account">Configure SIP account</string>
 	<string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
 	<string name="assistant_fetch_apply">Fetch and apply</string>
@@ -106,11 +105,12 @@
 	<string name="assistant_choose_country">Choose a country</string>
 	<string name="select_your_country">Select your Country</string>
 	<string name="country_code">(%s)</string>
-	<string name="use_username_instead_or_phone_number">Don\'t use phone number as username</string>
+	<string name="use_username_instead_or_phone_number">Use a username (optional)</string>
 	<string name="use_email_for_validation">Use email address for account validation</string>
-	<string name="login_with_username">Log in with username</string>
-	<string name="phone_number_info_title">What is my phone number for?</string>
-	<string name="phone_number_info_content">A SMS code will be sent to your phone number to validate your account.</string>
+	<string name="login_with_username">Use your username and password instead of your phone number</string>
+	<string name="phone_number_info_title">What will my phone number be used for?</string>
+	<string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\nYou will see in your addressbook who is using Linphone and your friends will know that they can rach you on Linphone as well.\n</string>
+	<string name="phone_number_link_info_content">\nYour friends will find your more easily if you link your account to your phone number\n\nYou will see in your addressbook who is using Linphone and your friends will know that they can rach you on Linphone as well.\n</string>
 
 	<!-- Status -->
 	<string name="invalid_email">Invalid email</string>

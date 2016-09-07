@@ -24,15 +24,6 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
-		<TextView
-			android:text="@string/assistant_validate_code"
-			style="@style/font11"
-			android:paddingTop="10dp"
-			android:gravity="center"
-			android:layout_gravity="center"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
-
 		<EditText
 			android:id="@+id/assistant_code"
 			android:background="@drawable/resizable_textfield"
