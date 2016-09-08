@@ -333,6 +333,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		noSipContact.setVisibility(View.GONE);
 		noContact.setVisibility(View.GONE);
 		contactsList.setVisibility(View.VISIBLE);
+		contactsFetchInProgress.setVisibility(View.GONE);
 
 		if (onlyDisplayLinphoneContacts) {
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -344,11 +345,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			edit.setEnabled(true);
 		}
 		ContactsManager.getInstance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
-		if (contactsList.getCount() == 0) {
-			contactsFetchInProgress.setVisibility(View.VISIBLE);
-		} else {
-			contactsFetchInProgress.setVisibility(View.GONE);
-		}
 	}
 	
 	private void changeContactsToggle() {

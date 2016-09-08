@@ -21,6 +21,7 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.assistant.RemoteProvisioningActivity;
+import org.linphone.mediastream.Version;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
 import android.app.Activity;
@@ -71,6 +72,11 @@ public class LinphoneLauncherActivity extends Activity {
 			classToStart = RemoteProvisioningActivity.class;
 		} else {
 			classToStart = LinphoneActivity.class;
+		}
+
+		// We need LinphoneService to start bluetoothManager
+		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+			BluetoothManager.getInstance().initBluetooth();
 		}
 		
 		mHandler.postDelayed(new Runnable() {
