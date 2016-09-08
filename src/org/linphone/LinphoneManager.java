@@ -432,6 +432,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
 		if(lc != null ) {
 			LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
+			Log.i("Presence list subscription is " + (enabled ? "enabled" : "disabled"));
 			mFriendList.enableSubscriptions(enabled);
 		}
 	}

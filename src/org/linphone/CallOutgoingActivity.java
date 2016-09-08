@@ -122,8 +122,6 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 				}
 			}
 		};
-
-		super.onCreate(savedInstanceState);
 		instance = this;
 	}
 

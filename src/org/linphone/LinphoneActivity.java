@@ -63,6 +63,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -73,6 +74,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -140,6 +142,113 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private boolean doNotGoToCallActivity = false;
 	private List<String> sideMenuItems;
 
+	private Application.ActivityLifecycleCallbacks activityCallbacks;
+	private Handler mHandler;
+
+
+	/*Believe me or not, but knowing the application visibility state on Android is a nightmare.
+	After two days of hard work I ended with the following class, that does the job more or less reliabily.
+	*/
+	class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
+		private ArrayList<Activity> activities = new ArrayList<Activity>();
+		private boolean mActive = false;
+		private int mRunningActivities = 0;
+
+		class InactivityChecker implements Runnable {
+			private boolean isCanceled;
+
+			public void cancel() {
+				isCanceled = true;
+			}
+
+			@Override
+			public void run() {
+				if (!isCanceled) {
+					if (ActivityMonitor.this.mRunningActivities == 0) {
+						mActive = false;
+						LinphoneActivity.this.onBackgroundMode();
+					}
+				}
+			}
+		};
+
+		private InactivityChecker mLastChecker;
+
+		@Override
+		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+			Log.i("Activity created:" + activity);
+			if (!activities.contains(activity))
+				activities.add(activity);
+		}
+
+		@Override
+		public void onActivityStarted(Activity activity) {
+			Log.i("Activity started:" + activity);
+		}
+
+		@Override
+		public void onActivityResumed(Activity activity) {
+			Log.i("Activity resumed:" + activity);
+			if (activities.contains(activity)) {
+				mRunningActivities++;
+				Log.i("runningActivities=" + mRunningActivities);
+				checkActivity();
+			}
+
+		}
+
+		@Override
+		public void onActivityPaused(Activity activity) {
+			Log.i("Activity paused:" + activity);
+			if (activities.contains(activity)) {
+				mRunningActivities--;
+				Log.i("runningActivities=" + mRunningActivities);
+				checkActivity();
+			}
+
+		}
+
+		@Override
+		public void onActivityStopped(Activity activity) {
+			Log.i("Activity stopped:" + activity);
+		}
+
+		@Override
+		public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+		}
+
+		@Override
+		public void onActivityDestroyed(Activity activity) {
+			Log.i("Activity destroyed:" + activity);
+			if (activities.contains(activity)) {
+				activities.remove(activity);
+			}
+		}
+
+		void startInactivityChecker() {
+			if (mLastChecker != null) mLastChecker.cancel();
+			LinphoneActivity.this.mHandler.postDelayed(
+					(mLastChecker = new InactivityChecker()), 2000);
+		}
+
+		void checkActivity() {
+
+			if (mRunningActivities == 0) {
+				if (mActive) startInactivityChecker();
+			} else if (mRunningActivities > 0) {
+				if (!mActive) {
+					mActive = true;
+					LinphoneActivity.this.onForegroundMode();
+				}
+				if (mLastChecker != null) {
+					mLastChecker.cancel();
+					mLastChecker = null;
+				}
+			}
+		}
+	}
+
 	static final boolean isInstanciated() {
 		return instance != null;
 	}
@@ -150,9 +259,33 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		throw new RuntimeException("LinphoneActivity not instantiated yet");
 	}
 
+	protected void onBackgroundMode(){
+		Log.i("App has entered background mode");
+		if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
+			if (LinphoneManager.isInstanciated())
+				LinphoneManager.getInstance().subscribeFriendList(false);
+		}
+	}
+
+	protected void onForegroundMode() {
+		Log.i("App has left background mode");
+	}
+
+	/*the purpose of this method is to monitor activities started after the LinphoneActivity (but including LinphoneActivity)
+	in order to just be able to determine whether the application is in foreground or not.
+	Believe me or not, this information is not something provided by the current android apis.
+	 */
+	private void setupActivityMonitor(){
+		if (activityCallbacks != null) return;
+		getApplication().registerActivityLifecycleCallbacks(activityCallbacks = new ActivityMonitor());
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//This must be done before calling super.onCreate().
+		setupActivityMonitor();
 		super.onCreate(savedInstanceState);
+		mHandler = new Handler();
 
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -1121,37 +1254,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
 
-		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled()){
-			LinphoneManager.getInstance().subscribeFriendList(!isApplicationBroughtToBackground(this));
-		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
 
 		super.onPause();
-	}
 
-	@SuppressWarnings("deprecation")
-	public static boolean isApplicationBroughtToBackground(final Activity activity) {
-		ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-		List<ActivityManager.RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
-
-		// Check the top Activity against the list of Activities contained in the Application's package.
-		if (!tasks.isEmpty()) {
-			ComponentName topActivity = tasks.get(0).topActivity;
-			try {
-				PackageInfo pi = activity.getPackageManager().getPackageInfo(activity.getPackageName(), PackageManager.GET_ACTIVITIES);
-				for (ActivityInfo activityInfo : pi.activities) {
-					if(topActivity.getClassName().equals(activityInfo.name)) {
-						return false;
-					}
-				}
-			} catch( PackageManager.NameNotFoundException e) {
-				return false; // Never happens.
-			}
-		}
-		return true;
 	}
 
 	public boolean checkAndRequestOverlayPermission() {
@@ -1168,7 +1277,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void checkAndRequestReadPhoneStatePermission() {
 		checkAndRequestPermission(Manifest.permission.READ_PHONE_STATE, 0);
 	}
-	
+
 	public void checkAndRequestReadExternalStoragePermission() {
 		checkAndRequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 0);
 	}
@@ -1188,7 +1297,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void checkAndRequestInappPermission() {
 		checkAndRequestPermission(Manifest.permission.GET_ACCOUNTS, PERMISSIONS_REQUEST_CONTACTS);
 	}
-	
+
 	private boolean willContactsPermissionBeAsked() {
 		return LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS, false) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS);
 	}
@@ -1301,7 +1410,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 		int readPhone = getPackageManager().checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
 		Log.i("[Permission] Read phone state permission is " + (readPhone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-		
+
 		if (contacts == PackageManager.PERMISSION_GRANTED) {
 			if (readPhone == PackageManager.PERMISSION_DENIED) {
 				checkAndRequestReadPhoneStatePermission();
@@ -1387,6 +1496,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (mOrientationHelper != null) {
 			mOrientationHelper.disable();
 			mOrientationHelper = null;
+		}
+
+		if (activityCallbacks != null){
+			getApplication().unregisterActivityLifecycleCallbacks(activityCallbacks);
+			activityCallbacks = null;
 		}
 
 		instance = null;
