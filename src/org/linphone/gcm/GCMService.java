@@ -77,11 +77,15 @@ public class GCMService extends GCMBaseIntentService {
 	}
 
 	@Override
-	protected void onRegistered(Context context, String regId) {
+	protected void onRegistered(Context context, final String regId) {
 		initLogger(context);
 		Log.d("[Push Notification] Registered: " + regId);
-		
-		LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
+		UIThreadDispatcher.dispatch(new Runnable(){
+			@Override
+			public void run() {
+				LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
+			}
+		});
 	}
 
 	@Override
@@ -89,7 +93,12 @@ public class GCMService extends GCMBaseIntentService {
 		initLogger(context);
 		Log.w("[Push Notification] Unregistered: " + regId);
 		
-		LinphonePreferences.instance().setPushNotificationRegistrationID(null);
+		UIThreadDispatcher.dispatch(new Runnable(){
+			@Override
+			public void run() {
+				LinphonePreferences.instance().setPushNotificationRegistrationID(null);
+			}
+		});
 	}
 	
 	protected String[] getSenderIds(Context context) {
