@@ -950,6 +950,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			public Button fileTransferAction;
 			public ImageView messageStatus;
 			public ProgressBar messageSendingInProgress;
+			public ImageView contactPictureMask;
 			
 			public ViewHolder(View view) {
 				id = view.getId();
@@ -965,6 +966,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				fileTransferAction = (Button) view.findViewById(R.id.file_transfer_action);
 				messageStatus = (ImageView) view.findViewById(R.id.status);
 				messageSendingInProgress = (ProgressBar) view.findViewById(R.id.inprogress);
+				contactPictureMask = (ImageView) view.findViewById(R.id.mask);
 			}
 
 			@Override
@@ -1191,6 +1193,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				Compatibility.setTextAppearance(holder.contactName, getActivity(), R.style.font3);
 				Compatibility.setTextAppearance(holder.fileTransferAction, getActivity(), R.style.font15);
 				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
+				holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 			} else {
 				if (isEditMode) {
 					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -1203,6 +1206,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				Compatibility.setTextAppearance(holder.contactName, getActivity(), R.style.font9);
 				Compatibility.setTextAppearance(holder.fileTransferAction, getActivity(), R.style.font8);
 				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+				holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 			}
 			holder.bubbleLayout.setLayoutParams(layoutParams);
 			
