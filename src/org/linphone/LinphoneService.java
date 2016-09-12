@@ -25,6 +25,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallLog.CallStatus;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
@@ -213,6 +214,12 @@ public final class LinphoneService extends Service {
 				if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
 					destroyOverlay();
 				}
+				
+				// Enable the following to have missed call notifications
+				/*if (state == State.CallEnd && call.getCallLog().getStatus() == CallStatus.Missed) {
+					Notification notif = Compatibility.createSimpleNotification(instance, "Missed call", LinphoneManager.getLc().getMissedCallsCount() + " missed call", mNotifContentIntent);
+					notifyWrapper(CUSTOM_NOTIF_ID, notif);
+				}*/
 
 				if (state == State.StreamsRunning) {
 					// Workaround bug current call seems to be updated after state changed to streams running
