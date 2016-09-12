@@ -370,7 +370,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 				if(state.equals(RegistrationState.RegistrationOk) && LinphonePreferences.instance().getLinkPopupTime() != ""){
 					if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
-						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null && !LinphonePreferences.instance().getLinkPopupTime().equals(""))){
+						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null)){
 							isAccountWithAlias();
 						}
 					}
@@ -566,7 +566,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
-
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction transaction = fm.beginTransaction();
 
@@ -1813,7 +1812,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
 			accountCreator.isAccountUsed();
 		} else {
-			LinphonePreferences.instance().setInappPopupTime(null);
+			LinphonePreferences.instance().setLinkPopupTime(null);
 		}
 	}
 

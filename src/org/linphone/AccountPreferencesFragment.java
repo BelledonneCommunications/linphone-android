@@ -240,6 +240,13 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			return true;
 		}
 	};
+	OnPreferenceClickListener linkAccountListener = new OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			LinphoneActivity.instance().displayLinkPhoneNumber();
+			return true;
+		}
+	};
 	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -371,6 +378,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		if(!isNewAccount){
 			friendlistSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 		}
+
+		Preference linkAccount = advanced.getPreference(9);
+		linkAccount.setOnPreferenceClickListener(linkAccountListener);
     	
     	PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
     	final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);

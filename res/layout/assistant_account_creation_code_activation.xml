@@ -29,7 +29,7 @@
 			android:background="@drawable/resizable_textfield"
 			android:textColor="@color/colorB"
 			android:contentDescription="@string/content_description_activation_code_field"
-			android:inputType="text|textNoSuggestions"
+			android:inputType="number"
 			android:gravity="center_vertical|center_horizontal"
 			android:layout_width="match_parent"
 			android:layout_height="40dp"
