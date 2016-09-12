@@ -1116,6 +1116,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						routeAudioToReceiver();
 					}
 				}
+				if (mIncallWakeLock != null && mIncallWakeLock.isHeld()) {
+					mIncallWakeLock.release();
+					Log.i("Last call ended: releasing incall (CPU only) wake lock");
+				} else {
+					Log.i("Last call ended: no incall (CPU only) wake lock were held");
+				}
 			}
 		}
 		if (state == State.CallUpdatedByRemote) {
