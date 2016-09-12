@@ -31,6 +31,7 @@ public class CallsAudio extends SampleTest {
 		goToSettings();
 
 		selectItemInListOnUIThread(3);
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_title));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_enable_title));
 		solo.sleep(500);
 		

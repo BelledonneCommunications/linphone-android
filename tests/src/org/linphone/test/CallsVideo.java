@@ -31,13 +31,10 @@ public class CallsVideo extends SampleTest {
 		//Enable video
 		goToSettings();
 
-		selectItemInListOnUIThread(3);
-		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_enable_title));
-		solo.sleep(500);
-		
 		// enable auto accept and auto share video
 		goToVideoCodecsSettings();
 		solo.sleep(500);
+		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_enable_title));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_initiate_call_with_video_title));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_video_automatically_accept_video_title));
 		solo.sleep(500);
@@ -61,6 +58,7 @@ public class CallsVideo extends SampleTest {
 		solo.clickOnView(solo.getView(org.linphone.R.id.call));
 
 		assertOutgoingCallIsCorrectlyRunning();
+		assertCallIsCorrectlyRunning();
 		assertCallIsRunningWithVideo();
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.video_frame));
