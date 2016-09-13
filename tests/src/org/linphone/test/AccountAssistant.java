@@ -26,6 +26,7 @@ public class AccountAssistant extends SampleTest {
 	@MediumTest
 	@LargeTest
 	public void testAWizardDisplayedAfterInstall() {
+		LinphonePreferences.instance().setXmlrpcUrl("https://sip3.linphone.org:444/inapp.php");
 		solo.waitForActivity("AssistantActivity", 3000);
 		solo.assertCurrentActivity("Expected Assistant Activity", AssistantActivity.class);
 	}
@@ -38,16 +39,19 @@ public class AccountAssistant extends SampleTest {
 		solo.assertCurrentActivity("Expected Assistant Activity", AssistantActivity.class);
 
 		solo.clickOnView(solo.getView(org.linphone.R.id.login_linphone));
+		solo.clickOnView(solo.getView(org.linphone.R.id.use_username));
 		solo.enterText((EditText) solo.getView(org.linphone.R.id.assistant_username), iContext.getString(R.string.account_linphone_login));
 		solo.enterText((EditText) solo.getView(org.linphone.R.id.assistant_password), iContext.getString(R.string.account_linphone_pwd));
-		solo.enterText((EditText) solo.getView(org.linphone.R.id.assistant_display_name), iContext.getString(R.string.account_linphone_display_name));
 		solo.clickOnView(solo.getView(org.linphone.R.id.assistant_apply));
+
+		solo.clickOnView(solo.getView(org.linphone.R.id.assistant_skip));
 
 		solo.sleep(1000);
 
 		//Test echo calibration launch at first start
-		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.assistant_ec_calibration)));
-				
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.assistant_codec_down_question)));
+		solo.clickOnView(solo.getView(org.linphone.R.id.answerNo));
+
 		solo.waitForActivity("LinphoneActivity", 8000);
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.account_linphone_login) + "@sip.linphone.org"));
 
@@ -68,8 +72,8 @@ public class AccountAssistant extends SampleTest {
 		String proxy = prefs.getAccountProxy(0);
 		Assert.assertEquals("<sip:" + aContext.getString(org.linphone.R.string.default_domain) + ";transport=tls>", proxy);
 
-		String display_name = prefs.getAccountDisplayName(0);
-		Assert.assertEquals(iContext.getString(R.string.account_linphone_display_name), display_name);
+		String username = prefs.getAccountUsername(0);
+		Assert.assertEquals(iContext.getString(R.string.account_linphone_login), username);
 				
 		boolean ice = prefs.isIceEnabled();
 		Assert.assertEquals(ice, true);
@@ -118,8 +122,6 @@ public class AccountAssistant extends SampleTest {
 
 		Assert.assertEquals(error.getText(), aContext.getString(org.linphone.R.string.wizard_username_incorrect));
 		Assert.assertFalse(createAccount.isEnabled());
-
-
 
 		solo.clearEditText((EditText) solo.getView(org.linphone.R.id.username));
 		solo.enterText((EditText) solo.getView(org.linphone.R.id.username), iContext.getString(R.string.account_linphone_login));
