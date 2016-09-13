@@ -1386,6 +1386,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			String sipUri = extras.getString("ChatContactSipUri");
 			doNotGoToCallActivity = true;
 			displayChat(sipUri);
+		} else if (extras != null && extras.getBoolean("GoToHistory", false)) {
+			doNotGoToCallActivity = true;
+			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];

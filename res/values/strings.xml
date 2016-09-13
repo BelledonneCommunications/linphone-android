@@ -170,6 +170,8 @@
 	<string name="incall_notif_video">Video capturing call ongoing</string>
 	<string name="notification_started">started</string>
 	<string name="unread_messages">%i unread messages</string>
+	<string name="missed_calls_notif_title">Missed call</string>
+	<string name="missed_calls_notif_body">%i missed calls</string>
 
 	<!-- Errors -->
 	<string name="skipable_error_service_not_ready">Warning: service is not ready</string>

@@ -152,6 +152,20 @@ public class ApiElevenPlus {
 	}
 
 	@SuppressWarnings("deprecation")
+	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context)
+		.setContentTitle(title)
+		.setContentText(text)
+		.setContentIntent(intent)
+		.setSmallIcon(R.drawable.call_status_missed)
+		.setAutoCancel(true)
+		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+		.setWhen(System.currentTimeMillis()).getNotification();
+
+		return notif;
+	}
+
+	@SuppressWarnings("deprecation")
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
 		Notification notif = new Notification.Builder(context)
 		.setContentTitle(title)

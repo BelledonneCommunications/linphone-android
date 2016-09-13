@@ -89,6 +89,7 @@ public final class LinphoneService extends Service {
 	private final static int INCALL_NOTIF_ID=2;
 	private final static int MESSAGE_NOTIF_ID=3;
 	private final static int CUSTOM_NOTIF_ID=4;
+	private final static int MISSED_NOTIF_ID=5;
 	
 	public static boolean isReady() {
 		return instance != null && instance.mTestDelayElapsed;
@@ -114,7 +115,7 @@ public final class LinphoneService extends Service {
 	private Notification mMsgNotif;
 	private Notification mCustomNotif;
 	private int mMsgNotifCount;
-	private PendingIntent mNotifContentIntent;
+	private PendingIntent mNotifContentIntent, mMissedCallsNotifContentIntent;
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
 	private LinphoneCoreListenerBase mListener;
@@ -181,6 +182,10 @@ public final class LinphoneService extends Service {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		Intent missedCallNotifIntent = new Intent(this, incomingReceivedActivity);
+		missedCallNotifIntent.putExtra("GoToHistory", true);
+		mMissedCallsNotifContentIntent = PendingIntent.getActivity(this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		Bitmap bm = null;
 		try {
@@ -215,11 +220,26 @@ public final class LinphoneService extends Service {
 					destroyOverlay();
 				}
 				
-				// Enable the following to have missed call notifications
-				/*if (state == State.CallEnd && call.getCallLog().getStatus() == CallStatus.Missed) {
-					Notification notif = Compatibility.createSimpleNotification(instance, "Missed call", LinphoneManager.getLc().getMissedCallsCount() + " missed call", mNotifContentIntent);
-					notifyWrapper(CUSTOM_NOTIF_ID, notif);
-				}*/
+				if (state == State.CallEnd && call.getCallLog().getStatus() == CallStatus.Missed) {
+					int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
+					String body;
+					if (missedCallCount > 1) {
+						body = getString(R.string.missed_calls_notif_body).replace("%i", String.valueOf(missedCallCount));
+					} else {
+						LinphoneAddress address = call.getRemoteAddress();
+						LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
+						if (c != null) {
+							body = c.getFullName();
+						} else {
+							body = address.getDisplayName();
+							if (body == null) {
+								body = address.asStringUriOnly();
+							}
+						}
+					}
+					Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, mMissedCallsNotifContentIntent);
+					notifyWrapper(MISSED_NOTIF_ID, notif);
+				}
 
 				if (state == State.StreamsRunning) {
 					// Workaround bug current call seems to be updated after state changed to streams running
