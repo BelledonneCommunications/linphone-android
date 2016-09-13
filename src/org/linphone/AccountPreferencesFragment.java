@@ -236,6 +236,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			boolean value = (Boolean) newValue;
+			mPrefs.enabledFriendlistSubscription(value);
 			LinphoneManager.getInstance().subscribeFriendList(value);
 			return true;
 		}
