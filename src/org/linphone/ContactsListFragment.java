@@ -146,6 +146,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		});
 		
 		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
+		contactsFetchInProgress.setVisibility(View.VISIBLE);
 
 		return view;
     }
@@ -333,16 +334,22 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		noSipContact.setVisibility(View.GONE);
 		noContact.setVisibility(View.GONE);
 		contactsList.setVisibility(View.VISIBLE);
-		contactsFetchInProgress.setVisibility(View.GONE);
 
+		ContactsListAdapter adapter;
 		if (onlyDisplayLinphoneContacts) {
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts()));
+			adapter = new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts());
+			contactsList.setAdapter(adapter);
 			edit.setEnabled(true);
 		} else {
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			contactsList.setAdapter(new ContactsListAdapter(ContactsManager.getInstance().getContacts()));
+			adapter = new ContactsListAdapter(ContactsManager.getInstance().getContacts());
+			contactsList.setAdapter(adapter);
 			edit.setEnabled(true);
+		}
+		
+		if (adapter.getCount() > 0) {
+			contactsFetchInProgress.setVisibility(View.GONE);
 		}
 		ContactsManager.getInstance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
 	}
