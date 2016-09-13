@@ -421,13 +421,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	private void addEmailHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			public void onTextChanged(CharSequence s, int start, int count, int after) 
-			{
 				emailOk = false;
 				Status status = accountCreator.setEmail(field.getText().toString());
 				if (status.equals(Status.Ok)) {
@@ -439,19 +432,18 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			public void onTextChanged(CharSequence s, int start, int count, int after) {
+			}
 		});
 	}
 	
 	private void addPasswordHandler(final EditText field1, final ImageView icon) {
 		TextWatcher passwordListener = new TextWatcher() {
 			public void afterTextChanged(Editable s) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			public void onTextChanged(CharSequence s, int start, int count, int after) 
-			{
 				passwordOk = false;
 				Status status = accountCreator.setPassword(field1.getText().toString());
 				if (isPasswordCorrect(field1.getText().toString())) {
@@ -463,6 +455,12 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
 			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			public void onTextChanged(CharSequence s, int start, int count, int after) {
+			}
 		};
 		
 		field1.addTextChangedListener(passwordListener);
@@ -471,13 +469,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	private void addConfirmPasswordHandler(final EditText field1, final EditText field2, final ImageView icon) {
 		TextWatcher passwordListener = new TextWatcher() {
 			public void afterTextChanged(Editable s) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			public void onTextChanged(CharSequence s, int start, int count, int after) 
-			{
 				confirmPasswordOk = false;
 				if (field1.getText().toString().equals(field2.getText().toString())) {
 					confirmPasswordOk = true;
@@ -490,9 +481,12 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 					displayError(confirmPasswordOk, passwordConfirmError, passwordConfirmEdit, getString(R.string.wizard_passwords_unmatched));
 				}
 				createAccount.setEnabled(usernameOk && passwordOk && confirmPasswordOk && emailOk);
-
-
 			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			public void onTextChanged(CharSequence s, int start, int count, int after) {}
 		};
 		field1.addTextChangedListener(passwordListener);
 		field2.addTextChangedListener(passwordListener);
@@ -550,7 +544,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, final Status status) {
-		if(getResources().getBoolean(R.bool.isTablet) || useEmail.isChecked()){
+		if(getResources().getBoolean(R.bool.isTablet) || useEmail.isChecked() || !getResources().getBoolean(R.bool.use_phone_number_validation)){
 			if (status.equals(Status.AccountExist) || status.equals(Status.AccountExistWithAlias)) {
 				usernameOk = false;
 				displayError(usernameOk, usernameError, usernameEdit, errorForStatus(status));
