@@ -46,8 +46,9 @@ public class AccountAssistant extends SampleTest {
 		solo.sleep(1000);
 
 		//Test echo calibration launch at first start
-		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.assistant_ec_calibration)));
-				
+		Assert.assertTrue(solo.searchText(aContext.getString(org.linphone.R.string.assistant_codec_down_question)));
+		solo.clickOnView(solo.getView(org.linphone.R.id.answerNo));
+
 		solo.waitForActivity("LinphoneActivity", 8000);
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.account_linphone_login) + "@sip.linphone.org"));
 
