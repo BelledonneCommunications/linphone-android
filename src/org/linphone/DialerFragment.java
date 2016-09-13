@@ -122,13 +122,15 @@ public class DialerFragment extends Fragment {
 			}
 		}
 
+		instance = this;
+
 		return view;
     }
 
 	/**
 	 * @return null if not ready yet
 	 */
-	public static DialerFragment instance() { 
+	public static DialerFragment instance() {
 		return instance;
 	}
 	
@@ -166,7 +168,7 @@ public class DialerFragment extends Fragment {
 	}
 	
 	public void resetLayout(boolean callTransfer) {
-		isCallTransferOngoing = callTransfer;
+		isCallTransferOngoing = LinphoneActivity.instance().isCallTransfer();
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) {
 			return;
