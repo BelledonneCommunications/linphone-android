@@ -74,6 +74,9 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="assistant_account_not_validated">Votre compte n\'a pas encore été validé.</string>
   <string name="assistant_account_validated">Votre compte à été validé.</string>
   <string name="assistant_error_bad_credentials">Nom d\'utilisateur ou mot de passe invalide</string>
+  <string name="assistant_codec_down_question">Voulez-vous télécharger le codec vidéo OpenH264 fourni par Cisco Systems, Inc. ? </string>
+  <string name="assistant_codec_downloading">Téléchargement du codec vidéo OpenH264 fourni par Cisco Systems, Inc.</string>
+  <string name="assistant_codec_downloaded">Téléchargement du codec vidéo OpenH264 fourni par Cisco Systems, Inc effectué.</string>
   <string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
   <string name="wizard_server_unavailable">Serveur indisponible, veuillez vérifier votre connexion réseau.</string>
   <string name="wizard_username_unavailable">Ce nom d\'utilisateur est déjà pris.</string>
@@ -101,6 +104,7 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="phone_number">Numéro de téléphone</string>
   <string name="contact_first_name">Prénom</string>
   <string name="contact_last_name">Nom</string>
+  <string name="contact_organization">Société</string>
   <!--Chat-->
   <string name="no_chat_history">Aucune conversation</string>
   <string name="delete_conversation">Voulez-vous supprimer la discussion sélectionnée ?</string>
@@ -154,6 +158,8 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="incall_notif_video">Appel vidéo en cours</string>
   <string name="notification_started">démarré</string>
   <string name="unread_messages">%i messages non lus</string>
+  <string name="missed_calls_notif_title">Appel manqué</string>
+  <string name="missed_calls_notif_body">%i appels manqués</string>
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Attention : le service n\'est pas prêt</string>
   <string name="error">Erreur</string>
@@ -225,6 +231,7 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="pref_echo_cancellation">Annulateur d\'écho</string>
   <string name="pref_echo_cancellation_summary">Supprime l\'écho entendu de l\'autre côté</string>
   <string name="pref_echo_canceller_calibration">Calibration de l\'annulateur d\'écho</string>
+  <string name="pref_echo_tester">Tester l\'écho</string>
   <string name="ec_calibrating">Calibration…</string>
   <string name="ec_calibrated">Calibré en %s ms</string>
   <string name="no_echo">Pas d\'écho</string>
@@ -264,8 +271,11 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <!--Network settings-->
   <string name="pref_network_title">Réseau</string>
   <string name="pref_wifi_only">Utiliser WiFi uniquement</string>
-  <string name="pref_stun_server">Serveur Stun</string>
+  <string name="pref_stun_server">Serveur STUN / TURN</string>
   <string name="pref_ice_enable">Activer ICE</string>
+  <string name="pref_turn_enable">Activer TURN</string>
+  <string name="pref_turn_username_title">Identifiant STUN / TURN (optionnel)</string>
+  <string name="pref_turn_passwd_title">Mot de passe STUN / TURN (optionnel)</string>
   <string name="pref_upnp_enable">Activer UPNP</string>
   <string name="pref_transport_use_random_ports">Utiliser des ports aléatoires</string>
   <string name="pref_sip_port_title">Port SIP à utiliser si port aléatoire désactivé</string>
@@ -285,6 +295,7 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="pref_autostart">Démarrer au lancement du téléphone</string>
   <string name="pref_incoming_call_timeout_title">Ignorer les appels entrants après (en secondes)</string>
   <string name="pref_remote_provisioning_title">Configuration distante</string>
+  <string name="pref_android_app_settings_title">Infos appli Android</string>
   <string name="pref_primary_account_title">Compte principal</string>
   <string name="pref_display_name_title">Nom d\'affichage</string>
   <string name="pref_user_name_title">Nom d\'utilisateur</string>
@@ -351,6 +362,7 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="content_description_delete_selection">Supprimer la sélection</string>
   <string name="content_description_contact_first_name">Prénom</string>
   <string name="content_description_contact_last_name">Nom</string>
+  <string name="content_description_contact_organization">Société</string>
   <string name="content_description_back_call">Retour à l\'appel</string>
   <string name="content_description_send_file">Envoi d\'un fichier</string>
   <string name="content_description_message">Message</string>

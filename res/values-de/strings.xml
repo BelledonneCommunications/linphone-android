@@ -73,6 +73,9 @@
   <string name="assistant_account_not_validated">Ihr Konto wurde noch nicht überprüft.</string>
   <string name="assistant_account_validated">Ihr Konto wurde überprüft.</string>
   <string name="assistant_error_bad_credentials">Falscher Benutzername oder Passwort</string>
+  <string name="assistant_codec_down_question">Sind Sie mit dem Herunterladen des OpenH264-Videocodecs, bereitgestellt von Cisco Systems, Inc., einverstanden?</string>
+  <string name="assistant_codec_downloading">OpenH264-Videocodec, bereitgestellt von Cisco Systems, Inc., wird heruntergeladen.</string>
+  <string name="assistant_codec_downloaded">OpenH264-Videocodec, bereitgestellt von Cisco Systems, Inc., heruntergeladen.</string>
   <string name="wizard_failed">Es ist ein Fehler aufgetreten, versuchen Sie es später nochmal</string>
   <string name="wizard_server_unavailable">Server nicht erreichbar, überprüfen Sie Ihre Netzwerkverbindung.</string>
   <string name="wizard_username_unavailable">Der Benutzername wird bereits verwendet.</string>
@@ -100,6 +103,7 @@
   <string name="phone_number">Telefonnummer</string>
   <string name="contact_first_name">Vorname</string>
   <string name="contact_last_name">Nachname</string>
+  <string name="contact_organization">Organisation</string>
   <!--Chat-->
   <string name="no_chat_history">Keine Gespräche</string>
   <string name="delete_conversation">Möchten Sie das ausgewählte Gespräch löschen?</string>
@@ -246,6 +250,8 @@
   <string name="pref_video_codecs_title">Codecs</string>
   <!--Call settings-->
   <string name="pref_call_title">Anruf</string>
+  <string name="pref_device_ringtone">Geräteklingelton verwenden</string>
+  <string name="pref_auto_answer">Eingehende Anrufe automatisch beantworten</string>
   <string name="pref_rfc2833_dtmf">RFC2833 DTMFs senden</string>
   <string name="pref_sipinfo_dtmf">SIP INFO DTMFs senden</string>
   <string name="pref_voice_mail">Sprachnachricht-URI</string>
@@ -260,8 +266,8 @@
   <!--Network settings-->
   <string name="pref_network_title">Netzwerk</string>
   <string name="pref_wifi_only">Nur WiFi verwenden</string>
-  <string name="pref_stun_server">Stun-Server</string>
   <string name="pref_ice_enable">ICE aktivieren</string>
+  <string name="pref_turn_enable">TURN aktivieren</string>
   <string name="pref_upnp_enable">UPNP aktivieren</string>
   <string name="pref_transport_use_random_ports">Zufällige Ports verwenden</string>
   <string name="pref_sip_port_title">Zu benutzender SIP-Port</string>
@@ -281,6 +287,7 @@
   <string name="pref_autostart">Beim Einschalten starten</string>
   <string name="pref_incoming_call_timeout_title">Auflegen bei eingehendem Anruf (in Sekunden)</string>
   <string name="pref_remote_provisioning_title">Fernbereitstellung</string>
+  <string name="pref_android_app_settings_title">Android-App-Einstellungen</string>
   <string name="pref_primary_account_title">Primäres Konto</string>
   <string name="pref_display_name_title">Anzeigename</string>
   <string name="pref_user_name_title">Benutzername</string>
@@ -347,6 +354,7 @@
   <string name="content_description_delete_selection">Auswahl löschen</string>
   <string name="content_description_contact_first_name">Vorname</string>
   <string name="content_description_contact_last_name">Nachname</string>
+  <string name="content_description_contact_organization">Organisation</string>
   <string name="content_description_back_call">Zurück zum Anruf</string>
   <string name="content_description_send_file">Datei senden</string>
   <string name="content_description_message">Nachricht</string>
