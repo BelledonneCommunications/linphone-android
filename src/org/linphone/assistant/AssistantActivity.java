@@ -312,31 +312,31 @@ private static AssistantActivity instance;
 		}
 	}
 
-	private void logIn(String username, String password, String ha1, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
-		saveCreatedAccount(username, password, displayName, ha1, domain, transport);
+	private void logIn(String username, String password, String ha1, String prefix, String domain, TransportType transport, boolean sendEcCalibrationResult) {
+		saveCreatedAccount(username, password, ha1, prefix, domain, transport);
 	}
 
-	public void checkAccount(String username, String password, String displayName, String domain) {
-		saveCreatedAccount(username, password, displayName, null, domain, null);
+	public void checkAccount(String username, String password, String prefix, String domain) {
+		saveCreatedAccount(username, password, null, prefix, domain, null);
 	}
 
-	public void linphoneLogIn(String username, String password, String ha1,  String displayName, boolean validate) {
+	public void linphoneLogIn(String username, String password, String ha1,  String prefix, boolean validate) {
 		if (validate) {
-			checkAccount(username, password, displayName, getString(R.string.default_domain));
+			checkAccount(username, password, prefix, getString(R.string.default_domain));
 		} else {
 			if(accountCreated) {
-				retryLogin(username, password, displayName, getString(R.string.default_domain), null);
+				retryLogin(username, password, prefix, getString(R.string.default_domain), null);
 			} else {
-				logIn(username, password, ha1,  displayName, getString(R.string.default_domain), null, true);
+				logIn(username, password, ha1,  prefix, getString(R.string.default_domain), null, true);
 			}
 		}
 	}
 
-	public void genericLogIn(String username, String password, String displayName, String domain, TransportType transport) {
+	public void genericLogIn(String username, String password, String prefix, String domain, TransportType transport) {
 		if (accountCreated) {
-			retryLogin(username, password, displayName, domain, transport);
+			retryLogin(username, password, prefix, domain, transport);
 		} else {
-			logIn(username, password, null, displayName, domain, transport, false);
+			logIn(username, password, null, prefix, domain, transport, false);
 		}
 	}
 
@@ -400,9 +400,9 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void retryLogin(String username, String password, String displayName, String domain, TransportType transport) {
+	public void retryLogin(String username, String password, String prefix, String domain, TransportType transport) {
 		accountCreated = false;
-		saveCreatedAccount(username, password, displayName, null, domain, transport);
+		saveCreatedAccount(username, password, null, prefix, domain, transport);
 	}
 
 	private void launchDownloadCodec() {
@@ -427,7 +427,7 @@ private static AssistantActivity instance;
 		return phoneNumberWithCountry;
 	}
 
-	public void saveCreatedAccount(String username, String password, String displayName, String ha1, String domain, TransportType transport) {
+	public void saveCreatedAccount(String username, String password, String prefix, String ha1, String domain, TransportType transport) {
 		if (accountCreated)
 			return;
 
@@ -441,19 +441,16 @@ private static AssistantActivity instance;
 			Log.e(e);
 		}
 
-		if(address != null && displayName != null && !displayName.equals("")){
-			address.setDisplayName(displayName);
-		}
-
-
-
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 		.setUsername(username)
 		.setDomain(domain)
-		.setDisplayName(displayName)
 		.setHa1(ha1)
 		.setPassword(password);
+
+		if(prefix != null){
+			builder.setPrefix(prefix);
+		}
 		
 		if (isMainAccountLinphoneDotOrg) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {

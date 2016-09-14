@@ -87,6 +87,7 @@
 				android:singleLine="true"/>
 
 			<TextView
+				android:visibility="gone"
 				android:text="@string/assistant_display_name_optional"
 				style="@style/font13"
 				android:textAllCaps="true"
@@ -95,6 +96,7 @@
 				android:layout_height="wrap_content"/>
 
 			<EditText
+				android:visibility="gone"
 				android:id="@+id/assistant_display_name"
 				android:background="@drawable/resizable_textfield"
 				android:textColor="@color/colorB"

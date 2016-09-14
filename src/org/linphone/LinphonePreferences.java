@@ -209,6 +209,7 @@ public class LinphonePreferences {
 		private String tempDomain;
 		private String tempProxy;
 		private String tempRealm;
+		private String tempPrefix;
 		private boolean tempOutboundProxy;
 		private String tempContactsParams;
 		private String tempExpire;
@@ -301,6 +302,11 @@ public class LinphonePreferences {
 			return this;
 		}
 
+		public AccountBuilder setPrefix(String prefix) {
+			tempPrefix = prefix;
+			return this;
+		}
+
 		public AccountBuilder setQualityReportingEnabled(boolean enable) {
 			tempQualityReportingEnabled = enable;
 			return this;
@@ -372,6 +378,11 @@ public class LinphonePreferences {
 			prxCfg.enableQualityReporting(tempQualityReportingEnabled);
 			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
 			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
+
+			if(tempPrefix != null){
+				prxCfg.setDialPrefix(tempPrefix);
+			}
+
 
 			if(tempRealm != null)
 				prxCfg.setRealm(tempRealm);
