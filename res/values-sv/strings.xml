@@ -138,7 +138,6 @@
   <string name="pref_image_sharing_server_title">Delar server</string>
   <!--Network settings-->
   <string name="pref_network_title">Nätverk</string>
-  <string name="pref_stun_server">Stun-server</string>
   <string name="pref_ice_enable">Aktivera ICE</string>
   <string name="pref_upnp_enable">Aktivera UPNP</string>
   <string name="pref_transport_use_random_ports">Använd slumpade portar</string>

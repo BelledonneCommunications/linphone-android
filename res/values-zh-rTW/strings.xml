@@ -9,6 +9,10 @@
   <string name="notification_registered">%s 已註冊</string>
   <string name="notification_register_failure">%s 無法註冊</string>
   <string name="tunnel_host"></string>
+  <string name="about_version">Linphone Android %s</string>
+  <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
+  <string name="about_link">www.linphone.org</string>
+  <string name="sync_account_name">Linphone 聯絡人</string>
   <!--Common-->
   <string name="username">使用者名稱</string>
   <string name="display_name">顯示名稱</string>
@@ -53,6 +57,7 @@
   <string name="assistant_generic_account">設定 SIP 帳號</string>
   <string name="assistant_login">登入</string>
   <string name="assistant_ec_calibration">正在進行回音消除器校正</string>
+  <string name="assistant_remote_provisioning_login">輸入你的使用者名稱和密碼</string>
   <string name="assistant_account_not_validated">你的帳號還沒被驗證。</string>
   <string name="assistant_account_validated">你的帳號已經被驗證。</string>
   <string name="assistant_error_bad_credentials">不正確的使用者名稱或密碼</string>
@@ -63,11 +68,14 @@
   <string name="wizard_email_incorrect">你的電子郵件無效。</string>
   <string name="wizard_password_incorrect">你的密碼無效。</string>
   <string name="wizard_passwords_unmatched">密碼不相符</string>
+  <string name="setup_confirm_username">你的使用者名稱將會是 %s。\r\n\r\n它可能與你輸入的不同來符合需求。\r\n你接受嗎？</string>
+  <string name="first_launch_no_login_password">請輸入你的使用者名稱和密碼</string>
+  <string name="forgot_password">忘記密碼？</string>
   <!--Dailer-->
   <string name="address_bar_hint">輸入號碼或位址</string>
   <!--History-->
-  <string name="no_call_history">歷史中沒有通話</string>
-  <string name="no_missed_call_history">歷史中沒有未接來電</string>
+  <string name="no_call_history">記錄中沒有通話</string>
+  <string name="no_missed_call_history">記錄中沒有未接來電</string>
   <string name="delete_history_log">你想要刪除選取的通話紀錄嗎？</string>
   <string name="today">今天</string>
   <string name="yesterday">昨天</string>
@@ -115,7 +123,7 @@
   <string name="unknown_incoming_call_name">未知</string>
   <string name="call_stats_audio">音訊</string>
   <string name="call_stats_video">視訊</string>
-  <string name="call_stats_codec">編碼：</string>
+  <string name="call_stats_codec">編解碼器：</string>
   <string name="call_stats_upload">上傳頻寬：</string>
   <string name="call_stats_download">下載頻寬：</string>
   <string name="call_stats_video_resolution">視訊大小：</string>
@@ -131,6 +139,7 @@
   <string name="error">錯誤</string>
   <string name="error_unknown">未知錯誤</string>
   <string name="error_user_not_found">找不到使用者</string>
+  <string name="error_incompatible_media">不相容的媒體參數</string>
   <string name="error_low_bandwidth">對方的頻寬過低，視訊無法啟動</string>
   <string name="error_network_unreachable">無法連接網路</string>
   <string name="error_io_error">網路錯誤</string>
@@ -178,8 +187,8 @@
   <string name="ec_calibrating">校正中...</string>
   <string name="no_echo">沒有回音</string>
   <string name="failed">失敗</string>
-  <string name="pref_codec_bitrate_limit">編碼位元率限制</string>
-  <string name="pref_codecs">編碼</string>
+  <string name="pref_codec_bitrate_limit">編解碼器位元率限制</string>
+  <string name="pref_codecs">編解碼器</string>
   <!--Video settings-->
   <string name="pref_video_title">視訊</string>
   <string name="pref_video_use_front_camera_title">使用前攝影機</string>
@@ -190,16 +199,20 @@
   <string name="pref_video_preset">視訊預設</string>
   <string name="pref_preferred_video_size">偏好的視訊大小</string>
   <string name="pref_preferred_fps">偏好的 FPS</string>
-  <string name="pref_video_codecs_title">編碼</string>
+  <string name="pref_video_codecs_title">編解碼器</string>
   <!--Call settings-->
   <string name="pref_call_title">通話</string>
+  <string name="pref_device_ringtone">使用裝置鈴聲</string>
   <!--Chat settings-->
   <string name="pref_chat_title">聊天</string>
+  <string name="pref_image_sharing_server_desc">不要編輯除非你知道你在做什麼！</string>
+  <string name="lime_encryption_entry_disabled">停用</string>
+  <string name="lime_encryption_entry_mandatory">強制</string>
   <!--Network settings-->
   <string name="pref_network_title">網路</string>
   <string name="pref_wifi_only">只使用 WiFi</string>
-  <string name="pref_stun_server"> Stun 伺服器</string>
   <string name="pref_ice_enable">啟用 ICE</string>
+  <string name="pref_turn_enable">啟用 TURN</string>
   <string name="pref_upnp_enable">啟用 UPNP</string>
   <string name="pref_transport_use_random_ports">使用隨機連接埠</string>
   <string name="pref_sip_port_title">要使用的連接埠</string>
@@ -251,7 +264,7 @@
   <string name="content_description_switch_video">切換視訊</string>
   <string name="content_description_pause">暫停</string>
   <string name="content_description_numpad">數字鍵盤</string>
-  <string name="content_description_history">歷史按鈕</string>
+  <string name="content_description_history">記錄按鈕</string>
   <string name="content_description_chat_button">聊天按鈕</string>
   <string name="content_description_contacts">聯絡人按鈕</string>
   <string name="content_description_call_quality">通話品質</string>

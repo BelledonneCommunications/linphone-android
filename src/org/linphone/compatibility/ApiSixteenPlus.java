@@ -112,6 +112,20 @@ public class ApiSixteenPlus {
 		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);		
 	}
 
+	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context)
+		.setContentTitle(title)
+		.setContentText(text)
+		.setSmallIcon(R.drawable.call_status_missed)
+		.setAutoCancel(true)
+		.setContentIntent(intent)
+		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+		.setWhen(System.currentTimeMillis())
+		.build();
+
+		return notif;
+	}
+
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
 		Notification notif = new Notification.Builder(context)
 		.setContentTitle(title)

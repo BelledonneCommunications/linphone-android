@@ -46,6 +46,17 @@ public class Compatibility {
 		}
 		return notif;
 	}
+	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = null;
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
+		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
+			notif = ApiSixteenPlus.createMissedCallNotification(context, title, text, intent);
+		} else {
+			notif = ApiElevenPlus.createMissedCallNotification(context, title, text, intent);
+		}
+		return notif;
+	}
 	
 	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
 		Notification notif = null;		

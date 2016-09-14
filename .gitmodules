@@ -101,3 +101,6 @@
 [submodule "submodules/externals/vo-amrwbenc"]
 	path = submodules/externals/vo-amrwbenc
 	url = git://git.linphone.org/vo-amrwbenc.git
+[submodule "submodules/externals/codec2"]
+	path = submodules/externals/codec2
+	url = git://git.linphone.org/codec2

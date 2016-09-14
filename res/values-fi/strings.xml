@@ -244,7 +244,6 @@
   <!--Network settings-->
   <string name="pref_network_title">Verkko</string>
   <string name="pref_wifi_only">Käytä vain wifiä</string>
-  <string name="pref_stun_server">Stun-palvelin eli \'osoitteenmuunoksen takaisin haku\'-palvelin</string>
   <string name="pref_ice_enable">Salli ICE</string>
   <string name="pref_upnp_enable">Salli UPNP</string>
   <string name="pref_transport_use_random_ports">Käytä satunnaista porttia</string>

@@ -240,7 +240,6 @@
   <!--Network settings-->
   <string name="pref_network_title">Сеть</string>
   <string name="pref_wifi_only">Использовать только WiFi</string>
-  <string name="pref_stun_server">Сервер Stun</string>
   <string name="pref_ice_enable">Включить ICE</string>
   <string name="pref_upnp_enable">Включить UPNP</string>
   <string name="pref_transport_use_random_ports">Использовать случайный порт</string>

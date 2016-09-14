@@ -243,7 +243,6 @@
   <!--Network settings-->
   <string name="pref_network_title">ネットワーク</string>
   <string name="pref_wifi_only">WiFiのみ</string>
-  <string name="pref_stun_server">Stunサーバー</string>
   <string name="pref_ice_enable">ICEを有効にする</string>
   <string name="pref_upnp_enable">UPNPを使う</string>
   <string name="pref_transport_use_random_ports">ランダムポートを使用する</string>

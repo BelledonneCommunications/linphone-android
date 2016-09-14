@@ -141,7 +141,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private boolean fetchedContactsOnce = false;
 	private boolean doNotGoToCallActivity = false;
 	private List<String> sideMenuItems;
-
+	private boolean callTransfer = false;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -1026,7 +1026,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
-	private void initInCallMenuLayout(boolean callTransfer) {
+	public Boolean isCallTransfer(){
+		return callTransfer;
+	}
+
+	private void initInCallMenuLayout(final boolean callTransfer) {
 		selectMenu(FragmentsAvailable.DIALER);
 		DialerFragment dialerFragment = DialerFragment.instance();
 		if (dialerFragment != null) {
@@ -1037,7 +1041,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
 		DialerFragment dialerFragment = DialerFragment.instance();
 		if (dialerFragment != null) {
-			((DialerFragment) dialerFragment).resetLayout(false);
+			((DialerFragment) dialerFragment).resetLayout(true);
 		}
 
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
@@ -1101,7 +1105,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
 			getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
-			boolean callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
+			callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
 			boolean chat = data == null ? false : data.getBooleanExtra("chat", false);
 			if(chat){
 				pendingFragmentTransaction = FragmentsAvailable.CHAT_LIST;
@@ -1128,9 +1132,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
-
+		callTransfer = false;
+		
 		super.onPause();
-
 	}
 
 	public boolean checkAndRequestOverlayPermission() {
@@ -1401,6 +1405,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			String sipUri = extras.getString("ChatContactSipUri");
 			doNotGoToCallActivity = true;
 			displayChat(sipUri);
+		} else if (extras != null && extras.getBoolean("GoToHistory", false)) {
+			doNotGoToCallActivity = true;
+			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
 		} else if (extras != null && extras.getBoolean("GoToInapp", false)) {
 				LinphoneService.instance().removeMessageNotification();
 				doNotGoToCallActivity = true;

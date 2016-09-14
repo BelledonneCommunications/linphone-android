@@ -243,7 +243,6 @@
   <!--Network settings-->
   <string name="pref_network_title">Ağ</string>
   <string name="pref_wifi_only">Sadece WİFİ kullan</string>
-  <string name="pref_stun_server">Stun sunucusu</string>
   <string name="pref_ice_enable">İCE Etkin</string>
   <string name="pref_upnp_enable">UPNP Etkin</string>
   <string name="pref_transport_use_random_ports">Rastgele bağlanma noktası kullan</string>
