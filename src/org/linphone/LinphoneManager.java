@@ -716,6 +716,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
 		prefMigrator.migrateSharingServerUrlIfNeeded();
+		prefMigrator.doPresenceMigrationIfNeeded();
 		
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
