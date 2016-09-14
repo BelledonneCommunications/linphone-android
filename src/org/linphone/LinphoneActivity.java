@@ -1302,7 +1302,14 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable("currentFragment", currentFragment);
+		outState.putBoolean("fetchedContactsOnce", fetchedContactsOnce);
 		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		fetchedContactsOnce = savedInstanceState.getBoolean("fetchedContactsOnce");
 	}
 
 	@Override
