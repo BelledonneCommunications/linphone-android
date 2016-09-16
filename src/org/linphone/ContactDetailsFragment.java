@@ -133,10 +133,19 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
 			tv.setText(displayednumberOrAddress);
 			tv.setSelected(true);
+
+			String contactAddress = contact.getPresenceModelForUri(noa.getValue());
+			if(contactAddress != null) {
+				v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
+			}
 			
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
-				v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
+				if(contactAddress != null){
+					v.findViewById(R.id.contact_call).setTag(contact.getPresenceModelForUri(noa.getValue()));
+				} else {
+					v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
+				}
 			} else {
 				v.findViewById(R.id.contact_call).setVisibility(View.GONE);
 			}
@@ -146,9 +155,18 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			if (lpc != null) {
 				String username = lpc.normalizePhoneNumber(LinphoneUtils.getUsernameFromAddress(noa.getValue()));
 				String tag = LinphoneUtils.getFullAddressFromUsername(username);
-				v.findViewById(R.id.contact_chat).setTag(tag);
+
+				if(contactAddress != null){
+					v.findViewById(R.id.contact_chat).setTag(contact.getPresenceModelForUri(noa.getValue()));
+				} else {
+					v.findViewById(R.id.contact_chat).setTag(tag);
+				}
 			} else {
-				v.findViewById(R.id.contact_chat).setTag(noa.getValue());
+				if(contactAddress != null){
+					v.findViewById(R.id.contact_chat).setTag(contact.getPresenceModelForUri(noa.getValue()));
+				} else {
+					v.findViewById(R.id.contact_chat).setTag(noa.getValue());
+				}
 			}
 			
 			if (getResources().getBoolean(R.bool.disable_chat)) {
