@@ -775,6 +775,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 	}
 
+	public void onMessageSent(String to, String message) {
+		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+		if (fragment.getClass() == ChatListFragment.class) {
+			((ChatListFragment)fragment).refresh();
+		}
+	}
+
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
 	}
