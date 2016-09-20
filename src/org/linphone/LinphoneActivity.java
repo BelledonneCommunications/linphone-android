@@ -213,7 +213,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 
 			@Override
-			public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
+			public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain, LinphoneCore.AuthMethod method) {
 				//authInfoPassword = displayWrongPasswordDialog(username, realm, domain);
 				//authInfoPassword.show();
 			}

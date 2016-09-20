@@ -195,7 +195,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 
 	@Override
 	public void authInfoRequested(LinphoneCore lc, String realm,
-			String username, String Domain) {
+			String username, String Domain, LinphoneCore.AuthMethod method) {
 		// TODO Auto-generated method stub
 		
 	}
