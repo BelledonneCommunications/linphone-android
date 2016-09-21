@@ -18,6 +18,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.AuthMethod;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -433,9 +434,16 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 
 	@Override
 	public void authInfoRequested(LinphoneCore lc, String realm,
-			String username, String Domain, LinphoneCore.AuthMethod method) {
+			String username, String domain) {
 		// TODO Auto-generated method stub
-
+		
+	}
+	
+	@Override
+	public void authenticationRequested(LinphoneCore lc,
+			LinphoneAuthInfo authInfo, AuthMethod method) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
