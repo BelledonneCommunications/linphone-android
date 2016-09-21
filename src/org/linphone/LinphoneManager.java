@@ -45,6 +45,7 @@ import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.AuthMethod;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
 import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.LogCollectionUploadState;
@@ -927,17 +928,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private Vibrator mVibrator;
 
 	public void displayWarning(LinphoneCore lc, String message) {}
-
-	public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain, LinphoneCore.AuthMethod method) {}
-	public void byeReceived(LinphoneCore lc, String from) {}
 	public void displayMessage(LinphoneCore lc, String message) {}
 	public void show(LinphoneCore lc) {}
-
-	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf, String url) {
-	}
-
-	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-	}
+	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf, String url) {}
+	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {}
 
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
@@ -1540,5 +1534,17 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	@Override
 	public void friendListRemoved(LinphoneCore lc, LinphoneFriendList list) {
 		// TODO Auto-generated method stub
+	}
+	@Override
+	public void authInfoRequested(LinphoneCore lc, String realm,
+			String username, String domain) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void authenticationRequested(LinphoneCore lc,
+			LinphoneAuthInfo authInfo, AuthMethod method) {
+		// TODO Auto-generated method stub
+		
 	}
 }
