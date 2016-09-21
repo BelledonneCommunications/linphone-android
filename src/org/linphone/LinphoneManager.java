@@ -215,11 +215,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			@Override
 			public void OnProgress(final int current, final int max) {
 				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
+						@Override
+						public void run() {
 						OpenH264DownloadHelper ohcodec = LinphoneManager.getInstance().getOpenH264DownloadHelper();
 						if (progress == null) {
-							progress = new ProgressDialog((Context)ohcodec.getUserData(ctxt));
+							progress = new ProgressDialog((Context) ohcodec.getUserData(ctxt));
 							progress.setCanceledOnTouchOutside(false);
 							progress.setCancelable(false);
 							progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -238,22 +238,22 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 							}
 						}
 					}
-				});
+					});
 			}
 
 			@Override
-			public void OnError (final String error){
+			public void OnError(final String error) {
 				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
+						@Override
+						public void run() {
 						if (progress != null) progress.dismiss();
-						AlertDialog.Builder builder = new AlertDialog.Builder((Context)LinphoneManager.getInstance().getOpenH264DownloadHelper().getUserData(ctxt));
+						AlertDialog.Builder builder = new AlertDialog.Builder((Context) LinphoneManager.getInstance().getOpenH264DownloadHelper().getUserData(ctxt));
 						builder.setMessage("Sorry an error has occurred.");
 						builder.setCancelable(false);
 						builder.setNeutralButton("Ok", null);
 						builder.show();
 					}
-				});
+					});
 			}
 		};
 		mCodecDownloader.setOpenH264HelperListener(mCodecListener);

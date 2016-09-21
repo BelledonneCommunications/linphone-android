@@ -58,12 +58,9 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:id="@+id/answerNo"
-		android:layout_marginBottom="35dp"
 		android:layout_alignParentBottom="true"
 		android:layout_toLeftOf="@+id/imageView"
-		android:layout_toStartOf="@+id/imageView"
-		android:layout_marginRight="26dp"
-		android:layout_marginEnd="26dp"/>
+		android:layout_toStartOf="@+id/imageView" />
 
 	<Button
 		style="@style/font7"
@@ -85,8 +82,8 @@
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:id="@+id/answerOk"
-		android:layout_alignTop="@+id/answerYes"
-		android:layout_centerHorizontal="true"/>
+		android:layout_centerHorizontal="true"
+		android:layout_alignTop="@+id/answerYes" />
 
 	<TextView
 		style="@style/font7"

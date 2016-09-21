@@ -179,6 +179,7 @@
 	<string name="warning_wrong_destination_address">Cannot build destination address from %s</string>
 	<string name="error_unknown">Unknown error</string>
 	<string name="error_call_declined">Call declined</string>
+	<string name="error_user_busy">User busy</string>
 	<string name="error_user_not_found">User not found</string>
 	<string name="error_incompatible_media">Incompatible media parameters</string>
 	<string name="error_low_bandwidth">Your correspondent has low bandwidth, video cannot be started</string>
