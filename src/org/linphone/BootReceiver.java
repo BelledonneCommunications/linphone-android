@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package org.linphone;
 
-import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LpConfig;
 import org.linphone.mediastream.Log;
@@ -32,11 +31,8 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (lc != null) {
-				Log.w("Device is shutting down, destroying LinphoneCore to unregister");
-				lc.destroy();
-			}
+			Log.w("Device is shutting down, destroying LinphoneCore to unregister");
+			LinphoneManager.destroy();
 		} else {
 			String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
 			LpConfig lpConfig = LinphoneCoreFactory.instance().createLpConfig(path);
