@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
@@ -561,10 +562,14 @@ public final class LinphoneService extends Service {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");
 		sb.append("MODEL=").append(Build.MODEL).append("\n");
-		//MANUFACTURER doesn't exist in android 1.5.
-		//sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
+		sb.append("MANUFACTURER=").append(Build.MANUFACTURER).append("\n");
 		sb.append("SDK=").append(Build.VERSION.SDK_INT).append("\n");
-		sb.append("EABI=").append(Version.getCpuAbis().get(0)).append("\n");
+		sb.append("Supported ABIs=");
+		for (String abi : Version.getCpuAbis()) {
+			sb.append(abi + ", ");
+		}
+		sb.append("\n");
+		sb.append("Used ABI=").append(LinphoneCoreFactoryImpl.ABI).append("\n");
 		Log.i(sb.toString());
 	}
 
