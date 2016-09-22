@@ -622,9 +622,8 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			if (camera == PackageManager.PERMISSION_GRANTED) {
 				disableVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
 			} else {
-				if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
-				}
+				checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_ENABLED_CAMERA);
+
 			}
 		}
 		else if (id == R.id.micro) {
@@ -634,9 +633,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			if (recordAudio == PackageManager.PERMISSION_GRANTED) {
 				toggleMicro();
 			} else {
-				if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-					checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_ENABLED_MIC);
-				}
+				checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_ENABLED_MIC);
 			}
 		}
 		else if (id == R.id.speaker) {
