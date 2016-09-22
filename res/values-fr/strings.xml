@@ -257,8 +257,8 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="pref_call_title">Appel</string>
   <string name="pref_device_ringtone">Utiliser la sonnerie du téléphone</string>
   <string name="pref_auto_answer">Décrocher automatiquement appels entrants</string>
-  <string name="pref_rfc2833_dtmf">Envoyer les DTMFs RFC2833</string>
-  <string name="pref_sipinfo_dtmf">Envoyer les DTMFs en SIP INFO</string>
+  <string name="pref_rfc2833_dtmf">Envoyer les DTMFs in-band (RFC2833)</string>
+  <string name="pref_sipinfo_dtmf">Envoyer les DTMFs out-band DTMFs(SIP INFO)</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
