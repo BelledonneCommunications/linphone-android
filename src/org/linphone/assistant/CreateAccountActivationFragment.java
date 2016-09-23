@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneXmlRpcRequest;
 import org.linphone.core.LinphoneXmlRpcRequest.LinphoneXmlRpcRequestListener;
@@ -48,7 +49,7 @@ public class CreateAccountActivationFragment extends Fragment implements Linphon
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.assistant_account_creation_activation, container, false);
+		View view = inflater.inflate(R.layout.assistant_account_creation_email_activation, container, false);
 		
 		username = getArguments().getString("Username");
 		password = getArguments().getString("Password");
@@ -71,7 +72,7 @@ public class CreateAccountActivationFragment extends Fragment implements Linphon
 		runOk = new Runnable() {
 			public void run() {
 				checkAccount.setEnabled(true);
-				AssistantActivity.instance().saveCreatedAccount(username,password,null, getString(R.string.default_domain),null);
+				AssistantActivity.instance().saveCreatedAccount(username, password, null,  null, getString(R.string.default_domain),null);
 				AssistantActivity.instance().isAccountVerified(username);
 			}
 		};
@@ -81,7 +82,7 @@ public class CreateAccountActivationFragment extends Fragment implements Linphon
 			}
 		};
 		
-		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), getString(R.string.wizard_url));
+		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getXmlrpcUrl());
 		xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_validated", LinphoneXmlRpcRequest.ArgType.Int);
 		xmlRpcRequest.setListener(this);
 		

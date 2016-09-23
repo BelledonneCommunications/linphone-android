@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
@@ -192,15 +194,22 @@ public class LinphonePreferences {
 		getLc().addAuthInfo(authInfo);
 	}
 
+
+	public LinphoneAccountCreator AccountCreator(LinphoneCore lc, String server_url) {
+		return new LinphoneAccountCreatorImpl(lc, server_url);
+	}
+
 	public static class AccountBuilder {
 		private LinphoneCore lc;
 		private String tempUsername;
 		private String tempDisplayName;
 		private String tempUserId;
 		private String tempPassword;
+		private String tempHa1;
 		private String tempDomain;
 		private String tempProxy;
 		private String tempRealm;
+		private String tempPrefix;
 		private boolean tempOutboundProxy;
 		private String tempContactsParams;
 		private String tempExpire;
@@ -235,6 +244,11 @@ public class LinphonePreferences {
 
 		public AccountBuilder setPassword(String password) {
 			tempPassword = password;
+			return this;
+		}
+
+		public AccountBuilder setHa1(String ha1) {
+			tempHa1 = ha1;
 			return this;
 		}
 
@@ -285,6 +299,11 @@ public class LinphonePreferences {
 
 		public AccountBuilder setQualityReportingCollector(String collector) {
 			tempQualityReportingCollector = collector;
+			return this;
+		}
+
+		public AccountBuilder setPrefix(String prefix) {
+			tempPrefix = prefix;
 			return this;
 		}
 
@@ -360,10 +379,15 @@ public class LinphonePreferences {
 			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
 			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
 
+			if(tempPrefix != null){
+				prxCfg.setDialPrefix(tempPrefix);
+			}
+
+
 			if(tempRealm != null)
 				prxCfg.setRealm(tempRealm);
 
-			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, null, null, tempDomain);
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(tempUsername, tempUserId, tempPassword, tempHa1, tempRealm, tempDomain);
 
 			lc.addProxyConfig(prxCfg);
 			lc.addAuthInfo(authInfo);
@@ -520,10 +544,23 @@ public class LinphonePreferences {
 		}
 	}
 
+	public void setAccountHa1(int n, String ha1) {
+		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, null, ha1, null, getAccountDomain(n));
+			LinphoneManager.getLc().addAuthInfo(authInfo);
+		}
+	}
+
 	public String getAccountPassword(int n) {
 		LinphoneAuthInfo authInfo = getAuthInfo(n);
 		return authInfo == null ? null : authInfo.getPassword();
 	}
+
+	public String getAccountHa1(int n) {
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		return authInfo == null ? null : authInfo.getHa1();
+	}
+
 	public void setAccountDomain(int n, String domain) {
 		String identity = "sip:" + getAccountUsername(n) + "@" + domain;
 		LinphoneAuthInfo old_info = getAuthInfo(n);
@@ -1324,6 +1361,30 @@ public class LinphonePreferences {
 		return purchasables;
 	}
 
+	public String getXmlrpcUrl(){
+		return getConfig().getString("assistant", "xmlrpc_url", null);
+	}
+
+	public void setXmlrpcUrl(String url){
+		getConfig().setString("assistant", "xmlrpc_url", url);
+	}
+
+	public String getInappPopupTime(){
+		return getConfig().getString("app", "inapp_popup_time", null);
+	}
+
+	public void setInappPopupTime(String date){
+		getConfig().setString("app", "inapp_popup_time", date);
+	}
+
+	public void setLinkPopupTime(String date){
+		getConfig().setString("app", "link_popup_time", date);
+	}
+
+	public String getLinkPopupTime(){
+		return getConfig().getString("app", "link_popup_time", null);
+	}
+
 	public String getXmlRpcServerUrl() {
 		return getConfig().getString("app", "server_url", null);
 	}
@@ -1403,5 +1464,9 @@ public class LinphonePreferences {
 	
 	public void enableAutoAnswer(boolean enable) {
 		getConfig().setBool("app", "auto_answer", enable);
+	}
+
+	public int getCodeLength(){
+		return getConfig().getInt("app", "activation_code_length", 0);
 	}
 }

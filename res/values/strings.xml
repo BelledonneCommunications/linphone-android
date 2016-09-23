@@ -17,12 +17,15 @@
 	<string name="sync_account_name">linphone contacts</string>
 	<string name="history_date_format">EEE, d MMM</string>
 	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
+	<string name="inapp_popup_date_format">yyyy/MM/dd</string>
+	<string name="inapp_popup_date_day">dd</string>
 	<string name="messages_date_format">dd/MM, HH:mm</string>
 	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">HH:mm</string>
 
 	<!-- Common -->
 	<string name="username">Username</string>
+	<string name="phone_number">Phone number</string>
 	<string name="display_name">Display name</string>
 	<string name="password">Password</string>
 	<string name="confirm_password">Password confirmation</string>
@@ -46,6 +49,14 @@
 	<string name="connect">Connection</string>
 	<string name="decline">Decline</string>
 	<string name="conference">Conference</string>
+	<string name="link">Link</string>
+	<string name="link_account_popup">Do you want to link the account %s with your phone number ?</string>
+	<string name="maybe_later">Maybe later</string>
+	<string name="later">Later</string>
+	<string name="no">No</string>
+	<string name="ok">Ok</string>
+	<string name="yes">Yes</string>
+	<string name="link_account">Link account</string>
 
 	<!-- Launch screen -->
 	<string name="app_description">the <i>libre</i> SIP client</string>
@@ -54,9 +65,11 @@
 	<string name="welcome">Welcome</string>
 	<string name="assistant">Assistant</string>
 	<string name="assistant_create_account">Create account</string>
+	<string name="assistant_continue">Continue</string>
+	<string name="assistant_activate">Activate account</string>
 	<string name="assistant_finish">Finish configuration</string>
 	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
-	<string name="assistant_welcome_desc">This assistant will help you to use a SIP account for your calls.</string>
+	<string name="assistant_welcome_desc">This assistant will help you configure and use your SIP account.</string>
 	<string name="assistant_linphone_login_desc">Enter your username and password of Linphone account</string>
 	<string name="assistant_login_desc">Enter your username and password with your SIP domain</string>
 	<string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
@@ -64,10 +77,10 @@
 	<string name="assistant_login_linphone">Use Linphone account</string>
 	<string name="assistant_login_generic">Use SIP account</string>
 	<string name="assistant_remote_provisioning">Fetch remote configuration</string>
-	<string name="assistant_create_account_part_1">1/2</string>
-	<string name="assistant_create_account_part_2">2/2</string>
+	<string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
+	<string name="assistant_create_account_part_2">We have sent you a SMS with a validation code.\n\nTo complete your phone number verification, please enter the 4 digit code below:\n</string>
 	<string name="assistant_display_name_optional">Display name (optional)</string>
-	<string name="assistant_linphone_account">Configure Linphone account</string>
+	<string name="assistant_linphone_account">Use your Linphone account</string>
 	<string name="assistant_generic_account">Configure SIP account</string>
 	<string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
 	<string name="assistant_fetch_apply">Fetch and apply</string>
@@ -75,6 +88,7 @@
 	<string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
 	<string name="assistant_remote_provisioning_login">Enter your login</string>
 	<string name="assistant_account_not_validated">Your account has not been validated yet.</string>
+	<string name="assistant_error_confirmation_code"></string>
 	<string name="assistant_account_validated">Your account has been validated.</string>
 	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
 	<string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>
@@ -83,13 +97,47 @@
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>
+	<string name="assistant_phone_number_unavailable">This phone number is already in use.</string>
 	<string name="wizard_username_incorrect">Your username is invalid.</string>
+	<string name="assistant_phone_number_incorrect">Your phone number is invalid.</string>
 	<string name="wizard_email_incorrect">Your email is invalid.</string>
 	<string name="wizard_password_incorrect">Your password is invalid</string>
 	<string name="wizard_passwords_unmatched">Passwords do not match.</string>
 	<string name="setup_confirm_username">Your username will be %s.\r\n\r\nIt may differ from your input to match requirements.\r\nDo you accept?</string>
 	<string name="first_launch_no_login_password">Please enter your login and password</string>
 	<string name="forgot_password">Forgot password ?</string>
+	<string name="assistant_choose_country">Choose a country</string>
+	<string name="select_your_country">Select your Country</string>
+	<string name="country_code">(%s)</string>
+	<string name="use_username_instead_or_phone_number">Use a username (optional)</string>
+	<string name="use_email_for_validation">Use email address for account validation</string>
+	<string name="login_with_username">Use your username and password instead of your phone number</string>
+	<string name="phone_number_info_title">What will my phone number be used for?</string>
+	<string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\nYou will see in your addressbook who is using Linphone and your friends will know that they can rach you on Linphone as well.\n</string>
+	<string name="phone_number_link_info_content">\nYour friends will find your more easily if you link your account to your phone number\n\nYou will see in your addressbook who is using Linphone and your friends will know that they can rach you on Linphone as well.\n</string>
+
+	<!-- Status -->
+	<string name="invalid_email">Invalid email</string>
+	<string name="account_already_exist">Account already exist</string>
+	<string name="invalid_username">Invalid username</string>
+	<string name="invalid_domain">Invalid domain</string>
+	<string name="invalid_route">Invalid route</string>
+	<string name="username_too_short">Username too short</string>
+	<string name="username_too_long">Username too long</string>
+	<string name="username_invalid_size">Username length invalid</string>
+	<string name="phone_number_too_long">Phone number too long</string>
+	<string name="phone_number_too_short">Phone number too short</string>
+	<string name="phone_number_invalid">Invalid phone number</string>
+	<string name="password_too_short">Password too short</string>
+	<string name="password_too_long">Password too long</string>
+	<string name="request_failed">Failed to query the server. Please try again later</string>
+	<string name="transport_unsupported">Unsupported transport</string>
+
+	<!-- In-app -->
+	<string name="inapp">In-app</string>
+	<string name="inapp_notification_title">In-app purchase</string>
+	<string name="inapp_notification_trial_expire">The trail period expires on %s</string>
+	<string name="inapp_notification_account_expire">The subscription period expires on %s</string>
 
 	<!-- Dailer -->
 	<string name="address_bar_hint">Enter a number or an address</string>
@@ -107,7 +155,6 @@
 	<string name="delete_contacts">Do you want to delete selected contacts?</string>
 	<string name="delete_contact">Do you want to delete selected contact?</string>
 	<string name="sip_address">SIP address</string>
-	<string name="phone_number">Phone number</string>
 	<string name="contact_first_name">First name</string>
 	<string name="contact_last_name">Last name</string>
 	<string name="contact_organization">Organization</string>
@@ -211,6 +258,7 @@
 	<string name="pref_avpf_rr_interval"> AVPF regular RTCP interval in seconds (between 1 and 5)</string>
 	<string name="pref_escape_plus">Replace + by 00</string>
 	<string name="pref_friendlist_subscribe">Friendlist subscribe</string>
+	<string name="pref_link_account">Link account</string>
 	<string name="pref_auth_userid">Auth userid</string>
 	<string name="pref_help_auth_userid">Enter authentication userid (optional)</string>
 	<string name="pref_display_name">Display name</string>
@@ -357,6 +405,7 @@
 	<string name="content_description_new_discussion">New discussion</string>
 	<string name="content_description_search">Search</string>
 	<string name="content_description_search_contact">Search contact</string>
+	<string name="content_description_search_country">Search country</string>
 	<string name="content_description_all_contacts">All contacts</string>
 	<string name="content_description_linphone_contacts">Linphone contacts</string>
 	<string name="content_description_call_direction">Call direction</string>
@@ -376,6 +425,8 @@
 	<string name="content_description_message_status">Message status</string>
 	<string name="content_description_conference">Conference</string>
 	<string name="content_description_username_field">Username field</string>
+	<string name="content_description_activation_code_field">Username field</string>
+	<string name="content_description_phone_number_field">Phone number field</string>
 	<string name="content_description_display_field">Display name field</string>
 	<string name="content_description_domain_field">Domain field</string>
 	<string name="content_description_url_field">Remote provisioning field</string>

@@ -635,6 +635,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return (friend != null && friend.getPresenceModel() != null &&  friend.getPresenceModel().getBasicStatus().equals(PresenceBasicStatus.Open));
 	}
 
+	public String getPresenceModelForUri(String uri) {
+		if (friend != null && friend.getPresenceModelForUri(uri) != null){
+			return friend.getPresenceModelForUri(uri).getContact();
+		}
+		return null;
+	}
+
 	public void setFriend(LinphoneFriend f) {
 		friend = f;
 	}

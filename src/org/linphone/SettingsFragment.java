@@ -35,7 +35,6 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.tools.OpenH264DownloadHelper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
@@ -65,7 +64,6 @@ import android.provider.Settings;
  * @author Sylvain Berfini
  */
 public class SettingsFragment extends PreferencesListFragment {
-	private static final int STORE_INTENT = 2;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
@@ -143,14 +141,6 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		findPreference(getString(R.string.pref_in_app_store_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(LinphoneService.instance(), InAppPurchaseActivity.class);
-	        	startActivityForResult(intent, STORE_INTENT);
-	        	return true;
-			}
-		});
 	}
 
 	// Sets listener for each preference to update the matching value in linphonecore
@@ -172,10 +162,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		if(!getResources().getBoolean(R.bool.replace_assistant_with_old_interface)){
 			hidePreference(R.string.pref_add_account_key);
-		}
-
-		if(!getResources().getBoolean(R.bool.in_app_purchase_in_settings)){
-			hidePreference(R.string.pref_in_app_store_key);
 		}
 
 		if (getResources().getBoolean(R.bool.disable_chat)) {

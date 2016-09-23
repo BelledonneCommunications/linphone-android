@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -24,6 +25,8 @@ import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
@@ -60,17 +63,19 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 /**
  * @author Sylvain Berfini
  */
-public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 private static AssistantActivity instance;
 	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
+	private AssistantFragmentsEnum lastFragment;
 	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
-	private boolean accountCreated = false, newAccount = false;
+	private boolean accountCreated = false, newAccount = false, isLink = false;
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
 	private StatusFragment status;
@@ -79,6 +84,12 @@ private static AssistantActivity instance;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
+	private LinphoneAccountCreator accountCreator;
+
+	public CountryListFragment.Country country;
+	public String phone_number;
+	public String email;
+	public String activation_code;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,23 +101,30 @@ private static AssistantActivity instance;
 		setContentView(R.layout.assistant);
 		initUI();
 
-		firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
-        if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState == null) {
-            	display(firstFragment);
-            } else {
-            	currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
-            }
-        }
+		if(getIntent().getBooleanExtra("LinkPhoneNumber",false)){
+			isLink = true;
+			displayCreateAccount();
+		} else {
+			firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
+			if (findViewById(R.id.fragment_container) != null) {
+				if (savedInstanceState == null) {
+					display(firstFragment);
+				} else {
+					currentFragment = (AssistantFragmentsEnum) savedInstanceState.getSerializable("CurrentFragment");
+				}
+			}
+		}
 		if (savedInstanceState != null && savedInstanceState.containsKey("echoCanceller")) {
 			echoCancellerAlreadyDone = savedInstanceState.getBoolean("echoCanceller");
 		} else {
 			echoCancellerAlreadyDone = false;
 		}
         mPrefs = LinphonePreferences.instance();
-		//if(mPrefs.isFirstLaunch()) {
-			status.enableSideMenu(false);
-		//}
+		status.enableSideMenu(false);
+
+		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator.setDomain(getResources().getString(R.string.default_domain));
+		accountCreator.setListener(this);
         
         mListener = new LinphoneCoreListenerBase() {
         	@Override
@@ -122,7 +140,7 @@ private static AssistantActivity instance;
 						if (state == RegistrationState.RegistrationOk) {
 							if (progress != null) progress.dismiss();
 							if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								success();
+								accountCreator.isAccountUsed();
 							}
 						} else if (state == RegistrationState.RegistrationFailed) {
 							if (progress != null) progress.dismiss();
@@ -189,10 +207,6 @@ private static AssistantActivity instance;
 		transaction.commitAllowingStateLoss();
 	}
 
-	public AssistantFragmentsEnum getCurrentFragment() {
-		return currentFragment;
-	}
-
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -200,7 +214,7 @@ private static AssistantActivity instance;
 		if (id == R.id.assistant_cancel) {
 			hideKeyboard();
 			LinphonePreferences.instance().firstLaunchSuccessful();
-			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
+			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				LinphonePreferences.instance().firstLaunchSuccessful();
@@ -215,9 +229,12 @@ private static AssistantActivity instance;
 
 	@Override
 	public void onBackPressed() {
+		if(isLink){
+			return;
+		}
 		if (currentFragment == firstFragment) {
 			LinphonePreferences.instance().firstLaunchSuccessful();
-			if (getResources().getBoolean(R.bool.setup_cancel_move_to_back)) {
+			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				LinphonePreferences.instance().firstLaunchSuccessful();
@@ -228,12 +245,15 @@ private static AssistantActivity instance;
 				|| currentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
 				|| currentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
 				|| currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
-			WelcomeFragment fragment = new WelcomeFragment();
-			changeFragment(fragment);
-			currentFragment = AssistantFragmentsEnum.WELCOME;
-			back.setVisibility(View.INVISIBLE);
+			displayMenu();
 		} else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
 			finish();
+		} else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER){
+			if(lastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)){
+				displayLoginLinphone();
+			} else {
+				displayCreateAccount();
+			}
 		}
 	}
 
@@ -246,13 +266,17 @@ private static AssistantActivity instance;
 	}
 
 	public void checkAndRequestAudioPermission() {
-		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
-		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-		
-		if (recordAudio != PackageManager.PERMISSION_GRANTED) {
-			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-				Log.i("[Permission] Asking for record audio");
-				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
+		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, 0);
+	}
+
+	public void checkAndRequestPermission(String permission, int result) {
+		int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
+		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+				Log.i("[Permission] Asking for " + permission);
+				ActivityCompat.requestPermissions(this, new String[]{permission}, result);
 			}
 		}
 	}
@@ -262,15 +286,13 @@ private static AssistantActivity instance;
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		}
-		
+
 		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
 			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				launchEchoCancellerCalibration(true);
 			} else {
 				isEchoCalibrationFinished();
 			}
-		} else {
-			isEchoCalibrationFinished();
 		}
 	}
 
@@ -290,31 +312,31 @@ private static AssistantActivity instance;
 		}
 	}
 
-	private void logIn(String username, String password, String displayName, String domain, TransportType transport, boolean sendEcCalibrationResult) {
-        saveCreatedAccount(username, password, displayName, domain, transport);
+	private void logIn(String username, String password, String ha1, String prefix, String domain, TransportType transport, boolean sendEcCalibrationResult) {
+		saveCreatedAccount(username, password, ha1, prefix, domain, transport);
 	}
 
-	public void checkAccount(String username, String password, String displayName, String domain) {
-		saveCreatedAccount(username, password, displayName, domain, null);
+	public void checkAccount(String username, String password, String prefix, String domain) {
+		saveCreatedAccount(username, password, null, prefix, domain, null);
 	}
 
-	public void linphoneLogIn(String username, String password, String displayName, boolean validate) {
+	public void linphoneLogIn(String username, String password, String ha1,  String prefix, boolean validate) {
 		if (validate) {
-			checkAccount(username, password, displayName, getString(R.string.default_domain));
+			checkAccount(username, password, prefix, getString(R.string.default_domain));
 		} else {
 			if(accountCreated) {
-				retryLogin(username, password, displayName, getString(R.string.default_domain), null);
+				retryLogin(username, password, prefix, getString(R.string.default_domain), null);
 			} else {
-				logIn(username, password, displayName, getString(R.string.default_domain), null, true);
+				logIn(username, password, ha1,  prefix, getString(R.string.default_domain), null, true);
 			}
 		}
 	}
 
-	public void genericLogIn(String username, String password, String displayName, String domain, TransportType transport) {
-		if(accountCreated) {
-			retryLogin(username, password, displayName, domain, transport);
+	public void genericLogIn(String username, String password, String prefix, String domain, TransportType transport) {
+		if (accountCreated) {
+			retryLogin(username, password, prefix, domain, transport);
 		} else {
-			logIn(username, password, displayName, domain, transport, false);
+			logIn(username, password, null, prefix, domain, transport, false);
 		}
 	}
 
@@ -334,6 +356,7 @@ private static AssistantActivity instance;
 	public void displayMenu() {
 		fragment = new WelcomeFragment();
 		changeFragment(fragment);
+		country = null;
 		currentFragment = AssistantFragmentsEnum.WELCOME;
 		back.setVisibility(View.INVISIBLE);
 	}
@@ -354,6 +377,9 @@ private static AssistantActivity instance;
 
 	public void displayCreateAccount() {
 		fragment = new CreateAccountFragment();
+		Bundle extra = new Bundle();
+		extra.putBoolean("LinkPhoneNumber", isLink);
+		fragment.setArguments(extra);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
 		back.setVisibility(View.VISIBLE);
@@ -366,14 +392,17 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void retryLogin(String username, String password, String displayName, String domain, TransportType transport) {
-		accountCreated = false;
-		saveCreatedAccount(username, password, displayName, domain, transport);
+	public void displayCountryChooser() {
+		fragment = new CountryListFragment();
+		changeFragment(fragment);
+		lastFragment = currentFragment;
+		currentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
+		back.setVisibility(View.VISIBLE);
 	}
 
-	public void loadLinphoneConfig(){
-		//LinphoneManager.getInstance().loadConfig();
-		//LinphoneManager.getInstance().restartLinphoneCore();
+	public void retryLogin(String username, String password, String prefix, String domain, TransportType transport) {
+		accountCreated = false;
+		saveCreatedAccount(username, password, null, prefix, domain, transport);
 	}
 
 	private void launchDownloadCodec() {
@@ -396,7 +425,13 @@ private static AssistantActivity instance;
 		goToLinphoneActivity();
 	}
 
-	public void saveCreatedAccount(String username, String password, String displayName, String domain, TransportType transport) {
+	public String getPhoneWithCountry() {
+		if(country == null || phone_number == null) return "";
+		String phoneNumberWithCountry = country.dial_code + phone_number.replace("\\D", "");
+		return phoneNumberWithCountry;
+	}
+
+	public void saveCreatedAccount(String username, String password, String prefix, String ha1, String domain, TransportType transport) {
 		if (accountCreated)
 			return;
 
@@ -410,16 +445,16 @@ private static AssistantActivity instance;
 			Log.e(e);
 		}
 
-		if(address != null && displayName != null && !displayName.equals("")){
-			address.setDisplayName(displayName);
-		}
-
 		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 		.setUsername(username)
 		.setDomain(domain)
-		.setDisplayName(displayName)
+		.setHa1(ha1)
 		.setPassword(password);
+
+		if(prefix != null){
+			builder.setPrefix(prefix);
+		}
 		
 		if (isMainAccountLinphoneDotOrg) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
@@ -439,10 +474,15 @@ private static AssistantActivity instance;
 			.setQualityReportingInterval(180)
 			.setRealm("sip.linphone.org")
 			.setNoDefault(false);
-			
+
+			mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
 			
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
+
+			accountCreator.setPassword(password);
+			accountCreator.setHa1(ha1);
+			accountCreator.setUsername(username);
 		} else {
 			String forcedProxy = "";
 			if (!TextUtils.isEmpty(forcedProxy)) {
@@ -464,6 +504,8 @@ private static AssistantActivity instance;
 				builder.setContactParameters(contactInfos);
 			}
 		}
+
+
 
 		try {
 			builder.saveNewAccount();
@@ -510,6 +552,22 @@ private static AssistantActivity instance;
 		changeFragment(fragment);
 		
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
+		back.setVisibility(View.INVISIBLE);
+	}
+
+	public void displayAssistantCodeConfirm(String username, String phone, String dialcode, boolean recoverAccount) {
+		CreateAccountCodeActivationFragment fragment = new CreateAccountCodeActivationFragment();
+		newAccount = true;
+		Bundle extras = new Bundle();
+		extras.putString("Username", username);
+		extras.putString("Phone", phone);
+		extras.putString("Dialcode", dialcode);
+		extras.putBoolean("RecoverAccount", recoverAccount);
+		extras.putBoolean("LinkAccount", isLink);
+		fragment.setArguments(extras);
+		changeFragment(fragment);
+
+		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
 		back.setVisibility(View.INVISIBLE);
 	}
 	
@@ -568,5 +626,46 @@ private static AssistantActivity instance;
 		if (status != null) {
 			status.setLinphoneCoreListener();
 		}
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if(status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias)){
+			success();
+		} else {
+			isLink = true;
+			displayCreateAccount();
+		}
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
 	}
 }

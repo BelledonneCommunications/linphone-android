@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.EcCalibratorStatus;
@@ -73,7 +74,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements Linpho
 			}
 		};
 		
-		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), getString(R.string.wizard_url));
+		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getXmlrpcUrl());
 		xmlRpcRequest = new LinphoneXmlRpcRequestImpl("add_ec_calibration_result", LinphoneXmlRpcRequest.ArgType.None);
 		xmlRpcRequest.setListener(this);
 

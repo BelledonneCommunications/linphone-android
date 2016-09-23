@@ -14,11 +14,6 @@
 	    android:key="@string/pref_add_account_key"
 	    android:persistent="false"/>
 
-	<Preference
-	    android:title="@string/pref_in_app_store"
-	    android:key="@string/pref_in_app_store_key"
-	    android:persistent="false"/>
-
 	<PreferenceCategory
 	    android:title="@string/pref_preferences_title">
 

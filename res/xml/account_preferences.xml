@@ -91,6 +91,11 @@
 			android:title="@string/pref_friendlist_subscribe"
 			android:key="@string/pref_friendlist_subscribe_key"
             android:persistent="false"/>
+
+		<Preference
+			android:title="@string/pref_link_account"
+			android:key="@string/pref_link_account_key"
+			android:persistent="false"/>
         
     </PreferenceCategory>
     

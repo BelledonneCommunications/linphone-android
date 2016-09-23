@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:background="@color/colorH"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="40dp"
+		tools:layout="@layout/status"/>
+
+	<LinearLayout
+		android:id="@+id/topbar"
+		android:layout_below="@+id/status"
+		android:background="@color/colorF"
+		android:orientation="horizontal"
+		android:layout_gravity="center_horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="60dp">
+
+		<ImageView
+			android:id="@+id/back"
+			android:src="@drawable/back"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_back"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="18dp"/>
+
+		<TextView
+			android:text="@string/inapp"
+			style="@style/font1"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.6"
+			android:gravity="center"/>
+
+		<ImageView
+			android:id="@+id/cancel"
+			android:src="@drawable/dialer_back"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_dialer_back"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+	</LinearLayout>
+
+	<ProgressBar
+		android:id="@+id/purchaseItemsFetchInProgress"
+		style="?android:attr/progressBarStyle"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:visibility="gone"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
+	<LinearLayout
+		android:id="@+id/fragment_container"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="horizontal"
+		android:layout_below="@+id/topbar"/>
+
+</RelativeLayout>

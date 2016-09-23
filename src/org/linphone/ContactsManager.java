@@ -217,7 +217,7 @@ public class ContactsManager extends ContentObserver {
 		contacts = c;
 		sipContacts = new ArrayList<LinphoneContact>();
 		for (LinphoneContact contact : contacts) {
-			if (contact.hasAddress()) {
+			if (contact.hasAddress() || contact.isInLinphoneFriendList()) {
 				sipContacts.add(contact);
 			}
 		}

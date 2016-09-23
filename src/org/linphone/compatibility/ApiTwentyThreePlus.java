@@ -1,7 +1,7 @@
 package org.linphone.compatibility;
 
-import android.annotation.TargetApi;
 import android.widget.TextView;
+import android.annotation.TargetApi;
 
 /*
 ApiTwentyThreePlus.java

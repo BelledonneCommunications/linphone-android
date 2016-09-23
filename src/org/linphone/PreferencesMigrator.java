@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.LpConfig;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -159,6 +161,20 @@ public class PreferencesMigrator {
 			
 			if (isDefaultAccount) {
 				mNewPrefs.setDefaultAccount(index);
+			}
+		}
+	}
+
+	public void doPresenceMigrationIfNeeded() {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LpConfig cfg = lc.getConfig();
+		if (cfg.getString("app", "friendlist_subscription_enabled", null) == null){
+			LinphoneProxyConfig proxy = lc.getDefaultProxyConfig();
+			if (proxy != null) {
+				String domain = proxy.getDomain();
+				if (domain!=null && domain.equals(getString(R.string.default_domain))) {
+					cfg.setBool("app", "friendlist_subscription_enabled", true);
+				}
 			}
 		}
 	}

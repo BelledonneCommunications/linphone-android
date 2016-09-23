@@ -435,6 +435,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
 		if(lc != null ) {
 			LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
+			Log.i("Presence list subscription is " + (enabled ? "enabled" : "disabled"));
 			mFriendList.enableSubscriptions(enabled);
 		}
 	}
@@ -717,6 +718,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
 		prefMigrator.migrateSharingServerUrlIfNeeded();
+		prefMigrator.doPresenceMigrationIfNeeded();
 		
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
@@ -750,7 +752,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
 		mLc.setUserCertificatesPath(mUserCertificatePath);
-		subscribeFriendList(mPrefs.isFriendlistsubscriptionEnabled());
+		//subscribeFriendList(mPrefs.isFriendlistsubscriptionEnabled());
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 		enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 
@@ -985,6 +987,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy,final RegistrationState state,final String message) {
 		Log.i("New registration state ["+state+"]");
+		if(LinphoneManager.getLc().getDefaultProxyConfig() == null){
+			subscribeFriendList(false);
+		}
 	}
 
 	private int savedMaxCallWhileGsmIncall;

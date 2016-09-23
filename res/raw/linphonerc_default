@@ -7,8 +7,7 @@ contact="Linphone Android" <sip:linphone.android@unknown-host>
 use_info=0
 use_ipv6=0
 keepalive_period=30000
-rls_uri=sip:rls@sip1.linphone.org
-use_rls_presence=1
+
 
 [video]
 size=qvga
