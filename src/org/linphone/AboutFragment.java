@@ -165,7 +165,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 					lc.resetLogCollection();
 				}
 			} else if (v == cancel) {
-				getFragmentManager().popBackStackImmediate();
+				LinphoneActivity.instance().goToDialerFragment();
 			}
 		}
 	}

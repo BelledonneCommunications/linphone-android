@@ -271,6 +271,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (message != null) {
 			outState.putString("messageDraft", message.getText().toString());
 		}
+		if (contact != null) {
+			outState.putSerializable("contactDraft",contact);
+			outState.putString("sipUriDraft",sipUri);
+		}
 		super.onSaveInstanceState(outState);
 	}
 
@@ -340,6 +344,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneAddress lAddress = null;
 		if (sipUri == null) {
+			contact = null; // Tablet rotation issue
 			initNewChatConversation();
 		} else {
 			try {
@@ -354,6 +359,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				LinphoneActivity.instance().updateMissedChatCount();
 				contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 				if (chatRoom != null) {
+					searchContactField.setVisibility(View.GONE);
+					resultContactsSearch.setVisibility(View.GONE);
 					displayChatHeader(lAddress);
 					displayMessageList();
 				}
@@ -376,13 +383,19 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 		}
 		messagesList.setAdapter(adapter);
+		messagesList.setVisibility(ListView.VISIBLE);
 	}
 
 	private void displayChatHeader(LinphoneAddress address) {
-		if (contact != null) {
-			contactName.setText(contact.getFullName());
-		} else if(address != null){
-			contactName.setText(LinphoneUtils.getAddressDisplayName(address));
+		if (contact != null || address != null) {
+			if (contact != null) {
+				contactName.setText(contact.getFullName());
+			} else {
+				contactName.setText(LinphoneUtils.getAddressDisplayName(address));
+			}
+			topBar.setVisibility(View.VISIBLE);
+			edit.setVisibility(View.VISIBLE);
+			contactName.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -512,8 +525,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
+		contact = (LinphoneContact)getArguments().getSerializable("contactDraft");
+		if (contact != null) {
+			contactName.setText(contact.getFullName());
+			sipUri = getArguments().getString("sipUriDraft");
+			getArguments().clear();
+		}
 
-		if (!newChatConversation) {
+		if (!newChatConversation || contact != null) {
 			initChatRoom(sipUri);
 			searchContactField.setVisibility(View.GONE);
 			resultContactsSearch.setVisibility(View.GONE);
@@ -634,6 +653,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneChatMessage message = chatRoom.createLinphoneChatMessage(messageToSend);
 			chatRoom.sendChatMessage(message);
 			lAddress = chatRoom.getPeerAddress();
+
+			if (LinphoneActivity.isInstanciated()) {
+				LinphoneActivity.instance().onMessageSent(sipUri, messageToSend);
+			}
 
 			message.setListener(LinphoneManager.getInstance());
 			if (newChatConversation) {

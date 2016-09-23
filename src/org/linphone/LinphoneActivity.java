@@ -222,12 +222,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			}
 
 			@Override
-			public void authInfoRequested(LinphoneCore lc, String realm, String username, String domain) {
-				//authInfoPassword = displayWrongPasswordDialog(username, realm, domain);
-				//authInfoPassword.show();
-			}
-
-			@Override
 			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
 				if (state.equals(RegistrationState.RegistrationCleared)) {
 					if (lc != null) {
@@ -800,6 +794,18 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void updateDialerFragment(DialerFragment fragment) {
 		// Hack to maintain soft input flags
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+	}
+
+	public void goToDialerFragment() {
+		changeCurrentFragment(FragmentsAvailable.DIALER, null);
+		dialer_selected.setVisibility(View.VISIBLE);
+	}
+
+	public void onMessageSent(String to, String message) {
+		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+		if (fragment.getClass() == ChatListFragment.class) {
+			((ChatListFragment)fragment).refresh();
+		}
 	}
 
 	public void updateStatusFragment(StatusFragment fragment) {

@@ -32,7 +32,7 @@
 		android:layout_height="wrap_content"
 		android:id="@+id/progressBar"
 		android:layout_marginBottom="50dp"
-		android:layout_above="@+id/buttons"
+		android:layout_above="@+id/answerNo"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
 		android:layout_alignParentRight="true"
@@ -50,46 +50,40 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"/>
 
-	<RelativeLayout
-		android:id="@+id/buttons"
-		android:layout_width="match_parent"
+	<Button
+		style="@style/font7"
+		android:text="No"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true">
+		android:gravity="center"
+		android:id="@+id/answerNo"
+		android:layout_alignParentBottom="true"
+		android:layout_toLeftOf="@+id/imageView"
+		android:layout_toStartOf="@+id/imageView" />
 
-		<Button
-			android:id="@+id/answerNo"
-			android:text="@string/no"
-			android:background="@drawable/assistant_button"
-			android:textColor="@drawable/assistant_button_text_color"
-			style="@style/font8"
-			android:layout_alignParentLeft="true"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center"/>
+	<Button
+		style="@style/font7"
+		android:text="Yes"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/answerYes"
+		android:layout_below="@+id/progressBar"
+		android:layout_toRightOf="@+id/imageView"
+		android:layout_toEndOf="@+id/imageView"/>
 
-		<Button
-			android:id="@+id/answerOk"
-			android:text="@string/ok"
-			android:background="@drawable/assistant_button"
-			android:textColor="@drawable/assistant_button_text_color"
-			style="@style/font8"
-			android:layout_centerInParent="true"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center"/>
-
-		<Button
-			android:id="@+id/answerYes"
-			android:text="@string/yes"
-			android:background="@drawable/assistant_button"
-			android:textColor="@drawable/assistant_button_text_color"
-			style="@style/font8"
-			android:layout_alignParentRight="true"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center"/>
-
-	</RelativeLayout>
+	<Button
+		style="@style/font7"
+		android:text="Ok"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/answerOk"
+		android:layout_centerHorizontal="true"
+		android:layout_alignTop="@+id/answerYes" />
 
 	<TextView
 		style="@style/font7"
