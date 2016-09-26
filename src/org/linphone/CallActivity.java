@@ -1147,11 +1147,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 				if (camera == PackageManager.PERMISSION_GRANTED) {
 					CallActivity.instance().acceptCallUpdate(true);
 				} else {
-					if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(CallActivity.this, Manifest.permission.CAMERA)) {
-						checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
-					} else {
-						CallActivity.instance().acceptCallUpdate(false);
-					}
+					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
 				}
 
 				dialog.dismiss();
