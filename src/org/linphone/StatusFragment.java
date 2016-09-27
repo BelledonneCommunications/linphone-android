@@ -437,6 +437,37 @@ public class StatusFragment extends Fragment {
 			ZRTPdialog.show();
 		}
 	}
+
+	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
+			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
+			, TextView ul, TextView ice, TextView senderLossRate, TextView receiverLossRate
+			, TextView videoResolutionSent, TextView videoResolutionReceived, boolean isVideo) {
+		if (stats != null) {
+			layout.setVisibility(View.VISIBLE);
+			title.setVisibility(TextView.VISIBLE);
+			if (media != null) {
+				String mime = media.getMime();
+				if (LinphoneManager.getLc().openH264Enabled() &&
+						media.getMime().equals("H264") &&
+						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
+					mime = "OpenH264";
+				}
+				codec.setText(mime + " / " + (media.getRate() / 1000) + "kHz");
+			}
+			dl.setText(String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
+			ul.setText(String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
+			ice.setText(stats.getIceState().toString());
+			senderLossRate.setText(stats.getSenderLossRate() + "%");
+			receiverLossRate.setText(stats.getReceiverLossRate()+ "%");
+			if (isVideo) {
+				videoResolutionSent.setText("\u2191 " + params.getSentVideoSize().toDisplayableString());
+				videoResolutionReceived.setText("\u2193 " + params.getReceivedVideoSize().toDisplayableString());
+			}
+		} else {
+			layout.setVisibility(View.GONE);
+			title.setVisibility(TextView.GONE);
+		}
+	}
 	
 	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
 		if (mTimer != null && mTask != null) {
@@ -452,15 +483,37 @@ public class StatusFragment extends Fragment {
 					return;
 				}
 
-				final TextView title = (TextView) view.findViewById(R.id.call_stats_title);
-				final TextView codec = (TextView) view.findViewById(R.id.codec);
-				final TextView dl = (TextView) view.findViewById(R.id.downloadBandwith);
-				final TextView ul = (TextView) view.findViewById(R.id.uploadBandwith);
-				final TextView ice = (TextView) view.findViewById(R.id.ice);
-				final TextView videoResolution = (TextView) view.findViewById(R.id.video_resolution);
-				final View videoResolutionLayout = view.findViewById(R.id.video_resolution_layout);
+				final TextView titleAudio = (TextView) view.findViewById(R.id.call_stats_audio);
+				final TextView titleVideo = (TextView) view.findViewById(R.id.call_stats_video);
+
+				final TextView codecAudio = (TextView) view.findViewById(R.id.codec_audio);
+				final TextView codecVideo = (TextView) view.findViewById(R.id.codec_video);
+
+				final TextView dlAudio = (TextView) view.findViewById(R.id.downloadBandwith_audio);
+				final TextView ulAudio = (TextView) view.findViewById(R.id.uploadBandwith_audio);
+
+				final TextView dlVideo = (TextView) view.findViewById(R.id.downloadBandwith_video);
+				final TextView ulVideo = (TextView) view.findViewById(R.id.uploadBandwith_video);
+
+				final TextView iceAudio = (TextView) view.findViewById(R.id.ice_audio);
+				final TextView iceVideo = (TextView) view.findViewById(R.id.ice_video);
+
+				final TextView videoResolutionSent = (TextView) view.findViewById(R.id.video_resolution_sent);
+				final TextView videoResolutionReceived = (TextView) view.findViewById(R.id.video_resolution_received);
+
+				final TextView senderLossRateAudio = (TextView) view.findViewById(R.id.senderLossRateAudio);
+				final TextView receiverLossRateAudio = (TextView) view.findViewById(R.id.receiverLossRateAudio);
+
+				final TextView senderLossRateVideo = (TextView) view.findViewById(R.id.senderLossRateVideo);
+				final TextView receiverLossRateVideo = (TextView) view.findViewById(R.id.receiverLossRateVideo);
+
+				final View videoLayout = view.findViewById(R.id.callStatsVideo);
+				final View audioLayout = view.findViewById(R.id.callStatsAudio);
 				
-				if (codec == null || dl == null || ul == null || ice == null || videoResolution == null || videoResolutionLayout == null) {
+				if (titleAudio == null || codecAudio == null || dlVideo == null || iceAudio == null
+						|| videoResolutionSent == null || videoLayout == null || titleVideo == null
+						|| codecVideo == null || dlAudio == null || ulAudio == null
+						|| ulVideo == null || iceVideo == null || videoResolutionReceived == null) {
 					mTimer.cancel();
 					return;
 				}
@@ -469,44 +522,27 @@ public class StatusFragment extends Fragment {
 					@Override
 					public void run() {
 						synchronized(LinphoneManager.getLc()) {
-							final LinphoneCallParams params = call.getCurrentParamsCopy();
-							if (params.getVideoEnabled()) {
-								final LinphoneCallStats videoStats = call.getVideoStats();
-								final LinphoneCallStats audioStats = call.getAudioStats();
-								if (videoStats != null && audioStats != null) {
-									title.setText("Video");
-									PayloadType payloadAudio = params.getUsedAudioCodec();
-									PayloadType payloadVideo = params.getUsedVideoCodec();
-									if (payloadVideo != null && payloadAudio != null) {
-										String videoMime = payloadVideo.getMime();
-										if (LinphoneManager.getLc().openH264Enabled() &&
-												payloadVideo.getMime().equals("H264") &&
-												LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
-											videoMime = "OpenH264";
-										}
-										codec.setText(videoMime + " / " + payloadAudio.getMime() + (payloadAudio.getRate() / 1000));
-									}
-									dl.setText(String.valueOf((int) videoStats.getDownloadBandwidth()) + " / " + (int) audioStats.getDownloadBandwidth() + " kbits/s");
-									ul.setText(String.valueOf((int) videoStats.getUploadBandwidth()) +  " / " + (int) audioStats.getUploadBandwidth() + " kbits/s");
-									ice.setText(videoStats.getIceState().toString());
-									
-									videoResolutionLayout.setVisibility(View.VISIBLE);
-									videoResolution.setText("\u2191 " + params.getSentVideoSize().toDisplayableString() + " / \u2193 " + params.getReceivedVideoSize().toDisplayableString());
-								}
-							} else {
-								final LinphoneCallStats audioStats = call.getAudioStats();
-								if (audioStats != null) {
-									title.setText("Audio");
-									PayloadType payload = params.getUsedAudioCodec();
-									if (payload != null) {
-										codec.setText(payload.getMime() + (payload.getRate() / 1000));
-									}
-									dl.setText(String.valueOf((int) audioStats.getDownloadBandwidth()) + " kbits/s");
-									ul.setText(String.valueOf((int) audioStats.getUploadBandwidth()) + " kbits/s");
-									ice.setText(audioStats.getIceState().toString());
-									
-									videoResolutionLayout.setVisibility(View.GONE);
-								}
+							LinphoneCallParams params = call.getCurrentParamsCopy();
+							if (params != null) {
+								LinphoneCallStats audioStats = call.getAudioStats();
+								LinphoneCallStats videoStats = null;
+
+								if (params.getVideoEnabled())
+									videoStats = call.getVideoStats();
+
+								PayloadType payloadAudio = params.getUsedAudioCodec();
+								PayloadType payloadVideo = params.getUsedVideoCodec();
+
+								displayMediaStats(params, audioStats, payloadAudio, audioLayout
+										, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
+										, senderLossRateAudio, receiverLossRateAudio, null, null
+										, false);
+
+								displayMediaStats(params, videoStats, payloadVideo, videoLayout
+										, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
+										, senderLossRateVideo, receiverLossRateVideo
+										, videoResolutionSent, videoResolutionReceived
+										, true);
 							}
 						}
 					}
@@ -515,7 +551,4 @@ public class StatusFragment extends Fragment {
 		};
 		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
-	
-
-
 }
