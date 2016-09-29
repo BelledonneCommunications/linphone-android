@@ -1,4 +1,4 @@
-[submodule "linphone"]
+[submodule "submodules/linphone"]
 	path = submodules/linphone
 	url = git://git.linphone.org/linphone.git
 [submodule "submodules/externals/gsm"]
