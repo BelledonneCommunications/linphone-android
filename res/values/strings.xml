@@ -331,6 +331,7 @@
 	<string name="pref_rfc2833_dtmf">Send in-band DTMFs(RFC2833)</string>
 	<string name="pref_sipinfo_dtmf">Send out-band DTMFs(SIP INFO)</string>
 	<string name="pref_voice_mail">Voice mail URI</string>
+	<string name="pref_dynamic_photo_uri">Dynamic Photo URI</string>
 	
 	<!-- Chat settings -->
 	<string name="pref_chat_title">Chat</string>

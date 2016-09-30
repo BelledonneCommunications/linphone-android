@@ -936,6 +936,14 @@ public class LinphonePreferences {
 	public void setVoiceMailUri(String uri) {
 		getConfig().setString("app", "voice_mail", uri);
 	}
+
+	public String getDynamicPhotoUri() {
+		return getConfig().getString("app", "dynamic_photo_uri", null);
+	}
+
+	public void setDynamicPhotoUri(String uri) {
+		getConfig().setString("app", "dynamic_photo_uri", uri);
+	}
 	// End of call settings
 
 	// Network settings

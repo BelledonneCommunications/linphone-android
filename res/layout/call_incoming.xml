@@ -74,6 +74,7 @@
 				android:adjustViewBounds="true"/>
 
 			<ImageView
+				android:id="@+id/avatar_mask_border"
 				android:src="@drawable/avatar_mask_border"
 				android:layout_width="200dp"
 				android:layout_height="wrap_content"
