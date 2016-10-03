@@ -33,6 +33,7 @@ import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
+import org.w3c.dom.Text;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -441,7 +442,8 @@ public class StatusFragment extends Fragment {
 	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
 			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
 			, TextView ul, TextView ice, TextView senderLossRate, TextView receiverLossRate
-			, TextView videoResolutionSent, TextView videoResolutionReceived, boolean isVideo) {
+			, TextView enc, TextView dec, TextView videoResolutionSent
+			, TextView videoResolutionReceived, boolean isVideo) {
 		if (stats != null) {
 			layout.setVisibility(View.VISIBLE);
 			title.setVisibility(TextView.VISIBLE);
@@ -454,6 +456,8 @@ public class StatusFragment extends Fragment {
 				}
 				codec.setText(mime + " / " + (media.getRate() / 1000) + "kHz");
 			}
+			enc.setText(stats.getEncoderName(media));
+			dec.setText(stats.getDecoderName(media));
 			dl.setText(String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
 			ul.setText(String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
 			ice.setText(stats.getIceState().toString());
@@ -485,28 +489,24 @@ public class StatusFragment extends Fragment {
 
 				final TextView titleAudio = (TextView) view.findViewById(R.id.call_stats_audio);
 				final TextView titleVideo = (TextView) view.findViewById(R.id.call_stats_video);
-
 				final TextView codecAudio = (TextView) view.findViewById(R.id.codec_audio);
 				final TextView codecVideo = (TextView) view.findViewById(R.id.codec_video);
-
+				final TextView encoderAudio = (TextView) view.findViewById(R.id.encoder_audio);
+				final TextView decoderAudio = (TextView) view.findViewById(R.id.decoder_audio);
+				final TextView encoderVideo = (TextView) view.findViewById(R.id.encoder_video);
+				final TextView decoderVideo = (TextView) view.findViewById(R.id.decoder_video);
 				final TextView dlAudio = (TextView) view.findViewById(R.id.downloadBandwith_audio);
 				final TextView ulAudio = (TextView) view.findViewById(R.id.uploadBandwith_audio);
-
 				final TextView dlVideo = (TextView) view.findViewById(R.id.downloadBandwith_video);
 				final TextView ulVideo = (TextView) view.findViewById(R.id.uploadBandwith_video);
-
 				final TextView iceAudio = (TextView) view.findViewById(R.id.ice_audio);
 				final TextView iceVideo = (TextView) view.findViewById(R.id.ice_video);
-
 				final TextView videoResolutionSent = (TextView) view.findViewById(R.id.video_resolution_sent);
 				final TextView videoResolutionReceived = (TextView) view.findViewById(R.id.video_resolution_received);
-
 				final TextView senderLossRateAudio = (TextView) view.findViewById(R.id.senderLossRateAudio);
 				final TextView receiverLossRateAudio = (TextView) view.findViewById(R.id.receiverLossRateAudio);
-
 				final TextView senderLossRateVideo = (TextView) view.findViewById(R.id.senderLossRateVideo);
 				final TextView receiverLossRateVideo = (TextView) view.findViewById(R.id.receiverLossRateVideo);
-
 				final View videoLayout = view.findViewById(R.id.callStatsVideo);
 				final View audioLayout = view.findViewById(R.id.callStatsAudio);
 				
@@ -535,12 +535,14 @@ public class StatusFragment extends Fragment {
 
 								displayMediaStats(params, audioStats, payloadAudio, audioLayout
 										, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
-										, senderLossRateAudio, receiverLossRateAudio, null, null
+										, senderLossRateAudio, receiverLossRateAudio
+										, encoderAudio, decoderAudio, null, null
 										, false);
 
 								displayMediaStats(params, videoStats, payloadVideo, videoLayout
 										, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
 										, senderLossRateVideo, receiverLossRateVideo
+										, encoderVideo, decoderVideo
 										, videoResolutionSent, videoResolutionReceived
 										, true);
 							}

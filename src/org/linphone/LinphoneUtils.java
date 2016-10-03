@@ -42,6 +42,11 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import android.app.AlertDialog;
+import android.widget.*;
+import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.CountryListFragment;
+import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -73,7 +78,6 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 
 /**
  * Helpers.
@@ -81,6 +85,7 @@ import android.widget.ImageView;
  *
  */
 public final class LinphoneUtils {
+	private static Context context = null;
 
 	private LinphoneUtils(){}
 
@@ -562,6 +567,111 @@ public final class LinphoneUtils {
 			Log.e(e);
 		} catch (IOException e) {
 			Log.e(e);
+		}
+	}
+
+	private static Context getContext() {
+		if (context == null && LinphoneManager.isInstanciated())
+			context = LinphoneManager.getInstance().getContext();
+		return context;
+	}
+
+	public static void displayError(boolean isOk, TextView error, String errorText) {
+		if (isOk) {
+			error.setVisibility(View.INVISIBLE);
+			error.setText("");
+		} else {
+			error.setVisibility(View.VISIBLE);
+			error.setText(errorText);
+		}
+	}
+
+	public static String errorForStatus(LinphoneAccountCreator.Status status) {
+		Context ctxt = getContext();
+		if (ctxt != null) {
+			if (status.equals(LinphoneAccountCreator.Status.EmailInvalid))
+				return ctxt.getString(R.string.invalid_email);
+			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalid)) {
+				return ctxt.getString(R.string.invalid_username);
+			}
+			if (status.equals(LinphoneAccountCreator.Status.UsernameTooShort)) {
+				return ctxt.getString(R.string.username_too_short);
+			}
+			if (status.equals(LinphoneAccountCreator.Status.UsernameTooLong)) {
+				return ctxt.getString(R.string.username_too_long);
+			}
+			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalidSize))
+				return ctxt.getString(R.string.username_invalid_size);
+			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberTooShort))
+				return ctxt.getString(R.string.phone_number_too_short);
+			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberTooLong))
+				return ctxt.getString(R.string.phone_number_too_long);
+			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberInvalid))
+				return ctxt.getString(R.string.phone_number_invalid);
+			if (status.equals(LinphoneAccountCreator.Status.PasswordTooShort))
+				return ctxt.getString(R.string.username_too_short);
+			if (status.equals(LinphoneAccountCreator.Status.PasswordTooLong))
+				return ctxt.getString(R.string.username_too_long);
+			if (status.equals(LinphoneAccountCreator.Status.DomainInvalid))
+				return ctxt.getString(R.string.invalid_domain);
+			if (status.equals(LinphoneAccountCreator.Status.RouteInvalid))
+				return ctxt.getString(R.string.invalid_route);
+			if (status.equals(LinphoneAccountCreator.Status.DisplayNameInvalid))
+				return ctxt.getString(R.string.invalid_route);
+			if (status.equals(LinphoneAccountCreator.Status.Failed))
+				return ctxt.getString(R.string.request_failed);
+			if (status.equals(LinphoneAccountCreator.Status.TransportNotSupported))
+				return ctxt.getString(R.string.transport_unsupported);
+			if (status.equals(LinphoneAccountCreator.Status.AccountExist))
+				return ctxt.getString(R.string.account_already_exist);
+			if (status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias))
+				return ctxt.getString(R.string.account_already_exist);
+			if (status.equals(LinphoneAccountCreator.Status.CountryCodeInvalid))
+				return ctxt.getString(R.string.country_code_invalid);
+			if (status.equals(LinphoneAccountCreator.Status.AccountCreated)
+					|| status.equals(LinphoneAccountCreator.Status.AccountNotCreated)
+					|| status.equals(LinphoneAccountCreator.Status.AccountNotExist)
+					|| status.equals(LinphoneAccountCreator.Status.AccountNotActivated)
+					|| status.equals(LinphoneAccountCreator.Status.AccountAlreadyActivated)
+					|| status.equals(LinphoneAccountCreator.Status.AccountActivated)
+					|| status.equals(LinphoneAccountCreator.Status.Ok)) {
+				return "";
+			}
+		}
+		return null;
+	}
+
+	public static String getCountryCode(EditText dialCode) {
+		if(dialCode != null) {
+			String code = dialCode.getText().toString();
+			if(code != null && code.startsWith("+")) {
+				code = code.substring(1);
+			}
+			return code;
+		}
+		return null;
+	}
+
+	public static void setCountry(AssistantActivity.Country c, EditText dialCode, Button selectCountry, int countryCode) {
+		if( c != null && dialCode != null && selectCountry != null) {
+			dialCode.setText(c.dial_code);
+			selectCountry.setText(c.name);
+		} else {
+			if(countryCode != -1){
+				dialCode.setText("+" + countryCode);
+			} else {
+				dialCode.setText("+");
+			}
+		}
+	}
+
+	public static void displayErrorAlert(String msg, Context ctxt) {
+		if (ctxt != null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
+			builder.setMessage(msg)
+					.setCancelable(false)
+					.setNeutralButton("Ok", null)
+					.show();
 		}
 	}
 }

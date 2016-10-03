@@ -25,7 +25,8 @@
 			android:layout_height="wrap_content"
 			android:paddingTop="10dp"
 			android:gravity="center"
-			android:layout_gravity="center"/>
+			android:layout_gravity="center"
+			android:id="@+id/message_phone_number" />
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -36,22 +37,13 @@
 
 			<LinearLayout
 				android:id="@+id/phone_number_layout"
+				android:visibility="gone"
+				android:orientation="vertical"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:gravity="center"
-				android:orientation="vertical">
+				android:layout_height="wrap_content">
 
-				<Button
-					android:id="@+id/select_country"
-					style="@style/font8"
-					android:text="@string/select_your_country"
-					android:background="@drawable/resizable_assistant_button"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"/>
-
-				<LinearLayout
-					android:orientation="vertical"
-					android:layout_marginTop="10dp"
+				<RelativeLayout
+					android:layout_marginBottom="5dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
@@ -63,45 +55,76 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"/>
 
+					<ImageView
+						android:id="@+id/info_phone_number"
+						android:src="@drawable/info"
+						android:layout_alignParentRight="true"
+						android:layout_width="20dp"
+						android:layout_height="20dp"/>
+
+				</RelativeLayout>
+
+				<LinearLayout
+					android:orientation="vertical"
+					android:layout_marginTop="10dp"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+					<Button
+						android:id="@+id/select_country"
+						style="@style/font8"
+						android:text="@string/select_your_country"
+						android:background="@drawable/resizable_assistant_button"
+						android:layout_width="match_parent"
+						android:layout_height="40dp"/>
+
 					<LinearLayout
-						android:orientation="horizontal"
+						android:orientation="vertical"
+						android:layout_marginTop="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content">
 
-						<EditText
-							android:id="@+id/dial_code"
-							android:background="@drawable/resizable_textfield"
-							android:textColor="@color/colorB"
-							android:inputType="phone"
-							android:text="+"
-							android:layout_marginRight="10dp"
-							android:gravity="center"
-							android:layout_width="65dp"
-							android:layout_height="42dp"
-							android:singleLine="true"/>
-
-						<EditText
-							android:id="@+id/phone_number"
-							android:background="@drawable/resizable_textfield"
-							android:textColor="@color/colorB"
-							android:contentDescription="@string/content_description_phone_number_field"
-							android:inputType="phone"
+						<LinearLayout
+							android:orientation="horizontal"
 							android:layout_width="match_parent"
-							android:layout_height="40dp"
-							android:singleLine="true"/>
+							android:layout_height="wrap_content">
+
+							<EditText
+								android:id="@+id/dial_code"
+								android:background="@drawable/resizable_textfield"
+								android:textColor="@color/colorB"
+								android:inputType="phone"
+								android:text="+"
+								android:layout_marginRight="10dp"
+								android:gravity="center"
+								android:layout_width="65dp"
+								android:layout_height="42dp"
+								android:singleLine="true"/>
+
+							<EditText
+								android:id="@+id/phone_number"
+								android:background="@drawable/resizable_textfield"
+								android:textColor="@color/colorB"
+								android:contentDescription="@string/content_description_phone_number_field"
+								android:inputType="phone"
+								android:layout_width="match_parent"
+								android:layout_height="40dp"
+								android:singleLine="true"/>
+
+						</LinearLayout>
 
 					</LinearLayout>
 
+					<TextView
+						android:id="@+id/phone_number_error_2"
+						android:text="@string/error"
+						style="@style/font20"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:visibility="invisible"/>
+
 				</LinearLayout>
 			</LinearLayout>
-
-			<CheckBox
-				android:id="@+id/use_username"
-				android:visibility="visible"
-				android:layout_marginTop="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/login_with_username"/>
 
 			<LinearLayout
 				android:id="@+id/username_layout"
@@ -158,7 +181,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:singleLine="true"/>
+
 			</LinearLayout>
+
+			<CheckBox
+				android:id="@+id/use_username"
+				android:visibility="visible"
+				android:layout_marginTop="20dp"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/login_with_username"/>
 
 			<Button
 				android:id="@+id/assistant_apply"

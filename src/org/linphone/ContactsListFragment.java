@@ -610,7 +610,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			if (fullName == null || fullName.isEmpty()) {
 				return 0;
 			}
-			String letter = fullName.substring(0, 1);
+			String letter = fullName.substring(0, 1).toUpperCase(Locale.getDefault());
 			return sectionsList.indexOf(letter);
 		}
 	}

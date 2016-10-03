@@ -18,6 +18,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -26,7 +32,6 @@ import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
 import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneCore;
@@ -61,8 +66,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Sylvain Berfini
@@ -85,8 +93,9 @@ private static AssistantActivity instance;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
 	private LinphoneAccountCreator accountCreator;
+	private CountryListAdapter countryListAdapter;
 
-	public CountryListFragment.Country country;
+	public Country country;
 	public String phone_number;
 	public String email;
 	public String activation_code;
@@ -122,9 +131,11 @@ private static AssistantActivity instance;
         mPrefs = LinphonePreferences.instance();
 		status.enableSideMenu(false);
 
-		accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setDomain(getResources().getString(R.string.default_domain));
 		accountCreator.setListener(this);
+
+		countryListAdapter = new CountryListAdapter(R.raw.countries, getApplicationContext());
         
         mListener = new LinphoneCoreListenerBase() {
         	@Override
@@ -667,5 +678,152 @@ private static AssistantActivity instance;
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 
+	}
+
+	public CountryListAdapter getCountryListAdapter() {
+		return countryListAdapter;
+	}
+
+	/**
+	 * This class reads a JSON file containing Country-specific phone number description,
+	 * and allows to present them into a ListView
+	 */
+	public class CountryListAdapter extends BaseAdapter implements Filterable {
+
+		private LayoutInflater mInflater;
+		private List<Country> allCountries;
+		private List<Country> filteredCountries;
+		private Context context;
+
+		public CountryListAdapter(int jsonId, Context ctx) {
+			context = ctx;
+			allCountries = new ArrayList<Country>();
+			String jsonString = loadJSONFromAsset(R.raw.countries);
+			try {
+				JSONArray c = new JSONArray(jsonString);
+				for( int i = 0; i < c.length(); i++) {
+					allCountries.add(new Country(c.getJSONObject(i)));
+				}
+				filteredCountries = allCountries;
+			} catch (JSONException e){
+				e.printStackTrace();
+			}
+		}
+
+		public void setInflater(LayoutInflater inf) {
+			mInflater = inf;
+		}
+
+		public String loadJSONFromAsset(int id) {
+			String json = null;
+			if (context != null) {
+				try {
+					InputStream is = context.getResources().openRawResource(id);
+					int size = is.available();
+					byte[] buffer = new byte[size];
+					is.read(buffer);
+					is.close();
+					json = new String(buffer, "UTF-8");
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					return null;
+				}
+			}
+			return json;
+		}
+
+		public boolean countryExist(String countryCode) {
+			for (Country c : allCountries) {
+				if (c.dial_code.equals("+"+countryCode)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public int getCount() {
+			return filteredCountries.size();
+		}
+
+		@Override
+		public Country getItem(int position) {
+			return filteredCountries.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent){
+			View view;
+
+			if (convertView != null) {
+				view = convertView;
+			} else {
+				view = mInflater.inflate(R.layout.country_cell, parent, false);
+			}
+
+			Country c = filteredCountries.get(position);
+
+			TextView name = (TextView) view.findViewById(R.id.country_name);
+			name.setText(c.name);
+
+			TextView dial_code = (TextView) view.findViewById(R.id.country_prefix);
+			if (context != null)
+				dial_code.setText(String.format(context.getString(R.string.country_code),c.dial_code));
+
+			view.setTag(c);
+			return view;
+		}
+
+		@Override
+		public Filter getFilter() {
+			return new Filter() {
+				@Override
+				protected FilterResults performFiltering(CharSequence constraint) {
+					ArrayList<Country> filteredCountries = new ArrayList<Country>();
+					for (Country c : allCountries) {
+						if (c.name.toLowerCase().contains(constraint) || c.dial_code.contains(constraint)){
+							filteredCountries.add(c);
+						}
+					}
+					FilterResults filterResults = new FilterResults();
+					filterResults.values = filteredCountries;
+					return filterResults;
+				}
+
+				@Override
+				@SuppressWarnings("unchecked")
+				protected void publishResults(CharSequence constraint, FilterResults results) {
+					filteredCountries = (List<Country>) results.values;
+					CountryListAdapter.this.notifyDataSetChanged();
+				}
+			};
+		}
+	}
+
+	/**
+	 * This class represents a Country. There's a name, dial_code, code and max number of digits.
+	 * It is constructed from a JSON object containing all these parameters.
+	 */
+	public class Country {
+		public String name;
+		public String dial_code;
+		public String code;
+		public int maxNum;
+
+		public Country(JSONObject obj ){
+			try {
+				name = obj.getString("name");
+				dial_code = obj.getString("dial_code");
+				code = obj.getString("code");
+				maxNum = obj.getInt("maxNum");
+			} catch (JSONException e){
+				e.printStackTrace();
+			}
+		}
 	}
 }

@@ -43,10 +43,72 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical"
+				android:text="@string/call_stats_encoder_name"
+				android:textStyle="bold"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:id="@+id/encoder_audio"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:gravity="right|center_vertical"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical"
+				android:text="@string/call_stats_decoder_name"
+				android:textStyle="bold"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:id="@+id/decoder_audio"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:gravity="right|center_vertical"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
 		</TableRow>
 
 		<TableRow
@@ -67,7 +129,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -91,7 +153,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -115,7 +177,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -139,7 +201,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -163,7 +225,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -209,10 +271,72 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical"
+				android:text="@string/call_stats_encoder_name"
+				android:textStyle="bold"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:id="@+id/encoder_video"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:gravity="right|center_vertical"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="left|center_vertical"
+				android:text="@string/call_stats_decoder_name"
+				android:textStyle="bold"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+
+		</TableRow>
+
+		<TableRow
+			android:stretchColumns="0"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<TextView
+				android:id="@+id/decoder_video"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:gravity="right|center_vertical"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
 		</TableRow>
 
 		<TableRow
@@ -233,7 +357,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -257,7 +381,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -281,7 +405,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -305,7 +429,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -329,7 +453,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -354,7 +478,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
@@ -379,7 +503,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
-				android:gravity="left|center_vertical"
+				android:gravity="right|center_vertical"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 

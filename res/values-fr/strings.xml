@@ -50,6 +50,7 @@
   <string name="welcome">Bienvenue</string>
   <string name="assistant">Assistant</string>
   <string name="assistant_create_account">Créer un compte</string>
+  <string name="assistant_link_account">Associer un compte</string>
   <string name="assistant_finish">Terminer la configuration</string>
   <string name="assistant_validate_account">Votre compte a été créé. Vérifiez vos emails pour valider votre compte.
 Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
@@ -58,14 +59,15 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="assistant_login_desc">Entrer votre nom d\'utilisateur et mot de passe ainsi que votre domaine SIP</string>
   <string name="assistant_remote_provisioning_desc">Veuillez fournir votre URL de configuration.</string>
   <string name="transport">Transport</string>
+  <string name="assistant_create_account_phone_number_address">Votre address SIP est</string>
   <string name="assistant_login_linphone">Utiliser un compte Linphone</string>
   <string name="assistant_login_generic">Utiliser un compte SIP</string>
   <string name="assistant_remote_provisioning">Télécharger la configuration</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
+  <string name="assistant_create_account_part_1">Merci de confirmer votre code de pays et de rentrer votre numéro de téléphone</string>
+  <string name="assistant_create_account_part_2">Nous vous avons envoyé un SMS avec un code de validation.\n\nPour complèter la vérification de votre numéro de téléphone, veuillez entrer les 4 chiffres du code en dessous:\n</string>
   <string name="assistant_display_name_optional">Nom d\'affichage (optionnel)</string>
-  <string name="assistant_linphone_account">Configurer un compte Linphone</string>
-  <string name="assistant_generic_account">Configure un compte SIP</string>
+  <string name="assistant_linphone_account">Utiliser un compte Linphone</string>
+  <string name="assistant_generic_account">Utiliser un compte SIP</string>
   <string name="assistant_remote_provisioning_title">Télécharger la configuration</string>
   <string name="assistant_fetch_apply">Télécharger et appliquer</string>
   <string name="assistant_login">Connexion</string>

@@ -33,7 +33,6 @@ import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -1692,7 +1691,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	private void isAccountWithAlias(){
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			LinphoneAccountCreator accountCreator;
-			accountCreator = new LinphoneAccountCreatorImpl(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+			accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 			accountCreator.setDomain(getResources().getString(R.string.default_domain));
 			accountCreator.setListener(this);
 			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));

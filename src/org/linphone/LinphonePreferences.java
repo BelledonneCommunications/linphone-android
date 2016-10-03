@@ -27,7 +27,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAccountCreatorImpl;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
 import org.linphone.core.LinphoneAuthInfo;
@@ -192,11 +191,6 @@ public class LinphonePreferences {
 	 */
 	private void saveAuthInfo(LinphoneAuthInfo authInfo) {
 		getLc().addAuthInfo(authInfo);
-	}
-
-
-	public LinphoneAccountCreator AccountCreator(LinphoneCore lc, String server_url) {
-		return new LinphoneAccountCreatorImpl(lc, server_url);
 	}
 
 	public static class AccountBuilder {
