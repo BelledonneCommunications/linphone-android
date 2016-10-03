@@ -225,7 +225,8 @@ public class CallIncomingActivity extends Activity implements LinphoneSliderTrig
 			}
 		}
 		if (mCall == null) {
-			Log.e("Couldn't find incoming call");
+			//The incoming call no longer exists.
+			Log.d("Couldn't find incoming call");
 			finish();
 			return;
 		}
