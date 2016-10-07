@@ -185,4 +185,9 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 	}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, Status status) {
+
+	}
 }

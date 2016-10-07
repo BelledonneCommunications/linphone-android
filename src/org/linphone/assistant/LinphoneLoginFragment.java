@@ -318,4 +318,9 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 		AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode), true);
 	}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
 }

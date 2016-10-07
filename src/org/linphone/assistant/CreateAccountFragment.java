@@ -565,4 +565,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, Status status) {
 
 	}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, Status status) {
+
+	}
 }

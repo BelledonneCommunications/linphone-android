@@ -680,6 +680,11 @@ private static AssistantActivity instance;
 
 	}
 
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
 	public CountryListAdapter getCountryListAdapter() {
 		return countryListAdapter;
 	}

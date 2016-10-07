@@ -1834,6 +1834,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
 }
 
 interface ContactPicked {
