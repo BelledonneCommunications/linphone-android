@@ -100,12 +100,12 @@ public final class LinphoneUtils {
 			return false;
 		}
 	}
-	
+
 	public static boolean isNumberAddress(String numberOrAddress) {
 		LinphoneProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
 		return proxy.normalizePhoneNumber(numberOrAddress) != null;
 	}
-	
+
 	public static boolean isStrictSipAddress(String numberOrAddress) {
 		return isSipAddress(numberOrAddress) && numberOrAddress.startsWith("sip:");
 	}
@@ -141,7 +141,7 @@ public final class LinphoneUtils {
 
 		return address;
 	}
-	
+
 	public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
 		if (!(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)) {
 			return false; // continue
@@ -204,7 +204,7 @@ public final class LinphoneUtils {
 
 
 
-	
+
 
 	public static Bitmap downloadBitmap(Uri uri) {
 		URL url;
@@ -223,7 +223,7 @@ public final class LinphoneUtils {
 		return null;
 	}
 
-	
+
 	public static void setImagePictureFromUri(Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
 		if (pictureUri == null) {
 			view.setImageResource(R.drawable.avatar);
@@ -294,7 +294,7 @@ public final class LinphoneUtils {
 		}
 		return l;
 	}
-	
+
 	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
 		// return a modifiable list
 		return new ArrayList<LinphoneCall>(Arrays.asList(lc.getCalls()));
@@ -353,41 +353,41 @@ public final class LinphoneUtils {
 	public static int pixelsToDpi(Resources res, int pixels) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) pixels, res.getDisplayMetrics());
 	}
-	
+
 	public static boolean isCallRunning(LinphoneCall call)
 	{
 		if (call == null) {
 			return false;
 		}
-		
+
 		LinphoneCall.State state = call.getState();
-		
+
 		return state == LinphoneCall.State.Connected ||
 				state == LinphoneCall.State.CallUpdating ||
 				state == LinphoneCall.State.CallUpdatedByRemote ||
 				state == LinphoneCall.State.StreamsRunning ||
 				state == LinphoneCall.State.Resuming;
 	}
-	
+
 	public static boolean isCallEstablished(LinphoneCall call) {
 		if (call == null) {
 			return false;
 		}
-		
+
 		LinphoneCall.State state = call.getState();
-		
-		return isCallRunning(call) || 
+
+		return isCallRunning(call) ||
 				state == LinphoneCall.State.Paused ||
 				state == LinphoneCall.State.PausedByRemote ||
 				state == LinphoneCall.State.Pausing;
 	}
-	
+
 	public static boolean isHighBandwidthConnection(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         return (info != null && info.isConnected() && isConnectionFast(info.getType(),info.getSubtype()));
     }
-	
+
 	private static boolean isConnectionFast(int type, int subType){
 		if (type == ConnectivityManager.TYPE_MOBILE) {
             switch (subType) {
@@ -400,7 +400,7 @@ public final class LinphoneUtils {
         //in doubt, assume connection is good.
         return true;
     }
-	
+
 	public static void clearLogs() {
 		try {
 			Runtime.getRuntime().exec(new String[] { "logcat", "-c" });
@@ -449,7 +449,7 @@ public final class LinphoneUtils {
 
             if( zipLogs(sb, zipFilePath) ) {
             	final String appName = (context != null) ? context.getString(R.string.app_name) : "Linphone(?)";
-            	
+
                 Uri zipURI = Uri.parse("file://" + zipFilePath);
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
@@ -460,7 +460,7 @@ public final class LinphoneUtils {
                 try {
                     context.startActivity(Intent.createChooser(i, "Send mail..."));
                 } catch (android.content.ActivityNotFoundException ex) {
-                    
+
                 }
             }
 
@@ -477,7 +477,7 @@ public final class LinphoneUtils {
 		}
 		return extension;
 	}
-	
+
 	public static void recursiveFileRemoval(File root) {
 		if (!root.delete()) {
 			if (root.isDirectory()) {
@@ -490,12 +490,12 @@ public final class LinphoneUtils {
 			}
 		}
 	}
-	
+
 	public static String getDisplayableUsernameFromAddress(String sipAddress) {
 		String username = sipAddress;
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return username;
-		
+
 		if (username.startsWith("sip:")) {
 			username = username.substring(4);
 		}
@@ -515,12 +515,12 @@ public final class LinphoneUtils {
 		}
 		return username;
 	}
-	
+
 	public static String getFullAddressFromUsername(String username) {
 		String sipAddress = username;
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return sipAddress;
-		
+
 		if (!sipAddress.startsWith("sip:")) {
 			sipAddress = "sip:" + sipAddress;
 		}
@@ -535,20 +535,20 @@ public final class LinphoneUtils {
 		}
 		return sipAddress;
 	}
-	
+
 	public static void storeImage(Context context, LinphoneChatMessage msg) {
 		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppData() == null) return;
 		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
 		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
 		if (bm == null) return;
-		
+
 		ContentValues values = new ContentValues();
         values.put(Images.Media.TITLE, file.getName());
         String extension = msg.getFileTransferInformation().getSubtype();
         values.put(Images.Media.MIME_TYPE, "image/" + extension);
         ContentResolver cr = context.getContentResolver();
         Uri path = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        
+
         OutputStream stream;
 		try {
 			stream = cr.openOutputStream(path);
@@ -557,7 +557,7 @@ public final class LinphoneUtils {
 			} else {
 				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 			}
-			
+
 			stream.close();
 			file.delete();
 	        bm.recycle();
@@ -632,7 +632,7 @@ public final class LinphoneUtils {
 					|| status.equals(LinphoneAccountCreator.Status.AccountAlreadyActivated)
 					|| status.equals(LinphoneAccountCreator.Status.AccountActivated)
 					|| status.equals(LinphoneAccountCreator.Status.Ok)) {
-				return "allo";
+				return "";
 			}
 		}
 		return null;
