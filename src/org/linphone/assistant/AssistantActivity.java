@@ -99,7 +99,7 @@ private static AssistantActivity instance;
 	public String phone_number;
 	public String email;
 	public String activation_code;
-	
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -136,7 +136,7 @@ private static AssistantActivity instance;
 		accountCreator.setListener(this);
 
 		countryListAdapter = new CountryListAdapter(R.raw.countries, getApplicationContext());
-        
+
         mListener = new LinphoneCoreListenerBase() {
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, RegistrationState state, String smessage) {
@@ -178,7 +178,7 @@ private static AssistantActivity instance;
 			lc.addListener(mListener);
 		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -188,14 +188,14 @@ private static AssistantActivity instance;
 
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable("CurrentFragment", currentFragment);
 		outState.putBoolean("echoCanceller", echoCancellerAlreadyDone);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	public static AssistantActivity instance() {
 		return instance;
 	}
@@ -210,7 +210,7 @@ private static AssistantActivity instance;
 		cancel = (ImageView) findViewById(R.id.assistant_cancel);
 		cancel.setOnClickListener(this);
 	}
-	
+
 	private void changeFragment(Fragment newFragment) {
 		hideKeyboard();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -221,7 +221,7 @@ private static AssistantActivity instance;
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+
 		if (id == R.id.assistant_cancel) {
 			hideKeyboard();
 			LinphonePreferences.instance().firstLaunchSuccessful();
@@ -310,7 +310,7 @@ private static AssistantActivity instance;
 	private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
 		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
 		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-		
+
 		if (recordAudio == PackageManager.PERMISSION_GRANTED) {
 			EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
 			fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
@@ -378,7 +378,7 @@ private static AssistantActivity instance;
 		currentFragment = AssistantFragmentsEnum.LOGIN;
 		back.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void displayLoginLinphone() {
 		fragment = new LinphoneLoginFragment();
 		changeFragment(fragment);
@@ -466,7 +466,7 @@ private static AssistantActivity instance;
 		if(prefix != null){
 			builder.setPrefix(prefix);
 		}
-		
+
 		if (isMainAccountLinphoneDotOrg) {
 			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 				builder.setProxy(domain)
@@ -487,7 +487,7 @@ private static AssistantActivity instance;
 			.setNoDefault(false);
 
 			mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
-			
+
 			mPrefs.setStunServer(getString(R.string.default_stun));
 			mPrefs.setIceEnabled(true);
 
@@ -506,7 +506,7 @@ private static AssistantActivity instance;
 				builder.setTransport(transport);
 			}
 		}
-		
+
 		if (getResources().getBoolean(R.bool.enable_push_id)) {
 			String regId = mPrefs.getPushNotificationRegistrationID();
 			String appId = getString(R.string.push_sender_id);
@@ -541,7 +541,7 @@ private static AssistantActivity instance;
 
  	public void displayRemoteProvisioningInProgressDialog() {
 		remoteProvisioningInProgress = true;
-		
+
 		progress = ProgressDialog.show(this, null, null);
 		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
 		d.setAlpha(200);
@@ -559,7 +559,7 @@ private static AssistantActivity instance;
 		extras.putString("Password", password);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
-		
+
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
 		back.setVisibility(View.INVISIBLE);
 	}
@@ -579,7 +579,7 @@ private static AssistantActivity instance;
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
 		back.setVisibility(View.INVISIBLE);
 	}
-	
+
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
 		launchEchoCancellerCalibration(true);
@@ -611,7 +611,7 @@ private static AssistantActivity instance;
 				});
 		return builder.show();
 	}
-	
+
 	public void success() {
 		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
 		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
@@ -620,7 +620,7 @@ private static AssistantActivity instance;
 			launchDownloadCodec();
 		}
 	}
-	
+
 	private void goToLinphoneActivity() {
 		mPrefs.firstLaunchSuccessful();
 		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
@@ -738,7 +738,7 @@ private static AssistantActivity instance;
 		public Country getCountryFromCountryCode(String countryCode) {
 			countryCode = (countryCode.startsWith("+")) ? countryCode : "+" + countryCode;
 			for (Country c : allCountries) {
-				if (c.dial_code.compareTo("+"+countryCode) == 0)
+				if (c.dial_code.compareTo(countryCode) == 0)
 					return c;
 			}
 			return null;

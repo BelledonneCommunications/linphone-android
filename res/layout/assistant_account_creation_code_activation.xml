@@ -22,6 +22,7 @@
 			android:text="@string/assistant_create_account_part_2"
 			style="@style/font11"
 			android:paddingTop="10dp"
+			android:gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 

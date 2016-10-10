@@ -117,7 +117,7 @@
 	<string name="phone_number_info_title">What will my phone number be used for?</string>
 	<string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Linphone and your friends will know that they can rach you on Linphone as well.\n</string>
 	<string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
-	<string name="phone_number_link_info_content_already_account">You can only use your phone number with one linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one simply link it now and your number will automatically be moved to this account.</string>
+	<string name="phone_number_link_info_content_already_account">You can only use your phone number with one Linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
 
 	<!-- Status -->
 	<string name="invalid_email">Invalid email</string>
@@ -337,7 +337,7 @@
 	<string name="pref_rfc2833_dtmf">Send in-band DTMFs(RFC2833)</string>
 	<string name="pref_sipinfo_dtmf">Send out-band DTMFs(SIP INFO)</string>
 	<string name="pref_voice_mail">Voice mail URI</string>
-	
+
 	<!-- Chat settings -->
 	<string name="pref_chat_title">Chat</string>
 	<string name="pref_image_sharing_server_title">Sharing server</string>

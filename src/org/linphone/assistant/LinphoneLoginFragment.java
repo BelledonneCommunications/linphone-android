@@ -68,7 +68,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		accountCreator.setListener(this);
 
 		String url = "http://linphone.org/free-sip-service.html&action=recover";
-		
+
 		login = (EditText) view.findViewById(R.id.assistant_username);
 		login.addTextChangedListener(this);
 
@@ -171,6 +171,15 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
+				if (field.equals(dialCode)) {
+					AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter().getCountryFromCountryCode(dialCode.getText().toString());
+					if (c != null) {
+						AssistantActivity.instance().country = c;
+						selectCountry.setText(c.name);
+					} else {
+						selectCountry.setText(R.string.select_your_country);
+					}
+				}
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -194,7 +203,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+
 		switch(id) {
 			case R.id.assistant_apply: {
 				if (recoverAccount) {
@@ -207,7 +216,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			case R.id.info_phone_number: {
 				new AlertDialog.Builder(getActivity())
 						.setTitle(getString(R.string.phone_number_info_title))
-						.setMessage(getString(R.string.phone_number_link_info_content) + "\n" + getString(R.string.phone_number_link_info_content_already_account))
+						.setMessage(getString(R.string.phone_number_link_info_content))
 						.show();
 				break;
 			}

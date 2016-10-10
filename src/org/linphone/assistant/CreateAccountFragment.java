@@ -62,7 +62,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	private EditText phoneNumberEdit, usernameEdit, passwordEdit, passwordConfirmEdit, emailEdit, dialCode;
 	private TextView phoneNumberError, usernameError, passwordError, passwordConfirmError, emailError, assisstantTitle, sipUri, skip;
 	private ImageView phoneNumberInfo;
-	
+
 	private boolean phoneNumberOk = false;
 	private boolean usernameOk = false;
 	private boolean passwordOk = false;
@@ -413,7 +413,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 					AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter().getCountryFromCountryCode(dialCode.getText().toString());
 					if (c != null) {
 						AssistantActivity.instance().country = c;
-						LinphoneUtils.setCountry(AssistantActivity.instance().country, dialCode, selectCountry, countryCode);
+						selectCountry.setText(c.name);
+					} else {
+						selectCountry.setText(R.string.select_your_country);
 					}
 				}
 			}
