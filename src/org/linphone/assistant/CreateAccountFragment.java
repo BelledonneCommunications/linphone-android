@@ -285,11 +285,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 
 			case R.id.assistant_create: {
-				if (linkAccount) {
-					addAlias();
-				} else {
-					createAccount();
-				}
+				accountCreator.isAccountActivated();
 				break;
 			}
 		}
@@ -378,6 +374,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		boolean isOk = status.equals(LinphoneAccountCreator.Status.Ok);
 		LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
 
+		accountCreator.setUsername(getUsername());
+
 		// Username or phone number
 		if (getResources().getBoolean(R.bool.assistant_allow_username) && useUsername.isChecked()
 				|| (getResources().getBoolean(R.bool.isTablet) || useEmail.isChecked()
@@ -410,7 +408,15 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
 		field.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable s) {}
+			public void afterTextChanged(Editable s) {
+				if (field.equals(dialCode)) {
+					AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter().getCountryFromCountryCode(dialCode.getText().toString());
+					if (c != null) {
+						AssistantActivity.instance().country = c;
+						LinphoneUtils.setCountry(AssistantActivity.instance().country, dialCode, selectCountry, countryCode);
+					}
+				}
+			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -434,18 +440,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 
 			public void onTextChanged(CharSequence s, int start, int count, int after) {
-				if(s.length() > 0){
-					usernameOk = false;
-					Status status = accountCreator.setUsername(field.getText().toString());
-					if(status.equals(Status.Ok)){
-						accountCreator.isAccountUsed();
-					} else {
-						LinphoneUtils.displayError(usernameOk, usernameError, LinphoneUtils.errorForStatus(status));
-						sipUri.setText("");
-					}
-				} else {
-					LinphoneUtils.displayError(true, usernameError, "");
-				}
 				onTextChanged2();
 			}
 		});
@@ -559,15 +553,26 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
+		if (status.equals(Status.AccountNotActivated)) {
+			if (useEmail.isChecked() || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
+				AssistantActivity.instance().displayAssistantConfirm(getUsername(), passwordEdit.getText().toString());
+			} else {
+				AssistantActivity.instance().displayAssistantCodeConfirm(getUsername(), phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode), false);
+			}
+		} else {
+			if (linkAccount) {
+				addAlias();
+			} else {
+				createAccount();
+			}
+		}
 	}
 
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, Status status) {
-
 	}
 
 	@Override
 	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, Status status) {
-
 	}
 }

@@ -1248,9 +1248,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
 		}
 
-		if (Hacks.needGalaxySAudioHack()) {
+		if (Hacks.needGalaxySAudioHack())
 			mAudioManager.setMode(MODE_RINGTONE);
-		}
 
 		try {
 			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {

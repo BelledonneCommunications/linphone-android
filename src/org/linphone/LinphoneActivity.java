@@ -1138,7 +1138,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			lc.removeListener(mListener);
 		}
 		callTransfer = false;
-		
+
 		super.onPause();
 	}
 
@@ -1271,7 +1271,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 				break;
 			case PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE:
-				((SettingsFragment) fragment).enableDeviceRingtone(grantResults[0] == PackageManager.PERMISSION_GRANTED);
+				if (permissions[0].compareTo(Manifest.permission.READ_EXTERNAL_STORAGE) != 0)
+					break;
+				boolean enableRingtone = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+				LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
+				LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
 				break;
 			case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -1283,6 +1287,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	@Override
 	protected void onStart() {
 		super.onStart();
+		ArrayList<String> permissionsList = new ArrayList<String>();
 
 		int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
 		Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
@@ -1290,23 +1295,32 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		int readPhone = getPackageManager().checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
 		Log.i("[Permission] Read phone state permission is " + (readPhone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
-		if (contacts == PackageManager.PERMISSION_GRANTED) {
-			if (readPhone == PackageManager.PERMISSION_DENIED) {
-				checkAndRequestReadPhoneStatePermission();
+		int ringtone = getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName());
+		Log.i("[Permission] Read external storage for ring tone permission is " + (ringtone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+		if (ringtone != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+				Log.i("[Permission] Asking for read external storage for ring tone");
+				permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
 			}
-			if (!fetchedContactsOnce) {
-				ContactsManager.getInstance().enableContactsAccess();
-				ContactsManager.getInstance().fetchContactsAsync();
-				fetchedContactsOnce = true;
+		}
+		if (readPhone != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_PHONE_STATE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+				Log.i("[Permission] Asking for read phone state");
+				permissionsList.add(Manifest.permission.READ_PHONE_STATE);
 			}
-		} else {
-			if (!willContactsPermissionBeAsked()) {
-				ContactsManager.getInstance().fetchContactsAsync();
-				fetchedContactsOnce = true;
-				checkAndRequestReadPhoneStatePermission();
-			} else {
-				checkAndRequestReadContactsPermission(); // This will ask for Read_Phone_State permission on it's cb
+		}
+		if (contacts != PackageManager.PERMISSION_GRANTED) {
+			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
+				Log.i("[Permission] Asking for contacts");
+				permissionsList.add(Manifest.permission.READ_CONTACTS);
 			}
+		}
+
+		if (permissionsList.size() > 0) {
+			String[] permissions = new String[permissionsList.size()];
+			permissions = permissionsList.toArray(permissions);
+			ActivityCompat.requestPermissions(this, permissions, PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE);
 		}
 	}
 
@@ -1316,7 +1330,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		outState.putBoolean("fetchedContactsOnce", fetchedContactsOnce);
 		super.onSaveInstanceState(outState);
 	}
-	
+
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -1339,7 +1353,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		if (isTablet()) {
 			// Prevent fragmentContainer2 to be visible when rotating the device
 			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-			if (currentFragment == FragmentsAvailable.DIALER 
+			if (currentFragment == FragmentsAvailable.DIALER
 					|| currentFragment == FragmentsAvailable.ABOUT
 					|| currentFragment == FragmentsAvailable.SETTINGS
 					|| currentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {

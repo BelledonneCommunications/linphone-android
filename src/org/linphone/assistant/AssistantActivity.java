@@ -516,8 +516,6 @@ private static AssistantActivity instance;
 			}
 		}
 
-
-
 		try {
 			builder.saveNewAccount();
 			if(!newAccount) {
@@ -737,13 +735,13 @@ private static AssistantActivity instance;
 			return json;
 		}
 
-		public boolean countryExist(String countryCode) {
+		public Country getCountryFromCountryCode(String countryCode) {
+			countryCode = (countryCode.startsWith("+")) ? countryCode : "+" + countryCode;
 			for (Country c : allCountries) {
-				if (c.dial_code.equals("+"+countryCode)) {
-					return true;
-				}
+				if (c.dial_code.compareTo("+"+countryCode) == 0)
+					return c;
 			}
-			return false;
+			return null;
 		}
 
 		@Override

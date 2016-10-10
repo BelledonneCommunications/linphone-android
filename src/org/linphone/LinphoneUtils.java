@@ -591,15 +591,12 @@ public final class LinphoneUtils {
 		if (ctxt != null) {
 			if (status.equals(LinphoneAccountCreator.Status.EmailInvalid))
 				return ctxt.getString(R.string.invalid_email);
-			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalid)) {
+			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalid))
 				return ctxt.getString(R.string.invalid_username);
-			}
-			if (status.equals(LinphoneAccountCreator.Status.UsernameTooShort)) {
+			if (status.equals(LinphoneAccountCreator.Status.UsernameTooShort))
 				return ctxt.getString(R.string.username_too_short);
-			}
-			if (status.equals(LinphoneAccountCreator.Status.UsernameTooLong)) {
+			if (status.equals(LinphoneAccountCreator.Status.UsernameTooLong))
 				return ctxt.getString(R.string.username_too_long);
-			}
 			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalidSize))
 				return ctxt.getString(R.string.username_invalid_size);
 			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberTooShort))
@@ -635,7 +632,7 @@ public final class LinphoneUtils {
 					|| status.equals(LinphoneAccountCreator.Status.AccountAlreadyActivated)
 					|| status.equals(LinphoneAccountCreator.Status.AccountActivated)
 					|| status.equals(LinphoneAccountCreator.Status.Ok)) {
-				return "";
+				return "allo";
 			}
 		}
 		return null;

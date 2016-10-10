@@ -38,6 +38,7 @@ max_calls=10
 
 [app]
 activation_code_length=4
+debug=1
 
 [in-app-purchase]
 server_url=https://sip3.linphone.org:444/inapp.php
