@@ -1853,6 +1853,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 
 	}
+
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
 }
 
 interface ContactPicked {

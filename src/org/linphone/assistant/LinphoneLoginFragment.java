@@ -104,6 +104,13 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			LinphoneProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
 			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());
 
+			AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter()
+					.getCountryFromCountryCode(dialCode.getText().toString());
+			if (c != null) {
+				AssistantActivity.instance().country = c;
+				selectCountry.setText(c.name);
+			}
+
 			phoneNumberLayout.setVisibility(View.VISIBLE);
 			selectCountry.setOnClickListener(this);
 			phoneNumberInfo.setOnClickListener(this);
@@ -330,6 +337,11 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 
 	}
 }

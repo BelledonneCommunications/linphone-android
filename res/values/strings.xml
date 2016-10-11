@@ -71,8 +71,8 @@
 	<string name="assistant_finish">Finish configuration</string>
 	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
 	<string name="assistant_welcome_desc">This assistant will help you configure and use your SIP account.</string>
-	<string name="assistant_linphone_login_desc">Enter your username and password of Linphone account</string>
-	<string name="assistant_login_desc">Enter your username and password with your SIP domain</string>
+	<string name="assistant_linphone_login_desc">Please enter your username and password of Linphone account</string>
+	<string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
 	<string name="assistant_remote_provisioning_desc">Please provide your provisioning URL</string>
 	<string name="transport">Transport</string>
 	<string name="assistant_create_account_phone_number_address">Your SIP address is</string>
@@ -99,7 +99,7 @@
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
 	<string name="wizard_username_unavailable">This username is already in use.</string>
-	<string name="assistant_phone_number_unavailable">This phone number is already in used.\r\nPlease type a different number or delete your existing account if you want to reuse your number.</string>
+	<string name="assistant_phone_number_unavailable">This phone number is already in used.\r\nPlease type a different number.\r\nYou can delete your existing account if you want to reuse your phone number.</string>
 	<string name="wizard_username_incorrect">Your username is invalid.</string>
 	<string name="assistant_phone_number_incorrect">Your phone number is invalid.</string>
 	<string name="wizard_email_incorrect">Your email is invalid.</string>
@@ -125,6 +125,7 @@
 	<string name="invalid_username">Invalid username</string>
 	<string name="invalid_domain">Invalid domain</string>
 	<string name="invalid_route">Invalid route</string>
+	<string name="invalid_display_name">Invalid display name</string>
 	<string name="username_too_short">Username too short</string>
 	<string name="username_too_long">Username too long</string>
 	<string name="username_invalid_size">Username length invalid</string>

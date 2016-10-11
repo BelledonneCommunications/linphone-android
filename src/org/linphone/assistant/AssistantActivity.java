@@ -683,6 +683,11 @@ private static AssistantActivity instance;
 
 	}
 
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
 	public CountryListAdapter getCountryListAdapter() {
 		return countryListAdapter;
 	}

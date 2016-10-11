@@ -53,7 +53,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation_code_activation, container, false);
-		
+
 		username = getArguments().getString("Username");
 		phone = getArguments().getString("Phone");
 		dialcode = getArguments().getString("Dialcode");
@@ -188,6 +188,11 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 
 	@Override
 	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, Status status) {
 
 	}
 }
