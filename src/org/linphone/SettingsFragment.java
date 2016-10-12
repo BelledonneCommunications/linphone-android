@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
-	
+
 	public SettingsFragment() {
 		super(R.xml.preferences);
 	}
@@ -108,17 +108,17 @@ public class SettingsFragment extends PreferencesListFragment {
 				}
 			}
 		};
-		
+
 		initSettings();
 		setListeners();
 		hideSettings();
 	}
-	
+
 	private void removePreviousPreferencesFile() {
 		SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
         editor.clear();
         editor.commit();
-        
+
 		File dir = new File(getActivity().getFilesDir().getAbsolutePath() + "shared_prefs");
 		LinphoneUtils.recursiveFileRemoval(dir);
 	}
@@ -257,7 +257,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		if (!LinphoneManager.getLc().isTunnelAvailable()) {
 			return;
 		}
-		
+
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
 		ListPreference tunnelModePref = (ListPreference) findPreference(getString(R.string.pref_tunnel_mode_key));
@@ -448,7 +448,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		pref.setSummary(value);
 		pref.setValue(value);
 	}
-	
+
 	private void initLimeEncryptionPreference(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
@@ -461,7 +461,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			pref.setEnabled(false);
 			return;
 		}
-		
+
 		entries.add(getString(R.string.lime_encryption_entry_mandatory));
 		values.add(LinphoneLimeState.Mandatory.toString());
 		entries.add(getString(R.string.lime_encryption_entry_preferred));
@@ -588,7 +588,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				synchronized (SettingsFragment.this) {
 					preference.setSummary(R.string.ec_calibrating);
-					
+
 					int recordAudio = getActivity().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getActivity().getPackageName());
 					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
 						startEchoCancellerCalibration();
@@ -640,7 +640,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void startEchoCancellerCalibration() {
 		try {
 			if (LinphoneManager.getInstance().getEchoTesterStatus())
@@ -650,7 +650,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			Log.e(e);
 		}
 	}
-	
+
 	public void echoCalibrationFail() {
 		Preference echoCancellerCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
 		echoCancellerCalibration.setSummary(R.string.failed);
@@ -838,7 +838,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_overlay_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -893,7 +893,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					mPrefs.enableDeviceRingtone(false);
 					LinphoneManager.getInstance().enableDeviceRingtone(false);
 				}
-				
+
 				return true;
 			}
 		});
@@ -915,9 +915,9 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		
+
 		initMediaEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_media_encryption_key)));
-		
+
 		findPreference(getString(R.string.pref_auto_answer_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -926,7 +926,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_rfc2833_dtmf_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -992,7 +992,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				} else if (lime == LinphoneLimeState.Preferred) {
 					preference.setSummary(getString(R.string.lime_encryption_entry_preferred));
 				}
-				
+
 				return true;
 			}
 		});
@@ -1007,7 +1007,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		ice.setChecked(mPrefs.isIceEnabled());
 		turn.setEnabled(mPrefs.getStunServer() != null);
 		turn.setChecked(mPrefs.isTurnEnabled());
-		
+
 		EditTextPreference turnUsername = (EditTextPreference) findPreference(getString(R.string.pref_turn_username_key));
 		EditTextPreference turnPassword = (EditTextPreference) findPreference(getString(R.string.pref_turn_passwd_key));
 		turnUsername.setEnabled(mPrefs.isTurnEnabled());
@@ -1046,7 +1046,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setStunServer(newValue.toString());
 				preference.setSummary(newValue.toString());
-				
+
 				CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
 				turn.setEnabled(mPrefs.getStunServer() != null);
 				return true;
@@ -1072,7 +1072,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_turn_username_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -1081,7 +1081,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_turn_passwd_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -1202,7 +1202,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
-		
+
 		findPreference(getString(R.string.pref_android_app_settings_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
@@ -1253,7 +1253,6 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
-
 		}
 	}
 

@@ -212,6 +212,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			createAccount.setText(getResources().getString(R.string.link_account));
 			assisstantTitle.setText(getResources().getString(R.string.link_account));
 		}
+		accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+
 		addUsernameHandler(usernameEdit, null);
 
     	createAccount.setEnabled(true);
@@ -297,7 +299,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 
 			case R.id.assistant_create: {
-				accountCreator.isAccountUsed();
+				createAccount.setEnabled(false);
+				if (linkAccount)
+					addAlias();
+				else
+					accountCreator.isAccountUsed();
 				break;
 			}
 		}
@@ -322,6 +328,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		if (isOk) {
 			accountCreator.linkPhoneNumberWithAccount();
 		} else {
+			createAccount.setEnabled(true);
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
 			LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
 		}
@@ -566,6 +573,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 						, LinphoneUtils.getCountryCode(dialCode), false);
 			}
 		} else {
+			createAccount.setEnabled(true);
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
 		}
 	}
@@ -602,6 +610,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				accountCreator.recoverPhoneAccount(); // Resend SMS
 			}
 		} else {
+			createAccount.setEnabled(true);
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
 		}
 	}
@@ -612,6 +621,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, dialCode.getText().toString() , phoneNumberEdit.getText().toString(), false);
 		} else {
+			createAccount.setEnabled(true);
 			//SMS error
 			LinphoneUtils.displayErrorAlert(getString(R.string.request_failed), getContext());
 		}
@@ -624,10 +634,12 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator ac, Status status) {
 		if (status.equals(Status.PhoneNumberUsedAccount) || status.equals(Status.PhoneNumberUsedAlias)) {
-			if (accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername()) == 0)
+			if (accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername()) == 0) {
 				accountCreator.isAccountActivated();
-			else
+			} else {
+				createAccount.setEnabled(true);
 				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
+			}
 		} else {
 			accountCreator.isAccountActivated();
 		}

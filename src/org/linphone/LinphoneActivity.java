@@ -631,10 +631,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayLinkPhoneNumber() {
-		Intent assistant = new Intent();
-		assistant.setClass(this, AssistantActivity.class);
-		assistant.putExtra("LinkPhoneNumber", true);
-		startActivity(assistant);
+		LinphoneAccountCreator accountCreator;
+		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator.setDomain(getResources().getString(R.string.default_domain));
+		accountCreator.setListener(this);
+		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
+		accountCreator.isAccountLinked();
 	}
 
 	public void displayInapp() {
@@ -1243,8 +1245,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		int readContactsI = -1;
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+			if (permissions[i] == Manifest.permission.READ_CONTACTS)
+				readContactsI = i;
 		}
 
 		switch (requestCode) {
@@ -1256,7 +1261,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 				break;
 			case PERMISSIONS_REQUEST_CONTACTS:
-				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
 					ContactsManager.getInstance().enableContactsAccess();
 				}
 				checkAndRequestReadPhoneStatePermission();
@@ -1314,6 +1319,12 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
 				Log.i("[Permission] Asking for contacts");
 				permissionsList.add(Manifest.permission.READ_CONTACTS);
+			}
+		} else {
+			if (!fetchedContactsOnce) {
+				ContactsManager.getInstance().enableContactsAccess();
+				ContactsManager.getInstance().fetchContactsAsync();
+				fetchedContactsOnce = true;
 			}
 		}
 
@@ -1826,8 +1837,8 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		if(status.equals(LinphoneAccountCreator.Status.AccountExist)){
-			askLinkWithPhoneNumber();
+		if (status.equals(LinphoneAccountCreator.Status.AccountExist)) {
+			accountCreator.isAccountLinked();
 		}
 	}
 
@@ -1851,12 +1862,13 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
+		if (status.equals(LinphoneAccountCreator.Status.AccountNotLinked)) {
+			askLinkWithPhoneNumber();
+		}
 	}
 
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
 	}
 }
 

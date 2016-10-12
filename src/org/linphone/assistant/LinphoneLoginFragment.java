@@ -44,6 +44,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Locale;
+
 /**
  * @author Sylvain Berfini
  */
@@ -146,6 +149,8 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			passwordLayout.setVisibility(View.VISIBLE);
 		}
 
+		accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+
 		addPhoneNumberHandler(dialCode, null);
 		addPhoneNumberHandler(phoneNumberEdit, null);
 
@@ -166,9 +171,11 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	public void linphoneLogIn() {
 		if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
 			LinphoneUtils.displayErrorAlert(getString(R.string.first_launch_no_login_password), getContext());
+			apply.setEnabled(true);
 			return;
 		}
 		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), null, null, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
+		apply.setEnabled(true);
 	}
 
 	private LinphoneAccountCreator.Status getPhoneNumberStatus() {
@@ -213,6 +220,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 		switch(id) {
 			case R.id.assistant_apply: {
+				apply.setEnabled(false);
 				if (recoverAccount) {
 					recoverAccount();
 				} else {
@@ -243,10 +251,12 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			if (isOk) {
 				accountCreator.recoverPhoneAccount();
 			} else {
+				apply.setEnabled(true);
 				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
 				LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
 			}
 		} else {
+			apply.setEnabled(true);
 			LinphoneUtils.displayErrorAlert(getString(R.string.assistant_create_account_part_1), getContext());
 		}
 	}
@@ -337,7 +347,6 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
 	}
 
 	@Override

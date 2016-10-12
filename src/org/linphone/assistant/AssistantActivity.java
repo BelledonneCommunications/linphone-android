@@ -110,7 +110,7 @@ private static AssistantActivity instance;
 		setContentView(R.layout.assistant);
 		initUI();
 
-		if(getIntent().getBooleanExtra("LinkPhoneNumber",false)){
+		if (getIntent().getBooleanExtra("LinkPhoneNumber",false)) {
 			isLink = true;
 			displayCreateAccount();
 		} else {
