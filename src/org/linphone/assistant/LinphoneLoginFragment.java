@@ -249,7 +249,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			LinphoneAccountCreator.Status status = getPhoneNumberStatus();
 			boolean isOk = status.equals(LinphoneAccountCreator.Status.Ok);
 			if (isOk) {
-				accountCreator.recoverPhoneAccount();
+				accountCreator.isPhoneNumberUsed();
 			} else {
 				apply.setEnabled(true);
 				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
@@ -351,6 +351,11 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
+		if (status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAccount) || status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAlias)) {
+			accountCreator.recoverPhoneAccount();
+		} else {
+			apply.setEnabled(true);
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
+		}
 	}
 }

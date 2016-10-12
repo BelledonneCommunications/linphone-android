@@ -122,6 +122,7 @@
 	<!-- Status -->
 	<string name="invalid_email">Invalid email</string>
 	<string name="account_already_exist">Account already exist</string>
+	<string name="phone_number_not_exist">This account does not exist</string>
 	<string name="invalid_username">Invalid username</string>
 	<string name="invalid_domain">Invalid domain</string>
 	<string name="invalid_route">Invalid route</string>
