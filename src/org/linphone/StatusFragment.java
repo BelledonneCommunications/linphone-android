@@ -33,7 +33,6 @@ import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
-import org.w3c.dom.Text;
 
 import android.app.Activity;
 import android.app.Dialog;

@@ -57,23 +57,18 @@ import org.linphone.xmlrpc.XmlRpcListenerBase;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -1179,10 +1174,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		checkAndRequestPermission(Manifest.permission.GET_ACCOUNTS, PERMISSIONS_REQUEST_CONTACTS);
 	}
 
-	private boolean willContactsPermissionBeAsked() {
-		return LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS, false) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS);
-	}
-
 	public void checkAndRequestWriteContactsPermission() {
 		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
 	}
@@ -1205,7 +1196,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		int readExternalStorage = getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName());
 		Log.i("[Permission] Read external storage permission is " + (readExternalStorage == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
-		int accounts = getPackageManager().checkPermission(Manifest.permission.GET_ACCOUNTS, getPackageName());
 		Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
 		if (readExternalStorage != PackageManager.PERMISSION_GRANTED) {

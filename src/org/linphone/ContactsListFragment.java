@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.linphone.core.LinphoneFriend;
-import org.linphone.core.PresenceActivityType;
-
 import android.app.Dialog;
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -428,7 +425,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			public TextView separatorText;
 			public ImageView contactPicture;
 			public TextView organization;
-			public ImageView friendStatus;
+			//public ImageView friendStatus;
 			
 			public ViewHolder(View view) {
 				delete = (CheckBox) view.findViewById(R.id.delete);
@@ -438,7 +435,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				separatorText = (TextView) view.findViewById(R.id.separator_text);
 				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 				organization = (TextView) view.findViewById(R.id.contactOrganization);
-				friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
+				//friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
 			}
 		}
 		
@@ -567,7 +564,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.delete.setVisibility(View.GONE);
 			}
 			
-			LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();
+			/*LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();
 			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
 				holder.friendStatus.setVisibility(View.VISIBLE);
 				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();
@@ -582,7 +579,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				} else {
 					holder.friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
 				}
-			}
+			}*/
 			
 			return view;
 		}

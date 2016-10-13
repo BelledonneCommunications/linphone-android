@@ -18,6 +18,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.R;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
+import org.linphone.core.LinphoneAccountCreator.Status;
+import org.linphone.core.LinphoneCoreFactory;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,17 +39,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.R;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneCoreFactory;
-
-
-import static org.linphone.core.LinphoneAccountCreator.*;
-
 public class CreateAccountCodeActivationFragment extends Fragment implements LinphoneAccountCreatorListener {
-	private String username, phone, dialcode, ha1;
+	private String username, phone, dialcode;
 	private TextView title;
 	private EditText code;
 	private boolean recoverAccount = false, linkAccount = false;

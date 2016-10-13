@@ -18,13 +18,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.R;
+import org.linphone.core.LinphoneAddress.TransportType;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-
-import org.linphone.core.LinphoneAddress.TransportType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +36,7 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class LoginFragment extends Fragment implements OnClickListener, TextWatcher {
-	private EditText login, password, displayName, domain;
+	private EditText login, password, domain;
 	private RadioGroup transports;
 	private Button apply;
 	
@@ -50,7 +49,6 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 		login.addTextChangedListener(this);
 		password = (EditText) view.findViewById(R.id.assistant_password);
 		password.addTextChangedListener(this);
-		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
 		domain = (EditText) view.findViewById(R.id.assistant_domain);
 		domain.addTextChangedListener(this);
 		transports = (RadioGroup) view.findViewById(R.id.assistant_transports);

@@ -19,18 +19,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.widget.AdapterView;
+import java.util.List;
+
+import org.linphone.R;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.linphone.R;
-import org.linphone.mediastream.Log;
-import java.util.List;
 
 public class InAppPurchaseListFragment extends Fragment implements AdapterView.OnItemClickListener{
 	private ListView inappList;

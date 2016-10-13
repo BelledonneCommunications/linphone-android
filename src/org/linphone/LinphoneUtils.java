@@ -42,10 +42,7 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import android.app.AlertDialog;
-import android.widget.*;
 import org.linphone.assistant.AssistantActivity;
-import org.linphone.assistant.CountryListFragment;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -59,6 +56,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -78,6 +76,10 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Helpers.

@@ -22,20 +22,21 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
+import org.linphone.core.LinphoneAccountCreator.Status;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -53,8 +54,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import static org.linphone.core.LinphoneAccountCreator.*;
-
 /**
  * @author Sylvain Berfini
  */
@@ -62,7 +61,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		, OnClickListener, LinphoneAccountCreatorListener {
 	private EditText phoneNumberEdit, usernameEdit, passwordEdit, passwordConfirmEdit
 			, emailEdit, dialCode;
-	private TextView phoneNumberError, usernameError, passwordError, passwordConfirmError
+	private TextView phoneNumberError, passwordError, passwordConfirmError
 			, emailError, assisstantTitle, sipUri, skip;
 	private ImageView phoneNumberInfo;
 
@@ -99,7 +98,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		useUsername = (CheckBox) view.findViewById(R.id.use_username);
 		useEmail = (CheckBox) view.findViewById(R.id.use_email);
 
-		usernameError = (TextView) view.findViewById(R.id.username_error);
 		usernameEdit = (EditText) view.findViewById(R.id.username);
 
 		phoneNumberError = (TextView) view.findViewById(R.id.phone_number_error);
@@ -125,10 +123,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 		//Phone number
 		if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
+			getActivity().getApplicationContext();
 			//Automatically get the country code from the phone
 			TelephonyManager tm =
 					(TelephonyManager) getActivity().getApplicationContext().getSystemService(
-							getActivity().getApplicationContext().TELEPHONY_SERVICE);
+							Context.TELEPHONY_SERVICE);
 			String countryIso = tm.getNetworkCountryIso();
 			LinphoneProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
 			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());

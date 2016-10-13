@@ -17,7 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import android.app.AlertDialog;
+import java.util.Locale;
+
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
@@ -27,7 +28,9 @@ import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -45,20 +48,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 /**
  * @author Sylvain Berfini
  */
 public class LinphoneLoginFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, OnClickListener, TextWatcher, LinphoneAccountCreator.LinphoneAccountCreatorListener {
-	private EditText login, password, phoneNumberEdit, dialCode, displayName;
+	private EditText login, password, phoneNumberEdit, dialCode;
 	private Button apply, selectCountry;
-	private CheckBox useUsername, usePassword;
+	private CheckBox useUsername;
 	private LinearLayout phoneNumberLayout, usernameLayout, passwordLayout;
 	private TextView forgotPassword, messagePhoneNumber, phoneNumberError;
 	private Boolean recoverAccount;
 	private LinphoneAccountCreator accountCreator;
-	private AssistantActivity.Country country;
 	private int countryCode;
 	private ImageView phoneNumberInfo;
 
@@ -89,7 +89,6 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
 		passwordLayout = (LinearLayout) view.findViewById(R.id.password_layout);
 		password = (EditText) view.findViewById(R.id.assistant_password);
-		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
 		messagePhoneNumber = (TextView) view.findViewById(R.id.message_phone_number);
 
 		forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
@@ -101,8 +100,9 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 		//Phone number
 		if(getResources().getBoolean(R.bool.use_phone_number_validation)){
+			getActivity().getApplicationContext();
 			//Automatically get the country code from the phone
-			TelephonyManager tm = (TelephonyManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().TELEPHONY_SERVICE);
+			TelephonyManager tm = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 			String countryIso = tm.getNetworkCountryIso();
 			LinphoneProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
 			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());
@@ -156,18 +156,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 		return view;
 	}
-
-	private String getPhoneNumber(){
-		LinphoneProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
-		String countryCode = dialCode.getText().toString();
-		if(countryCode != null && countryCode.startsWith("+")) {
-			countryCode = countryCode.substring(1);
-		}
-		proxyConfig.setDialPrefix(countryCode);
-		return proxyConfig.normalizePhoneNumber(phoneNumberEdit.getText().toString());
-	}
-
-
+	
 	public void linphoneLogIn() {
 		if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
 			LinphoneUtils.displayErrorAlert(getString(R.string.first_launch_no_login_password), getContext());

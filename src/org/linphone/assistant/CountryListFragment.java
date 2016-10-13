@@ -1,28 +1,21 @@
 package org.linphone.assistant;
 
+import org.linphone.R;
+
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.linphone.R;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 
 public class CountryListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
-	private LayoutInflater mInflater;
 	private ListView list;
 	private EditText search;
 	private ImageView clearSearchField;
@@ -31,7 +24,6 @@ public class CountryListFragment extends Fragment implements AdapterView.OnItemC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		mInflater = inflater;
 
 		View view = inflater.inflate(R.layout.assistant_country_list, container, false);
 		adapter = AssistantActivity.instance().getCountryListAdapter();

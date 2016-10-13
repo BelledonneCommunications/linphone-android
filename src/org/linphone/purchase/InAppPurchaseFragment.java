@@ -18,12 +18,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import java.util.Locale;
+
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.R;
+import org.linphone.core.LinphoneProxyConfig;
+
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +37,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.R;
-import org.linphone.mediastream.Log;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.xmlrpc.XmlRpcHelper;
-import org.linphone.xmlrpc.XmlRpcListenerBase;
-
-import java.util.Locale;
-import java.util.regex.Pattern;
-
 
 public class InAppPurchaseFragment extends Fragment implements View.OnClickListener {
 	private LinearLayout usernameLayout;
@@ -50,7 +44,6 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 	private TextView errorMessage;
 
 	private boolean usernameOk = false, emailOk = false;
-	private Handler mHandler = new Handler();
 	private String defaultUsername, defaultEmail;
 	private Button buyItemButton, recoverAccountButton;
 
@@ -60,7 +53,6 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 		
 		super.onCreate(savedInstanceState);
 
-		LayoutInflater mInflater = inflater;
 		View view = inflater.inflate(R.layout.in_app_store, container, false);
 
 		String id = getArguments().getString("item_id");
@@ -122,37 +114,6 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 			}
 		});
 	}
-
-	private void addEmailHandler(final EditText field, final TextView errorMessage) {
-		field.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable s) {
-
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			public void onTextChanged(CharSequence s, int start, int count, int after) {
-				emailOk = false;
-				String email = s.toString();
-				if (isEmailCorrect(email)) {
-					emailOk = true;
-					errorMessage.setText("");
-				} else {
-					errorMessage.setText(R.string.wizard_email_incorrect);
-				}
-				if (buyItemButton != null) buyItemButton.setEnabled(emailOk && usernameOk);
-				if (recoverAccountButton != null) recoverAccountButton.setEnabled(emailOk && usernameOk);
-			}
-		});
-	}
-
-	private boolean isEmailCorrect(String email) {
-		Pattern emailPattern = Patterns.EMAIL_ADDRESS;
-		return emailPattern.matcher(email).matches();
-	}
-
 
 	private boolean isUsernameCorrect(String username) {
 		LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
