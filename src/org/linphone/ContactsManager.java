@@ -204,8 +204,9 @@ public class ContactsManager extends ContentObserver {
 				if (lpc != null) {
 					normalized = lpc.normalizePhoneNumber(noa.getValue());
 				}
+				String alias = c.getPresenceModelForUri(noa.getValue());
 				
-				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (normalized != null && !noa.isSIPAddress() && normalized.equals(username)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
+				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (alias != null && alias.equals(sipUri)) || (normalized != null && !noa.isSIPAddress() && normalized.equals(username)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
 					return c;
 				}
 			}
