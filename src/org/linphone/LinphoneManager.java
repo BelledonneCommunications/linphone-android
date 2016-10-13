@@ -471,15 +471,19 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 //			return;
 //		}
 		
+		LinphoneProxyConfig lpc = getLc().getDefaultProxyConfig();
+		if (lpc != null) {
+			to = lpc.normalizePhoneNumber(to);
+		}
+		
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
-			LinphoneProxyConfig lpc = mLc.getDefaultProxyConfig();
-
-			if (mR.getBoolean(R.bool.forbid_self_call) && lpc!=null && lAddress.asStringUriOnly().equals(lpc.getIdentity())) {
+			if (mR.getBoolean(R.bool.forbid_self_call) && lpc != null && lAddress.asStringUriOnly().equals(lpc.getIdentity())) {
 				return;
 			}
 		} catch (LinphoneCoreException e) {
+			Log.e(e);
 			return;
 		}
 		lAddress.setDisplayName(displayName);

@@ -118,8 +118,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
 			boolean skip = false;
 			View v = inflater.inflate(R.layout.contact_control_row, null);
-			
-			String displayednumberOrAddress = LinphoneUtils.getDisplayableUsernameFromAddress(noa.getValue());
+
+			String value = noa.getValue();
+			String displayednumberOrAddress = LinphoneUtils.getDisplayableUsernameFromAddress(value);
 
 			TextView label = (TextView) v.findViewById(R.id.address_label);
 			if (noa.isSIPAddress()) {
@@ -133,40 +134,35 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
 			tv.setText(displayednumberOrAddress);
 			tv.setSelected(true);
+			
+
+			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+			if (lpc != null) {
+				String username = lpc.normalizePhoneNumber(displayednumberOrAddress);
+				value = LinphoneUtils.getFullAddressFromUsername(username);
+			}
 
 			String contactAddress = contact.getPresenceModelForUri(noa.getValue());
-			if(contactAddress != null) {
+			if (contactAddress != null) {
 				v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
 			}
 			
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
-				if(contactAddress != null){
-					v.findViewById(R.id.contact_call).setTag(contact.getPresenceModelForUri(noa.getValue()));
+				if (contactAddress != null) {
+					v.findViewById(R.id.contact_call).setTag(contactAddress);
 				} else {
-					v.findViewById(R.id.contact_call).setTag(displayednumberOrAddress);
+					v.findViewById(R.id.contact_call).setTag(value);
 				}
 			} else {
 				v.findViewById(R.id.contact_call).setVisibility(View.GONE);
 			}
 
 			v.findViewById(R.id.contact_chat).setOnClickListener(chatListener);
-			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-			if (lpc != null) {
-				String username = lpc.normalizePhoneNumber(LinphoneUtils.getUsernameFromAddress(noa.getValue()));
-				String tag = LinphoneUtils.getFullAddressFromUsername(username);
-
-				if(contactAddress != null){
-					v.findViewById(R.id.contact_chat).setTag(contact.getPresenceModelForUri(noa.getValue()));
-				} else {
-					v.findViewById(R.id.contact_chat).setTag(tag);
-				}
+			if (contactAddress != null) {
+				v.findViewById(R.id.contact_chat).setTag(contactAddress);
 			} else {
-				if(contactAddress != null){
-					v.findViewById(R.id.contact_chat).setTag(contact.getPresenceModelForUri(noa.getValue()));
-				} else {
-					v.findViewById(R.id.contact_chat).setTag(noa.getValue());
-				}
+				v.findViewById(R.id.contact_chat).setTag(value);
 			}
 			
 			if (getResources().getBoolean(R.bool.disable_chat)) {

@@ -743,6 +743,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 							if (isSIP && !number.startsWith("sip:")) {
 								number = "sip:" + number;
 							}
+							if (isSIP && !number.contains("@")) {
+								number = number + "@" + ContactsManager.getInstance().getString(R.string.default_domain);
+							}
 							result.add(new LinphoneNumberOrAddress(number, isSIP));
 						}
 					}
