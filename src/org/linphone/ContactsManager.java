@@ -222,15 +222,10 @@ public class ContactsManager extends ContentObserver {
 		
 		for (LinphoneContact c: getContacts()) {
 			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
-				if (noa.isSIPAddress()) {
-					continue;
-				}
-				
 				String normalized = null;
 				if (lpc != null) {
 					normalized = lpc.normalizePhoneNumber(noa.getValue());
 				}
-				
 				if (noa.getValue().equals(phoneNumber) || (normalized != null && normalized.equals(phoneNumber))) {
 					return c;
 				}

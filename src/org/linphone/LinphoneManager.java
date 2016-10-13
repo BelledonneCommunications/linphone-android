@@ -470,6 +470,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
 //			return;
 //		}
+		if (to == null) return;
+
+		// If to is only a username, try to find the contact to get an alias if existing
+		if (!to.startsWith("sip:") || !to.contains("@")) {
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromPhoneNumber(to);
+			if (contact != null) {
+				String alias = contact.getPresenceModelForUri(to);
+				if (alias != null) {
+					to = alias;
+				}
+			}
+		}
 		
 		LinphoneProxyConfig lpc = getLc().getDefaultProxyConfig();
 		if (lpc != null) {
