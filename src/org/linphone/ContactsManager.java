@@ -213,6 +213,32 @@ public class ContactsManager extends ContentObserver {
 		return null;
 	}
 	
+	public LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		LinphoneProxyConfig lpc = null;
+		if (lc != null) {
+			lpc = lc.getDefaultProxyConfig();
+		}
+		
+		for (LinphoneContact c: getContacts()) {
+			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
+				if (noa.isSIPAddress()) {
+					continue;
+				}
+				
+				String normalized = null;
+				if (lpc != null) {
+					normalized = lpc.normalizePhoneNumber(noa.getValue());
+				}
+				
+				if (noa.getValue().equals(phoneNumber) || (normalized != null && normalized.equals(phoneNumber))) {
+					return c;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public synchronized void setContacts(List<LinphoneContact> c) {
 		contacts = c;
 		sipContacts = new ArrayList<LinphoneContact>();

@@ -470,6 +470,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
 //			return;
 //		}
+		
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);

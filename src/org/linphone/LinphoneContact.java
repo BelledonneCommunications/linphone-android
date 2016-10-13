@@ -33,6 +33,7 @@ import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
 import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
 
 import android.content.ContentProviderOperation;
@@ -632,11 +633,18 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	public boolean isInLinphoneFriendList() {
-		return (friend != null && friend.getPresenceModel() != null &&  friend.getPresenceModel().getBasicStatus().equals(PresenceBasicStatus.Open));
+		if (friend == null) return false;
+		for (LinphoneNumberOrAddress noa : addresses) {
+			PresenceModel pm = friend.getPresenceModelForUri(noa.getValue());
+			if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getPresenceModelForUri(String uri) {
-		if (friend != null && friend.getPresenceModelForUri(uri) != null){
+		if (friend != null && friend.getPresenceModelForUri(uri) != null) {
 			return friend.getPresenceModelForUri(uri).getContact();
 		}
 		return null;
