@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,6 +44,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,12 +70,12 @@ public class StatusFragment extends Fragment {
 	private LinphoneCoreListenerBase mListener;
 	private Dialog ZRTPdialog = null;
 	private int mDisplayedQuality = -1;
-	
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.status, container, false);
-		
+
 		statusText = (TextView) view.findViewById(R.id.status_text);
 		statusLed = (ImageView) view.findViewById(R.id.status_led);
 		callQuality = (ImageView) view.findViewById(R.id.call_quality);
@@ -84,7 +86,7 @@ public class StatusFragment extends Fragment {
 
 		// We create it once to not delay the first display
 		populateSliderContent();
-		
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
@@ -106,7 +108,7 @@ public class StatusFragment extends Fragment {
 					statusLed.setImageResource(getStatusIconResource(state, true));
 					statusText.setText(getStatusIconText(state));
 				}
-				
+
 				try {
 					statusText.setOnClickListener(new OnClickListener() {
 						@Override
@@ -116,10 +118,10 @@ public class StatusFragment extends Fragment {
 					});
 				} catch (IllegalStateException ise) {}
 			}
-			
+
 			@Override
 			public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
-				
+
 				if(!content.getType().equals("application")) return;
 				if(!content.getSubtype().equals("simple-message-summary")) return;
 
@@ -140,12 +142,12 @@ public class StatusFragment extends Fragment {
 					voicemailCount.setVisibility(View.GONE);
 				}
 			}
-			
+
 		};
 
 		isAttached = true;
 		Activity activity = getActivity();
-		
+
 		if (activity instanceof LinphoneActivity) {
 			((LinphoneActivity) activity).updateStatusFragment(this);
 			isInCall = false;
@@ -164,14 +166,14 @@ public class StatusFragment extends Fragment {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
-			
+
 			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
 				mListener.registrationState(lc, lpc, lpc.getState(), null);
 			}
 		}
 	}
-	
+
 	@Override
 	public void onDetach() {
 		super.onDetach();
@@ -183,7 +185,7 @@ public class StatusFragment extends Fragment {
 	private void populateSliderContent() {
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
 			voicemailCount.setVisibility(View.GONE);
-			
+
 			if (isInCall && isAttached) {
 				//LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 				//initCallStatsRefresher(call, callStats);
@@ -225,17 +227,17 @@ public class StatusFragment extends Fragment {
 		} catch (Exception e) {
 			Log.e(e);
 		}
-		
+
 		return R.drawable.led_disconnected;
 	}
-	
+
 	private String getStatusIconText(LinphoneCore.RegistrationState state) {
 		Context context = getActivity();
 		if (!isAttached && LinphoneActivity.isInstanciated())
 			context = LinphoneActivity.instance();
 		else if (!isAttached && LinphoneService.isReady())
 			context = LinphoneService.instance();
-		
+
 		try {
 			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
 				return context.getString(R.string.status_connected);
@@ -249,7 +251,7 @@ public class StatusFragment extends Fragment {
 		} catch (Exception e) {
 			Log.e(e);
 		}
-		
+
 		return context.getString(R.string.status_not_connected);
 	}
 
@@ -267,7 +269,7 @@ public class StatusFragment extends Fragment {
 				}
 				float newQuality = mCurrentCall.getCurrentQuality();
 				updateQualityOfSignalIcon(newQuality);
-				
+
 				if (isInCall) {
 					refreshHandler.postDelayed(this, 1000);
 				} else
@@ -275,10 +277,10 @@ public class StatusFragment extends Fragment {
 			}
 		}, 1000);
 	}
-	
+
 	void updateQualityOfSignalIcon(float quality) {
 		int iQuality = (int) quality;
-		
+
 		if (iQuality == mDisplayedQuality) return;
 		if (quality >= 4) // Good Quality
 		{
@@ -303,7 +305,7 @@ public class StatusFragment extends Fragment {
 		}
 		mDisplayedQuality = iQuality;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -315,7 +317,7 @@ public class StatusFragment extends Fragment {
 			if (lpc != null) {
 				mListener.registrationState(lc, lpc, lpc.getState(), null);
 			}
-			
+
 			LinphoneCall call = lc.getCurrentCall();
 			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 				if (call != null) {
@@ -340,22 +342,22 @@ public class StatusFragment extends Fragment {
 			encryption.setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
-		
+
 		if (mCallQualityUpdater != null) {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater = null;
 		}
 	}
-	
+
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
 		if (call != null) {
 			voicemailCount.setVisibility(View.GONE);
@@ -366,7 +368,7 @@ public class StatusFragment extends Fragment {
 			} else {
 				//background.setVisibility(View.VISIBLE);
 			}
-			
+
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
 				encryption.setImageResource(R.drawable.security_ok);
 			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
@@ -374,7 +376,7 @@ public class StatusFragment extends Fragment {
 			} else {
 				encryption.setImageResource(R.drawable.security_ko);
 			}
-			
+
 			if (mediaEncryption == MediaEncryption.ZRTP) {
 				encryption.setOnClickListener(new OnClickListener() {
 					@Override
@@ -387,7 +389,7 @@ public class StatusFragment extends Fragment {
 			}
 		}
 	}
-	
+
 	public void showZRTPDialog(final LinphoneCall call) {
 		if (getActivity() == null) {
 			Log.w("Can't display ZRTP popup, no Activity");
@@ -438,10 +440,14 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
+	private void formatText(TextView tv, String name, String value) {
+		tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
+	}
+
 	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
 			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
-			, TextView ul, TextView ice, TextView senderLossRate, TextView receiverLossRate
-			, TextView enc, TextView dec, TextView videoResolutionSent
+			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
+			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
 			, TextView videoResolutionReceived, boolean isVideo) {
 		if (stats != null) {
 			layout.setVisibility(View.VISIBLE);
@@ -453,30 +459,44 @@ public class StatusFragment extends Fragment {
 						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
 					mime = "OpenH264";
 				}
-				codec.setText(mime + " / " + (media.getRate() / 1000) + "kHz");
+				formatText(codec, getString(R.string.call_stats_codec),
+						mime + " / " + (media.getRate() / 1000) + "kHz");
 			}
-			enc.setText(stats.getEncoderName(media));
-			dec.setText(stats.getDecoderName(media));
-			dl.setText(String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
-			ul.setText(String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
-			ice.setText(stats.getIceState().toString());
-			senderLossRate.setText(stats.getSenderLossRate() + "%");
-			receiverLossRate.setText(stats.getReceiverLossRate()+ "%");
+			formatText(enc, getString(R.string.call_stats_encoder_name),
+					stats.getEncoderName(media));
+			formatText(dec, getString(R.string.call_stats_decoder_name),
+					stats.getDecoderName(media));
+			formatText(dl, getString(R.string.call_stats_download),
+					String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
+			formatText(ul, getString(R.string.call_stats_upload),
+					String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
+			formatText(ice, getString(R.string.call_stats_ice),
+					stats.getIceState().toString());
+			formatText(ip, getString(R.string.call_stats_ip),
+					(stats.getIsIpV6Active()) ? "IpV6" : "IpV4");
+			formatText(senderLossRate, getString(R.string.call_stats_sender_loss_rate),
+					new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
+			formatText(receiverLossRate, getString(R.string.call_stats_receiver_loss_rate),
+					new DecimalFormat("##.##").format(stats.getReceiverLossRate())+ "%");
 			if (isVideo) {
-				videoResolutionSent.setText("\u2191 " + params.getSentVideoSize().toDisplayableString());
-				videoResolutionReceived.setText("\u2193 " + params.getReceivedVideoSize().toDisplayableString());
+				formatText(videoResolutionSent,
+						getString(R.string.call_stats_video_resolution_sent),
+						"\u2191 " + params.getSentVideoSize().toDisplayableString());
+				formatText(videoResolutionReceived,
+						getString(R.string.call_stats_video_resolution_received),
+						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
 			}
 		} else {
 			layout.setVisibility(View.GONE);
 			title.setVisibility(TextView.GONE);
 		}
 	}
-	
+
 	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
 		if (mTimer != null && mTask != null) {
 			return;
 		}
-		
+
 	 	mTimer = new Timer();
 		mTask = new TimerTask() {
 			@Override
@@ -506,17 +526,20 @@ public class StatusFragment extends Fragment {
 				final TextView receiverLossRateAudio = (TextView) view.findViewById(R.id.receiverLossRateAudio);
 				final TextView senderLossRateVideo = (TextView) view.findViewById(R.id.senderLossRateVideo);
 				final TextView receiverLossRateVideo = (TextView) view.findViewById(R.id.receiverLossRateVideo);
+				final TextView ipAudio = (TextView) view.findViewById(R.id.ip_audio);
+				final TextView ipVideo = (TextView) view.findViewById(R.id.ip_video);
 				final View videoLayout = view.findViewById(R.id.callStatsVideo);
 				final View audioLayout = view.findViewById(R.id.callStatsAudio);
-				
+
 				if (titleAudio == null || codecAudio == null || dlVideo == null || iceAudio == null
 						|| videoResolutionSent == null || videoLayout == null || titleVideo == null
-						|| codecVideo == null || dlAudio == null || ulAudio == null
-						|| ulVideo == null || iceVideo == null || videoResolutionReceived == null) {
+						|| ipVideo == null || ipAudio == null || codecVideo == null
+						|| dlAudio == null || ulAudio == null || ulVideo == null || iceVideo == null
+						|| videoResolutionReceived == null) {
 					mTimer.cancel();
 					return;
 				}
-				
+
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
@@ -534,13 +557,13 @@ public class StatusFragment extends Fragment {
 
 								displayMediaStats(params, audioStats, payloadAudio, audioLayout
 										, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
-										, senderLossRateAudio, receiverLossRateAudio
+										,ipAudio, senderLossRateAudio, receiverLossRateAudio
 										, encoderAudio, decoderAudio, null, null
 										, false);
 
 								displayMediaStats(params, videoStats, payloadVideo, videoLayout
 										, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
-										, senderLossRateVideo, receiverLossRateVideo
+										, ipVideo, senderLossRateVideo, receiverLossRateVideo
 										, encoderVideo, decoderVideo
 										, videoResolutionSent, videoResolutionReceived
 										, true);

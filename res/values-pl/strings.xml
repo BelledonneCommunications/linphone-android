@@ -1,16 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Custom-->
-  <string name="app_name">Linphone</string>
-  <string name="service_name">Linphone Service</string>
-  <string name="addressbook_label">Linphone</string>
-  <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Uruchamianie</string>
   <string name="notification_registered">%s zarejestrowany</string>
   <string name="notification_register_failure">%s nie udało się zarejestrować</string>
-  <string name="tunnel_host"></string>
-  <string name="about_version">Linphone Android %s</string>
-  <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">kontakt linphone</string>
@@ -60,8 +53,6 @@
   <string name="assistant_login_linphone">Użyj konta Linphone</string>
   <string name="assistant_login_generic">Użyj konta SIP</string>
   <string name="assistant_remote_provisioning">Pobierz zdalną konfigurację</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">Wyświetl nazwę (opcjonalnie)</string>
   <string name="assistant_linphone_account">Skonfiguruj konto Linphone</string>
   <string name="assistant_generic_account">Skonfiguruj konto SIP</string>
