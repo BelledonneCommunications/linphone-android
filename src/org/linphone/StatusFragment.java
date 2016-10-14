@@ -25,6 +25,7 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneCallStats.LinphoneAddressFamily;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -473,7 +474,9 @@ public class StatusFragment extends Fragment {
 			formatText(ice, getString(R.string.call_stats_ice),
 					stats.getIceState().toString());
 			formatText(ip, getString(R.string.call_stats_ip),
-					(stats.getIsIpV6Active()) ? "IpV6" : "IpV4");
+					(stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET_6.getInt()) ?
+							"IpV6" : (stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET.getInt()) ?
+							"IpV4" : "Unknown");
 			formatText(senderLossRate, getString(R.string.call_stats_sender_loss_rate),
 					new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
 			formatText(receiverLossRate, getString(R.string.call_stats_receiver_loss_rate),
