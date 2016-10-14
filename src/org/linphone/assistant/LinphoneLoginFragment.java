@@ -31,6 +31,7 @@ import org.linphone.core.LinphoneProxyConfig;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -149,14 +150,16 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			passwordLayout.setVisibility(View.VISIBLE);
 		}
 
-		accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+		}
 
 		addPhoneNumberHandler(dialCode, null);
 		addPhoneNumberHandler(phoneNumberEdit, null);
 
 		return view;
 	}
-	
+
 	public void linphoneLogIn() {
 		if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
 			LinphoneUtils.displayErrorAlert(getString(R.string.first_launch_no_login_password), getContext());

@@ -37,6 +37,7 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -211,7 +212,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			createAccount.setText(getResources().getString(R.string.link_account));
 			assisstantTitle.setText(getResources().getString(R.string.link_account));
 		}
-		accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+		}
 
 		addUsernameHandler(usernameEdit, null);
 
