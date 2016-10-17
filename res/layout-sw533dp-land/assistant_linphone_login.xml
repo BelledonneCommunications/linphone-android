@@ -19,7 +19,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:paddingTop="10dp"
-		android:layout_gravity="center"/>
+		android:layout_gravity="center"
+		android:id="@+id/message_phone_number"/>
 
 
 
@@ -110,23 +111,17 @@
 
 					</LinearLayout>
 
+					<TextView
+						android:id="@+id/phone_number_error_2"
+						android:text="@string/error"
+						style="@style/font20"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:visibility="invisible"/>
+
 				</LinearLayout>
 			</LinearLayout>
 
-		</TableRow>
-
-		<TableRow
-			android:layout_weight="1"
-			android:gravity="left"
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp">
-
-			<CheckBox
-				android:id="@+id/use_username"
-				android:visibility="visible"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/login_with_username"/>
 		</TableRow>
 
 		<TableRow
@@ -232,6 +227,20 @@
 				android:layout_weight="1"
 				android:layout_height="0dp"/>
 
+		</TableRow>
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="left"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp">
+
+			<CheckBox
+				android:id="@+id/use_username"
+				android:visibility="visible"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/login_with_username"/>
 		</TableRow>
 	</TableLayout>
 

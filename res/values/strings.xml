@@ -81,6 +81,7 @@
 	<string name="assistant_remote_provisioning">Fetch remote configuration</string>
 	<string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
 	<string name="assistant_create_account_part_2">We have sent you a SMS with a validation code.\n\nTo complete your phone number verification, please enter the 4 digit code below:\n</string>
+	<string name="assistant_create_account_part_email">Please enter an username, email and password for your Linphone account</string>
 	<string name="assistant_display_name_optional">Display name (optional)</string>
 	<string name="assistant_linphone_account">Use your Linphone account</string>
 	<string name="assistant_generic_account">Use SIP account</string>

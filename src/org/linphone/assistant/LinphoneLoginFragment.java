@@ -162,7 +162,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	public void linphoneLogIn() {
 		if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0) {
-			LinphoneUtils.displayErrorAlert(getString(R.string.first_launch_no_login_password), getContext());
+			LinphoneUtils.displayErrorAlert(getString(R.string.first_launch_no_login_password), AssistantActivity.instance());
 			apply.setEnabled(true);
 			return;
 		}
@@ -244,12 +244,14 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 				accountCreator.isPhoneNumberUsed();
 			} else {
 				apply.setEnabled(true);
-				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
-				LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
+				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status),
+						AssistantActivity.instance());
+				LinphoneUtils.displayError(isOk, phoneNumberError,
+						LinphoneUtils.errorForStatus(status));
 			}
 		} else {
 			apply.setEnabled(true);
-			LinphoneUtils.displayErrorAlert(getString(R.string.assistant_create_account_part_1), getContext());
+			LinphoneUtils.displayErrorAlert(getString(R.string.assistant_create_account_part_1), AssistantActivity.instance());
 		}
 	}
 
@@ -347,7 +349,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			accountCreator.recoverPhoneAccount();
 		} else {
 			apply.setEnabled(true);
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), getContext());
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
 		}
 	}
 }

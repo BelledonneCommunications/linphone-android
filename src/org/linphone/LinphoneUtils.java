@@ -57,6 +57,7 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -619,17 +620,17 @@ public final class LinphoneUtils {
 				return ctxt.getString(R.string.invalid_display_name);
 			if (status.equals(LinphoneAccountCreator.Status.Failed))
 				return ctxt.getString(R.string.request_failed);
-			if (status.equals(LinphoneAccountCreator.Status.ErrorServeur))
+			if (status.equals(LinphoneAccountCreator.Status.ErrorServer))
 				return ctxt.getString(R.string.wizard_failed);
 			if (status.equals(LinphoneAccountCreator.Status.TransportNotSupported))
 				return ctxt.getString(R.string.transport_unsupported);
-			if (status.equals(LinphoneAccountCreator.Status.AccountExist))
+			if (status.equals(LinphoneAccountCreator.Status.AccountExist)
+					|| status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias))
 				return ctxt.getString(R.string.account_already_exist);
 			if (status.equals(LinphoneAccountCreator.Status.CountryCodeInvalid))
 				return ctxt.getString(R.string.country_code_invalid);
 			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAccount)
-					|| status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAlias)
-					|| status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias))
+					|| status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAlias))
 				return ctxt.getString(R.string.assistant_phone_number_unavailable);
 			if (status.equals(LinphoneAccountCreator.Status.AccountNotExist))
 				return ctxt.getString(R.string.assistant_error_bad_credentials);

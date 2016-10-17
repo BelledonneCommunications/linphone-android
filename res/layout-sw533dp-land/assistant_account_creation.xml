@@ -23,7 +23,8 @@
 			android:paddingTop="10dp"
 			android:layout_gravity="center"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:id="@+id/message_create_account"/>
 
 
 		<TableLayout
@@ -133,7 +134,8 @@
 							android:id="@+id/sip_uri"
 							style="@style/font9"
 							android:layout_width="match_parent"
-							android:layout_height="wrap_content"/>
+							android:layout_height="wrap_content"
+							android:visibility="visible"/>
 
 					</LinearLayout>
 				</LinearLayout>
@@ -143,49 +145,55 @@
 
 			<TableRow
 				android:layout_weight="1"
-				android:gravity="left"
-				android:layout_marginLeft="10dp"
-				android:layout_marginRight="10dp">
-
-				<CheckBox
-					android:id="@+id/use_username"
-					android:visibility="visible"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/use_username_instead_or_phone_number"
-					android:checked="false" android:layout_column="1"/>
-			</TableRow>
-
-			<TableRow
-				android:layout_weight="1"
-				android:gravity="left"
-				android:layout_marginLeft="10dp"
-				android:layout_marginRight="10dp">
-
-				<CheckBox
-					android:id="@+id/use_email"
-					android:visibility="visible"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/use_email_for_validation" android:layout_column="1"
-					android:checked="false"/>
-
-			</TableRow>
-
-			<TableRow
-				android:layout_weight="1"
 				android:gravity="center"
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="10dp">
 
 				<LinearLayout
+					android:id="@+id/username_layout"
+					android:orientation="vertical"
+					android:visibility="gone"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:layout_height="wrap_content"
+					android:layout_column="0">
+
+					<TextView
+						android:id="@+id/username_label"
+						android:text="@string/username"
+						style="@style/font13"
+						android:textAllCaps="true"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"/>
+
+					<EditText
+						android:id="@+id/username"
+						android:background="@drawable/resizable_textfield"
+						android:textColor="@color/colorB"
+						android:inputType="text|textNoSuggestions"
+						android:contentDescription="@string/content_description_username_field"
+						android:layout_width="match_parent"
+						android:layout_height="40dp"
+						android:singleLine="true"/>
+
+					<TextView
+						android:id="@+id/username_error"
+						android:text="@string/error"
+						style="@style/font20"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:visibility="invisible"/>
+				</LinearLayout>
+
+				<LinearLayout
 				android:id="@+id/password_layout"
 				android:orientation="vertical"
-				android:visibility="visible"
+				android:visibility="gone"
 				android:paddingLeft="30dp"
 				android:layout_width="0dp"
 				android:layout_weight="1"
-				android:layout_height="wrap_content" android:layout_column="0">
+				android:layout_height="wrap_content"
+				android:layout_column="1">
 
 				<TextView
 					android:id="@+id/password_label"
@@ -215,41 +223,8 @@
 					android:layout_height="wrap_content"
 					android:visibility="invisible"/>
 
-			</LinearLayout>
-				<LinearLayout
-					android:id="@+id/username_layout"
-					android:orientation="vertical"
-					android:visibility="gone"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="wrap_content" android:layout_column="1">
-
-					<TextView
-						android:id="@+id/username_label"
-						android:text="@string/username"
-						style="@style/font13"
-						android:textAllCaps="true"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"/>
-
-					<EditText
-						android:id="@+id/username"
-						android:background="@drawable/resizable_textfield"
-						android:textColor="@color/colorB"
-						android:inputType="text|textNoSuggestions"
-						android:contentDescription="@string/content_description_username_field"
-						android:layout_width="match_parent"
-						android:layout_height="40dp"
-						android:singleLine="true"/>
-
-					<TextView
-						android:id="@+id/username_error"
-						android:text="@string/error"
-						style="@style/font20"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:visibility="invisible"/>
 				</LinearLayout>
+
 			</TableRow>
 
 		<TableRow
@@ -264,7 +239,6 @@
 				android:orientation="vertical"
 				android:layout_width="0dp"
 				android:layout_weight="1"
-				android:paddingLeft="30dp"
 				android:layout_height="wrap_content" android:layout_column="0">
 
 			<TextView
@@ -297,13 +271,15 @@
 					android:visibility="invisible"/>
 
 			</LinearLayout>
+
 			<LinearLayout
 				android:id="@+id/password_confirm_layout"
 				android:visibility="gone"
 				android:orientation="vertical"
 				android:layout_width="0dp"
 				android:layout_weight="1"
-				android:layout_height="wrap_content" android:layout_column="1">
+				android:layout_height="wrap_content" android:layout_column="1"
+				android:paddingLeft="30dp">
 
 				<TextView
 					android:id="@+id/confirm_password_label"
@@ -336,6 +312,39 @@
 
 			</LinearLayout>
 		</TableRow>
+
+			<TableRow
+				android:layout_weight="1"
+				android:gravity="left"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp">
+
+				<CheckBox
+					android:id="@+id/use_username"
+					android:visibility="visible"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/use_username_instead_or_phone_number"
+					android:checked="false"
+					android:layout_column="1"/>
+			</TableRow>
+
+			<TableRow
+				android:layout_weight="1"
+				android:gravity="left"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp">
+
+				<CheckBox
+					android:id="@+id/use_email"
+					android:visibility="visible"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/use_email_for_validation"
+					android:layout_column="1"
+					android:checked="false"/>
+
+			</TableRow>
 	</TableLayout>
 
 	<Button
