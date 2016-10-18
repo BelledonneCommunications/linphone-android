@@ -1250,14 +1250,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 					ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
 				}
 				break;
-			case PERMISSIONS_REQUEST_CONTACTS:
-				if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
-					ContactsManager.getInstance().enableContactsAccess();
-				}
-				checkAndRequestReadPhoneStatePermission();
-				ContactsManager.getInstance().fetchContactsAsync();
-				fetchedContactsOnce = true;
-				break;
 			case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 					((SettingsFragment) fragment).startEchoCancellerCalibration();
@@ -1266,6 +1258,16 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}
 				break;
 			case PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE:
+				if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
+					ContactsManager.getInstance().enableContactsAccess();
+				}
+				ContactsManager.getInstance().fetchContactsAsync();
+				ContactsManager.getInstance().enableContactsAccess();
+				if (!fetchedContactsOnce) {
+					ContactsManager.getInstance().enableContactsAccess();
+					ContactsManager.getInstance().fetchContactsAsync();
+					fetchedContactsOnce = true;
+				}
 				if (permissions[0].compareTo(Manifest.permission.READ_EXTERNAL_STORAGE) != 0)
 					break;
 				boolean enableRingtone = (grantResults[0] == PackageManager.PERMISSION_GRANTED);

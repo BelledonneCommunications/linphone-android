@@ -70,7 +70,7 @@
 		android:id="@+id/footer"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:layout_alignParentBottom="true">
 
@@ -96,7 +96,7 @@
 				android:textCursorDrawable="@null"
 				android:inputType="textShortMessage|textMultiLine"
 				android:contentDescription="@string/content_description_message"
-				android:maxLines="50"
+				android:maxLines="6"
 				android:padding="5dp"
 				android:layout_margin="5dp"
 				android:layout_weight="1"
