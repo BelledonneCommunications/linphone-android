@@ -69,7 +69,8 @@
 	<string name="assistant_continue">Continue</string>
 	<string name="assistant_activate">Activate your account</string>
 	<string name="assistant_finish">Finish configuration</string>
-	<string name="assistant_validate_account">Your account is created. Please check your mails to validate your account. Once it is done, come back here and click on the button.</string>
+	<string name="assistant_validate_account_1">Your account is created. Please check your mails to validate your account:</string>
+	<string name="assistant_validate_account_2">Once it is done, come back here and click on the button.</string>
 	<string name="assistant_welcome_desc">This assistant will help you configure and use your SIP account.</string>
 	<string name="assistant_linphone_login_desc">Please enter your username and password of Linphone account</string>
 	<string name="assistant_login_desc">Please enter your username and password with your SIP domain</string>
@@ -80,7 +81,8 @@
 	<string name="assistant_login_generic">Use SIP account</string>
 	<string name="assistant_remote_provisioning">Fetch remote configuration</string>
 	<string name="assistant_create_account_part_1">Please confirm your country code and enter your phone number</string>
-	<string name="assistant_create_account_part_2">We have sent you a SMS with a validation code.\n\nTo complete your phone number verification, please enter the 4 digit code below:\n</string>
+	<string name="assistant_create_account_part_2">We have sent you a SMS with a validation code to your phone number:</string>
+	<string name="assistant_create_account_part_3">To complete your phone number verification, please enter the 4 digit code below:\n</string>
 	<string name="assistant_create_account_part_email">Please enter an username, email and password for your Linphone account</string>
 	<string name="assistant_display_name_optional">Display name (optional)</string>
 	<string name="assistant_linphone_account">Use your Linphone account</string>

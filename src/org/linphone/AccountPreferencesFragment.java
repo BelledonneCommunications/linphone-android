@@ -184,7 +184,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			String value = newValue.toString();
 			preference.setSummary(value);
 			if (isNewAccount) {
-				//TODO accpunt builder ste prefix
+				builder.setPrefix(value);
 			} else {
 				mPrefs.setPrefix(n, value);
 			}
@@ -357,7 +357,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		if(!isNewAccount){
 			String prefixValue = mPrefs.getPrefix(n);
 			prefix.setText(prefixValue);
-			prefix.setOnPreferenceChangeListener(prefixChangedListener);
 		}
 
 		CheckBoxPreference avpf = (CheckBoxPreference) advanced.getPreference(5);

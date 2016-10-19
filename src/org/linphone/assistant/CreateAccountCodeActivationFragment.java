@@ -41,7 +41,7 @@ import android.widget.Toast;
 
 public class CreateAccountCodeActivationFragment extends Fragment implements LinphoneAccountCreatorListener {
 	private String username, phone, dialcode;
-	private TextView title;
+	private TextView title, phonenumber;
 	private EditText code;
 	private boolean recoverAccount = false, linkAccount = false;
 	private int code_length;
@@ -77,6 +77,9 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 		} else if (recoverAccount) {
 			title.setText(getString(R.string.assistant_linphone_account));
 		}
+
+		phonenumber = (TextView) view.findViewById(R.id.send_phone_number);
+		phonenumber.setText(phone);
 
 		code = (EditText) view.findViewById(R.id.assistant_code);
 		code.addTextChangedListener(new TextWatcher() {

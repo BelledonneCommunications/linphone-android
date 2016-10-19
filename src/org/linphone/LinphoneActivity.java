@@ -32,7 +32,6 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCall;
@@ -98,7 +97,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback, LinphoneAccountCreator.LinphoneAccountCreatorListener {
+public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int CALL_ACTIVITY = 19;
@@ -230,7 +229,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if(state.equals(RegistrationState.RegistrationOk) && LinphonePreferences.instance().getLinkPopupTime() != ""){
 					if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
 						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null)){
-							isAccountWithAlias();
+							LinphoneManager.getInstance().isAccountWithAlias();
 						}
 					}
 				}
@@ -625,14 +624,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
 	}
 
-	public void displayLinkPhoneNumber() {
-		LinphoneAccountCreator accountCreator;
-		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
-		accountCreator.setDomain(getResources().getString(R.string.default_domain));
-		accountCreator.setListener(this);
-		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
-		accountCreator.isAccountLinked();
-	}
+
 
 	public void displayInapp() {
 		startActivity(new Intent(LinphoneActivity.this, InAppPurchaseActivity.class));
@@ -1705,19 +1697,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 	}
 
-	private void isAccountWithAlias(){
-		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			LinphoneAccountCreator accountCreator;
-			accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
-			accountCreator.setDomain(getResources().getString(R.string.default_domain));
-			accountCreator.setListener(this);
-			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
-			accountCreator.isAccountUsed();
-		} else {
-			LinphonePreferences.instance().setLinkPopupTime(null);
-		}
-	}
-
 	//Inapp Purchase
 	private void isTrialAccount() {
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphonePreferences.instance().getInappPopupTime() != null) {
@@ -1792,75 +1771,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			return cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR);
 		}
 		return -1;
-	}
-
-	private void askLinkWithPhoneNumber(){
-		long now = Calendar.getInstance().getTimeInMillis();
-		long newDate = now + (getResources().getInteger(R.integer.popup_time_interval)*60);
-		if (LinphonePreferences.instance().getLinkPopupTime() != null &&  Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
-			return;
-		} else {
-				LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-		}
-		final Dialog dialog = displayDialog(String.format(getResources().getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly()));
-		Button delete = (Button) dialog.findViewById(R.id.delete_button);
-		delete.setText(getResources().getString(R.string.link));
-		Button cancel = (Button) dialog.findViewById(R.id.cancel);
-		cancel.setText(getResources().getString(R.string.maybe_later));
-
-		delete.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				displayLinkPhoneNumber();
-				dialog.dismiss();
-			}
-		});
-
-		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-
-		cancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
-	}
-
-	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		if (status.equals(LinphoneAccountCreator.Status.AccountExist)) {
-			accountCreator.isAccountLinked();
-		}
-	}
-
-	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
-
-	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
-
-	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
-
-	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
-
-	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
-
-	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
-
-	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		if (status.equals(LinphoneAccountCreator.Status.AccountNotLinked)) {
-			askLinkWithPhoneNumber();
-		}
-	}
-
-	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 	}
 }
 

@@ -52,8 +52,8 @@
   <string name="assistant_create_account">Créer un compte</string>
   <string name="assistant_link_account">Associer un compte</string>
   <string name="assistant_finish">Terminer la configuration</string>
-  <string name="assistant_validate_account">Votre compte a été créé. Vérifiez vos emails pour valider votre compte.
-Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
+  <string name="assistant_validate_account_1">Votre compte a été créé. Vérifiez vos emails pour valider votre compte:</string>
+  <string name="assistant_validate_account_2">Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="assistant_welcome_desc">Cet assistant va vous guider pour réaliser des appels à l\'aide d\'un compte SIP.</string>
   <string name="assistant_linphone_login_desc">Entrez le nom d\'utilisateur et mot de passe de votre compte Linphone.</string>
   <string name="assistant_login_desc">Entrer votre nom d\'utilisateur et mot de passe ainsi que votre domaine SIP</string>
@@ -64,7 +64,8 @@ Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
   <string name="assistant_login_generic">Utiliser un compte SIP</string>
   <string name="assistant_remote_provisioning">Télécharger la configuration</string>
   <string name="assistant_create_account_part_1">Merci de confirmer votre code de pays et de rentrer votre numéro de téléphone</string>
-  <string name="assistant_create_account_part_2">Nous vous avons envoyé un SMS avec un code de validation.\n\nPour complèter la vérification de votre numéro de téléphone, veuillez entrer les 4 chiffres du code en dessous:\n</string>
+  <string name="assistant_create_account_part_2">Nous vous avons envoyé un SMS avec un code de validation au numéro :</string>
+  <string name="assistant_create_account_part_3">Pour complèter la vérification de votre numéro de téléphone, veuillez entrer les 4 chiffres du code en dessous:\n</string>
   <string name="assistant_display_name_optional">Nom d\'affichage (optionnel)</string>
   <string name="assistant_linphone_account">Utiliser un compte Linphone</string>
   <string name="assistant_generic_account">Utiliser un compte SIP</string>

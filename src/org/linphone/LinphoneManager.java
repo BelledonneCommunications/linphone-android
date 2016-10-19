@@ -30,11 +30,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneCall;
@@ -77,6 +79,7 @@ import org.linphone.tools.OpenH264DownloadHelper;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -99,6 +102,8 @@ import android.preference.CheckBoxPreference;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 /**
@@ -116,7 +121,7 @@ import android.widget.Toast;
  * @author Guillaume Beraudo
  *
  */
-public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessage.LinphoneChatMessageListener {
+public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessage.LinphoneChatMessageListener, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -138,6 +143,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private IntentFilter mKeepAliveIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
+	private LinphoneAccountCreator accountCreator;
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
 	private static LinphoneChatMessage mUploadPendingFileMessage;
 
@@ -482,12 +488,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				}
 			}
 		}
-		
+
 		LinphoneProxyConfig lpc = getLc().getDefaultProxyConfig();
 		if (lpc != null) {
 			to = lpc.normalizePhoneNumber(to);
 		}
-		
+
 		LinphoneAddress lAddress;
 		try {
 			lAddress = mLc.interpretUrl(to);
@@ -664,11 +670,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void restartLinphoneCore() {
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
-		/* 
-		 You cannot receive this through components declared in manifests, only 
-		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only 
+		/*
+		 You cannot receive this through components declared in manifests, only
+		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only
 		 be sent by the system.
-		*/ 
+		*/
 		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 		sExited = false;
 	}
@@ -702,7 +708,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e, "Cannot start linphone");
 		}
 	}
-	
+
 	private void initPushNotificationsService() {
 		try {
             Class<?> GCMRegistrar = Class.forName("com.google.android.gcm.GCMRegistrar");
@@ -736,7 +742,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
 		prefMigrator.migrateSharingServerUrlIfNeeded();
 		prefMigrator.doPresenceMigrationIfNeeded();
-		
+
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
 		}
@@ -761,7 +767,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		} catch (NameNotFoundException e) {
 			Log.e(e, "cannot get version name");
 		}
-		
+
 		mLc.setRingback(mRingbackSoundFile);
 		mLc.setRootCA(mLinphoneRootCaFile);
 		mLc.setPlayFile(mPauseSoundFile);
@@ -786,11 +792,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			initPushNotificationsService();
 		}
 
-		/* 
-		 You cannot receive this through components declared in manifests, only 
-		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only 
+		/*
+		 You cannot receive this through components declared in manifests, only
+		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only
 		 be sent by the system.
-		*/ 
+		*/
 		mKeepAliveIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		mKeepAliveIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
 		mKeepAliveReceiver = new KeepAliveReceiver();
@@ -799,6 +805,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		updateNetworkReachability();
 
 		resetCameraFromPreferences();
+
+		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator.setDomain(getString(R.string.default_domain));
+		accountCreator.setListener(this);
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
@@ -888,7 +898,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mLastNetworkType=curtype;
 			}
 		}
-		
+
 		if (mLc.isNetworkReachable()) {
 			// When network isn't available, push informations might not be set. This should fix the issue.
 			LinphonePreferences prefs = LinphonePreferences.instance();
@@ -1053,16 +1063,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		return null;
 	}
-	
+
 	public void setAudioManagerInCallMode() {
 		if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
-			Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping..."); 
+			Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping...");
 			return;
 		}
 		Log.d("[AudioManager] Mode: MODE_IN_COMMUNICATION");
 		mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 	}
-	
+
 	@SuppressLint("Wakelock")
 	public void callState(final LinphoneCore lc,final LinphoneCall call, final State state, final String message) {
 		Log.i("New call state [",state,"]");
@@ -1245,7 +1255,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			if (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) mAudioFocused=true;
 		}
 	}
-	
+
 	public void enableDeviceRingtone(boolean use) {
 		if (use) {
 			mLc.setRing(null);
@@ -1260,7 +1270,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			routeAudioToSpeaker();
 			return;
 		}
-		
+
 		if (mR.getBoolean(R.bool.allow_ringing_while_early_media)) {
 			routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
 		}
@@ -1432,8 +1442,52 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		return incomingPending ? currentCall : null;
 	}
 
+	public void displayLinkPhoneNumber() {
+		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
+		accountCreator.isAccountLinked();
+	}
 
+	public void isAccountWithAlias(){
+		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
+			accountCreator.isAccountUsed();
+		} else {
+			LinphonePreferences.instance().setLinkPopupTime(null);
+		}
+	}
 
+	private void askLinkWithPhoneNumber(){
+		long now = Calendar.getInstance().getTimeInMillis();
+		long newDate = now + (LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval)*60);
+		if (LinphonePreferences.instance().getLinkPopupTime() != null &&  Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
+			return;
+		} else {
+			LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+		}
+		final Dialog dialog = LinphoneActivity.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly()));
+		Button delete = (Button) dialog.findViewById(R.id.delete_button);
+		delete.setText(getString(R.string.link));
+		Button cancel = (Button) dialog.findViewById(R.id.cancel);
+		cancel.setText(getString(R.string.maybe_later));
+
+		delete.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				LinphoneManager.getInstance().displayLinkPhoneNumber();
+				dialog.dismiss();
+			}
+		});
+
+		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+
+		cancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+	}
 
 	@SuppressWarnings("serial")
 	public static class LinphoneConfigException extends LinphoneException {
@@ -1546,12 +1600,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mAudioManager.abandonAudioFocus(null);
 		Log.i("Set audio mode on 'Normal'");
 	}
-	
+
 	@Override
 	public void friendListCreated(LinphoneCore lc, LinphoneFriendList list) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void friendListRemoved(LinphoneCore lc, LinphoneFriendList list) {
 		// TODO Auto-generated method stub
@@ -1560,12 +1614,48 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void authInfoRequested(LinphoneCore lc, String realm,
 			String username, String domain) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public void authenticationRequested(LinphoneCore lc,
 			LinphoneAuthInfo authInfo, AuthMethod method) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (status.equals(LinphoneAccountCreator.Status.AccountExist)) {
+			accountCreator.isAccountLinked();
+		}
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (status.equals(LinphoneAccountCreator.Status.AccountNotLinked)) {
+			askLinkWithPhoneNumber();
+		}
+	}
+
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 	}
 }

@@ -20,91 +20,106 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.core.LinphoneXmlRpcRequest;
-import org.linphone.core.LinphoneXmlRpcRequest.LinphoneXmlRpcRequestListener;
-import org.linphone.core.LinphoneXmlRpcRequestImpl;
-import org.linphone.core.LinphoneXmlRpcSession;
-import org.linphone.core.LinphoneXmlRpcSessionImpl;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.mediastream.Log;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class CreateAccountActivationFragment extends Fragment implements LinphoneXmlRpcRequestListener {
+public class CreateAccountActivationFragment extends Fragment implements OnClickListener, LinphoneAccountCreatorListener {
 	private String username, password;
-	private Handler mHandler = new Handler();
 	private Button checkAccount;
-	private LinphoneXmlRpcSession xmlRpcSession;
-	private LinphoneXmlRpcRequest xmlRpcRequest;
-	private Runnable runNotOk, runOk, runNotReachable;
-	
+	private TextView email;
+	private LinphoneAccountCreator accountCreator;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation_email_activation, container, false);
-		
+
+		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
+				, LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator.setDomain(getResources().getString(R.string.default_domain));
+		accountCreator.setListener(this);
+
 		username = getArguments().getString("Username");
 		password = getArguments().getString("Password");
 
-		checkAccount = (Button) view.findViewById(R.id.assistant_check);
-		checkAccount.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkAccount.setEnabled(false);
-				isAccountVerified(username);
-			}
-		});
+		accountCreator.setUsername(username);
+		accountCreator.setPassword(password);
 
-		runNotOk = new Runnable() {
-			public void run() {
-				checkAccount.setEnabled(true);
-				Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
-			}
-		};
-		runOk = new Runnable() {
-			public void run() {
-				checkAccount.setEnabled(true);
-				AssistantActivity.instance().saveCreatedAccount(username, password, null,  null, getString(R.string.default_domain),null);
-				AssistantActivity.instance().isAccountVerified(username);
-			}
-		};
-		runNotReachable = new Runnable() {
-			public void run() {
-				Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
-			}
-		};
-		
-		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getXmlrpcUrl());
-		xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_validated", LinphoneXmlRpcRequest.ArgType.Int);
-		xmlRpcRequest.setListener(this);
-		
+		email = (TextView) view.findViewById(R.id.send_email);
+		email.setText(getArguments().getString("Email"));
+
+		checkAccount = (Button) view.findViewById(R.id.assistant_check);
+		checkAccount.setOnClickListener(this);
 		return view;
 	}
 
 	@Override
-	public void onXmlRpcRequestResponse(LinphoneXmlRpcRequest request) {		
-		if (request.getStatus() == LinphoneXmlRpcRequest.Status.Ok) {
-			int response = request.getIntResponse();
-			if (response != 1) {
-				mHandler.post(runNotOk);
-			} else {
-				mHandler.post(runOk);
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.assistant_check: {
+				checkAccount.setEnabled(false);
+				accountCreator.isAccountActivated();
+				break;
 			}
-		} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
-			mHandler.post(runNotReachable);
 		}
 	}
-	
-	private void isAccountVerified(final String username) {
-		xmlRpcRequest.addStringArg(username + "@" + getString(R.string.default_domain));
-		xmlRpcSession.sendRequest(xmlRpcRequest);
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (status.equals(LinphoneAccountCreator.Status.AccountNotActivated)) {
+			Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
+		} else if (status.equals(LinphoneAccountCreator.Status.AccountActivated)) {
+			AssistantActivity.instance().saveCreatedAccount(username, password, null, null, getString(R.string.default_domain), null);
+			AssistantActivity.instance().isAccountVerified(username);
+		} else {
+			Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
+		}
+		checkAccount.setEnabled(true);
+	}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
 	}
 }

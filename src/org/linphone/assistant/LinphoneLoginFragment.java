@@ -40,6 +40,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -103,13 +104,16 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		if(getResources().getBoolean(R.bool.use_phone_number_validation)){
 			getActivity().getApplicationContext();
 			//Automatically get the country code from the phone
-			TelephonyManager tm = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager tm =
+					(TelephonyManager) getActivity().getApplicationContext().getSystemService(
+							Context.TELEPHONY_SERVICE);
 			String countryIso = tm.getNetworkCountryIso();
 			LinphoneProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
 			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());
 
+
 			AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter()
-					.getCountryFromCountryCode(dialCode.getText().toString());
+					.getCountryFromCountryCode(String.valueOf(countryCode));
 			if (c != null) {
 				AssistantActivity.instance().country = c;
 				selectCountry.setText(c.name);
@@ -123,8 +127,6 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			if (previousPhone != null ) {
 				phoneNumberEdit.setText(previousPhone);
 			}
-
-			LinphoneUtils.setCountry(AssistantActivity.instance().country, dialCode, selectCountry, countryCode);
 
 			//Allow user to enter a username instead use the phone number as username
 			if(getResources().getBoolean(R.bool.assistant_allow_username) ) {

@@ -32,7 +32,6 @@ import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
 import org.linphone.core.LinphoneAccountCreator.Status;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
-import org.w3c.dom.Text;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -152,7 +151,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				AssistantActivity.instance().country = c;
 				selectCountry.setText(c.name);
 			}
-			LinphoneUtils.setCountry(c, dialCode, selectCountry, countryCode);
 
 			//Allow user to enter a username instead use the phone number as username
 			if (getResources().getBoolean(R.bool.assistant_allow_username)) {
@@ -320,7 +318,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				if (linkAccount) {
 					addAlias();
 				} else {
-					if (getUsername().length() > 0) {
+					if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
 						accountCreator.isAccountUsed();
 					} else {
 						LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(Status.UsernameTooShort)
@@ -601,7 +599,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		if (status.equals(Status.AccountCreated)) {
 			if (useEmail.isChecked() || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
 				AssistantActivity.instance().displayAssistantConfirm(getUsername()
-						, passwordEdit.getText().toString());
+						, passwordEdit.getText().toString(), emailEdit.getText().toString());
 			} else {
 				AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 						, phoneNumberEdit.getText().toString()

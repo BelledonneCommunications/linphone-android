@@ -551,12 +551,13 @@ private static AssistantActivity instance;
 		progress.show();
 	}
 
-	public void displayAssistantConfirm(String username, String password) {
+	public void displayAssistantConfirm(String username, String password, String email) {
 		CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
 		newAccount = true;
 		Bundle extras = new Bundle();
 		extras.putString("Username", username);
 		extras.putString("Password", password);
+		extras.putString("Email", email);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 
@@ -582,7 +583,8 @@ private static AssistantActivity instance;
 
 	public void isAccountVerified(String username) {
 		Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG).show();
-		launchEchoCancellerCalibration(true);
+		hideKeyboard();
+		success();
 	}
 
 	public void isEchoCalibrationFinished() {

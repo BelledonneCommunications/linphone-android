@@ -26,6 +26,22 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
+		<TextView
+			android:id="@+id/send_phone_number"
+			style="@style/font6"
+			android:paddingTop="10dp"
+			android:gravity="center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<TextView
+			android:text="@string/assistant_create_account_part_3"
+			style="@style/font11"
+			android:paddingTop="10dp"
+			android:gravity="center_horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
 		<EditText
 			android:id="@+id/assistant_code"
 			android:background="@drawable/resizable_textfield"

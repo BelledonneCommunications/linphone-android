@@ -568,7 +568,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 					holder.delete.setChecked(false);
 				}
 			} else {
-				holder.delete.setVisibility(View.GONE);
+				holder.delete.setVisibility(View.INVISIBLE);
 			}
 
 			/*LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();

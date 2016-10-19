@@ -79,26 +79,26 @@
 		    android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/delete"
 		    android:layout_marginLeft="10dp">
-			
-			<TextView 
+
+			<TextView
 			    android:id="@+id/name"
 			    android:lines="1"
 				style="@style/font6"
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:layout_alignParentTop="true"/>
-			
-			<TextView 
+
+			<TextView
 			    android:id="@+id/contactOrganization"
 				style="@style/font9"
 				android:singleLine="true"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 			    android:layout_alignParentBottom="true"/>
-			
+
 		</RelativeLayout>
-		
-		<ImageView 
+
+		<ImageView
 		    android:id="@+id/friendStatus"
 		    android:visibility="gone"
 	        android:layout_width="wrap_content"
@@ -115,14 +115,13 @@
 			android:visibility="gone"
 			android:layout_width="20dp"
 			android:layout_height="20dp"
-			android:layout_alignParentRight="true"
+			android:layout_toLeftOf="@id/delete"
 			android:layout_centerVertical="true"
 			android:adjustViewBounds="true"
-			android:layout_marginRight="20dp"
+			android:layout_marginRight="10dp"
 			android:scaleType="centerInside"
 			android:src="@drawable/linphone_user" />
 
-
 	</RelativeLayout>
-    
+
 </LinearLayout>
