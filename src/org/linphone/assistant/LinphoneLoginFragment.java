@@ -27,6 +27,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -168,8 +169,9 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			apply.setEnabled(true);
 			return;
 		}
-		AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), null, null, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
-		apply.setEnabled(true);
+		accountCreator.setUsername(login.getText().toString());
+		accountCreator.setPassword(password.getText().toString());
+		accountCreator.isAccountUsed();
 	}
 
 	private LinphoneAccountCreator.Status getPhoneNumberStatus() {
@@ -310,26 +312,32 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (status.equals(LinphoneAccountCreator.Status.AccountExist) || status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias)) {
+			String phone = accountCreator.getPhoneNumber();
+			String dial = null;
+			if (phone != null && phone.length() > 0)
+				dial = accountCreator.getPrefix(phone);
+			AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), dial, null, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
+		} else {
+			apply.setEnabled(true);
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
+		}
 	}
 
 	@Override
 	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
 	}
 
 	@Override
 	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
 	}
 
 	@Override
 	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
 	}
 
 	@Override
 	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
 	}
 
 	@Override
