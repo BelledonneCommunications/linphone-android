@@ -301,8 +301,10 @@ uninstall:
 \tadb uninstall $(PACKAGE_NAME)
 
 release: java-clean build copy-libs update-project
+\tpatch -p1 < release.patch
 \tcat ant.properties | grep version.name > default.properties
 \tant release
+\tpatch -Rp1 < release.patch
 
 generate-sdk: liblinphone-android-sdk
 
