@@ -1,6 +1,7 @@
 package org.linphone.assistant;
 
 import org.linphone.R;
+import org.linphone.core.DialPlan;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class CountryListFragment extends Fragment implements AdapterView.OnItemC
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		AssistantActivity.Country c = (AssistantActivity.Country)view.getTag();
+		DialPlan c = (DialPlan) view.getTag();
 		AssistantActivity.instance().country = c;
 		AssistantActivity.instance().onBackPressed();
 	}

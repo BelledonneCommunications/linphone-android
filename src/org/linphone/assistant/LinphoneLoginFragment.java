@@ -24,6 +24,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
@@ -113,11 +114,19 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());
 
 
-			AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter()
+			DialPlan c = AssistantActivity.instance().getCountryListAdapter()
 					.getCountryFromCountryCode(String.valueOf(countryCode));
 			if (c != null) {
-				AssistantActivity.instance().country = c;
-				selectCountry.setText(c.name);
+				selectCountry.setText(c.getCountryName());
+				dialCode.setText(c.getCountryCallingCode().contains("+") ?
+						c.getCountryCallingCode() : "+" + c.getCountryCallingCode());
+			} else {
+				c = AssistantActivity.instance().country;
+				if (c != null) {
+					selectCountry.setText(c.getCountryName());
+					dialCode.setText(c.getCountryCallingCode().contains("+") ?
+							c.getCountryCallingCode() : "+" + c.getCountryCallingCode());
+				}
 			}
 
 			phoneNumberLayout.setVisibility(View.VISIBLE);
@@ -182,10 +191,10 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				if (field.equals(dialCode)) {
-					AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter().getCountryFromCountryCode(dialCode.getText().toString());
+					DialPlan c = AssistantActivity.instance().getCountryListAdapter().getCountryFromCountryCode(dialCode.getText().toString());
 					if (c != null) {
 						AssistantActivity.instance().country = c;
-						selectCountry.setText(c.name);
+						selectCountry.setText(c.getCountryName());
 					} else {
 						selectCountry.setText(R.string.select_your_country);
 					}

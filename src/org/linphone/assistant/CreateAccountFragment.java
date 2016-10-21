@@ -27,6 +27,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
 import org.linphone.core.LinphoneAccountCreator.Status;
@@ -145,11 +146,19 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			if (previousPhone != null ) {
 				phoneNumberEdit.setText(previousPhone);
 			}
-			AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter()
-					.getCountryFromCountryCode(String.valueOf(countryCode));
+			DialPlan c = AssistantActivity.instance().country;
 			if (c != null) {
-				AssistantActivity.instance().country = c;
-				selectCountry.setText(c.name);
+				selectCountry.setText(c.getCountryName());
+				dialCode.setText(c.getCountryCallingCode().contains("+") ?
+						c.getCountryCallingCode() : "+" + c.getCountryCallingCode());
+			} else {
+				c = AssistantActivity.instance().getCountryListAdapter()
+						.getCountryFromCountryCode(String.valueOf(countryCode));
+				if (c != null) {
+					selectCountry.setText(c.getCountryName());
+					dialCode.setText(c.getCountryCallingCode().contains("+") ?
+							c.getCountryCallingCode() : "+" + c.getCountryCallingCode());
+				}
 			}
 
 			//Allow user to enter a username instead use the phone number as username
@@ -466,11 +475,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				if (field.equals(dialCode)) {
-					AssistantActivity.Country c = AssistantActivity.instance().getCountryListAdapter()
+					DialPlan c = AssistantActivity.instance().getCountryListAdapter()
 							.getCountryFromCountryCode(dialCode.getText().toString());
 					if (c != null) {
 						AssistantActivity.instance().country = c;
-						selectCountry.setText(c.name);
+						selectCountry.setText(c.getCountryName());
 					} else {
 						selectCountry.setText(R.string.select_your_country);
 					}

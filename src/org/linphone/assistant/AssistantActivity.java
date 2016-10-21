@@ -31,6 +31,7 @@ import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
 import org.linphone.StatusFragment;
+import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
@@ -70,6 +71,7 @@ import android.view.inputmethod.InputMethodManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -95,7 +97,7 @@ private static AssistantActivity instance;
 	private LinphoneAccountCreator accountCreator;
 	private CountryListAdapter countryListAdapter;
 
-	public Country country;
+	public DialPlan country;
 	public String phone_number;
 	public String email;
 	public String activation_code;
@@ -135,7 +137,7 @@ private static AssistantActivity instance;
 		accountCreator.setDomain(getResources().getString(R.string.default_domain));
 		accountCreator.setListener(this);
 
-		countryListAdapter = new CountryListAdapter(R.raw.countries, getApplicationContext());
+		countryListAdapter = new CountryListAdapter(getApplicationContext());
 
         mListener = new LinphoneCoreListenerBase() {
         	@Override
@@ -438,7 +440,7 @@ private static AssistantActivity instance;
 
 	public String getPhoneWithCountry() {
 		if(country == null || phone_number == null) return "";
-		String phoneNumberWithCountry = country.dial_code + phone_number.replace("\\D", "");
+		String phoneNumberWithCountry = country.getCountryCode() + phone_number.replace("\\D", "");
 		return phoneNumberWithCountry;
 	}
 
@@ -701,51 +703,25 @@ private static AssistantActivity instance;
 	public class CountryListAdapter extends BaseAdapter implements Filterable {
 
 		private LayoutInflater mInflater;
-		private List<Country> allCountries;
-		private List<Country> filteredCountries;
+		private DialPlan[] allCountries;
+		private List<DialPlan> filteredCountries;
 		private Context context;
 
-		public CountryListAdapter(int jsonId, Context ctx) {
+		public CountryListAdapter(Context ctx) {
 			context = ctx;
-			allCountries = new ArrayList<Country>();
-			String jsonString = loadJSONFromAsset(R.raw.countries);
-			try {
-				JSONArray c = new JSONArray(jsonString);
-				for( int i = 0; i < c.length(); i++) {
-					allCountries.add(new Country(c.getJSONObject(i)));
-				}
-				filteredCountries = allCountries;
-			} catch (JSONException e){
-				e.printStackTrace();
-			}
+			allCountries = LinphoneCoreFactory.instance().getAllDialPlan();
+			filteredCountries = new ArrayList<DialPlan>(Arrays.asList(allCountries));
 		}
 
 		public void setInflater(LayoutInflater inf) {
 			mInflater = inf;
 		}
 
-		public String loadJSONFromAsset(int id) {
-			String json = null;
-			if (context != null) {
-				try {
-					InputStream is = context.getResources().openRawResource(id);
-					int size = is.available();
-					byte[] buffer = new byte[size];
-					is.read(buffer);
-					is.close();
-					json = new String(buffer, "UTF-8");
-				} catch (IOException ex) {
-					ex.printStackTrace();
-					return null;
-				}
-			}
-			return json;
-		}
 
-		public Country getCountryFromCountryCode(String countryCode) {
-			countryCode = (countryCode.startsWith("+")) ? countryCode : "+" + countryCode;
-			for (Country c : allCountries) {
-				if (c.dial_code.compareTo(countryCode) == 0)
+		public DialPlan getCountryFromCountryCode(String countryCode) {
+			countryCode = (countryCode.startsWith("+")) ? countryCode.substring(1) : countryCode;
+			for (DialPlan c : allCountries) {
+				if (c.getCountryCallingCode().compareTo(countryCode) == 0)
 					return c;
 			}
 			return null;
@@ -757,7 +733,7 @@ private static AssistantActivity instance;
 		}
 
 		@Override
-		public Country getItem(int position) {
+		public DialPlan getItem(int position) {
 			return filteredCountries.get(position);
 		}
 
@@ -776,14 +752,14 @@ private static AssistantActivity instance;
 				view = mInflater.inflate(R.layout.country_cell, parent, false);
 			}
 
-			Country c = filteredCountries.get(position);
+			DialPlan c = filteredCountries.get(position);
 
 			TextView name = (TextView) view.findViewById(R.id.country_name);
-			name.setText(c.name);
+			name.setText(c.getCountryName());
 
 			TextView dial_code = (TextView) view.findViewById(R.id.country_prefix);
 			if (context != null)
-				dial_code.setText(String.format(context.getString(R.string.country_code),c.dial_code));
+				dial_code.setText(String.format(context.getString(R.string.country_code),c.getCountryCallingCode()));
 
 			view.setTag(c);
 			return view;
@@ -794,9 +770,10 @@ private static AssistantActivity instance;
 			return new Filter() {
 				@Override
 				protected FilterResults performFiltering(CharSequence constraint) {
-					ArrayList<Country> filteredCountries = new ArrayList<Country>();
-					for (Country c : allCountries) {
-						if (c.name.toLowerCase().contains(constraint) || c.dial_code.contains(constraint)){
+					ArrayList<DialPlan> filteredCountries = new ArrayList<DialPlan>();
+					for (DialPlan c : allCountries) {
+						if (c.getCountryName().toLowerCase().contains(constraint)
+								|| c.getCountryCallingCode().contains(constraint)) {
 							filteredCountries.add(c);
 						}
 					}
@@ -808,32 +785,10 @@ private static AssistantActivity instance;
 				@Override
 				@SuppressWarnings("unchecked")
 				protected void publishResults(CharSequence constraint, FilterResults results) {
-					filteredCountries = (List<Country>) results.values;
+					filteredCountries = (List<DialPlan>) results.values;
 					CountryListAdapter.this.notifyDataSetChanged();
 				}
 			};
-		}
-	}
-
-	/**
-	 * This class represents a Country. There's a name, dial_code, code and max number of digits.
-	 * It is constructed from a JSON object containing all these parameters.
-	 */
-	public class Country {
-		public String name;
-		public String dial_code;
-		public String code;
-		public int maxNum;
-
-		public Country(JSONObject obj ){
-			try {
-				name = obj.getString("name");
-				dial_code = obj.getString("dial_code");
-				code = obj.getString("code");
-				maxNum = obj.getInt("maxNum");
-			} catch (JSONException e){
-				e.printStackTrace();
-			}
 		}
 	}
 }

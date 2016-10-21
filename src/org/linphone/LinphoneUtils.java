@@ -43,6 +43,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -658,10 +659,10 @@ public final class LinphoneUtils {
 		return null;
 	}
 
-	public static void setCountry(AssistantActivity.Country c, EditText dialCode, Button selectCountry, int countryCode) {
+	public static void setCountry(DialPlan c, EditText dialCode, Button selectCountry, int countryCode) {
 		if( c != null && dialCode != null && selectCountry != null) {
-			dialCode.setText(c.dial_code);
-			selectCountry.setText(c.name);
+			dialCode.setText(c.getCountryCode());
+			selectCountry.setText(c.getCountryName());
 		} else {
 			if(countryCode != -1){
 				dialCode.setText("+" + countryCode);
