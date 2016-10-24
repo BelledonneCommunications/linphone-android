@@ -35,6 +35,7 @@ ec_calibrator_cool_tones=1
 
 [misc]
 max_calls=10
+history_max_size=100
 
 [app]
 activation_code_length=4
