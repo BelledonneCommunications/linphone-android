@@ -1253,8 +1253,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
 					ContactsManager.getInstance().enableContactsAccess();
 				}
-				ContactsManager.getInstance().fetchContactsAsync();
-				ContactsManager.getInstance().enableContactsAccess();
 				if (!fetchedContactsOnce) {
 					ContactsManager.getInstance().enableContactsAccess();
 					ContactsManager.getInstance().fetchContactsAsync();
