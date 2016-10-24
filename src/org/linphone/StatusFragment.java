@@ -22,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
@@ -450,6 +451,7 @@ public class StatusFragment extends Fragment {
 			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
 			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
 			, TextView videoResolutionReceived, boolean isVideo) {
+		Context ctxt = LinphoneActivity.instance();
 		if (stats != null) {
 			layout.setVisibility(View.VISIBLE);
 			title.setVisibility(TextView.VISIBLE);
@@ -460,33 +462,33 @@ public class StatusFragment extends Fragment {
 						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
 					mime = "OpenH264";
 				}
-				formatText(codec, getString(R.string.call_stats_codec),
+				formatText(codec, ctxt.getString(R.string.call_stats_codec),
 						mime + " / " + (media.getRate() / 1000) + "kHz");
 			}
-			formatText(enc, getString(R.string.call_stats_encoder_name),
+			formatText(enc, ctxt.getString(R.string.call_stats_encoder_name),
 					stats.getEncoderName(media));
-			formatText(dec, getString(R.string.call_stats_decoder_name),
+			formatText(dec, ctxt.getString(R.string.call_stats_decoder_name),
 					stats.getDecoderName(media));
-			formatText(dl, getString(R.string.call_stats_download),
+			formatText(dl, ctxt.getString(R.string.call_stats_download),
 					String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
-			formatText(ul, getString(R.string.call_stats_upload),
+			formatText(ul, ctxt.getString(R.string.call_stats_upload),
 					String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
-			formatText(ice, getString(R.string.call_stats_ice),
+			formatText(ice, ctxt.getString(R.string.call_stats_ice),
 					stats.getIceState().toString());
-			formatText(ip, getString(R.string.call_stats_ip),
+			formatText(ip, ctxt.getString(R.string.call_stats_ip),
 					(stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET_6.getInt()) ?
 							"IpV6" : (stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET.getInt()) ?
 							"IpV4" : "Unknown");
-			formatText(senderLossRate, getString(R.string.call_stats_sender_loss_rate),
+			formatText(senderLossRate, ctxt.getString(R.string.call_stats_sender_loss_rate),
 					new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
-			formatText(receiverLossRate, getString(R.string.call_stats_receiver_loss_rate),
+			formatText(receiverLossRate, ctxt.getString(R.string.call_stats_receiver_loss_rate),
 					new DecimalFormat("##.##").format(stats.getReceiverLossRate())+ "%");
 			if (isVideo) {
 				formatText(videoResolutionSent,
-						getString(R.string.call_stats_video_resolution_sent),
+						ctxt.getString(R.string.call_stats_video_resolution_sent),
 						"\u2191 " + params.getSentVideoSize().toDisplayableString());
 				formatText(videoResolutionReceived,
-						getString(R.string.call_stats_video_resolution_received),
+						ctxt.getString(R.string.call_stats_video_resolution_received),
 						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
 			}
 		} else {
@@ -547,29 +549,31 @@ public class StatusFragment extends Fragment {
 					@Override
 					public void run() {
 						synchronized(LinphoneManager.getLc()) {
-							LinphoneCallParams params = call.getCurrentParamsCopy();
-							if (params != null) {
-								LinphoneCallStats audioStats = call.getAudioStats();
-								LinphoneCallStats videoStats = null;
+							if (LinphoneActivity.isInstanciated()) {
+								LinphoneCallParams params = call.getCurrentParamsCopy();
+								if (params != null) {
+									LinphoneCallStats audioStats = call.getAudioStats();
+									LinphoneCallStats videoStats = null;
 
-								if (params.getVideoEnabled())
-									videoStats = call.getVideoStats();
+									if (params.getVideoEnabled())
+										videoStats = call.getVideoStats();
 
-								PayloadType payloadAudio = params.getUsedAudioCodec();
-								PayloadType payloadVideo = params.getUsedVideoCodec();
+									PayloadType payloadAudio = params.getUsedAudioCodec();
+									PayloadType payloadVideo = params.getUsedVideoCodec();
 
-								displayMediaStats(params, audioStats, payloadAudio, audioLayout
-										, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
-										,ipAudio, senderLossRateAudio, receiverLossRateAudio
-										, encoderAudio, decoderAudio, null, null
-										, false);
+									displayMediaStats(params, audioStats, payloadAudio, audioLayout
+											, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
+											, ipAudio, senderLossRateAudio, receiverLossRateAudio
+											, encoderAudio, decoderAudio, null, null
+											, false);
 
-								displayMediaStats(params, videoStats, payloadVideo, videoLayout
-										, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
-										, ipVideo, senderLossRateVideo, receiverLossRateVideo
-										, encoderVideo, decoderVideo
-										, videoResolutionSent, videoResolutionReceived
-										, true);
+									displayMediaStats(params, videoStats, payloadVideo, videoLayout
+											, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
+											, ipVideo, senderLossRateVideo, receiverLossRateVideo
+											, encoderVideo, decoderVideo
+											, videoResolutionSent, videoResolutionReceived
+											, true);
+								}
 							}
 						}
 					}

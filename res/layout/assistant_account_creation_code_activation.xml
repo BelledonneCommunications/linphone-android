@@ -14,6 +14,7 @@
 			android:text="@string/assistant_create_account"
 			style="@style/font6"
 			android:textAllCaps="true"
+			android:gravity="center_horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/title_account_activation" />
