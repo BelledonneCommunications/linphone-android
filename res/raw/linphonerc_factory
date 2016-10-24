@@ -15,7 +15,6 @@ ping_with_options=0
 rls_uri=sip:rls@sip.linphone.org
 use_rls_presence=1
 
-
 [rtp]
 audio_rtp_port=7076
 video_rtp_port=9078
