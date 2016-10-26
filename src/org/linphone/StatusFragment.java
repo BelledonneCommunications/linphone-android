@@ -287,15 +287,15 @@ public class StatusFragment extends Fragment {
 		if (quality >= 4) // Good Quality
 		{
 			callQuality.setImageResource(
-					R.drawable.call_quality_indicator_3);
+					R.drawable.call_quality_indicator_4);
 		} else if (quality >= 3) // Average quality
 		{
 			callQuality.setImageResource(
-					R.drawable.call_quality_indicator_2);
+					R.drawable.call_quality_indicator_3);
 		} else if (quality >= 2) // Low quality
 		{
 			callQuality.setImageResource(
-					R.drawable.call_quality_indicator_1);
+					R.drawable.call_quality_indicator_2);
 		} else if (quality >= 1) // Very low quality
 		{
 			callQuality.setImageResource(
