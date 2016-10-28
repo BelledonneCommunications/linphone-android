@@ -439,7 +439,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void subscribeFriendList(boolean enabled){
 		LinphoneCore lc = getLcIfManagerNotDestroyedOrNull();
-		if(lc != null ) {
+		if(lc != null && lc.getFriendList() != null && lc.getFriendList().length > 0) {
 			LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
 			Log.i("Presence list subscription is " + (enabled ? "enabled" : "disabled"));
 			mFriendList.enableSubscriptions(enabled);

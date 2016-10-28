@@ -453,6 +453,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 					dialCode.setBackgroundResource(R.drawable.resizable_textfield);
 					phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield_error);
 				}
+
 			} else {
 				dialCode.setBackgroundResource(R.drawable.resizable_textfield);
 				phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
@@ -679,7 +680,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator ac, Status status) {
 		if (status.equals(Status.PhoneNumberUsedAccount) || status.equals(Status.PhoneNumberUsedAlias)) {
-			if (accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername()) == 0) {
+			if (accountCreator.getPhoneNumber() != null && accountCreator.getUsername() != null
+					&& accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername()) == 0) {
 				accountCreator.isAccountActivated();
 			} else {
 				createAccount.setEnabled(true);
