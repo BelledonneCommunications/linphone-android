@@ -138,8 +138,18 @@ private static AssistantActivity instance;
 		accountCreator.setListener(this);
 
 		countryListAdapter = new CountryListAdapter(getApplicationContext());
-
         mListener = new LinphoneCoreListenerBase() {
+
+			@Override
+			public void configuringStatus(LinphoneCore lc, final LinphoneCore.RemoteProvisioningState state, String message) {
+				if (progress != null) progress.dismiss();
+				if (state == LinphoneCore.RemoteProvisioningState.ConfiguringSuccessful) {
+					goToLinphoneActivity();
+				} else if (state == LinphoneCore.RemoteProvisioningState.ConfiguringFailed) {
+					Toast.makeText(AssistantActivity.instance(), getString(R.string.remote_provisioning_failure), Toast.LENGTH_LONG).show();
+				}
+			}
+
         	@Override
         	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, RegistrationState state, String smessage) {
         		if (remoteProvisioningInProgress) {
