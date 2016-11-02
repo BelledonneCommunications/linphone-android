@@ -67,13 +67,22 @@
 		<delete file="${output.file}"/>
 	</target>
 	<target name="check-for-crash" if="has.crashed">
-		<exec executable="bash" >
+         <exec executable="adb" outputproperty="arch">
+            <arg value="shell"/>
+            <arg value="getprop" />
+            <arg value="ro.product.cpu.abi"/>
+        </exec>
+				<exec executable="bash" outputproperty="abi">
+            <arg value="-c"/>
+            <arg value="echo ${arch} | tr -d '\r'"/>
+        </exec>
+        <exec executable="bash" >
 			<arg value="-c" />
 			<arg value="tail -n 500 ${archive.name}" />
 		</exec>
 		<exec executable="bash" >
 			<arg value="-c" />
-			<arg value="cat ${archive.name} |ndk-stack -sym ../libs-debug/`adb shell getprop ro.product.cpu.abi | tr -d '\r'`" />
+            <arg value="cat ${archive.name} |ndk-stack -sym ../libs-debug/${abi}" />
 		</exec>
 		<fail message="Tests crashed" status="125"/>
 	</target>
