@@ -325,7 +325,8 @@ run-linphone:
 \tant run
 
 run-liblinphone-tests:
-\t$(MAKE) -C liblinphone_tester run-all-tests
+\t@cd liblinphone_tester && \\
+\tmake run-all-tests
 
 run-basic-tests: update-project
 \tant partial-clean
