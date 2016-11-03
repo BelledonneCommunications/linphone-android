@@ -328,9 +328,9 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 				dial = accountCreator.getPrefix(phone);
 			AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), dial, null, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
 		} else {
-			apply.setEnabled(true);
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
 		}
+		apply.setEnabled(true);
 	}
 
 	@Override

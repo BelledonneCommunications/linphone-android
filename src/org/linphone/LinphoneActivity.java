@@ -226,9 +226,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 				refreshAccounts();
 
-				if(state.equals(RegistrationState.RegistrationOk) && LinphonePreferences.instance().getLinkPopupTime() != ""){
-					if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
-						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null)){
+				if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
+					if (state.equals(RegistrationState.RegistrationOk)) {
+						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null)) {
 							LinphoneManager.getInstance().isAccountWithAlias();
 						}
 					}
