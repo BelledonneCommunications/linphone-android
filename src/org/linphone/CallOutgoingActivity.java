@@ -66,7 +66,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
@@ -95,7 +95,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {				
+			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
 				if (call == mCall && State.Connected == state) {
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
@@ -117,7 +117,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
 					}
 				}
-				
+
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
 					finish();
 					return;
@@ -140,14 +140,24 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
 			for (LinphoneCall call : calls) {
-				if (State.OutgoingInit == call.getState() || State.OutgoingProgress == call.getState() || State.OutgoingRinging == call.getState() || State.OutgoingEarlyMedia == call.getState()) {
+				State cstate = call.getState();
+				if (State.OutgoingInit == cstate || State.OutgoingProgress == cstate
+						|| State.OutgoingRinging == cstate || State.OutgoingEarlyMedia == cstate) {
 					mCall = call;
 					break;
+				}
+				if (State.StreamsRunning == cstate) {
+					if (!LinphoneActivity.isInstanciated()) {
+						return;
+					}
+					LinphoneActivity.instance().startIncallActivity(mCall);
+					finish();
 				}
 			}
 		}
 		if (mCall == null) {
 			Log.e("Couldn't find outgoing call");
+			LinphoneActivity.instance().goToDialerFragment();
 			finish();
 			return;
 		}
@@ -162,7 +172,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 		}
 		number.setText(address.asStringUriOnly());
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -237,15 +247,15 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
 	}
-	
+
 	private void checkAndRequestCallPermissions() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
-		
+
 		int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
 		Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
 		Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-		
+
 		if (recordAudio != PackageManager.PERMISSION_GRANTED) {
 			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
 				Log.i("[Permission] Asking for record audio");
@@ -260,14 +270,14 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 				}
 			}
 		}
-		
+
 		if (permissionsList.size() > 0) {
 			String[] permissions = new String[permissionsList.size()];
 			permissions = permissionsList.toArray(permissions);
 			ActivityCompat.requestPermissions(this, permissions, 0);
 		}
 	}
-	
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		for (int i = 0; i < permissions.length; i++) {
