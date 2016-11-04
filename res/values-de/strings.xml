@@ -16,11 +16,14 @@
   <string name="sync_account_name">Linphone-Kontakte</string>
   <string name="history_date_format">EEE, t MMM</string>
   <string name="history_detail_date_format">jjjj/MM/tt - HH:mm - </string>
+  <string name="inapp_popup_date_format">jjjj/MM/tt</string>
+  <string name="inapp_popup_date_day">tt</string>
   <string name="messages_date_format">tt/MM, HH:mm</string>
   <string name="messages_list_date_format">tt/MM</string>
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Benutzername</string>
+  <string name="phone_number">Telefonnummer</string>
   <string name="display_name">Anzeigename</string>
   <string name="password">Passwort</string>
   <string name="confirm_password">Passwortbestätigung</string>
@@ -44,33 +47,38 @@
   <string name="connect">Verbindung</string>
   <string name="decline">Ablehnen</string>
   <string name="conference">Konferenz</string>
+  <string name="link">Link</string>
+  <string name="maybe_later">Vielleicht später</string>
+  <string name="later">Später</string>
+  <string name="no">Nein</string>
+  <string name="ok">OK</string>
+  <string name="yes">Ja</string>
+  <string name="link_account">Verknüpfen Sie Ihr Konto</string>
   <!--Launch screen-->
   <string name="app_description">der <i>freie</i> SIP-Client</string>
   <!--Assistant-->
   <string name="welcome">Willkommen</string>
   <string name="assistant">Assistent</string>
   <string name="assistant_create_account">Konto erstellen</string>
+  <string name="assistant_link_account">Konto verknüpfen</string>
+  <string name="assistant_continue">Fortsetzen</string>
+  <string name="assistant_activate">Aktivieren Sie Ihr Konto</string>
   <string name="assistant_finish">Konfiguration fertigstellen</string>
-  <string name="assistant_validate_account">Ihr Konto ist erstellt. Bitte überprüfen Sie Ihre E-Mails, um Ihr Konto zu bestätigen. Sobald das gemacht ist, kommen Sie hierher zurück und klicken Sie auf die Schaltfläche.</string>
-  <string name="assistant_welcome_desc">Dieser Assistent wird Ihnen dabei helfen, ein SIP-Konto für Ihre Anrufe zu verwenden.</string>
-  <string name="assistant_linphone_login_desc">Geben Sie Ihren Benutzernamen und Passwort des Linphone-Kontos ein</string>
-  <string name="assistant_login_desc">Geben Sie Ihren Benutzernamen und Passwort mit Ihrer SIP-Domäne ein</string>
   <string name="assistant_remote_provisioning_desc">Bitte geben Sie eine Bereitstellungs-URL an</string>
   <string name="transport">Transport</string>
+  <string name="assistant_create_account_phone_number_address">Ihre SIP-Adresse ist</string>
   <string name="assistant_login_linphone">Linphone-Konto verwenden</string>
   <string name="assistant_login_generic">SIP-Konto verwenden</string>
   <string name="assistant_remote_provisioning">Fernkonfiguration abrufen</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">Anzeigename (optional)</string>
-  <string name="assistant_linphone_account">Linphone-Konto konfigurieren</string>
-  <string name="assistant_generic_account">SIP-Konto konfigurieren</string>
+  <string name="assistant_generic_account">SIP-Konto verwenden</string>
   <string name="assistant_remote_provisioning_title">Fernkonfiguration abrufen</string>
   <string name="assistant_fetch_apply">Abrufen und anwenden</string>
   <string name="assistant_login">Anmelden</string>
   <string name="assistant_ec_calibration">Echounterdrückungskalibrierung läuft</string>
   <string name="assistant_remote_provisioning_login">Geben Sie Ihre Anmeldung ein</string>
   <string name="assistant_account_not_validated">Ihr Konto wurde noch nicht überprüft.</string>
+  <string name="assistant_error_confirmation_code">Der Bestätigungscode ist ungültig.\r\nBitte überprüfen Sie Ihre SMS und versuchen Sie es erneut.</string>
   <string name="assistant_account_validated">Ihr Konto wurde überprüft.</string>
   <string name="assistant_error_bad_credentials">Falscher Benutzername oder Passwort</string>
   <string name="assistant_codec_down_question">Sind Sie mit dem Herunterladen des OpenH264-Videocodecs, bereitgestellt von Cisco Systems, Inc., einverstanden?</string>
@@ -80,12 +88,39 @@
   <string name="wizard_server_unavailable">Server nicht erreichbar, überprüfen Sie Ihre Netzwerkverbindung.</string>
   <string name="wizard_username_unavailable">Der Benutzername wird bereits verwendet.</string>
   <string name="wizard_username_incorrect">Ihr Benutzername ist ungültig.</string>
+  <string name="assistant_phone_number_incorrect">Ihre Telefonnummer ist ungültig.</string>
   <string name="wizard_email_incorrect">Ihre E-Mail-Adresse ist ungültig.</string>
   <string name="wizard_password_incorrect">Ihr Passwort ist ungültig.</string>
   <string name="wizard_passwords_unmatched">Passwörter stimmen nicht überein.</string>
   <string name="setup_confirm_username">Ihr Benutzername wird %s sein.\r\n\r\nIt kann von Ihrer Eingabe abweichen, um Anforderungen zu entsprechen.\r\nNehmen Sie an?</string>
   <string name="first_launch_no_login_password">Bitte geben Sie Ihren Benutzername und Ihr Passwort ein</string>
   <string name="forgot_password">Passwort vergessen?</string>
+  <string name="assistant_choose_country">Wählen Sie ein Land aus</string>
+  <string name="select_your_country">Wählen Sie Ihr Land aus</string>
+  <string name="country_code">(%s)</string>
+  <string name="use_email_for_validation">E-Mail-Adresse für Kontobestätigung verwenden</string>
+  <string name="phone_number_info_title">Wozu wird meine Telefonnummer verwendet?</string>
+  <!--Status-->
+  <string name="invalid_email">Ungültige E-Mail-Adresse</string>
+  <string name="account_already_exist">Konto bereits vorhanden</string>
+  <string name="phone_number_not_exist">Dieses Konto ist nicht vorhanden</string>
+  <string name="invalid_username">Ungültiger Benutzername</string>
+  <string name="invalid_domain">Ungültige Domain</string>
+  <string name="invalid_route">Ungültige Route</string>
+  <string name="invalid_display_name">Ungültiger Anzeigename</string>
+  <string name="username_too_short">Benutzername zu kurz</string>
+  <string name="username_too_long">Benutzername zu lang</string>
+  <string name="username_invalid_size">Benutzernamenlänge ungültig</string>
+  <string name="phone_number_too_long">Telefonnummer zu lang</string>
+  <string name="phone_number_too_short">Telefonnummer zu kurz</string>
+  <string name="phone_number_invalid">Ungültige Telefonnummer</string>
+  <string name="password_too_short">Passwort zu kurz</string>
+  <string name="password_too_long">Passwort zu lang</string>
+  <string name="transport_unsupported">Nicht unterstützter Transport</string>
+  <string name="country_code_invalid">Landesvorwahl ungültig</string>
+  <!--In-app-->
+  <string name="inapp">In-App</string>
+  <string name="inapp_notification_title">In-App-Kauf</string>
   <!--Dailer-->
   <string name="address_bar_hint">Geben Sie eine Nummer oder eine Adresse ein</string>
   <!--History-->
@@ -100,7 +135,6 @@
   <string name="delete_contacts">Möchten Sie die ausgewählten Kontakte löschen?</string>
   <string name="delete_contact">Möchten Sie den ausgewählten Kontakt löschen?</string>
   <string name="sip_address">SIP-Adresse</string>
-  <string name="phone_number">Telefonnummer</string>
   <string name="contact_first_name">Vorname</string>
   <string name="contact_last_name">Nachname</string>
   <string name="contact_organization">Organisation</string>
@@ -143,10 +177,16 @@
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>
   <string name="call_stats_codec">Codec:</string>
+  <string name="call_stats_ip">Afinet:</string>
   <string name="call_stats_upload">Upload-Bandbreite:</string>
   <string name="call_stats_download">Download-Bandbreite:</string>
   <string name="call_stats_ice">ICE-Konnektivität:</string>
-  <string name="call_stats_video_resolution">Videogröße:</string>
+  <string name="call_stats_video_resolution_sent">Gesendete Videoauflösung:</string>
+  <string name="call_stats_video_resolution_received">Empfangene Videoauflösung:</string>
+  <string name="call_stats_sender_loss_rate">Senderverlustrate:</string>
+  <string name="call_stats_receiver_loss_rate">Empfängerverlustrate:</string>
+  <string name="call_stats_encoder_name">Kodierer:</string>
+  <string name="call_stats_decoder_name">Dekodierer:</string>
   <string name="call">Anruf</string>
   <!--About-->
   <string name="menu_send_log">Protokoll senden</string>
@@ -157,12 +197,15 @@
   <string name="incall_notif_video">Video-Anruf fortsetzen</string>
   <string name="notification_started">begonnen</string>
   <string name="unread_messages">%i ungelesene Nachrichten</string>
+  <string name="missed_calls_notif_title">Verpasster Anruf</string>
+  <string name="missed_calls_notif_body">%i verpasste Anrufe</string>
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Warnung: Dienst ist nicht bereit</string>
   <string name="error">Fehler</string>
   <string name="warning_wrong_destination_address">Kann Zieladresse aus %s nicht bauen</string>
   <string name="error_unknown">Unbekannter Fehler</string>
   <string name="error_call_declined">Anruf abgelehnt</string>
+  <string name="error_user_busy">Benutzer beschäftigt</string>
   <string name="error_user_not_found">Benutzer nicht gefunden</string>
   <string name="error_incompatible_media">Inkompatible Medienparameter</string>
   <string name="error_low_bandwidth">Ihr Partner hat eine niedrige Bandbreite, Video kann nicht gestartet werden</string>
@@ -193,6 +236,7 @@
   <string name="pref_avpf_rr_interval"> AVPF Standard RTCP Interval in Sekunden (zwischen 1 und 5)</string>
   <string name="pref_escape_plus">Ersetzen + durch 00</string>
   <string name="pref_friendlist_subscribe">Freundesliste abonnieren</string>
+  <string name="pref_link_account">Verknüpfen Sie Ihr Konto</string>
   <string name="pref_auth_userid">Authentifizierungs-Benutzerkennung</string>
   <string name="pref_help_auth_userid">Authentifizierungs-Benutzerkennung eingeben (optional)</string>
   <string name="pref_display_name">Anzeigename</string>
@@ -227,6 +271,7 @@
   <string name="pref_echo_cancellation">Echounterdrückung</string>
   <string name="pref_echo_cancellation_summary">Entfernt das Echo, das am anderen Ende gehört wird</string>
   <string name="pref_echo_canceller_calibration">Echounterdrückungskalibrierung</string>
+  <string name="pref_echo_tester">Echo testen</string>
   <string name="ec_calibrating">Kalibrierung...</string>
   <string name="ec_calibrated">Kalibriert in %s ms</string>
   <string name="no_echo">Kein Echo</string>
@@ -252,8 +297,6 @@
   <string name="pref_call_title">Anruf</string>
   <string name="pref_device_ringtone">Geräteklingelton verwenden</string>
   <string name="pref_auto_answer">Eingehende Anrufe automatisch beantworten</string>
-  <string name="pref_rfc2833_dtmf">RFC2833 DTMFs senden</string>
-  <string name="pref_sipinfo_dtmf">SIP INFO DTMFs senden</string>
   <string name="pref_voice_mail">Sprachnachricht-URI</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Nachrichten</string>
@@ -266,8 +309,11 @@
   <!--Network settings-->
   <string name="pref_network_title">Netzwerk</string>
   <string name="pref_wifi_only">Nur WiFi verwenden</string>
+  <string name="pref_stun_server">STUN / TURN-Server</string>
   <string name="pref_ice_enable">ICE aktivieren</string>
   <string name="pref_turn_enable">TURN aktivieren</string>
+  <string name="pref_turn_username_title">STUN / TURN-Benutzername (optional)</string>
+  <string name="pref_turn_passwd_title">STUN / TURN-Passwort (optional)</string>
   <string name="pref_upnp_enable">UPNP aktivieren</string>
   <string name="pref_transport_use_random_ports">Zufällige Ports verwenden</string>
   <string name="pref_sip_port_title">Zu benutzender SIP-Port</string>
@@ -324,6 +370,7 @@
   <string name="content_description_new_discussion">Neue Diskussion</string>
   <string name="content_description_search">Suchen</string>
   <string name="content_description_search_contact">Kontakt suchen</string>
+  <string name="content_description_search_country">Land suchen</string>
   <string name="content_description_all_contacts">Alle Kontakte</string>
   <string name="content_description_linphone_contacts">Linphone-Kontakte</string>
   <string name="content_description_call_direction">Anrufrichtung</string>
@@ -343,6 +390,8 @@
   <string name="content_description_message_status">Nachrichtenstatus</string>
   <string name="content_description_conference">Konferenz</string>
   <string name="content_description_username_field">Benutzernamenfeld</string>
+  <string name="content_description_activation_code_field">Benutzernamenfeld</string>
+  <string name="content_description_phone_number_field">Telefonnummernfeld</string>
   <string name="content_description_display_field">Anzeigenamenfeld</string>
   <string name="content_description_domain_field">Domänenfeld</string>
   <string name="content_description_url_field">Fernbereitstellungsfeld</string>

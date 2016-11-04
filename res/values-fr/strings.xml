@@ -16,11 +16,14 @@
   <string name="sync_account_name">contacts linphone</string>
   <string name="history_date_format">EEE, d MMM</string>
   <string name="history_detail_date_format">dd/MM/yyy - HH:mm -</string>
+  <string name="inapp_popup_date_format">yyyy/MM/dd</string>
+  <string name="inapp_popup_date_day">dd</string>
   <string name="messages_date_format">dd/MM, HH:mm</string>
   <string name="messages_list_date_format">dd/MM</string>
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Nom d\'utilisateur</string>
+  <string name="phone_number">Numéro de téléphone</string>
   <string name="display_name">Nom d\'affichage</string>
   <string name="password">Mot de passe</string>
   <string name="confirm_password">Confirmation du mot de passe</string>
@@ -44,28 +47,38 @@
   <string name="connect">Connexion</string>
   <string name="decline">Refuser</string>
   <string name="conference">Conférence</string>
+  <string name="link">Associer</string>
+  <string name="maybe_later">Plus tard</string>
+  <string name="later">Plus tard</string>
+  <string name="no">Non</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Oui</string>
+  <string name="link_account">Associer votre compte</string>
   <!--Launch screen-->
   <string name="app_description">le client SIP <i>libre</i></string>
   <!--Assistant-->
   <string name="welcome">Bienvenue</string>
   <string name="assistant">Assistant</string>
   <string name="assistant_create_account">Créer un compte</string>
-  <string name="assistant_link_account">Associer un compte</string>
+  <string name="assistant_link_account">Associer votre compte</string>
+  <string name="assistant_continue">Continuer</string>
+  <string name="assistant_activate">Activer votre compte</string>
   <string name="assistant_finish">Terminer la configuration</string>
-  <string name="assistant_validate_account_1">Votre compte a été créé. Vérifiez vos emails pour valider votre compte:</string>
-  <string name="assistant_validate_account_2">Lorsque cela est fait, cliquez sur le bouton pour continuer.</string>
-  <string name="assistant_welcome_desc">Cet assistant va vous guider pour réaliser des appels à l\'aide d\'un compte SIP.</string>
-  <string name="assistant_linphone_login_desc">Entrez le nom d\'utilisateur et mot de passe de votre compte Linphone.</string>
-  <string name="assistant_login_desc">Entrer votre nom d\'utilisateur et mot de passe ainsi que votre domaine SIP</string>
+  <string name="assistant_validate_account_1">Nous avons envoyé un mail avec un code d\'activation au mail :</string>
+  <string name="assistant_validate_account_2">Pour valider votre compte veuillez suivre les instructions du mail et cliquez sur le bouton.</string>
+  <string name="assistant_welcome_desc">Cet assistant va vous aider à configurer et utiliser votre compte SIP.</string>
+  <string name="assistant_linphone_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe de votre compte Linphone</string>
+  <string name="assistant_login_desc">Veuillez saisir votre nom d\'utilisateur et votre mot de passe avec le domaine SIP</string>
   <string name="assistant_remote_provisioning_desc">Veuillez fournir votre URL de configuration.</string>
   <string name="transport">Transport</string>
-  <string name="assistant_create_account_phone_number_address">Votre address SIP est</string>
+  <string name="assistant_create_account_phone_number_address">Votre adresse SIP sera</string>
   <string name="assistant_login_linphone">Utiliser un compte Linphone</string>
   <string name="assistant_login_generic">Utiliser un compte SIP</string>
   <string name="assistant_remote_provisioning">Télécharger la configuration</string>
-  <string name="assistant_create_account_part_1">Merci de confirmer votre code de pays et de rentrer votre numéro de téléphone</string>
-  <string name="assistant_create_account_part_2">Nous vous avons envoyé un SMS avec un code de validation au numéro :</string>
-  <string name="assistant_create_account_part_3">Pour complèter la vérification de votre numéro de téléphone, veuillez entrer les 4 chiffres du code en dessous:\n</string>
+  <string name="assistant_create_account_part_1">Confirmez l\'indicatif téléphonique de votre pays et saisissez votre numéro de téléphone</string>
+  <string name="assistant_create_account_part_2">Nous avons envoyé un SMS avec un code d\'activation au numéro :</string>
+  <string name="assistant_create_account_part_3">Pour valider votre numéro veuillez enter le code à 4 chiffres ci-dessous :</string>
+  <string name="assistant_create_account_part_email">Veuillez saisir un nom d\'utilisateur, un mail et un mot de passe pour votre compte Linphone</string>
   <string name="assistant_display_name_optional">Nom d\'affichage (optionnel)</string>
   <string name="assistant_linphone_account">Utiliser un compte Linphone</string>
   <string name="assistant_generic_account">Utiliser un compte SIP</string>
@@ -75,6 +88,7 @@
   <string name="assistant_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
   <string name="assistant_remote_provisioning_login">Entrez vos identifiants</string>
   <string name="assistant_account_not_validated">Votre compte n\'a pas encore été validé.</string>
+  <string name="assistant_error_confirmation_code">Le code d\'activation est invalide.\r\nVeuillez vérifier vos SMS et réessayer.</string>
   <string name="assistant_account_validated">Votre compte à été validé.</string>
   <string name="assistant_error_bad_credentials">Nom d\'utilisateur ou mot de passe invalide</string>
   <string name="assistant_codec_down_question">Voulez-vous télécharger le codec vidéo OpenH264 fourni par Cisco Systems, Inc. ? </string>
@@ -83,13 +97,45 @@
   <string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
   <string name="wizard_server_unavailable">Serveur indisponible, veuillez vérifier votre connexion réseau.</string>
   <string name="wizard_username_unavailable">Ce nom d\'utilisateur est déjà pris.</string>
+  <string name="assistant_phone_number_unavailable">Ce numéro de téléphone est déjà utilisé.\r\nVeuillez saisir un autre numéro.\r\nVous pouvez supprimer le compte existant si vous voulez réutiliser votre numéro de téléphone.</string>
   <string name="wizard_username_incorrect">Votre nom d\'utilisateur est invalide.</string>
+  <string name="assistant_phone_number_incorrect">Votre numéro de téléphone est invalide.</string>
   <string name="wizard_email_incorrect">Votre email est invalide.</string>
   <string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide.</string>
   <string name="wizard_passwords_unmatched">Les mots de passes ne correspondent pas.</string>
   <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de votre saisie.\r\nContinuer ?</string>
   <string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
   <string name="forgot_password">Mot de passe oublié ?</string>
+  <string name="assistant_choose_country">Choisir un pays</string>
+  <string name="select_your_country">Choisissez votre pays</string>
+  <string name="use_username_instead_or_phone_number">Utiliser un nom d\'utilisateur (optionnel)</string>
+  <string name="use_email_for_validation">Utiliser une adresse mail pour créer un compte</string>
+  <string name="login_with_username">Utiliser votre nom d\'utilisateur et votre mot de passe plutôt que votre numéro</string>
+  <string name="phone_number_info_title">Comment mon numéro de téléphone sera-t-il utilisé ?</string>
+  <string name="phone_number_info_content">
+Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
+  <string name="phone_number_link_info_content">
+Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
+  <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
+  <!--Status-->
+  <string name="invalid_email">Mail non valide</string>
+  <string name="account_already_exist">Ce compte existe déjà</string>
+  <string name="phone_number_not_exist">Ce compte n\'existe pas</string>
+  <string name="invalid_username">Nom d\'utilisateur non valide</string>
+  <string name="invalid_domain">Domaine non valide</string>
+  <string name="invalid_display_name">Nom d\'affichage non valide</string>
+  <string name="username_too_short">Nom d\'utilisateur trop court</string>
+  <string name="username_too_long">Nom d\'utilisateur trop long</string>
+  <string name="username_invalid_size">Taille du nom d\'utilisateur non valide</string>
+  <string name="phone_number_too_long">Numéro de téléphone trop long</string>
+  <string name="phone_number_too_short">Numéro de téléphone trop court</string>
+  <string name="phone_number_invalid">Numéro de téléphone non valide</string>
+  <string name="password_too_short">Mot de passe trop court</string>
+  <string name="password_too_long">Mot de passe trop long</string>
+  <string name="request_failed">Erreur de communication avec le serveur. Veuillez réessayer plus tard.</string>
+  <string name="transport_unsupported">Transport non supporté</string>
+  <string name="country_code_invalid">Indicatif de pays non valide</string>
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">Entrez un numéro ou une adresse</string>
   <!--History-->
@@ -104,7 +150,6 @@
   <string name="delete_contacts">Voulez-vous supprimer les contacts sélectionnés ?</string>
   <string name="delete_contact">Voulez-vous supprimer le contact sélectionné ?</string>
   <string name="sip_address">Adresse SIP</string>
-  <string name="phone_number">Numéro de téléphone</string>
   <string name="contact_first_name">Prénom</string>
   <string name="contact_last_name">Nom</string>
   <string name="contact_organization">Société</string>
@@ -150,7 +195,8 @@
   <string name="call_stats_upload">Bande passante envoi :</string>
   <string name="call_stats_download">Bande passante réception :</string>
   <string name="call_stats_ice">Connexion ICE :</string>
-  <string name="call_stats_video_resolution">Taille vidéo:</string>
+  <string name="call_stats_encoder_name">Encodeur :</string>
+  <string name="call_stats_decoder_name">Décodeur :</string>
   <string name="call">Appel</string>
   <!--About-->
   <string name="menu_send_log">Envoyer les logs</string>
@@ -169,6 +215,7 @@
   <string name="warning_wrong_destination_address">Impossible d\'utiliser l\'adresse %s</string>
   <string name="error_unknown">Erreur inconnue</string>
   <string name="error_call_declined">Appel rejeté</string>
+  <string name="error_user_busy">Utilisateur occupé</string>
   <string name="error_user_not_found">Utilisateur non trouvé</string>
   <string name="error_incompatible_media">Paramètres média incompatibles</string>
   <string name="error_low_bandwidth">Votre correspondant a une bande passante limitée, la vidéo ne peut pas être rajoutée</string>
@@ -199,6 +246,7 @@
   <string name="pref_avpf_rr_interval">Intervalle AVPF RTCP régulier en secondes (entre 1 et 5) </string>
   <string name="pref_escape_plus">Remplacer + par 00</string>
   <string name="pref_friendlist_subscribe">Souscrire à la liste d\'amis</string>
+  <string name="pref_link_account">Associer votre compte</string>
   <string name="pref_auth_userid">Identifiant d\'authentification</string>
   <string name="pref_help_auth_userid">Entrez l\'userid d\'authentification (optionnel)</string>
   <string name="pref_display_name">Nom d\'affichage</string>
@@ -260,8 +308,6 @@
   <string name="pref_call_title">Appel</string>
   <string name="pref_device_ringtone">Utiliser la sonnerie du téléphone</string>
   <string name="pref_auto_answer">Décrocher automatiquement appels entrants</string>
-  <string name="pref_rfc2833_dtmf">Envoyer les DTMFs in-band (RFC2833)</string>
-  <string name="pref_sipinfo_dtmf">Envoyer les DTMFs out-band DTMFs(SIP INFO)</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
@@ -335,6 +381,7 @@
   <string name="content_description_new_discussion">Nouvelle discussion</string>
   <string name="content_description_search">Rechercher</string>
   <string name="content_description_search_contact">Recherche d\'un contact</string>
+  <string name="content_description_search_country">Rechercher</string>
   <string name="content_description_all_contacts">Tous les contacts</string>
   <string name="content_description_linphone_contacts">Contacts Linphone</string>
   <string name="content_description_call_direction">Direction d\'appel</string>
@@ -354,6 +401,8 @@
   <string name="content_description_message_status">Status de message</string>
   <string name="content_description_conference">Conférence</string>
   <string name="content_description_username_field">Champ nom d\'utilisateur</string>
+  <string name="content_description_activation_code_field">Champ nom d\'utilisateur</string>
+  <string name="content_description_phone_number_field">Numéro de téléphone</string>
   <string name="content_description_display_field">Champ nom d\'affichage</string>
   <string name="content_description_domain_field">Champ domaine</string>
   <string name="content_description_url_field">Champ de configuration distante</string>

@@ -11,6 +11,7 @@
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Nombre de usuario</string>
+  <string name="phone_number">Número de teléfono</string>
   <string name="display_name">Nombre a mostrar</string>
   <string name="password">Contraseña</string>
   <string name="delete">Borrar</string>
@@ -25,15 +26,20 @@
   <string name="settings">Configuración</string>
   <string name="decline">Declinar</string>
   <string name="conference">Conferencia</string>
+  <string name="no">No</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Si</string>
   <!--Launch screen-->
   <!--Assistant-->
-  <string name="assistant_welcome_desc">Este asistente te ayudará a usar una cuanta SIP para tus llamadas.</string>
+  <string name="assistant_continue">Continuar</string>
   <string name="transport">Transporte</string>
   <string name="assistant_account_not_validated">Su cuenta aún no ha sido verificada.</string>
   <string name="assistant_account_validated">Su cuenta ha sido verificada.</string>
   <string name="wizard_failed">Ha ocurrido un error, pruebe más tarde.</string>
   <string name="wizard_username_unavailable">Este nombre de usuario está en uso.</string>
   <string name="first_launch_no_login_password">Por favor, introduzca su usuario y contraseña</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <!--History-->
   <string name="today">Hoy</string>
@@ -42,7 +48,6 @@
   <string name="no_contact">No hay contactos en su agenda de contactos.</string>
   <string name="no_sip_contact">No hay contactos SIP en su agenda de contactos.</string>
   <string name="sip_address">Dirección SIP</string>
-  <string name="phone_number">Número de teléfono</string>
   <string name="contact_first_name">Nombre</string>
   <string name="contact_last_name">Apellido</string>
   <!--Chat-->
@@ -71,7 +76,6 @@
   <string name="call_stats_upload">Ancho de banda de subida:</string>
   <string name="call_stats_download">Ancho de banda de bajada:</string>
   <string name="call_stats_ice">Conectividad ICE</string>
-  <string name="call_stats_video_resolution">Tamaño de vídeo:</string>
   <string name="call">Llamar</string>
   <!--About-->
   <string name="menu_send_log">Enviar registro</string>
@@ -145,7 +149,6 @@
   <string name="pref_video_codecs_title">Codecs</string>
   <!--Call settings-->
   <string name="pref_call_title">Llamar</string>
-  <string name="pref_rfc2833_dtmf">Enviar DTMS RFC2833</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
   <!--Network settings-->

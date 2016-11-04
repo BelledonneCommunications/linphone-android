@@ -11,6 +11,7 @@
   <string name="tunnel_host"></string>
   <!--Common-->
   <string name="username">Имя пользователя</string>
+  <string name="phone_number">Номер телефона</string>
   <string name="display_name">Отображаемое имя</string>
   <string name="password">Пароль</string>
   <string name="confirm_password">Подтверждение пароля</string>
@@ -34,26 +35,22 @@
   <string name="connect">Подключение</string>
   <string name="decline">Отклонить</string>
   <string name="conference">Конференция</string>
+  <string name="no">Нет</string>
+  <string name="yes">Да</string>
   <!--Launch screen-->
   <!--Assistant-->
   <string name="welcome">Добро пожаловать</string>
   <string name="assistant">Ассистент</string>
   <string name="assistant_create_account">Создать аккаунт</string>
+  <string name="assistant_continue">Продолжить</string>
   <string name="assistant_finish">Завершить настройку</string>
-  <string name="assistant_validate_account">Ваш аккаунт создан. Пожалуйста, проверьте электронную почту, чтобы подтвердить свой аккаунт. Как только это будет сделано, вернитесь сюда и нажмите на кнопку.</string>
-  <string name="assistant_welcome_desc">Этот ассистент поможет настроить SIP-аккаунт для звонков.</string>
-  <string name="assistant_linphone_login_desc">Введите имя пользователя и пароль от аккаунта Linphone</string>
-  <string name="assistant_login_desc">Введите имя пользователя и пароль с доменом SIP</string>
   <string name="assistant_remote_provisioning_desc">Пожалуйста, введите URL конфигурирования</string>
   <string name="transport">Транспорт</string>
   <string name="assistant_login_linphone">Исп. аккаунт Linphone</string>
   <string name="assistant_login_generic">Исп. SIP-аккаунт</string>
   <string name="assistant_remote_provisioning">Удалённое конфигурирование</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">Отображаемое имя (необязательно)</string>
-  <string name="assistant_linphone_account">Настройка аккаунта Linphone</string>
-  <string name="assistant_generic_account">Настройка SIP-аккаунта</string>
+  <string name="assistant_generic_account">Исп. SIP-аккаунт</string>
   <string name="assistant_remote_provisioning_title">Удалённое конфигурирование</string>
   <string name="assistant_fetch_apply">Извлечь и применить</string>
   <string name="assistant_login">Логин</string>
@@ -71,6 +68,8 @@
   <string name="wizard_passwords_unmatched">Пароли не совпадают.</string>
   <string name="setup_confirm_username">Ваше имя пользователя будет %s.\r\n\r\nОно может отличаться от введённого для соответствия требованиям.\r\nВы согласны?</string>
   <string name="first_launch_no_login_password">Пожалуйста, введите имя пользователя и пароль</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">Введите номер или адрес</string>
   <!--History-->
@@ -85,7 +84,6 @@
   <string name="delete_contacts">Вы действительно хотите удалить выбранные контакты?</string>
   <string name="delete_contact">Вы действительно хотите удалить выбранный контакт?</string>
   <string name="sip_address">Адрес SIP</string>
-  <string name="phone_number">Номер телефона</string>
   <string name="contact_first_name">Имя</string>
   <string name="contact_last_name">Фамилия</string>
   <!--Chat-->
@@ -130,7 +128,6 @@
   <string name="call_stats_upload">Полоса пропускания загрузки:</string>
   <string name="call_stats_download">Полоса пропускания скачивания:</string>
   <string name="call_stats_ice">Подключение ICE:</string>
-  <string name="call_stats_video_resolution">Размер видео:</string>
   <string name="call">Вызов</string>
   <!--About-->
   <string name="menu_send_log">Отправить журнал</string>
@@ -231,8 +228,6 @@
   <string name="pref_video_codecs_title">Кодеки</string>
   <!--Call settings-->
   <string name="pref_call_title">Вызов</string>
-  <string name="pref_rfc2833_dtmf">Отправлять RFC2833 DTMFs</string>
-  <string name="pref_sipinfo_dtmf">Отправлять SIP INFO DTMFs</string>
   <string name="pref_voice_mail">URI голосовой почты</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Чат</string>
@@ -311,6 +306,7 @@
   <string name="content_description_message_status">Статус сообщения</string>
   <string name="content_description_conference">Конференция</string>
   <string name="content_description_username_field">Поле имени пользователя</string>
+  <string name="content_description_activation_code_field">Поле имени пользователя</string>
   <string name="content_description_display_field">Поле отображаемого имени</string>
   <string name="content_description_domain_field">Поле домена</string>
   <string name="content_description_url_field">Поле удалённого конфигурирования</string>

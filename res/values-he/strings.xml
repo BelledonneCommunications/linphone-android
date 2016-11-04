@@ -14,9 +14,14 @@
   <string name="settings">הגדרות</string>
   <string name="decline">דחה</string>
   <string name="conference">ועידה</string>
+  <string name="no">לא</string>
+  <string name="yes">כן</string>
   <!--Launch screen-->
   <!--Assistant-->
+  <string name="assistant_continue">המשך</string>
   <string name="transport">טרנספורט</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <!--History-->
   <string name="today">היום</string>

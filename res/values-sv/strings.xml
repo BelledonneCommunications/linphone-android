@@ -10,6 +10,7 @@
   <string name="sync_account_name">linphone-kontakter</string>
   <!--Common-->
   <string name="username">Användarnamn</string>
+  <string name="phone_number">Telefonnummer</string>
   <string name="display_name">Visningsnamn</string>
   <string name="password">Lösenord</string>
   <string name="delete">Ta bort</string>
@@ -26,10 +27,16 @@
   <string name="settings">Inställningar</string>
   <string name="decline">Avvisa</string>
   <string name="conference">Konferens</string>
+  <string name="no">Nej</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Ja</string>
   <!--Launch screen-->
   <!--Assistant-->
+  <string name="assistant_continue">Fortsätt</string>
   <string name="wizard_username_unavailable">Detta användarnamn används redan.</string>
   <string name="first_launch_no_login_password">Ange din inloggning och lösenord</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <!--History-->
   <string name="today">Idag</string>
@@ -38,7 +45,6 @@
   <string name="no_contact">Inga kontakter i din adressbok.</string>
   <string name="no_sip_contact">Inga SIP-kontakter i din adressbok.</string>
   <string name="sip_address">SIP-adress</string>
-  <string name="phone_number">Telefonnummer</string>
   <string name="contact_first_name">Förnamn</string>
   <string name="contact_last_name">Efternamn</string>
   <!--Chat-->
@@ -66,7 +72,6 @@
   <string name="call_stats_upload">Uppladdningsbandbredd:</string>
   <string name="call_stats_download">Nerladdningsbandbredd:</string>
   <string name="call_stats_ice">ICE-anslutning:</string>
-  <string name="call_stats_video_resolution">Video-storlek:</string>
   <string name="call">Ring</string>
   <!--About-->
   <string name="menu_send_log">Skicka logg</string>
@@ -132,7 +137,6 @@
   <string name="pref_bandwidth_limit">Bandbreddsgräns i kbit/s</string>
   <!--Call settings-->
   <string name="pref_call_title">Ring</string>
-  <string name="pref_rfc2833_dtmf">Skicka RFC2833 DTMF</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chatt</string>
   <string name="pref_image_sharing_server_title">Delar server</string>

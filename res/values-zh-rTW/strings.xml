@@ -15,6 +15,7 @@
   <string name="sync_account_name">Linphone 聯絡人</string>
   <!--Common-->
   <string name="username">使用者名稱</string>
+  <string name="phone_number">電話號碼</string>
   <string name="display_name">顯示名稱</string>
   <string name="password">密碼</string>
   <string name="confirm_password">密碼確認</string>
@@ -37,24 +38,22 @@
   <string name="connect">連接</string>
   <string name="decline">拒絕</string>
   <string name="conference">會議</string>
+  <string name="no">否</string>
+  <string name="ok">確定</string>
+  <string name="yes">是</string>
   <!--Launch screen-->
   <string name="app_description"><i>自由的</i> SIP 客戶端</string>
   <!--Assistant-->
   <string name="welcome">歡迎</string>
   <string name="assistant">助理</string>
   <string name="assistant_create_account">建立帳號</string>
+  <string name="assistant_continue">繼續</string>
   <string name="assistant_finish">完成設定</string>
-  <string name="assistant_validate_account">你的帳號已經建立。請檢查你的郵件來驗證你的帳號。完成時，回到這裡並點擊按鈕。</string>
-  <string name="assistant_welcome_desc">這個助理將幫助你使用一個 SIP 帳號來通話。</string>
-  <string name="assistant_linphone_login_desc">輸入你 Linphone 帳號的使用者名稱和密碼</string>
   <string name="transport">傳輸</string>
   <string name="assistant_login_linphone">使用 Linphone 帳號</string>
   <string name="assistant_login_generic">使用 SIP 帳號</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">顯示名稱(選擇性)</string>
-  <string name="assistant_linphone_account">設定 Linphone 帳號</string>
-  <string name="assistant_generic_account">設定 SIP 帳號</string>
+  <string name="assistant_generic_account">使用 SIP 帳號</string>
   <string name="assistant_login">登入</string>
   <string name="assistant_ec_calibration">正在進行回音消除器校正</string>
   <string name="assistant_remote_provisioning_login">輸入你的使用者名稱和密碼</string>
@@ -71,6 +70,8 @@
   <string name="setup_confirm_username">你的使用者名稱將會是 %s。\r\n\r\n它可能與你輸入的不同來符合需求。\r\n你接受嗎？</string>
   <string name="first_launch_no_login_password">請輸入你的使用者名稱和密碼</string>
   <string name="forgot_password">忘記密碼？</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">輸入號碼或位址</string>
   <!--History-->
@@ -85,7 +86,6 @@
   <string name="delete_contacts">你想要刪除選取的聯絡人嗎？</string>
   <string name="delete_contact">你想要刪除選取的聯絡人嗎？</string>
   <string name="sip_address">SIP 位址</string>
-  <string name="phone_number">電話號碼</string>
   <string name="contact_first_name">名字</string>
   <string name="contact_last_name">姓氏</string>
   <!--Chat-->
@@ -126,7 +126,6 @@
   <string name="call_stats_codec">編解碼器：</string>
   <string name="call_stats_upload">上傳頻寬：</string>
   <string name="call_stats_download">下載頻寬：</string>
-  <string name="call_stats_video_resolution">視訊大小：</string>
   <string name="call">通話</string>
   <!--About-->
   <string name="menu_send_log">傳送記錄</string>
@@ -274,6 +273,7 @@
   <string name="content_description_message_status">訊息狀態</string>
   <string name="content_description_conference">會議</string>
   <string name="content_description_username_field">使用者名稱欄位</string>
+  <string name="content_description_activation_code_field">使用者名稱欄位</string>
   <string name="content_description_display_field">顯示名稱欄位</string>
   <string name="content_description_domain_field">網域欄位</string>
   <string name="content_description_confirm_password_field">確認密碼欄位</string>

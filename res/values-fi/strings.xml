@@ -17,6 +17,7 @@
   <string name="today_date_format">TT:mm esim. 11:11</string>
   <!--Common-->
   <string name="username">Käyttäjätunnus</string>
+  <string name="phone_number">Puhelin numero</string>
   <string name="display_name">Näytä nimi</string>
   <string name="password">Salasana</string>
   <string name="confirm_password">Salasanan vahvistus</string>
@@ -40,25 +41,22 @@
   <string name="connect">Yhteys</string>
   <string name="decline">Hylkää</string>
   <string name="conference">Kokous</string>
+  <string name="no">Ei</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Kyllä</string>
   <!--Launch screen-->
   <!--Assistant-->
   <string name="welcome">Tervetuloa</string>
   <string name="assistant">Avustaja</string>
   <string name="assistant_create_account">Luo tili</string>
-  <string name="assistant_validate_account">Antamaasi osoitteeseen on lähetetty sähköposti. Avaa viestiss oleva linkki aktivoidaksesi tilin. Kun olet valmis, palaa ja paina painiketta.</string>
-  <string name="assistant_welcome_desc">Tämä avustaja auttaa sinua käyttämään SIP tiliä puheluissasi.</string>
-  <string name="assistant_linphone_login_desc">Anna linphone.org tilisi käyttäjätunnus ja salasana</string>
-  <string name="assistant_login_desc">Anna sinun käyttäjätunnus ja salasana ja SIP verkkotunnus eli domain</string>
+  <string name="assistant_continue">Jatka</string>
   <string name="assistant_remote_provisioning_desc">Anna puhelun yhteyden luomistietojen url-osoite</string>
   <string name="transport">Siirrä</string>
   <string name="assistant_login_linphone">Käytä Linphone tiliä</string>
   <string name="assistant_login_generic">Käytä SIP tiliä</string>
   <string name="assistant_remote_provisioning">Hae etäsäädöt</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">Näyttö nimi (vainnainen)</string>
-  <string name="assistant_linphone_account">Muokkaa Linphone tiliä</string>
-  <string name="assistant_generic_account">Muokkaa SIP tiliä</string>
+  <string name="assistant_generic_account">Käytä SIP tiliä</string>
   <string name="assistant_remote_provisioning_title">Hae etäsäädöt</string>
   <string name="assistant_fetch_apply">Hae ja käytä</string>
   <string name="assistant_login">Kirjaudu sisään</string>
@@ -75,6 +73,8 @@
   <string name="wizard_passwords_unmatched">Antamasi salasanat ovat erillaiset.</string>
   <string name="setup_confirm_username">Sinun käyttäjätunnus tulee olemaan %s.\r\n\r\nIt voiden muuttua, jotta vaatiukset täyttyisivät .\r\nHyväksytkö?</string>
   <string name="first_launch_no_login_password">Anna käyttäjätunnus ja salasana</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">Anna numero tai osoite</string>
   <!--History-->
@@ -89,7 +89,6 @@
   <string name="delete_contacts">Haluatko poistaa valitun yhteystiedon?</string>
   <string name="delete_contact">Haluatko poistaa valitun yhteystiedon?</string>
   <string name="sip_address">SIP osoite</string>
-  <string name="phone_number">Puhelin numero</string>
   <string name="contact_first_name">Etunimi</string>
   <string name="contact_last_name">Sukunimi</string>
   <!--Chat-->
@@ -134,7 +133,6 @@
   <string name="call_stats_upload">Lähetyskaistanleveys:</string>
   <string name="call_stats_download">Latauskaistanleveys:</string>
   <string name="call_stats_ice">ICE yhdistettävyys:</string>
-  <string name="call_stats_video_resolution">Videon koko:</string>
   <string name="call">Puhelu</string>
   <!--About-->
   <string name="menu_send_log">Lähetä loki</string>
@@ -235,8 +233,6 @@
   <string name="pref_video_codecs_title">Kodekit</string>
   <!--Call settings-->
   <string name="pref_call_title">Puhelu</string>
-  <string name="pref_rfc2833_dtmf">Lähetä RFC2833 DTMFs</string>
-  <string name="pref_sipinfo_dtmf">Lähetä SIP INFO DTMFs</string>
   <string name="pref_voice_mail">Ääni postin URI-osoite</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Keskustelu</string>

@@ -11,6 +11,7 @@
   <string name="today_date_format">ЧЧ:мм</string>
   <!--Common-->
   <string name="username">Корисничко име</string>
+  <string name="phone_number">Број телефона</string>
   <string name="display_name">Приказано име</string>
   <string name="password">Лозинка</string>
   <string name="delete">Обриши</string>
@@ -27,15 +28,20 @@
   <string name="settings">Подешавања</string>
   <string name="decline">Одбаци</string>
   <string name="conference">Конференција</string>
+  <string name="no">Не</string>
+  <string name="ok">У реду</string>
+  <string name="yes">Да</string>
   <!--Launch screen-->
   <!--Assistant-->
-  <string name="assistant_welcome_desc">Овај помоћник ће вам помоћи да користите СИП налог за ваше позиве.</string>
+  <string name="assistant_continue">Настави</string>
   <string name="transport">Пренос</string>
   <string name="assistant_account_not_validated">Ваш налог још није потврђен.</string>
   <string name="assistant_account_validated">Ваш налог је потврђен.</string>
   <string name="wizard_failed">Дошло је до грепке, пробајте опет касније.</string>
   <string name="wizard_username_unavailable">Ово корисничко име је већ у употреби.</string>
   <string name="first_launch_no_login_password">Упишите вашу пријаву и лозинку</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <!--History-->
   <string name="today">Данас</string>
@@ -44,7 +50,6 @@
   <string name="no_contact">Нема контакта у вашем адресару.</string>
   <string name="no_sip_contact">Нема СИП контакта у вашем адресару.</string>
   <string name="sip_address">СИП адреса</string>
-  <string name="phone_number">Број телефона</string>
   <string name="contact_first_name">Име</string>
   <string name="contact_last_name">Презиме</string>
   <!--Chat-->
@@ -76,7 +81,6 @@
   <string name="call_stats_upload">Пропусни опсег отпремања:</string>
   <string name="call_stats_download">Пропусни опсег преузимања:</string>
   <string name="call_stats_ice">ИЦЕ повезивост:</string>
-  <string name="call_stats_video_resolution">Величина видеа:</string>
   <string name="call">Позови</string>
   <!--About-->
   <string name="menu_send_log">Пошаљи дневник</string>
@@ -167,8 +171,6 @@
   <string name="pref_video_codecs_title">Кодеци</string>
   <!--Call settings-->
   <string name="pref_call_title">Позови</string>
-  <string name="pref_rfc2833_dtmf">Пошаљи РФЦ2833 ДТМФ-е</string>
-  <string name="pref_sipinfo_dtmf">Пошаљи СИП ИНФО ДТФ-е</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Ћаскање</string>
   <string name="pref_image_sharing_server_title">Сервер дељења</string>

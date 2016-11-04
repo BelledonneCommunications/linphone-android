@@ -6,33 +6,56 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Bezig met opstarten</string>
+  <string name="notification_registered">%s geregistreerd</string>
+  <string name="notification_register_failure">%s registratie mislukt</string>
   <string name="tunnel_host"></string>
+  <string name="about_version">Linphone Android %s</string>
+  <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Gebruikersnaam</string>
+  <string name="phone_number">Telefoonnummer</string>
   <string name="display_name">Weergavenaam</string>
   <string name="password">Wachtwoord</string>
+  <string name="confirm_password">Bevestig wachtwoord</string>
+  <string name="domain">Domein</string>
+  <string name="remote_provisioning_url">URL</string>
+  <string name="email">Email</string>
+  <string name="delete_text">Weet u zeker dat u de selectie wilt verwijderen?</string>
   <string name="delete">Verwijderen</string>
+  <string name="retry">Probeer opnieuw</string>
   <string name="cancel">Annuleren</string>
   <string name="accept">Accepteren</string>
+  <string name="continue_text">Ga door</string>
   <string name="about">Over</string>
   <string name="deny">Weigeren</string>
+  <string name="no_account">Geen account geconfigureerd</string>
+  <string name="search">Zoeken</string>
   <string name="outgoing">Uitgaande</string>
   <string name="incoming">Inkomende</string>
-  <string name="missed">Gemist</string>
+  <string name="missed">Gemiste</string>
   <string name="settings">Instellingen</string>
+  <string name="connect">Connectie</string>
   <string name="decline">Weigeren</string>
+  <string name="conference">Conference</string>
+  <string name="no">Nee</string>
+  <string name="yes">Ja</string>
   <!--Launch screen-->
   <!--Assistant-->
-  <string name="assistant_welcome_desc">Deze wizard zal u helpen bij het gebruiken van een SIP-account voor uw oproepen.</string>
+  <string name="welcome">Welkom</string>
+  <string name="assistant">Assistent</string>
+  <string name="assistant_create_account">Creëer account</string>
+  <string name="assistant_continue">Ga door</string>
+  <string name="assistant_finish">Beëindig configuratie</string>
   <string name="transport">Transport</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <!--History-->
   <string name="today">Vandaag</string>
   <string name="yesterday">Gisteren</string>
   <!--Contacts-->
   <string name="sip_address">SIP-adres</string>
-  <string name="phone_number">Telefoonnummer</string>
   <string name="contact_first_name">Voornaam</string>
   <string name="contact_last_name">Achternaam</string>
   <!--Chat-->
@@ -42,6 +65,7 @@
   <!--Status Bar-->
   <string name="status_connected">Geregistreerd</string>
   <!--Side Menu-->
+  <string name="menu_assistant">Assistent</string>
   <string name="menu_settings">Instellingen</string>
   <string name="menu_about">Over</string>
   <!--Call-->
@@ -51,7 +75,6 @@
   <string name="call_stats_codec">Codec:</string>
   <string name="call_stats_upload">Uploadbandbreedte:</string>
   <string name="call_stats_download">Downloadbandbreedte:</string>
-  <string name="call_stats_video_resolution">Videogrootte:</string>
   <string name="call">Oproep</string>
   <!--About-->
   <string name="menu_send_log">Log versturen</string>
@@ -125,7 +148,9 @@
   <string name="content_description_chat">Chat</string>
   <string name="content_description_delete">Verwijderen</string>
   <string name="content_description_add">Oproep toevoegen</string>
+  <string name="content_description_search">Zoeken</string>
   <string name="content_description_add_call">Oproep toevoegen</string>
+  <string name="content_description_conference">Conference</string>
   <string name="content_description_default_account">Standaard account</string>
   <string name="content_description_contact_first_name">Voornaam</string>
   <string name="content_description_contact_last_name">Achternaam</string>

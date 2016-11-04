@@ -1,9 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Custom-->
+  <string name="app_name">Linphone</string>
+  <string name="service_name">Linphone Service</string>
+  <string name="addressbook_label">Linphone</string>
+  <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Uruchamianie</string>
   <string name="notification_registered">%s zarejestrowany</string>
   <string name="notification_register_failure">%s nie udało się zarejestrować</string>
+  <string name="tunnel_host"></string>
+  <string name="about_version">Linphone Android %s</string>
+  <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">kontakt linphone</string>
@@ -14,6 +21,7 @@
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Nazwa użytkownika</string>
+  <string name="phone_number">Numer telefonu</string>
   <string name="display_name">Nazwa wyświetlana</string>
   <string name="password">Hasło</string>
   <string name="confirm_password">Potwierdź hasło</string>
@@ -43,19 +51,15 @@
   <string name="welcome">Witam</string>
   <string name="assistant">Asystent</string>
   <string name="assistant_create_account">Stwórz konto</string>
+  <string name="assistant_continue">Kontynuuj </string>
   <string name="assistant_finish">Zakończ konfigurację</string>
-  <string name="assistant_validate_account">Konto zostało utworzone. Proszę sprawdzić pocztę, aby zweryfikować konto. Po weryfikacji proszę wrócić tutaj i kliknąć przycisk.</string>
-  <string name="assistant_welcome_desc">Ten asystent pomoże Ci używać konta połączeń SIP.</string>
-  <string name="assistant_linphone_login_desc">Wprowadź swoją nazwę użytkownika i hasło konta Linphone</string>
-  <string name="assistant_login_desc">Wprowadź swoją nazwę użytkownika i hasło w domenie SIP</string>
   <string name="assistant_remote_provisioning_desc">Proszę podać swoje zastrzeganie URL</string>
   <string name="transport">Transport</string>
   <string name="assistant_login_linphone">Użyj konta Linphone</string>
   <string name="assistant_login_generic">Użyj konta SIP</string>
   <string name="assistant_remote_provisioning">Pobierz zdalną konfigurację</string>
   <string name="assistant_display_name_optional">Wyświetl nazwę (opcjonalnie)</string>
-  <string name="assistant_linphone_account">Skonfiguruj konto Linphone</string>
-  <string name="assistant_generic_account">Skonfiguruj konto SIP</string>
+  <string name="assistant_generic_account">Użyj konta SIP</string>
   <string name="assistant_remote_provisioning_title">Pobierz zdalną konfigurację </string>
   <string name="assistant_fetch_apply">Pobierz i zastosuj</string>
   <string name="assistant_login">Login</string>
@@ -77,6 +81,8 @@
   <string name="setup_confirm_username">Twoja nazwa użytkownika będzie %s.\r\n\r\nIt  może różnić się od danych wejściowych w celu dopasowania wymagań. \ Czy akceptujesz?</string>
   <string name="first_launch_no_login_password">Podaj swój login i hasło</string>
   <string name="forgot_password">Zapomniałeś hasła ?</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">Wprowadź numer lub adres</string>
   <!--History-->
@@ -91,7 +97,6 @@
   <string name="delete_contacts">Czy chcesz usunąć wybrane kontakty?</string>
   <string name="delete_contact">Czy chcesz usunąć wybrany kontakt?</string>
   <string name="sip_address">Adres SIP</string>
-  <string name="phone_number">Numer telefonu</string>
   <string name="contact_first_name">Imię</string>
   <string name="contact_last_name">Nazwisko</string>
   <string name="contact_organization">Organizacja</string>
@@ -137,7 +142,6 @@
   <string name="call_stats_upload">Prześlij przepustowość:</string>
   <string name="call_stats_download">Pobierz przepustowość:</string>
   <string name="call_stats_ice">Łączność ICE:</string>
-  <string name="call_stats_video_resolution">Rozmiar filmu:</string>
   <string name="call">Połączenie</string>
   <!--About-->
   <string name="menu_send_log">Wyślij rejestr</string>
@@ -239,8 +243,6 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_call_title">Połączenie </string>
   <string name="pref_device_ringtone">Zastosowanie urządzenia dzwonka</string>
   <string name="pref_auto_answer">Auto odbieranie przychodzących połączeń</string>
-  <string name="pref_rfc2833_dtmf">Wyślij  RFC2833 DTMFs </string>
-  <string name="pref_sipinfo_dtmf">Wyślij SIP INFO DTMFs</string>
   <string name="pref_voice_mail">Poczta głosowa URI</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Czat</string>
@@ -330,6 +332,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="content_description_message_status">Stan wiadomości</string>
   <string name="content_description_conference">Konferencja</string>
   <string name="content_description_username_field">Nazwa pola</string>
+  <string name="content_description_activation_code_field">Nazwa pola</string>
   <string name="content_description_display_field">Wyświetlana nazwa pola</string>
   <string name="content_description_domain_field">Pole domeny</string>
   <string name="content_description_url_field">Pole zdalnego zastrzegania</string>

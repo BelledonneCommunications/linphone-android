@@ -21,6 +21,7 @@
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">ユーザー名</string>
+  <string name="phone_number">電話番号</string>
   <string name="display_name">表示する名前</string>
   <string name="password">パスワード</string>
   <string name="confirm_password">パスワードを再入力</string>
@@ -44,27 +45,24 @@
   <string name="connect">接続する</string>
   <string name="decline">接続しない</string>
   <string name="conference">会談</string>
+  <string name="no">いいえ</string>
+  <string name="ok">OK</string>
+  <string name="yes">はい</string>
   <!--Launch screen-->
   <string name="app_description">the <i>libre</i> SIP client</string>
   <!--Assistant-->
   <string name="welcome">ようこそ</string>
   <string name="assistant">アシスタント</string>
   <string name="assistant_create_account">アカウントを作成する</string>
+  <string name="assistant_continue">続行</string>
   <string name="assistant_finish">完了しました</string>
-  <string name="assistant_validate_account">アカウントを作成しました。あなたのメールを確認し、アカウントを認証してください。その後このボタンを押して再開してください。</string>
-  <string name="assistant_welcome_desc">SIPアカウントの設定を行います。</string>
-  <string name="assistant_linphone_login_desc">Linphoneのユーザー名とパスワードを入力してください</string>
-  <string name="assistant_login_desc">SIPドメインのユーザー名とパスワードを入力してください</string>
   <string name="assistant_remote_provisioning_desc">プロビショニングURLを入力してください</string>
   <string name="transport">トランスポート</string>
   <string name="assistant_login_linphone">Linphoneのアカウントで使う</string>
   <string name="assistant_login_generic">SIPアカウントで使う</string>
   <string name="assistant_remote_provisioning">リモート設定</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">表示する名前(任意)</string>
-  <string name="assistant_linphone_account">Linphoneアカウントを登録する</string>
-  <string name="assistant_generic_account">SIPアカウントを登録する</string>
+  <string name="assistant_generic_account">SIPアカウントで使う</string>
   <string name="assistant_remote_provisioning_title">リモート設定</string>
   <string name="assistant_login">ログイン</string>
   <string name="assistant_ec_calibration">エコーキャンセルを設定しています</string>
@@ -80,6 +78,8 @@
   <string name="wizard_passwords_unmatched">パスワードが一致しません</string>
   <string name="first_launch_no_login_password">ユーザー名とパスワードを入力してください</string>
   <string name="forgot_password">パスワードを忘れましたか？</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">番号もしくはアドレスを入力してください</string>
   <!--History-->
@@ -94,7 +94,6 @@
   <string name="delete_contacts">本当に選択した連絡先を削除しますか？</string>
   <string name="delete_contact">本当に選択した連絡先を削除しますか？</string>
   <string name="sip_address">SIPアドレス</string>
-  <string name="phone_number">電話番号</string>
   <string name="contact_first_name">名前</string>
   <string name="contact_last_name">名字</string>
   <!--Chat-->
@@ -135,7 +134,6 @@
   <string name="call_stats_upload">アップロード幅:</string>
   <string name="call_stats_download">ダウンロード幅:</string>
   <string name="call_stats_ice">ICE 接続:</string>
-  <string name="call_stats_video_resolution">ビデオ解像度:</string>
   <string name="call">発信</string>
   <!--About-->
   <string name="menu_send_log">ログを送信する</string>
@@ -233,8 +231,6 @@
   <string name="pref_video_codecs_title">コーデック</string>
   <!--Call settings-->
   <string name="pref_call_title">発信</string>
-  <string name="pref_rfc2833_dtmf">DTMFをRFC2833で送信する</string>
-  <string name="pref_sipinfo_dtmf">DTMFをSIP情報で送信する</string>
   <string name="pref_voice_mail">音声メールのURI</string>
   <!--Chat settings-->
   <string name="pref_chat_title">チャット</string>
@@ -317,6 +313,7 @@
   <string name="content_description_message_status">メッセージ状態</string>
   <string name="content_description_conference">会談</string>
   <string name="content_description_username_field">ユーザー名</string>
+  <string name="content_description_activation_code_field">ユーザー名</string>
   <string name="content_description_display_field">表示名</string>
   <string name="content_description_domain_field">ドメイン</string>
   <string name="content_description_confirm_password_field">パスワードの再入力</string>

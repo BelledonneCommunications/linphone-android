@@ -17,6 +17,7 @@
   <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">اسم المستخدم</string>
+  <string name="phone_number">رقم الهاتف</string>
   <string name="display_name">الاسم المعروض</string>
   <string name="password">كلمة السر</string>
   <string name="confirm_password">تأكيد كلمة السر</string>
@@ -40,27 +41,24 @@
   <string name="connect">الاتصال</string>
   <string name="decline">رفض</string>
   <string name="conference">اجتماع</string>
+  <string name="no">لا</string>
+  <string name="ok">موافق</string>
+  <string name="yes">نعم</string>
   <!--Launch screen-->
   <string name="app_description">‫الزبون SIP <i>الحر</i>‬</string>
   <!--Assistant-->
   <string name="welcome">مرحبا</string>
   <string name="assistant">المرشد</string>
   <string name="assistant_create_account">إنشاء الحساب</string>
+  <string name="assistant_continue">استمرار</string>
   <string name="assistant_finish">أنهِ التهئية</string>
-  <string name="assistant_validate_account">لقد أُنشِيء حسابك. يُرجى الاطلاع على رسائل بريدك الإلكتروني لتأكيد حسابك. حالما تنتهي من ذلك، عُد إلى هنا واضغط على الزر.</string>
-  <string name="assistant_welcome_desc">سيمكنك هذا المرشد من إعداد حساب SIP لإجراء المكالمات.</string>
-  <string name="assistant_linphone_login_desc">أدخِل اسم المستخدم وكلمة السر لحساب لِنْفُونْ</string>
-  <string name="assistant_login_desc">‫أدخِل اسم المستخدم وكلمة السر الحساب مع نطاق SIP‬</string>
   <string name="assistant_remote_provisioning_desc">يٌرجى إدخال عنوان التهئية البعيدة</string>
   <string name="transport">النقل</string>
   <string name="assistant_login_linphone">استخدم حساب لِنْفُونْ</string>
   <string name="assistant_login_generic">استخدم حساب SIP</string>
   <string name="assistant_remote_provisioning">اجذب التهيئة البعيدة</string>
-  <string name="assistant_create_account_part_1">1/2</string>
-  <string name="assistant_create_account_part_2">2/2</string>
   <string name="assistant_display_name_optional">الاسم المعروض (اختياري)</string>
-  <string name="assistant_linphone_account">هيِّءْ حساب لِنْفُونْ</string>
-  <string name="assistant_generic_account">هيِّءْ حساب SIP</string>
+  <string name="assistant_generic_account">استخدم حساب SIP</string>
   <string name="assistant_remote_provisioning_title">اجذب التهيئة البعيدة</string>
   <string name="assistant_fetch_apply">اجذبْ وطبِّق</string>
   <string name="assistant_login">الولوج</string>
@@ -78,6 +76,8 @@
   <string name="wizard_passwords_unmatched">كلمتا السر غير متطابقتين.</string>
   <string name="setup_confirm_username">سيكون اسم المستخدم هو %s.\r\n\r\nقد يختلف عما أدخلته ليوافق المعايير.\r\nأتقبل ذلك ؟</string>
   <string name="first_launch_no_login_password">يُرجى إدخال اسم المستخدم وكلمة السر</string>
+  <!--Status-->
+  <!--In-app-->
   <!--Dailer-->
   <string name="address_bar_hint">أدخل رقما أو عنوانا</string>
   <!--History-->
@@ -92,7 +92,6 @@
   <string name="delete_contacts">أتود حذف جهات الاتصال المحددة ؟</string>
   <string name="delete_contact">أتود حذف جهة الاتصال المحددة ؟</string>
   <string name="sip_address">عنوان SIP</string>
-  <string name="phone_number">رقم الهاتف</string>
   <string name="contact_first_name">اﻹسم</string>
   <string name="contact_last_name">اللقب</string>
   <!--Chat-->
@@ -137,7 +136,6 @@
   <string name="call_stats_upload">صبيب الرفع :</string>
   <string name="call_stats_download">صبيب التنزيل :</string>
   <string name="call_stats_ice">توصيل ICE :</string>
-  <string name="call_stats_video_resolution">مقاس الفيديو :</string>
   <string name="call">المكالمة</string>
   <!--About-->
   <string name="menu_send_log">إرسال السجل</string>
@@ -238,8 +236,6 @@
   <string name="pref_video_codecs_title">المراميز</string>
   <!--Call settings-->
   <string name="pref_call_title">المكالمة</string>
-  <string name="pref_rfc2833_dtmf">إرسال RFC2833 DTMFs</string>
-  <string name="pref_sipinfo_dtmf">إرسال SIP INFO DTMFs</string>
   <string name="pref_voice_mail">عنوان العلبة الصوتية</string>
   <!--Chat settings-->
   <string name="pref_chat_title">المحادثة</string>
@@ -321,6 +317,7 @@
   <string name="content_description_message_status">حالة الرسالة</string>
   <string name="content_description_conference">اجتماع</string>
   <string name="content_description_username_field">حقل اسم المستخدم</string>
+  <string name="content_description_activation_code_field">حقل اسم المستخدم</string>
   <string name="content_description_display_field">اعرض حقل الاسم</string>
   <string name="content_description_domain_field">حقل النطاق</string>
   <string name="content_description_url_field">حقل التهيئة البعيدة</string>
