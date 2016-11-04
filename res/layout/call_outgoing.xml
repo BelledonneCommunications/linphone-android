@@ -44,9 +44,9 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentTop="true"
-			android:gravity="center"
 			android:layout_centerHorizontal="true"
-			android:paddingTop="5dp"/>
+			android:paddingTop="5dp"
+			android:gravity="center_vertical|center_horizontal" />
 
 		<TextView
 			android:id="@+id/contact_number"
@@ -54,9 +54,9 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_below="@id/contact_name"
-			android:layout_gravity="center"
 			android:layout_centerHorizontal="true"
-			android:paddingBottom="10dp"/>
+			android:paddingBottom="10dp"
+			android:layout_gravity="center_vertical|center_horizontal" />
 
 		<RelativeLayout
 			android:id="@+id/avatar_layout"
