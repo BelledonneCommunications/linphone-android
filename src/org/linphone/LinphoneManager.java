@@ -1637,7 +1637,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (status.equals(LinphoneAccountCreator.Status.AccountNotLinked)) {
+			askLinkWithPhoneNumber();
+		}
+	}
 
 	@Override
 	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
@@ -1649,13 +1653,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		if (status.equals(LinphoneAccountCreator.Status.AccountNotLinked)) {
-			askLinkWithPhoneNumber();
-		}
-	}
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-	}
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
 }
