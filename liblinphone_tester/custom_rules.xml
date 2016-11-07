@@ -79,7 +79,15 @@
 			<arg value="-c" />
 			<arg value="tail -n 500 ${archive.name}" />
 		</exec>
-		<exec executable="bash" >
+        <exec executable="bash">
+            <arg value="-c"/>
+            <arg value="echo ${archive.name}"/>
+        </exec>
+        <exec executable="bash">
+            <arg value="-c"/>
+            <arg value="pwd"/>
+        </exec>
+        <exec executable="bash" >
 			<arg value="-c" />
       <arg value="cat ${archive.name} |ndk-stack -sym ../libs-debug/${abi}" />
 		</exec>
