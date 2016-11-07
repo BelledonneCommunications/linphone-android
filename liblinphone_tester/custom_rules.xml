@@ -62,27 +62,26 @@
 				<resourcecontains resource="${output.file}" substring="FAILURES" />
 			</condition>
 		</fail>
-
 		<delete file="${archive.name}"/>
 		<delete file="${output.file}"/>
 	</target>
 	<target name="check-for-crash" if="has.crashed">
-         <exec executable="adb" outputproperty="arch">
-            <arg value="shell"/>
-            <arg value="getprop" />
-            <arg value="ro.product.cpu.abi"/>
-        </exec>
-				<exec executable="bash" outputproperty="abi">
-            <arg value="-c"/>
-            <arg value="echo ${arch} | tr -d '\r'"/>
-        </exec>
-        <exec executable="bash" >
+    <exec executable="adb" outputproperty="arch">
+    	<arg value="shell"/>
+    	<arg value="getprop" />
+      <arg value="ro.product.cpu.abi"/>
+    </exec>
+		<exec executable="bash" outputproperty="abi">
+      <arg value="-c"/>
+      <arg value="echo ${arch} | tr -d '\r'"/>
+    </exec>
+    <exec executable="bash" >
 			<arg value="-c" />
 			<arg value="tail -n 500 ${archive.name}" />
 		</exec>
 		<exec executable="bash" >
 			<arg value="-c" />
-            <arg value="cat ${archive.name} |ndk-stack -sym ../libs-debug/${abi}" />
+      <arg value="cat ${archive.name} |ndk-stack -sym ../libs-debug/${abi}" />
 		</exec>
 		<fail message="Tests crashed" status="125"/>
 	</target>
