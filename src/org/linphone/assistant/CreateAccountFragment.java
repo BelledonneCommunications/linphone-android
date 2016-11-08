@@ -692,4 +692,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			accountCreator.isAccountActivated();
 		}
 	}
+
+	@Override
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, Status status) {
+
+	}
 }

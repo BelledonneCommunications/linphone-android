@@ -48,6 +48,7 @@
   <string name="decline">Ablehnen</string>
   <string name="conference">Konferenz</string>
   <string name="link">Link</string>
+  <string name="link_account_popup">Möchten Sie das Konto %s mit Ihrer Telefonnummer verknüpfen?</string>
   <string name="maybe_later">Vielleicht später</string>
   <string name="later">Später</string>
   <string name="no">Nein</string>
@@ -64,13 +65,23 @@
   <string name="assistant_continue">Fortsetzen</string>
   <string name="assistant_activate">Aktivieren Sie Ihr Konto</string>
   <string name="assistant_finish">Konfiguration fertigstellen</string>
+  <string name="assistant_validate_account_1">Ihr Konto ist erstellt. Bitte überprüfen Sie Ihre E-Mails, um Ihr Konto zu bestätigen.</string>
+  <string name="assistant_validate_account_2">Sobald das gemacht ist, kommen Sie wieder her und klicken auf die Schaltfläche.</string>
+  <string name="assistant_welcome_desc">Dieser Assistent hilft Ihnen beim Konfigurieren und Nutzen Ihres SIP-Kontos.</string>
+  <string name="assistant_linphone_login_desc">Bitte geben Sie Ihren Benutzernamen und Ihr Passwort des Linphone-Kontos ein</string>
+  <string name="assistant_login_desc">Bitte geben Sie Ihren Benutzernamen und Ihr Passwort mit Ihrer SIP-Domäne ein</string>
   <string name="assistant_remote_provisioning_desc">Bitte geben Sie eine Bereitstellungs-URL an</string>
   <string name="transport">Transport</string>
   <string name="assistant_create_account_phone_number_address">Ihre SIP-Adresse ist</string>
   <string name="assistant_login_linphone">Linphone-Konto verwenden</string>
   <string name="assistant_login_generic">SIP-Konto verwenden</string>
   <string name="assistant_remote_provisioning">Fernkonfiguration abrufen</string>
+  <string name="assistant_create_account_part_1">Bitte bestätigen Sie Ihre Landesvorwahl und geben Sie Ihre Telefonnummer ein</string>
+  <string name="assistant_create_account_part_2">Wir haben Ihnen eine SMS mit einem Bestätigungscode an Ihre Telefonnummer gesendet.</string>
+  <string name="assistant_create_account_part_3">Geben Sie bitte den folgenden 4-stelligen Code ein, um Ihre Telefonnummernbestätigung abzuschließen:\n</string>
+  <string name="assistant_create_account_part_email">Bitte geben Sie einen Benutzernamen, eine E-Mail-Adresse und ein Passwort für Ihr Linphone-Konto ein</string>
   <string name="assistant_display_name_optional">Anzeigename (optional)</string>
+  <string name="assistant_linphone_account">Verwenden Sie Ihr Linphone-Konto</string>
   <string name="assistant_generic_account">SIP-Konto verwenden</string>
   <string name="assistant_remote_provisioning_title">Fernkonfiguration abrufen</string>
   <string name="assistant_fetch_apply">Abrufen und anwenden</string>
@@ -87,6 +98,7 @@
   <string name="wizard_failed">Es ist ein Fehler aufgetreten, versuchen Sie es später nochmal</string>
   <string name="wizard_server_unavailable">Server nicht erreichbar, überprüfen Sie Ihre Netzwerkverbindung.</string>
   <string name="wizard_username_unavailable">Der Benutzername wird bereits verwendet.</string>
+  <string name="assistant_phone_number_unavailable">Diese Telefonnummer wird bereits verwendet.\r\nBitte geben Sie eine andere Nummer ein.\r\nSie können Ihr vorhandenes Konto löschen, wenn Sie Ihre Telefonnummer wiederverwenden möchten.</string>
   <string name="wizard_username_incorrect">Ihr Benutzername ist ungültig.</string>
   <string name="assistant_phone_number_incorrect">Ihre Telefonnummer ist ungültig.</string>
   <string name="wizard_email_incorrect">Ihre E-Mail-Adresse ist ungültig.</string>
@@ -98,7 +110,9 @@
   <string name="assistant_choose_country">Wählen Sie ein Land aus</string>
   <string name="select_your_country">Wählen Sie Ihr Land aus</string>
   <string name="country_code">(%s)</string>
+  <string name="use_username_instead_or_phone_number">Benutzername verwenden (optional)</string>
   <string name="use_email_for_validation">E-Mail-Adresse für Kontobestätigung verwenden</string>
+  <string name="login_with_username">Verwenden Sie Ihren Benutzernamen und Ihr Passwort anstelle Ihrer Telefonnummer</string>
   <string name="phone_number_info_title">Wozu wird meine Telefonnummer verwendet?</string>
   <!--Status-->
   <string name="invalid_email">Ungültige E-Mail-Adresse</string>
@@ -116,11 +130,14 @@
   <string name="phone_number_invalid">Ungültige Telefonnummer</string>
   <string name="password_too_short">Passwort zu kurz</string>
   <string name="password_too_long">Passwort zu lang</string>
+  <string name="request_failed">Fehler beim Abfragen des Servers. Bitte versuchen Sie es später erneut</string>
   <string name="transport_unsupported">Nicht unterstützter Transport</string>
   <string name="country_code_invalid">Landesvorwahl ungültig</string>
   <!--In-app-->
   <string name="inapp">In-App</string>
   <string name="inapp_notification_title">In-App-Kauf</string>
+  <string name="inapp_notification_trial_expire">Die Probezeit läuft am %s ab</string>
+  <string name="inapp_notification_account_expire">Die Bezugszeit läuft am %s ab</string>
   <!--Dailer-->
   <string name="address_bar_hint">Geben Sie eine Nummer oder eine Adresse ein</string>
   <!--History-->
@@ -177,7 +194,7 @@
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>
   <string name="call_stats_codec">Codec:</string>
-  <string name="call_stats_ip">Afinet:</string>
+  <string name="call_stats_ip">IP-Familie:</string>
   <string name="call_stats_upload">Upload-Bandbreite:</string>
   <string name="call_stats_download">Download-Bandbreite:</string>
   <string name="call_stats_ice">ICE-Konnektivität:</string>
@@ -247,11 +264,13 @@
   <string name="pref_transport_tcp">TCP</string>
   <string name="pref_transport_tls">TLS</string>
   <string name="pref_delete_account">Konto löschen</string>
+  <string name="pref_change_password">Passwort ändern</string>
   <string name="pref_default_account">Als Standard benutzen</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP-Konten</string>
   <string name="default_account_flag">Standardkonto</string>
   <string name="pref_add_account">Konto hinzufügen</string>
+  <string name="pref_in_app_store">In-App Store</string>
   <string name="pref_tunnel">Tunnel</string>
   <string name="pref_tunnel_host">Hostname</string>
   <string name="pref_tunnel_port">Port</string>

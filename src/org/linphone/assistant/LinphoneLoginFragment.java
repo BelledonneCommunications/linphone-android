@@ -371,4 +371,9 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
 		}
 	}
+
+	@Override
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
 }

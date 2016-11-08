@@ -1449,8 +1449,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void isAccountWithAlias(){
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
-			accountCreator.isAccountUsed();
+			long now = Calendar.getInstance().getTimeInMillis();
+			if (LinphonePreferences.instance().getLinkPopupTime() == null
+					|| Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
+				accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
+				accountCreator.isAccountUsed();
+			}
 		} else {
 			LinphonePreferences.instance().setLinkPopupTime(null);
 		}
@@ -1459,11 +1463,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private void askLinkWithPhoneNumber(){
 		long now = Calendar.getInstance().getTimeInMillis();
 		long newDate = now + (LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval)*60);
-		if (LinphonePreferences.instance().getLinkPopupTime() != null &&  Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
-			return;
-		} else {
-			LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-		}
+
+		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+
 		final Dialog dialog = LinphoneActivity.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly()));
 		Button delete = (Button) dialog.findViewById(R.id.delete_button);
 		delete.setText(getString(R.string.link));
@@ -1657,4 +1659,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {}
+
+	@Override
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
 }

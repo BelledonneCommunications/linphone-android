@@ -779,7 +779,7 @@ public class LinphonePreferences {
 		if (authInfo != null) {
 			getLc().removeAuthInfo(authInfo);
 		}
-		
+
 		LinphoneProxyConfig proxyCfg = getProxyConfig(n);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
@@ -788,7 +788,7 @@ public class LinphonePreferences {
 		} else {
 			getLc().setDefaultProxyConfig(null);
 		}
-		
+
 		getLc().refreshRegisters();
 	}
 	// End of accounts settings
@@ -976,7 +976,7 @@ public class LinphonePreferences {
 		transports.tls = LINPHONE_CORE_RANDOM_PORT;
 		getLc().setSignalingTransportPorts(transports);
 	}
-	
+
 	private LinphoneNatPolicy getOrCreateNatPolicy() {
 		LinphoneNatPolicy nat = getLc().getNatPolicy();
 		if (nat == null) {
@@ -991,9 +991,9 @@ public class LinphonePreferences {
 	}
 
 	public void setStunServer(String stun) {
-		LinphoneNatPolicy nat = getOrCreateNatPolicy();		
+		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		nat.setStunServer(stun);
-		
+
 		if (stun != null && !stun.isEmpty()) {
 			nat.enableStun(true);
 		}
@@ -1032,16 +1032,16 @@ public class LinphonePreferences {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		return nat.turnEnabled();
 	}
-	
+
 	public String getTurnUsername() {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		return nat.getStunServerUsername();
 	}
-	
+
 	public void setTurnUsername(String username) {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		LinphoneAuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
-		
+
 		if (authInfo != null) {
 			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
 			getLc().removeAuthInfo(authInfo);
@@ -1055,11 +1055,11 @@ public class LinphonePreferences {
 		nat.setStunServerUsername(username);
 		getLc().setNatPolicy(nat);
 	}
-	
+
 	public void setTurnPassword(String password) {
 		LinphoneNatPolicy nat = getOrCreateNatPolicy();
 		LinphoneAuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
-		
+
 		if (authInfo != null) {
 			LinphoneAuthInfo cloneAuthInfo = authInfo.clone();
 			getLc().removeAuthInfo(authInfo);
@@ -1084,7 +1084,7 @@ public class LinphonePreferences {
 
 	public void setPushNotificationEnabled(boolean enable) {
 		 getConfig().setBool("app", "push_notification", enable);
-		 
+
 		 LinphoneCore lc = getLc();
 		 if (lc == null) {
 			 return;
@@ -1316,31 +1316,31 @@ public class LinphonePreferences {
 	public boolean isContactsMigrationDone(){
 		return getConfig().getBool("app", "contacts_migration_done", false);
 	}
-	
+
 	public String getInAppPurchaseValidatingServerUrl() {
 		return getConfig().getString("in-app-purchase", "server_url", null);
 	}
-	
+
 	public Purchasable getInAppPurchasedItem() {
 		String id = getConfig().getString("in-app-purchase", "purchase_item_id", null);
 		String payload = getConfig().getString("in-app-purchase", "purchase_item_payload", null);
 		String signature = getConfig().getString("in-app-purchase", "purchase_item_signature", null);
 		String username = getConfig().getString("in-app-purchase", "purchase_item_username", null);
-		
+
 		Purchasable item = new Purchasable(id).setPayloadAndSignature(payload, signature).setUserData(username);
 		return item;
 	}
-	
+
 	public void setInAppPurchasedItem(Purchasable item) {
 		if (item == null)
 			return;
-		
+
 		getConfig().setString("in-app-purchase", "purchase_item_id", item.getId());
 		getConfig().setString("in-app-purchase", "purchase_item_payload", item.getPayload());
 		getConfig().setString("in-app-purchase", "purchase_item_signature", item.getPayloadSignature());
 		getConfig().setString("in-app-purchase", "purchase_item_username", item.getUserData());
 	}
-	
+
 	public ArrayList<String> getInAppPurchasables() {
 		ArrayList<String>  purchasables = new ArrayList<String>();
 		String list = getConfig().getString("in-app-purchase", "purchasable_items_ids", null);
@@ -1401,19 +1401,19 @@ public class LinphonePreferences {
 	public void setServiceNotificationVisibility(boolean enable) {
 		getConfig().setBool("app", "show_service_notification", enable);
 	}
-	
+
 	public boolean isOverlayEnabled() {
 		return getConfig().getBool("app", "display_overlay", false);
 	}
-	
+
 	public void enableOverlay(boolean enable) {
 		getConfig().setBool("app", "display_overlay", enable);
 	}
-	
+
 	public LinphoneLimeState getLimeEncryption() {
 		return getLc().getLimeEncryption();
 	}
-	
+
 	public void setLimeEncryption(LinphoneLimeState lime) {
 		getLc().setLimeEncryption(lime);
 	}
@@ -1429,16 +1429,16 @@ public class LinphonePreferences {
 		}
 		return firstTime;
 	}
-	
+
 	public void permissionHasBeenAsked(String permission) {
 		getConfig().setBool("app", permission, false);
 	}
-	
+
 	public boolean isDeviceRingtoneEnabled() {
 		int readExternalStorage = mContext.getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, mContext.getPackageName());
 		return getConfig().getBool("app", "device_ringtone", true) && readExternalStorage == PackageManager.PERMISSION_GRANTED;
 	}
-	
+
 	public void enableDeviceRingtone(boolean enable) {
 		getConfig().setBool("app", "device_ringtone", enable);
 	}
@@ -1446,7 +1446,7 @@ public class LinphonePreferences {
 	public boolean isBisFeatureEnabled() {
 		return getConfig().getBool("app", "bis_feature", true);
 	}
-	
+
 	public void enableBisFeature(boolean enable) {
 		getConfig().setBool("app", "bis_feature", enable);
 	}
@@ -1454,7 +1454,7 @@ public class LinphonePreferences {
 	public boolean isAutoAnswerEnabled() {
 		return getConfig().getBool("app", "auto_answer", false);
 	}
-	
+
 	public void enableAutoAnswer(boolean enable) {
 		getConfig().setBool("app", "auto_answer", enable);
 	}

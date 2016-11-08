@@ -48,6 +48,7 @@
   <string name="decline">Refuser</string>
   <string name="conference">Conférence</string>
   <string name="link">Associer</string>
+  <string name="link_account_popup">Voulez vous associer le compte %s avec votre numéro de téléphone ?</string>
   <string name="maybe_later">Plus tard</string>
   <string name="later">Plus tard</string>
   <string name="no">Non</string>
@@ -136,6 +137,10 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="transport_unsupported">Transport non supporté</string>
   <string name="country_code_invalid">Indicatif de pays non valide</string>
   <!--In-app-->
+  <string name="inapp">In-app</string>
+  <string name="inapp_notification_title">Achat In-app</string>
+  <string name="inapp_notification_trial_expire">La période d\'essai se terminera le %s</string>
+  <string name="inapp_notification_account_expire">L\'abonnement se terminera le %s</string>
   <!--Dailer-->
   <string name="address_bar_hint">Entrez un numéro ou une adresse</string>
   <!--History-->
@@ -192,9 +197,12 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Vidéo</string>
   <string name="call_stats_codec">Codec :</string>
+  <string name="call_stats_ip">Type d\'IP :</string>
   <string name="call_stats_upload">Bande passante envoi :</string>
   <string name="call_stats_download">Bande passante réception :</string>
   <string name="call_stats_ice">Connexion ICE :</string>
+  <string name="call_stats_video_resolution_sent">Résolution vidéo envoyée</string>
+  <string name="call_stats_video_resolution_received">Résolution vidéo reçu</string>
   <string name="call_stats_encoder_name">Encodeur :</string>
   <string name="call_stats_decoder_name">Décodeur :</string>
   <string name="call">Appel</string>
@@ -257,7 +265,9 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_transport_tcp">TCP</string>
   <string name="pref_transport_tls">TLS</string>
   <string name="pref_delete_account">Supprimer ce compte</string>
+  <string name="pref_change_password">Changer de mot de passe</string>
   <string name="pref_default_account">Utiliser par défaut</string>
+  <string name="pref_password_changed">Mot de passe changé</string>
   <!--Settings-->
   <string name="pref_sipaccounts">Comptes SIP</string>
   <string name="default_account_flag">Compte par défaut</string>

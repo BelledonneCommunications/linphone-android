@@ -210,7 +210,7 @@
 	<string name="call_stats_audio">Audio</string>
 	<string name="call_stats_video">Video</string>
 	<string name="call_stats_codec">Codec:</string>
-	<string name="call_stats_ip">Afinet:</string>
+	<string name="call_stats_ip">IP Family:</string>
 	<string name="call_stats_upload">Upload bandwidth:</string>
 	<string name="call_stats_download">Download bandwidth:</string>
 	<string name="call_stats_ice">ICE connectivity:</string>
@@ -284,7 +284,9 @@
 	<string name="pref_transport_tcp">TCP</string>
 	<string name="pref_transport_tls">TLS</string>
 	<string name="pref_delete_account">Delete this account</string>
+	<string name="pref_change_password">Change password</string>
 	<string name="pref_default_account">Use as default</string>
+	<string name="pref_password_changed">Password changed</string>
 
 	<!-- Settings -->
 	<string name="pref_sipaccounts">SIP Accounts</string>

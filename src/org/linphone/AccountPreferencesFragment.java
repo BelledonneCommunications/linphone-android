@@ -23,11 +23,18 @@ import java.util.List;
 
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -37,18 +44,24 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 /**
  * @author Sylvain Berfini
  */
-public class AccountPreferencesFragment extends PreferencesListFragment {
+public class AccountPreferencesFragment extends PreferencesListFragment implements LinphoneAccountCreator.LinphoneAccountCreatorListener {
 	private int n;
 	private boolean isNewAccount=false;
 	private LinphonePreferences mPrefs;
 	private EditTextPreference mProxyPreference;
 	private ListPreference mTransportPreference;
 	private AccountBuilder builder;
+	private LinphoneAccountCreator accountCreator;
+	private ProgressDialog progress;
 
 	public AccountPreferencesFragment() {
 		super(R.xml.account_preferences);
@@ -289,6 +302,10 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 	private void initAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
 
+		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
+				, LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator.setListener(this);
+
     	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
 		username.setOnPreferenceChangeListener(usernameChangedListener);
@@ -387,8 +404,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		Preference linkAccount = advanced.getPreference(9);
 		linkAccount.setOnPreferenceClickListener(linkAccountListener);
 
-    	PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
-    	final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);
+		PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
+		final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);
     	disable.setEnabled(true);
     	disable.setOnPreferenceChangeListener(disableChangedListener);
 		if(!isNewAccount){
@@ -396,10 +413,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 		}
 
     	CheckBoxPreference mainAccount = (CheckBoxPreference) manage.getPreference(1);
-    	mainAccount.setChecked(isDefaultAccount);
-    	mainAccount.setEnabled(!mainAccount.isChecked());
-    	mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener()
-    	{
+		mainAccount.setChecked(isDefaultAccount);
+		mainAccount.setEnabled(!mainAccount.isChecked());
+		mainAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
 				mPrefs.setDefaultAccount(n);
 				disable.setEnabled(false);
@@ -412,7 +428,63 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			mainAccount.setEnabled(!mainAccount.isChecked());
 		}
 
-    	final Preference delete = manage.getPreference(2);
+		final Preference changePassword = manage.getPreference(2);
+		if (mPrefs.getAccountDomain(n).compareTo(getString(R.string.default_domain)) == 0) {
+			changePassword.setEnabled(!isNewAccount);
+			changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				public boolean onPreferenceClick(Preference preference) {
+					final AlertDialog.Builder alert = new AlertDialog.Builder(LinphoneActivity.instance());
+					LayoutInflater inflater = LinphoneActivity.instance().getLayoutInflater();
+					View layout = inflater.inflate(R.layout.new_password, null);
+					final EditText pass1 = (EditText) layout.findViewById(R.id.password1);
+					final EditText pass2 = (EditText) layout.findViewById(R.id.password2);
+					alert.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+					alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							LinphoneAccountCreator.Status status = accountCreator.setPassword(pass1.getText().toString());
+							if (status.equals(LinphoneAccountCreator.Status.Ok)) {
+								if (pass1.getText().toString().compareTo(pass2.getText().toString()) == 0) {
+									accountCreator.setUsername(mPrefs.getAccountUsername(n));
+									accountCreator.setHa1(mPrefs.getAccountHa1(n));
+									status = accountCreator.updatePassword(pass1.getText().toString());
+									if (!status.equals(LinphoneAccountCreator.Status.Ok)) {
+										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status)
+												, LinphoneActivity.instance());
+									} else {
+										progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
+										Drawable d = new ColorDrawable(ContextCompat.getColor(LinphoneActivity.instance(), R.color.colorE));
+										d.setAlpha(200);
+										progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+										progress.getWindow().setBackgroundDrawable(d);
+										progress.setContentView(R.layout.progress_dialog);
+										progress.show();
+									}
+								} else {
+									LinphoneUtils.displayErrorAlert(getString(R.string.wizard_passwords_unmatched)
+											, LinphoneActivity.instance());
+								}
+								return;
+							}
+							LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
+						}
+					});
+
+					alert.setView(layout);
+					alert.show();
+					return true;
+				}
+			});
+		} else {
+			changePassword.setEnabled(false);
+		}
+
+		final Preference delete = manage.getPreference(3);
     	delete.setEnabled(!isNewAccount);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
@@ -482,6 +554,62 @@ public class AccountPreferencesFragment extends PreferencesListFragment {
 			LinphoneActivity.instance().isNewProxyConfig();
 			LinphoneManager.getLc().refreshRegisters();
 			LinphoneActivity.instance().hideTopBar();
+		}
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+
+	}
+
+	@Override
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	}
+
+	@Override
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		progress.dismiss();
+		if (status.equals(LinphoneAccountCreator.Status.Ok)) {
+			mPrefs.setAccountPassword(n, accountCreator.getPassword());
+			PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
+			((EditTextPreference) account.getPreference(2)).setText(mPrefs.getAccountPassword(n));
+			LinphoneUtils.displayErrorAlert(getString(R.string.pref_password_changed), LinphoneActivity.instance());
+		} else {
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
 		}
 	}
 }

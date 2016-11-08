@@ -197,4 +197,9 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, Status status) {
 
 	}
+
+	@Override
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, Status status) {
+
+	}
 }
