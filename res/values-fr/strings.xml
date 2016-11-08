@@ -109,6 +109,7 @@
   <string name="forgot_password">Mot de passe oublié ?</string>
   <string name="assistant_choose_country">Choisir un pays</string>
   <string name="select_your_country">Choisissez votre pays</string>
+  <string name="country_code">(%s)</string>
   <string name="use_username_instead_or_phone_number">Utiliser un nom d\'utilisateur (optionnel)</string>
   <string name="use_email_for_validation">Utiliser une adresse mail pour créer un compte</string>
   <string name="login_with_username">Utiliser votre nom d\'utilisateur et votre mot de passe plutôt que votre numéro</string>
@@ -124,6 +125,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="phone_number_not_exist">Ce compte n\'existe pas</string>
   <string name="invalid_username">Nom d\'utilisateur non valide</string>
   <string name="invalid_domain">Domaine non valide</string>
+  <string name="invalid_route">Route invalide</string>
   <string name="invalid_display_name">Nom d\'affichage non valide</string>
   <string name="username_too_short">Nom d\'utilisateur trop court</string>
   <string name="username_too_long">Nom d\'utilisateur trop long</string>
@@ -318,6 +320,8 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_call_title">Appel</string>
   <string name="pref_device_ringtone">Utiliser la sonnerie du téléphone</string>
   <string name="pref_auto_answer">Décrocher automatiquement appels entrants</string>
+  <string name="pref_rfc2833_dtmf">Envoyer des DTMF\'s dans le flux(RFC2833)</string>
+  <string name="pref_sipinfo_dtmf">Envoyer des DTMFs en SIP INFO</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
