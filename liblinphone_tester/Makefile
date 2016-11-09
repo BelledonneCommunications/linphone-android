@@ -1,7 +1,10 @@
 ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-9]+' | tail -n1)
+SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 
 all: update-project copy-files
-	ant debug install
+	ant clean debug
+	$(SDK_PLATFORM_TOOLS_PATH)/adb install -g bin/liblinphone_tester-debug.apk
+	#$(SDK_PLATFORM_TOOLS_PATH)/adb install -g ../bin/Linphone-debug.apk
 
 run-all-tests: all
 	ant test

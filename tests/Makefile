@@ -14,7 +14,9 @@ clean:
 	$(SDK_PATH)/android update test-project --path . -m ../
 
 all: clean
-	$(ANT) debug install
+	ant clean debug
+	$(SDK_PLATFORM_TOOLS_PATH)/adb install -g bin/LinphoneTest-debug.apk
+	$(SDK_PLATFORM_TOOLS_PATH)/adb install -g ../bin/Linphone-debug.apk
 
 run-basic-tests: all
 	ant -e test -Dtest.size=small
