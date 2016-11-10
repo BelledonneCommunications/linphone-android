@@ -10,13 +10,15 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
+## [Incomming]
+- Open H264 binary download for Android < 5.1
+
 ## [Unreleased]
 
 ## [3.2.0] - 2016-11-10
 
 ### Added
 - Change your password in your account settings
-- Open H264 binary download for Android < 5.1
 
 ### Changed
 - Media H264 support improved for Android >= 5.1
