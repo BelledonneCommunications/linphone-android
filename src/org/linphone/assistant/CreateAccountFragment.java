@@ -466,7 +466,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			addressSip = getUsername();
 			if (addressSip.length() > 0) {
 				msg = getResources().getString(R.string.assistant_create_account_phone_number_address)
-						+ " <" + addressSip + "@" + getResources().getString(R.string.default_domain) + ">";
+						+ " <sip:" + addressSip + "@" + getResources().getString(R.string.default_domain) + ">";
 			}
 		}
 		sipUri.setText(msg);

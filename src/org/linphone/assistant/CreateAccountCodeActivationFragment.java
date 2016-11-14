@@ -79,7 +79,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 		}
 
 		phonenumber = (TextView) view.findViewById(R.id.send_phone_number);
-		phonenumber.setText(dialcode + phone);
+		phonenumber.setText(accountCreator.getPhoneNumber());
 
 		code = (EditText) view.findViewById(R.id.assistant_code);
 		code.addTextChangedListener(new TextWatcher() {
