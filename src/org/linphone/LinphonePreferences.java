@@ -577,7 +577,8 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountDomain(int n) {
-		return getProxyConfig(n).getDomain();
+		LinphoneProxyConfig proxyConf = getProxyConfig(n);
+		return (proxyConf != null) ? proxyConf.getDomain() : "";
 	}
 
 	public void setAccountProxy(int n, String proxy) {
