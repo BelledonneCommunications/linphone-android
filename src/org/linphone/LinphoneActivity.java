@@ -455,7 +455,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 		}
 
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
-		transaction.commit();
+		transaction.commitAllowingStateLoss();
 		fm.executePendingTransactions();
 
 		currentFragment = newFragmentType;
@@ -478,7 +478,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			ll.setVisibility(View.VISIBLE);
 			emptyFragment = true;
 			transaction.replace(R.id.fragmentContainer2, newFragment);
-			transaction.commit();
+			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
 		} else {
 			if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
@@ -514,7 +514,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 				}*/
 				transaction.replace(R.id.fragmentContainer, newFragment);
 			}
-			transaction.commit();
+			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
 
 			currentFragment = newFragmentType;
