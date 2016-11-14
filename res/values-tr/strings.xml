@@ -14,10 +14,6 @@
   <string name="about_text">GNU Genel Kamu Lisansı V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone bağlantıları</string>
-  <string name="history_detail_date_format">yyyy/AA/gg - SS:dd -</string>
-  <string name="messages_date_format">gg/AA, SS:dd</string>
-  <string name="messages_list_date_format">gg/AA</string>
-  <string name="today_date_format">SS:dd</string>
   <!--Common-->
   <string name="username">Kullanıcı adı</string>
   <string name="phone_number">Telefon numarası</string>

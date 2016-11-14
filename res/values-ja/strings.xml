@@ -14,11 +14,6 @@
   <string name="about_text">GNU ライセンス V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">linphoneにたずねる</string>
-  <string name="history_date_format">EEE, d MMM</string>
-  <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
-  <string name="messages_date_format">dd/MM, HH:mm</string>
-  <string name="messages_list_date_format">dd/MM</string>
-  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">ユーザー名</string>
   <string name="phone_number">電話番号</string>
