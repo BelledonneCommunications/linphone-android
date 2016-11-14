@@ -29,8 +29,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -1449,9 +1451,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void isAccountWithAlias(){
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			long now = Calendar.getInstance().getTimeInMillis();
+			Timestamp now = new Timestamp(new Date().getTime());
 			if (LinphonePreferences.instance().getLinkPopupTime() == null
-					|| Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now) {
+					|| Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now.getTime()) {
 				accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
 				accountCreator.isAccountUsed();
 			}
@@ -1461,8 +1463,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private void askLinkWithPhoneNumber(){
-		long now = Calendar.getInstance().getTimeInMillis();
-		long newDate = now + (LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval)*60);
+		Timestamp now = new Timestamp(new Date().getTime());
+		long newDate = now.getTime() + LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval);
 
 		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 

@@ -19,12 +19,14 @@ package org.linphone;
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.linphone.LinphoneManager.AddressType;
@@ -1740,11 +1742,11 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	}
 
 	public void displayInappNotification(String date) {
-		long now = Calendar.getInstance().getTimeInMillis();
-		if (LinphonePreferences.instance().getInappPopupTime() != null && Long.parseLong(LinphonePreferences.instance().getInappPopupTime()) < now) {
+		Timestamp now = new Timestamp(new Date().getTime());
+		if (LinphonePreferences.instance().getInappPopupTime() != null && Long.parseLong(LinphonePreferences.instance().getInappPopupTime()) < now.getTime()) {
 			return;
 		} else {
-			long newDate = now + (getResources().getInteger(R.integer.time_between_inapp_notification)*60);
+			long newDate = now.getTime() + getResources().getInteger(R.integer.time_between_inapp_notification);
 			LinphonePreferences.instance().setInappPopupTime(String.valueOf(newDate));
 		}
 		if(isTrialAccount){
