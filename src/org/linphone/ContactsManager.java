@@ -32,11 +32,13 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
+import android.*;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -160,7 +162,8 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public boolean hasContactsAccess() {
-		return hasContactAccess && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
+		int contacts = context.getPackageManager().checkPermission(android.Manifest.permission.READ_CONTACTS, context.getPackageName());
+		return contacts == PackageManager.PERMISSION_GRANTED && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
