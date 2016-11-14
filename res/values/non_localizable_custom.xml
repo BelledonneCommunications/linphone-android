@@ -12,7 +12,7 @@
 
 	<!-- Phone numbers -->
 	<bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->
-	<integer name="popup_time_interval">86400</integer><!-- Time between two inapp notifications in seconds -->
+	<integer name="popup_time_interval">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
 
 	<!-- Assistant -->
 	<bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
@@ -38,7 +38,7 @@
 	<!-- Inapp -->
 	<bool name="enable_in_app_purchase">false</bool>
 	<integer name="days_notification_shown">5</integer><!-- Notification shown before end of trial version in days -->
-	<integer name="time_between_inapp_notification">86400</integer><!-- Time between two inapp notifications in seconds -->
+	<integer name="time_between_inapp_notification">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
 	<bool name="hide_username_in_inapp">true</bool>
 
 	<!-- Push notification settings -->

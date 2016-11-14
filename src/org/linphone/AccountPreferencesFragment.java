@@ -262,6 +262,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			Intent assistant = new Intent();
 			assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
 			assistant.putExtra("LinkPhoneNumber", true);
+			assistant.putExtra("FromPref", true);
 			startActivity(assistant);
 			return true;
 		}

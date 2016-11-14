@@ -39,6 +39,7 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -302,7 +303,12 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 
 			case R.id.assistant_skip: {
-				AssistantActivity.instance().success();
+				if (getArguments().getBoolean("LinkFromPref")) {
+					startActivity(new Intent().setClass(AssistantActivity.instance(), LinphoneActivity.class));
+					AssistantActivity.instance().finish();
+				} else {
+					AssistantActivity.instance().success();
+				}
 				break;
 			}
 

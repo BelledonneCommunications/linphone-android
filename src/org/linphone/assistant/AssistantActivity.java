@@ -83,7 +83,7 @@ private static AssistantActivity instance;
 	private AssistantFragmentsEnum firstFragment;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
-	private boolean accountCreated = false, newAccount = false, isLink = false;
+	private boolean accountCreated = false, newAccount = false, isLink = false, fromPref = false;
 	private LinphoneCoreListenerBase mListener;
 	private LinphoneAddress address;
 	private StatusFragment status;
@@ -112,6 +112,8 @@ private static AssistantActivity instance;
 
 		if (getIntent().getBooleanExtra("LinkPhoneNumber",false)) {
 			isLink = true;
+			if (getIntent().getBooleanExtra("FromPref",false))
+				fromPref = true;
 			displayCreateAccount();
 		} else {
 			firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
@@ -400,6 +402,7 @@ private static AssistantActivity instance;
 		fragment = new CreateAccountFragment();
 		Bundle extra = new Bundle();
 		extra.putBoolean("LinkPhoneNumber", isLink);
+		extra.putBoolean("LinkFromPref", fromPref);
 		fragment.setArguments(extra);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;

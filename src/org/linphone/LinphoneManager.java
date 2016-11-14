@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
@@ -1451,9 +1452,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void isAccountWithAlias(){
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-			Timestamp now = new Timestamp(new Date().getTime());
+			long now = new Timestamp(new Date().getTime()).getTime();
 			if (LinphonePreferences.instance().getLinkPopupTime() == null
-					|| Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) > now.getTime()) {
+					|| Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
 				accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
 				accountCreator.isAccountUsed();
 			}
@@ -1463,8 +1464,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private void askLinkWithPhoneNumber(){
-		Timestamp now = new Timestamp(new Date().getTime());
-		long newDate = now.getTime() + LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval);
+		long now = new Timestamp(new Date().getTime()).getTime();
+		long future = new Timestamp(LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval)).getTime();
+		long newDate = now + future;
 
 		LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
@@ -1477,7 +1479,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		delete.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneManager.getInstance().displayLinkPhoneNumber();
+				Intent assistant = new Intent();
+				assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
+				assistant.putExtra("LinkPhoneNumber", true);
+				assistant.putExtra("LinkPhoneNumberAsk", true);
+				mServiceContext.startActivity(assistant);
 				dialog.dismiss();
 			}
 		});

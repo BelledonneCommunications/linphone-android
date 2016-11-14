@@ -230,9 +230,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 				if(getResources().getBoolean(R.bool.use_phone_number_validation)) {
 					if (state.equals(RegistrationState.RegistrationOk)) {
-						if (LinphonePreferences.instance().getLinkPopupTime() == null || (LinphonePreferences.instance().getLinkPopupTime() != null)) {
-							LinphoneManager.getInstance().isAccountWithAlias();
-						}
+						LinphoneManager.getInstance().isAccountWithAlias();
 					}
 				}
 
@@ -1743,7 +1741,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	public void displayInappNotification(String date) {
 		Timestamp now = new Timestamp(new Date().getTime());
-		if (LinphonePreferences.instance().getInappPopupTime() != null && Long.parseLong(LinphonePreferences.instance().getInappPopupTime()) < now.getTime()) {
+		if (LinphonePreferences.instance().getInappPopupTime() != null && Long.parseLong(LinphonePreferences.instance().getInappPopupTime()) > now.getTime()) {
 			return;
 		} else {
 			long newDate = now.getTime() + getResources().getInteger(R.integer.time_between_inapp_notification);
