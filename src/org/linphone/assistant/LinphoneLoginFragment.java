@@ -64,6 +64,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	private Boolean recoverAccount;
 	private LinphoneAccountCreator accountCreator;
 	private int countryCode;
+	private String username, phone, dialcode;
 	private ImageView phoneNumberInfo;
 
 	@Override
@@ -104,6 +105,9 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 		//Phone number
 		if(getResources().getBoolean(R.bool.use_phone_number_validation)){
+			phone = getArguments().getString("Phone");
+			dialcode = getArguments().getString("Dialcode");
+
 			getActivity().getApplicationContext();
 			//Automatically get the country code from the phone
 			TelephonyManager tm =
@@ -139,10 +143,15 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			}
 
 			//Allow user to enter a username instead use the phone number as username
-			if(getResources().getBoolean(R.bool.assistant_allow_username) ) {
+			if (getResources().getBoolean(R.bool.assistant_allow_username) ) {
 				useUsername.setVisibility(View.VISIBLE);
 				useUsername.setOnCheckedChangeListener(this);
 			}
+
+			if (phone != null)
+				phoneNumberEdit.setText(phone);
+			if (dialcode != null)
+				dialCode.setText("+"+dialcode);
 		}
 
 		if(getResources().getBoolean(R.bool.assistant_allow_username)) {

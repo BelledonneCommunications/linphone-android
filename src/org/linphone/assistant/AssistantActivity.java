@@ -393,6 +393,10 @@ private static AssistantActivity instance;
 
 	public void displayLoginLinphone() {
 		fragment = new LinphoneLoginFragment();
+		Bundle extras = new Bundle();
+		extras.putString("Phone", null);
+		extras.putString("Dialcode", null);
+		fragment.setArguments(extras);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
 		back.setVisibility(View.VISIBLE);
@@ -592,6 +596,19 @@ private static AssistantActivity instance;
 
 		currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
 		back.setVisibility(View.INVISIBLE);
+	}
+
+	public void displayAssistantLinphoneLogin( String phone, String dialcode) {
+		LinphoneLoginFragment fragment = new LinphoneLoginFragment();
+		newAccount = true;
+		Bundle extras = new Bundle();
+		extras.putString("Phone", phone);
+		extras.putString("Dialcode", dialcode);
+		fragment.setArguments(extras);
+		changeFragment(fragment);
+
+		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
+		back.setVisibility(View.VISIBLE);
 	}
 
 	public void isAccountVerified(String username) {

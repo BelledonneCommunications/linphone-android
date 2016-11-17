@@ -160,8 +160,9 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 			}
 		} else if (status.equals(LinphoneAccountCreator.Status.Failed)) {
 			Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
-		}else {
+		} else {
 			Toast.makeText(getActivity(), getString(R.string.assistant_error_confirmation_code), Toast.LENGTH_LONG).show();
+			AssistantActivity.instance().displayAssistantLinphoneLogin(phone, dialcode);
 		}
 	}
 
