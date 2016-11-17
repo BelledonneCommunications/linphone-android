@@ -364,7 +364,11 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-		AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode), true);
+		if (status.equals(LinphoneAccountCreator.Status.ErrorServer)) {
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(LinphoneAccountCreator.Status.Failed), AssistantActivity.instance());
+		} else {
+			AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode), true);
+		}
 	}
 
 	@Override
