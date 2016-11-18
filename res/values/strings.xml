@@ -93,7 +93,7 @@
 	<string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
 	<string name="assistant_remote_provisioning_login">Enter your login</string>
 	<string name="assistant_account_not_validated">Your account has not been validated yet.</string>
-	<string name="assistant_error_confirmation_code">The confirmation code is invalid.\r\nPlease check your SMS and try again.</string>
+	<string name="assistant_error_confirmation_code">The confirmation code is invalid.\r\nPlease try again.</string>
 	<string name="assistant_account_validated">Your account has been validated.</string>
 	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
 	<string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>

@@ -82,7 +82,6 @@
   <string name="assistant_ec_calibration">Echounterdrückungskalibrierung läuft</string>
   <string name="assistant_remote_provisioning_login">Geben Sie Ihre Anmeldung ein</string>
   <string name="assistant_account_not_validated">Ihr Konto wurde noch nicht überprüft.</string>
-  <string name="assistant_error_confirmation_code">Der Bestätigungscode ist ungültig.\r\nBitte überprüfen Sie Ihre SMS und versuchen Sie es erneut.</string>
   <string name="assistant_account_validated">Ihr Konto wurde überprüft.</string>
   <string name="assistant_error_bad_credentials">Falscher Benutzername oder Passwort</string>
   <string name="assistant_codec_down_question">Sind Sie mit dem Herunterladen des OpenH264-Videocodecs, bereitgestellt von Cisco Systems, Inc., einverstanden?</string>
@@ -259,6 +258,7 @@
   <string name="pref_delete_account">Konto löschen</string>
   <string name="pref_change_password">Passwort ändern</string>
   <string name="pref_default_account">Als Standard benutzen</string>
+  <string name="pref_password_changed">Passwort geändert</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP-Konten</string>
   <string name="default_account_flag">Standardkonto</string>

@@ -82,7 +82,7 @@
   <string name="assistant_ec_calibration">Calibration de l\'annulateur d\'écho en cours</string>
   <string name="assistant_remote_provisioning_login">Entrez vos identifiants</string>
   <string name="assistant_account_not_validated">Votre compte n\'a pas encore été validé.</string>
-  <string name="assistant_error_confirmation_code">Le code d\'activation est invalide.\r\nVeuillez vérifier vos SMS et réessayer.</string>
+  <string name="assistant_error_confirmation_code">Le code d\'activation est invalide.\r\nVeuillez réessayer.</string>
   <string name="assistant_account_validated">Votre compte à été validé.</string>
   <string name="assistant_error_bad_credentials">Nom d\'utilisateur ou mot de passe invalide</string>
   <string name="assistant_codec_down_question">Voulez-vous télécharger le codec vidéo OpenH264 fourni par Cisco Systems, Inc. ? </string>
