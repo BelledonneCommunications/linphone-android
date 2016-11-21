@@ -246,6 +246,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 
 	private void decline() {
 		LinphoneManager.getLc().terminateCall(mCall);
+		finish();
 	}
 
 	private void checkAndRequestCallPermissions() {
