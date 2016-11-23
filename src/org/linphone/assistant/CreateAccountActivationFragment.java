@@ -17,14 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.R;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.mediastream.Log;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,6 +26,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.R;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
+import org.linphone.core.LinphoneCoreFactory;
 /**
  * @author Sylvain Berfini
  */
@@ -45,7 +44,7 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation_email_activation, container, false);
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
@@ -69,12 +68,10 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-			case R.id.assistant_check: {
-				checkAccount.setEnabled(false);
-				accountCreator.isAccountActivated();
-				break;
-			}
+		int id = v.getId();
+		if(id == R.id.assistant_check) {
+			checkAccount.setEnabled(false);
+			accountCreator.isAccountActivated();
 		}
 	}
 

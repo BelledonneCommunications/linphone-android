@@ -17,19 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import java.util.Locale;
-
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
-import org.linphone.R;
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.DialPlan;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
-
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -42,7 +29,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -51,6 +37,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneUtils;
+import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.DialPlan;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
+
+import java.util.Locale;
 
 /**
  * @author Sylvain Berfini
@@ -69,7 +67,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_linphone_login, container, false);
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
@@ -231,31 +229,24 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-
-		switch(id) {
-			case R.id.assistant_apply: {
-				apply.setEnabled(false);
-				if (recoverAccount) {
-					recoverAccount();
-				} else {
-					linphoneLogIn();
-				}
-				break;
+		if(id == R.id.assistant_apply){
+			apply.setEnabled(false);
+			if (recoverAccount) {
+				recoverAccount();
+			} else {
+				linphoneLogIn();
 			}
-			case R.id.info_phone_number: {
-				new AlertDialog.Builder(getActivity())
-						.setTitle(getString(R.string.phone_number_info_title))
-						.setMessage(getString(R.string.phone_number_link_info_content))
-						.show();
-				break;
-			}
-			case R.id.select_country: {
-				AssistantActivity.instance().displayCountryChooser();
-				break;
-			}
-			default:
-				break;
 		}
+		else if(id == R.id.info_phone_number){
+			new AlertDialog.Builder(getActivity())
+					.setTitle(getString(R.string.phone_number_info_title))
+					.setMessage(getString(R.string.phone_number_link_info_content))
+					.show();
+		}
+		else if(id == R.id.select_country){
+			AssistantActivity.instance().displayCountryChooser();
+		}
+
 	}
 
 	private void recoverAccount() {
