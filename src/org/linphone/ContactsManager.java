@@ -214,7 +214,6 @@ public class ContactsManager extends ContentObserver {
 			for (LinphoneNumberOrAddress noa: c.getNumbersOrAddresses()) {
 				String normalized = null;
 				if (lpc != null) {
-					lpc.setDialPrefix("");
 					normalized = lpc.normalizePhoneNumber(noa.getValue());
 				}
 				String alias = c.getPresenceModelForUri(noa.getValue());

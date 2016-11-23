@@ -375,6 +375,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		if(!isNewAccount){
 			String prefixValue = mPrefs.getPrefix(n);
 			prefix.setText(prefixValue);
+			prefix.setSummary(prefixValue);
 		}
 
 		CheckBoxPreference avpf = (CheckBoxPreference) advanced.getPreference(5);
