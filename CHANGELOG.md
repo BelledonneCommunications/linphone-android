@@ -11,9 +11,18 @@ Group changes to describe their impact on the project, as follows:
     Security to invite users to upgrade in case of vulnerabilities.
 
 ## [Incomming]
-- Open H264 binary download for Android < 5.1
 
 ## [Unreleased]
+
+## [3.2.1] - 2016-11-24
+
+### Added
+- Open H264 binary download for ARM Android < 5.1
+
+### Fixed
+- Crashes for x86 CPU at starting
+- Crashes in somes view in cause of bad locale time
+- Crashes in contacts view if we don't have permission
 
 ## [3.2.0] - 2016-11-10
 
