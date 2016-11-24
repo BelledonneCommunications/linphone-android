@@ -1227,6 +1227,9 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		if (permissions.length <= 0)
+			return;
+
 		int readContactsI = -1;
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
