@@ -785,9 +785,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
 		mLc.setCpuCount(availableCores);
 
-		int migrationResult = getLc().migrateToMultiTransport();
-		Log.d("Migration to multi transport result = " + migrationResult);
-
 		mLc.migrateCallLogs();
 
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
