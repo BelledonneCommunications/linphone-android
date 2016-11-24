@@ -1074,7 +1074,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			
 			if (holder.id == message.getStorageId()) {
-				sameMessage = true;
+				if (holder.messageImage.getTag() != null && holder.messageImage.getTag().equals(message.getAppData())) {
+					sameMessage = true;
+				}
 			} else {
 				holder.id = message.getStorageId();
 			}
@@ -1133,7 +1135,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 				if (message.isOutgoing() && appData != null) {
 					holder.messageImage.setVisibility(View.VISIBLE);
-					if (!sameMessage) loadBitmap(appData, holder.messageImage);
+					if (!sameMessage) {
+						loadBitmap(appData, holder.messageImage);
+						holder.messageImage.setTag(appData);
+					}
 
 					if (LinphoneManager.getInstance().getMessageUploadPending() != null  && LinphoneManager.getInstance().getMessageUploadPending().getStorageId() == message.getStorageId()) {
 						holder.messageSendingInProgress.setVisibility(View.GONE);
