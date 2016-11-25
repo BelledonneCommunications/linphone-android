@@ -49,7 +49,7 @@ import android.provider.ContactsContract.CommonDataKinds;
 
 public class LinphoneContact implements Serializable, Comparable<LinphoneContact> {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 9015568163905205244L;
 
@@ -61,7 +61,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private transient ArrayList<ContentProviderOperation> changesToCommit2;
 	private boolean hasSipAddress;
 	private transient Bitmap photoBitmap, thumbnailBitmap;
-	
+
 	public LinphoneContact() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
 		androidId = null;
@@ -71,7 +71,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		changesToCommit2 = new ArrayList<ContentProviderOperation>();
 		hasSipAddress = false;
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		if (photoBitmap != null) {
@@ -84,7 +84,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		}
 		super.finalize();
 	}
-	
+
 	@Override
 	public int compareTo(LinphoneContact contact) {
 		String fullName = getFullName() != null ? getFullName() : "";
@@ -97,19 +97,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public void setFullName(String name) {
 		fullName = name;
 	}
-	
+
 	public String getFullName() {
 		return fullName;
 	}
-	
+
 	public void setFirstNameAndLastName(String fn, String ln) {
 		if (fn != null && fn.length() == 0 && ln != null && ln.length() == 0) return;
-		
+
 		if (isAndroidContact()) {
 			if (firstName != null || lastName != null) {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'";
 				String[] args = new String[]{ getAndroidId() };
-	
+
 				changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
 					.withSelection(select, args)
 					.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
@@ -126,7 +126,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			        .build());
 			}
 		}
-		
+
 		firstName = fn;
 		lastName = ln;
 		if (firstName != null && lastName != null && firstName.length() > 0 && lastName.length() > 0) {
@@ -137,25 +137,25 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			fullName = lastName;
 		}
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	public String getOrganization() {
 		return organization;
 	}
-	
+
 	public void setOrganization(String org) {
 		if (isAndroidContact()) {
 			if (androidRawId != null) {
 				String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE + "'";
 				String[] args = new String[]{ getAndroidId() };
-	
+
 				if (organization != null) {
 					changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
 						.withSelection(select, args)
@@ -177,18 +177,18 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			        .build());
 			}
 		}
-		
+
 		organization = org;
 	}
-	
+
 	public boolean hasPhoto() {
 		return photoUri != null;
 	}
-	
+
 	public void setPhotoUri(Uri uri) {
 		if (uri.equals(photoUri)) return;
 		photoUri = uri;
-		
+
 		if (photoBitmap != null) {
 			photoBitmap.recycle();
 		}
@@ -200,19 +200,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			Log.e(e);
 		}
 	}
-	
+
 	public Uri getPhotoUri() {
 		return photoUri;
 	}
-	
+
 	public Bitmap getPhotoBitmap() {
 		return photoBitmap;
 	}
-	
+
 	public void setThumbnailUri(Uri uri) {
 		if (uri.equals(thumbnailUri)) return;
 		thumbnailUri = uri;
-		
+
 		if (thumbnailBitmap != null) {
 			thumbnailBitmap.recycle();
 		}
@@ -228,11 +228,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public Uri getThumbnailUri() {
 		return thumbnailUri;
 	}
-	
+
 	public Bitmap getThumbnailBitmap() {
 		return thumbnailBitmap;
 	}
-	
+
 	public Bitmap getPhoto() {
 		if (photoBitmap != null) {
 			return photoBitmap;
@@ -241,7 +241,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		}
 		return null;
 	}
-	
+
 	public void setPhoto(byte[] photo) {
 		if (photo != null) {
 			if (isAndroidContact()) {
@@ -287,11 +287,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		}
 		return false;
 	}
-	
+
 	public boolean hasAddress() {
 		return hasSipAddress;
 	}
-	
+
 	public void removeNumberOrAddress(LinphoneNumberOrAddress noa) {
 		if (noa != null && noa.getOldValue() != null) {
 			if (isAndroidContact()) {
@@ -302,11 +302,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
 				}
 				String[] args = new String[]{ getAndroidId(), noa.getOldValue() };
-		
+
 				changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
 					.withSelection(select, args)
 					.build());
-				
+
 				if (androidTagId != null && noa.isSIPAddress()) {
 					select = ContactsContract.Data.RAW_CONTACT_ID + "=? AND " + ContactsContract.Data.DATA1 + "=?";
 					args = new String[] { androidTagId, noa.getOldValue() };
@@ -316,7 +316,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						.build());
 				}
 			}
-			
+
 			if (isLinphoneFriend()) {
 				if (noa.isSIPAddress()) {
 					if (!noa.getOldValue().startsWith("sip:")) {
@@ -336,7 +336,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 	}
-	
+
 	public void addOrUpdateNumberOrAddress(LinphoneNumberOrAddress noa) {
 		if (noa != null && noa.getValue() != null) {
 			if (isAndroidContact()) {
@@ -364,7 +364,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					        .withValues(values)
 					        .build());
 					}
-					
+
 					if (noa.isSIPAddress() && LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
 						if (androidTagId != null) {
 							changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
@@ -388,13 +388,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					ContentValues values = new ContentValues();
 					String select;
 					String[] args = new String[] { getAndroidId(), noa.getOldValue() };
-					
+
 					if (noa.isSIPAddress()) {
 						select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
 						values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
 				        values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
 					} else {
-						select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?"; 
+						select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE +  "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
 				        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
 				        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
 					}
@@ -402,7 +402,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 						.withSelection(select, args)
 				        .withValues(values)
 				        .build());
-					
+
 					if (noa.isSIPAddress() && LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
 						if (androidTagId != null) {
 							changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
@@ -447,7 +447,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 	}
-	
+
 	public void setAndroidId(String id) {
 		androidId = id;
 	}
@@ -455,10 +455,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public String getAndroidId() {
 		return androidId;
 	}
-	
+
 	private void createOrUpdateFriend() {
 		if (!isLinphoneFriend()) {
-			friend = LinphoneCoreFactory.instance().createLinphoneFriend();
+			friend = LinphoneManager.getLc().createFriend();
 			friend.enableSubscribes(false);
 			friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 			if (isAndroidContact()) {
@@ -469,18 +469,18 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			updateFriend();
 		}
 	}
-	
+
 	private void updateFriend() {
 		if (!isLinphoneFriend()) return;
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return;
-		
+
 		friend.edit();
 		friend.setFamilyName(lastName);
 		friend.setGivenName(firstName);
 		friend.setName(fullName);
-		
+
 		for (LinphoneAddress address : friend.getAddresses()) {
 			friend.removeAddress(address);
 		}
@@ -505,7 +505,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 		friend.done();
-		
+
 		if (!friend.isAlreadyPresentInFriendList()) {
 			try {
 				LinphoneManager.getLcIfManagerNotDestroyedOrNull().addFriend(friend);
@@ -513,16 +513,16 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				Log.e(e);
 			}
 		}
-		
+
 		if (!ContactsManager.getInstance().hasContactsAccess()) {
-			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends. 
+			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends.
 			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
 			ContactsManager.getInstance().fetchContactsAsync();
 		}
 	}
-	
-	public void save() {		
-		if (isAndroidContact() && ContactsManager.getInstance().hasContactsAccess() && changesToCommit.size() > 0) {		
+
+	public void save() {
+		if (isAndroidContact() && ContactsManager.getInstance().hasContactsAccess() && changesToCommit.size() > 0) {
 			try {
 				ContactsManager.getInstance().getContentResolver().applyBatch(ContactsContract.AUTHORITY, changesToCommit);
 				createLinphoneTagIfNeeded();
@@ -533,7 +533,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				changesToCommit2 = new ArrayList<ContentProviderOperation>();
 			}
 		}
-		
+
 		createOrUpdateFriend();
 	}
 
@@ -548,22 +548,22 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			deleteFriend();
 		}
 	}
-	
+
 	public void deleteFriend() {
 		if (friend != null) {
 			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 		}
 	}
-	
+
 	public void minimalRefresh() {
 		hasSipAddress = false;
-		
+
 		if (isAndroidContact()) {
 			getContactNames();
 			setThumbnailUri(getContactThumbnailPictureUri());
 			setPhotoUri(getContactPictureUri());
 			getNativeContactOrganization();
-			
+
 			if (isLinphoneFriend()) {
 				hasSipAddress = friend.getAddress() != null;
 			}
@@ -581,7 +581,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public void refresh() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
 		hasSipAddress = false;
-		
+
 		if (isAndroidContact()) {
 			getContactNames();
 			setThumbnailUri(getContactThumbnailPictureUri());
@@ -604,7 +604,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			firstName = friend.getGivenName();
 			thumbnailUri = null;
 			photoUri = null;
-			
+
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc != null && lc.isVCardSupported()) {
 				for (LinphoneAddress addr : friend.getAddresses()) {
@@ -623,11 +623,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 	}
-	
+
 	public boolean isAndroidContact() {
 		return androidId != null;
 	}
-	
+
 	public boolean isLinphoneFriend() {
 		return friend != null;
 	}
@@ -670,7 +670,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(getAndroidId()));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
 	}
-	
+
 	private void getContactNames() {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		String[] proj = new String[]{ ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ContactsContract.Contacts.DISPLAY_NAME };
@@ -686,7 +686,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			c.close();
 		}
 	}
-	
+
 	private void getNativeContactOrganization() {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		String[] proj = new String[]{ ContactsContract.CommonDataKinds.Organization.COMPANY };
@@ -700,12 +700,12 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			c.close();
 		}
 	}
-	
+
 	private String findRawContactID() {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		String result = null;
 		String[] projection = { ContactsContract.RawContacts._ID };
-		
+
 		String selection = ContactsContract.RawContacts.CONTACT_ID + "=?";
 		Cursor c = resolver.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, new String[]{ getAndroidId() }, null);
 		if (c != null) {
@@ -716,11 +716,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		}
 		return result;
 	}
-	
+
 	private List<LinphoneNumberOrAddress> getAddressesAndNumbersForAndroidContact() {
 		List<LinphoneNumberOrAddress> result = new ArrayList<LinphoneNumberOrAddress>();
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
-		
+
 		String select = ContactsContract.Data.CONTACT_ID + " =? AND (" + ContactsContract.Data.MIMETYPE + "=? OR " + ContactsContract.Data.MIMETYPE + "=?)";
 		String[] projection = new String[] { ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS, ContactsContract.Data.MIMETYPE }; // PHONE_NUMBER == SIP_ADDRESS == "data1"...
 		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ getAndroidId(), ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE }, null);
@@ -736,7 +736,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					} else if (mime.equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
 						found = true;
 					}
-					
+
 					if (found) {
 						String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS)); // PHONE_NUMBER == SIP_ADDRESS == "data1"...
 						if (number != null && number.length() > 0) {
@@ -759,32 +759,32 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	private static LinphoneContact createAndroidContact() {
 		LinphoneContact contact = new LinphoneContact();
-		
+
 		contact.changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
 	        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
 	        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
 	        .withValue(ContactsContract.RawContacts.AGGREGATION_MODE, ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
 	        .build());
 		contact.setAndroidId("0");
-		
+
 		return contact;
 	}
 
 	private static LinphoneContact createLinphoneFriend() {
 		LinphoneContact contact = new LinphoneContact();
-		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend();
+		LinphoneFriend friend = LinphoneManager.getLc().createFriend();
 		// Disable subscribes for now
 		friend.enableSubscribes(false);
 		friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 		contact.friend = friend;
 		return contact;
 	}
-	
+
 	private String findLinphoneRawContactId() {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		String result = null;
 		String[] projection = { ContactsContract.RawContacts._ID };
-		
+
 		String selection = ContactsContract.RawContacts.CONTACT_ID + "=? AND " + ContactsContract.RawContacts.ACCOUNT_TYPE + "=?";
 		Cursor c = resolver.query(ContactsContract.RawContacts.CONTENT_URI, projection, selection, new String[] { getAndroidId(), ContactsManager.getInstance().getString(R.string.sync_account_type) }, null);
 		if (c != null) {
@@ -795,7 +795,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		}
 		return result;
 	}
-	
+
 	private void createLinphoneTagIfNeeded() {
 		if (LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
 			if (androidTagId == null && findLinphoneRawContactId() == null) {
@@ -803,10 +803,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 		}
 	}
-	
+
 	private void createLinphoneContactTag() {
 		ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
-		
+
 		batch.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
 			.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, ContactsManager.getInstance().getString(R.string.sync_account_type))
 			.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, ContactsManager.getInstance().getString(R.string.sync_account_name))
@@ -824,13 +824,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			.withValue(ContactsContract.AggregationExceptions.RAW_CONTACT_ID1, androidRawId)
 			.withValueBackReference(ContactsContract.AggregationExceptions.RAW_CONTACT_ID2, 0)
 			.build());
-		
+
 		if (changesToCommit2.size() > 0) {
 			for(ContentProviderOperation cpo : changesToCommit2) {
 				batch.add(cpo);
 			}
 		}
-		
+
 		try {
 			ContactsManager.getInstance().getContentResolver().applyBatch(ContactsContract.AUTHORITY, batch);
 			androidTagId = findLinphoneRawContactId();
