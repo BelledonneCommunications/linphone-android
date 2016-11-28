@@ -116,14 +116,14 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			countryCode = proxyConfig.lookupCCCFromIso(countryIso.toUpperCase());
 
 
-			DialPlan c = AssistantActivity.instance().getCountryListAdapter()
-					.getCountryFromCountryCode(String.valueOf(countryCode));
+			DialPlan c = AssistantActivity.instance().country;
 			if (c != null) {
 				selectCountry.setText(c.getCountryName());
 				dialCode.setText(c.getCountryCallingCode().contains("+") ?
 						c.getCountryCallingCode() : "+" + c.getCountryCallingCode());
 			} else {
-				c = AssistantActivity.instance().country;
+				c = AssistantActivity.instance().getCountryListAdapter()
+						.getCountryFromCountryCode(String.valueOf(countryCode));
 				if (c != null) {
 					selectCountry.setText(c.getCountryName());
 					dialCode.setText(c.getCountryCallingCode().contains("+") ?
