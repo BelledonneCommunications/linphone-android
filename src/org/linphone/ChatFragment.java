@@ -947,7 +947,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			for (ContactAddress c : searchAdapter.contacts) {
 				String address = c.address;
 				if (address.startsWith("sip:")) address = address.substring(4);
-				if (c.contact.getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
+				if (c.contact.getFullName() != null && c.contact.getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
 						|| address.toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))) {
 					result.add(c);
 				}

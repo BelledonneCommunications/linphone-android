@@ -717,6 +717,8 @@ public class LinphonePreferences {
 	}
 
 	public int getDefaultAccountIndex() {
+		if (getLc() == null)
+			return -1;
 		LinphoneProxyConfig defaultPrxCfg = getLc().getDefaultProxyConfig();
 		if (defaultPrxCfg == null)
 			return -1;
