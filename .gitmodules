@@ -106,4 +106,4 @@
 	url = git://git.linphone.org/codec2
 [submodule "submodules/externals/libjpeg-turbo"]
 	path = submodules/externals/libjpeg-turbo
-	url = gitosis@git.linphone.org:libjpeg-turbo.git
+	url = git://git.linphone.org/libjpeg-turbo.git
