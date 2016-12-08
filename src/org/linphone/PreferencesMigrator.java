@@ -39,46 +39,46 @@ public class PreferencesMigrator {
 	private LinphonePreferences mNewPrefs;
 	private SharedPreferences mOldPrefs;
 	private Resources mResources;
-	
+
 	public PreferencesMigrator(Context context) {
 		mNewPrefs = LinphonePreferences.instance();
 		mResources = context.getResources();
 		mOldPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
-	
+
 	public boolean isEchoMigratioNeeded() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) {
 			return false;
 		}
-		
+
 		if (mNewPrefs.isEchoConfigurationUpdated()) {
 			return false;
 		}
-		
+
 		return (!lc.needsEchoCalibration() && mNewPrefs.isEchoCancellationEnabled());
 	}
-	
+
 	public void doEchoMigration() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) {
 			return;
 		}
-		
+
 		if (!lc.needsEchoCalibration()) {
 			mNewPrefs.setEchoCancellation(false);
 		}
 	}
-	
+
 	public boolean isMigrationNeeded() {
 		int accountNumber = mOldPrefs.getInt(getString(R.string.pref_extra_accounts), -1);
 		return accountNumber != -1;
 	}
-	
+
 	public void doMigration() {
 		mNewPrefs.firstLaunchSuccessful(); // If migration is needed, it is safe to assume Linphone has already been started once.
 		mNewPrefs.removePreviousVersionAuthInfoRemoval(); // Remove flag in linphonerc asking core not to store auths infos
-		
+
 		mNewPrefs.setFrontCamAsDefault(getPrefBoolean(R.string.pref_video_use_front_camera_key, true));
 		mNewPrefs.setWifiOnlyEnabled(getPrefBoolean(R.string.pref_wifi_only_key, false));
 		mNewPrefs.useRandomPort(getPrefBoolean(R.string.pref_transport_use_random_ports_key, true), false);
@@ -89,7 +89,7 @@ public class PreferencesMigrator {
 		mNewPrefs.setAutoStart(getPrefBoolean(R.string.pref_autostart_key, false));
 		mNewPrefs.setSharingPictureServerUrl(getPrefString(R.string.pref_image_sharing_server_key, null));
 		mNewPrefs.setRemoteProvisioningUrl(getPrefString(R.string.pref_remote_provisioning_key, null));
-		
+
 		doAccountsMigration();
 		deleteAllOldPreferences();
 	}
@@ -111,12 +111,12 @@ public class PreferencesMigrator {
 			mNewPrefs.getConfig().sync();
 		}
 	}
-	
+
 	private void doAccountsMigration() {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		lc.clearAuthInfos();
 		lc.clearProxyConfigs();
-		
+
 		for (int i = 0; i < mOldPrefs.getInt(getString(R.string.pref_extra_accounts), 1); i++) {
 			doAccountMigration(i, i == getPrefInt(R.string.pref_default_account_key, 0));
 		}
@@ -124,7 +124,7 @@ public class PreferencesMigrator {
 
 	private void doAccountMigration(int index, boolean isDefaultAccount) {
 		String key = index == 0 ? "" : String.valueOf(index);
-		
+
 		String username = getPrefString(getString(R.string.pref_username_key) + key, null);
 		String userid = getPrefString(getString(R.string.pref_auth_userid_key) + key, null);
 		String password = getPrefString(getString(R.string.pref_passwd_key) + key, null);
@@ -140,7 +140,7 @@ public class PreferencesMigrator {
 			.setPassword(password)
 			.setProxy(proxy)
 			.setExpires(expire);
-			
+
 			if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false)) {
 				builder.setOutboundProxyEnabled(true);
 			}
@@ -152,13 +152,13 @@ public class PreferencesMigrator {
 					builder.setContactParameters(contactInfos);
 				}
 			}
-			
+
 			try {
 				builder.saveNewAccount();
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
-			
+
 			if (isDefaultAccount) {
 				mNewPrefs.setDefaultAccount(index);
 			}
@@ -182,9 +182,9 @@ public class PreferencesMigrator {
 	private void deleteAllOldPreferences() {
 		Editor editor = mOldPrefs.edit();
 		editor.clear();
-		editor.commit();
+		editor.apply();
 	}
-	
+
 	private String getString(int key) {
 		return mResources.getString(key);
 	}

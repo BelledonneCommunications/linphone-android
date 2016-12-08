@@ -44,7 +44,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 			LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc == null) return;
-			
+
 			String action = intent.getAction();
 			if (action == null) {
 				Log.i("[KeepAlive] Refresh registers");

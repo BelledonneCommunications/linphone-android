@@ -31,9 +31,9 @@ import android.os.Bundle;
 import android.os.Handler;
 
 /**
- * 
+ *
  * Launch Linphone main activity when Service is ready.
- * 
+ *
  * @author Guillaume Beraudo
  *
  */
@@ -45,19 +45,19 @@ public class LinphoneLauncherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Hack to avoid to draw twice LinphoneActivity on tablets
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		setContentView(R.layout.launch_screen);
-        
+
 		mHandler = new Handler();
-		
+
 		if (LinphoneService.isReady()) {
 			onServiceReady();
 		} else {
-			// start linphone as background  
+			// start linphone as background
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			mThread = new ServiceWaitThread();
 			mThread.start();
@@ -78,7 +78,7 @@ public class LinphoneLauncherActivity extends Activity {
 		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			BluetoothManager.getInstance().initBluetooth();
 		}
-		
+
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {

@@ -117,7 +117,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void removePreviousPreferencesFile() {
 		SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
 
 		File dir = new File(getActivity().getFilesDir().getAbsolutePath() + "shared_prefs");
 		LinphoneUtils.recursiveFileRemoval(dir);

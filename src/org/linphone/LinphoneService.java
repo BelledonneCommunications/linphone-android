@@ -64,16 +64,16 @@ import android.provider.MediaStore;
 import android.view.WindowManager;
 
 /**
- * 
+ *
  * Linphone service, reacting to Incoming calls, ...<br />
- * 
+ *
  * Roles include:<ul>
  * <li>Initializing LinphoneManager</li>
  * <li>Starting C libLinphone through LinphoneManager</li>
  * <li>Reacting to LinphoneManager state changes</li>
  * <li>Delegating GUI state change actions to GUI listener</li>
- * 
- * 
+ *
+ *
  * @author Guillaume Beraudo
  *
  */
@@ -86,15 +86,15 @@ public final class LinphoneService extends Service {
 	/*private static final int IC_LEVEL_GREEN=1;
 	private static final int IC_LEVEL_RED=2;*/
 	//public static final int IC_LEVEL_OFFLINE=3;
-	
+
 	private static LinphoneService instance;
-	
+
 	private final static int NOTIF_ID=1;
 	private final static int INCALL_NOTIF_ID=2;
 	private final static int MESSAGE_NOTIF_ID=3;
 	private final static int CUSTOM_NOTIF_ID=4;
 	private final static int MISSED_NOTIF_ID=5;
-	
+
 	public static boolean isReady() {
 		return instance != null && instance.mTestDelayElapsed;
 	}
@@ -255,18 +255,18 @@ public final class LinphoneService extends Service {
 	public int getMessageNotifCount() {
 		return mMsgNotifCount;
 	}
-	
+
 	public void resetMessageNotifCount() {
 		mMsgNotifCount = 0;
 	}
-	
+
 	private boolean displayServiceNotification() {
 		return LinphonePreferences.instance().getServiceNotificationVisibility();
 	}
-	
+
 	public void showServiceNotification() {
 		startForegroundCompat(NOTIF_ID, mNotif);
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return;
 		LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
@@ -280,7 +280,7 @@ public final class LinphoneService extends Service {
 			sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 		}
 	}
-	
+
 	public void hideServiceNotification() {
 		stopForegroundCompat(NOTIF_ID);
 	}
@@ -300,7 +300,7 @@ public final class LinphoneService extends Service {
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
 		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
 		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
-		
+
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
 		dumpDeviceInformation();
@@ -312,7 +312,7 @@ public final class LinphoneService extends Service {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		Intent missedCallNotifIntent = new Intent(this, incomingReceivedActivity);
 		missedCallNotifIntent.putExtra("GoToHistory", true);
 		mMissedCallsNotifContentIntent = PendingIntent.getActivity(this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -333,7 +333,7 @@ public final class LinphoneService extends Service {
 		} catch (ClassNotFoundException e) {
 			Log.e(e);
 		}
-		
+
 		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
@@ -341,15 +341,15 @@ public final class LinphoneService extends Service {
 					Log.i("Service not ready, discarding call state change to ",state.toString());
 					return;
 				}
-				
+
 				if (state == LinphoneCall.State.IncomingReceived) {
 					onIncomingReceived();
 				}
-				
+
 				if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
 					destroyOverlay();
 				}
-				
+
 				if (state == State.CallEnd && call.getCallLog().getStatus() == CallStatus.Missed) {
 					int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
 					String body;
@@ -380,7 +380,7 @@ public final class LinphoneService extends Service {
 						refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 				}
 			}
-			
+
 			@Override
 			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
 				if (state == GlobalState.GlobalOn && displayServiceNotification()) {
@@ -398,18 +398,18 @@ public final class LinphoneService extends Service {
 					if (displayServiceNotification() && state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 					}
-			
+
 					if (displayServiceNotification() && (state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
 					}
-					
+
 					if (displayServiceNotification() && state == RegistrationState.RegistrationNone) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 					}
 				}
 			}
 		});
-		
+
 		// Retrieve methods to publish notification and keep Android
 		// from killing us and keep the audio quality high.
 		if (Version.sdkStrictlyBelow(Version.API05_ECLAIR_20)) {
@@ -441,29 +441,29 @@ public final class LinphoneService extends Service {
 				}
 			}, 5000);
 		}
-		
+
 		//make sure the application will at least wakes up every 10 mn
 		Intent intent = new Intent(this, KeepAliveReceiver.class);
 		PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 		AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
 		Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
-		
+
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 	}
-	
+
 	public void createOverlay() {
 		if (mOverlay != null) destroyOverlay();
-		
+
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null || !call.getCurrentParamsCopy().getVideoEnabled()) return;
-		
+
 		mOverlay = new LinphoneOverlay(this);
 		WindowManager.LayoutParams params = mOverlay.getWindowManagerLayoutParams();
 		params.x = 0;
 		params.y = 0;
 		mWindowManager.addView(mOverlay, params);
 	}
-	
+
 	public void destroyOverlay() {
 		if (mOverlay != null) {
 			mWindowManager.removeViewImmediate(mOverlay);
@@ -480,7 +480,7 @@ public final class LinphoneService extends Service {
 
 		int notificationTextId = 0;
 		int inconId = 0;
-		
+
 		switch (state) {
 		case IDLE:
 			mNM.cancel(INCALL_NOTIF_ID);
@@ -496,15 +496,15 @@ public final class LinphoneService extends Service {
 		case VIDEO:
 			inconId = R.drawable.topbar_videocall_notification;
 			notificationTextId = R.string.incall_notif_video;
-			break;	
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown state " + state);
 		}
-		
+
 		if (LinphoneManager.getLc().getCallsNb() == 0) {
 			return;
 		}
-		
+
 		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 		String userName = call.getRemoteAddress().getUserName();
 		String domain = call.getRemoteAddress().getDomain();
@@ -544,50 +544,50 @@ public final class LinphoneService extends Service {
 		}
 	}
 
-	@Deprecated 
+	@Deprecated
 	public void addNotification(Intent onClickIntent, int iconResourceID, String title, String message) {
 		addCustomNotification(onClickIntent, iconResourceID, title, message, true);
 	}
-	
+
 	public void addCustomNotification(Intent onClickIntent, int iconResourceID, String title, String message, boolean isOngoingEvent) {
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, onClickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		Bitmap bm = null;
 		try {
 			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 		} catch (Exception e) {
 		}
 		mCustomNotif = Compatibility.createNotification(this, title, message, iconResourceID, 0, bm, notifContentIntent, isOngoingEvent,notifcationsPriority);
-		
+
 		mCustomNotif.defaults |= Notification.DEFAULT_VIBRATE;
 		mCustomNotif.defaults |= Notification.DEFAULT_SOUND;
 		mCustomNotif.defaults |= Notification.DEFAULT_LIGHTS;
-		
+
 		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
-	
+
 	public void removeCustomNotification() {
 		mNM.cancel(CUSTOM_NOTIF_ID);
 		resetIntentLaunchedOnNotificationClick();
 	}
-	
+
 	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
 		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
-		
+
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		if (fromName == null) {
 			fromName = fromSipUri;
 		}
-		
+
 		if (mMsgNotif == null) {
 			mMsgNotifCount = 1;
 		} else {
 			mMsgNotifCount++;
 		}
-		
+
 		Uri pictureUri = null;
 		try {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
@@ -596,7 +596,7 @@ public final class LinphoneService extends Service {
 		} catch (LinphoneCoreException e1) {
 			Log.e("Cannot parse from address ", e1);
 		}
-		
+
 		Bitmap bm = null;
 		if (pictureUri != null) {
 			try {
@@ -608,7 +608,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
 		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
-		
+
 		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
 	}
 
@@ -621,7 +621,7 @@ public final class LinphoneService extends Service {
 
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
-	
+
 	public void removeMessageNotification() {
 		mNM.cancel(MESSAGE_NOTIF_ID);
 		resetIntentLaunchedOnNotificationClick();
@@ -696,7 +696,7 @@ public final class LinphoneService extends Service {
 			invokeMethod(mSetForeground, mSetForegroundArgs);
 		}
 	}
-	
+
 	private void dumpDeviceInformation() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("DEVICE=").append(Build.DEVICE).append("\n");
@@ -724,7 +724,7 @@ public final class LinphoneService extends Service {
 			Log.i("Linphone version is unknown");
 		}
 	}
-	
+
 	public void disableNotificationsAutomaticRegistrationStatusContent() {
 		mDisableRegistrationStatus = true;
 	}
@@ -765,13 +765,13 @@ public final class LinphoneService extends Service {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-	
+
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
 		if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
 			Log.d("Task removed, stop service");
-			
+
 			// If push is enabled, don't unregister account, otherwise do unregister
 			if (LinphonePreferences.instance().isPushNotificationEnabled()) {
 				LinphoneManager.getLc().setNetworkReachable(false);
@@ -794,7 +794,7 @@ public final class LinphoneService extends Service {
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
-		
+
 		instance = null;
 		getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
 		LinphoneManager.destroy();
@@ -806,7 +806,7 @@ public final class LinphoneService extends Service {
 
 		super.onDestroy();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void setActivityToLaunchOnIncomingReceived(String activityName) {
 		try {
@@ -818,17 +818,17 @@ public final class LinphoneService extends Service {
 		}
 		resetIntentLaunchedOnNotificationClick();
 	}
-	
+
 	private void resetIntentLaunchedOnNotificationClick() {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-		
+
 		/*if (mNotif != null) {
 			mNotif.contentIntent = mNotifContentIntent;
 		}
 		notifyWrapper(NOTIF_ID, mNotif);*/
 	}
-	
+
 	protected void onIncomingReceived() {
 		//wakeup linphone
 		startActivity(new Intent()

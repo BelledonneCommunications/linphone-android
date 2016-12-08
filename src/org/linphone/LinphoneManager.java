@@ -140,10 +140,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private static boolean sExited;
 	private boolean mAudioFocused;
 	private boolean echoTesterIsRunning;
+	private boolean dozeModeEnabled;
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
 	private BroadcastReceiver mKeepAliveReceiver;
+	private BroadcastReceiver mDozeReceiver;
 	private IntentFilter mKeepAliveIntentFilter;
+	private IntentFilter mDozeIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
 	private LinphoneAccountCreator accountCreator;
@@ -188,6 +191,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		mR = c.getResources();
 		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			dozeModeEnabled = ((PowerManager)c.getSystemService(c.POWER_SERVICE)).isDeviceIdleMode();
+		} else {
+			dozeModeEnabled = false;
+		}
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -663,6 +672,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		finally {
 			try {
 				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+				mServiceContext.unregisterReceiver(mDozeReceiver);
 			} catch (Exception e) {
 				Log.e(e);
 			}
@@ -679,6 +689,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		 be sent by the system.
 		*/
 		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
+		mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 		sExited = false;
 	}
 
@@ -798,8 +809,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		*/
 		mKeepAliveIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		mKeepAliveIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+
 		mKeepAliveReceiver = new KeepAliveReceiver();
 		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
+
+		mDozeIntentFilter = new IntentFilter(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+		mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+
+		mDozeReceiver = new DozeReceiver();
+
+		mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 
 		updateNetworkReachability();
 
@@ -870,7 +889,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		ConnectivityManager cm = (ConnectivityManager) mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo eventInfo = cm.getActiveNetworkInfo();
 
-		if (eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED) {
+		if (eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED || dozeModeEnabled) {
 			Log.i("No connectivity: setting network unreachable");
 			mLc.setNetworkReachable(false);
 		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
@@ -1493,6 +1512,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		});
 		dialog.show();
+	}
+
+	public void setDozeModeEnabled(boolean b) {
+		dozeModeEnabled = b;
 	}
 
 	@SuppressWarnings("serial")

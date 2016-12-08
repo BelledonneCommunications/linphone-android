@@ -133,7 +133,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
-		
+
 		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
@@ -166,7 +166,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 		        displayMissedChats();
 			}
-			
+
 			@Override
 			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -436,7 +436,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	public void checkAndRequestPermission(String permission, int result) {
 		int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
 		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-		
+
 		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
 			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
 				Log.i("[Permission] Asking for " + permission);
@@ -450,7 +450,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		}
-		
+
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_CAMERA:
 				UIThreadDispatcher.dispatch(new Runnable() {
@@ -618,7 +618,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		if (id == R.id.video) {
 			int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
 			Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-			
+
 			if (camera == PackageManager.PERMISSION_GRANTED) {
 				disableVideo(isVideoEnabled(LinphoneManager.getLc().getCurrentCall()));
 			} else {
@@ -629,7 +629,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 		else if (id == R.id.micro) {
 			int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
 			Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-			
+
 			if (recordAudio == PackageManager.PERMISSION_GRANTED) {
 				toggleMicro();
 			} else {
@@ -783,7 +783,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 
 		//Check if the call is not terminated
 		if(call.getState() == State.CallEnd || call.getState() == State.CallReleased) return;
-		
+
 		if (!displayVideo) {
 			showAudioView();
 		} else {
@@ -1143,7 +1143,7 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 			public void onClick(View view) {
 				int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
 				Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-				
+
 				if (camera == PackageManager.PERMISSION_GRANTED) {
 					CallActivity.instance().acceptCallUpdate(true);
 				} else {
@@ -1568,14 +1568,14 @@ public class CallActivity extends Activity implements OnClickListener, SensorEve
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
 	}
-	
+
 	private void displayMissedChats() {
 		int count = 0;
 		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
 		for (LinphoneChatRoom chatroom : chats) {
 			count += chatroom.getUnreadMessagesCount();
 		}
-		
+
 		if (count > 0) {
 			missedChats.setText(count + "");
 			missedChats.setVisibility(View.VISIBLE);
