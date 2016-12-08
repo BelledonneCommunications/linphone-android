@@ -152,6 +152,7 @@ public class CallOutgoingActivity extends Activity implements OnClickListener{
 					}
 					LinphoneActivity.instance().startIncallActivity(mCall);
 					finish();
+					return;
 				}
 			}
 		}
