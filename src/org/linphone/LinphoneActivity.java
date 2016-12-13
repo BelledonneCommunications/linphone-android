@@ -1077,6 +1077,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 	public void quit() {
 		finish();
 		stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	@Override
@@ -1614,7 +1615,7 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-					if(view != null) {
+					if(view != null && view.getTag().toString() != null) {
 						int position = Integer.parseInt(view.getTag().toString());
 						LinphoneActivity.instance().displayAccountSettings(position);
 					}
