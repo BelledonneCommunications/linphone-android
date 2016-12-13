@@ -98,6 +98,9 @@
 	<string name="assistant_error_bad_credentials">Incorrect username or password</string>
 	<string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>
 	<string name="assistant_codec_downloading">Downloading OpenH264 Video Codec provided by Cisco Systems, Inc.</string>
+	<string name="assistant_openh264_downloading">Downloading OpenH264</string>
+	<string name="assistant_openh264_restart">Before use OpenH264 codec you must restart %s.</string>
+	<string name="assistant_openh264_error">Sorry an error has occurred.</string>
 	<string name="assistant_codec_downloaded">OpenH264 Video Codec provided by Cisco Systems, Inc. downloaded.</string>
 	<string name="wizard_failed">An error occurred, try again later.</string>
 	<string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>

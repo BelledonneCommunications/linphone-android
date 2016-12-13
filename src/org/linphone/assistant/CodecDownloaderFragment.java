@@ -27,6 +27,7 @@ import org.linphone.core.PayloadType;
 import org.linphone.tools.OpenH264DownloadHelper;
 
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -82,10 +83,15 @@ public class CodecDownloaderFragment extends Fragment {
 							bar.setVisibility(View.VISIBLE);
 						} else {
 							hideAllItems();
-							LinphoneManager.getLc().reloadMsPlugins(null);
 							downloaded.setVisibility(View.VISIBLE);
-							enabledH264(true);
-							AssistantActivity.instance().endDownloadCodec();
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+								enabledH264(true);
+								LinphoneManager.getLc().reloadMsPlugins(AssistantActivity.instance().getApplicationInfo().nativeLibraryDir);
+								AssistantActivity.instance().endDownloadCodec();
+							} else {
+								// We need to restart due to bad android linker
+								AssistantActivity.instance().restartApplication();
+							}
 						}
 					}
 				});

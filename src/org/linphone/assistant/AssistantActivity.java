@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -25,8 +27,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.R;
@@ -667,6 +671,18 @@ private static AssistantActivity instance;
 		if (status != null) {
 			status.setLinphoneCoreListener();
 		}
+	}
+
+	public void restartApplication() {
+		mPrefs.firstLaunchSuccessful();
+
+		Intent mStartActivity = new Intent(this, LinphoneLauncherActivity.class);
+		PendingIntent mPendingIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager mgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
+
+		stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
 	@Override

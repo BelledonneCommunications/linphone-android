@@ -243,14 +243,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 							progress.setCancelable(false);
 							progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 						} else if (current <= max) {
-							progress.setMessage("Downloading OpenH264");
+							progress.setMessage(getString(R.string.assistant_openh264_downloading));
 							progress.setMax(max);
 							progress.setProgress(current);
 							progress.show();
 						} else {
 							progress.dismiss();
 							progress = null;
-							LinphoneManager.getLc().reloadMsPlugins(null);
+							LinphoneManager.getLc().reloadMsPlugins(LinphoneManager.this.getContext().getApplicationInfo().nativeLibraryDir);
 							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null) {
 								((CheckBoxPreference) ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
 								((CheckBoxPreference) ohcodec.getUserData(box)).setTitle("OpenH264");
@@ -267,9 +267,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						public void run() {
 						if (progress != null) progress.dismiss();
 						AlertDialog.Builder builder = new AlertDialog.Builder((Context) LinphoneManager.getInstance().getOpenH264DownloadHelper().getUserData(ctxt));
-						builder.setMessage("Sorry an error has occurred.");
+						builder.setMessage(getString(R.string.assistant_openh264_error));
 						builder.setCancelable(false);
-						builder.setNeutralButton("Ok", null);
+						builder.setNeutralButton(getString(R.string.ok), null);
 						builder.show();
 					}
 					});
@@ -316,8 +316,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		instance = new LinphoneManager(c);
 		instance.startLibLinphone(c);
 
-		// H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
-		H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
+		if (getLc().openH264Enabled()) {
+			// H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
+			H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
+		}
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
@@ -938,6 +940,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		finally {
 			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+			mServiceContext.unregisterReceiver(mDozeReceiver);
 			mLc = null;
 			instance = null;
 		}
