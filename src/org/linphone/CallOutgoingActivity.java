@@ -46,7 +46,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CallOutgoingActivity extends Activity implements OnClickListener{
+public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener{
 	private static CallOutgoingActivity instance;
 
 	private TextView name, number;

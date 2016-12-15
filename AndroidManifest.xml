@@ -1,266 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.linphone"
+          package="org.linphone"
+          android:installLocation="auto"
+          android:versionCode="3214"
+          android:versionName="3.2.1">
 
-      android:versionCode="3214" android:versionName="3.2.1" android:installLocation="auto">
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23"/>
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23"/>
 
     <!-- Permissions for Push Notification -->
-    <permission android:name="org.linphone.permission.C2D_MESSAGE" android:protectionLevel="signature" /> <!-- Change package ! -->
-	<uses-permission android:name="org.linphone.permission.C2D_MESSAGE" />  <!-- Change package ! -->
-	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission
+        android:name="org.linphone.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/> <!-- Change package ! -->
+    <uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> <!-- Change package ! -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <!-- Needed to allow Linphone to install on tablets, since android.permission.CALL_PHONE implies android.hardware.telephony is required -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false"/>
 
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
-	<uses-permission android:name="android.permission.READ_CONTACTS"/>
-	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.WAKE_LOCK"/>
-	<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
-	<uses-permission android:name="android.permission.CALL_PHONE"/>
-	<!-- Needed to allow Linphone to install on tablets, since android.permission.CALL_PHONE implies android.hardware.telephony is required -->
-	<uses-feature 	 android:name="android.hardware.telephony" android:required="false" />
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-	<uses-permission android:name="android.permission.VIBRATE"/>
-	<uses-permission android:name="android.permission.CAMERA" />
-	<!-- Needed to allow Linphone to install on tablets, since android.permission.CAMERA implies android.hardware.camera and android.hardware.camera.autofocus are required -->
-	<uses-feature 	 android:name="android.hardware.camera" android:required="false" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-	<!-- Needed to store received images if the user wants to -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<!-- Needed to use our own Contact editor -->
-	<uses-permission android:name="android.permission.WRITE_CONTACTS"/>
-	<!-- Needed to route the audio to the bluetooth headset if available -->
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
-	<!-- Needed to pre fill the wizard email field (only if enabled in custom settings) -->
-	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Needed to allow Linphone to install on tablets, since android.permission.CAMERA implies android.hardware.camera and android.hardware.camera.autofocus are required -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"/>
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- Needed to store received images if the user wants to -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- Needed to use our own Contact editor -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <!-- Needed to route the audio to the bluetooth headset if available -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <!-- Needed to pre fill the wizard email field (only if enabled in custom settings) -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <!-- Needed for in-app purchase -->
-    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="com.android.vending.BILLING"/>
     <!-- Needed for overlay widget -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
-	<supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true"/>
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true"/>
 
-    <application android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:largeHeap="true" android:allowBackup="true">
-
-		<activity android:name="org.linphone.LinphoneLauncherActivity"
-		    android:label="@string/app_name"
-		    android:windowSoftInputMode="adjustPan|stateHidden"
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true">
+        <activity
+            android:name=".LinphoneLauncherActivity"
             android:exported="true"
-		    android:theme="@style/NoTitle">
-		    <intent-filter>
-		        <action android:name="android.intent.action.MAIN" />
-		        <category android:name="android.intent.category.LAUNCHER" />
-		    </intent-filter>
-
+            android:label="@string/app_name"
+            android:theme="@style/NoTitle"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
-                <action android:name="android.intent.action.CALL" />
-                <action android:name="android.intent.action.CALL_PRIVILEGED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="tel" />
-                <data android:scheme="sip" /> />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
             <intent-filter>
-                <action android:name="android.intent.action.SENDTO" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="sip" />
-                <data android:scheme="imto" />
-			 </intent-filter>
+                <action android:name="android.intent.action.CALL"/>
+                <action android:name="android.intent.action.CALL_PRIVILEGED"/>
 
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:scheme="tel"/>
+                <data android:scheme="sip"/>
+                />
+            </intent-filter>
             <intent-filter>
-                <data android:mimeType="@string/sync_mimetype" /> <!-- Change package in res/values/non_localizable_custom.xml ! -->
-		        <action android:name="android.intent.action.VIEW" />
-		        <category android:name="android.intent.category.BROWSABLE" />
-		        <category android:name="android.intent.category.DEFAULT" />
-     		</intent-filter>
+                <action android:name="android.intent.action.SENDTO"/>
 
-		</activity>
+                <category android:name="android.intent.category.DEFAULT"/>
 
-		<activity android:name="org.linphone.LinphoneActivity"
-		    android:theme="@style/NoTitle"
-            android:screenOrientation="behind"
-            android:launchMode="singleTask">
+                <data android:scheme="sip"/>
+                <data android:scheme="imto"/>
+            </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <data android:mimeType="@string/sync_mimetype"/> <!-- Change package in res/values/non_localizable_custom.xml ! -->
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".CallIncomingActivity"
-		    android:theme="@style/NoTitle"
-			android:launchMode="singleTop"
-            android:screenOrientation="behind">
+        <activity
+            android:name=".LinphoneActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
-         </activity>
+        </activity>
+        <activity
+            android:name=".CallIncomingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CallOutgoingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CallActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/FullScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
 
-		<activity android:name=".CallOutgoingActivity"
-			  android:theme="@style/NoTitle"
-			  android:launchMode="singleTop"
-			  android:screenOrientation="behind">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-			</intent-filter>
-		</activity>
-
-        <activity android:name=".CallActivity"
-		   android:theme="@style/FullScreen"
-           android:launchMode="singleTop">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-			</intent-filter>
-
-			<!--<intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:mimeType="audio/*" />
                 <data android:mimeType="video/*" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
-
-        <activity android:name=".assistant.AssistantActivity"
-		    android:theme="@style/NoTitle"
-            android:screenOrientation="behind">
+        <activity
+            android:name=".assistant.AssistantActivity"
+            android:screenOrientation="behind"
+            android:theme="@style/NoTitle">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
-         </activity>
-
-         <activity android:name="org.linphone.purchase.InAppPurchaseActivity"
-		    android:theme="@style/NoTitle"
-            android:screenOrientation="nosensor">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-         </activity>
-
-        <activity android:name="org.linphone.assistant.RemoteProvisioningLoginActivity"
-		    android:theme="@style/NoTitle"
-            android:screenOrientation="nosensor">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-         </activity>
-
-        <activity android:name="org.linphone.assistant.RemoteProvisioningActivity"
-            android:theme="@style/NoTitle"
-            android:screenOrientation="nosensor">
-            <intent-filter>
-	     		<action android:name="android.intent.action.MAIN" />
-		  	</intent-filter>
-
-            <intent-filter>
-		        <data android:scheme="linphone-config" /> <!-- Change if needed -->
-		        <action android:name="android.intent.action.VIEW" />
-		        <category android:name="android.intent.category.BROWSABLE" />
-		        <category android:name="android.intent.category.DEFAULT" />
-     		</intent-filter>
         </activity>
+        <activity
+            android:name=".purchase.InAppPurchaseActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.RemoteProvisioningLoginActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.RemoteProvisioningActivity"
+            android:screenOrientation="nosensor"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="linphone-config"/> <!-- Change if needed -->
+                <action android:name="android.intent.action.VIEW"/>
 
-	    <service android:name="org.linphone.LinphoneService"
-	        android:label="@string/service_name"
-	        android:stopWithTask="false"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <service
-            android:name="org.linphone.sync.SyncService"
+            android:name=".LinphoneService"
+            android:label="@string/service_name"
+            android:stopWithTask="false"/>
+        <service
+            android:name=".sync.SyncService"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter" android:resource="@xml/syncadapter" />
-            <meta-data android:name="android.provider.CONTACTS_STRUCTURE" android:resource="@xml/contacts" />
-        </service>
 
-        <service
-            android:name="org.linphone.sync.AuthenticationService">
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter"/>
+            <meta-data
+                android:name="android.provider.CONTACTS_STRUCTURE"
+                android:resource="@xml/contacts"/>
+        </service>
+        <service android:name=".sync.AuthenticationService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator"/>
         </service>
 
-        <receiver android:name="org.linphone.NetworkManager">
-			<intent-filter><action android:name="android.net.conn.CONNECTIVITY_CHANGE"></action></intent-filter>
-		</receiver>
-
-	    <receiver android:name="org.linphone.BluetoothManager" android:enabled="false">
-		</receiver>
-
-		<receiver android:name="org.linphone.BootReceiver">
-			<intent-filter><action android:name="android.intent.action.BOOT_COMPLETED"></action></intent-filter>
-			<intent-filter><action android:name="android.intent.action.ACTION_SHUTDOWN"></action></intent-filter>
-		</receiver>
-
-		<receiver android:name="org.linphone.PhoneStateChangedReceiver">
-			<intent-filter><action android:name="android.intent.action.PHONE_STATE" /></intent-filter>
-		</receiver>
-
-		<!-- This one needs to be registered from application -->
-		<receiver android:name="KeepAliveReceiver"/>
-
-		<!-- Needed for push notification -->
-		<receiver android:name="org.linphone.gcm.GCMReceiver" android:permission="com.google.android.c2dm.permission.SEND" >
-		  <intent-filter>
-		    <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-		    <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-		    <category android:name="org.linphone" /> <!-- Change package ! -->
-		  </intent-filter>
-		</receiver>
-
-		<service android:name="org.linphone.gcm.GCMService" />
-
-        <activity android:name="org.linphone.tutorials.TutorialLauncherActivity"
-		    android:theme="@style/NoTitle">
+        <receiver android:name=".NetworkManager">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
-        </activity>
-
-		<activity android:name="org.linphone.tutorials.TutorialBuddyStatusActivity"
-		    android:theme="@style/NoTitle">
+        </receiver>
+        <receiver
+            android:name=".BluetoothManager"
+            android:enabled="false">
+        </receiver>
+        <receiver android:name=".BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
-        </activity>
-
-		<activity android:name="org.linphone.tutorials.TutorialChatRoomActivity"
-		    android:theme="@style/NoTitle">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
             </intent-filter>
-        </activity>
-
-		<activity android:name="org.linphone.tutorials.TutorialHelloWorldActivity"
-		    android:theme="@style/NoTitle">
+        </receiver>
+        <receiver android:name=".PhoneStateChangedReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
-        </activity>
+        </receiver>
 
-		<activity android:name="org.linphone.tutorials.TutorialRegistrationActivity"
-		    android:theme="@style/NoTitle">
+        <!-- This one needs to be registered from application -->
+        <receiver android:name=".KeepAliveReceiver"/>
+
+        <!-- Needed for push notification -->
+        <receiver
+            android:name=".gcm.GCMReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
-		<activity android:name="org.linphone.tutorials.TutorialCardDavSync"
+                <category android:name="org.linphone"/> <!-- Change package ! -->
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".gcm.GCMService"/>
+
+        <activity
+            android:name=".tutorials.TutorialLauncherActivity"
             android:theme="@style/NoTitle">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-
-	</application>
+        <activity
+            android:name=".tutorials.TutorialBuddyStatusActivity"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tutorials.TutorialChatRoomActivity"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tutorials.TutorialHelloWorldActivity"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tutorials.TutorialRegistrationActivity"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".tutorials.TutorialCardDavSync"
+            android:theme="@style/NoTitle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".LinphoneGenericActivity">
+        </activity>
+    </application>
 
 </manifest>

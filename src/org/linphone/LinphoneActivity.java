@@ -99,7 +99,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class LinphoneActivity extends Activity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
+public class LinphoneActivity extends LinphoneGenericActivity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int CALL_ACTIVITY = 19;
@@ -156,12 +156,6 @@ public class LinphoneActivity extends Activity implements OnClickListener, Conta
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-
-		if (!LinphoneManager.isInstanciated()) {
-			finish();
-			startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
-			return;
-		}
 
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
 		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {

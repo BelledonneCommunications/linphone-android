@@ -79,7 +79,7 @@ import android.widget.Toast;
 /**
  * @author Sylvain Berfini
  */
-public class CallActivity extends Activity implements OnClickListener, SensorEventListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class CallActivity extends LinphoneGenericActivity implements OnClickListener, SensorEventListener, ActivityCompat.OnRequestPermissionsResultCallback {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
