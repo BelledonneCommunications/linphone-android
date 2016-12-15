@@ -1609,7 +1609,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-					if(view != null && view.getTag().toString() != null) {
+					if(view != null && view.getTag() != null) {
 						int position = Integer.parseInt(view.getTag().toString());
 						LinphoneActivity.instance().displayAccountSettings(position);
 					}

@@ -70,7 +70,11 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_add);
 			}
 		} else {
-			mCall.setImageResource(R.drawable.call_audio_start);
+			if (LinphoneManager.getLc().getVideoAutoInitiatePolicy()) {
+				mCall.setImageResource(R.drawable.call_video_start);
+			} else {
+				mCall.setImageResource(R.drawable.call_audio_start);
+			}
 		}
 
 		numpad = (AddressAware) view.findViewById(R.id.numpad);
@@ -189,7 +193,11 @@ public class DialerFragment extends Fragment {
 			mAddContact.setImageResource(R.drawable.call_alt_back);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			mCall.setImageResource(R.drawable.call_audio_start);
+			if (LinphoneManager.getLc().getVideoAutoInitiatePolicy()) {
+				mCall.setImageResource(R.drawable.call_video_start);
+			} else {
+				mCall.setImageResource(R.drawable.call_audio_start);
+			}
 			mAddContact.setEnabled(false);
 			mAddContact.setImageResource(R.drawable.contact_add_button);
 			mAddContact.setOnClickListener(addContactListener);
