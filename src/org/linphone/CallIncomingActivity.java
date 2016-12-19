@@ -57,7 +57,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
 	private LinearLayout declineUnlock;
-	private boolean isScreenActive, alreadyAcceptedOrDeniedCall;
+	private boolean alreadyAcceptedOrDeniedCall;
 	private float answerX;
 	private float declineX;
 
@@ -89,7 +89,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		getWindow().addFlags(flags);
 
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		isScreenActive = Compatibility.isScreenOn(pm);
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
@@ -101,87 +100,81 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(isScreenActive) {
-					answer();
-				} else {
-					decline.setVisibility(View.GONE);
-					acceptUnlock.setVisibility(View.VISIBLE);
-				}
+
+				decline.setVisibility(View.GONE);
+				acceptUnlock.setVisibility(View.VISIBLE);
+
 			}
 		});
 
-		if(!isScreenActive) {
-			accept.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-					float curX;
-					switch (motionEvent.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							acceptUnlock.setVisibility(View.VISIBLE);
-							decline.setVisibility(View.GONE);
-							answerX = motionEvent.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							curX = motionEvent.getX();
-							if((answerX - curX) >= 0)
-								view.scrollBy((int) (answerX - curX), view.getScrollY());
-							answerX = curX;
-							if (curX < screenWidth/4) {
-								answer();
-								return true;
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-							view.scrollTo(0, view.getScrollY());
-							decline.setVisibility(View.VISIBLE);
-							acceptUnlock.setVisibility(View.GONE);
-							break;
-					}
-					return true;
-				}
-			});
 
-			decline.setOnTouchListener(new View.OnTouchListener() {
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent) {
-					float curX;
-					switch (motionEvent.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							declineUnlock.setVisibility(View.VISIBLE);
-							accept.setVisibility(View.GONE);
-							declineX = motionEvent.getX();
-							break;
-						case MotionEvent.ACTION_MOVE:
-							curX = motionEvent.getX();
-							view.scrollBy((int) (declineX - curX), view.getScrollY());
-							declineX = curX;
-							Log.w(curX);
-							if (curX > (screenWidth/2)){
-								decline();
-								return true;
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-							view.scrollTo(0, view.getScrollY());
-							accept.setVisibility(View.VISIBLE);
-							declineUnlock.setVisibility(View.GONE);
-							break;
-
-					}
-					return true;
+		accept.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				float curX;
+				switch (motionEvent.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						acceptUnlock.setVisibility(View.VISIBLE);
+						decline.setVisibility(View.GONE);
+						answerX = motionEvent.getX();
+						break;
+					case MotionEvent.ACTION_MOVE:
+						curX = motionEvent.getX();
+						if((answerX - curX) >= 0)
+							view.scrollBy((int) (answerX - curX), view.getScrollY());
+						answerX = curX;
+						if (curX < screenWidth/4) {
+							answer();
+							return true;
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+						view.scrollTo(0, view.getScrollY());
+						decline.setVisibility(View.VISIBLE);
+						acceptUnlock.setVisibility(View.GONE);
+						break;
 				}
-			});
-		}
+				return true;
+			}
+		});
+
+		decline.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				float curX;
+				switch (motionEvent.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						declineUnlock.setVisibility(View.VISIBLE);
+						accept.setVisibility(View.GONE);
+						declineX = motionEvent.getX();
+						break;
+					case MotionEvent.ACTION_MOVE:
+						curX = motionEvent.getX();
+						view.scrollBy((int) (declineX - curX), view.getScrollY());
+						declineX = curX;
+						Log.w(curX);
+						if (curX > (screenWidth/2)){
+							decline();
+							return true;
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+						view.scrollTo(0, view.getScrollY());
+						accept.setVisibility(View.VISIBLE);
+						declineUnlock.setVisibility(View.GONE);
+						break;
+
+				}
+				return true;
+			}
+		});
+
 
 		decline.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(isScreenActive) {
-					decline();
-				} else {
-					accept.setVisibility(View.GONE);
-					acceptUnlock.setVisibility(View.VISIBLE);
-				}
+				accept.setVisibility(View.GONE);
+				acceptUnlock.setVisibility(View.VISIBLE);
 			}
 		});
 
