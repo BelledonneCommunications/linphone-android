@@ -5,19 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<fragment
-		android:id="@+id/status"
-		android:name="org.linphone.StatusFragment"
-		android:layout_width="match_parent"
-		android:layout_height="35dp"
-		tools:layout="@layout/status" />
-
-
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/side_menu"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/status">
+		android:layout_height="match_parent">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
@@ -53,7 +44,8 @@
 						android:id="@+id/active_call"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:visibility="visible">
+						android:visibility="visible"
+						android:layout_marginTop="40dp">
 
 						<LinearLayout
 							android:id="@+id/active_call_info"
@@ -246,7 +238,7 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1">
-						
+
 						<ImageView
 							android:id="@+id/chat"
 							android:src="@drawable/footer_chat"
@@ -256,7 +248,7 @@
 							android:layout_height="wrap_content"
 							android:padding="15dp"
 							android:layout_centerInParent="true"/>
-	
+
 						<TextView
 							android:id="@+id/missed_chats"
 							android:background="@drawable/history_chat_indicator"
@@ -278,7 +270,7 @@
 
 					<RelativeLayout
 						android:layout_width="match_parent"
-						android:layout_height="match_parent"
+						android:layout_height="wrap_content"
 						android:layout_weight="1">
 
 						<ImageView
@@ -288,7 +280,7 @@
 							android:contentDescription="@string/content_description_switch_video"
 							android:padding="20dp"
 							android:layout_width="match_parent"
-							android:layout_height="match_parent"/>
+							android:layout_height="wrap_content"/>
 
 						<ProgressBar
 							android:id="@+id/video_in_progress"
@@ -489,5 +481,12 @@
 		</RelativeLayout>
 
 	</android.support.v4.widget.DrawerLayout>
+
+	<fragment
+		android:id="@+id/status"
+		android:name="org.linphone.StatusFragment"
+		android:layout_width="match_parent"
+		android:layout_height="35dp"
+		tools:layout="@layout/status" />
 
 </RelativeLayout>

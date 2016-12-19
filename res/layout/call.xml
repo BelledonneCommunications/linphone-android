@@ -294,13 +294,13 @@
 						android:layout_height="wrap_content"
 						android:layout_weight="0.4"
 						android:padding="12dp"/>
-					
+
 					<RelativeLayout
 						android:background="@drawable/footer_button"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="0.8">
-						
+
 						<ImageView
 							android:id="@+id/chat"
 							android:src="@drawable/footer_chat"
@@ -310,7 +310,7 @@
 							android:layout_height="wrap_content"
 							android:padding="15dp"
 							android:layout_centerInParent="true"/>
-	
+
 						<TextView
 							android:id="@+id/missed_chats"
 							android:background="@drawable/history_chat_indicator"
