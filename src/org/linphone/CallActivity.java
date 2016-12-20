@@ -803,10 +803,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
 				mProximitySensingEnabled = true;
 			}
-		}else{
+		} else {
 			if (mProximitySensingEnabled){
 				mSensorManager.unregisterListener(this);
 				mProximitySensingEnabled = false;
+				// Don't forgeting to release wakelock if held
+				if(wakeLock.isHeld()) {
+					wakeLock.release();
+				}
 			}
 		}
 	}
@@ -828,6 +832,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		refreshInCallActions();
 
 		enableProximitySensing(false);
+
 		replaceFragmentAudioByVideo();
 		hideStatusBar();
 	}
