@@ -27,6 +27,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @TargetApi(19)
 public class ApiNineteenPlus {
 	public static void scheduleAlarm(AlarmManager alarmManager, int type, long triggerAtMillis, PendingIntent operation) {
-		alarmManager.setExact(type, triggerAtMillis, operation);
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+			alarmManager.setExact(type, triggerAtMillis, operation);
+		} else {
+			alarmManager.set(type, triggerAtMillis, operation);
+		}
 	}
 }
