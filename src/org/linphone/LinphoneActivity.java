@@ -1213,10 +1213,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
 		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
-			if (LinphonePreferences.instance().firstTimeAskingForPermission(permission) || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-				Log.i("[Permission] Asking for " + permission);
-				ActivityCompat.requestPermissions(this, new String[] { permission }, result);
-			}
+			ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
+			Log.i("[Permission] Asking for " + permission);
+			ActivityCompat.requestPermissions(this, new String[] { permission }, result);
 		}
 	}
 
