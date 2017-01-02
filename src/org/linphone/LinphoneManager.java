@@ -316,10 +316,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		instance = new LinphoneManager(c);
 		instance.startLibLinphone(c);
 
-		if (getLc().openH264Enabled()) {
-			// H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
-			H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
-		}
+		//if (getLc().openH264Enabled()) {  ==> Not really relevant because not openH264Enabled condition check is not totally correct
+		// H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
+		H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
+		//}
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
