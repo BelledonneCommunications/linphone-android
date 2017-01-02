@@ -87,8 +87,8 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	@Override
 	public int compareTo(LinphoneContact contact) {
-		String fullName = getFullName() != null ? getFullName() : "";
-		String contactFullName = contact.getFullName() != null ? contact.getFullName() : "";
+		String fullName = getFullName() != null ? getFullName().toUpperCase(Locale.getDefault()) : "";
+		String contactFullName = contact.getFullName() != null ? contact.getFullName().toUpperCase(Locale.getDefault()) : "";
 		/*String firstLetter = fullName == null || fullName.isEmpty() ? "" : fullName.substring(0, 1).toUpperCase(Locale.getDefault());
 		String contactfirstLetter = contactFullName == null || contactFullName.isEmpty() ? "" : contactFullName.substring(0, 1).toUpperCase(Locale.getDefault());*/
 		return fullName.compareTo(contactFullName);
