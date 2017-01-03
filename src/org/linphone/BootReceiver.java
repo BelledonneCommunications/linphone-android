@@ -36,7 +36,9 @@ public class BootReceiver extends BroadcastReceiver {
 		} else {
 			String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
 			LpConfig lpConfig = LinphoneCoreFactory.instance().createLpConfig(path);
-			if (lpConfig.getBool("app", "auto_start", false)) {
+			boolean autostart = lpConfig.getBool("app", "auto_start", false);
+			android.util.Log.i("LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
+			if (autostart) {
 				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
 				context.startService(lLinphoneServiceIntent);
