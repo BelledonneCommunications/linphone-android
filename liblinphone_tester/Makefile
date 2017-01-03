@@ -3,6 +3,7 @@ SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 
 all: update-project copy-files
 	ant clean debug
+	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.tester
 	$(SDK_PLATFORM_TOOLS_PATH)/adb install -g bin/liblinphone_tester-debug.apk
 	#$(SDK_PLATFORM_TOOLS_PATH)/adb install -g ../bin/Linphone-debug.apk
 
