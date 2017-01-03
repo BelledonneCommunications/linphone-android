@@ -224,7 +224,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.enableSpeaker(speakerOn);
 	}
 
-	public void initOpenH264Helper() {
+	public void initOpenH264DownloadHelper() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+			Log.i("Android >= 5.1 we disable the download of OpenH264");
+			getLc().enableDownloadOpenH264(false);
+			return;
+		}
+
 		mCodecDownloader = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 		mCodecListener = new OpenH264DownloadHelperListener() {
 			ProgressDialog progress;
@@ -315,11 +321,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		instance = new LinphoneManager(c);
 		instance.startLibLinphone(c);
+		instance.initOpenH264DownloadHelper();
 
-		//if (getLc().openH264Enabled()) {  ==> Not really relevant because not openH264Enabled condition check is not totally correct
 		// H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
 		H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
-		//}
+
 		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
 		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
 		setGsmIdle(gsmIdle);
@@ -1028,7 +1034,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			try {
 				Log.e("LinphoneManager"," globalState ON");
 				initLiblinphone(lc);
-				initOpenH264Helper();
 
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
