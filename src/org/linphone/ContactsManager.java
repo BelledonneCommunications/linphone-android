@@ -21,6 +21,7 @@ package org.linphone;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -59,6 +60,8 @@ public class ContactsManager extends ContentObserver {
 	private ContentResolver contentResolver;
 	private Context context;
 	private ContactsFetchTask contactsFetchTask;
+	private HashMap<String, LinphoneContact> contactsCache;
+	private LinphoneContact contactNotFound;
 
 	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
 	public static void addContactsListener(ContactsUpdatedListener listener) {
@@ -77,6 +80,8 @@ public class ContactsManager extends ContentObserver {
 
 	private ContactsManager(Handler handler) {
 		super(handler);
+		contactNotFound = new LinphoneContact();
+		contactsCache = new HashMap<String, LinphoneContact>();
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
 		contacts = new ArrayList<LinphoneContact>();
 		sipContacts = new ArrayList<LinphoneContact>();
@@ -203,6 +208,12 @@ public class ContactsManager extends ContentObserver {
 	public LinphoneContact findContactFromAddress(LinphoneAddress address) {
 		String sipUri = address.asStringUriOnly();
 		String username = address.getUserName();
+		
+		LinphoneContact cache = contactsCache.get(sipUri);
+		if (cache != null) {
+			if (cache == contactNotFound) return null;
+			return cache;
+		}
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		LinphoneProxyConfig lpc = null;
@@ -219,14 +230,22 @@ public class ContactsManager extends ContentObserver {
 				String alias = c.getPresenceModelForUri(noa.getValue());
 
 				if ((noa.isSIPAddress() && noa.getValue().equals(sipUri)) || (alias != null && alias.equals(sipUri)) || (normalized != null && !noa.isSIPAddress() && normalized.equals(username)) || (!noa.isSIPAddress() && noa.getValue().equals(username))) {
+					contactsCache.put(sipUri, c);
 					return c;
 				}
 			}
 		}
+		contactsCache.put(sipUri, contactNotFound);
 		return null;
 	}
 
 	public LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
+		LinphoneContact cache = contactsCache.get(phoneNumber);
+		if (cache != null) {
+			if (cache == contactNotFound) return null;
+			return cache;
+		}
+		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		LinphoneProxyConfig lpc = null;
 		if (lc != null) {
@@ -240,10 +259,12 @@ public class ContactsManager extends ContentObserver {
 					normalized = lpc.normalizePhoneNumber(noa.getValue());
 				}
 				if (noa.getValue().equals(phoneNumber) || (normalized != null && normalized.equals(phoneNumber))) {
+					contactsCache.put(phoneNumber, c);
 					return c;
 				}
 			}
 		}
+		contactsCache.put(phoneNumber, contactNotFound);
 		return null;
 	}
 
@@ -345,6 +366,7 @@ public class ContactsManager extends ContentObserver {
 
 		protected void onPostExecute(List<LinphoneContact> result) {
 			setContacts(result);
+			contactsCache.clear();
 			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 				listener.onContactsUpdated();
 			}
