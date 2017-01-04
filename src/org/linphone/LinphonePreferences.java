@@ -1269,7 +1269,8 @@ public class LinphonePreferences {
 	// End of tunnel settings
 
 	public boolean isProvisioningLoginViewEnabled() {
-		return getConfig().getBool("app", "show_login_view", false);
+
+		return (getConfig() != null) ? getConfig().getBool("app", "show_login_view", false) : false;
 	}
 
 	public void disableProvisioningLoginView() {

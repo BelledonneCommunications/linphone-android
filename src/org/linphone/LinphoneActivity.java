@@ -257,7 +257,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		};
 
-		int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
+		int missedCalls = (LinphoneManager.getInstance() != null) ? LinphoneManager.getLc().getMissedCallsCount() : 0;
 		displayMissedCalls(missedCalls);
 
 		int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -276,7 +276,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			break;
 		}
 
-		LinphoneManager.getLc().setDeviceRotation(rotation);
+		if (LinphoneManager.getInstance() != null) {
+			LinphoneManager.getLc().setDeviceRotation(rotation);
+		}
 		mAlwaysChangingPhoneAngle = rotation;
 	}
 
