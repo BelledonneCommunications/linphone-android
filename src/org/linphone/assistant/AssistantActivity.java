@@ -438,7 +438,7 @@ private static AssistantActivity instance;
 	}
 
 	private void launchDownloadCodec() {
-		if (LinphoneManager.getLc().downloadOpenH264Enabled()) {
+		if (LinphoneManager.getLc().openH264Enabled()) {
 			OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
 			if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
 				CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();

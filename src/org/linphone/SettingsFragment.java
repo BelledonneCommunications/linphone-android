@@ -691,7 +691,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
-			if (lc.downloadOpenH264Enabled()) {
+			if (lc.openH264Enabled()) {
 				if (pt.getMime().equals("H264") && mCodecDownloader.isCodecFound()) {
 					codec.setSummary(mCodecDownloader.getLicenseMessage());
 					codec.setTitle("OpenH264");
@@ -704,7 +704,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					try {
-						if (lc.downloadOpenH264Enabled()) {
+						if (lc.openH264Enabled()) {
 							if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
 									&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
 								mCodecDownloader.setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
