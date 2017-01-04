@@ -626,6 +626,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(Status.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, phoneNumberEdit.getText().toString()
@@ -635,6 +638,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(Status.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, phoneNumberEdit.getText().toString()
@@ -644,6 +650,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(Status.AccountNotActivated)) {
 			if (getResources().getBoolean(R.bool.isTablet)
 					|| !getResources().getBoolean(R.bool.use_phone_number_validation)) {
@@ -660,6 +669,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(Status.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, dialCode.getText().toString() , phoneNumberEdit.getText().toString(), false);
@@ -677,6 +689,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator ac, Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(Status.PhoneNumberUsedAccount) || status.equals(Status.PhoneNumberUsedAlias)) {
 			if (accountCreator.getPhoneNumber() != null && accountCreator.getUsername() != null
 					&& accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername()) == 0) {

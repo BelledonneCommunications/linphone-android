@@ -321,6 +321,10 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (AssistantActivity.instance() == null) {
+			apply.setEnabled(true);
+			return;
+		}
 		if (status.equals(LinphoneAccountCreator.Status.AccountExist) || status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias)) {
 			String phone = accountCreator.getPhoneNumber();
 			String dial = null;
@@ -355,6 +359,10 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (AssistantActivity.instance() == null) {
+			apply.setEnabled(true);
+			return;
+		}
 		if (status.equals(LinphoneAccountCreator.Status.ErrorServer)) {
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(LinphoneAccountCreator.Status.Failed), AssistantActivity.instance());
 			apply.setEnabled(true);
@@ -369,6 +377,10 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (AssistantActivity.instance() == null) {
+			apply.setEnabled(true);
+			return;
+		}
 		if (status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAccount) || status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAlias)) {
 			accountCreator.recoverPhoneAccount();
 		} else {

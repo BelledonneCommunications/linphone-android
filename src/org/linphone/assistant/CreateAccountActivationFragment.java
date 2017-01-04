@@ -97,6 +97,9 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 
 	@Override
 	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(LinphoneAccountCreator.Status.AccountNotActivated)) {
 			Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
 		} else if (status.equals(LinphoneAccountCreator.Status.AccountActivated)) {

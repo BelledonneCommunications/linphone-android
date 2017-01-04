@@ -142,6 +142,9 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 
 	@Override
 	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if (status.equals(Status.AccountActivated)) {
 			checkAccount.setEnabled(true);
 			if (accountCreator.getUsername() != null) {
@@ -174,6 +177,9 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 
 	@Override
 	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+		if (AssistantActivity.instance() == null) {
+			return;
+		}
 		if(status.equals(LinphoneAccountCreator.Status.Ok)){
 			LinphonePreferences.instance().setLinkPopupTime("");
 			AssistantActivity.instance().hideKeyboard();
