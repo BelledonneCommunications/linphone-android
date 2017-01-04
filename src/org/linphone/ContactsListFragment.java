@@ -336,6 +336,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		contactsList.setVisibility(View.VISIBLE);
 
 		ContactsListAdapter adapter;
+		contactsList.setFastScrollEnabled(false);
 		if (onlyDisplayLinphoneContacts) {
 			contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 			adapter = new ContactsListAdapter(ContactsManager.getInstance().getSIPContacts());
@@ -347,6 +348,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			contactsList.setAdapter(adapter);
 			edit.setEnabled(true);
 		}
+		contactsList.setFastScrollEnabled(true);
+		adapter.notifyDataSetInvalidated();
+		
 
 		if (adapter.getCount() > 0) {
 			contactsFetchInProgress.setVisibility(View.GONE);
