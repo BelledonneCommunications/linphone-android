@@ -21,11 +21,13 @@ package org.linphone;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
@@ -290,13 +292,19 @@ public class ContactsManager extends ContentObserver {
 		@SuppressWarnings("unchecked")
 		protected List<LinphoneContact> doInBackground(Void... params) {
 			List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
-
+			Date contactsTime = new Date();
+			
 			if (hasContactsAccess()) {
 				Cursor c = getContactsCursor(contentResolver);
 				if (c != null) {
 					while (c.moveToNext()) {
 						String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
+				    	String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME));
+				    	String givenName = c.getString(c.getColumnIndex(CommonDataKinds.StructuredName.GIVEN_NAME));
+				    	String familyName = c.getString(c.getColumnIndex(CommonDataKinds.StructuredName.FAMILY_NAME));
 						LinphoneContact contact = new LinphoneContact();
+						contact.setFirstNameAndLastName(givenName, familyName);
+						contact.setFullName(displayName);
 						contact.setAndroidId(id);
 						contacts.add(contact);
 					}
@@ -346,6 +354,12 @@ public class ContactsManager extends ContentObserver {
 			}
 			Collections.sort(contacts);
 
+			long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			String time = String.format("%02d:%02d", 
+				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) - 
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+			Log.d("[ContactsManager] minimal informations for " + contacts.size() + " contacts gathered in " + time);
 			// Public the current list of contacts without all the informations populated
 			publishProgress(contacts);
 
@@ -353,11 +367,18 @@ public class ContactsManager extends ContentObserver {
 				// This time fetch all informations including phone numbers and SIP addresses
 				contact.refresh();
 			}
+			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			time = String.format("%02d:%02d", 
+				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) - 
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+			Log.d("[ContactsManager] complete informations for " + contacts.size() + " contacts gathered in " + time);
 
 			return contacts;
 		}
 
 		protected void onProgressUpdate(List<LinphoneContact>... result) {
+			contactsCache.clear();
 			setContacts(result[0]);
 			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 				listener.onContactsUpdated();
@@ -365,8 +386,6 @@ public class ContactsManager extends ContentObserver {
 		}
 
 		protected void onPostExecute(List<LinphoneContact> result) {
-			setContacts(result);
-			contactsCache.clear();
 			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 				listener.onContactsUpdated();
 			}
@@ -432,8 +451,8 @@ public class ContactsManager extends ContentObserver {
 		String req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
 				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
 				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
-				+ "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
-		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
+				+ "' AND " + CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
+		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME, CommonDataKinds.StructuredName.GIVEN_NAME, CommonDataKinds.StructuredName.FAMILY_NAME };
 		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + req + ")";
 
 		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME + ") COLLATE UNICODE ASC");
@@ -451,9 +470,13 @@ public class ContactsManager extends ContentObserver {
 
 		    	int contactID = cursor.getColumnIndex(Data.CONTACT_ID);
 		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME);
-
+		    	int givenName = cursor.getColumnIndex(CommonDataKinds.StructuredName.GIVEN_NAME);
+		    	int familyName = cursor.getColumnIndex(CommonDataKinds.StructuredName.FAMILY_NAME);
+		    	
 		    	newRow[contactID] = cursor.getString(contactID);
 		    	newRow[displayName] = cursor.getString(displayName);
+		    	newRow[givenName] = cursor.getString(givenName);
+		    	newRow[familyName] = cursor.getString(familyName);
 
 		        result.addRow(newRow);
 	    	}
