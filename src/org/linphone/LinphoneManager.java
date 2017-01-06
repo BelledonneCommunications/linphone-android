@@ -1099,6 +1099,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			return;
 		}
 		Log.d("[AudioManager] Mode: MODE_IN_COMMUNICATION");
+
 		mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 	}
 
@@ -1192,20 +1193,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == State.OutgoingInit) {
 			setAudioManagerInCallMode();
 			requestAudioFocus(STREAM_VOICE_CALL);
+			startBluetooth();
 		}
 
 		if (state == State.StreamsRunning) {
-			if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
-				BluetoothManager.getInstance().routeAudioToBluetooth();
-				// Hack to ensure the bluetooth route is really used
-				mHandler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						BluetoothManager.getInstance().routeAudioToBluetooth();
-					}
-				}, 500);
-			}
-
+			startBluetooth();
 			if (mIncallWakeLock == null) {
 				mIncallWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,	"incall");
 			}
@@ -1215,6 +1207,19 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			} else {
 				Log.i("New call active while incall (CPU only) wake lock already active");
 			}
+		}
+	}
+
+	public void startBluetooth() {
+		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
+			BluetoothManager.getInstance().routeAudioToBluetooth();
+			// Hack to ensure the bluetooth route is really used
+			mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					BluetoothManager.getInstance().routeAudioToBluetooth();
+				}
+			}, 500);
 		}
 	}
 
