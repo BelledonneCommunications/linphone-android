@@ -1110,15 +1110,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						displayName = contact.getFullName();
 					}
 					if (contact.hasPhoto()) {
-						LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+						LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
 					} else {
-						holder.contactPicture.setImageResource(R.drawable.avatar);
+						holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 					}
 				} else {
-					holder.contactPicture.setImageResource(R.drawable.avatar);
+					holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 				}
 			} else {
-				holder.contactPicture.setImageResource(R.drawable.avatar);
+				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
 			holder.contactName.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
 

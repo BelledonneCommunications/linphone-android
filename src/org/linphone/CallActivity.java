@@ -1327,7 +1327,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(lAddress);
 		if (lContact == null) {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
-			contactPicture.setImageResource(R.drawable.avatar);
+			contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		} else {
 			contactName.setText(lContact.getFullName());
 			LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());

@@ -524,9 +524,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			}
 
 			if (contact.hasPhoto()) {
-				LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
 			} else {
-				holder.contactPicture.setImageResource(R.drawable.avatar);
+				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
 
 			boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);

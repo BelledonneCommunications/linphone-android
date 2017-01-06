@@ -261,7 +261,7 @@ public class ContactEditorFragment extends Fragment {
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 		} else {
-			contactPicture.setImageResource(R.drawable.avatar);
+			contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		}
 
 		contactPicture.setOnClickListener(new OnClickListener() {

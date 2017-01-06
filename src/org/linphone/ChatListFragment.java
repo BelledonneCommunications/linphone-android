@@ -422,9 +422,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 
 			if (contact != null) {
-				LinphoneUtils.setImagePictureFromUri(getActivity(), holder.contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
 			} else {
-				holder.contactPicture.setImageResource(R.drawable.avatar);
+				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
 
 			if (unreadMessagesCount > 0) {

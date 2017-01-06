@@ -229,8 +229,8 @@ public final class LinphoneUtils {
 
 
 	public static void setImagePictureFromUri(Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
-		if (pictureUri == null) {
-			view.setImageResource(R.drawable.avatar);
+		if (pictureUri == null && thumbnailUri == null) {
+			view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			return;
 		}
 		if (pictureUri.getScheme().startsWith("http")) {
@@ -252,14 +252,14 @@ public final class LinphoneUtils {
 			if (bm != null) {
 				view.setImageBitmap(bm);
 			} else {
-				view.setImageResource(R.drawable.avatar);
+				view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
 		}
 	}
 
 	public static void setThumbnailPictureFromUri(Context c, ImageView view, Uri tUri) {
 		if (tUri == null) {
-			view.setImageResource(R.drawable.avatar);
+			view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			return;
 		}
 		if (tUri.getScheme().startsWith("http")) {
@@ -273,8 +273,10 @@ public final class LinphoneUtils {
 			} catch (IOException e) {
 				view.setImageURI(tUri);
 			}
-			if(bm != null) {
+			if (bm != null) {
 				view.setImageBitmap(bm);
+			} else {
+				view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
 		}
 	}

@@ -43,6 +43,8 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -64,6 +66,7 @@ public class ContactsManager extends ContentObserver {
 	private ContactsFetchTask contactsFetchTask;
 	private HashMap<String, LinphoneContact> contactsCache;
 	private LinphoneContact contactNotFound;
+	private Bitmap defaultAvatar;
 
 	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
 	public static void addContactsListener(ContactsUpdatedListener listener) {
@@ -82,6 +85,7 @@ public class ContactsManager extends ContentObserver {
 
 	private ContactsManager(Handler handler) {
 		super(handler);
+		defaultAvatar = BitmapFactory.decodeResource(LinphoneService.instance().getResources(), R.drawable.avatar);
 		contactNotFound = new LinphoneContact();
 		contactsCache = new HashMap<String, LinphoneContact>();
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
@@ -93,7 +97,13 @@ public class ContactsManager extends ContentObserver {
 		if (contactsFetchTask != null && !contactsFetchTask.isCancelled()) {
 			contactsFetchTask.cancel(true);
 		}
+		defaultAvatar.recycle();
 		instance = null;
+	}
+	
+	
+	public Bitmap getDefaultAvatarBitmap() {
+		return defaultAvatar;
 	}
 
 	@Override

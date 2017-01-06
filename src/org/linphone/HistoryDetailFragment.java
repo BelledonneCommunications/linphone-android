@@ -121,7 +121,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				goToContact.setVisibility(View.VISIBLE);
 			} else {
 				contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
-				contactPicture.setImageResource(R.drawable.avatar);
+				contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 				addToContacts.setVisibility(View.VISIBLE);
 				goToContact.setVisibility(View.GONE);
 			}
