@@ -18,8 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.linphone;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +27,6 @@ import java.util.Locale;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
 import org.linphone.core.PresenceBasicStatus;
@@ -41,10 +38,8 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.provider.ContactsContract.CommonDataKinds;
 
 public class LinphoneContact implements Serializable, Comparable<LinphoneContact> {
@@ -60,7 +55,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private transient ArrayList<ContentProviderOperation> changesToCommit;
 	private transient ArrayList<ContentProviderOperation> changesToCommit2;
 	private boolean hasSipAddress;
-	private transient Bitmap photoBitmap, thumbnailBitmap;
 
 	public LinphoneContact() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
@@ -71,20 +65,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		changesToCommit2 = new ArrayList<ContentProviderOperation>();
 		hasSipAddress = false;
 	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		if (photoBitmap != null) {
-			photoBitmap.recycle();
-			photoBitmap = null;
-		}
-		if (thumbnailBitmap != null) {
-			thumbnailBitmap.recycle();
-			thumbnailBitmap = null;
-		}
-		super.finalize();
-	}
-
+	
 	@Override
 	public int compareTo(LinphoneContact contact) {
 		String fullName = getFullName() != null ? getFullName().toUpperCase(Locale.getDefault()) : "";
@@ -188,58 +169,19 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public void setPhotoUri(Uri uri) {
 		if (uri.equals(photoUri)) return;
 		photoUri = uri;
-
-		if (photoBitmap != null) {
-			photoBitmap.recycle();
-		}
-		try {
-			photoBitmap = MediaStore.Images.Media.getBitmap(ContactsManager.getInstance().getContentResolver(), photoUri);
-		} catch (FileNotFoundException e) {
-			// Let's not say anything if the picture doesn't exist, it will pollute the logs
-		} catch (IOException e) {
-			Log.e(e);
-		}
 	}
 
 	public Uri getPhotoUri() {
 		return photoUri;
 	}
 
-	public Bitmap getPhotoBitmap() {
-		return photoBitmap;
-	}
-
 	public void setThumbnailUri(Uri uri) {
 		if (uri.equals(thumbnailUri)) return;
 		thumbnailUri = uri;
-
-		if (thumbnailBitmap != null) {
-			thumbnailBitmap.recycle();
-		}
-		try {
-			thumbnailBitmap = MediaStore.Images.Media.getBitmap(ContactsManager.getInstance().getContentResolver(), thumbnailUri);
-		} catch (FileNotFoundException e) {
-			// Let's not say anything if the picture doesn't exist, it will pollute the logs
-		} catch (IOException e) {
-			Log.e(e);
-		}
 	}
 
 	public Uri getThumbnailUri() {
 		return thumbnailUri;
-	}
-
-	public Bitmap getThumbnailBitmap() {
-		return thumbnailBitmap;
-	}
-
-	public Bitmap getPhoto() {
-		if (photoBitmap != null) {
-			return photoBitmap;
-		} else if (thumbnailBitmap != null) {
-			return thumbnailBitmap;
-		}
-		return null;
 	}
 
 	public void setPhoto(byte[] photo) {
@@ -560,6 +502,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		hasSipAddress = false;
 
 		if (isAndroidContact()) {
+			getContactNames();
 			getNativeContactOrganization();
 			setThumbnailUri(getContactThumbnailPictureUri());
 			setPhotoUri(getContactPictureUri());
@@ -652,6 +595,22 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private Uri getContactPictureUri() {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(getAndroidId()));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
+	}
+	
+	private void getContactNames() {
+		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
+		String[] proj = new String[]{ ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ContactsContract.Contacts.DISPLAY_NAME };
+		String select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "=?";
+		String[] args = new String[]{ getAndroidId(), ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE };
+		Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, proj, select, args, null);
+		if (c != null) {
+			if (c.moveToFirst()) {
+				firstName = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+				lastName = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+		       	fullName = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+			}
+			c.close();
+		}
 	}
 
 	private void getNativeContactOrganization() {

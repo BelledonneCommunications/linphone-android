@@ -300,10 +300,7 @@ public class ContactsManager extends ContentObserver {
 					while (c.moveToNext()) {
 						String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
 				    	String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME));
-				    	String givenName = c.getString(c.getColumnIndex(CommonDataKinds.StructuredName.GIVEN_NAME));
-				    	String familyName = c.getString(c.getColumnIndex(CommonDataKinds.StructuredName.FAMILY_NAME));
 						LinphoneContact contact = new LinphoneContact();
-						contact.setFirstNameAndLastName(givenName, familyName);
 						contact.setFullName(displayName);
 						contact.setAndroidId(id);
 						contacts.add(contact);
@@ -359,7 +356,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) - 
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.d("[ContactsManager] minimal informations for " + contacts.size() + " contacts gathered in " + time);
+			Log.i("[ContactsManager] minimal informations for " + contacts.size() + " contacts gathered in " + time);
 			// Public the current list of contacts without all the informations populated
 			publishProgress(contacts);
 
@@ -372,7 +369,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) - 
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.d("[ContactsManager] complete informations for " + contacts.size() + " contacts gathered in " + time);
+			Log.i("[ContactsManager] complete informations for " + contacts.size() + " contacts gathered in " + time);
 
 			return contacts;
 		}
@@ -452,7 +449,7 @@ public class ContactsManager extends ContentObserver {
 				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
 				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
 				+ "' AND " + CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
-		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME, CommonDataKinds.StructuredName.GIVEN_NAME, CommonDataKinds.StructuredName.FAMILY_NAME };
+		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
 		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + req + ")";
 
 		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME + ") COLLATE UNICODE ASC");
@@ -470,14 +467,9 @@ public class ContactsManager extends ContentObserver {
 
 		    	int contactID = cursor.getColumnIndex(Data.CONTACT_ID);
 		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME);
-		    	int givenName = cursor.getColumnIndex(CommonDataKinds.StructuredName.GIVEN_NAME);
-		    	int familyName = cursor.getColumnIndex(CommonDataKinds.StructuredName.FAMILY_NAME);
 		    	
 		    	newRow[contactID] = cursor.getString(contactID);
 		    	newRow[displayName] = cursor.getString(displayName);
-		    	newRow[givenName] = cursor.getString(givenName);
-		    	newRow[familyName] = cursor.getString(familyName);
-
 		        result.addRow(newRow);
 	    	}
 	    }
