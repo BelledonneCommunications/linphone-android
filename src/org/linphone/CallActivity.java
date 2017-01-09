@@ -1235,7 +1235,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
-		enableProximitySensing(false);
+		// Workaround for proximity sensor bug on Samsung devices
+		if (lc.getCurrentCall() != null && lc.getCurrentCall().getState() != State.StreamsRunning)
+			enableProximitySensing(false);
 	}
 
 	@Override
@@ -1546,7 +1548,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		final float distanceInCm = event.values[0];
 		final float maxDistance = event.sensor.getMaximumRange();
-		Log.d("Proximity sensor report [",distanceInCm,"] , for max range [",maxDistance,"]");
+		Log.d("Proximity sensor report ["+distanceInCm+"] , for max range ["+maxDistance+"]");
 
 		if (maxDistance <= threshold) {
 			// Case binary 0/1 and short sensors

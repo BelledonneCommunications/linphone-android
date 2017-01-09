@@ -1096,8 +1096,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
 			getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
-			callTransfer = data == null ? false : data.getBooleanExtra("Transfer", false);
-			boolean chat = data == null ? false : data.getBooleanExtra("chat", false);
+			callTransfer = data != null && data.getBooleanExtra("Transfer", false);
+			boolean chat = data != null && data.getBooleanExtra("chat", false);
 			if(chat){
 				pendingFragmentTransaction = FragmentsAvailable.CHAT_LIST;
 			}
