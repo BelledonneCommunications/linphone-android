@@ -40,6 +40,7 @@ import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -58,6 +59,7 @@ interface ContactsUpdatedListener {
 }
 
 public class ContactsManager extends ContentObserver {
+	public static int CONTACTS_STEP = 15;
 	private static ContactsManager instance;
 	private List<LinphoneContact> contacts, sipContacts;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
@@ -180,7 +182,8 @@ public class ContactsManager extends ContentObserver {
 		if (context == null)
 			return false;
 		int contacts = context.getPackageManager().checkPermission(android.Manifest.permission.READ_CONTACTS, context.getPackageName());
-		return contacts == context.getPackageManager().PERMISSION_GRANTED && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
+		context.getPackageManager();
+		return contacts == PackageManager.PERMISSION_GRANTED && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
@@ -217,7 +220,7 @@ public class ContactsManager extends ContentObserver {
 		initializeContactManager(context, contentResolver);
 	}
 
-	public LinphoneContact findContactFromAddress(LinphoneAddress address) {
+	public synchronized LinphoneContact findContactFromAddress(LinphoneAddress address) {
 		String sipUri = address.asStringUriOnly();
 		String username = address.getUserName();
 		
@@ -251,7 +254,7 @@ public class ContactsManager extends ContentObserver {
 		return null;
 	}
 
-	public LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
+	public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
 		LinphoneContact cache = contactsCache.get(phoneNumber);
 		if (cache != null) {
 			if (cache == contactNotFound) return null;
@@ -355,9 +358,17 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 
+			int i = 0;
+			
 			for (LinphoneContact contact : contacts) {
 				// This will only get name & picture informations to be able to quickly display contacts list
 				contact.minimalRefresh();
+				i++;
+				
+				if (i == CONTACTS_STEP) {
+					i = 0;
+					publishProgress(contacts);
+				}
 			}
 			Collections.sort(contacts);
 
@@ -384,9 +395,9 @@ public class ContactsManager extends ContentObserver {
 			return contacts;
 		}
 
-		protected void onProgressUpdate(List<LinphoneContact>... result) {
-			contactsCache.clear();
+		protected synchronized void onProgressUpdate(List<LinphoneContact>... result) {
 			setContacts(result[0]);
+			contactsCache.clear();
 			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 				listener.onContactsUpdated();
 			}

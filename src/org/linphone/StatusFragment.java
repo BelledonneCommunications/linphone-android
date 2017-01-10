@@ -22,7 +22,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.linphone.assistant.AssistantActivity;
-import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCallParams;
 import org.linphone.core.LinphoneCallStats;
@@ -442,6 +441,7 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void formatText(TextView tv, String name, String value) {
 		tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
 	}

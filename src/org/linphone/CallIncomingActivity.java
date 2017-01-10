@@ -21,7 +21,6 @@ package org.linphone;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
@@ -32,12 +31,9 @@ import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -87,8 +83,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
-
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
 

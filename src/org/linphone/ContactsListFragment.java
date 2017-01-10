@@ -27,7 +27,6 @@ import java.util.Map;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -411,7 +410,15 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 	@Override
 	public void onContactsUpdated() {
-		invalidate();
+		ContactsListAdapter adapter = (ContactsListAdapter)contactsList.getAdapter();
+		contactsList.setFastScrollEnabled(false);
+		if (onlyDisplayLinphoneContacts) {
+			adapter.updateDataSet(ContactsManager.getInstance().getSIPContacts());
+		} else {
+			adapter.updateDataSet(ContactsManager.getInstance().getContacts());
+		}
+		contactsList.setFastScrollEnabled(true);
+		contactsFetchInProgress.setVisibility(View.GONE);
 	}
 
 	public void invalidate() {
@@ -452,6 +459,10 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		Map<String, Integer>map = new LinkedHashMap<String, Integer>();
 
 		ContactsListAdapter(List<LinphoneContact> contactsList) {
+			updateDataSet(contactsList);
+		}
+		
+		public void updateDataSet(List<LinphoneContact> contactsList) {
 			contacts = contactsList;
 
 			map = new LinkedHashMap<String, Integer>();
@@ -471,6 +482,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			sectionsList = new ArrayList<String>(map.keySet());
 			sections = new String[sectionsList.size()];
 			sectionsList.toArray(sections);
+			
+			notifyDataSetChanged();
 		}
 
 		public int getCount() {

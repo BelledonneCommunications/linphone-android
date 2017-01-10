@@ -30,7 +30,6 @@ import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;

@@ -30,10 +30,9 @@ import org.linphone.core.LinphoneCallLog.CallStatus;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -222,7 +221,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	@Override
 	public void onContactsUpdated() {
-		historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
+		CallHistoryAdapter adapter = (CallHistoryAdapter)historyList.getAdapter();
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override

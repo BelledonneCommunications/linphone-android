@@ -17,6 +17,18 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+import java.util.Locale;
+
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneUtils;
+import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.DialPlan;
+import org.linphone.core.LinphoneAccountCreator;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -38,18 +50,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
-import org.linphone.R;
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.DialPlan;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneProxyConfig;
-
-import java.util.Locale;
-
 /**
  * @author Sylvain Berfini
  */
@@ -62,7 +62,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	private Boolean recoverAccount;
 	private LinphoneAccountCreator accountCreator;
 	private int countryCode;
-	private String username, phone, dialcode;
+	private String phone, dialcode;
 	private ImageView phoneNumberInfo;
 
 	@Override

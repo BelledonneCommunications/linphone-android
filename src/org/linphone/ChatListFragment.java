@@ -30,7 +30,6 @@ import org.linphone.mediastream.Log;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -228,7 +227,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	@Override
 	public void onContactsUpdated() {
-		hideAndDisplayMessageIfNoChat();
+		ChatListAdapter adapter = (ChatListAdapter)chatList.getAdapter();
+		adapter.notifyDataSetChanged();
 	}
 
 	@Override

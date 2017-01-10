@@ -18,35 +18,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package org.linphone;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.os.Vibrator;
-import android.preference.CheckBoxPreference;
-import android.provider.Settings;
-import android.provider.Settings.SettingNotFoundException;
-import android.telephony.TelephonyManager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import static android.media.AudioManager.MODE_RINGTONE;
+import static android.media.AudioManager.STREAM_RING;
+import static android.media.AudioManager.STREAM_VOICE_CALL;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.CallDirection;
@@ -91,23 +79,35 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.tools.H264Helper;
 import org.linphone.tools.OpenH264DownloadHelper;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static android.media.AudioManager.MODE_RINGTONE;
-import static android.media.AudioManager.STREAM_RING;
-import static android.media.AudioManager.STREAM_VOICE_CALL;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
+import android.preference.CheckBoxPreference;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
+import android.telephony.TelephonyManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 /**
  *
@@ -193,7 +193,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			dozeModeEnabled = ((PowerManager)c.getSystemService(c.POWER_SERVICE)).isDeviceIdleMode();
+			dozeModeEnabled = ((PowerManager)c.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
 		} else {
 			dozeModeEnabled = false;
 		}
