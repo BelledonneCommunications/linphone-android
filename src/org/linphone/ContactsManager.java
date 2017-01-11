@@ -102,8 +102,8 @@ public class ContactsManager extends ContentObserver {
 		defaultAvatar.recycle();
 		instance = null;
 	}
-	
-	
+
+
 	public Bitmap getDefaultAvatarBitmap() {
 		return defaultAvatar;
 	}
@@ -223,7 +223,7 @@ public class ContactsManager extends ContentObserver {
 	public synchronized LinphoneContact findContactFromAddress(LinphoneAddress address) {
 		String sipUri = address.asStringUriOnly();
 		String username = address.getUserName();
-		
+
 		LinphoneContact cache = contactsCache.get(sipUri);
 		if (cache != null) {
 			if (cache == contactNotFound) return null;
@@ -260,7 +260,7 @@ public class ContactsManager extends ContentObserver {
 			if (cache == contactNotFound) return null;
 			return cache;
 		}
-		
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		LinphoneProxyConfig lpc = null;
 		if (lc != null) {
@@ -306,7 +306,12 @@ public class ContactsManager extends ContentObserver {
 		protected List<LinphoneContact> doInBackground(Void... params) {
 			List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 			Date contactsTime = new Date();
-			
+
+			//We need to check sometimes to know if Linphone was destroyed
+			if (this.isCancelled()) {
+				return null;
+			}
+
 			if (hasContactsAccess()) {
 				Cursor c = getContactsCursor(contentResolver);
 				if (c != null) {
@@ -323,7 +328,10 @@ public class ContactsManager extends ContentObserver {
 			} else {
 				Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
 			}
-
+			//We need to check sometimes to know if Linphone was destroyed
+			if (this.isCancelled()) {
+				return null;
+			}
 			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc != null) {
 				for (LinphoneFriend friend : lc.getFriendList()) {
@@ -361,6 +369,10 @@ public class ContactsManager extends ContentObserver {
 			int i = 0;
 			
 			for (LinphoneContact contact : contacts) {
+				//We need to check sometimes to know if Linphone was destroyed
+				if (this.isCancelled()) {
+					return null;
+				}
 				// This will only get name & picture informations to be able to quickly display contacts list
 				contact.minimalRefresh();
 				i++;
@@ -373,22 +385,26 @@ public class ContactsManager extends ContentObserver {
 			Collections.sort(contacts);
 
 			long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-			String time = String.format("%02d:%02d", 
+			String time = String.format("%02d:%02d",
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
-				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) - 
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] minimal informations for " + contacts.size() + " contacts gathered in " + time);
 			// Public the current list of contacts without all the informations populated
 			publishProgress(contacts);
 
 			for (LinphoneContact contact : contacts) {
+				//We need to check sometimes to know if Linphone was destroyed
+				if (this.isCancelled()) {
+					return null;
+				}
 				// This time fetch all informations including phone numbers and SIP addresses
 				contact.refresh();
 			}
 			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-			time = String.format("%02d:%02d", 
+			time = String.format("%02d:%02d",
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
-				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) - 
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] complete informations for " + contacts.size() + " contacts gathered in " + time);
 
@@ -488,7 +504,7 @@ public class ContactsManager extends ContentObserver {
 
 		    	int contactID = cursor.getColumnIndex(Data.CONTACT_ID);
 		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME);
-		    	
+
 		    	newRow[contactID] = cursor.getString(contactID);
 		    	newRow[displayName] = cursor.getString(displayName);
 		        result.addRow(newRow);

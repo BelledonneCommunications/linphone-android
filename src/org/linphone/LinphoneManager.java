@@ -671,7 +671,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public synchronized final void destroyLinphoneCore() {
 		sExited = true;
-		BluetoothManager.getInstance().destroy();
+		ContactsManagerDestroy();
+		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
 			mLc.destroy();
@@ -936,7 +937,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void doDestroy() {
-		BluetoothManager.getInstance().destroy();
+		ContactsManagerDestroy();
+		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
 			mLc.destroy();
@@ -952,9 +954,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+	public static void ContactsManagerDestroy() {
+		if (ContactsManager.getInstance() != null)
+			ContactsManager.getInstance().destroy();
+	}
+
+	public static void BluetoothManagerDestroy() {
+		if (BluetoothManager.getInstance() != null)
+			BluetoothManager.getInstance().destroy();
+	}
+
 	public static synchronized void destroy() {
 		if (instance == null) return;
-		ContactsManager.getInstance().destroy();
 		getInstance().changeStatusToOffline();
 		sExited = true;
 		instance.doDestroy();

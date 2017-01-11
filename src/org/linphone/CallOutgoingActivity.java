@@ -157,7 +157,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		}
 		if (mCall == null) {
 			Log.e("Couldn't find outgoing call");
-			LinphoneActivity.instance().goToDialerFragment();
 			finish();
 			return;
 		}
@@ -248,6 +247,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		LinphoneManager.getLc().terminateCall(mCall);
 		finish();
 	}
+
+
 
 	private void checkAndRequestCallPermissions() {
 		ArrayList<String> permissionsList = new ArrayList<String>();
