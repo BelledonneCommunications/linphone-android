@@ -1015,7 +1015,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		LinphoneAddress from = message.getFrom();
 
-		String textMessage = message.getText();
+		String textMessage = (message.getFileTransferInformation() != null) ?
+				getString(R.string.content_description_incoming_file) : message.getText();
 		try {
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {

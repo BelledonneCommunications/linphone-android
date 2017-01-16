@@ -461,6 +461,7 @@
     <string name="content_description_contact_organization">Organization</string>
     <string name="content_description_back_call">Back to call</string>
     <string name="content_description_send_file">Send a file</string>
+    <string name="content_description_incoming_file">Incoming file</string>
     <string name="content_description_message">Message</string>
     <string name="content_description_unread_chat_message">Unread chat message</string>
     <string name="content_description_transfer">Transfer</string>
