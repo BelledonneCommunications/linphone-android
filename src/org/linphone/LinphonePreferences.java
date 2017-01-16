@@ -159,6 +159,7 @@ public class LinphonePreferences {
 
 	private LinphoneAuthInfo getAuthInfo(int n) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		if (prxCfg == null) return null;
 		try {
 			LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(prxCfg.getIdentity());
 			LinphoneAuthInfo authInfo = getLc().findAuthInfo(addr.getUserName(), null, addr.getDomain());
