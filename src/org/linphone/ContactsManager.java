@@ -136,7 +136,6 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized List<LinphoneContact> getSIPContacts() {
-		setContacts(contacts);
 		return sipContacts;
 	}
 
@@ -411,11 +410,13 @@ public class ContactsManager extends ContentObserver {
 			return contacts;
 		}
 
-		protected synchronized void onProgressUpdate(List<LinphoneContact>... result) {
-			setContacts(result[0]);
-			contactsCache.clear();
-			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
-				listener.onContactsUpdated();
+		protected void onProgressUpdate(List<LinphoneContact>... result) {
+			synchronized (ContactsManager.this) {
+				setContacts(result[0]);
+				contactsCache.clear();
+				for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+					listener.onContactsUpdated();
+				}
 			}
 		}
 
