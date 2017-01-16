@@ -14,6 +14,23 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Unreleased]
 
+## [3.2.3] - 2017-01-11
+
+### Fixed
+- Somes crashs
+
+### Changed
+- Improved performance of contacts loading
+
+## [3.2.2] - 2017-01-04
+
+### Fixed
+- Some bug with the download of OpenH264 for Android < 5.1
+- Some crashs
+
+### Changed
+- Disable AAC codecs
+
 ## [3.2.1] - 2016-11-24
 
 ### Added
