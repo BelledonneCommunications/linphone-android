@@ -228,7 +228,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	@Override
 	public void onContactsUpdated() {
 		ChatListAdapter adapter = (ChatListAdapter)chatList.getAdapter();
-		adapter.notifyDataSetChanged();
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override

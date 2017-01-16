@@ -411,14 +411,16 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	@Override
 	public void onContactsUpdated() {
 		ContactsListAdapter adapter = (ContactsListAdapter)contactsList.getAdapter();
-		contactsList.setFastScrollEnabled(false);
-		if (onlyDisplayLinphoneContacts) {
-			adapter.updateDataSet(ContactsManager.getInstance().getSIPContacts());
-		} else {
-			adapter.updateDataSet(ContactsManager.getInstance().getContacts());
+		if (adapter != null) {
+			contactsList.setFastScrollEnabled(false);
+			if (onlyDisplayLinphoneContacts) {
+				adapter.updateDataSet(ContactsManager.getInstance().getSIPContacts());
+			} else {
+				adapter.updateDataSet(ContactsManager.getInstance().getContacts());
+			}
+			contactsList.setFastScrollEnabled(true);
+			contactsFetchInProgress.setVisibility(View.GONE);
 		}
-		contactsList.setFastScrollEnabled(true);
-		contactsFetchInProgress.setVisibility(View.GONE);
 	}
 
 	public void invalidate() {

@@ -222,7 +222,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	@Override
 	public void onContactsUpdated() {
 		CallHistoryAdapter adapter = (CallHistoryAdapter)historyList.getAdapter();
-		adapter.notifyDataSetChanged();
+		if (adapter != null) {
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
