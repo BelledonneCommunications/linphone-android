@@ -1188,16 +1188,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
 		if (readExternalStorage != PackageManager.PERMISSION_GRANTED) {
-			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-				Log.i("[Permission] Asking for read external storage");
-				permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-			}
+			ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+			Log.i("[Permission] Asking for read external storage");
+			permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
 		}
 		if (camera != PackageManager.PERMISSION_GRANTED) {
-			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-				Log.i("[Permission] Asking for camera");
-				permissionsList.add(Manifest.permission.CAMERA);
-			}
+			ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA);
+			Log.i("[Permission] Asking for camera");
+			permissionsList.add(Manifest.permission.CAMERA);
 		}
 		if (permissionsList.size() > 0) {
 			String[] permissions = new String[permissionsList.size()];
