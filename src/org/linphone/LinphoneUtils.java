@@ -269,7 +269,7 @@ public final class LinphoneUtils {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
 			} catch (IOException e) {
-				view.setImageURI(tUri);
+				Log.e(e.getMessage());
 			}
 			if (bm != null) {
 				view.setImageBitmap(bm);
