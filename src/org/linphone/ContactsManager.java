@@ -328,6 +328,13 @@ public class ContactsManager extends ContentObserver {
 			} else {
 				Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
 			}
+			long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			String time = String.format("%02d:%02d",
+				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+			Log.i("[ContactsManager] got " + contacts.size() + " contacts names and pictures in " + time);
+			
 			//We need to check sometimes to know if Linphone was destroyed
 			if (this.isCancelled()) {
 				return null;
@@ -387,12 +394,12 @@ public class ContactsManager extends ContentObserver {
 			}
 			Collections.sort(contacts);
 
-			long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-			String time = String.format("%02d:%02d",
+			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			time = String.format("%02d:%02d",
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.i("[ContactsManager] minimal informations for " + contacts.size() + " contacts gathered in " + time);
+			Log.i("[ContactsManager] organization, SIP and phone numbers for " + contacts.size() + " contacts fetched in " + time);
 			// Public the current list of contacts without all the informations populated
 			publishProgress(contacts);
 
@@ -409,7 +416,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.i("[ContactsManager] complete informations for " + contacts.size() + " contacts gathered in " + time);
+			Log.i("[ContactsManager] linphone friends for " + contacts.size() + " contacts created in " + time);
 
 			return contacts;
 		}
