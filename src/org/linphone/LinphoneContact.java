@@ -392,6 +392,8 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	public void setAndroidId(String id) {
 		androidId = id;
+		setThumbnailUri(getContactThumbnailPictureUri());
+		setPhotoUri(getContactPictureUri());
 	}
 
 	public String getAndroidId() {
@@ -419,9 +421,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		if (lc == null) return;
 
 		friend.edit();
+		friend.setName(fullName);
 		friend.setFamilyName(lastName);
 		friend.setGivenName(firstName);
-		friend.setName(fullName);
 
 		for (LinphoneAddress address : friend.getAddresses()) {
 			friend.removeAddress(address);
@@ -504,8 +506,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		if (isAndroidContact()) {
 			getContactNames();
 			getNativeContactOrganization();
-			setThumbnailUri(getContactThumbnailPictureUri());
-			setPhotoUri(getContactPictureUri());
 
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact()) {
 				addNumberOrAddress(noa);
