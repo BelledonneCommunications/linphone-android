@@ -175,6 +175,7 @@ public class ContactsManager extends ContentObserver {
 
 	public void enableContactsAccess() {
 		hasContactAccess = true;
+		LinphonePreferences.instance().disableFriendsStorage();
 	}
 
 	public boolean hasContactsAccess() {
@@ -355,6 +356,9 @@ public class ContactsManager extends ContentObserver {
 								contact.setFriend(friend);
 								contacts.add(contact);
 							}
+						} else {
+							// Now that we no longer store friends in database that match one in the system, let's remove it
+							lc.removeFriend(friend);
 						}
 					} else {
 						// No refkey so it's a standalone contact

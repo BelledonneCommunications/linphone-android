@@ -1466,4 +1466,16 @@ public class LinphonePreferences {
 	public int getCodeLength(){
 		return getConfig().getInt("app", "activation_code_length", 0);
 	}
+
+	public void disableFriendsStorage() {
+		getConfig().setBool("misc", "store_friends", false);
+	}
+
+	public void enableFriendsStorage() {
+		getConfig().setBool("misc", "store_friends", true);
+	}
+
+	public boolean isFriendsStorageEnabled() {
+		return getConfig().getBool("misc", "store_friends", true);
+	}
 }
