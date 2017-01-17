@@ -18,7 +18,7 @@
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
 		android:visibility="invisible" android:layout_alignParentTop="true"/>
-	
+
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
@@ -67,6 +67,7 @@
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			android:layout_toLeftOf="@id/delete_chatroom"
 			android:paddingLeft="10dp">
 
 			<TextView
@@ -104,7 +105,7 @@
 				style="@style/font11"/>
 
 		</RelativeLayout>
-	    
+
 	</LinearLayout>
-    
+
 </RelativeLayout>
