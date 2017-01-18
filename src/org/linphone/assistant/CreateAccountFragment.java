@@ -327,6 +327,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			if (linkAccount) {
 				addAlias();
 			} else {
+				if (useEmail.isChecked()) accountCreator.setPhoneNumber(null, null);
 				if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
 					accountCreator.isAccountUsed();
 				} else {
