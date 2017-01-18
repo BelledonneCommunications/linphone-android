@@ -88,7 +88,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 			lfl = lc.createLinphoneFriendList();
 			lc.addFriendList(lfl);
 			
-			LinphoneFriend lf = LinphoneCoreFactory.instance().createLinphoneFriend("sip:ghislain@sip.linphone.org");
+			LinphoneFriend lf = lc.createFriendWithAddress("sip:ghislain@sip.linphone.org");
 			lf.setName("Ghislain");
 			lfl.addLocalFriend(lf); // This is a local friend, it won't be sent to the CardDAV server and will be removed at the next synchronization
 		} catch (LinphoneCoreException e) {

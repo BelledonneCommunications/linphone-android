@@ -84,7 +84,7 @@ public class WrapperTester extends AndroidTestCase {
 
 		//Test LinphoneFriend ref key
 		String key = "12";
-		LinphoneFriend friend = LinphoneCoreFactory.instance().createLinphoneFriend("sip:lala@test.linphone.org");
+		LinphoneFriend friend = mCore.createFriendWithAddress("sip:lala@test.linphone.org");
 		friend.setRefKey(key);
 		Assert.assertEquals(friend.getRefKey(),key);
 		
