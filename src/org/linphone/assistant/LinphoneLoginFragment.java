@@ -103,6 +103,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 		//Phone number
 		if(getResources().getBoolean(R.bool.use_phone_number_validation)){
+			messagePhoneNumber.setText(getString(R.string.assistant_create_account_part_1));
 			phone = getArguments().getString("Phone");
 			dialcode = getArguments().getString("Dialcode");
 
