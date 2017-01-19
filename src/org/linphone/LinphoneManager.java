@@ -227,7 +227,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void initOpenH264DownloadHelper() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
 			Log.i("Android >= 5.1 we disable the download of OpenH264");
-			getLc().enableOpenH264(false);
+			getLc().enableDownloadOpenH264(false);
 			return;
 		}
 

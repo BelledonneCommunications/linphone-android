@@ -457,7 +457,7 @@ public class StatusFragment extends Fragment {
 			title.setVisibility(TextView.VISIBLE);
 			if (media != null) {
 				String mime = media.getMime();
-				if (LinphoneManager.getLc().openH264Enabled() &&
+				if (LinphoneManager.getLc().downloadOpenH264Enabled() &&
 						media.getMime().equals("H264") &&
 						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
 					mime = "OpenH264";
