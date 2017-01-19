@@ -28,6 +28,7 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendImpl;
 import org.linphone.core.LinphoneFriend.SubscribePolicy;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
@@ -415,6 +416,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			if (isAndroidContact()) {
 				friend.setRefKey(getAndroidId());
 			}
+			((LinphoneFriendImpl)friend).setLinphoneContact(this);
 			created = true;
 		}
 		if (isLinphoneFriend()) {
@@ -571,6 +573,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	public void setFriend(LinphoneFriend f) {
 		friend = f;
+		((LinphoneFriendImpl)friend).setLinphoneContact(this);
 	}
 	
 	public void getAndroidIds() {
@@ -702,6 +705,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		friend.enableSubscribes(false);
 		friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 		contact.friend = friend;
+		((LinphoneFriendImpl)friend).setLinphoneContact(contact);
 		return contact;
 	}
 
