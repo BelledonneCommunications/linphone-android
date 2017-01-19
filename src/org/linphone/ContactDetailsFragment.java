@@ -183,7 +183,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
 			LinphoneActivity.instance().hideTabBar(false);
 		}
-		contact.minimalRefresh();
+		contact.minimalRefresh(true);
 		displayContact(inflater, view);
 	}
 
