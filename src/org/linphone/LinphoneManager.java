@@ -1000,7 +1000,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void displayMessage(LinphoneCore lc, String message) {}
 	public void show(LinphoneCore lc) {}
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf, String url) {}
-	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {}
+	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
+		ContactsManager.getInstance().refreshSipContacts();
+	}
 
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {

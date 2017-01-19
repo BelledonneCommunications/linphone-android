@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 
@@ -285,11 +286,21 @@ public class ContactsManager extends ContentObserver {
 
 	public synchronized void setContacts(List<LinphoneContact> c) {
 		contacts = c;
-		sipContacts = new ArrayList<LinphoneContact>();
+	}
+
+	public synchronized void setSipContacts(List<LinphoneContact> c) {
+		sipContacts = c;
+	}
+	
+	public synchronized void refreshSipContacts() {
 		for (LinphoneContact contact : contacts) {
-			if (contact.hasAddress() || contact.isInLinphoneFriendList()) {
+			if (contact.isInLinphoneFriendList() && !sipContacts.contains(contact)) {
 				sipContacts.add(contact);
 			}
+		}
+		Collections.sort(sipContacts);
+		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+			listener.onContactsUpdated();
 		}
 	}
 
@@ -300,11 +311,21 @@ public class ContactsManager extends ContentObserver {
 		contactsFetchTask = new ContactsFetchTask();
 		contactsFetchTask.execute();
 	}
+	
+	private class ContactsLists {
+		public List<LinphoneContact> contacts;
+		public List<LinphoneContact> sipContacts;
+		
+		public ContactsLists(List<LinphoneContact> c, List<LinphoneContact> s) {
+			contacts = c;
+			sipContacts = s;
+		}
+	}
 
-	private class ContactsFetchTask extends AsyncTask<Void, List<LinphoneContact>, List<LinphoneContact>> {
-		@SuppressWarnings("unchecked")
-		protected List<LinphoneContact> doInBackground(Void... params) {
+	private class ContactsFetchTask extends AsyncTask<Void, ContactsLists, ContactsLists> {
+		protected ContactsLists doInBackground(Void... params) {
 			List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
+			List<LinphoneContact> sipContacts = new ArrayList<LinphoneContact>();
 			Date contactsTime = new Date();
 
 			//We need to check sometimes to know if Linphone was destroyed
@@ -317,7 +338,7 @@ public class ContactsManager extends ContentObserver {
 				if (c != null) {
 					while (c.moveToNext()) {
 						String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
-				    	String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME));
+				    	String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME_PRIMARY));
 						LinphoneContact contact = new LinphoneContact();
 						contact.setFullName(displayName);
 						contact.setAndroidId(id);
@@ -386,13 +407,17 @@ public class ContactsManager extends ContentObserver {
 				// This will only get name & picture informations to be able to quickly display contacts list
 				contact.minimalRefresh();
 				i++;
+				if (contact.hasAddress()) {
+					sipContacts.add(contact);
+				}
 				
 				if (i == CONTACTS_STEP) {
 					i = 0;
-					publishProgress(contacts);
+					publishProgress(new ContactsLists(contacts, sipContacts));
 				}
 			}
 			Collections.sort(contacts);
+			Collections.sort(sipContacts);
 
 			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
 			time = String.format("%02d:%02d",
@@ -401,7 +426,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] organization, SIP and phone numbers for " + contacts.size() + " contacts fetched in " + time);
 			// Public the current list of contacts without all the informations populated
-			publishProgress(contacts);
+			publishProgress(new ContactsLists(contacts, sipContacts));
 
 			for (LinphoneContact contact : contacts) {
 				//We need to check sometimes to know if Linphone was destroyed
@@ -410,6 +435,10 @@ public class ContactsManager extends ContentObserver {
 				}
 				// This time fetch all informations including phone numbers and SIP addresses
 				contact.refresh();
+				
+				if (contact.isInLinphoneFriendList() && !sipContacts.contains(contact)) {
+					sipContacts.add(contact);
+				}
 			}
 			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
 			time = String.format("%02d:%02d",
@@ -417,13 +446,19 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] linphone friends for " + contacts.size() + " contacts created in " + time);
+			
+			for (LinphoneFriendList lfl : lc.getFriendLists()) {
+				Log.d("[ContactsManager] Updating friends subscribtions");
+				lfl.updateSubscriptions();
+			}
 
-			return contacts;
+			return new ContactsLists(contacts, sipContacts);
 		}
 
-		protected void onProgressUpdate(List<LinphoneContact>... result) {
+		protected void onProgressUpdate(ContactsLists... result) {
 			synchronized (ContactsManager.this) {
-				setContacts(result[0]);
+				setContacts(result[0].contacts);
+				setSipContacts(result[0].sipContacts);
 				contactsCache.clear();
 				for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 					listener.onContactsUpdated();
@@ -431,7 +466,7 @@ public class ContactsManager extends ContentObserver {
 			}
 		}
 
-		protected void onPostExecute(List<LinphoneContact> result) {
+		protected void onPostExecute(ContactsLists result) {
 			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 				listener.onContactsUpdated();
 			}
@@ -498,10 +533,10 @@ public class ContactsManager extends ContentObserver {
 				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
 				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
 				+ "' AND " + CommonDataKinds.SipAddress.SIP_ADDRESS + " IS NOT NULL))";
-		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME };
-		String query = Data.DISPLAY_NAME + " IS NOT NULL AND (" + req + ")";
+		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME_PRIMARY };
+		String query = Data.DISPLAY_NAME_PRIMARY + " IS NOT NULL AND (" + req + ")";
 
-		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME + ") COLLATE UNICODE ASC");
+		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME_PRIMARY + ") COLLATE UNICODE ASC");
 		if (cursor == null) {
 			return cursor;
 		}
@@ -509,13 +544,13 @@ public class ContactsManager extends ContentObserver {
 		MatrixCursor result = new MatrixCursor(cursor.getColumnNames());
 		Set<String> groupBy = new HashSet<String>();
 		while (cursor.moveToNext()) {
-		    String name = cursor.getString(cursor.getColumnIndex(Data.DISPLAY_NAME));
+		    String name = cursor.getString(cursor.getColumnIndex(Data.DISPLAY_NAME_PRIMARY));
 		    if (!groupBy.contains(name)) {
 		    	groupBy.add(name);
 		    	Object[] newRow = new Object[cursor.getColumnCount()];
 
 		    	int contactID = cursor.getColumnIndex(Data.CONTACT_ID);
-		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME);
+		    	int displayName = cursor.getColumnIndex(Data.DISPLAY_NAME_PRIMARY);
 
 		    	newRow[contactID] = cursor.getString(contactID);
 		    	newRow[displayName] = cursor.getString(displayName);
