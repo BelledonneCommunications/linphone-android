@@ -14,6 +14,12 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Unreleased]
 
+## [3.2.4] - 2017-01-19
+
+### Fixed
+- Some crashs
+- Some UI bugs
+
 ## [3.2.3] - 2017-01-11
 
 ### Fixed
