@@ -68,6 +68,7 @@ public class ContactsManager extends ContentObserver {
 	private Context context;
 	private ContactsFetchTask contactsFetchTask;
 	private HashMap<String, LinphoneContact> contactsCache;
+	private HashMap<String, LinphoneContact> androidContactsCache;
 	private LinphoneContact contactNotFound;
 	private Bitmap defaultAvatar;
 
@@ -91,6 +92,7 @@ public class ContactsManager extends ContentObserver {
 		defaultAvatar = BitmapFactory.decodeResource(LinphoneService.instance().getResources(), R.drawable.avatar);
 		contactNotFound = new LinphoneContact();
 		contactsCache = new HashMap<String, LinphoneContact>();
+		androidContactsCache = new HashMap<String, LinphoneContact>();
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
 		contacts = new ArrayList<LinphoneContact>();
 		sipContacts = new ArrayList<LinphoneContact>();
@@ -292,13 +294,17 @@ public class ContactsManager extends ContentObserver {
 		sipContacts = c;
 	}
 	
-	public synchronized void refreshSipContacts() {
+	public synchronized void refreshSipContact(LinphoneFriend lf) {
 		for (LinphoneContact contact : contacts) {
-			if (contact.isInLinphoneFriendList() && !sipContacts.contains(contact)) {
-				sipContacts.add(contact);
+			if (contact.getLinphoneFriend() == lf) {
+				if (contact.isInLinphoneFriendList() && !sipContacts.contains(contact)) {
+					sipContacts.add(contact);
+				}
+				break;
 			}
 		}
 		Collections.sort(sipContacts);
+		
 		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 			listener.onContactsUpdated();
 		}
@@ -327,6 +333,7 @@ public class ContactsManager extends ContentObserver {
 			List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 			List<LinphoneContact> sipContacts = new ArrayList<LinphoneContact>();
 			Date contactsTime = new Date();
+			androidContactsCache.clear();
 
 			//We need to check sometimes to know if Linphone was destroyed
 			if (this.isCancelled()) {
@@ -340,11 +347,30 @@ public class ContactsManager extends ContentObserver {
 						String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
 				    	String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME_PRIMARY));
 						LinphoneContact contact = new LinphoneContact();
+						
 						contact.setFullName(displayName);
 						contact.setAndroidId(id);
+						/*contact.getAndroidIds();*/
 						contacts.add(contact);
+						androidContactsCache.put(id, contact);
 					}
 					c.close();
+				}
+
+				boolean isOrgVisible = LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.display_contact_organization);
+				if (isOrgVisible) {
+					c = getOrganizationCursor(contentResolver);
+					if (c != null) {
+						while (c.moveToNext()) {
+					    	String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+					    	String org = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Organization.COMPANY));
+					    	LinphoneContact contact = androidContactsCache.get(id);
+					    	if (contact != null) {
+					    		contact.setOrganization(org);
+					    	}
+						}
+						c.close();
+					}
 				}
 			} else {
 				Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
@@ -354,7 +380,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.i("[ContactsManager] got " + contacts.size() + " contacts names and pictures in " + time);
+			Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts executed in " + time);
 			
 			//We need to check sometimes to know if Linphone was destroyed
 			if (this.isCancelled()) {
@@ -382,6 +408,10 @@ public class ContactsManager extends ContentObserver {
 								// Refkey not null but no contact access => can't link it to native contact so display it on is own
 								LinphoneContact contact = new LinphoneContact();
 								contact.setFriend(friend);
+								contact.refresh();
+								if (contact.hasAddress()) {
+									sipContacts.add(contact);
+								}
 								contacts.add(contact);
 							}
 						} else {
@@ -392,66 +422,78 @@ public class ContactsManager extends ContentObserver {
 						// No refkey so it's a standalone contact
 						LinphoneContact contact = new LinphoneContact();
 						contact.setFriend(friend);
+						contact.refresh();
+						if (contact.hasAddress()) {
+							sipContacts.add(contact);
+						}
 						contacts.add(contact);
 					}
 				}
 			}
-
-			int i = 0;
-			
-			for (LinphoneContact contact : contacts) {
-				//We need to check sometimes to know if Linphone was destroyed
-				if (this.isCancelled()) {
-					return null;
-				}
-				// This will only get name & picture informations to be able to quickly display contacts list
-				contact.minimalRefresh();
-				i++;
-				if (contact.hasAddress()) {
-					sipContacts.add(contact);
-				}
-				
-				if (i == CONTACTS_STEP) {
-					i = 0;
-					publishProgress(new ContactsLists(contacts, sipContacts));
-				}
-			}
 			Collections.sort(contacts);
 			Collections.sort(sipContacts);
+			publishProgress(new ContactsLists(contacts, sipContacts));
+			
+			//We need to check sometimes to know if Linphone was destroyed
+			if (this.isCancelled()) {
+				return null;
+			}
+			
+			if (hasContactsAccess()) {
+				Cursor c = getPhonesCursor(contentResolver);
+				if (c != null) {
+					while (c.moveToNext()) {
+						String id = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+				    	String number = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+				    	LinphoneContact contact = androidContactsCache.get(id);
+				    	if (contact != null) {
+				    		contact.addNumberOrAddress(new LinphoneNumberOrAddress(number, false));
+				    	}
+					}
+					c.close();
+				}
+				c = getSipCursor(contentResolver);
+				if (c != null) {
+					while (c.moveToNext()) {
+						String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
+				    	String sip = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS));
+				    	LinphoneContact contact = androidContactsCache.get(id);
+				    	if (contact != null) {
+				    		contact.addNumberOrAddress(new LinphoneNumberOrAddress(sip, true));
+				    		if (!sipContacts.contains(contact)) {
+				    			sipContacts.add(contact);
+				    		}
+				    	}
+					}
+					c.close();
+				}
+				Collections.sort(sipContacts);
+			}
+			publishProgress(new ContactsLists(contacts, sipContacts));
 
 			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
 			time = String.format("%02d:%02d",
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.i("[ContactsManager] organization, SIP and phone numbers for " + contacts.size() + " contacts fetched in " + time);
-			// Public the current list of contacts without all the informations populated
-			publishProgress(new ContactsLists(contacts, sipContacts));
-
+			Log.i("[ContactsManager] Step 2 for " + contacts.size() + " contacts executed in " + time);
+			
 			for (LinphoneContact contact : contacts) {
 				//We need to check sometimes to know if Linphone was destroyed
 				if (this.isCancelled()) {
 					return null;
 				}
-				// This time fetch all informations including phone numbers and SIP addresses
-				contact.refresh();
-				
-				if (contact.isInLinphoneFriendList() && !sipContacts.contains(contact)) {
-					sipContacts.add(contact);
-				}
+				// Create the LinphoneFriends matching the native contacts
+				contact.createOrUpdateLinphoneFriendFromNativeContact();
 			}
 			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
 			time = String.format("%02d:%02d",
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-			Log.i("[ContactsManager] linphone friends for " + contacts.size() + " contacts created in " + time);
+			Log.i("[ContactsManager] Step 3 for " + contacts.size() + " contacts executed in " + time);
 			
-			for (LinphoneFriendList lfl : lc.getFriendLists()) {
-				Log.d("[ContactsManager] Updating friends subscribtions");
-				lfl.updateSubscriptions();
-			}
-
+			androidContactsCache.clear();
 			return new ContactsLists(contacts, sipContacts);
 		}
 
@@ -467,6 +509,8 @@ public class ContactsManager extends ContentObserver {
 		}
 
 		protected void onPostExecute(ContactsLists result) {
+			Log.d("[ContactsManager] Updating contacts subscribtions");
+			LinphoneManager.getLc().getFriendLists()[0].updateSubscriptions();
 			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 				listener.onContactsUpdated();
 			}
@@ -559,5 +603,26 @@ public class ContactsManager extends ContentObserver {
 	    }
 		cursor.close();
 		return result;
+	}
+
+	private Cursor getPhonesCursor(ContentResolver cr) {
+		Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+			     new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.CONTACT_ID }, 
+			     null, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " ASC");
+		return cursor;
+	}
+
+	private Cursor getSipCursor(ContentResolver cr) {
+		String select = ContactsContract.Data.MIMETYPE + "=?";
+		String[] projection = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS };
+		Cursor c = cr.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE }, null);
+		return c;
+	}
+
+	private Cursor getOrganizationCursor(ContentResolver cr) {
+		String select = ContactsContract.Data.MIMETYPE + "=?";
+		String[] projection = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.CommonDataKinds.Organization.COMPANY };
+		Cursor c = cr.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE }, null);
+		return c;
 	}
 }
