@@ -296,7 +296,7 @@ public class ContactsManager extends ContentObserver {
 	}
 	
 	public synchronized void refreshSipContact(LinphoneFriend lf) {
-		LinphoneContact contact = ((LinphoneFriendImpl)lf).getLinphoneContact();
+		LinphoneContact contact = (LinphoneContact)((LinphoneFriendImpl)lf).getUserData();
 		if (!sipContacts.contains(contact)) {
 			sipContacts.add(contact);
 		}

@@ -416,7 +416,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			if (isAndroidContact()) {
 				friend.setRefKey(getAndroidId());
 			}
-			((LinphoneFriendImpl)friend).setLinphoneContact(this);
+			((LinphoneFriendImpl)friend).setUserData(this);
 			created = true;
 		}
 		if (isLinphoneFriend()) {
@@ -573,7 +573,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
 	public void setFriend(LinphoneFriend f) {
 		friend = f;
-		((LinphoneFriendImpl)friend).setLinphoneContact(this);
+		((LinphoneFriendImpl)friend).setUserData(this);
 	}
 	
 	public void getAndroidIds() {
@@ -705,7 +705,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		friend.enableSubscribes(false);
 		friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 		contact.friend = friend;
-		((LinphoneFriendImpl)friend).setLinphoneContact(contact);
+		((LinphoneFriendImpl)friend).setUserData(contact);
 		return contact;
 	}
 
