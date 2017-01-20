@@ -31,11 +31,11 @@ find_library(AVUTIL_LIBRARY avutil)
 find_library(SWRESAMPLE_LIBRARY swresample)
 find_library(SWSCALE_LIBRARY swscale)
 
-add_library(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} SHARED)
-target_link_libraries(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} LINK_PRIVATE "m" "-Wl,-whole-archive" ${AVCODEC_LIBRARY} ${AVUTIL_LIBRARY} ${SWRESAMPLE_LIBRARY} ${SWSCALE_LIBRARY} "-Wl,-no-whole-archive")
-set_target_properties(ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR} PROPERTIES LINKER_LANGUAGE C)
+add_library(ffmpeg-linphone-${NDK_ARCHITECTURE} SHARED)
+target_link_libraries(ffmpeg-linphone-${NDK_ARCHITECTURE} LINK_PRIVATE "m" "-Wl,-whole-archive" ${AVCODEC_LIBRARY} ${AVUTIL_LIBRARY} ${SWRESAMPLE_LIBRARY} ${SWSCALE_LIBRARY} "-Wl,-no-whole-archive")
+set_target_properties(ffmpeg-linphone-${NDK_ARCHITECTURE} PROPERTIES LINKER_LANGUAGE C)
 
-install(TARGETS ffmpeg-linphone-${CMAKE_SYSTEM_PROCESSOR}
+install(TARGETS ffmpeg-linphone-${NDK_ARCHITECTURE}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

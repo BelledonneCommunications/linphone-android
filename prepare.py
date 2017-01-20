@@ -65,6 +65,12 @@ class AndroidArmv7Target(AndroidTarget):
         AndroidTarget.__init__(self, 'armv7')
 
 
+class AndroidArm64Target(AndroidTarget):
+
+    def __init__(self):
+        AndroidTarget.__init__(self, 'arm64')
+
+
 class AndroidX86Target(AndroidTarget):
 
     def __init__(self):
@@ -76,6 +82,7 @@ class AndroidX86Target(AndroidTarget):
 android_targets = {
     'arm': AndroidArmTarget(),
     'armv7': AndroidArmv7Target(),
+    'arm64': AndroidArm64Target(),
     'x86': AndroidX86Target()
 }
 
@@ -250,6 +257,25 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdb.setup libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdbserver libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdb.setup libs/armeabi-v7a; \\
+\tfi
+\trm -rf libs-debug/arm64-v8a
+\trm -rf libs/arm64-v8a
+\tif test -d "liblinphone-sdk/android-arm64"; then \\
+\t\tmkdir -p libs-debug/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/libgnustl_shared.so libs-debug/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/lib*-arm64-v8a.so libs-debug/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs-debug/arm64-v8a && \\
+\t\tmkdir -p libs/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/libgnustl_shared.so libs/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/lib*-arm64-v8a.so libs/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs/arm64-v8a && \\
+\t\tsh WORK/android-arm64/strip.sh libs/arm64-v8a/*.so; \\
+\tfi
+\tif test -f "liblinphone-sdk/android-arm64/bin/gdbserver"; then \\
+\t\tcp -f liblinphone-sdk/android-arm64/bin/gdbserver libs-debug/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/bin/gdb.setup libs-debug/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/bin/gdbserver libs/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/bin/gdb.setup libs/arm64-v8a; \\
 \tfi
 \trm -rf libs-debug/x86
 \trm -rf libs/x86
