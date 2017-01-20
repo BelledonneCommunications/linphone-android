@@ -122,6 +122,16 @@
 				android:gravity="center"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
+			
+			<TextView 
+				android:id="@+id/jitterBufferAudio"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:text="@string/call_stats_jitter_buffer"
+				android:gravity="center"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
 
 		</TableLayout>
 

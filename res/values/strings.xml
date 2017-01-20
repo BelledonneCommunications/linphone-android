@@ -221,6 +221,7 @@
     <string name="call_stats_video_resolution_received">Received video resolution:</string>
     <string name="call_stats_sender_loss_rate">Sender loss rate:</string>
     <string name="call_stats_receiver_loss_rate">Receiver loss rate:</string>
+    <string name="call_stats_jitter_buffer">Jitter buffer:</string>
     <string name="call_stats_encoder_name">Encoder:</string>
     <string name="call_stats_decoder_name">Decoder:</string>
     <string name="call">Call</string>

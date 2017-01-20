@@ -33,7 +33,6 @@ import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriendImpl;
-import org.linphone.core.LinphoneFriendList;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 

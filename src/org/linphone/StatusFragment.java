@@ -17,15 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import java.text.DecimalFormat;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCallStats;
-import org.linphone.core.LinphoneCallStats.LinphoneAddressFamily;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.MediaEncryption;
@@ -33,7 +26,6 @@ import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneEvent;
 import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -45,7 +37,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,14 +51,11 @@ import android.widget.TextView;
  * @author Sylvain Berfini
  */
 public class StatusFragment extends Fragment {
-	private Handler mHandler = new Handler();
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, voicemailCount;
 	private ImageView statusLed, callQuality, encryption, menu, voicemail;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false;
-	private Timer mTimer;
-	private TimerTask mTask;
 	private LinphoneCoreListenerBase mListener;
 	private Dialog ZRTPdialog = null;
 	private int mDisplayedQuality = -1;
@@ -439,147 +427,5 @@ public class StatusFragment extends Fragment {
 			});
 			ZRTPdialog.show();
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	private void formatText(TextView tv, String name, String value) {
-		tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
-	}
-
-	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
-			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
-			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
-			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
-			, TextView videoResolutionReceived, boolean isVideo) {
-		Context ctxt = LinphoneActivity.instance();
-		if (stats != null) {
-			layout.setVisibility(View.VISIBLE);
-			title.setVisibility(TextView.VISIBLE);
-			if (media != null) {
-				String mime = media.getMime();
-				if (LinphoneManager.getLc().downloadOpenH264Enabled() &&
-						media.getMime().equals("H264") &&
-						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
-					mime = "OpenH264";
-				}
-				formatText(codec, ctxt.getString(R.string.call_stats_codec),
-						mime + " / " + (media.getRate() / 1000) + "kHz");
-			}
-			formatText(enc, ctxt.getString(R.string.call_stats_encoder_name),
-					stats.getEncoderName(media));
-			formatText(dec, ctxt.getString(R.string.call_stats_decoder_name),
-					stats.getDecoderName(media));
-			formatText(dl, ctxt.getString(R.string.call_stats_download),
-					String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
-			formatText(ul, ctxt.getString(R.string.call_stats_upload),
-					String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
-			formatText(ice, ctxt.getString(R.string.call_stats_ice),
-					stats.getIceState().toString());
-			formatText(ip, ctxt.getString(R.string.call_stats_ip),
-					(stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET_6.getInt()) ?
-							"IpV6" : (stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET.getInt()) ?
-							"IpV4" : "Unknown");
-			formatText(senderLossRate, ctxt.getString(R.string.call_stats_sender_loss_rate),
-					new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
-			formatText(receiverLossRate, ctxt.getString(R.string.call_stats_receiver_loss_rate),
-					new DecimalFormat("##.##").format(stats.getReceiverLossRate())+ "%");
-			if (isVideo) {
-				formatText(videoResolutionSent,
-						ctxt.getString(R.string.call_stats_video_resolution_sent),
-						"\u2191 " + params.getSentVideoSize().toDisplayableString());
-				formatText(videoResolutionReceived,
-						ctxt.getString(R.string.call_stats_video_resolution_received),
-						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
-			}
-		} else {
-			layout.setVisibility(View.GONE);
-			title.setVisibility(TextView.GONE);
-		}
-	}
-
-	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
-		if (mTimer != null && mTask != null) {
-			return;
-		}
-
-	 	mTimer = new Timer();
-		mTask = new TimerTask() {
-			@Override
-			public void run() {
-				if (call == null) {
-					mTimer.cancel();
-					return;
-				}
-
-				final TextView titleAudio = (TextView) view.findViewById(R.id.call_stats_audio);
-				final TextView titleVideo = (TextView) view.findViewById(R.id.call_stats_video);
-				final TextView codecAudio = (TextView) view.findViewById(R.id.codec_audio);
-				final TextView codecVideo = (TextView) view.findViewById(R.id.codec_video);
-				final TextView encoderAudio = (TextView) view.findViewById(R.id.encoder_audio);
-				final TextView decoderAudio = (TextView) view.findViewById(R.id.decoder_audio);
-				final TextView encoderVideo = (TextView) view.findViewById(R.id.encoder_video);
-				final TextView decoderVideo = (TextView) view.findViewById(R.id.decoder_video);
-				final TextView dlAudio = (TextView) view.findViewById(R.id.downloadBandwith_audio);
-				final TextView ulAudio = (TextView) view.findViewById(R.id.uploadBandwith_audio);
-				final TextView dlVideo = (TextView) view.findViewById(R.id.downloadBandwith_video);
-				final TextView ulVideo = (TextView) view.findViewById(R.id.uploadBandwith_video);
-				final TextView iceAudio = (TextView) view.findViewById(R.id.ice_audio);
-				final TextView iceVideo = (TextView) view.findViewById(R.id.ice_video);
-				final TextView videoResolutionSent = (TextView) view.findViewById(R.id.video_resolution_sent);
-				final TextView videoResolutionReceived = (TextView) view.findViewById(R.id.video_resolution_received);
-				final TextView senderLossRateAudio = (TextView) view.findViewById(R.id.senderLossRateAudio);
-				final TextView receiverLossRateAudio = (TextView) view.findViewById(R.id.receiverLossRateAudio);
-				final TextView senderLossRateVideo = (TextView) view.findViewById(R.id.senderLossRateVideo);
-				final TextView receiverLossRateVideo = (TextView) view.findViewById(R.id.receiverLossRateVideo);
-				final TextView ipAudio = (TextView) view.findViewById(R.id.ip_audio);
-				final TextView ipVideo = (TextView) view.findViewById(R.id.ip_video);
-				final View videoLayout = view.findViewById(R.id.callStatsVideo);
-				final View audioLayout = view.findViewById(R.id.callStatsAudio);
-
-				if (titleAudio == null || codecAudio == null || dlVideo == null || iceAudio == null
-						|| videoResolutionSent == null || videoLayout == null || titleVideo == null
-						|| ipVideo == null || ipAudio == null || codecVideo == null
-						|| dlAudio == null || ulAudio == null || ulVideo == null || iceVideo == null
-						|| videoResolutionReceived == null) {
-					mTimer.cancel();
-					return;
-				}
-
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						synchronized(LinphoneManager.getLc()) {
-							if (LinphoneActivity.isInstanciated()) {
-								LinphoneCallParams params = call.getCurrentParamsCopy();
-								if (params != null) {
-									LinphoneCallStats audioStats = call.getAudioStats();
-									LinphoneCallStats videoStats = null;
-
-									if (params.getVideoEnabled())
-										videoStats = call.getVideoStats();
-
-									PayloadType payloadAudio = params.getUsedAudioCodec();
-									PayloadType payloadVideo = params.getUsedVideoCodec();
-
-									displayMediaStats(params, audioStats, payloadAudio, audioLayout
-											, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
-											, ipAudio, senderLossRateAudio, receiverLossRateAudio
-											, encoderAudio, decoderAudio, null, null
-											, false);
-
-									displayMediaStats(params, videoStats, payloadVideo, videoLayout
-											, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
-											, ipVideo, senderLossRateVideo, receiverLossRateVideo
-											, encoderVideo, decoderVideo
-											, videoResolutionSent, videoResolutionReceived
-											, true);
-								}
-							}
-						}
-					}
-				});
-			}
-		};
-		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
 }

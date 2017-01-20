@@ -17,19 +17,25 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCall.State;
 import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneCallStats.LinphoneAddressFamily;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatRoom;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphonePlayer;
+import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
@@ -58,6 +64,7 @@ import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -120,6 +127,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private LinphoneCoreListenerBase mListener;
 	private DrawerLayout sideMenu;
 	private boolean mProximitySensingEnabled;
+	
+	private Handler mHandler = new Handler();
+	private Timer mTimer;
+	private TimerTask mTask;
 
 	public static CallActivity instance() {
 		return instance;
@@ -498,8 +509,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 		});
 
-		status.initCallStatsRefresher(LinphoneManager.getLc().getCurrentCall(), findViewById(R.id.incall_stats));
-
+		initCallStatsRefresher(LinphoneManager.getLc().getCurrentCall(), findViewById(R.id.incall_stats));
 	}
 
 	private void refreshIncallUi(){
@@ -1590,5 +1600,150 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			missedChats.clearAnimation();
 			missedChats.setVisibility(View.GONE);
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void formatText(TextView tv, String name, String value) {
+		tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
+	}
+
+	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
+			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
+			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
+			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
+			, TextView videoResolutionReceived, boolean isVideo, TextView jitterBuffer) {
+		if (stats != null) {
+			layout.setVisibility(View.VISIBLE);
+			title.setVisibility(TextView.VISIBLE);
+			if (media != null) {
+				String mime = media.getMime();
+				if (LinphoneManager.getLc().downloadOpenH264Enabled() &&
+						media.getMime().equals("H264") &&
+						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
+					mime = "OpenH264";
+				}
+				formatText(codec, getString(R.string.call_stats_codec),
+						mime + " / " + (media.getRate() / 1000) + "kHz");
+			}
+			formatText(enc, getString(R.string.call_stats_encoder_name),
+					stats.getEncoderName(media));
+			formatText(dec, getString(R.string.call_stats_decoder_name),
+					stats.getDecoderName(media));
+			formatText(dl, getString(R.string.call_stats_download),
+					String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
+			formatText(ul, getString(R.string.call_stats_upload),
+					String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
+			formatText(ice, getString(R.string.call_stats_ice),
+					stats.getIceState().toString());
+			formatText(ip, getString(R.string.call_stats_ip),
+					(stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET_6.getInt()) ?
+							"IpV6" : (stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET.getInt()) ?
+							"IpV4" : "Unknown");
+			formatText(senderLossRate, getString(R.string.call_stats_sender_loss_rate),
+					new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
+			formatText(receiverLossRate, getString(R.string.call_stats_receiver_loss_rate),
+					new DecimalFormat("##.##").format(stats.getReceiverLossRate())+ "%");
+			if (isVideo) {
+				formatText(videoResolutionSent,
+						getString(R.string.call_stats_video_resolution_sent),
+						"\u2191 " + params.getSentVideoSize().toDisplayableString());
+				formatText(videoResolutionReceived,
+						getString(R.string.call_stats_video_resolution_received),
+						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
+			} else {
+				formatText(jitterBuffer, getString(R.string.call_stats_jitter_buffer), 
+						new DecimalFormat("##.##").format(stats.getJitterBufferSize()) + " ms");
+			}
+		} else {
+			layout.setVisibility(View.GONE);
+			title.setVisibility(TextView.GONE);
+		}
+	}
+
+	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
+		if (mTimer != null && mTask != null) {
+			return;
+		}
+
+		final TextView titleAudio = (TextView) view.findViewById(R.id.call_stats_audio);
+		final TextView titleVideo = (TextView) view.findViewById(R.id.call_stats_video);
+		final TextView codecAudio = (TextView) view.findViewById(R.id.codec_audio);
+		final TextView codecVideo = (TextView) view.findViewById(R.id.codec_video);
+		final TextView encoderAudio = (TextView) view.findViewById(R.id.encoder_audio);
+		final TextView decoderAudio = (TextView) view.findViewById(R.id.decoder_audio);
+		final TextView encoderVideo = (TextView) view.findViewById(R.id.encoder_video);
+		final TextView decoderVideo = (TextView) view.findViewById(R.id.decoder_video);
+		final TextView dlAudio = (TextView) view.findViewById(R.id.downloadBandwith_audio);
+		final TextView ulAudio = (TextView) view.findViewById(R.id.uploadBandwith_audio);
+		final TextView dlVideo = (TextView) view.findViewById(R.id.downloadBandwith_video);
+		final TextView ulVideo = (TextView) view.findViewById(R.id.uploadBandwith_video);
+		final TextView iceAudio = (TextView) view.findViewById(R.id.ice_audio);
+		final TextView iceVideo = (TextView) view.findViewById(R.id.ice_video);
+		final TextView videoResolutionSent = (TextView) view.findViewById(R.id.video_resolution_sent);
+		final TextView videoResolutionReceived = (TextView) view.findViewById(R.id.video_resolution_received);
+		final TextView senderLossRateAudio = (TextView) view.findViewById(R.id.senderLossRateAudio);
+		final TextView receiverLossRateAudio = (TextView) view.findViewById(R.id.receiverLossRateAudio);
+		final TextView senderLossRateVideo = (TextView) view.findViewById(R.id.senderLossRateVideo);
+		final TextView receiverLossRateVideo = (TextView) view.findViewById(R.id.receiverLossRateVideo);
+		final TextView ipAudio = (TextView) view.findViewById(R.id.ip_audio);
+		final TextView ipVideo = (TextView) view.findViewById(R.id.ip_video);
+		final TextView jitterBufferAudio = (TextView) view.findViewById(R.id.jitterBufferAudio);
+		final View videoLayout = view.findViewById(R.id.callStatsVideo);
+		final View audioLayout = view.findViewById(R.id.callStatsAudio);
+
+	 	mTimer = new Timer();
+		mTask = new TimerTask() {
+			@Override
+			public void run() {
+				if (call == null) {
+					mTimer.cancel();
+					return;
+				}
+
+				if (titleAudio == null || codecAudio == null || dlVideo == null || iceAudio == null
+						|| videoResolutionSent == null || videoLayout == null || titleVideo == null
+						|| ipVideo == null || ipAudio == null || codecVideo == null
+						|| dlAudio == null || ulAudio == null || ulVideo == null || iceVideo == null
+						|| videoResolutionReceived == null) {
+					mTimer.cancel();
+					return;
+				}
+
+				mHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						synchronized(LinphoneManager.getLc()) {
+							if (LinphoneActivity.isInstanciated()) {
+								LinphoneCallParams params = call.getCurrentParamsCopy();
+								if (params != null) {
+									LinphoneCallStats audioStats = call.getAudioStats();
+									LinphoneCallStats videoStats = null;
+
+									if (params.getVideoEnabled())
+										videoStats = call.getVideoStats();
+
+									PayloadType payloadAudio = params.getUsedAudioCodec();
+									PayloadType payloadVideo = params.getUsedVideoCodec();
+
+									displayMediaStats(params, audioStats, payloadAudio, audioLayout
+											, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
+											, ipAudio, senderLossRateAudio, receiverLossRateAudio
+											, encoderAudio, decoderAudio, null, null
+											, false, jitterBufferAudio);
+
+									displayMediaStats(params, videoStats, payloadVideo, videoLayout
+											, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
+											, ipVideo, senderLossRateVideo, receiverLossRateVideo
+											, encoderVideo, decoderVideo
+											, videoResolutionSent, videoResolutionReceived
+											, true, null);
+								}
+							}
+						}
+					}
+				});
+			}
+		};
+		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
 }
