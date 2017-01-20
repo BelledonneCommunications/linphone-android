@@ -465,7 +465,7 @@ private static AssistantActivity instance;
 		return phoneNumberWithCountry;
 	}
 
-	public void saveCreatedAccount(String username, String password, String prefix, String ha1, String domain, TransportType transport) {
+	public void saveCreatedAccount(String username, String password, String ha1, String prefix, String domain, TransportType transport) {
 		if (accountCreated)
 			return;
 
