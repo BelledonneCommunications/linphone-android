@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.linphone"
           android:installLocation="auto"
-          android:versionCode="3221"
-          android:versionName="3.2.2">
+          android:versionCode="3241"
+          android:versionName="3.2.4">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -53,7 +53,7 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <!-- Needed for in-app purchase -->
-    <uses-permission android:name="com.android.vending.BILLING"/>
+    <!--<uses-permission android:name="com.android.vending.BILLING"/>-->
     <!-- Needed for overlay widget -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
@@ -109,7 +109,6 @@
         <activity
             android:name=".LinphoneActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="behind"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -118,7 +117,6 @@
         <activity
             android:name=".CallIncomingActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="behind"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -127,7 +125,6 @@
         <activity
             android:name=".CallOutgoingActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="behind"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
