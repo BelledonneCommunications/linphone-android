@@ -12,6 +12,9 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+### Fixed
+- Rotation after screen locking
+
 ## [Unreleased]
 
 ## [3.2.4] - 2017-01-19
