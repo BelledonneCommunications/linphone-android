@@ -127,7 +127,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private LinphoneCoreListenerBase mListener;
 	private DrawerLayout sideMenu;
 	private boolean mProximitySensingEnabled;
-	
+
 	private Handler mHandler = new Handler();
 	private Timer mTimer;
 	private TimerTask mTask;
@@ -763,7 +763,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			LinphoneManager.getLc().updateCall(call, params);
 		} else {
 			videoProgress.setVisibility(View.VISIBLE);
-			if (!call.getRemoteParams().isLowBandwidthEnabled()) {
+			if (call.getRemoteParams() != null && !call.getRemoteParams().isLowBandwidthEnabled()) {
 				LinphoneManager.getInstance().addVideo();
 			} else {
 				displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
@@ -1651,7 +1651,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 						getString(R.string.call_stats_video_resolution_received),
 						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
 			} else {
-				formatText(jitterBuffer, getString(R.string.call_stats_jitter_buffer), 
+				formatText(jitterBuffer, getString(R.string.call_stats_jitter_buffer),
 						new DecimalFormat("##.##").format(stats.getJitterBufferSize()) + " ms");
 			}
 		} else {
