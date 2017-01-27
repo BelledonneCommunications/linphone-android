@@ -763,6 +763,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {
 		mLc = lc;
 
+
 		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
 		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
 		prefMigrator.migrateSharingServerUrlIfNeeded();
@@ -770,14 +771,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (prefMigrator.isMigrationNeeded()) {
 			prefMigrator.doMigration();
-		}
-
-		// Some devices could be using software AEC before
-		// This will disable it in favor of hardware AEC if available
-		if (prefMigrator.isEchoMigratioNeeded()) {
-			Log.d("Echo canceller configuration need to be updated");
-			prefMigrator.doEchoMigration();
-			mPrefs.echoConfigurationUpdated();
 		}
 
 		mLc.setZrtpSecretsCache(basePath + "/zrtp_secrets");

@@ -59,17 +59,6 @@ public class PreferencesMigrator {
 		return (!lc.needsEchoCalibration() && mNewPrefs.isEchoCancellationEnabled());
 	}
 
-	public void doEchoMigration() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc == null) {
-			return;
-		}
-
-		if (!lc.needsEchoCalibration()) {
-			mNewPrefs.setEchoCancellation(false);
-		}
-	}
-
 	public boolean isMigrationNeeded() {
 		int accountNumber = mOldPrefs.getInt(getString(R.string.pref_extra_accounts), -1);
 		return accountNumber != -1;
