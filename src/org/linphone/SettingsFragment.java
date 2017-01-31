@@ -957,6 +957,11 @@ public class SettingsFragment extends PreferencesListFragment {
 		});
 	}
 
+	private void setEncryptionZrtp() {
+		mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
+		findPreference(getString(R.string.pref_media_encryption_key)).setSummary(mPrefs.getMediaEncryption().toString());
+	}
+
 	private void initChatSettings() {
 		setPreferenceDefaultValueAndSummary(R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
 		initLimeEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_use_lime_encryption_key)));
@@ -988,10 +993,10 @@ public class SettingsFragment extends PreferencesListFragment {
 				if (lime == LinphoneLimeState.Disabled) {
 					preference.setSummary(getString(R.string.lime_encryption_entry_disabled));
 				} else if (lime == LinphoneLimeState.Mandatory) {
-					mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
+					setEncryptionZrtp();
 					preference.setSummary(getString(R.string.lime_encryption_entry_mandatory));
 				} else if (lime == LinphoneLimeState.Preferred) {
-					mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
+					setEncryptionZrtp();
 					preference.setSummary(getString(R.string.lime_encryption_entry_preferred));
 				}
 
