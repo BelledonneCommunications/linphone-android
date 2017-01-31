@@ -988,8 +988,10 @@ public class SettingsFragment extends PreferencesListFragment {
 				if (lime == LinphoneLimeState.Disabled) {
 					preference.setSummary(getString(R.string.lime_encryption_entry_disabled));
 				} else if (lime == LinphoneLimeState.Mandatory) {
+					mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
 					preference.setSummary(getString(R.string.lime_encryption_entry_mandatory));
 				} else if (lime == LinphoneLimeState.Preferred) {
+					mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
 					preference.setSummary(getString(R.string.lime_encryption_entry_preferred));
 				}
 

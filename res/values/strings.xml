@@ -186,6 +186,7 @@
     <string name="image_saved">Image saved</string>
     <string name="image_not_saved">Error, image not saved</string>
     <string name="wait">Please wait...</string>
+    <string name="lime_not_verified">You are trying to send a message using LIME to a contact not verified by ZRTP.\nPlease call this contact and verify his ZRTP key before sending your messages.</string>
     <string name="processing_image">Processing image, can take up to a few seconds depending on the size of the file</string>
 
     <!-- Status Bar -->

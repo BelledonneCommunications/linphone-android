@@ -12,6 +12,9 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+### Added
+- Lime integration
+
 ### Fixed
 - Rotation after screen locking
 
