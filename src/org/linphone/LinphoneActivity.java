@@ -183,10 +183,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			if (getPackageManager().checkPermission(Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
 				checkSyncPermission();
 			} else {
-				ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+				if (LinphoneService.isReady())
+					ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
 			}
 		} else {
-			ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
+			if (LinphoneService.isReady())
+				ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
 		}
 
 		setContentView(R.layout.main);
