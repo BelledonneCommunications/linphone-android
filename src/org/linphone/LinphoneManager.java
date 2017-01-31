@@ -153,7 +153,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
 	private static LinphoneChatMessage mUploadPendingFileMessage;
 
-
 	public String wizardLoginViewDomain = null;
 
 	private static List<LinphoneChatMessage.LinphoneChatMessageListener> simpleListeners = new ArrayList<LinphoneChatMessage.LinphoneChatMessageListener>();
@@ -214,7 +213,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mFriendsDatabaseFile;
 	private final String mErrorToneFile;
 	private final String mUserCertificatePath;
-	private ByteArrayInputStream mUploadingImageStream;
+	private byte[] mUploadingImage;
 	private Timer mTimer;
 
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
@@ -371,16 +370,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		return mUploadPendingFileMessage;
 	}
 
-	public void setUploadingImageStream(ByteArrayInputStream array){
-		this.mUploadingImageStream = array;
+	public void setUploadingImage(byte[] array){
+		this.mUploadingImage = array;
 	}
 
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, LinphoneChatMessage.State state) {
 		if (state == LinphoneChatMessage.State.FileTransferDone) {
-			if (msg.isOutgoing() && mUploadingImageStream != null) {
+			if (msg.isOutgoing() && mUploadingImage != null) {
 				mUploadPendingFileMessage = null;
-				mUploadingImageStream = null;
+				mUploadingImage = null;
 			} else {
 				LinphoneUtils.storeImage(getContext(), msg);
 				removePendingMessage(msg);
@@ -402,14 +401,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@Override
 	public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {
-		if (mUploadingImageStream != null && size > 0) {
+		if (mUploadingImage != null && size > 0) {
 			byte[] data = new byte[size];
-			int read = mUploadingImageStream.read(data, 0, size);
-			if (read > 0) {
+			if (offset + size <= mUploadingImage.length) {
+				for (int i = 0; i < size; i++) {
+					data[i] = mUploadingImage[i + offset];
+				}
 				bufferToFill.setContent(data);
-				bufferToFill.setSize(read);
+				bufferToFill.setSize(size);
 			} else {
-				Log.e("Error, upload task asking for more bytes(" + size + ") than available (" + mUploadingImageStream.available() + ")");
+				Log.e("Error, upload task asking for more bytes( " + (size+offset) + " ) than available (" + mUploadingImage.length + ")");
 			}
 		}
 	}

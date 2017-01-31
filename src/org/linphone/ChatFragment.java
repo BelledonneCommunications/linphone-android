@@ -136,7 +136,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ChatMessageAdapter adapter;
 
 	private LinphoneCoreListenerBase mListener;
-	private ByteArrayInputStream mUploadingImageStream;
 	private boolean newChatConversation = false;
 
 	@Override
@@ -893,7 +892,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (progressDialog != null && progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
-			mUploadingImageStream = new ByteArrayInputStream(result);
 
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
 			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
@@ -905,7 +903,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			message.setAppData(path);
 
 			LinphoneManager.getInstance().setUploadPendingFileMessage(message);
-			LinphoneManager.getInstance().setUploadingImageStream(mUploadingImageStream);
+			LinphoneManager.getInstance().setUploadingImage(result);
 
 			chatRoom.sendChatMessage(message);
 			adapter.addMessage(message);
