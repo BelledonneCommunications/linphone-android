@@ -869,7 +869,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			missedCalls.setText(missedCallsCount + "");
 			missedCalls.setVisibility(View.VISIBLE);
 		} else {
-			LinphoneManager.getLc().resetMissedCallsCount();
+			if (LinphoneManager.isInstanciated()) LinphoneManager.getLc().resetMissedCallsCount();
 			missedCalls.clearAnimation();
 			missedCalls.setVisibility(View.GONE);
 		}

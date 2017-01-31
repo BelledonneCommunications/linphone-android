@@ -113,6 +113,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private int cameraNumber;
 	private CountDownTimer timer;
 	private boolean isVideoCallPaused = false;
+	private Dialog dialog = null;
+	private static long TimeRemind = 0;
 
 	private static PowerManager powerManager;
 	private static PowerManager.WakeLock wakeLock;
@@ -225,24 +227,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
 					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 							showAcceptCallUpdateDialog();
-							timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
-								public void onTick(long millisUntilFinished) { }
-								public void onFinish() {
-									//TODO dismiss dialog
-									acceptCallUpdate(false);
-								}
-							}.start();
-
-							/*showAcceptCallUpdateDialog();
-
-							timer = new CountDownTimer(SECONDS_BEFORE_DENYING_CALL_UPDATE, 1000) {
-								public void onTick(long millisUntilFinished) { }
-								public void onFinish() {
-									//TODO dismiss dialog
-
-								}
-							}.start();*/
-
+							createTimerForDialog(SECONDS_BEFORE_DENYING_CALL_UPDATE);
 					}
 //        			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
 //        				mHandler.post(new Runnable() {
@@ -286,6 +271,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				isSpeakerEnabled = savedInstanceState.getBoolean("Speaker");
 				isMicMuted = savedInstanceState.getBoolean("Mic");
 				isVideoCallPaused = savedInstanceState.getBoolean("VideoCallPaused");
+				if (savedInstanceState.getBoolean("AskingVideo")) {
+					showAcceptCallUpdateDialog();
+					TimeRemind = savedInstanceState.getLong("TimeRemind");
+					createTimerForDialog(TimeRemind);
+				}
 				refreshInCallActions();
 				return;
 			} else {
@@ -314,6 +304,21 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
+	public void createTimerForDialog(long time) {
+		timer = new CountDownTimer(time , 1000) {
+			public void onTick(long millisUntilFinished) {
+				TimeRemind = millisUntilFinished;
+			}
+			public void onFinish() {
+				if (dialog != null) {
+					dialog.dismiss();
+					dialog = null;
+				}
+				acceptCallUpdate(false);
+			}
+		}.start();
+	}
+
 	private boolean isVideoEnabled(LinphoneCall call) {
 		if(call != null){
 			return call.getCurrentParamsCopy().getVideoEnabled();
@@ -326,7 +331,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		outState.putBoolean("Speaker", LinphoneManager.getLc().isSpeakerEnabled());
 		outState.putBoolean("Mic", LinphoneManager.getLc().isMicMuted());
 		outState.putBoolean("VideoCallPaused", isVideoCallPaused);
-
+		outState.putBoolean("AskingVideo", (dialog != null));
+		outState.putLong("TimeRemind", TimeRemind);
+		if (dialog != null) dialog.dismiss();
 		super.onSaveInstanceState(outState);
 	}
 
@@ -1138,7 +1145,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 
 	private void showAcceptCallUpdateDialog() {
-		final Dialog dialog = new Dialog(this);
+		dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
 		d.setAlpha(200);
@@ -1166,6 +1173,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				}
 
 				dialog.dismiss();
+				dialog = null;
 			}
 		});
 
@@ -1176,6 +1184,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					CallActivity.instance().acceptCallUpdate(false);
 				}
 				dialog.dismiss();
+				dialog = null;
 			}
 		});
 		dialog.show();
@@ -1288,6 +1297,16 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		if (LinphoneUtils.onKeyVolumeAdjust(keyCode)) return true;
 		if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) return true;
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override // Never invoke actually
+	public void onBackPressed() {
+		if (dialog != null) {
+			acceptCallUpdate(false);
+			dialog.dismiss();
+			dialog = null;
+		}
+		return;
 	}
 
 	public void bindAudioFragment(CallAudioFragment fragment) {

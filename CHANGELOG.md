@@ -17,6 +17,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - Rotation after screen locking
+- Contacts background task
 
 ## [Unreleased]
 

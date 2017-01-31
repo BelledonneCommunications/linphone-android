@@ -30,19 +30,19 @@ import android.view.ViewGroup;
  */
 public class CallAudioFragment extends Fragment {
 	private CallActivity incallActvityInstance;
-	
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.audio, container, false);
         return view;
     }
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
 		incallActvityInstance = (CallActivity) getActivity();
-		
+
 		if (incallActvityInstance != null) {
 			incallActvityInstance.bindAudioFragment(this);
 		}
@@ -52,19 +52,19 @@ public class CallAudioFragment extends Fragment {
 			incallActvityInstance.removeCallbacks();
 		}
 	}
-	
+
 	class SwipeGestureDetector implements OnTouchListener {
 	    static final int MIN_DISTANCE = 100;
 	    private float downX, upX;
 	    private boolean lock;
-	    
+
 		private SwipeListener listener;
-		
+
 		public SwipeGestureDetector(SwipeListener swipeListener) {
 			super();
 			listener = swipeListener;
 		}
-		
+
         @Override
     	public boolean onTouch(View v, MotionEvent event) {
             switch(event.getAction()){
@@ -72,7 +72,7 @@ public class CallAudioFragment extends Fragment {
             	lock = false;
                 downX = event.getX();
                 return true;
-                
+
             case MotionEvent.ACTION_MOVE:
             	if (lock) {
             		return false;
@@ -91,7 +91,7 @@ public class CallAudioFragment extends Fragment {
             return false;
         }
     }
-	
+
 	interface SwipeListener {
 		void onRightToLeftSwipe();
 		void onLeftToRightSwipe();
