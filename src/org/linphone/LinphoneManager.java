@@ -387,7 +387,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		if (state == LinphoneChatMessage.State.FileTransferError) {
-			//TODO
+			LinphoneUtils.displayErrorAlert(getString(R.string.image_transfert_error), LinphoneActivity.instance());
 		}
 
 		for (LinphoneChatMessage.LinphoneChatMessageListener l: simpleListeners) {
