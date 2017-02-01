@@ -1138,7 +1138,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (!message.isSecured() &&
+					if (!message.isSecured() && !message.isOutgoing() &&
 							LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
 						LinphoneUtils.displayErrorAlert(getString(R.string.message_not_encrypted), LinphoneActivity.instance());
 					}
@@ -1185,7 +1185,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				holder.messageStatus.setImageResource(R.drawable.chat_message_not_delivered);
 			} else if (status == LinphoneChatMessage.State.InProgress) {
 				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
-			} else if (!message.isSecured() &&
+			} else if (!message.isSecured() && !message.isOutgoing() &&
 					LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
 				holder.messageStatus.setVisibility(View.VISIBLE);
 				holder.messageStatus.setImageResource(R.drawable.lime_ko);
