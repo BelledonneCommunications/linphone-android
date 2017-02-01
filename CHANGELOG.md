@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Lime integration
+- No pause VOIP Call on incoming GSM call until we off hook this
 
 ### Fixed
 - Rotation after screen locking
