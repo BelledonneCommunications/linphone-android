@@ -1135,6 +1135,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			view.setId(holder.id);
 			registerForContextMenu(view);
+			view.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (!message.isSecured() &&
+							LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
+						LinphoneUtils.displayErrorAlert(getString(R.string.message_not_encrypted), LinphoneActivity.instance());
+					}
+				}
+			});
 
 			LinphoneChatMessage.State status = message.getStatus();
 			String externalBodyUrl = message.getExternalBodyUrl();
@@ -1174,9 +1183,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (status == LinphoneChatMessage.State.NotDelivered) {
 				holder.messageStatus.setVisibility(View.VISIBLE);
 				holder.messageStatus.setImageResource(R.drawable.chat_message_not_delivered);
-
 			} else if (status == LinphoneChatMessage.State.InProgress) {
 				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
+			} else if (!message.isSecured() &&
+					LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
+				holder.messageStatus.setVisibility(View.VISIBLE);
+				holder.messageStatus.setImageResource(R.drawable.lime_ko);
 			}
 
 			if (externalBodyUrl != null || fileTransferContent != null) {
