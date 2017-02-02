@@ -48,21 +48,21 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 	private TextView logs;
 
 	private Timer timer;
-	
+
 	private LinphoneCore lc;
 	private LinphoneFriendList lfl;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tuto_carddav);
-		
+
 		username = (EditText) findViewById(R.id.carddav_username);
 		password = (EditText) findViewById(R.id.carddav_pwd);
 		ha1 = (EditText) findViewById(R.id.carddav_ha1);
 		server = (EditText) findViewById(R.id.carddav_server);
 		logs = (TextView) findViewById(R.id.carddav_events);
-		
+
 		synchronize = (Button) findViewById(R.id.carddav_synchronize);
 		synchronize.setOnClickListener(this);
 
@@ -84,10 +84,10 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 			};
 			timer = new Timer("Linphone scheduler");
 			timer.schedule(lTask, 0, 20);
-			
+
 			lfl = lc.createLinphoneFriendList();
 			lc.addFriendList(lfl);
-			
+
 			LinphoneFriend lf = lc.createFriendWithAddress("sip:ghislain@sip.linphone.org");
 			lf.setName("Ghislain");
 			lfl.addLocalFriend(lf); // This is a local friend, it won't be sent to the CardDAV server and will be removed at the next synchronization
@@ -95,7 +95,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 			Log.e(e);
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		try {
@@ -114,13 +114,13 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 		String serverDomain = serverUrl.replace("http://", "").replace("https://", "").split("/")[0]; // We just want the domain name
 		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(username.getText().toString(), null, password.getText().toString(), ha1.getText().toString(), "SabreDAV", serverDomain);
 		lc.addAuthInfo(authInfo);
-		
+
 		lfl.setUri(serverUrl);
 		lfl.setListener(this);
 		synchronize.setEnabled(false);
 		lfl.synchronizeFriendsFromServer();
 	}
-	
+
 	private void myLog(String msg) {
 		Log.d(msg);
 		logs.setText(logs.getText().toString() + "\r\n" + msg);
@@ -132,7 +132,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 		// TODO Auto-generated method stub
 		String msg = "Friend created " + lf.getAddress();
 		myLog(msg);
-		
+
 		LinphoneFriend[] friends = list.getFriendList();
 		String msg2 = "There are " + friends.length + (friends.length > 1 ? " friends" : " friend") + " in the list";
 		myLog(msg2);
@@ -144,7 +144,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 		// TODO Auto-generated method stub
 		String msg = "Friend updated " + newFriend.getAddress();
 		myLog(msg);
-		
+
 		LinphoneFriend[] friends = list.getFriendList();
 		String msg2 = "There are " + friends.length + (friends.length > 1 ? " friends" : " friend") + " in the list";
 		myLog(msg2);
@@ -156,7 +156,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 		// TODO Auto-generated method stub
 		String msg = "Friend removed " + lf.getAddress();
 		myLog(msg);
-		
+
 		LinphoneFriend[] friends = list.getFriendList();
 		String msg2 = "There are " + friends.length + (friends.length > 1 ? " friends" : " friend") + " in the list";
 		myLog(msg2);
@@ -177,7 +177,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 		// TODO Auto-generated method stub
 		String msg = "Friend List added";
 		myLog(msg);
-		
+
 		LinphoneFriendList[] lists = lc.getFriendLists();
 		String msg2 = "There are " + lists.length + (lists.length > 1 ? " lists" : " list") + " in the core";
 		myLog(msg2);
@@ -188,7 +188,7 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 		// TODO Auto-generated method stub
 		String msg = "Friend List removed";
 		myLog(msg);
-		
+
 		LinphoneFriendList[] lists = lc.getFriendLists();
 		String msg2 = "There are " + lists.length + (lists.length > 1 ? " lists" : " list") + " in the core";
 		myLog(msg2);
@@ -198,99 +198,99 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 	public void callStatsUpdated(LinphoneCore lc, LinphoneCall call,
 			LinphoneCallStats stats) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
 			String url) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneAddress from, byte[] event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void transferState(LinphoneCore lc, LinphoneCall call,
 			State new_call_state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void infoReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneInfoMessage info) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void subscriptionStateChanged(LinphoneCore lc, LinphoneEvent ev,
 			SubscriptionState state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void publishStateChanged(LinphoneCore lc, LinphoneEvent ev,
 			PublishState state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void show(LinphoneCore lc) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void displayStatus(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void displayMessage(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void displayWarning(LinphoneCore lc, String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void fileTransferProgressIndication(LinphoneCore lc,
 			LinphoneChatMessage message, LinphoneContent content, int progress) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void fileTransferRecv(LinphoneCore lc, LinphoneChatMessage message,
 			LinphoneContent content, byte[] buffer, int size) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -303,88 +303,93 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 	@Override
 	public void globalState(LinphoneCore lc, GlobalState state, String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg,
 			RegistrationState state, String smessage) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void configuringStatus(LinphoneCore lc,
 			RemoteProvisioningState state, String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneChatMessage message) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void messageReceivedUnableToDecrypted(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+
 	}
 
 	@Override
 	public void callState(LinphoneCore lc, LinphoneCall call, State state,
 			String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
 			boolean encrypted, String authenticationToken) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneEvent ev,
 			String eventName, LinphoneContent content) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom cr) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
 			int delay_ms, Object data) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void uploadStateChanged(LinphoneCore lc,
 			LogCollectionUploadState state, String info) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void authInfoRequested(LinphoneCore lc, String realm,
 			String username, String domain) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void authenticationRequested(LinphoneCore lc,
 			LinphoneAuthInfo authInfo, AuthMethod method) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

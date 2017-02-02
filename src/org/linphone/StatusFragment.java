@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
@@ -393,9 +394,19 @@ public class StatusFragment extends Fragment {
 			ZRTPdialog.setContentView(R.layout.dialog);
 			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 			ZRTPdialog.getWindow().setBackgroundDrawable(d);
+			String zrtpToRead, zrtpToListen;
+
+			if (call.getDirection().equals(CallDirection.Incoming)) {
+				zrtpToRead = call.getAuthenticationToken().substring(0,2);
+				zrtpToListen = call.getAuthenticationToken().substring(2);
+			} else {
+				zrtpToListen = call.getAuthenticationToken().substring(0,2);
+				zrtpToRead = call.getAuthenticationToken().substring(2);
+			}
 
 			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
-			String newText = getString(R.string.zrtp_dialog).replace("%s", call.getAuthenticationToken());
+			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
+					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
 			customText.setText(newText);
 			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete_button);
 			delete.setText(R.string.accept);

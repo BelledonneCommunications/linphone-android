@@ -958,6 +958,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void setEncryptionZrtp() {
+		LinphoneUtils.displayErrorAlert(getString(R.string.lime_encryption_enable_zrtp), LinphoneActivity.instance());
 		mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
 		findPreference(getString(R.string.pref_media_encryption_key)).setSummary(mPrefs.getMediaEncryption().toString());
 	}

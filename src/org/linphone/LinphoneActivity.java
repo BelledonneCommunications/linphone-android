@@ -137,6 +137,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private boolean doNotGoToCallActivity = false;
 	private List<String> sideMenuItems;
 	private boolean callTransfer = false;
+	private boolean isOnBackground = false;
 
 	static final boolean isInstanciated() {
 		return instance != null;
@@ -1126,6 +1127,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			lc.removeListener(mListener);
 		}
 		callTransfer = false;
+		isOnBackground = true;
 
 		super.onPause();
 	}
@@ -1385,6 +1387,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		}
 		doNotGoToCallActivity = false;
+		isOnBackground = false;
 	}
 
 	@Override
@@ -1461,6 +1464,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				}
 			}
 		}
+	}
+
+	public boolean isOnBackground() {
+		return isOnBackground;
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

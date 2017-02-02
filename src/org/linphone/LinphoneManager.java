@@ -22,7 +22,6 @@ import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -152,6 +151,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private LinphoneAccountCreator accountCreator;
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
 	private static LinphoneChatMessage mUploadPendingFileMessage;
+	private boolean mAreDisplayAlertMessage = false;
 
 	public String wizardLoginViewDomain = null;
 
@@ -1025,6 +1025,64 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		} catch (Exception e) {
 			Log.e(e);
 		}
+	}
+
+	@Override
+	public void messageReceivedUnableToDecrypted(LinphoneCore lc, LinphoneChatRoom cr,
+												 LinphoneChatMessage message) {
+		if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
+			return;
+		}
+
+		final LinphoneAddress from = message.getFrom();
+		try {
+			final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
+			if (LinphoneActivity.instance().isOnBackground()) {
+				if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
+					if (contact != null) {
+						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName()
+								, getString(R.string.message_cant_be_decrypted_notif));
+					} else {
+						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName()
+								, getString(R.string.message_cant_be_decrypted_notif));
+					}
+				}
+			} else if (!mAreDisplayAlertMessage){
+				mAreDisplayAlertMessage = true;
+				final Dialog dialog = LinphoneActivity.instance().displayDialog(
+						getString(R.string.message_cant_be_decrypted).replace("%s"
+								, (contact != null) ? contact.getFullName() : from.getUserName()));
+				Button delete = (Button) dialog.findViewById(R.id.delete_button);
+				delete.setText(getString(R.string.call));
+				Button cancel = (Button) dialog.findViewById(R.id.cancel);
+				cancel.setText(getString(R.string.ok));
+
+				delete.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						LinphoneManager.getInstance().newOutgoingCall(from.asStringUriOnly()
+								, (contact != null) ? contact.getFullName() : from.getUserName());
+						dialog.dismiss();
+						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
+					}
+				});
+
+				cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
+					}
+				});
+				dialog.show();
+			}
+		} catch (Exception e) {
+			Log.e(e);
+		}
+	}
+
+	public void setAreDisplayAlertMessage(boolean b) {
+		mAreDisplayAlertMessage = b;
 	}
 
 	public String getLastLcStatusMessage() {
