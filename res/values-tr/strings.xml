@@ -11,9 +11,14 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Çekirdeği %s</string>
-  <string name="about_text">GNU Genel Kamu Lisansı V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone bağlantıları</string>
+  <string name="history_detail_date_format">yyyy/AA/gg - SS:dd -</string>
+  <string name="inapp_popup_date_format">yyyy/AA/gg</string>
+  <string name="inapp_popup_date_day">gg</string>
+  <string name="messages_date_format">gg/AA, SS:dd</string>
+  <string name="messages_list_date_format">gg/AA</string>
+  <string name="today_date_format">SS:dd</string>
   <!--Common-->
   <string name="username">Kullanıcı adı</string>
   <string name="phone_number">Telefon numarası</string>
@@ -82,6 +87,7 @@
   <string name="assistant_ec_calibration">Yankı giderme ayarlaması sürüyor</string>
   <string name="assistant_remote_provisioning_login">Giriş bilgilerinizi girin</string>
   <string name="assistant_account_not_validated">Hesabınız henüz onaylanmadı.</string>
+  <string name="assistant_error_confirmation_code">Doğrulama kodu geçersiz.\r\nLütfen yeniden deneyin.</string>
   <string name="assistant_account_validated">Hesabınız onaylandı.</string>
   <string name="assistant_error_bad_credentials">Geçersiz kullanıcı adı ve parola</string>
   <string name="assistant_codec_down_question">Cisco Systems, Inc. tarafından sağlanan OpenH264 Video çözücüsünü indirmeyi kabul ediyor musunuz?</string>
@@ -184,7 +190,6 @@
   <string name="no_current_call">Etkin arama yok</string>
   <string name="call_paused_by_remote">Görüştüğünüz kişi aramayı duraklattı</string>
   <string name="couldnt_accept_call">Gelen aramanın kabulünde bir hata oluştu</string>
-  <string name="zrtp_dialog">ZRTP fişiniz %s\nBunu yalnızca görüştüğünüz kişinin fişiyle aynıysa kabul etmelisiniz</string>
   <string name="unknown_incoming_call_name">Bilinmeyen</string>
   <string name="call_stats_audio">Ses</string>
   <string name="call_stats_video">Görüntü</string>

@@ -120,7 +120,6 @@
   <string name="no_current_call">Нет активного вызова</string>
   <string name="call_paused_by_remote">Ваш собеседник поставил звонок на паузу</string>
   <string name="couldnt_accept_call">Произошла ошибка во время принятия вызова</string>
-  <string name="zrtp_dialog">ZRTP токен %s\nВы должны принять только если у вас тот же токен, как у вашего собеседника</string>
   <string name="unknown_incoming_call_name">Неизвестный</string>
   <string name="call_stats_audio">Аудио</string>
   <string name="call_stats_video">Видео</string>

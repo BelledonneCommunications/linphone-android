@@ -11,9 +11,13 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
-  <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone Contatos</string>
+  <string name="history_date_format">EEE, d MMM</string>
+  <string name="history_detail_date_format">dd/MM/yyyy - HH:mm -</string>
+  <string name="messages_date_format">dd/MM, HH:mm</string>
+  <string name="messages_list_date_format">dd/MM</string>
+  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Usuário</string>
   <string name="phone_number">Número do telefone</string>
@@ -131,7 +135,6 @@
   <string name="no_current_call">Nova Chamada</string>
   <string name="call_paused_by_remote">Seu contato gostaria de adicionar vídeo a chamada atual</string>
   <string name="couldnt_accept_call">Ocorreu um erro ao aceitar a chamada</string>
-  <string name="zrtp_dialog">ZRTP token is %s\nVocê só deve aceitar se você tiver o mesmo TOKEN (acima) que seu contato</string>
   <string name="unknown_incoming_call_name">Erro desconhecido</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>

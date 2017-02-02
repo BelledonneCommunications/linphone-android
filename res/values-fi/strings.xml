@@ -120,7 +120,6 @@
   <string name="no_current_call">Ei aktiivisia puheluita</string>
   <string name="call_paused_by_remote">Vastapuoli laittoi puhelun tauolle</string>
   <string name="couldnt_accept_call">Virhe puhelua ottaessa</string>
-  <string name="zrtp_dialog">ZRTP avain on %s\nSinun pitää vain hyväksyä jos haluat saman avaimen kuin vastapuoli</string>
   <string name="unknown_incoming_call_name">Tuntematon</string>
   <string name="call_stats_audio">Ääni</string>
   <string name="call_stats_video">Video</string>

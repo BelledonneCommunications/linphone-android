@@ -187,7 +187,9 @@
     <string name="image_not_saved">Error, image not saved</string>
     <string name="wait">Please wait...</string>
     <string name="image_transfert_error">An error occurred during the file transfer</string>
-    <string name="message_not_encrypted">Warning, this message is not encrypted</string>
+    <string name="message_not_encrypted">This message is not encrypted</string>
+    <string name="message_cant_be_decrypted">You have received an encrypted message you are unable to decrypt from %s\nYou need to call your correspondant in order to exchange your ZRTP keys if you want to decrypt the future messages you will receive.</string>
+    <string name="message_cant_be_decrypted_notif">You are unable to decrypt this message.</string>
     <string name="lime_not_verified">You are trying to send a message using LIME to a contact not verified by ZRTP.\nPlease call this contact and verify his ZRTP key before sending your messages.</string>
     <string name="processing_image">Processing image, can take up to a few seconds depending on the size of the file</string>
 
@@ -211,7 +213,8 @@
     <string name="no_current_call">No active call</string>
     <string name="call_paused_by_remote">Your correspondent paused the call</string>
     <string name="couldnt_accept_call">An error occurred while accepting the call</string>
-    <string name="zrtp_dialog">ZRTP token is %s\nYou should only accept if you have the same token as your correspondent</string>
+    <string name="zrtp_dialog1">Confirm the following SAS with peer:\nSay: %s</string>
+    <string name="zrtp_dialog2">\nYour correspondant should say: %s</string>
     <string name="unknown_incoming_call_name">Unknown</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>
@@ -361,6 +364,7 @@
     <string name="lime_encryption_entry_disabled">Disabled</string>
     <string name="lime_encryption_entry_mandatory">Mandatory</string>
     <string name="lime_encryption_entry_preferred">Preferred</string>
+    <string name="lime_encryption_enable_zrtp">LIME requires ZRTP encryption.\nBy activating LIME you automatically activate ZRTP media encryption.</string>
 
     <!-- Network settings -->
     <string name="pref_network_title">Network</string>

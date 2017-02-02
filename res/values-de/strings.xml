@@ -11,9 +11,15 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone-Kern %s</string>
-  <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone-Kontakte</string>
+  <string name="history_date_format">EEE, t MMM</string>
+  <string name="history_detail_date_format">jjjj/MM/tt - HH:mm - </string>
+  <string name="inapp_popup_date_format">jjjj/MM/tt</string>
+  <string name="inapp_popup_date_day">tt</string>
+  <string name="messages_date_format">tt/MM, HH:mm</string>
+  <string name="messages_list_date_format">tt/MM</string>
+  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Benutzername</string>
   <string name="phone_number">Telefonnummer</string>
@@ -82,6 +88,7 @@
   <string name="assistant_ec_calibration">Echounterdrückungskalibrierung läuft</string>
   <string name="assistant_remote_provisioning_login">Geben Sie Ihre Anmeldung ein</string>
   <string name="assistant_account_not_validated">Ihr Konto wurde noch nicht überprüft.</string>
+  <string name="assistant_error_confirmation_code">Der Bestätigungscode ist ungültig.\r\nBitte versuchen Sie es erneut.</string>
   <string name="assistant_account_validated">Ihr Konto wurde überprüft.</string>
   <string name="assistant_error_bad_credentials">Falscher Benutzername oder Passwort</string>
   <string name="assistant_codec_down_question">Sind Sie mit dem Herunterladen des OpenH264-Videocodecs, bereitgestellt von Cisco Systems, Inc., einverstanden?</string>
@@ -181,7 +188,6 @@
   <string name="no_current_call">Kein aktiver Anruf</string>
   <string name="call_paused_by_remote">Ihr Partner hat den Anruf pausiert</string>
   <string name="couldnt_accept_call">Beim Annehmen des Anrufs ist ein Fehler aufgetreten</string>
-  <string name="zrtp_dialog">ZRTP-Token ist %s\nSie sollten nur annehmen, wenn Sie den gleichen Token wie Ihr Partner haben</string>
   <string name="unknown_incoming_call_name">Unbekannt</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>

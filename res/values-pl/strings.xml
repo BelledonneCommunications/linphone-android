@@ -11,9 +11,15 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
-  <string name="about_text">GNU General Public License V2\n © 2010-2016 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">kontakt linphone</string>
+  <string name="history_date_format">EEE, d MMM</string>
+  <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
+  <string name="inapp_popup_date_format">rrrr/mm/dd</string>
+  <string name="inapp_popup_date_day">dd</string>
+  <string name="messages_date_format">dd/MM, HH:mm</string>
+  <string name="messages_list_date_format">dd/MM</string>
+  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Nazwa użytkownika</string>
   <string name="phone_number">Numer telefonu</string>
@@ -30,7 +36,7 @@
   <string name="accept">Akceptuj</string>
   <string name="continue_text">Kontynuuj </string>
   <string name="about">O nas</string>
-  <string name="deny">Zaprzeczać</string>
+  <string name="deny">Odmów</string>
   <string name="no_account">Konto nie zostało skonfigurowane</string>
   <string name="search">Szukaj</string>
   <string name="outgoing">Wyjście</string>
@@ -40,20 +46,41 @@
   <string name="connect">Połączenie</string>
   <string name="decline">Utracone</string>
   <string name="conference">Konferencja</string>
+  <string name="link">Link</string>
+  <string name="link_account_popup">Czy chcesz połączyć konta%s z numerem telefonu?</string>
+  <string name="maybe_later">Może później</string>
+  <string name="later">Później</string>
+  <string name="no">Nie</string>
+  <string name="ok">Ok</string>
+  <string name="yes">Tak</string>
+  <string name="link_account">Połącz swoje konto</string>
   <!--Launch screen-->
   <string name="app_description"><i>libre</i> klient SIP</string>
   <!--Assistant-->
   <string name="welcome">Witam</string>
   <string name="assistant">Asystent</string>
   <string name="assistant_create_account">Stwórz konto</string>
+  <string name="assistant_link_account">Połącz konto</string>
   <string name="assistant_continue">Kontynuuj </string>
+  <string name="assistant_activate">Aktywuj swoje konto</string>
   <string name="assistant_finish">Zakończ konfigurację</string>
+  <string name="assistant_validate_account_1">Twoje konto zostało utworzone. Proszę sprawdzić pocztę, aby zweryfikować konto:</string>
+  <string name="assistant_validate_account_2">Jeden raz to jest wykonywane, wróć tutaj i kliknij na przycisk.</string>
+  <string name="assistant_welcome_desc">Ten asystent pomoże Ci skonfigurować i używać konta SIP.</string>
+  <string name="assistant_linphone_login_desc">Wpisz nazwę użytkownika i hasło konta Linphone</string>
+  <string name="assistant_login_desc">Wpisz nazwę użytkownika i hasło w domenie SIP</string>
   <string name="assistant_remote_provisioning_desc">Proszę podać swoje zastrzeganie URL</string>
   <string name="transport">Transport</string>
+  <string name="assistant_create_account_phone_number_address">Twój adres SIP</string>
   <string name="assistant_login_linphone">Użyj konta Linphone</string>
   <string name="assistant_login_generic">Użyj konta SIP</string>
   <string name="assistant_remote_provisioning">Pobierz zdalną konfigurację</string>
+  <string name="assistant_create_account_part_1">Potwierdź swój kod kraju i podaj swój numer telefonu</string>
+  <string name="assistant_create_account_part_2">Wysłaliśmy Ci SMS z kodem weryfikacji na twój numer telefonu:</string>
+  <string name="assistant_create_account_part_3">Aby zakończyć weryfikację numeru telefonu, wprowadź poniżej 4-cyfrowy kod:\n</string>
+  <string name="assistant_create_account_part_email">Podaj nazwę użytkownika, adres e-mail i hasło do konta Linphone</string>
   <string name="assistant_display_name_optional">Wyświetl nazwę (opcjonalnie)</string>
+  <string name="assistant_linphone_account">Użyj swojego konta Linphone</string>
   <string name="assistant_generic_account">Użyj konta SIP</string>
   <string name="assistant_remote_provisioning_title">Pobierz zdalną konfigurację </string>
   <string name="assistant_fetch_apply">Pobierz i zastosuj</string>
@@ -61,6 +88,7 @@
   <string name="assistant_ec_calibration">Anulacja kalibracji echo w trakcie</string>
   <string name="assistant_remote_provisioning_login">Podaj login</string>
   <string name="assistant_account_not_validated">Twoje konto nie zostało jeszcze zatwierdzone.</string>
+  <string name="assistant_error_confirmation_code">Kod potwierdzenia jest nieprawidłowy.\r\nSpróbuj ponownie.</string>
   <string name="assistant_account_validated">Twoje konto zostało zatwierdzone.</string>
   <string name="assistant_error_bad_credentials">Niepoprawna nazwa użytkownika lub hasło</string>
   <string name="assistant_codec_down_question">Czy zgadzają się Państwo na pobranie OpenH264 Video Codec dostarczonego przez Cisco Systems, Inc.?</string>
@@ -69,15 +97,51 @@
   <string name="wizard_failed">Wystąpił błąd, spróbuj ponownie później.</string>
   <string name="wizard_server_unavailable">Serwer niedostępny, sprawdź swoje połączenie sieciowe.</string>
   <string name="wizard_username_unavailable">Nazwa użytkownika zajęta.</string>
+  <string name="assistant_phone_number_unavailable">Ten numer jest już używany.\r\nProszę wpisać inny numer.\r\nMożasz usunąć istniejące konto, jeśli chcesz ponownie wykorzystać swój numer telefonu.</string>
   <string name="wizard_username_incorrect">Twoja nazwa użytkownika jest nieprawidłowa.</string>
+  <string name="assistant_phone_number_incorrect">Numer telefonu jest nieprawidłowy.</string>
   <string name="wizard_email_incorrect">Twój email jest niepoprawny.</string>
   <string name="wizard_password_incorrect">Twoje hasło jest nieprawidłowe</string>
   <string name="wizard_passwords_unmatched">Hasła nie pasują do siebie.</string>
   <string name="setup_confirm_username">Twoja nazwa użytkownika będzie %s.\r\n\r\nIt  może różnić się od danych wejściowych w celu dopasowania wymagań. \ Czy akceptujesz?</string>
   <string name="first_launch_no_login_password">Podaj swój login i hasło</string>
   <string name="forgot_password">Zapomniałeś hasła ?</string>
+  <string name="assistant_choose_country">Wybierz kraj</string>
+  <string name="select_your_country">Wybierz swój kraj</string>
+  <string name="country_code">(%s)</string>
+  <string name="use_username_instead_or_phone_number">Użyj nazwy użytkownika (opcjonalnie)</string>
+  <string name="use_email_for_validation">Użyj adresu e-mail do weryfikacji konta</string>
+  <string name="login_with_username">Użyj nazwy użytkownika i hasła, zamiast numeru telefonu</string>
+  <string name="phone_number_info_title">Jaki będzie używany mój numer telefonu?</string>
+  <string name="phone_number_info_content">
+\nDzięki twojemu numerowi telefonu twoi znajomi będą mogli znaleźć cię łatwiej.\n\nZobaczysz w książce adresowej, kto używa Linphone i twoi znajomi będą wiedzieli, że mogą dotrzeć do ciebie również na Linphone.\n</string>
+  <string name="phone_number_link_info_content">
+\nTwoi znajomi będą mogli znaleźć cię łatwiej, jeśli połączysz swoje konto do swojego numeru telefonu\n\nZobaczysz w książce adresowej, kto używa Linphone i twoi znajomi będą wiedzieli, że mogą dotrzeć do ciebie również na Linphone.\n</string>
+  <string name="phone_number_link_info_content_already_account">Można używać tylko swój numer telefonu z jednego konta Linphone.\n\nIf Jeśli masz już połączony swój numer do innego konta, ale wolisz używać tego jednego, wystarczy połączyć go teraz i numer zostanie automatycznie przeniesiony do tego konta.</string>
   <!--Status-->
+  <string name="invalid_email">Niepoprawny email</string>
+  <string name="account_already_exist">Konto już istnieje</string>
+  <string name="phone_number_not_exist">To konto nie istnieje</string>
+  <string name="invalid_username">Zła nazwa użytkownika</string>
+  <string name="invalid_domain">Nieprawidłowa domena</string>
+  <string name="invalid_route">Nieprawidłowy route</string>
+  <string name="invalid_display_name">Nieprawidłowo wyświetlana nazwa</string>
+  <string name="username_too_short">Nazwa użytkownika jest za krótka</string>
+  <string name="username_too_long">Nazwa użytkownika jest za długa</string>
+  <string name="username_invalid_size">Długość nazwy użytkownika niepoprawna</string>
+  <string name="phone_number_too_long">Numer telefonu jest za długi</string>
+  <string name="phone_number_too_short">Numer telefonu jest za krótki</string>
+  <string name="phone_number_invalid">Nieprawidłowy numer telefonu</string>
+  <string name="password_too_short">Hasło za krótkie</string>
+  <string name="password_too_long">Hasło za długie</string>
+  <string name="request_failed">Nie udało się uzyskać z serwera. Spróbuj ponownie później</string>
+  <string name="transport_unsupported">Transport nieobsługiwany</string>
+  <string name="country_code_invalid">Kod kraju nieprawidłowy</string>
   <!--In-app-->
+  <string name="inapp">In-app</string>
+  <string name="inapp_notification_title">Zakupy wewnątrz aplikacji</string>
+  <string name="inapp_notification_trial_expire">Okres próbny upływa %s</string>
+  <string name="inapp_notification_account_expire">Okres subskrypcji wygasa %s</string>
   <!--Dailer-->
   <string name="address_bar_hint">Wprowadź numer lub adres</string>
   <!--History-->
@@ -110,7 +174,7 @@
   <string name="image_saved">Obraz zapisany</string>
   <string name="image_not_saved">Błąd, obraz nie został zapisany</string>
   <string name="wait">Proszę czekać...</string>
-  <string name="processing_image">Przetwarzania obrazu, może potrwać nawet do kilku sekund w zależności od rozmiaru pliku</string>
+  <string name="processing_image">Przetwarzanie obrazu, może potrwać nawet do kilku sekund w zależności od rozmiaru pliku</string>
   <!--Status Bar-->
   <string name="status_connected">Zarejestrowany</string>
   <string name="status_not_connected">Nie zarejestrowany</string>
@@ -124,19 +188,25 @@
   <string name="quit">Zamknij</string>
   <!--Call-->
   <string name="incoming_call">Połączenie przychodzące</string>
-  <string name="outgoing_call">Połączenia wychodzące</string>
+  <string name="outgoing_call">Połączenie wychodzące</string>
   <string name="add_video_dialog">Twój rozmówca chciałby włączyć wideo</string>
   <string name="no_current_call">Brak aktywnego połączenia</string>
   <string name="call_paused_by_remote">Twój rozmówca przerwał połączenie</string>
   <string name="couldnt_accept_call">Wystąpił błąd podczas odebrania</string>
-  <string name="zrtp_dialog">Znak ZRTP %s\n należy zaakceptować tylko jeśli mają ten sam znak, jak rozmówcy</string>
   <string name="unknown_incoming_call_name">Nieznany</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Wideo</string>
   <string name="call_stats_codec">Codec:</string>
+  <string name="call_stats_ip">IP Rodzina:</string>
   <string name="call_stats_upload">Prześlij przepustowość:</string>
   <string name="call_stats_download">Pobierz przepustowość:</string>
   <string name="call_stats_ice">Łączność ICE:</string>
+  <string name="call_stats_video_resolution_sent">Wysłana rozdzielczość wideo:</string>
+  <string name="call_stats_video_resolution_received">Odebrana rozdzielczość wideo:</string>
+  <string name="call_stats_sender_loss_rate">Wskaźnik utraty nadawcy</string>
+  <string name="call_stats_receiver_loss_rate">Wskaźnik utraty odbiorcy</string>
+  <string name="call_stats_encoder_name">Encoder:</string>
+  <string name="call_stats_decoder_name">Dekoder:</string>
   <string name="call">Połączenie</string>
   <!--About-->
   <string name="menu_send_log">Wyślij rejestr</string>
@@ -147,12 +217,15 @@
   <string name="incall_notif_video">Przechwytywanie wideo rozmowy w toku</string>
   <string name="notification_started">Rozpoczęty</string>
   <string name="unread_messages">%i nieprzeczytane wiadomości</string>
+  <string name="missed_calls_notif_title">Nieodebrane połączenie</string>
+  <string name="missed_calls_notif_body">%i nieodebranych połączeń</string>
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Ostrzeżenie: usługa nie jest gotowa</string>
   <string name="error">Błąd</string>
   <string name="warning_wrong_destination_address">Nie można zbudować adresu docelowego z %s</string>
   <string name="error_unknown">Nieznany błąd</string>
   <string name="error_call_declined">Spadek połaczeń</string>
+  <string name="error_user_busy">Użytkownik zajęty</string>
   <string name="error_user_not_found">Użytkownik nie znaleziony</string>
   <string name="error_incompatible_media">Parametry nośników niekompatybilne</string>
   <string name="error_low_bandwidth">Twój rozmówca ma niską przepustowość,  nie można uruchomić wideo</string>
@@ -183,6 +256,7 @@
   <string name="pref_avpf_rr_interval">AVPF regularny odstęp RTCP w sekundach (pomiędzy 1 i 5)</string>
   <string name="pref_escape_plus">Wymień + przez 00</string>
   <string name="pref_friendlist_subscribe">Przyjazne subskrybowanie</string>
+  <string name="pref_link_account">Połącz swoje konto</string>
   <string name="pref_auth_userid">Autoryzuj ID użytkownika</string>
   <string name="pref_help_auth_userid">Wprowadź ID użytkownika uwierzytelniania (opcjonalnie)</string>
   <string name="pref_display_name">Nazwa wyświetlana</string>
@@ -194,7 +268,9 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_transport_tcp">TCP</string>
   <string name="pref_transport_tls">TLS</string>
   <string name="pref_delete_account">Usuń to konto</string>
+  <string name="pref_change_password">Zmień hasło</string>
   <string name="pref_default_account">Użyj jako domyślny</string>
+  <string name="pref_password_changed">Hasło zostało zmienione</string>
   <!--Settings-->
   <string name="pref_sipaccounts">Konta SIP</string>
   <string name="default_account_flag">Domyślne konto</string>
@@ -213,6 +289,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_echo_cancellation">Redukcja szumów</string>
   <string name="pref_echo_cancellation_summary">Usuwa usłyszane echo od drugiego końca</string>
   <string name="pref_echo_canceller_calibration">Anulowanie kalibracji echo</string>
+  <string name="pref_echo_tester">Test echo</string>
   <string name="ec_calibrating">Kalibracja ...</string>
   <string name="ec_calibrated">Kalibrowane w %s ms</string>
   <string name="no_echo">Brak echa</string>
@@ -237,7 +314,9 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <!--Call settings-->
   <string name="pref_call_title">Połączenie </string>
   <string name="pref_device_ringtone">Zastosowanie urządzenia dzwonka</string>
-  <string name="pref_auto_answer">Auto odbieranie przychodzących połączeń</string>
+  <string name="pref_auto_answer">Auto odbieranie połączeń przychodzących </string>
+  <string name="pref_rfc2833_dtmf">Send in-band DTMFs(RFC2833)</string>
+  <string name="pref_sipinfo_dtmf">Send out-band DTMFs(SIP INFO)</string>
   <string name="pref_voice_mail">Poczta głosowa URI</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Czat</string>
@@ -250,8 +329,11 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <!--Network settings-->
   <string name="pref_network_title">Sieć</string>
   <string name="pref_wifi_only">Używaj tylko WiFi</string>
+  <string name="pref_stun_server">STUN / TURN serwer</string>
   <string name="pref_ice_enable">Włącz ICE</string>
   <string name="pref_turn_enable">Włącz TURN</string>
+  <string name="pref_turn_username_title">STUN / TURN nazwa użytkownika (opcjonalnie)</string>
+  <string name="pref_turn_passwd_title">STUN / TURN hasło (opcjonalnie)</string>
   <string name="pref_upnp_enable">Włącz UPNP</string>
   <string name="pref_transport_use_random_ports">Użyj losowych portów</string>
   <string name="pref_sip_port_title">Port SIP w użyciu</string>
@@ -263,7 +345,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_push_notification">Włącz powiadomienia push</string>
   <string name="pref_ipv6_title">Zezwól IPv6</string>
   <!--Advanced settings-->
-  <string name="pref_advanced_title">Zaawansowany</string>
+  <string name="pref_advanced_title">Zaawansowane</string>
   <string name="pref_debug">Debug</string>
   <string name="pref_background_mode">Tryb tła</string>
   <string name="pref_animation_enable_title">Włącz animacje</string>
@@ -308,6 +390,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="content_description_new_discussion">Nowa dyskusja</string>
   <string name="content_description_search">Szukaj</string>
   <string name="content_description_search_contact">Wyszukiwanie kontaktu</string>
+  <string name="content_description_search_country">Szukaj Kraju</string>
   <string name="content_description_all_contacts">Wszystkie kontakty</string>
   <string name="content_description_linphone_contacts">Kontakty Linphone</string>
   <string name="content_description_call_direction">Kierunek połączeń</string>
@@ -328,6 +411,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="content_description_conference">Konferencja</string>
   <string name="content_description_username_field">Nazwa pola</string>
   <string name="content_description_activation_code_field">Nazwa pola</string>
+  <string name="content_description_phone_number_field">Pole numeru telefonu</string>
   <string name="content_description_display_field">Wyświetlana nazwa pola</string>
   <string name="content_description_domain_field">Pole domeny</string>
   <string name="content_description_url_field">Pole zdalnego zastrzegania</string>
