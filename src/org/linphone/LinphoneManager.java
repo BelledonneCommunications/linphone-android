@@ -1204,6 +1204,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
+				//It is for incoming calls, because outgoing calls enter MODE_IN_COMMUNICATION immediately when they start.
+				//However, incoming call first use the MODE_RINGING to play the local ring.
+				setAudioManagerInCallMode();
 				mAudioManager.abandonAudioFocus(null);
 				requestAudioFocus(STREAM_VOICE_CALL);
 			}
@@ -1212,10 +1215,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				Log.w("Using soft volume audio hack");
 				adjustVolume(0); // Synchronize
 			}
-		}
-
-		if (state == State.OutgoingEarlyMedia) {
-			setAudioManagerInCallMode();
 		}
 
 		if (state == State.CallEnd || state == State.Error) {
@@ -1257,6 +1256,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 		if (state == State.OutgoingInit) {
+			//Enter the MODE_IN_COMMUNICATION mode as soon as possible, so that ringback
+			//is heard normally in earpiece or bluetooth receiver.
 			setAudioManagerInCallMode();
 			requestAudioFocus(STREAM_VOICE_CALL);
 			startBluetooth();
@@ -1375,8 +1376,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			routeAudioToSpeaker(); // Need to be able to ear the ringtone during the early media
 		}
 
-		if (Hacks.needGalaxySAudioHack())
-			mAudioManager.setMode(MODE_RINGTONE);
+		//if (Hacks.needGalaxySAudioHack())
+		mAudioManager.setMode(MODE_RINGTONE);
 
 		try {
 			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {
