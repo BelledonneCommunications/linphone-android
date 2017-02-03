@@ -892,24 +892,24 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void updateNetworkReachability() {
 		ConnectivityManager cm = (ConnectivityManager) mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo eventInfo = cm.getActiveNetworkInfo();
+		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-		if (eventInfo == null || eventInfo.getState() == NetworkInfo.State.DISCONNECTED || dozeModeEnabled) {
+		if (networkInfo == null || !networkInfo.isConnected() || dozeModeEnabled) {
 			Log.i("No connectivity: setting network unreachable");
 			mLc.setNetworkReachable(false);
-		} else if (eventInfo.getState() == NetworkInfo.State.CONNECTED){
-			manageTunnelServer(eventInfo);
+		} else if (networkInfo.isConnected()){
+			manageTunnelServer(networkInfo);
 
 			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
 			if (wifiOnly){
-				if (eventInfo.getType()==ConnectivityManager.TYPE_WIFI)
+				if (networkInfo.getType()==ConnectivityManager.TYPE_WIFI)
 					mLc.setNetworkReachable(true);
 				else {
 					Log.i("Wifi-only mode, setting network not reachable");
 					mLc.setNetworkReachable(false);
 				}
 			}else{
-				int curtype=eventInfo.getType();
+				int curtype=networkInfo.getType();
 
 				if (curtype!=mLastNetworkType){
 					//if kind of network has changed, we need to notify network_reachable(false) to make sure all current connections are destroyed.
