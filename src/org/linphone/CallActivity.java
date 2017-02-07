@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.HashMap;
 
 import org.linphone.core.CallDirection;
 import org.linphone.core.LinphoneAddress;
@@ -40,6 +41,7 @@ import org.linphone.core.PayloadType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
+import org.linphone.mediastream.Factory;
 
 import android.Manifest;
 import android.app.Activity;
@@ -134,6 +136,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private Handler mHandler = new Handler();
 	private Timer mTimer;
 	private TimerTask mTask;
+	private HashMap<String, String> mEncoderTexts;
+	private HashMap<String, String> mDecoderTexts;
 
 	public static CallActivity instance() {
 		return instance;
@@ -174,6 +178,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
+		mEncoderTexts = new HashMap<String, String>();
+		mDecoderTexts = new HashMap<String, String>();
 
 		mListener = new LinphoneCoreListenerBase() {
 			@Override
@@ -1627,28 +1634,44 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		tv.setText(Html.fromHtml("<b>" + name + " </b>" + value));
 	}
 
+	private String getEncoderText(String mime){
+		String ret = mEncoderTexts.get(mime);
+		if (ret == null){
+			org.linphone.mediastream.Factory msfactory = LinphoneManager.getLc().getMSFactory();
+			ret = msfactory.getEncoderText(mime);
+			mEncoderTexts.put(mime, ret);
+		}
+		return ret;
+	}
+	private String getDecoderText(String mime){
+		String ret = mDecoderTexts.get(mime);
+		if (ret == null){
+			org.linphone.mediastream.Factory msfactory = LinphoneManager.getLc().getMSFactory();
+			ret = msfactory.getDecoderText(mime);
+			mDecoderTexts.put(mime, ret);
+		}
+		return ret;
+	}
+
 	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
 			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
 			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
 			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
 			, TextView videoResolutionReceived, boolean isVideo, TextView jitterBuffer) {
 		if (stats != null) {
+			String mime = null;
+
 			layout.setVisibility(View.VISIBLE);
 			title.setVisibility(TextView.VISIBLE);
 			if (media != null) {
-				String mime = media.getMime();
-				if (LinphoneManager.getLc().downloadOpenH264Enabled() &&
-						media.getMime().equals("H264") &&
-						LinphoneManager.getInstance().getOpenH264DownloadHelper().isCodecFound()) {
-					mime = "OpenH264";
-				}
+				mime = media.getMime();
 				formatText(codec, getString(R.string.call_stats_codec),
 						mime + " / " + (media.getRate() / 1000) + "kHz");
 			}
-			formatText(enc, getString(R.string.call_stats_encoder_name),
-					stats.getEncoderName(media));
-			formatText(dec, getString(R.string.call_stats_decoder_name),
-					stats.getDecoderName(media));
+			if (mime != null ){
+				formatText(enc, getString(R.string.call_stats_encoder_name), getEncoderText(mime));
+				formatText(dec, getString(R.string.call_stats_decoder_name), getDecoderText(mime));
+			}
 			formatText(dl, getString(R.string.call_stats_download),
 					String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
 			formatText(ul, getString(R.string.call_stats_upload),
@@ -1710,6 +1733,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		final TextView jitterBufferAudio = (TextView) view.findViewById(R.id.jitterBufferAudio);
 		final View videoLayout = view.findViewById(R.id.callStatsVideo);
 		final View audioLayout = view.findViewById(R.id.callStatsAudio);
+
 
 	 	mTimer = new Timer();
 		mTask = new TimerTask() {
