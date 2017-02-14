@@ -15,13 +15,6 @@
     <string name="about_text">GNU General Public License V2\n © 2010-2017 Belledonne Communications</string>
     <string name="about_link">www.linphone.org</string>
     <string name="sync_account_name">linphone contacts</string>
-    <string name="history_date_format">EEE, d MMM</string>
-    <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
-    <string name="inapp_popup_date_format">yyyy/MM/dd</string>
-    <string name="inapp_popup_date_day">dd</string>
-    <string name="messages_date_format">dd/MM, HH:mm</string>
-    <string name="messages_list_date_format">dd/MM</string>
-    <string name="today_date_format">HH:mm</string>
 
     <!-- Common -->
     <string name="username">Username</string>

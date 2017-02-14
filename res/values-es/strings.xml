@@ -8,7 +8,6 @@
   <string name="wait_dialog_text">Iniciando</string>
   <string name="tunnel_host"></string>
   <string name="sync_account_name">contactos linphone</string>
-  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Nombre de usuario</string>
   <string name="phone_number">Número de teléfono</string>

@@ -11,15 +11,9 @@
   <string name="tunnel_host"></string>
   <string name="about_version">لِنْفُونْ أندرويد %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_text">رخصة جْنُو العمومية الإصدار \n© 2010-2017 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
-  <string name="sync_account_name">جهات اتصال Linphone</string>
-  <string name="history_date_format">EEE, d MMM</string>
-  <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
-  <string name="inapp_popup_date_format">yyyy/MM/dd</string>
-  <string name="inapp_popup_date_day">dd</string>
-  <string name="messages_date_format">dd/MM, HH:mm</string>
-  <string name="messages_list_date_format">dd/MM</string>
-  <string name="today_date_format">HH:mm</string>
+  <string name="sync_account_name">جهات اتصال لِنْفُونْ</string>
   <!--Common-->
   <string name="username">اسم المستخدم</string>
   <string name="phone_number">رقم الهاتف</string>
@@ -93,6 +87,9 @@
   <string name="assistant_error_bad_credentials">اسم المسخدم أو كلمة السر غير صحيحة</string>
   <string name="assistant_codec_down_question">أأنت موافق على تنزيل مرماز الفيديو OpenH264 المُقدَّم من طرف شركة Cisco Systems, Inc. ؟</string>
   <string name="assistant_codec_downloading">يجري تنزيل مرماز الفيديو OpenH264 المُقدَّم من طرف شركة Cisco Systems, Inc.</string>
+  <string name="assistant_openh264_downloading">يجري تنزيل OpenH264</string>
+  <string name="assistant_openh264_restart">قبل تشغيل مرماز OpenH264 يجب عليك إعادة تشغيل %s.</string>
+  <string name="assistant_openh264_error">عذرا، حدث خطأ ما.</string>
   <string name="assistant_codec_downloaded">انتهى تنزيل مرماز الفيديو OpenH264 المُقدَّم من طرف شركة Cisco Systems, Inc.</string>
   <string name="wizard_failed">حدث خطأ، حاول لاحقا.</string>
   <string name="wizard_server_unavailable">انعدام الوصول للخادم، تأكد من اتصالك بالشبكة.</string>
@@ -138,6 +135,9 @@
   <string name="transport_unsupported">النقل غير مدعوم</string>
   <string name="country_code_invalid">رمز البلد غير صحيح</string>
   <!--In-app-->
+  <string name="inapp">التبضع محمول</string>
+  <string name="inapp_notification_title">شراء بالتبضع محمول</string>
+  <string name="inapp_notification_trial_expire">ستنتهي الفترة التجريبية بتاريخ %s</string>
   <string name="inapp_notification_account_expire">سوف تنتهي صلاحية الاشتراك في %s</string>
   <!--Dailer-->
   <string name="address_bar_hint">أدخل رقما أو عنوانا</string>
@@ -171,6 +171,11 @@
   <string name="image_saved">حُفظَت الصورة</string>
   <string name="image_not_saved">خطأ، لم تُحفَظ الصورة</string>
   <string name="wait">يُرجى الانتظار...</string>
+  <string name="image_transfert_error">حدث خطأ أثناء نقل الملف</string>
+  <string name="message_not_encrypted">إن الرسالة ليست مُعمَّاة</string>
+  <string name="message_cant_be_decrypted">لقد استلمت رسالة مُعمَّاة لم تتمكن من فك تعميتها من  %s\nيجب عليك الاتصال بمخاطبك لتبادل مفاتيح ZRTP إذا أردت فك تعمية الرسائل اللاحقة التي ستستلمها.</string>
+  <string name="message_cant_be_decrypted_notif">تعذر عليك فك تعمية هذه الرسالة.</string>
+  <string name="lime_not_verified">إنك تحاول إرسال رسالة عبر LIME لجهة اتصال لم تتحقق منها بواسطة ZRTP.\nيُرجى الاتصال بجهة الاتصال هذه والتحقق من مفتاحها ZRTP قبل إرسال رسائلك.</string>
   <string name="processing_image">قد تستلزم معالجة الصور بضع ثوان حسب حجم الملف.</string>
   <!--Status Bar-->
   <string name="status_connected">مُسجَّل</string>
@@ -190,6 +195,9 @@
   <string name="no_current_call">لا وجود لأي مكالمة نشيطة</string>
   <string name="call_paused_by_remote">أوقف مخاطبك المكالمة مؤقتا</string>
   <string name="couldnt_accept_call">حدث خطأ خلال قبول المكالمة</string>
+  <string name="zrtp_dialog1">أكد رمز الاستيثاق مع نظيرك :\nقل : %s</string>
+  <string name="zrtp_dialog2">
+\nيجب على مخاطبك أن يقول : %s</string>
   <string name="unknown_incoming_call_name">مجهول</string>
   <string name="call_stats_audio">الصوت</string>
   <string name="call_stats_video">الفيديو</string>
@@ -202,6 +210,7 @@
   <string name="call_stats_video_resolution_received">دقة الفيديو المُستلَم :</string>
   <string name="call_stats_sender_loss_rate">معدل ضياع المُرسِل :</string>
   <string name="call_stats_receiver_loss_rate">معدل ضياع المتلقي :</string>
+  <string name="call_stats_jitter_buffer">صِوان الارتعاش :</string>
   <string name="call_stats_encoder_name">مُرمِّز :</string>
   <string name="call_stats_decoder_name">مفك الترميز :</string>
   <string name="call">المكالمة</string>
@@ -271,6 +280,7 @@
   <string name="pref_sipaccounts">حسابات SIP</string>
   <string name="default_account_flag">الحساب الافتراضي</string>
   <string name="pref_add_account">إضافة حساب</string>
+  <string name="pref_in_app_store">متجر التبضع محمول</string>
   <string name="pref_tunnel">النفق</string>
   <string name="pref_tunnel_host">إسم المضيف</string>
   <string name="pref_tunnel_port">المنفذ</string>
@@ -300,6 +310,8 @@
   <string name="pref_codecs">المراميز</string>
   <!--Video settings-->
   <string name="pref_video_title">الفيديو</string>
+  <string name="pref_overlay">فيديو قابل للانفصال</string>
+  <string name="pref_overlay_summary">اعرض فيديو المكالمة خارج التطبيق</string>
   <string name="pref_video_use_front_camera_title">استخدام الكاميرا الأمامية</string>
   <string name="pref_video_initiate_call_with_video_title">بدء اتصالات بالصورة</string>
   <string name="pref_video_initiate_call_with_video">أرسِل دائما طلبات الفيديو</string>
@@ -314,6 +326,8 @@
   <string name="pref_call_title">المكالمة</string>
   <string name="pref_device_ringtone">استخدم رنة الجهاز</string>
   <string name="pref_auto_answer">رد تلقائيا على المكالمات الواردة</string>
+  <string name="pref_rfc2833_dtmf">أرسل DTMF مع التدفق (RFC2833)</string>
+  <string name="pref_sipinfo_dtmf">أرسل DTMF خارج التدفق (SIP INFO)</string>
   <string name="pref_voice_mail">عنوان العلبة الصوتية</string>
   <!--Chat settings-->
   <string name="pref_chat_title">المحادثة</string>
@@ -323,6 +337,7 @@
   <string name="lime_encryption_entry_disabled">غير مفعلة</string>
   <string name="lime_encryption_entry_mandatory">واجبة</string>
   <string name="lime_encryption_entry_preferred">مفضلة</string>
+  <string name="lime_encryption_enable_zrtp">يتطلب LIME تعمية بواسطة ZRTP.\nبتفعيل LIME سوف تقوم بتفعيل تلقائي لوسيط التعمية ZRTP.</string>
   <!--Network settings-->
   <string name="pref_network_title">الشبكة</string>
   <string name="pref_wifi_only">استخدم WiFi فقط</string>
@@ -411,18 +426,19 @@
   <string name="content_description_phone_number_field">حقل رقم الهاتف</string>
   <string name="content_description_display_field">اعرض حقل الاسم</string>
   <string name="content_description_domain_field">حقل النطاق</string>
-  <string name="content_description_url_field">حقل التهيئة البعيدة</string>
+  <string name="content_description_url_field">حقل التهيئة عن بعد</string>
   <string name="content_description_confirm_password_field">حقل تأكيد كلمة السر</string>
   <string name="content_description_email_field">حقل البريد الإلكتروني</string>
   <string name="content_description_default_account">الحساب الافتراضي</string>
   <string name="content_description_deselect_all">أزل تحديد الكل</string>
   <string name="content_description_select_all">حدد الكل</string>
   <string name="content_description_delete_selection">احذف التحديد</string>
-  <string name="content_description_contact_first_name">اﻹسم</string>
+  <string name="content_description_contact_first_name">الاسم</string>
   <string name="content_description_contact_last_name">اللقب</string>
   <string name="content_description_contact_organization">المنظمة</string>
   <string name="content_description_back_call">ارجع إلى المكالمة</string>
   <string name="content_description_send_file">أرسل ملفا</string>
+  <string name="content_description_incoming_file">الملف الوارد</string>
   <string name="content_description_message">رسالة</string>
   <string name="content_description_unread_chat_message">الرسائل غير المقروءة</string>
   <string name="content_description_transfer">تحويل</string>

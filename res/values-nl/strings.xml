@@ -11,7 +11,6 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
-  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">Gebruikersnaam</string>
   <string name="phone_number">Telefoonnummer</string>

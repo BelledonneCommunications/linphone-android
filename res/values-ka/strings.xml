@@ -11,15 +11,9 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ბირთვი %s</string>
+  <string name="about_text">GNU ზოგადი საჯარო ლიცენზია V2\n © 2010-2017 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">linphone კონტაქტები</string>
-  <string name="history_date_format">EEE წლის d MMM</string>
-  <string name="history_detail_date_format">dd/MM/yyyy - HH:mm -</string>
-  <string name="inapp_popup_date_format">dd/MM/yyyy</string>
-  <string name="inapp_popup_date_day">dd</string>
-  <string name="messages_date_format">dd/MM, HH:mm</string>
-  <string name="messages_list_date_format">dd/MM</string>
-  <string name="today_date_format">HH:mm</string>
   <!--Common-->
   <string name="username">მომხმარებლის სახელი</string>
   <string name="phone_number">ტელეფონის ნომერი</string>
@@ -93,6 +87,9 @@
   <string name="assistant_error_bad_credentials">არასწორი მომხმარებლის სახელი ან პაროლი</string>
   <string name="assistant_codec_down_question">ეთანხმებით Cisco Systems, Inc. მოერ მოწოდებული OpenH264 ვიდეო კოდეკის გადმოწერას?</string>
   <string name="assistant_codec_downloading">მიმდინარეობს Cisco Systems, Inc. მიერ მოწოდებული OpenH264 ვიდეო კოდეკის გადმოწერა</string>
+  <string name="assistant_openh264_downloading">მიმდინარეობს OpenH264-ს გადმოწერა</string>
+  <string name="assistant_openh264_restart">სანამ შეძლებთ OpenH264 კოდეკის გამოყენებას უნდა გადატვირთოთ %s.</string>
+  <string name="assistant_openh264_error">ბოდიში, მოხდა შეცდომა.</string>
   <string name="assistant_codec_downloaded">Cisco Systems, Inc. მიერ მოწოდებული OpenH264 ვიდეო კოდეკის იქნა გადმოწერილი.</string>
   <string name="wizard_failed">მოხდა შეცდომა, გთხოვთ, სცადოთ მოგვიანებით.</string>
   <string name="wizard_server_unavailable">სერვისი მიუეწვდომელია, შეამოწმეთ თქვენი ქსელური კავშირი.</string>
@@ -172,6 +169,11 @@
   <string name="image_saved">სურათი შენახულია</string>
   <string name="image_not_saved">შეცდომა, სურათი ვერ შეინახა</string>
   <string name="wait">გთხოვთ, დაელოდოთ...</string>
+  <string name="image_transfert_error">ფაილისი გზავნის დროს მოხდა შეცდომა</string>
+  <string name="message_not_encrypted">ეს შეტყობინება არ არის დაშიფრული</string>
+  <string name="message_cant_be_decrypted">თქვენ მიიღეთ დაშიფრული შეტყობინება, რომლის განშიფრვაც %s-დან არ შეგიძლიათ\nუნდა დაუკავშერდეთ თქვენს კორესპონდენტს იმისათვის, რომ გაცვალოთ ZRTP გასაღებები, თუ გსურთ მომავალი მიღებული შეტყობინებების განშიფრვა.</string>
+  <string name="message_cant_be_decrypted_notif">თქვენ არ შეგიძლიათ ამ შეტყობინების განშიფრვა.</string>
+  <string name="lime_not_verified">თქვენ სცდილობთ შეტყობინების გაგზავნას LIME-ს გამოყენებით კონტაქტის მიმართულებით, რომელიც არ არის დამოწმებული ZRTP-ით.\nგთხოვთ, დაურეკოთ ამ კონტაქტს და შეამოწმოთ მისი ZRTP გასაღები შეტყობინებების გაგზავნამდე.</string>
   <string name="processing_image">მიმდინარეობს სურათის დამუშავება, შეიძლება დაიკავოს რამოდენიმე წამი, ფაილის ზომის მიხედვით</string>
   <!--Status Bar-->
   <string name="status_connected">რეგისტრირებული</string>
@@ -191,6 +193,9 @@
   <string name="no_current_call">აქტიური ზარი არ არის</string>
   <string name="call_paused_by_remote">თვენმა კონტაქტმა შეაჩერა ზარი</string>
   <string name="couldnt_accept_call">ზარის მიღებისას მოხდა შეცდომა</string>
+  <string name="zrtp_dialog1">დაადასტურეთ შემდეგი SAS მომხმარებელთან:\nთქვით: %s</string>
+  <string name="zrtp_dialog2">
+\nთქვენმა კოლეგამ უნდა თქვას: %s</string>
   <string name="unknown_incoming_call_name">უცნობი</string>
   <string name="call_stats_audio">ხმა</string>
   <string name="call_stats_video">ვიდეო</string>
@@ -203,6 +208,7 @@
   <string name="call_stats_video_resolution_received">მიღებული ვიდეოს გაფართოება:</string>
   <string name="call_stats_sender_loss_rate">გამგზავნის დაკარგვის სიხშირე:</string>
   <string name="call_stats_receiver_loss_rate">მიმღების დაკარგვის სიხშირე:</string>
+  <string name="call_stats_jitter_buffer">ჯიტერის ბუფერი:</string>
   <string name="call_stats_encoder_name">ენკოდერი:</string>
   <string name="call_stats_decoder_name">დეკოდერი:</string>
   <string name="call">ზარი</string>
@@ -329,6 +335,7 @@
   <string name="lime_encryption_entry_disabled">გათიშულია</string>
   <string name="lime_encryption_entry_mandatory">სავალდებულო</string>
   <string name="lime_encryption_entry_preferred">არჩეული</string>
+  <string name="lime_encryption_enable_zrtp">LIME-ს სჭირდება ZRTP დაშიფრვა.\nLIME-ს აქტივაციით, თქვენ ავტომატურად ააქტიურებთ ZRTP მედიის დაშიფრვას.</string>
   <!--Network settings-->
   <string name="pref_network_title">ქსელი</string>
   <string name="pref_wifi_only">მხოლოდ WiFi-ს გამოყენება</string>
@@ -429,6 +436,7 @@
   <string name="content_description_contact_organization">ორგანიზაცია</string>
   <string name="content_description_back_call">დაბრუნება ზარზე</string>
   <string name="content_description_send_file">ფაილის გაგზავნა</string>
+  <string name="content_description_incoming_file">შემომავალი ფაილი</string>
   <string name="content_description_message">შეტყობინება</string>
   <string name="content_description_unread_chat_message">წაუკითხავი ჩატის შეტყობინება</string>
   <string name="content_description_transfer">გზავნილი</string>

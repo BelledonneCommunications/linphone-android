@@ -11,14 +11,9 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Çekirdeği %s</string>
+  <string name="about_text">GNU Genel Kamu Lisansı V2\n © 2010-2017 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone bağlantıları</string>
-  <string name="history_detail_date_format">yyyy/AA/gg - SS:dd -</string>
-  <string name="inapp_popup_date_format">yyyy/AA/gg</string>
-  <string name="inapp_popup_date_day">gg</string>
-  <string name="messages_date_format">gg/AA, SS:dd</string>
-  <string name="messages_list_date_format">gg/AA</string>
-  <string name="today_date_format">SS:dd</string>
   <!--Common-->
   <string name="username">Kullanıcı adı</string>
   <string name="phone_number">Telefon numarası</string>
@@ -92,6 +87,9 @@
   <string name="assistant_error_bad_credentials">Geçersiz kullanıcı adı ve parola</string>
   <string name="assistant_codec_down_question">Cisco Systems, Inc. tarafından sağlanan OpenH264 Video çözücüsünü indirmeyi kabul ediyor musunuz?</string>
   <string name="assistant_codec_downloading">Cisco Systems, Inc. tarafından sağlanan OpenH264 Video çözücüsü indiriliyor.</string>
+  <string name="assistant_openh264_downloading">OpenH264 indiriliyor</string>
+  <string name="assistant_openh264_restart">OpenH264 çözücüsünü kullanmadan önce %s\'u yeniden başlatmalısınız.</string>
+  <string name="assistant_openh264_error">Üzgünüz bir hata oluştu.</string>
   <string name="assistant_codec_downloaded">Cisco Systems, Inc. tarafından sağlanan OpenH264 Video çözücüsü indirildi.</string>
   <string name="wizard_failed">Bir hata oluştu,daha sonra tekrar deneyin.</string>
   <string name="wizard_server_unavailable">Sunucuya ulaşılamıyor,ağ bağlantınızı kontrol edin.</string>
@@ -171,6 +169,11 @@
   <string name="image_saved">Resim kaydedildi</string>
   <string name="image_not_saved">Hata,resim kaydedilmedi</string>
   <string name="wait">Lütfen bekleyin...</string>
+  <string name="image_transfert_error">Dosya aktarımı sırasında bir hata oluştu</string>
+  <string name="message_not_encrypted">Bu ileti şifrelenmemiş</string>
+  <string name="message_cant_be_decrypted">%s\'den şifresi çözülemeyen bir şifrelenmiş ileti aldınız.\nEğer gelecekte alacağınız iletileri çözmek istiyorsanız, ZRTP anahtarlarınızın değiş tokuşu için eşinizi aramanız gerekiyor.</string>
+  <string name="message_cant_be_decrypted_notif">Bu iletinin şifresini çözemezsiniz.</string>
+  <string name="lime_not_verified">ZRTP ile doğrulanmamış bir kişiye LIME kullanarak ileti göndermek istiyorsunuz.\nLütfen bu kişiyi arayın ve iletilerinizi göndermeden önce onun ZRTP anahtarını doğrulayın.</string>
   <string name="processing_image">Görüntü işleniyor, dosyanın boyutuna bağlı olarak bir kaç saniye sürebilir</string>
   <!--Status Bar-->
   <string name="status_connected">Kayıtlı</string>
@@ -190,6 +193,8 @@
   <string name="no_current_call">Etkin arama yok</string>
   <string name="call_paused_by_remote">Görüştüğünüz kişi aramayı duraklattı</string>
   <string name="couldnt_accept_call">Gelen aramanın kabulünde bir hata oluştu</string>
+  <string name="zrtp_dialog1">Eş ile aşağıdaki SAS\'ı doğrulayın:\nSöyleyin: %s</string>
+  <string name="zrtp_dialog2">\nEşiniz şunu söylemeli: %s</string>
   <string name="unknown_incoming_call_name">Bilinmeyen</string>
   <string name="call_stats_audio">Ses</string>
   <string name="call_stats_video">Görüntü</string>
@@ -327,6 +332,7 @@
   <string name="lime_encryption_entry_disabled">Devre dışı</string>
   <string name="lime_encryption_entry_mandatory">Zorunlu</string>
   <string name="lime_encryption_entry_preferred">Yeğlenen</string>
+  <string name="lime_encryption_enable_zrtp">LIME, ZRTP şifreleme gerektiriyor.\nLIME\'ı etkinleştirerek ZRTP ortam şifrelemeyi kendiliğinden etkinleştirmiş olacaksınız.</string>
   <!--Network settings-->
   <string name="pref_network_title">Ağ</string>
   <string name="pref_wifi_only">Yalnızca WiFi kullan</string>
@@ -427,6 +433,7 @@
   <string name="content_description_contact_organization">Kuruluş</string>
   <string name="content_description_back_call">Aramaya dön</string>
   <string name="content_description_send_file">Bir dosya gönder</string>
+  <string name="content_description_incoming_file">Gelen dosya</string>
   <string name="content_description_message">İleti</string>
   <string name="content_description_unread_chat_message">Okunmamış konuşma iletisi</string>
   <string name="content_description_transfer">Aktarma</string>

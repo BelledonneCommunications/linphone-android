@@ -8,7 +8,6 @@
   <string name="wait_dialog_text">Покрећем се</string>
   <string name="tunnel_host"></string>
   <string name="sync_account_name">контакти линфона</string>
-  <string name="today_date_format">ЧЧ:мм</string>
   <!--Common-->
   <string name="username">Корисничко име</string>
   <string name="phone_number">Број телефона</string>

@@ -10,6 +10,15 @@
 	<bool name="force_use_of_linphone_friends">false</bool>
 	<bool name="use_linphone_tag">true</bool>
 
+	<!-- Time -->
+	<string name="history_date_format">EEE, d MMM</string>
+	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
+	<string name="inapp_popup_date_format">yyyy/MM/dd</string>
+	<string name="inapp_popup_date_day">dd</string>
+	<string name="messages_date_format">dd/MM, HH:mm</string>
+	<string name="messages_list_date_format">dd/MM</string>
+	<string name="today_date_format">HH:mm</string>
+
 	<!-- Phone numbers -->
 	<bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->
 	<integer name="popup_time_interval">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
