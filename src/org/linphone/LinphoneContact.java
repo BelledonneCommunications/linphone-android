@@ -66,7 +66,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		changesToCommit2 = new ArrayList<ContentProviderOperation>();
 		hasSipAddress = false;
 	}
-	
+
 	@Override
 	public int compareTo(LinphoneContact contact) {
 		String fullName = getFullName() != null ? getFullName().toUpperCase(Locale.getDefault()) : "";
@@ -400,7 +400,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public String getAndroidId() {
 		return androidId;
 	}
-	
+
 	public LinphoneFriend getLinphoneFriend() {
 		return friend;
 	}
@@ -408,7 +408,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private void createOrUpdateFriend() {
 		boolean created = false;
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		
+
 		if (!isLinphoneFriend()) {
 			friend = LinphoneManager.getLc().createFriend();
 			friend.enableSubscribes(false);
@@ -427,7 +427,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			if (organization != null) {
 				friend.setOrganization(organization);
 			}
-			
+
 			if (!created) {
 				for (LinphoneAddress address : friend.getAddresses()) {
 					friend.removeAddress(address);
@@ -459,7 +459,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				Log.e(e);
 			}
 		}
-		
+
 		if (!ContactsManager.getInstance().hasContactsAccess()) {
 			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends.
 			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
@@ -502,12 +502,12 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	public void refresh() {
+		addresses = new ArrayList<LinphoneNumberOrAddress>();
 		if (isAndroidContact()) {
 			getContactNames();
 			getNativeContactOrganization();
 			getAndroidIds();
 			hasSipAddress = false;
-			addresses = new ArrayList<LinphoneNumberOrAddress>();
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact()) {
 				addNumberOrAddress(noa);
 			}
@@ -575,7 +575,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		friend = f;
 		((LinphoneFriendImpl)friend).setUserData(this);
 	}
-	
+
 	public void getAndroidIds() {
 		androidRawId = findRawContactID();
 		if (LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
@@ -599,7 +599,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(getAndroidId()));
 		return Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);
 	}
-	
+
 	private void getContactNames() {
 		ContentResolver resolver = ContactsManager.getInstance().getContentResolver();
 		String[] proj = new String[]{ ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME };
