@@ -1280,6 +1280,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		enableProximitySensing(false);
 
 		unbindDrawables(findViewById(R.id.topLayout));
+		if (mTimer != null) {
+			mTimer.cancel();
+		}
 		instance = null;
 		super.onDestroy();
 		System.gc();
@@ -1756,6 +1759,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				mHandler.post(new Runnable() {
 					@Override
 					public void run() {
+						if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() == null) return;
 						synchronized(LinphoneManager.getLc()) {
 							if (LinphoneActivity.isInstanciated()) {
 								LinphoneCallParams params = call.getCurrentParamsCopy();
