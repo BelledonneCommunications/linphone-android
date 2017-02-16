@@ -328,8 +328,6 @@ public class ContactsManager extends ContentObserver {
 					boolean found = false;
 					for (LinphoneContact contact : contacts) {
 						if (refkey.equals(contact.getAndroidId())) {
-							// Native matching contact found, link the friend to it
-							contact.setFriend(friend);
 							found = true;
 							break;
 						}
@@ -341,6 +339,7 @@ public class ContactsManager extends ContentObserver {
 						} else {
 							// Refkey not null but no contact access => can't link it to native contact so display it on is own
 							LinphoneContact contact = new LinphoneContact();
+							// Native matching contact found, link the friend to it
 							contact.setFriend(friend);
 							contact.refresh();
 							if (contact.hasAddress()) {
