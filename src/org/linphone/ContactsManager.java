@@ -237,14 +237,9 @@ public class ContactsManager extends ContentObserver {
 			lpc = lc.getDefaultProxyConfig();
 		}
 		String normalized = lpc.normalizePhoneNumber(phoneNumber);
-		LinphoneAddress addr = null;
-		try {
-			addr = LinphoneCoreFactory.instance().createLinphoneAddress(normalized);
-		} catch (LinphoneCoreException e) {
-			return null;
-		}
-		
-		LinphoneFriend lf = lc.findFriendByAddress(addr.asStringUriOnly());
+
+		LinphoneAddress addr = lpc.normalizeSipUri(normalized);
+		LinphoneFriend lf = lc.findFriendByAddress(addr.asStringUriOnly() + ";user=phone"); // Without this, the hashmap inside liblinphone won't find it...
 		if (lf != null) {
 			LinphoneContact contact = (LinphoneContact)((LinphoneFriendImpl)lf).getUserData();
 			return contact;
