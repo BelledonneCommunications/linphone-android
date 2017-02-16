@@ -133,7 +133,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
-	private boolean fetchedContactsOnce = false;
 	private boolean doNotGoToCallActivity = false;
 	private List<String> sideMenuItems;
 	private boolean callTransfer = false;
@@ -1264,10 +1263,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
 			ContactsManager.getInstance().enableContactsAccess();
-			if (!fetchedContactsOnce) {
+			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
-				ContactsManager.getInstance().fetchContactsAsync();
-				fetchedContactsOnce = true;
+				ContactsManager.getInstance().fetchContactsSync();
 			}
 		}
 	}
@@ -1304,10 +1302,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				permissionsList.add(Manifest.permission.READ_CONTACTS);
 			}
 		} else {
-			if (!fetchedContactsOnce) {
+			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
-				ContactsManager.getInstance().fetchContactsAsync();
-				fetchedContactsOnce = true;
+				ContactsManager.getInstance().fetchContactsSync();
 			}
 		}
 
@@ -1321,14 +1318,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable("currentFragment", currentFragment);
-		outState.putBoolean("fetchedContactsOnce", fetchedContactsOnce);
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		fetchedContactsOnce = savedInstanceState.getBoolean("fetchedContactsOnce");
 	}
 
 	@Override
