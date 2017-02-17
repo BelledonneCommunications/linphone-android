@@ -360,7 +360,7 @@ public class ContactsManager extends ContentObserver {
 			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-		Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts executed in " + time);
+		Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 		
 		if (hasContactsAccess()) {
 			Cursor c = getPhonesCursor(contentResolver);
@@ -397,7 +397,7 @@ public class ContactsManager extends ContentObserver {
 			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-		Log.i("[ContactsManager] Step 2 for " + contacts.size() + " contacts executed in " + time);
+		Log.i("[ContactsManager] Step 2 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 		
 		for (LinphoneContact contact : contacts) {
 			// Create the LinphoneFriends matching the native contacts
@@ -408,7 +408,7 @@ public class ContactsManager extends ContentObserver {
 			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-		Log.i("[ContactsManager] Step 3 for " + contacts.size() + " contacts executed in " + time);
+		Log.i("[ContactsManager] Step 3 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 		
 		androidContactsCache.clear();
 		Collections.sort(contacts);
