@@ -695,13 +695,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void restartLinphoneCore() {
 		destroyLinphoneCore();
 		startLibLinphone(mServiceContext);
-		/*
-		 You cannot receive this through components declared in manifests, only
-		 by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only
-		 be sent by the system.
-		*/
-		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
-		mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 		sExited = false;
 	}
 
