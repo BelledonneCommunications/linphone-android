@@ -48,3 +48,4 @@ tests/tests.output
 WORK
 .d
 google-services.json
+gradle.properties
