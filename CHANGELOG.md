@@ -14,11 +14,15 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Lime integration
+
+### Changed
+- Migrate Linphone build from ANT to gradle
 - No pause VOIP Call on incoming GSM call until we off hook this
 
 ### Fixed
 - Rotation after screen locking
 - Contacts background task
+- No more asking phone number for non-linphone domain
 
 ## [Unreleased]
 

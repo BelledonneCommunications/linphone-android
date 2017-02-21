@@ -47,3 +47,4 @@ tests/linphonetester_*
 tests/tests.output
 WORK
 .d
+google-services.json

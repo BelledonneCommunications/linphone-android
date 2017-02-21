@@ -10,11 +10,11 @@
         android:targetSdkVersion="23"/>
 
     <!-- Permissions for Push Notification -->
-    <permission
+    <!--<permission
         android:name="org.linphone.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/> <!-- Change package ! -->
-    <uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> <!-- Change package ! -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+        android:protectionLevel="signature"/> GCM permission--> <!-- Change package ! -->
+    <!--<uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> GCM permission--> <!-- Change package ! -->
+    <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> GCM permission-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -53,7 +53,7 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <!-- Needed for in-app purchase -->
-    <!--<uses-permission android:name="com.android.vending.BILLING"/>-->
+    <!-- <uses-permission android:name="com.android.vending.BILLING"/> -->
     <!-- Needed for overlay widget -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
@@ -242,18 +242,31 @@
         <receiver android:name=".KeepAliveReceiver"/>
 
         <!-- Needed for push notification -->
-        <receiver
+        <!--<receiver
             android:name=".gcm.GCMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
-                <category android:name="org.linphone"/> <!-- Change package ! -->
-            </intent-filter>
+                <category android:name="org.linphone"/>--> <!-- Change package ! -->
+            <!--</intent-filter>
         </receiver>
 
-        <service android:name=".gcm.GCMService"/>
+        <service android:name=".gcm.GCMService"/>-->
+
+        <service android:name=".firebase.FirebaseIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".firebase.FirebaseMessaging">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".tutorials.TutorialLauncherActivity"

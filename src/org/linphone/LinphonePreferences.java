@@ -1100,7 +1100,7 @@ public class LinphonePreferences {
 			 String appId = getString(R.string.push_sender_id);
 			 if (regId != null && lc.getProxyConfigList().length > 0) {
 				 for (LinphoneProxyConfig lpc : lc.getProxyConfigList()) {
-					 String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
+					 String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId;
 					 lpc.edit();
 					 lpc.setContactUriParameters(contactInfos);
 					 lpc.done();

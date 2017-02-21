@@ -4,20 +4,21 @@ ext.linphonePackageName = "org.linphone"
 
 buildscript {
   repositories {
-    mavenCentral()
     jcenter()
+    mavenCentral()
     mavenLocal()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.2.0'
+    classpath 'com.google.gms:google-services:3.0.0'
   }
 }
-
-// Android
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
   compile fileTree(dir: 'libs', include: '*.jar')
+  compile 'com.google.firebase:firebase-messaging:9.0.0'
 }
 
 android {
@@ -25,6 +26,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     applicationId "org.linphone"
+    multiDexEnabled true
   }
 
   lintOptions {

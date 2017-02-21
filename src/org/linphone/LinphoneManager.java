@@ -108,6 +108,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 /**
  *
  * Manager of the low level LibLinphone stuff.<br />
@@ -729,29 +731,31 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	private void initPushNotificationsService() {
-		try {
-            Class<?> GCMRegistrar = Class.forName("com.google.android.gcm.GCMRegistrar");
-            GCMRegistrar.getMethod("checkDevice", Context.class).invoke(null, mServiceContext);
-            try {
-                GCMRegistrar.getMethod("checkManifest", Context.class).invoke(null, mServiceContext);
-            } catch (IllegalStateException e) {
-                Log.e("[Push Notification] No receiver found", e);
-            }
-            final String regId = (String)GCMRegistrar.getMethod("getRegistrationId", Context.class).invoke(null, mServiceContext);
-            String newPushSenderID = mServiceContext.getString(R.string.push_sender_id);
-            String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
-            if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
-                GCMRegistrar.getMethod("register", Context.class, String[].class).invoke(null, mServiceContext, new String[]{newPushSenderID});
-                Log.i("[Push Notification] Storing current sender id = " + newPushSenderID);
-            } else {
-                Log.i("[Push Notification] Already registered with id = " + regId);
-                LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
-            }
-        } catch (java.lang.UnsupportedOperationException e) {
-            Log.i("[Push Notification] Not activated");
-        } catch (Exception e1) {
-            Log.i("[Push Notification] Assuming GCM jar is not provided.");
-        }
+		if (getString(R.string.push_type).equals("google")) {
+			try {
+				Class<?> GCMRegistrar = Class.forName("com.google.android.gcm.GCMRegistrar");
+				GCMRegistrar.getMethod("checkDevice", Context.class).invoke(null, mServiceContext);
+				try {
+					GCMRegistrar.getMethod("checkManifest", Context.class).invoke(null, mServiceContext);
+				} catch (IllegalStateException e) {
+					Log.e("[Push Notification] No receiver found", e);
+				}
+				final String regId = (String) GCMRegistrar.getMethod("getRegistrationId", Context.class).invoke(null, mServiceContext);
+				String newPushSenderID = mServiceContext.getString(R.string.push_sender_id);
+				String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
+				if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
+					GCMRegistrar.getMethod("register", Context.class, String[].class).invoke(null, mServiceContext, new String[]{newPushSenderID});
+					Log.i("[Push Notification] Storing current sender id = " + newPushSenderID);
+				} else {
+					Log.i("[Push Notification] Already registered with id = " + regId);
+					LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
+				}
+			} catch (java.lang.UnsupportedOperationException e) {
+				Log.i("[Push Notification] Not activated");
+			} catch (Exception e1) {
+				Log.i("[Push Notification] Assuming GCM jar is not provided.");
+			}
+		}
 	}
 
 	private synchronized void initLiblinphone(LinphoneCore lc) throws LinphoneCoreException {

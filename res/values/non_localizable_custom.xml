@@ -52,7 +52,8 @@
 
 	<!-- Push notification settings -->
 	<bool name="enable_push_id">true</bool>
-	<string name="push_sender_id">622464153529</string>
+	<string name="push_sender_id">290889430912</string><!--firebase 290889430912 !! gcm 622464153529 -->
+	<string name="push_type">firebase</string>
 
 	<!-- Call -->
 	<bool name="forbid_self_call">false</bool>

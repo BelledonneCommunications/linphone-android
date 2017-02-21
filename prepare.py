@@ -331,7 +331,7 @@ liblinphone-android-sdk: generate-apk
 \tant liblinphone-android-sdk
 
 linphone-android-sdk: generate-apk
-\ant linphone-android-sdk
+\tant linphone-android-sdk
 
 mediastreamer2-sdk: generate-mediastreamer2-apk
 \t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
