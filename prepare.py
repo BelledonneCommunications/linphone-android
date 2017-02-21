@@ -214,7 +214,7 @@ clean: java-clean
 install: install-apk run-linphone
 
 java-clean:
-\tant clean
+\tgradle clean
 
 $(TOPDIR)/res/raw/rootca.pem:
 \tcp liblinphone-sdk/android-{first_arch}/share/linphone/rootca.pem $@
@@ -307,30 +307,23 @@ update-mediastreamer2-project:
 
 generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem update-project
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
-\tant debug
+\tgradle assembleDebug
 
 generate-mediastreamer2-apk: java-clean build copy-libs update-mediastreamer2-project
 \t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
 \tant debug
 
-quick:
-\tant clean
-\tant debug
-\tant installd
-\tant run
+quick: clean install-apk run-linphone
 
 install-apk:
-\tant installd
+\tgradle installDebug
 
 uninstall:
 \tadb uninstall $(PACKAGE_NAME)
 
 release: java-clean build copy-libs update-project
-\tpatch -p1 < release.patch
-\tcat ant.properties | grep version.name > default.properties
-\tant release
-\tpatch -Rp1 < release.patch
+\tgradle assembleRelease
 
 generate-sdk: liblinphone-android-sdk
 
@@ -338,7 +331,7 @@ liblinphone-android-sdk: generate-apk
 \tant liblinphone-android-sdk
 
 linphone-android-sdk: generate-apk
-\tant linphone-android-sdk
+\ant linphone-android-sdk
 
 mediastreamer2-sdk: generate-mediastreamer2-apk
 \t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
@@ -348,18 +341,16 @@ liblinphone_tester:
 \t$(MAKE) -C liblinphone_tester
 
 run-linphone:
-\tant run
+\tadb shell monkey -p $(PACKAGE_NAME) -c android.intent.category.LAUNCHER 1
 
 run-liblinphone-tests:
 \t@cd liblinphone_tester && \\
 \tmake run-all-tests
 
-run-basic-tests: update-project
-\tant partial-clean
+run-basic-tests: clean update-project
 \t$(MAKE) -C tests run-basic-tests ANT_SILENT=$(ANT_SILENT)
 
-run-all-tests: update-project
-\tant partial-clean
+run-all-tests: clean update-project
 \t$(MAKE) -C tests run-all-tests ANT_SILENT=$(ANT_SILENT)
 
 pull-transifex:
