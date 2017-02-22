@@ -205,10 +205,7 @@ PACKAGE_NAME=$(shell sed -nE 's|<property name="linphone.package.name" value="(.
 .PHONY: all
 .NOTPARALLEL: all generate-apk generate-mediastreamer2-apk install release
 
-all: version-name update-project generate-apk
-
-version-name:
-	echo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties
+all: update-project generate-apk
 
 build: $(addsuffix -build, $(archs))
 
