@@ -10,7 +10,6 @@ bin
 build
 certdata.txt
 check_tools.mk
-default.properties
 doc
 gen
 liblinphone-junit-report.xml
