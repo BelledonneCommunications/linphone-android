@@ -1268,7 +1268,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			ContactsManager.getInstance().enableContactsAccess();
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
-				ContactsManager.getInstance().fetchContactsSync();
+				ContactsManager.getInstance().fetchContactsAsync();
 			}
 		}
 	}
@@ -1307,7 +1307,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		} else {
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
-				ContactsManager.getInstance().fetchContactsSync();
+				ContactsManager.getInstance().fetchContactsAsync();
 			}
 		}
 

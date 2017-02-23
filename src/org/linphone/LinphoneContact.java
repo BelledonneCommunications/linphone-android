@@ -463,7 +463,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		if (!ContactsManager.getInstance().hasContactsAccess()) {
 			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends.
 			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
-			ContactsManager.getInstance().fetchContactsSync();
+			ContactsManager.getInstance().fetchContactsAsync();
 		}
 	}
 

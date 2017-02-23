@@ -31,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriendImpl;
 import org.linphone.core.LinphoneProxyConfig;
@@ -51,7 +49,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Data;
@@ -64,11 +61,12 @@ public class ContactsManager extends ContentObserver {
 	private static ContactsManager instance;
 	
 	private List<LinphoneContact> contacts, sipContacts;
-	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true, hasContactAccess = false;
+	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
 	private ContentResolver contentResolver;
 	private Context context;
 	private HashMap<String, LinphoneContact> androidContactsCache;
 	private Bitmap defaultAvatar;
+	private Handler handler;
 
 	private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
 	public static void addContactsListener(ContactsUpdatedListener listener) {
@@ -78,15 +76,9 @@ public class ContactsManager extends ContentObserver {
 		contactsUpdatedListeners.remove(listener);
 	}
 
-	private static Handler handler = new Handler() {
-		@Override
-		public void handleMessage (Message msg) {
-
-		}
-	};
-
 	private ContactsManager(Handler handler) {
 		super(handler);
+		this.handler = handler;
 		defaultAvatar = BitmapFactory.decodeResource(LinphoneService.instance().getResources(), R.drawable.avatar);
 		androidContactsCache = new HashMap<String, LinphoneContact>();
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
@@ -122,7 +114,7 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public static final ContactsManager getInstance() {
-		if (instance == null) instance = new ContactsManager(handler);
+		if (instance == null) instance = new ContactsManager(LinphoneService.instance().mHandler);
 		return instance;
 	}
 
@@ -173,7 +165,6 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public void enableContactsAccess() {
-		hasContactAccess = true;
 		LinphonePreferences.instance().disableFriendsStorage();
 	}
 
@@ -265,12 +256,20 @@ public class ContactsManager extends ContentObserver {
 			}
 		}
 	}
+	
+	public void fetchContactsAsync() {
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				fetchContactsSync();
+			}
+		});
+	}
 
-	public synchronized void fetchContactsSync() {
+	private synchronized void fetchContactsSync() {
 		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		List<LinphoneContact> sipContacts = new ArrayList<LinphoneContact>();
 		Date contactsTime = new Date();
-		androidContactsCache.clear();
 		
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
@@ -298,8 +297,16 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 		}
+		
+		long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+		String time = String.format("%02d:%02d",
+			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
+			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+		Log.i("[ContactsManager] Step 0 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 
 		if (hasContactsAccess()) {
+			androidContactsCache.clear();
 			List<String> nativeIds = new ArrayList<String>();
 			Cursor c = getContactsCursor(contentResolver);
 			if (c != null) {
@@ -351,19 +358,15 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 			nativeIds.clear();
-		} else {
-			Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
-		}
-		
-		long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-		String time = String.format("%02d:%02d",
-			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
-			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
-			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-		Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
-		
-		if (hasContactsAccess()) {
-			Cursor c = getPhonesCursor(contentResolver);
+			
+			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			time = String.format("%02d:%02d",
+				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+			Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
+			
+			c = getPhonesCursor(contentResolver);
 			if (c != null) {
 				while (c.moveToNext()) {
 					String id = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
@@ -390,27 +393,30 @@ public class ContactsManager extends ContentObserver {
 				}
 				c.close();
 			}
-		}
 
-		timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-		time = String.format("%02d:%02d",
-			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
-			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
-			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-		Log.i("[ContactsManager] Step 2 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
-		
-		for (LinphoneContact contact : contacts) {
-			// Create the LinphoneFriends matching the native contacts
-			contact.createOrUpdateLinphoneFriendFromNativeContact();
+			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			time = String.format("%02d:%02d",
+				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+			Log.i("[ContactsManager] Step 2 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
+			
+			for (LinphoneContact contact : contacts) {
+				// Create the LinphoneFriends matching the native contacts
+				contact.createOrUpdateLinphoneFriendFromNativeContact();
+			}
+			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
+			time = String.format("%02d:%02d",
+				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
+				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
+				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+			Log.i("[ContactsManager] Step 3 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
+			
+			androidContactsCache.clear();
+		} else {
+			Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
 		}
-		timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-		time = String.format("%02d:%02d",
-			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
-			    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
-			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
-		Log.i("[ContactsManager] Step 3 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 		
-		androidContactsCache.clear();
 		Collections.sort(contacts);
 		Collections.sort(sipContacts);
 		setContacts(contacts);
