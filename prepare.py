@@ -216,6 +216,9 @@ install: install-apk run-linphone
 java-clean:
 \tgradle clean
 
+ant-clean:
+\tant clean
+
 $(TOPDIR)/res/raw/rootca.pem:
 \tcp liblinphone-sdk/android-{first_arch}/share/linphone/rootca.pem $@
 
@@ -309,7 +312,7 @@ generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem update-pro
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
 \tgradle assembleDebug
 
-generate-mediastreamer2-apk: java-clean build copy-libs update-mediastreamer2-project
+generate-mediastreamer2-apk: ant-clean build copy-libs update-mediastreamer2-project
 \t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
 \tant debug

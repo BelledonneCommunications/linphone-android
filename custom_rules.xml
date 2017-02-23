@@ -73,7 +73,7 @@
 		<echo level="info">Creating library output jar file...</echo>
 		<property name="out.library.jar.file" location="${out.absolute.dir}/liblinphone.jar" />
 		<jar destfile="${out.library.jar.file}">
-			<fileset dir="${out.classes.absolute.dir}"
+			<fileset dir="bin/intermediates/classes/debug"
 				includes="org/linphone/mediastream/**/*.class  org/linphone/core/**/*.class org/linphone/tools/**/*.class"/>
 			<fileset dir="submodules/linphone/java" >
 				<include name="common/org/linphone/core/*.java"/>
