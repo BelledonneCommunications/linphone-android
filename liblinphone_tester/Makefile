@@ -2,10 +2,9 @@ ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 
 all: update-project copy-files
-	ant clean debug
-	$(SDK_PLATFORM_TOOLS_PATH)/adb uninstall org.linphone.tester
-	$(SDK_PLATFORM_TOOLS_PATH)/adb install -g bin/liblinphone_tester-debug.apk
-	#$(SDK_PLATFORM_TOOLS_PATH)/adb install -g ../bin/Linphone-debug.apk
+	gradle clean
+	gradle uninstallDebug
+	gradle installDebug
 
 run-all-tests: all
 	ant test
@@ -64,3 +63,4 @@ copy-files: ../submodules/linphone/tester/tester_hosts ../submodules/linphone/te
 	cp -rf ../submodules/linphone/tester/rcfiles assets/config_files
 	cp -rf ../submodules/linphone/tester/sounds assets/config_files
 	cp -rf ../submodules/linphone/tester/vcards assets/config_files
+	cp ../google-services.json .

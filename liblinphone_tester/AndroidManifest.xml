@@ -5,11 +5,11 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
-    
-    <instrumentation 
-        android:targetPackage="org.linphone.tester" 
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23" />
+
+    <instrumentation
+        android:targetPackage="org.linphone.tester"
         android:name="org.linphone.tester.TestRunner" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -47,8 +47,8 @@
             android:screenOrientation="nosensor"
             android:launchMode="singleTask">
         </activity>
-        
+
         <uses-library android:name="android.test.runner" />
-            
+
     </application>
 </manifest>
