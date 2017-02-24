@@ -2,9 +2,9 @@ ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-
 SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
 
 all: update-project copy-files
-	gradle clean
-	gradle uninstallDebug
-	gradle installDebug
+	../gradlew clean
+	../gradlew uninstallDebug
+	../gradlew installDebug
 
 run-all-tests: all
 	ant test

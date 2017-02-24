@@ -183,6 +183,13 @@ class AndroidPreparator(prepare.Preparator):
         if os.path.isdir('liblinphone-sdk') and not os.listdir('liblinphone-sdk'):
             os.rmdir('liblinphone-sdk')
 
+    def prepare(self):
+        self.download_gradle()
+        prepare.Preparator.prepare(self)
+
+    def download_gradle(self):
+        os.system('./gradlew')
+
     def generate_makefile(self, generator, project_file=''):
         platforms = self.args.target
         arch_targets = ""
@@ -214,7 +221,7 @@ clean: java-clean
 install: install-apk run-linphone
 
 java-clean:
-\tgradle clean
+\t./gradlew clean
 
 ant-clean:
 \tant clean
@@ -310,7 +317,7 @@ update-mediastreamer2-project:
 
 generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem update-project
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
-\tgradle assembleDebug
+\t./gradlew assembleDebug
 
 generate-mediastreamer2-apk: ant-clean build copy-libs update-mediastreamer2-project
 \t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
@@ -320,13 +327,13 @@ generate-mediastreamer2-apk: ant-clean build copy-libs update-mediastreamer2-pro
 quick: clean install-apk run-linphone
 
 install-apk:
-\tgradle installDebug
+\t./gradlew installDebug
 
 uninstall:
 \tadb uninstall $(PACKAGE_NAME)
 
 release: java-clean build copy-libs update-project
-\tgradle assembleRelease
+\t./gradlew assembleRelease
 
 generate-sdk: liblinphone-android-sdk
 
