@@ -112,19 +112,25 @@ android {
 // TODO
 def getSdkDir() {
   Properties local = new Properties()
-  local.load(new FileInputStream("${rootDir}/local.properties"))
+  if (new File("${rootDir}/local.properties").exists()) {
+    local.load(new FileInputStream("${rootDir}/local.properties"))
+  }
   return local.getProperty('sdk.dir')
 }
 
 def getTarget() {
   Properties local = new Properties()
-  local.load(new FileInputStream("${rootDir}/project.properties"))
+  if (new File("${rootDir}/project.properties").exists()) {
+    local.load(new FileInputStream("${rootDir}/project.properties"))
+  }
   return local.getProperty('target')
 }
 
 def getVersionName() {
   Properties local = new Properties()
-  local.load(new FileInputStream("${rootDir}/default.properties"))
+  if (new File("${rootDir}/default.properties").exists()) {
+    local.load(new FileInputStream("${rootDir}/default.properties"))
+  }
   return local.getProperty('version.name')
 }
 
