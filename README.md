@@ -4,7 +4,7 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 ## To build liblinphone for Android, you must:
 
-1. Download the Android sdk (API 23 at least) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path.
+1. Download the Android sdk (API 25 at least) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path.
 
 2. Download the Android ndk (version r11c or 13b) from google and add it to your path (no symlink !!!).
 
@@ -60,7 +60,11 @@ You can speed up the compilation by using ccache (compiler cache, see [ccache.sa
 
 ## Firebase
 
-To enable firebase in Linphone, just add your 'google-service.json' in project root and you key in 'res/values/non_localizable_custom.xml'
+To enable firebase in Linphone, just add your 'google-service.json' in project root, add your key at 'push_sender_id' and add 'firebase' at 'push_type' in 'res/values/non_localizable_custom.xml'
+
+## Google
+
+To enable google push in Linphone, remove 'google-service.json' file if it exist, add your key at 'push_sender_id' and add 'google' at 'push_type' in 'res/values/non_localizable_custom.xml'
 
 # TROUBLESHOOTING
 

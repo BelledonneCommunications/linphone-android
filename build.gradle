@@ -1,7 +1,14 @@
 // Project information
 buildDir = 'bin'
-ext.linphonePackageName = "org.linphone"
-File googleFile2 = new File('google-services.json')
+
+def getPackageName() {
+  return "org.linphone"
+}
+
+def firebaseEnable() {
+  File googleFile = new File('google-services.json')
+  return googleFile.exists()
+}
 
 buildscript {
   File googleFile = new File('google-services.json')
@@ -19,15 +26,14 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-if (googleFile2.exists()) {
+if (firebaseEnable()) {
   apply plugin: 'com.google.gms.google-services'
 }
 
 
 dependencies {
-  File googleFile = new File('google-services.json')
   compile fileTree(dir: 'libs', include: '*.jar')
-  if (googleFile.exists()) {
+  if (firebaseEnable()) {
     compile 'com.google.firebase:firebase-messaging:9.0.0'
   } else {
     compile 'com.android.support:support-v4:+'
@@ -38,7 +44,7 @@ android {
   defaultConfig {
     compileSdkVersion 23
     buildToolsVersion "25.0.2"
-    applicationId "org.linphone"
+    applicationId getPackageName()
     multiDexEnabled true
   }
 
@@ -67,10 +73,13 @@ android {
 
   sourceSets {
     main {
-      File googleFile = new File('google-services.json')
       String firebase = ''
-      if (!googleFile.exists()) {
+      // Exclude firebase file if not enable
+      if (!firebaseEnable()) {
         firebase = '**/Firebase*'
+        println '[Push Notification] Firebase disabled'
+      } else {
+        println '[Push Notification] Firebase enabled'
       }
       manifest.srcFile 'AndroidManifest.xml'
       java.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
@@ -83,7 +92,6 @@ android {
 
       java.exclude '**/mediastream/MediastreamerActivity.java'
       java.exclude firebase
-      println firebase
     }
 
     // Move the tests to tests/java, tests/res, etc...
