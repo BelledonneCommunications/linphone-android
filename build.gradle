@@ -1,8 +1,10 @@
 // Project information
 buildDir = 'bin'
 ext.linphonePackageName = "org.linphone"
+File googleFile2 = new File('google-services.json')
 
 buildscript {
+  File googleFile = new File('google-services.json')
   repositories {
     jcenter()
     mavenCentral()
@@ -10,15 +12,26 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.2.0'
-    classpath 'com.google.gms:google-services:3.0.0'
+    if (googleFile.exists()) {
+      classpath 'com.google.gms:google-services:3.0.0'
+    }
   }
 }
+
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+if (googleFile2.exists()) {
+  apply plugin: 'com.google.gms.google-services'
+}
+
 
 dependencies {
+  File googleFile = new File('google-services.json')
   compile fileTree(dir: 'libs', include: '*.jar')
-  compile 'com.google.firebase:firebase-messaging:9.0.0'
+  if (googleFile.exists()) {
+    compile 'com.google.firebase:firebase-messaging:9.0.0'
+  } else {
+    compile 'com.android.support:support-v4:+'
+  }
 }
 
 android {
@@ -54,6 +67,11 @@ android {
 
   sourceSets {
     main {
+      File googleFile = new File('google-services.json')
+      String firebase = ''
+      if (!googleFile.exists()) {
+        firebase = '**/Firebase*'
+      }
       manifest.srcFile 'AndroidManifest.xml'
       java.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
       resources.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
@@ -64,6 +82,8 @@ android {
       jniLibs.srcDir 'libs'
 
       java.exclude '**/mediastream/MediastreamerActivity.java'
+      java.exclude firebase
+      println firebase
     }
 
     // Move the tests to tests/java, tests/res, etc...

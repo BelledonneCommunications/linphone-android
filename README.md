@@ -6,10 +6,10 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 1. Download the Android sdk (API 23 at least) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path.
 
-2. Download the Android ndk (version r11c or 12b) from google and add it to your path (no symlink !!!).
+2. Download the Android ndk (version r11c or 13b) from google and add it to your path (no symlink !!!).
 
-3. Install _yasm_, _nasm_, _ant_, _python_, _intltoolize_, _cmake_ and _vim-common_. 
-  * On 64 bits linux systems you'll need the _ia32-libs_ package. 
+3. Install _yasm_, _nasm_, _ant_, _python_, _intltoolize_, _cmake_ and _vim-common_.
+  * On 64 bits linux systems you'll need the _ia32-libs_ package.
   * With the latest Debian (multiarch), you need this:
     * `dpkg --add-architecture i386`
     * `aptitude update`
@@ -28,7 +28,7 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 9. _(optional)_ To generate a signed apk to publish on the Google Play, run `make release`. Make sure you filled the ant.properties values for version.name, key.store and key.alias in order to correctly sign the generated apk. You also may want to create a file name ant_password.properties with the following:
   * key.store.password=[your_password]
   * key.alias.password=[your_password]
-  
+
   If you don't, the passwords will be asked at the signing phase.
 
 10. _(optional)_ Once you compiled the libraries succesfully with 'make', you can reduce the compilation time using 'make quick': it will only generate a new APK from java files.
@@ -56,17 +56,23 @@ Simply run `make liblinphone_tester`. This will be build everything, generate an
 
 You can speed up the compilation by using ccache (compiler cache, see [ccache.samba.org](https://ccache.samba.org/)). Give the *"-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"* options to the *prepare.py* script.
 
+# PUSH NOTIFICATION
+
+## Firebase
+
+To enable firebase in Linphone, just add your 'google-service.json' in project root and you key in 'res/values/non_localizable_custom.xml'
+
 # TROUBLESHOOTING
 
 If you encounter the following issue:
 
 ```
-E/dalvikvm( 2465): dlopen("/data/app-lib/org.linphone-1/liblinphone-armeabi-v7a.so") failed: 
-Cannot load library: soinfo_relocate(linker.cpp:975): cannot locate symbol "rand" referenced 
+E/dalvikvm( 2465): dlopen("/data/app-lib/org.linphone-1/liblinphone-armeabi-v7a.so") failed:
+Cannot load library: soinfo_relocate(linker.cpp:975): cannot locate symbol "rand" referenced
 by "liblinphone-armeabi-v7a.so"
 ```
 
-It's because you have installed the android-21 platform (which is chosen automatically because it's the most recent) and you deployed the apk on a android < 5 device. 
+It's because you have installed the android-21 platform (which is chosen automatically because it's the most recent) and you deployed the apk on a android < 5 device.
 
 To fix this, in the Makefile, force *ANDROID_MOST_RECENT_TARGET=android-19*.
 
@@ -78,7 +84,7 @@ If you built the app using eclipse, ensure you ran at least once the make comman
 FATAL EXCEPTION: main
 java.lang.ExceptionInInitializerError
 ...
-Caused by: java.lang.UnsatisfiedLinkError: Couldn't load linphone-armeabi-v7a: findLibrary 
+Caused by: java.lang.UnsatisfiedLinkError: Couldn't load linphone-armeabi-v7a: findLibrary
 returned null
 ```
 

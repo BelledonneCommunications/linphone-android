@@ -108,8 +108,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-
 /**
  *
  * Manager of the low level LibLinphone stuff.<br />
