@@ -1,8 +1,17 @@
 // Project information
 buildDir = 'bin'
-ext.linphonePackageName = "org.linphone.tester"
+
+def getPackageName() {
+  return "org.linphone.tester"
+}
+
+def firebaseEnable() {
+  File googleFile = new File('google-services.json')
+  return googleFile.exists()
+}
 
 buildscript {
+  File googleFile = new File('google-services.json')
   repositories {
     jcenter()
     mavenCentral()
@@ -10,27 +19,46 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.2.0'
-    classpath 'com.google.gms:google-services:3.0.0'
+    if (googleFile.exists()) {
+      classpath 'com.google.gms:google-services:3.0.0'
+    }
   }
 }
+
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+if (firebaseEnable()) {
+  apply plugin: 'com.google.gms.google-services'
+}
+
 
 dependencies {
   compile fileTree(dir: 'libs', include: '*.jar')
-  compile 'com.google.firebase:firebase-messaging:9.0.0'
+  if (firebaseEnable()) {
+    compile 'com.google.firebase:firebase-messaging:9.0.0'
+  } else {
+    compile 'com.android.support:support-v4:+'
+  }
 }
 
 android {
   defaultConfig {
     compileSdkVersion 23
     buildToolsVersion "25.0.2"
-    applicationId "org.linphone.tester"
+    applicationId getPackageName()
     multiDexEnabled true
   }
 
   sourceSets {
     main {
+      String firebase = ''
+      // Exclude firebase file if not enable
+      if (!firebaseEnable()) {
+        firebase = '**/Firebase*'
+        println '[Push Notification] Firebase disabled'
+      } else {
+        println '[Push Notification] Firebase enabled'
+      }
+
       manifest.srcFile 'AndroidManifest.xml'
       java.srcDirs = ['../submodules/linphone/mediastreamer2/java/src','../submodules/linphone/java/j2se','../submodules/linphone/java/common','../submodules/linphone/java/impl','../submodules/externals/axmlrpc/src/main/java','../submodules/linphone/coreapi/help/java','src']
       resources.srcDirs = ['../submodules/linphone/mediastreamer2/java/src','../submodules/linphone/java/j2se','../submodules/linphone/java/common','../submodules/linphone/java/impl','../submodules/externals/axmlrpc/src/main/java','../submodules/linphone/coreapi/help/java','src']
@@ -39,6 +67,8 @@ android {
       res.srcDirs = ['res']
       assets.srcDirs = ['assets']
       jniLibs.srcDir 'libs'
+
+      java.exclude firebase
     }
   }
 

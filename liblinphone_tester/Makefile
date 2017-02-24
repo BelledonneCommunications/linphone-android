@@ -63,4 +63,6 @@ copy-files: ../submodules/linphone/tester/tester_hosts ../submodules/linphone/te
 	cp -rf ../submodules/linphone/tester/rcfiles assets/config_files
 	cp -rf ../submodules/linphone/tester/sounds assets/config_files
 	cp -rf ../submodules/linphone/tester/vcards assets/config_files
-	cp ../google-services.json .
+	if [ -a ../google-services.json ] ; \
+	then cp ../google-services.json . ; \
+	fi;
