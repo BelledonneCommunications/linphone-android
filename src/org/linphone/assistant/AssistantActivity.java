@@ -175,6 +175,7 @@ private static AssistantActivity instance;
 							if (progress != null) progress.dismiss();
 							if (dialog == null || !dialog.isShowing()) {
 								dialog = createErrorDialog(cfg, smessage);
+								dialog.setCancelable(false);
 								dialog.show();
 							}
 						} else if(!(state == RegistrationState.RegistrationProgress)) {
