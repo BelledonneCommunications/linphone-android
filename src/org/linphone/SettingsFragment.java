@@ -1150,6 +1150,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initAdvancedSettings() {
+		((CheckBoxPreference)findPreference(getString(R.string.pref_friendlist_subscribe_key))).setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_debug_key))).setChecked(mPrefs.isDebugEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_background_mode_key))).setChecked(mPrefs.isBackgroundModeEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_service_notification_key))).setChecked(mPrefs.getServiceNotificationVisibility());
@@ -1160,6 +1161,17 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void setAdvancedPreferencesListener() {
+
+		findPreference(getString(R.string.pref_friendlist_subscribe_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean value = (Boolean) newValue;
+				mPrefs.enabledFriendlistSubscription(value);
+				LinphoneManager.getInstance().subscribeFriendList(value);
+				return true;
+			}
+		});
+
 		findPreference(getString(R.string.pref_debug_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {

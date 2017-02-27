@@ -788,7 +788,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
 		mLc.setUserCertificatesPath(mUserCertificatePath);
-		subscribeFriendList(mPrefs.isFriendlistsubscriptionEnabled());
+		subscribeFriendList(false);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 		enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 

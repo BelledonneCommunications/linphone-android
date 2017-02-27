@@ -247,15 +247,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			return true;
 		}
 	};
-	OnPreferenceChangeListener friendlistSubscribeListener = new OnPreferenceChangeListener() {
-		@Override
-		public boolean onPreferenceChange(Preference preference, Object newValue) {
-			boolean value = (Boolean) newValue;
-			mPrefs.enabledFriendlistSubscription(value);
-			LinphoneManager.getInstance().subscribeFriendList(value);
-			return true;
-		}
-	};
 	OnPreferenceClickListener linkAccountListener = new OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
@@ -397,13 +388,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
 		}
 
-		CheckBoxPreference friendlistSubscribe = (CheckBoxPreference) advanced.getPreference(8);
-		friendlistSubscribe.setOnPreferenceChangeListener(friendlistSubscribeListener);
-		if(!isNewAccount){
-			friendlistSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
-		}
-
-		Preference linkAccount = advanced.getPreference(9);
+		Preference linkAccount = advanced.getPreference(8);
 		linkAccount.setOnPreferenceClickListener(linkAccountListener);
 
 		PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
