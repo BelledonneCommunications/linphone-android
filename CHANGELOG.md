@@ -18,6 +18,7 @@ Group changes to describe their impact on the project, as follows:
 ### Changed
 - Migrate Linphone build from ANT to gradle
 - No pause VOIP Call on incoming GSM call until we off hook this
+- Subscription friends list enabled by default only for linphone domain
 
 ### Fixed
 - Rotation after screen locking
