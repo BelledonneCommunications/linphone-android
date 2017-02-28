@@ -59,7 +59,7 @@ interface ContactsUpdatedListener {
 
 public class ContactsManager extends ContentObserver {
 	private static ContactsManager instance;
-	
+
 	private List<LinphoneContact> contacts, sipContacts;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
 	private ContentResolver contentResolver;
@@ -245,7 +245,7 @@ public class ContactsManager extends ContentObserver {
 	public synchronized void setSipContacts(List<LinphoneContact> c) {
 		sipContacts = c;
 	}
-	
+
 	public synchronized void refreshSipContact(LinphoneFriend lf) {
 		LinphoneContact contact = (LinphoneContact)((LinphoneFriendImpl)lf).getUserData();
 		if (contact != null && !sipContacts.contains(contact)) {
@@ -256,7 +256,7 @@ public class ContactsManager extends ContentObserver {
 			}
 		}
 	}
-	
+
 	public void fetchContactsAsync() {
 		handler.post(new Runnable() {
 			@Override
@@ -270,7 +270,8 @@ public class ContactsManager extends ContentObserver {
 		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
 		List<LinphoneContact> sipContacts = new ArrayList<LinphoneContact>();
 		Date contactsTime = new Date();
-		
+		androidContactsCache.clear();
+
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			for (LinphoneFriend friend : lc.getFriendList()) {
@@ -297,7 +298,7 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 		}
-		
+
 		long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
 		String time = String.format("%02d:%02d",
 			    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
@@ -306,14 +307,13 @@ public class ContactsManager extends ContentObserver {
 		Log.i("[ContactsManager] Step 0 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 
 		if (hasContactsAccess()) {
-			androidContactsCache.clear();
 			List<String> nativeIds = new ArrayList<String>();
 			Cursor c = getContactsCursor(contentResolver);
 			if (c != null) {
 				while (c.moveToNext()) {
 					String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
 			    	String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME_PRIMARY));
-			    	
+
 			    	nativeIds.add(id);
 			    	boolean created = false;
 			    	LinphoneContact contact = androidContactsCache.get(id);
@@ -348,7 +348,7 @@ public class ContactsManager extends ContentObserver {
 					c.close();
 				}
 			}
-			
+
 			for (LinphoneContact contact : androidContactsCache.values()) {
 				String id = contact.getAndroidId();
 				if (id != null && !nativeIds.contains(id)) {
@@ -358,14 +358,14 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 			nativeIds.clear();
-			
+
 			timeElapsed = (new Date()).getTime() - contactsTime.getTime();
 			time = String.format("%02d:%02d",
 				    TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
-			
+
 			c = getPhonesCursor(contentResolver);
 			if (c != null) {
 				while (c.moveToNext()) {
@@ -400,7 +400,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] Step 2 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
-			
+
 			for (LinphoneContact contact : contacts) {
 				// Create the LinphoneFriends matching the native contacts
 				contact.createOrUpdateLinphoneFriendFromNativeContact();
@@ -411,17 +411,17 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] Step 3 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
-			
+
 			androidContactsCache.clear();
 		} else {
 			Log.w("[Permission] Read contacts permission wasn't granted, only fetch LinphoneFriends");
 		}
-		
+
 		Collections.sort(contacts);
 		Collections.sort(sipContacts);
 		setContacts(contacts);
 		setSipContacts(sipContacts);
-		
+
 		LinphoneManager.getLc().getFriendLists()[0].updateSubscriptions();
 		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 			listener.onContactsUpdated();
@@ -518,7 +518,7 @@ public class ContactsManager extends ContentObserver {
 
 	private Cursor getPhonesCursor(ContentResolver cr) {
 		Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-			     new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.CONTACT_ID }, 
+			     new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.CONTACT_ID },
 			     null, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " ASC");
 		return cursor;
 	}
