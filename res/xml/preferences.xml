@@ -248,6 +248,11 @@
 				    android:key="@string/pref_wifi_only_key"
 					android:persistent="false"/>
 
+				<CheckBoxPreference
+					android:title="@string/pref_doze_mode"
+					android:key="@string/pref_doze_mode_key"
+					android:persistent="false"/>
+
 				<EditTextPreference
 				    android:title="@string/pref_stun_server"
 					android:key="@string/pref_stun_server_key"
@@ -323,17 +328,22 @@
 		<PreferenceScreen
 		    android:title="@string/pref_advanced_title">
 
+			<PreferenceCategory
+				android:title="@string/pref_debug_title">
+
+				<CheckBoxPreference
+					android:title="@string/pref_debug"
+					android:key="@string/pref_debug_key"
+					android:persistent="false"/>
+
+			</PreferenceCategory>
+
 		    <PreferenceCategory
 				android:title="@string/pref_advanced_title">
 
 				<CheckBoxPreference
 					android:title="@string/pref_friendlist_subscribe"
 					android:key="@string/pref_friendlist_subscribe_key"
-					android:persistent="false"/>
-
-				<CheckBoxPreference
-					android:title="@string/pref_debug"
-				    android:key="@string/pref_debug_key"
 					android:persistent="false"/>
 
 				<CheckBoxPreference

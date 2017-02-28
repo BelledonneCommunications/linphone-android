@@ -275,7 +275,6 @@
     <string name="pref_avpf">AVPF</string>
     <string name="pref_avpf_rr_interval"> AVPF regular RTCP interval in seconds (between 1 and 5)</string>
     <string name="pref_escape_plus">Replace + by 00</string>
-    <string name="pref_friendlist_subscribe">Friendlist subscribe</string>
     <string name="pref_link_account">Link your account</string>
     <string name="pref_auth_userid">Auth userid</string>
     <string name="pref_help_auth_userid">Enter authentication userid (optional)</string>
@@ -362,6 +361,7 @@
     <!-- Network settings -->
     <string name="pref_network_title">Network</string>
     <string name="pref_wifi_only">Use WiFi only</string>
+    <string name="pref_doze_mode">Doze mode</string>
     <string name="pref_stun_server">STUN / TURN server</string>
     <string name="pref_ice_enable">Enable ICE</string>
     <string name="pref_turn_enable">Enable TURN</string>
@@ -380,7 +380,9 @@
 
     <!-- Advanced settings -->
     <string name="pref_advanced_title">Advanced</string>
+    <string name="pref_debug_title">Debug</string>
     <string name="pref_debug">Debug</string>
+    <string name="pref_friendlist_subscribe">Friendlist subscribe</string>
     <string name="pref_background_mode">Background mode</string>
     <string name="pref_animation_enable_title">Enable Animations</string>
     <string name="pref_service_notification">Enable service notification</string>

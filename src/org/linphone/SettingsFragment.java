@@ -1009,6 +1009,8 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initNetworkSettings() {
 		((CheckBoxPreference) findPreference(getString(R.string.pref_wifi_only_key))).setChecked(mPrefs.isWifiOnlyEnabled());
 
+		((CheckBoxPreference) findPreference(getString(R.string.pref_doze_mode_key))).setChecked(mPrefs.isDozeModeEnabled());
+
 		// Disable UPnP if ICE si enabled, or disable ICE if UPnP is enabled
 		CheckBoxPreference ice = (CheckBoxPreference) findPreference(getString(R.string.pref_ice_enable_key));
 		CheckBoxPreference turn = (CheckBoxPreference) findPreference(getString(R.string.pref_turn_enable_key));
@@ -1045,6 +1047,15 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setWifiOnlyEnabled((Boolean) newValue);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_doze_mode_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				mPrefs.enableDozeMode((Boolean) newValue);
+				LinphoneManager.getInstance().dozeManager((Boolean) newValue);
 				return true;
 			}
 		});

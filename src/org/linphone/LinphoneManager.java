@@ -684,7 +684,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		finally {
 			try {
 				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-				mServiceContext.unregisterReceiver(mDozeReceiver);
+				dozeManager(false);
 			} catch (Exception e) {
 				Log.e(e);
 			}
@@ -818,7 +818,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		mDozeReceiver = new DozeReceiver();
 
-		mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
+		if (mPrefs.isDozeModeEnabled()) {
+			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
+		}
 
 		updateNetworkReachability();
 
@@ -889,10 +891,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		ConnectivityManager cm = (ConnectivityManager) mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
 
-		if (networkInfo == null || !networkInfo.isConnected() || dozeModeEnabled) {
+		if (networkInfo == null || !networkInfo.isConnected()) {
 			Log.i("No connectivity: setting network unreachable");
 			mLc.setNetworkReachable(false);
-		} else if (networkInfo.isConnected()){
+		} else if (dozeModeEnabled) {
+			Log.i("Doze Mode enabled: shutting down network");
+			mLc.setNetworkReachable(false);
+		}else if (networkInfo.isConnected()){
 			manageTunnelServer(networkInfo);
 
 			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
@@ -937,9 +942,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		finally {
 			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-			mServiceContext.unregisterReceiver(mDozeReceiver);
+			dozeManager(false);
 			mLc = null;
 			instance = null;
+		}
+	}
+
+	public void dozeManager(boolean enable) {
+		if (enable) {
+			Log.i("[Doze Mode]: register");
+			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
+		} else {
+			Log.i("[Doze Mode]: unregister");
+			dozeModeEnabled = false;
+			mServiceContext.unregisterReceiver(mDozeReceiver);
 		}
 	}
 
