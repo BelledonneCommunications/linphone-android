@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -888,8 +889,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public void updateNetworkReachability() {
-		ConnectivityManager cm = (ConnectivityManager) mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+		if (mConnectivityManager == null) return;
+
+		NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
 
 		if (networkInfo == null || !networkInfo.isConnected()) {
 			Log.i("No connectivity: setting network unreachable");
@@ -1612,6 +1614,26 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		dozeModeEnabled = b;
 	}
 
+	public void setDnsServers() {
+		if (mConnectivityManager == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			return;
+
+		if (mConnectivityManager.getActiveNetwork() == null
+				|| mConnectivityManager.getLinkProperties(mConnectivityManager.getActiveNetwork()) == null)
+			return;
+
+		int i = 0;
+		List<InetAddress> inetServers = null;
+		inetServers = mConnectivityManager.getLinkProperties(mConnectivityManager.getActiveNetwork()).getDnsServers();
+
+		String[] servers = new String[inetServers.size()];
+
+		for (InetAddress address : inetServers) {
+			servers[i++] = address.getHostAddress();
+		}
+		mLc.setDnsServers(servers);
+	}
+
 	@SuppressWarnings("serial")
 	public static class LinphoneConfigException extends LinphoneException {
 
@@ -1733,6 +1755,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void friendListRemoved(LinphoneCore lc, LinphoneFriendList list) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void networkReachableChanged(LinphoneCore lc, boolean enable) {
+		Log.d("Set Dns servers");
+		setDnsServers();
+	}
+
 	@Override
 	public void authInfoRequested(LinphoneCore lc, String realm,
 			String username, String domain) {

@@ -195,6 +195,11 @@ public class TutorialCardDavSync extends Activity implements OnClickListener, Li
 	}
 
 	@Override
+	public void networkReachableChanged(LinphoneCore lc, boolean enable) {
+
+	}
+
+	@Override
 	public void callStatsUpdated(LinphoneCore lc, LinphoneCall call,
 			LinphoneCallStats stats) {
 		// TODO Auto-generated method stub
