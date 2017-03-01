@@ -1126,7 +1126,7 @@ public class LinphonePreferences {
 	}
 
 	public void setPushNotificationRegistrationID(String regId) {
-		 getConfig().setString("app", "push_notification_regid", regId);
+		 getConfig().setString("app", "push_notification_regid", (regId != null) ? regId: "");
 		 setPushNotificationEnabled(isPushNotificationEnabled());
 	}
 
