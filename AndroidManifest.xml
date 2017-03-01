@@ -88,7 +88,6 @@
 
                 <data android:scheme="tel"/>
                 <data android:scheme="sip"/>
-                />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO"/>
@@ -254,6 +253,14 @@
         </receiver>
 
         <service android:name=".gcm.GCMService"/>-->
+
+        <receiver
+            android:name=".AccountEnableReceiver"
+            android:permission="android.permission.CONFIGURE_SIP">
+            <intent-filter>
+                <action android:name="org.linphone.intent.ACCOUNTACTIVATE"/>
+            </intent-filter>
+        </receiver>
 
         <service android:name=".firebase.FirebaseIdService">
             <intent-filter>
