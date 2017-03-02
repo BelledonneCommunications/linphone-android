@@ -47,6 +47,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -212,7 +213,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			historyList.setAdapter(new CallHistoryAdapter(getActivity().getApplicationContext()));
 		}
 	}
-	
+
 	@Override
 	public void onPause() {
 		ContactsManager.removeContactsListener(this);
@@ -322,17 +323,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			LinphoneCallLog log = mLogs.get(position);
 			LinphoneManager.getLc().removeCallLog(log);
 			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-		} else {
-			if (LinphoneActivity.isInstanciated()) {
-				LinphoneCallLog log = mLogs.get(position);
-				LinphoneAddress address;
-				if (log.getDirection() == CallDirection.Incoming) {
-					address = log.getFrom();
-				} else {
-					address = log.getTo();
-				}
-				LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
-			}
 		}
 	}
 
@@ -358,20 +348,22 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			public CheckBox select;
 			public ImageView callDirection;
 			public ImageView contactPicture;
-			
+			public RelativeLayout CallContact;
+
 			public ViewHolder(View view) {
 				contact = (TextView) view.findViewById(R.id.sip_uri);
 				detail = (ImageView) view.findViewById(R.id.detail);
 				select = (CheckBox) view.findViewById(R.id.delete);
 				callDirection = (ImageView) view.findViewById(R.id.icon);
 				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+				CallContact = (RelativeLayout) view.findViewById(R.id.history_click);
 			}
 		}
-		
+
 		CallHistoryAdapter(Context aContext) {
-		
+
 		}
-		
+
 		public int getCount() {
 			return mLogs.size();
 		}
@@ -421,7 +413,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
 			ViewHolder holder = null;
-			
+
 			if (convertView != null) {
 				view = convertView;
 				holder = (ViewHolder) view.getTag();
@@ -487,6 +479,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			}
 
 			if (isEditMode) {
+				holder.CallContact.setOnClickListener(null);
 				holder.select.setVisibility(View.VISIBLE);
 				holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
@@ -523,6 +516,21 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 					public void onClick(View v) {
 						if (LinphoneActivity.isInstanciated()) {
 							LinphoneActivity.instance().displayHistoryDetail(sipUri, log);
+						}
+					}
+				});
+				holder.CallContact.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (LinphoneActivity.isInstanciated()) {
+							LinphoneCallLog log = mLogs.get(position);
+							LinphoneAddress address;
+							if (log.getDirection() == CallDirection.Incoming) {
+								address = log.getFrom();
+							} else {
+								address = log.getTo();
+							}
+							LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
 						}
 					}
 				});
