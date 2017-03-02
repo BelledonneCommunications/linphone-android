@@ -26,10 +26,6 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-if (firebaseEnable()) {
-  apply plugin: 'com.google.gms.google-services'
-}
-
 
 dependencies {
   compile fileTree(dir: 'libs', include: '*.jar')
@@ -38,6 +34,10 @@ dependencies {
   } else {
     compile 'com.android.support:support-v4:+'
   }
+}
+
+if (firebaseEnable()) {
+  apply plugin: 'com.google.gms.google-services'
 }
 
 android {
