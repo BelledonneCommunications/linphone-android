@@ -227,6 +227,7 @@ public class ContactsManager extends ContentObserver {
 		if (lc != null) {
 			lpc = lc.getDefaultProxyConfig();
 		}
+		if (lpc == null) return null;
 		String normalized = lpc.normalizePhoneNumber(phoneNumber);
 
 		LinphoneAddress addr = lpc.normalizeSipUri(normalized);
