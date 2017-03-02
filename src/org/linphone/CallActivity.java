@@ -1262,9 +1262,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			mControlsHandler.removeCallbacks(mControls);
 		}
 		mControls = null;
-		// Workaround for proximity sensor bug on Samsung devices
-		if (lc.getCurrentCall() != null && lc.getCurrentCall().getState() != State.StreamsRunning)
-			enableProximitySensing(false);
 	}
 
 	@Override
