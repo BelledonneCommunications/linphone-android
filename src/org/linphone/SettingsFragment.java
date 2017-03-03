@@ -861,11 +861,10 @@ public class SettingsFragment extends PreferencesListFragment {
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
 
+		rfc2833.setChecked(mPrefs.useRfc2833Dtmfs());
+		sipInfo.setChecked(mPrefs.useSipInfoDtmfs());
 		deviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
 		autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
-
-		rfc2833.setChecked(false);
-		sipInfo.setChecked(false);
 
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 	}
