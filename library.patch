@@ -1,11 +1,12 @@
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index 950aa71e..cc615068 100755
+index d127def4..b00d68a0 100755
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -9,309 +9,4 @@
+@@ -8,317 +8,4 @@
+     <uses-sdk
          android:minSdkVersion="14"
          android:targetSdkVersion="23"/>
- 
+-
 -    <!-- Permissions for Push Notification -->
 -    <!--<permission
 -        android:name="org.linphone.permission.C2D_MESSAGE"
@@ -85,7 +86,6 @@ index 950aa71e..cc615068 100755
 -
 -                <data android:scheme="tel"/>
 -                <data android:scheme="sip"/>
--                />
 -            </intent-filter>
 -            <intent-filter>
 -                <action android:name="android.intent.action.SENDTO"/>
@@ -252,6 +252,14 @@ index 950aa71e..cc615068 100755
 -
 -        <service android:name=".gcm.GCMService"/>-->
 -
+-        <receiver
+-            android:name=".AccountEnableReceiver"
+-            android:permission="android.permission.CONFIGURE_SIP">
+-            <intent-filter>
+-                <action android:name="org.linphone.intent.ACCOUNTACTIVATE"/>
+-            </intent-filter>
+-        </receiver>
+-
 -        <service android:name=".firebase.FirebaseIdService">
 -            <intent-filter>
 -                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
@@ -358,4 +366,4 @@ index 402368a6..d7835538 100644
 +      signingConfig null//signingConfigs.release
      }
    }
- 
+
