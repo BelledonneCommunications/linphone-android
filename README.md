@@ -61,10 +61,12 @@ You can speed up the compilation by using ccache (compiler cache, see [ccache.sa
 ## Firebase
 
 To enable firebase in Linphone, just add your 'google-service.json' in project root, add your key at 'push_sender_id' and add 'firebase' at 'push_type' in 'res/values/non_localizable_custom.xml'
+Be sure to have all services for Firebase in your 'AndroidManifest.xml'
 
 ## Google
 
 To enable google push in Linphone, remove 'google-service.json' file if it exist, add your key at 'push_sender_id' and add 'google' at 'push_type' in 'res/values/non_localizable_custom.xml'
+Be sure to have every permissions and services for GCM in your 'AndroidManifest.xml'
 
 # TROUBLESHOOTING
 
