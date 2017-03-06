@@ -12,8 +12,9 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+## [3.2.5] - 2017-03-06
+
 ### Added
-- Lime integration
 - Doze mode(energy saving) button in Network settings
 
 ### Changed
@@ -28,6 +29,9 @@ Group changes to describe their impact on the project, as follows:
 - Bug with Linphone credential login
 
 ## [Unreleased]
+
+### Added
+- Lime integration
 
 ## [3.2.4] - 2017-01-19
 
