@@ -353,6 +353,7 @@
   <string name="pref_ipv6_title">IPv6\'ya izin ver</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Gelişmiş</string>
+  <string name="pref_debug_title">Hata ayıklama</string>
   <string name="pref_debug">Hata ayıklama</string>
   <string name="pref_background_mode">Artalan kipi</string>
   <string name="pref_animation_enable_title">Animasyonlar etkin</string>

@@ -11,6 +11,7 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_text">GNU General Public License V2\n © 2010-2017 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">contacts linphone</string>
   <!--Common-->
@@ -86,6 +87,7 @@
   <string name="assistant_error_bad_credentials">Nom d\'utilisateur ou mot de passe invalide</string>
   <string name="assistant_codec_down_question">Voulez-vous télécharger le codec vidéo OpenH264 fourni par Cisco Systems, Inc. ? </string>
   <string name="assistant_codec_downloading">Téléchargement du codec vidéo OpenH264 fourni par Cisco Systems, Inc.</string>
+  <string name="assistant_openh264_downloading">Téléchargement de OpenH264</string>
   <string name="assistant_codec_downloaded">Téléchargement du codec vidéo OpenH264 fourni par Cisco Systems, Inc effectué.</string>
   <string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
   <string name="wizard_server_unavailable">Serveur indisponible, veuillez vérifier votre connexion réseau.</string>
@@ -167,6 +169,10 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="image_saved">Image sauvegardée</string>
   <string name="image_not_saved">Erreur, image non sauvegardée</string>
   <string name="wait">Merci de patienter...</string>
+  <string name="message_not_encrypted">Ce message n\\'est pas chiffré</string>
+  <string name="message_cant_be_decrypted">Vous avez reçu un message chiffré que vous ne pouvez pas déchiffré de la part de %s\nVous devez appeler votre correspondant pour pouvoir echanger votre clef ZRTP avec lui si vous voulez pouvoir déchiffrer les futurs messages qu\\'il vous enverra.</string>
+  <string name="message_cant_be_decrypted_notif">Vous ne pouvez pas déchiffrer ce message.</string>
+  <string name="lime_not_verified">Vous essayez d\\'envoyer un message à un contact non vérifié par ZRTP tout en utilisant LIME.\nAppelez ce contact et vérifié sa clef ZRTP avant de lui envoyer des messages.</string>
   <string name="processing_image">Traitement de l\'image, cela peut prendre quelques secondes selon sa taille</string>
   <!--Status Bar-->
   <string name="status_connected">Enregistré</string>
@@ -186,6 +192,8 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="no_current_call">Aucun appel en cours</string>
   <string name="call_paused_by_remote">Votre correspondant a pausé l\'appel</string>
   <string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation de l\'appel</string>
+  <string name="zrtp_dialog1">Indiquez le code SAS suivant à votre interlocuteur:\nDites: %s</string>
+  <string name="zrtp_dialog2">\nVotre correspondant doit dire: %s</string>
   <string name="unknown_incoming_call_name">Inconnu</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Vidéo</string>
@@ -246,7 +254,6 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_avpf">AVPF</string>
   <string name="pref_avpf_rr_interval">Intervalle AVPF RTCP régulier en secondes (entre 1 et 5) </string>
   <string name="pref_escape_plus">Remplacer + par 00</string>
-  <string name="pref_friendlist_subscribe">Souscrire à la liste d\'amis</string>
   <string name="pref_link_account">Associer votre compte</string>
   <string name="pref_auth_userid">Identifiant d\'authentification</string>
   <string name="pref_help_auth_userid">Entrez l\'userid d\'authentification (optionnel)</string>
@@ -342,7 +349,9 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_ipv6_title">Autoriser l\'IPv6</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Avancé</string>
+  <string name="pref_debug_title">Activer les traces de débogage</string>
   <string name="pref_debug">Activer les traces de débogage</string>
+  <string name="pref_friendlist_subscribe">Souscrire à la liste d\'amis</string>
   <string name="pref_background_mode">Actif en arrière plan</string>
   <string name="pref_animation_enable_title">Activer les animations</string>
   <string name="pref_service_notification">Notification de service</string>
@@ -422,6 +431,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="content_description_contact_organization">Société</string>
   <string name="content_description_back_call">Retour à l\'appel</string>
   <string name="content_description_send_file">Envoi d\'un fichier</string>
+  <string name="content_description_incoming_file">Fichier entrant</string>
   <string name="content_description_message">Message</string>
   <string name="content_description_unread_chat_message">Message non lu</string>
   <string name="content_description_transfer">Transfert</string>

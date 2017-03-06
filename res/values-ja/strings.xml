@@ -248,7 +248,6 @@
   <string name="pref_avpf">AVPF</string>
   <string name="pref_avpf_rr_interval">AVPFによる正規のRTCP間隔 (1秒 から 5秒)</string>
   <string name="pref_escape_plus">00 で置き換える</string>
-  <string name="pref_friendlist_subscribe">フレンドの購読</string>
   <string name="pref_link_account">アカウントをリンクする</string>
   <string name="pref_auth_userid">ユーザーIDを認証</string>
   <string name="pref_help_auth_userid">認証用のID(任意)</string>
@@ -344,7 +343,9 @@
   <string name="pref_ipv6_title">IPv6を使用する</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">拡張設定</string>
+  <string name="pref_debug_title">デバッグ</string>
   <string name="pref_debug">デバッグ</string>
+  <string name="pref_friendlist_subscribe">フレンドの購読</string>
   <string name="pref_background_mode">バックグラウンド動作</string>
   <string name="pref_animation_enable_title">アニメーションを有効にする</string>
   <string name="pref_service_notification">サービス通知を有効にする</string>

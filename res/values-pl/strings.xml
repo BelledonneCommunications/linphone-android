@@ -248,7 +248,6 @@
   <string name="pref_avpf">AVPF</string>
   <string name="pref_avpf_rr_interval">AVPF regularny odstęp RTCP w sekundach (pomiędzy 1 i 5)</string>
   <string name="pref_escape_plus">Wymień + przez 00</string>
-  <string name="pref_friendlist_subscribe">Przyjazne subskrybowanie</string>
   <string name="pref_link_account">Połącz swoje konto</string>
   <string name="pref_auth_userid">Autoryzuj ID użytkownika</string>
   <string name="pref_help_auth_userid">Wprowadź ID użytkownika uwierzytelniania (opcjonalnie)</string>
@@ -339,7 +338,9 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="pref_ipv6_title">Zezwól IPv6</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Zaawansowane</string>
+  <string name="pref_debug_title">Debug</string>
   <string name="pref_debug">Debug</string>
+  <string name="pref_friendlist_subscribe">Przyjazne subskrybowanie</string>
   <string name="pref_background_mode">Tryb tła</string>
   <string name="pref_animation_enable_title">Włącz animacje</string>
   <string name="pref_service_notification">Włącz powiadomienie usług</string>

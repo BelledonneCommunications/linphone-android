@@ -252,7 +252,6 @@
   <string name="pref_avpf">AVPF</string>
   <string name="pref_avpf_rr_interval"> AVPF Standard RTCP Interval in Sekunden (zwischen 1 und 5)</string>
   <string name="pref_escape_plus">Ersetzen + durch 00</string>
-  <string name="pref_friendlist_subscribe">Freundesliste abonnieren</string>
   <string name="pref_link_account">Verknüpfen Sie Ihr Konto</string>
   <string name="pref_auth_userid">Authentifizierungs-Benutzerkennung</string>
   <string name="pref_help_auth_userid">Authentifizierungs-Benutzerkennung eingeben (optional)</string>
@@ -347,7 +346,9 @@
   <string name="pref_ipv6_title">IPv6 erlauben</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Erweitert</string>
+  <string name="pref_debug_title">Debug</string>
   <string name="pref_debug">Debug</string>
+  <string name="pref_friendlist_subscribe">Freundesliste abonnieren</string>
   <string name="pref_background_mode">Hintergrundmodus</string>
   <string name="pref_animation_enable_title">Animationen aktivieren</string>
   <string name="pref_service_notification">Dienstbenachrichtigung aktivieren</string>

@@ -261,7 +261,6 @@
   <string name="pref_avpf">AVPF</string>
   <string name="pref_avpf_rr_interval">نطاق RTCP الاعتيادي لـ AVPF بالثواني (ما بين 1 و 5)</string>
   <string name="pref_escape_plus">استبدال + بـ 00</string>
-  <string name="pref_friendlist_subscribe">الاشتراك في قائمة الأصدقاء</string>
   <string name="pref_link_account">اربط حسابك</string>
   <string name="pref_auth_userid">مُعرِّف استيثاق المستخدم</string>
   <string name="pref_help_auth_userid">ادخل مُعرِّف استيثاق المستخدم (اختياري)</string>
@@ -358,7 +357,9 @@
   <string name="pref_ipv6_title">رخِّصْ IPv6</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">متقدم</string>
+  <string name="pref_debug_title">التنقيح</string>
   <string name="pref_debug">التنقيح</string>
+  <string name="pref_friendlist_subscribe">الاشتراك في قائمة الأصدقاء</string>
   <string name="pref_background_mode">وضع الخلفية</string>
   <string name="pref_animation_enable_title">تشغيل التحريكات</string>
   <string name="pref_service_notification">فعِّل إشعارات الخدمة</string>

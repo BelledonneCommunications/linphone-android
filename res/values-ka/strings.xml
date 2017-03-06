@@ -259,7 +259,6 @@
   <string name="pref_avpf">AVPF</string>
   <string name="pref_avpf_rr_interval"> AVPF რეგულარული RTCP ინტერვალი წამებში (1 და 5 შორის)</string>
   <string name="pref_escape_plus">შეცვალეთ + 00-ით</string>
-  <string name="pref_friendlist_subscribe">მეგობრების სიის გამოწერა</string>
   <string name="pref_link_account">ანგარიშის მიბმა</string>
   <string name="pref_auth_userid">აუთენტიფიკაციის მომხმარებლის იდენტიფიკატორი</string>
   <string name="pref_help_auth_userid">შეიყვანეტ აუთენტიფიკაციის მომხმარებლის იდენტიფიკატორი (არა სავალდებულო)</string>
@@ -356,7 +355,9 @@
   <string name="pref_ipv6_title">IPv6-ის ნებართვა</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">გაფართოებული</string>
+  <string name="pref_debug_title">დებაგი</string>
   <string name="pref_debug">დებაგი</string>
+  <string name="pref_friendlist_subscribe">მეგობრების სიის გამოწერა</string>
   <string name="pref_background_mode">ფონის რეჟიმი</string>
   <string name="pref_animation_enable_title">ანიმაციების ჩართვა</string>
   <string name="pref_service_notification">სერვისის შეტყობინების ჩართვა</string>

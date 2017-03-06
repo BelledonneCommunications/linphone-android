@@ -160,6 +160,7 @@
   <string name="pref_push_notification">Activar notificaciones push</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Avanzado</string>
+  <string name="pref_debug_title">Desarrollo</string>
   <string name="pref_debug">Desarrollo</string>
   <string name="pref_animation_enable_title">Habilitar animaciones</string>
   <string name="pref_autostart">Arrancar al inicio</string>

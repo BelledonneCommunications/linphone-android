@@ -187,6 +187,7 @@
   <string name="pref_push_notification">Укључи обавештења гурања</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Напредно</string>
+  <string name="pref_debug_title">Прочисти</string>
   <string name="pref_debug">Прочисти</string>
   <string name="pref_background_mode">Режим позадине</string>
   <string name="pref_animation_enable_title">Укључи анимације</string>
