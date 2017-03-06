@@ -14,6 +14,7 @@ Group changes to describe their impact on the project, as follows:
 
 ### Added
 - Lime integration
+- Doze mode(energy saving) button in Network settings
 
 ### Changed
 - Migrate Linphone build from ANT to gradle
@@ -24,6 +25,7 @@ Group changes to describe their impact on the project, as follows:
 - Rotation after screen locking
 - Contacts background task
 - No more asking phone number for non-linphone domain
+- Bug with Linphone credential login
 
 ## [Unreleased]
 
