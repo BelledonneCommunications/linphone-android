@@ -1358,11 +1358,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 
 		updateMissedChatCount();
-		if(LinphonePreferences.instance().isFriendlistsubscriptionEnabled() && LinphoneManager.getLc().getDefaultProxyConfig() != null){
-			LinphoneManager.getInstance().subscribeFriendList(true);
-		} else {
-			LinphoneManager.getInstance().subscribeFriendList(false);
-		}
 
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 

@@ -467,6 +467,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			LinphoneFriendList mFriendList = (lc.getFriendLists())[0];
 			Log.i("Presence list subscription is " + (enabled ? "enabled" : "disabled"));
 			mFriendList.enableSubscriptions(enabled);
+			if (ContactsManager.getInstance() != null)
+				ContactsManager.getInstance().fetchContactsAsync();
 		}
 	}
 
@@ -789,7 +791,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
 		mLc.setUserCertificatesPath(mUserCertificatePath);
-		subscribeFriendList(false);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 		enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 

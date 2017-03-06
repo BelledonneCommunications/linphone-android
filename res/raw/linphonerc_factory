@@ -12,8 +12,7 @@ register_only_when_network_is_up=1
 auto_net_state_mon=0
 auto_answer_replacing_calls=1
 ping_with_options=0
-rls_uri=sip:rls@sip.linphone.org
-use_rls_presence=1
+rls_uri=
 
 [rtp]
 audio_rtp_port=7076

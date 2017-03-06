@@ -423,7 +423,10 @@ public class ContactsManager extends ContentObserver {
 		setContacts(contacts);
 		setSipContacts(sipContacts);
 
-		LinphoneManager.getLc().getFriendLists()[0].updateSubscriptions();
+		if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
+			LinphoneManager.getLc().getFriendLists()[0].setRLSUri(getString(R.string.rls_uri));
+			LinphoneManager.getLc().getFriendLists()[0].updateSubscriptions();
+		}
 		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 			listener.onContactsUpdated();
 		}
