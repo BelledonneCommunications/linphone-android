@@ -245,6 +245,10 @@ public final class LinphoneService extends Service {
 
 	protected void onForegroundMode() {
 		Log.i("App has left background mode");
+		if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
+			if (LinphoneManager.isInstanciated())
+				LinphoneManager.getInstance().subscribeFriendList(true);
+		}
 	}
 
 	private void setupActivityMonitor(){
