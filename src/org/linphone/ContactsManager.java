@@ -424,7 +424,9 @@ public class ContactsManager extends ContentObserver {
 		setSipContacts(sipContacts);
 
 		if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-			LinphoneManager.getLc().getFriendLists()[0].setRLSUri(getString(R.string.rls_uri));
+			if (getString(R.string.rls_uri) != null) {
+				LinphoneManager.getLc().getFriendLists()[0].setRLSUri(getString(R.string.rls_uri));
+			}
 			LinphoneManager.getLc().getFriendLists()[0].updateSubscriptions();
 		}
 		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
@@ -484,6 +486,7 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public String getString(int resourceID) {
+		if (context == null) return null;
 		return context.getString(resourceID);
 	}
 
