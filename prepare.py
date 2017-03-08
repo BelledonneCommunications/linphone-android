@@ -93,7 +93,7 @@ class AndroidPreparator(prepare.Preparator):
         self.min_supported_ndk = 10
         self.max_supported_ndk = 13
         self.unsupported_ndk_version = None
-        self.min_cmake_version = "3.0"
+        self.min_cmake_version = "3.7"
         self.release_with_debug_info = True
         self.veryclean = True
         self.show_gpl_disclaimer = True
