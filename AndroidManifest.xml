@@ -10,9 +10,6 @@
         android:targetSdkVersion="23"/>
 
     <!-- Permissions for Push Notification -->
-    <!--<permission
-        android:name="org.linphone.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/> GCM permission--> <!-- Change package ! -->
     <!--<uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> GCM permission--> <!-- Change package ! -->
     <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> GCM permission-->
     <uses-permission android:name="android.permission.INTERNET"/>
