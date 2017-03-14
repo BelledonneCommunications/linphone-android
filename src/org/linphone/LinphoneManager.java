@@ -1279,6 +1279,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (state == State.StreamsRunning) {
 			startBluetooth();
+			setAudioManagerInCallMode();
 			if (mIncallWakeLock == null) {
 				mIncallWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,	"incall");
 			}
