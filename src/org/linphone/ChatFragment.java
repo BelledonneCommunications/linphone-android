@@ -51,6 +51,7 @@ import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -70,7 +71,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -232,7 +232,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
 					LinphoneActivity.instance().updateMissedChatCount();
-					adapter.addMessage(cr.getHistory(1)[0]);
+					adapter.addMessage(message);
 
 					String externalBodyUrl = message.getExternalBodyUrl();
 					LinphoneContent fileTransferContent = message.getFileTransferInformation();
