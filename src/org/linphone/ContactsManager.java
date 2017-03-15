@@ -278,6 +278,7 @@ public class ContactsManager extends ContentObserver {
 			for (LinphoneFriend friend : lc.getFriendList()) {
 				LinphoneContact contact = (LinphoneContact)((LinphoneFriendImpl)friend).getUserData();
 				if (contact != null) {
+					contact.clearAddresses();
 					contacts.add(contact);
 					if (contact.getAndroidId() != null) {
 						androidContactsCache.put(contact.getAndroidId(), contact);

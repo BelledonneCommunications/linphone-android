@@ -500,6 +500,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 		}
 	}
+	
+	public void clearAddresses() {
+		addresses.clear();
+	}
 
 	public void refresh() {
 		addresses = new ArrayList<LinphoneNumberOrAddress>();
