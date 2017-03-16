@@ -1280,7 +1280,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						}
 					}
 				});
-				LinphoneManager.getLc().getChatRoom(message.getFrom()).markAsRead();;
+				chatRoom.markAsRead();
 		
 			} else {
 				holder.imdmLayout.setVisibility(View.INVISIBLE);
