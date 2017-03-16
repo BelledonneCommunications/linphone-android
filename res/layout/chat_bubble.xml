@@ -59,8 +59,10 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				android:padding="10dp">
-	
+				android:paddingTop="10dp"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp">
+
 				<TextView
 					android:id="@+id/contact_header"
 					android:singleLine="true"
@@ -104,11 +106,37 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_below="@id/progress_bar"/>
-	
+
 				</RelativeLayout>
-	
+				<LinearLayout
+					android:id="@+id/imdmLayout"
+					android:layout_width="wrap_content"
+					android:layout_height="12dp"
+					android:layout_alignParentBottom="true"
+					android:layout_alignParentRight="true"
+					android:layout_marginTop="5dp"
+					android:layout_marginBottom="5dp"
+					android:orientation="horizontal"
+					android:layout_gravity="right"
+					android:gravity="right"
+					android:visibility="invisible">
+
+					<TextView
+						android:id="@+id/imdmText"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="Displayed"
+						android:textSize="10dp"
+						android:paddingRight="5dp"/>
+					<ImageView
+						android:id="@+id/imdmIcon"
+						android:layout_width="10dp"
+						android:layout_height="12dp"
+						android:src="@drawable/valid"
+						/>
+				</LinearLayout>
 			</LinearLayout>
-			
+
 		</LinearLayout>
 	
 		<RelativeLayout
@@ -139,7 +167,7 @@
 				android:layout_height="match_parent"/>
 		
 		</RelativeLayout>
-	
+
 	</RelativeLayout>
 	
 </RelativeLayout>

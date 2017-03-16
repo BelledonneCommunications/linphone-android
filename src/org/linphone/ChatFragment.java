@@ -18,30 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneBuffer;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatMessage.State;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneContent;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.mediastream.Log;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -96,6 +72,30 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneBuffer;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatMessage.State;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneContent;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.mediastream.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener {
@@ -1021,6 +1021,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			public ImageView messageStatus;
 			public ProgressBar messageSendingInProgress;
 			public ImageView contactPictureMask;
+			public LinearLayout imdmLayout;
+			public ImageView imdmIcon;
+			public TextView imdmLabel;
 
 			public ViewHolder(View view) {
 				id = view.getId();
@@ -1037,6 +1040,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				messageStatus = (ImageView) view.findViewById(R.id.status);
 				messageSendingInProgress = (ProgressBar) view.findViewById(R.id.inprogress);
 				contactPictureMask = (ImageView) view.findViewById(R.id.mask);
+				imdmLayout = (LinearLayout) view.findViewById(R.id.imdmLayout);
+				imdmIcon = (ImageView) view.findViewById(R.id.imdmIcon);
+				imdmLabel = (TextView) view.findViewById(R.id.imdmText);
 			}
 
 			@Override
@@ -1178,15 +1184,37 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			holder.contactName.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
 
-			if (status == LinphoneChatMessage.State.NotDelivered) {
+			/*if (status == LinphoneChatMessage.State.NotDelivered) {
 				holder.messageStatus.setVisibility(View.VISIBLE);
 				holder.messageStatus.setImageResource(R.drawable.chat_message_not_delivered);
-			} else if (status == LinphoneChatMessage.State.InProgress) {
+			} else*/
+			if (status == LinphoneChatMessage.State.InProgress) {
 				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
 			} else if (!message.isSecured() && !message.isOutgoing() &&
 					LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
 				holder.messageStatus.setVisibility(View.VISIBLE);
 				holder.messageStatus.setImageResource(R.drawable.lime_ko);
+			}
+			else if(status == State.DeliveredToUser && message.isOutgoing()){
+				holder.imdmLayout.setVisibility(View.VISIBLE);
+				holder.imdmIcon.setImageResource(R.drawable.valid_disabled);
+				holder.imdmLabel.setText(R.string.delivered);
+				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorA));
+			}
+			else if(status == State.Displayed && message.isOutgoing()){
+				holder.imdmLayout.setVisibility(View.VISIBLE);
+				holder.imdmIcon.setImageResource(R.drawable.valid);
+				holder.imdmLabel.setText(R.string.displayed);
+				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorA));
+			}
+			else if(status == State.NotDelivered && message.isOutgoing()){
+				holder.imdmLayout.setVisibility(View.VISIBLE);
+				holder.imdmIcon.setImageResource(R.drawable.chat_message_not_delivered);
+				holder.imdmLabel.setText(R.string.resend);
+				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorI));
+			}
+			if(!message.isOutgoing()){
+				holder.imdmLayout.setVisibility(View.INVISIBLE);
 			}
 
 			if (externalBodyUrl != null || fileTransferContent != null) {
@@ -1252,7 +1280,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						}
 					}
 				});
+				LinphoneManager.getLc().getChatRoom(message.getFrom()).markAsRead();;
+		
 			} else {
+				holder.imdmLayout.setVisibility(View.INVISIBLE);
 				holder.fileTransferAction.setText(getString(R.string.accept));
 				holder.fileTransferAction.setOnClickListener(new OnClickListener() {
 					@Override
