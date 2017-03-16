@@ -205,14 +205,13 @@ class AndroidPreparator(prepare.Preparator):
 archs={archs}
 TOPDIR=$(shell pwd)
 LINPHONE_ANDROID_VERSION=$(shell git describe --always)
-ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-9]+' | tail -n1)
 ANT_SILENT=$(shell ant -h | grep -q -- -S && echo 1 || echo 0)
 PACKAGE_NAME=$(shell sed -nE 's|<property name="linphone.package.name" value="(.*)" />|\\1|p' custom_rules.xml)
 
 .PHONY: all
 .NOTPARALLEL: all generate-apk generate-mediastreamer2-apk install release
 
-all: update-project generate-apk
+all: generate-apk
 
 build: $(addsuffix -build, $(archs))
 
@@ -307,15 +306,10 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
 
-update-project:
-\tandroid update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
-\tandroid update test-project --path tests -m .
-
 update-mediastreamer2-project:
 \t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
-\tandroid update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
 
-generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem update-project
+generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
 \t./gradlew assembleDebug
 
@@ -332,7 +326,7 @@ install-apk:
 uninstall:
 \tadb uninstall $(PACKAGE_NAME)
 
-release: java-clean build copy-libs update-project
+release: java-clean build copy-libs
 \t./gradlew assembleRelease
 
 generate-sdk: liblinphone-android-sdk
@@ -357,10 +351,10 @@ run-liblinphone-tests:
 \t@cd liblinphone_tester && \\
 \tmake run-all-tests
 
-run-basic-tests: clean update-project
+run-basic-tests: clean
 \t$(MAKE) -C tests run-basic-tests ANT_SILENT=$(ANT_SILENT)
 
-run-all-tests: clean update-project
+run-all-tests: clean
 \t$(MAKE) -C tests run-all-tests ANT_SILENT=$(ANT_SILENT)
 
 pull-transifex:
