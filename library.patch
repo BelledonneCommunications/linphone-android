@@ -1,16 +1,13 @@
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
-index d127def4..b00d68a0 100755
+index 8bc78f3..5481307 100755
 --- a/AndroidManifest.xml
 +++ b/AndroidManifest.xml
-@@ -8,317 +8,4 @@
+@@ -8,314 +8,4 @@
      <uses-sdk
          android:minSdkVersion="14"
          android:targetSdkVersion="23"/>
 -
 -    <!-- Permissions for Push Notification -->
--    <!--<permission
--        android:name="org.linphone.permission.C2D_MESSAGE"
--        android:protectionLevel="signature"/> GCM permission--> <!-- Change package ! -->
 -    <!--<uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> GCM permission--> <!-- Change package ! -->
 -    <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> GCM permission-->
 -    <uses-permission android:name="android.permission.INTERNET"/>
@@ -321,7 +318,7 @@ index d127def4..b00d68a0 100755
 -
  </manifest>
 diff --git a/build.gradle b/build.gradle
-index 402368a6..d7835538 100644
+index 3dd7bdc..9f467cb 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -25,7 +25,7 @@ buildscript {
@@ -366,4 +363,4 @@ index 402368a6..d7835538 100644
 +      signingConfig null//signingConfigs.release
      }
    }
-
+ 
