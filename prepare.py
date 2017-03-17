@@ -307,7 +307,7 @@ copy-libs:
 \tfi
 
 update-mediastreamer2-project:
-\t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
+\t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java
 
 generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
