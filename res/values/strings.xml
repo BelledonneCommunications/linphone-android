@@ -185,7 +185,7 @@
     <string name="message_cant_be_decrypted_notif">You are unable to decrypt this message.</string>
     <string name="lime_not_verified">You are trying to send a message using LIME to a contact not verified by ZRTP.\nPlease call this contact and verify his ZRTP key before sending your messages.</string>
     <string name="processing_image">Processing image, can take up to a few seconds depending on the size of the file</string>
-    <string name="displayed">Displayed</string>
+    <string name="displayed">Read</string>
     <string name="delivered">Delivered</string>
     <string name="resend">Resend</string>
 

@@ -229,7 +229,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
 				LinphoneAddress from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
-					LinphoneService.instance().removeMessageNotification();
+					//LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
 					LinphoneActivity.instance().updateMissedChatCount();
 					adapter.addMessage(message);
@@ -376,6 +376,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}
+		//messagesList.invalidateViews();
 	}
 
 	private void displayMessageList() {
@@ -1047,7 +1048,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			@Override
 			public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
-
+					Log.e(" /////////====>> onLinphoneChatMessageStateChanged - state = "+state.toString());
 			}
 
 			@Override
@@ -1094,6 +1095,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			messagesList.setSelection(getCount() - 1);
 		}
 
+		public void refreshMessageCell(LinphoneChatMessage msg){
+
+		}
+
 		@Override
 		public int getCount() {
 			return history.size();
@@ -1119,13 +1124,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (convertView != null) {
 				view = convertView;
 				holder = (ViewHolder) view.getTag();
-				LinphoneManager.removeListener(holder);
+				//LinphoneManager.removeListener(holder);
 			} else {
 				view = LayoutInflater.from(context).inflate(R.layout.chat_bubble, null);
 				holder = new ViewHolder(view);
 				view.setTag(holder);
 			}
 
+			LinphoneManager.addListener(holder);
 			if (holder.id == message.getStorageId()) {
 				// Horrible workaround to not reload image on edit chat list
 				if (holder.messageImage.getTag() != null
@@ -1184,10 +1190,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			holder.contactName.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
 
-			/*if (status == LinphoneChatMessage.State.NotDelivered) {
-				holder.messageStatus.setVisibility(View.VISIBLE);
-				holder.messageStatus.setImageResource(R.drawable.chat_message_not_delivered);
-			} else*/
 			if (status == LinphoneChatMessage.State.InProgress) {
 				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
 			} else if (!message.isSecured() && !message.isOutgoing() &&
@@ -1195,24 +1197,25 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				holder.messageStatus.setVisibility(View.VISIBLE);
 				holder.messageStatus.setImageResource(R.drawable.lime_ko);
 			}
-			else if(status == State.DeliveredToUser && message.isOutgoing()){
+			if(status == State.DeliveredToUser && message.isOutgoing()){
 				holder.imdmLayout.setVisibility(View.VISIBLE);
-				holder.imdmIcon.setImageResource(R.drawable.valid_disabled);
+				holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
 				holder.imdmLabel.setText(R.string.delivered);
-				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorA));
+				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorD));
 			}
 			else if(status == State.Displayed && message.isOutgoing()){
 				holder.imdmLayout.setVisibility(View.VISIBLE);
-				holder.imdmIcon.setImageResource(R.drawable.valid);
+				holder.imdmIcon.setImageResource(R.drawable.chat_read);
 				holder.imdmLabel.setText(R.string.displayed);
-				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorA));
+				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorK));
 			}
 			else if(status == State.NotDelivered && message.isOutgoing()){
 				holder.imdmLayout.setVisibility(View.VISIBLE);
-				holder.imdmIcon.setImageResource(R.drawable.chat_message_not_delivered);
+				holder.imdmIcon.setImageResource(R.drawable.chat_error);
 				holder.imdmLabel.setText(R.string.resend);
 				holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorI));
-			}
+			}else
+				holder.imdmLayout.setVisibility(View.INVISIBLE);
 			if(!message.isOutgoing()){
 				holder.imdmLayout.setVisibility(View.INVISIBLE);
 			}
@@ -1230,7 +1233,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					if (LinphoneManager.getInstance().getMessageUploadPending() != null  && LinphoneManager.getInstance().getMessageUploadPending().getStorageId() == message.getStorageId()) {
 						holder.messageSendingInProgress.setVisibility(View.GONE);
 						holder.fileTransferLayout.setVisibility(View.VISIBLE);
-						LinphoneManager.addListener(holder);
+						//LinphoneManager.addListener(holder);
 					}
 				} else {
 					if (appData != null && !LinphoneManager.getInstance().isMessagePending(message) && appData.contains(context.getString(R.string.temp_photo_name_with_date).split("%s")[0])) {
@@ -1238,15 +1241,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					}
 
 					if (appData == null) {
-						LinphoneManager.addListener(holder);
+						//LinphoneManager.addListener(holder);
 						holder.fileTransferLayout.setVisibility(View.VISIBLE);
 					} else {
 						if (LinphoneManager.getInstance().isMessagePending(message)) {
-							LinphoneManager.addListener(holder);
+							//LinphoneManager.addListener(holder);
 							holder.fileTransferAction.setEnabled(false);
 							holder.fileTransferLayout.setVisibility(View.VISIBLE);
 						} else {
-							LinphoneManager.removeListener(holder);
+							//LinphoneManager.removeListener(holder);
 							holder.fileTransferLayout.setVisibility(View.GONE);
 							holder.messageImage.setVisibility(View.VISIBLE);
 							if (!sameMessage) {
@@ -1631,6 +1634,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	//LinphoneChatMessage Listener
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+		Log.e(" =======>>>>>>> onLinphoneChatMessageStateChanged - state = "+state.toString());
 		redrawMessageList();
 	}
 
