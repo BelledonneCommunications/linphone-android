@@ -208,7 +208,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				} else if (state == State.Resuming) {
 					if(LinphonePreferences.instance().isVideoEnabled()){
 						status.refreshStatusItems(call, isVideoEnabled(call));
-						if(call.getCurrentParamsCopy().getVideoEnabled()){
+						if(call.getCurrentParams().getVideoEnabled()){
 							showVideoView();
 						}
 					}
@@ -231,7 +231,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					}
 
 					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
-					boolean localVideo = call.getCurrentParamsCopy().getVideoEnabled();
+					boolean localVideo = call.getCurrentParams().getVideoEnabled();
 					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
 					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 							showAcceptCallUpdateDialog();
@@ -254,10 +254,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			@Override
 			public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
 				if (status != null) {
-					if(call.getCurrentParamsCopy().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
+					if(call.getCurrentParams().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
 						status.showZRTPDialog(call);
 					}
-					status.refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+					status.refreshStatusItems(call, call.getCurrentParams().getVideoEnabled());
 				}
 			}
 
@@ -329,7 +329,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	private boolean isVideoEnabled(LinphoneCall call) {
 		if(call != null){
-			return call.getCurrentParamsCopy().getVideoEnabled();
+			return call.getCurrentParams().getVideoEnabled();
 		}
 		return false;
 	}
@@ -1759,7 +1759,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 						if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() == null) return;
 						synchronized(LinphoneManager.getLc()) {
 							if (LinphoneActivity.isInstanciated()) {
-								LinphoneCallParams params = call.getCurrentParamsCopy();
+								LinphoneCallParams params = call.getCurrentParams();
 								if (params != null) {
 									LinphoneCallStats audioStats = call.getAudioStats();
 									LinphoneCallStats videoStats = null;

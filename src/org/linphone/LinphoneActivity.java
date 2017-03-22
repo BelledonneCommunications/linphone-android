@@ -1012,7 +1012,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			if (lc != null) {
 				lc.setDeviceRotation(rotation);
 				LinphoneCall currentCall = lc.getCurrentCall();
-				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParamsCopy().getVideoEnabled()) {
+				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParams().getVideoEnabled()) {
 					lc.updateCall(currentCall, null);
 				}
 			}

@@ -459,7 +459,7 @@ public final class LinphoneService extends Service {
 		if (mOverlay != null) destroyOverlay();
 
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		if (call == null || !call.getCurrentParamsCopy().getVideoEnabled()) return;
+		if (call == null || !call.getCurrentParams().getVideoEnabled()) return;
 
 		mOverlay = new LinphoneOverlay(this);
 		WindowManager.LayoutParams params = mOverlay.getWindowManagerLayoutParams();
@@ -533,7 +533,7 @@ public final class LinphoneService extends Service {
 	public void refreshIncallIcon(LinphoneCall currentCall) {
 		LinphoneCore lc = LinphoneManager.getLc();
 		if (currentCall != null) {
-			if (currentCall.getCurrentParamsCopy().getVideoEnabled() && currentCall.cameraEnabled()) {
+			if (currentCall.getCurrentParams().getVideoEnabled() && currentCall.cameraEnabled()) {
 				// checking first current params is mandatory
 				setIncallIcon(IncallIconState.VIDEO);
 			} else {

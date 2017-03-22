@@ -85,7 +85,7 @@ public class CallManager {
 			Log.e("Trying to reinviteWithVideo while not in call: doing nothing");
 			return false;
 		}
-		LinphoneCallParams params = lCall.getCurrentParamsCopy();
+		LinphoneCallParams params = lc.createCallParams(lCall);
 
 		if (params.getVideoEnabled()) return false;
 		
@@ -115,7 +115,7 @@ public class CallManager {
 			Log.e("Trying to reinvite while not in call: doing nothing");
 			return;
 		}
-		LinphoneCallParams params = lCall.getCurrentParamsCopy();
+		LinphoneCallParams params = lc.createCallParams(lCall);
 		bm().updateWithProfileSettings(lc, params);
 		lc.updateCall(lCall, params);
 	}
@@ -132,7 +132,7 @@ public class CallManager {
 			Log.e("Trying to updateCall while not in call: doing nothing");
 			return;
 		}
-		LinphoneCallParams params = lCall.getCurrentParamsCopy();
+		LinphoneCallParams params = lc.createCallParams(lCall);
 		bm().updateWithProfileSettings(lc, params);
 		lc.updateCall(lCall, null);
 	}

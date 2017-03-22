@@ -312,7 +312,7 @@ public class StatusFragment extends Fragment {
 			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 				if (call != null) {
 					startCallQuality();
-					refreshStatusItems(call, call.getCurrentParamsCopy().getVideoEnabled());
+					refreshStatusItems(call, call.getCurrentParams().getVideoEnabled());
 				}
 				menu.setVisibility(View.INVISIBLE);
 				encryption.setVisibility(View.VISIBLE);
@@ -351,7 +351,7 @@ public class StatusFragment extends Fragment {
 	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
 		if (call != null) {
 			voicemailCount.setVisibility(View.GONE);
-			MediaEncryption mediaEncryption = call.getCurrentParamsCopy().getMediaEncryption();
+			MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
 
 			if (isVideoEnabled) {
 				//background.setVisibility(View.GONE);
