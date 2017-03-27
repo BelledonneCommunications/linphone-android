@@ -1203,7 +1203,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
 				requestAudioFocus(STREAM_RING);
-				BluetoothManager.getInstance().disableBluetoothSCO(); // Just in case
 
 				ringingCall = call;
 				startRinging();
@@ -1218,9 +1217,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			if (mLc.getCallsNb() == 1) {
 				//It is for incoming calls, because outgoing calls enter MODE_IN_COMMUNICATION immediately when they start.
 				//However, incoming call first use the MODE_RINGING to play the local ring.
-				setAudioManagerInCallMode();
-				mAudioManager.abandonAudioFocus(null);
-				requestAudioFocus(STREAM_VOICE_CALL);
+				if(call.getDirection() == CallDirection.Incoming) {
+					setAudioManagerInCallMode();
+					mAudioManager.abandonAudioFocus(null);
+					requestAudioFocus(STREAM_VOICE_CALL);
+				}
 			}
 
 			if (Hacks.needSoftvolume()) {
@@ -1232,7 +1233,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == State.CallEnd || state == State.Error) {
 			if (mLc.getCallsNb() == 0) {
 				Context activity = getContext();
-				if (mAudioFocused){
+				if (mAudioFocused) {
 					int res = mAudioManager.abandonAudioFocus(null);
 					Log.d("Audio focus released a bit later: " + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED ? "Granted" : "Denied"));
 					mAudioFocused = false;
@@ -1293,13 +1294,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void startBluetooth() {
 		if (BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
 			BluetoothManager.getInstance().routeAudioToBluetooth();
-			// Hack to ensure the bluetooth route is really used
-			mHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					BluetoothManager.getInstance().routeAudioToBluetooth();
-				}
-			}, 500);
 		}
 	}
 
