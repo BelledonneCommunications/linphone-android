@@ -205,12 +205,12 @@
     <!-- Call -->
     <string name="incoming_call">incoming call</string>
     <string name="outgoing_call">outgoing call</string>
-    <string name="add_video_dialog">Your correspondent would like to turn on video</string>
+    <string name="add_video_dialog">Your caller would like to turn on video</string>
     <string name="no_current_call">No active call</string>
-    <string name="call_paused_by_remote">Your correspondent paused the call</string>
+    <string name="call_paused_by_remote">Your caller paused the call</string>
     <string name="couldnt_accept_call">An error occurred while accepting the call</string>
     <string name="zrtp_dialog1">Confirm the following SAS with peer:\nSay: %s</string>
-    <string name="zrtp_dialog2">\nYour correspondant should say: %s</string>
+    <string name="zrtp_dialog2">\nYour caller should say: %s</string>
     <string name="unknown_incoming_call_name">Unknown</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>
@@ -250,7 +250,7 @@
     <string name="error_user_busy">User busy</string>
     <string name="error_user_not_found">User not found</string>
     <string name="error_incompatible_media">Incompatible media parameters</string>
-    <string name="error_low_bandwidth">Your correspondent has low bandwidth, video cannot be started</string>
+    <string name="error_low_bandwidth">Your caller has low bandwidth, video cannot be started</string>
     <string name="error_network_unreachable">Network is unreachable</string>
     <string name="error_bad_credentials">Bad credentials</string>
     <string name="error_unauthorized">Unauthorized</string>

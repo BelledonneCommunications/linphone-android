@@ -97,7 +97,7 @@
   <string name="assistant_phone_number_incorrect">Votre numéro de téléphone est invalide.</string>
   <string name="wizard_email_incorrect">Votre email est invalide.</string>
   <string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide.</string>
-  <string name="wizard_passwords_unmatched">Les mots de passes ne correspondent pas.</string>
+  <string name="wizard_passwords_unmatched">Les mots de passe ne correspondent pas.</string>
   <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de votre saisie.\r\nContinuer ?</string>
   <string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
   <string name="forgot_password">Mot de passe oublié ?</string>
