@@ -18,23 +18,35 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package org.linphone;
 
-import static android.media.AudioManager.MODE_RINGTONE;
-import static android.media.AudioManager.STREAM_RING;
-import static android.media.AudioManager.STREAM_VOICE_CALL;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.os.Vibrator;
+import android.preference.CheckBoxPreference;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
+import android.telephony.TelephonyManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.CallDirection;
@@ -79,35 +91,23 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.tools.H264Helper;
 import org.linphone.tools.OpenH264DownloadHelper;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.os.Vibrator;
-import android.preference.CheckBoxPreference;
-import android.provider.Settings;
-import android.provider.Settings.SettingNotFoundException;
-import android.telephony.TelephonyManager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static android.media.AudioManager.MODE_RINGTONE;
+import static android.media.AudioManager.STREAM_RING;
+import static android.media.AudioManager.STREAM_VOICE_CALL;
 
 /**
  *
@@ -145,8 +145,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private ConnectivityManager mConnectivityManager;
 	private BroadcastReceiver mKeepAliveReceiver;
 	private BroadcastReceiver mDozeReceiver;
+	private BroadcastReceiver mHookReceiver;
 	private IntentFilter mKeepAliveIntentFilter;
 	private IntentFilter mDozeIntentFilter;
+	private IntentFilter mHookIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
 	private LinphoneAccountCreator accountCreator;
@@ -822,6 +824,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 		}
 
+		mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
+		mHookIntentFilter.setPriority(999);
+		mHookReceiver = new HookReceiver();
+		mServiceContext.registerReceiver(mHookReceiver, mHookIntentFilter);
+
+
 		updateNetworkReachability();
 
 		resetCameraFromPreferences();
@@ -829,6 +837,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setDomain(getString(R.string.default_domain));
 		accountCreator.setListener(this);
+	}
+
+	protected void setHandsetMode(Boolean on){
+		if(mLc.isInComingInvitePending() && on){
+			try {
+				mLc.acceptCall(mLc.getCurrentCall());
+				LinphoneActivity.instance().startIncallActivity(mLc.getCurrentCall());
+			}catch(LinphoneCoreException e){}
+		}else if(on && CallActivity.isInstanciated()){
+			CallActivity.instance().setSpeakerEnabled(true);
+			CallActivity.instance().refreshInCallActions();
+		}else if (!on){
+			LinphoneManager.getInstance().terminateCall();
+		}
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
@@ -1192,7 +1214,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 
-		if (state == State.IncomingReceived && LinphonePreferences.instance().isAutoAnswerEnabled()) {
+		if (state == State.IncomingReceived && (LinphonePreferences.instance().isAutoAnswerEnabled())) {
 			try {
 				mLc.acceptCall(call);
 			} catch (LinphoneCoreException e) {

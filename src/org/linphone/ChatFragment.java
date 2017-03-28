@@ -1634,7 +1634,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	//LinphoneChatMessage Listener
 	@Override
 	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
-		Log.e(" =======>>>>>>> onLinphoneChatMessageStateChanged - state = "+state.toString());
 		redrawMessageList();
 	}
 

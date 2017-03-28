@@ -18,7 +18,7 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.0'
+    classpath 'com.android.tools.build:gradle:2.2.2'
     if (googleFile.exists()) {
       classpath 'com.google.gms:google-services:3.0.0'
     }
@@ -106,6 +106,7 @@ android {
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
   }
+  buildToolsVersion '25.0.2'
 }
 
 ///////////// Task /////////////

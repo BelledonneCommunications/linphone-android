@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.linphone"
+<manifest package="org.linphone"
+          xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
           android:versionCode="3253"
           android:versionName="3.2.5">
@@ -10,8 +10,9 @@
         android:targetSdkVersion="23"/>
 
     <!-- Permissions for Push Notification -->
-    <!--<uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> GCM permission--> <!-- Change package ! -->
-    <!--<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> GCM permission-->
+    <!-- <uses-permission android:name="org.linphone.permission.C2D_MESSAGE"/> GCM permission -->
+    <!-- Change package ! -->
+    <!-- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> GCM permission -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -133,7 +134,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
-
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -229,7 +229,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".PhoneStateChangedReceiver">
-            <intent-filter>
+            <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
         </receiver>
@@ -237,19 +237,30 @@
         <!-- This one needs to be registered from application -->
         <receiver android:name=".KeepAliveReceiver"/>
 
+        <receiver android:name=".HookReceiver" >
+            <intent-filter>
+                <action android:name="com.base.module.phone.HOOKEVENT" />
+            </intent-filter>
+        </receiver>
+
         <!-- Needed for push notification -->
-        <!--<receiver
+        <!--
+            <receiver
             android:name=".gcm.GCMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
-                <category android:name="org.linphone"/>--> <!-- Change package ! -->
-            <!--</intent-filter>
+                <category android:name="org.linphone"/>
+        -->
+        <!-- Change package ! -->
+        <!--
+        </intent-filter>
         </receiver>
 
-        <service android:name=".gcm.GCMService"/>-->
+        <service android:name=".gcm.GCMService"/>
+        -->
 
         <receiver
             android:name=".AccountEnableReceiver"
@@ -264,9 +275,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
-
-        <service
-            android:name=".firebase.FirebaseMessaging">
+        <service android:name=".firebase.FirebaseMessaging">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

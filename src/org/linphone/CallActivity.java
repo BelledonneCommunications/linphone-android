@@ -17,32 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.HashMap;
-
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCallStats;
-import org.linphone.core.LinphoneCallStats.LinphoneAddressFamily;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphonePlayer;
-import org.linphone.core.PayloadType;
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.ui.Numpad;
-import org.linphone.mediastream.Factory;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -85,6 +59,30 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCallStats;
+import org.linphone.core.LinphoneCallStats.LinphoneAddressFamily;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphonePlayer;
+import org.linphone.core.PayloadType;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.ui.Numpad;
+
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Sylvain Berfini
@@ -273,7 +271,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					enableAndRefreshInCallActions();
 				}
 			}
-
 			if (savedInstanceState != null) {
 				// Fragment already created, no need to create it again (else it will generate a memory leak with duplicated fragments)
 				isSpeakerEnabled = savedInstanceState.getBoolean("Speaker");
@@ -403,11 +400,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 		avatar_layout = (RelativeLayout) findViewById(R.id.avatar_layout);
 
-		/*if(isTablet()){
-			speaker.setEnabled(false);
-		}
-		speaker.setEnabled(false);*/
-
 		//Options
 		addCall = (ImageView) findViewById(R.id.add_call);
 		addCall.setOnClickListener(this);
@@ -534,7 +526,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		displayMissedChats();
 	}
 
-	private void refreshInCallActions() {
+	protected void setSpeakerEnabled(boolean enabled){
+		isSpeakerEnabled = enabled;
+	}
+
+	protected void refreshInCallActions() {
 		if (!LinphonePreferences.instance().isVideoEnabled() || isConferenceRunning) {
 			enabledVideoButton(false);
 		} else {
@@ -921,7 +917,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
-	private void toggleSpeaker() {
+	protected void toggleSpeaker() {
 		isSpeakerEnabled = !isSpeakerEnabled;
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
@@ -1200,6 +1196,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	@Override
 	protected void onResume() {
+
 		instance = this;
 		super.onResume();
 
@@ -1207,6 +1204,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
+		isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
 
 		refreshIncallUi();
 		handleViewIntent();

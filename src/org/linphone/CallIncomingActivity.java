@@ -18,18 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package org.linphone;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.mediastream.Log;
-import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
-
 import android.Manifest;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -43,6 +31,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.mediastream.Log;
+import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CallIncomingActivity extends LinphoneGenericActivity implements LinphoneSliderTriggered {
 	private static CallIncomingActivity instance;
@@ -179,6 +179,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 					finish();
 				}
 				if (state == State.StreamsRunning) {
+					Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = "+LinphoneManager.getLc().isSpeakerEnabled());
 					// The following should not be needed except some devices need it (e.g. Galaxy S).
 					LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
 				}
