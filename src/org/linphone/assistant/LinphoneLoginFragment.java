@@ -191,7 +191,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		accountCreator.isAccountUsed();
 	}
 
-	private LinphoneAccountCreator.Status getPhoneNumberStatus() {
+	private int getPhoneNumberStatus() {
 		return accountCreator.setPhoneNumber(phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode));
 	}
 
@@ -252,16 +252,16 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 	private void recoverAccount() {
 		if (phoneNumberEdit.length() > 0 || dialCode.length() > 1) {
-			LinphoneAccountCreator.Status status = getPhoneNumberStatus();
-			boolean isOk = status.equals(LinphoneAccountCreator.Status.Ok);
+			int status = getPhoneNumberStatus();
+			boolean isOk = status == LinphoneAccountCreator.PhoneNumberCheck.Ok.value();
 			if (isOk) {
 				accountCreator.isPhoneNumberUsed();
 			} else {
 				apply.setEnabled(true);
-				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status),
+				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPhoneNumberStatus(status),
 						AssistantActivity.instance());
 				LinphoneUtils.displayError(isOk, phoneNumberError,
-						LinphoneUtils.errorForStatus(status));
+						LinphoneUtils.errorForPhoneNumberStatus(status));
 			}
 		} else {
 			apply.setEnabled(true);
@@ -273,11 +273,11 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
 	public void onTextChanged2() {
-		LinphoneAccountCreator.Status status = getPhoneNumberStatus();
-		boolean isOk = status.equals(LinphoneAccountCreator.Status.Ok);
-		LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
+		int status = getPhoneNumberStatus();
+		boolean isOk = status == LinphoneAccountCreator.PhoneNumberCheck.Ok.value();
+		LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
 		if (!isOk) {
-			if (status.equals(LinphoneAccountCreator.Status.CountryCodeInvalid)) {
+			if ((1 == (status & LinphoneAccountCreator.PhoneNumberCheck.CountryCodeInvalid.value()))) {
 				dialCode.setBackgroundResource(R.drawable.resizable_textfield_error);
 				phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
 			} else {
@@ -321,51 +321,51 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			apply.setEnabled(true);
 			return;
 		}
-		if (status.equals(LinphoneAccountCreator.Status.AccountExist) || status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias)) {
+		if (status.equals(LinphoneAccountCreator.RequestStatus.AccountExist) || status.equals(LinphoneAccountCreator.RequestStatus.AccountExistWithAlias)) {
 			String phone = accountCreator.getPhoneNumber();
 			String dial = null;
 			if (phone != null && phone.length() > 0)
 				dial = accountCreator.getPrefix(phone);
 			AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), null, dial, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
 		} else {
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status), AssistantActivity.instance());
 		}
 		apply.setEnabled(true);
 	}
 
 	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			apply.setEnabled(true);
 			return;
 		}
-		if (status.equals(LinphoneAccountCreator.Status.ErrorServer)) {
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(LinphoneAccountCreator.Status.Failed), AssistantActivity.instance());
+		if (status.equals(LinphoneAccountCreator.RequestStatus.ErrorServer)) {
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(LinphoneAccountCreator.RequestStatus.Failed), AssistantActivity.instance());
 			apply.setEnabled(true);
 		} else {
 			AssistantActivity.instance().displayAssistantCodeConfirm(accountCreator.getUsername(), phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode), true);
@@ -373,25 +373,25 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			apply.setEnabled(true);
 			return;
 		}
-		if (status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAccount) || status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAlias)) {
+		if (status.equals(LinphoneAccountCreator.RequestStatus.AliasIsAccount) || status.equals(LinphoneAccountCreator.RequestStatus.AliasExist)) {
 			accountCreator.recoverPhoneAccount();
 		} else {
 			apply.setEnabled(true);
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status), AssistantActivity.instance());
 		}
 	}
 
 	@Override
-	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 }

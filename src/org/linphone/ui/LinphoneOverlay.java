@@ -41,14 +41,14 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 		params.gravity = Gravity.TOP | Gravity.LEFT;
 		metrics = new DisplayMetrics();
 		wm.getDefaultDisplay().getMetrics(metrics);
-		
+
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(this, null, new AndroidVideoWindowImpl.VideoWindowListener() {
 			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				LinphoneManager.getLc().setVideoWindow(vw);
 			}
 
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				
+
 			}
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
@@ -57,7 +57,7 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
 			}
 		});
-		
+
 		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
 		LinphoneCallParams callParams = call.getCurrentParams();
 		params.width = callParams.getReceivedVideoSize().width;
@@ -88,7 +88,7 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 	public LinphoneOverlay(Context context) {
 		this(context, null);
 	}
-	
+
 	public void destroy() {
 		androidVideoWindowImpl.release();
 	}

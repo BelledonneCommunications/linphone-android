@@ -434,14 +434,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 					alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							LinphoneAccountCreator.Status status = accountCreator.setPassword(pass1.getText().toString());
-							if (status.equals(LinphoneAccountCreator.Status.Ok)) {
+							LinphoneAccountCreator.PasswordCheck status = accountCreator.setPassword(pass1.getText().toString());
+							if (status.equals(LinphoneAccountCreator.PasswordCheck.Ok)) {
 								if (pass1.getText().toString().compareTo(pass2.getText().toString()) == 0) {
 									accountCreator.setUsername(mPrefs.getAccountUsername(n));
 									accountCreator.setHa1(mPrefs.getAccountHa1(n));
-									status = accountCreator.updatePassword(pass1.getText().toString());
-									if (!status.equals(LinphoneAccountCreator.Status.Ok)) {
-										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status)
+									LinphoneAccountCreator.RequestStatus req_status = accountCreator.updatePassword(pass1.getText().toString());
+									if (!req_status.equals(LinphoneAccountCreator.RequestStatus.Ok)) {
+										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(req_status)
 												, LinphoneActivity.instance());
 									} else {
 										progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
@@ -458,7 +458,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 								}
 								return;
 							}
-							LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
+							LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPasswordStatus(status), LinphoneActivity.instance());
 						}
 					});
 
@@ -545,58 +545,58 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
-
-	}
-
-	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+
 	}
 
 	@Override
-	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.Status status) {
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	}
+
+	@Override
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
 		progress.dismiss();
-		if (status.equals(LinphoneAccountCreator.Status.Ok)) {
+		if (status.equals(LinphoneAccountCreator.RequestStatus.Ok)) {
 			mPrefs.setAccountPassword(n, accountCreator.getPassword());
 			PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
 			((EditTextPreference) account.getPreference(2)).setText(mPrefs.getAccountPassword(n));
 			LinphoneUtils.displayErrorAlert(getString(R.string.pref_password_changed), LinphoneActivity.instance());
 		} else {
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status), LinphoneActivity.instance());
 		}
 	}
 }

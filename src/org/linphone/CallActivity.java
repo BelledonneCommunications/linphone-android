@@ -159,10 +159,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
 
-		if(!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
-			BluetoothManager.getInstance().initBluetooth();
-		}
-
 		cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
 
 		try {

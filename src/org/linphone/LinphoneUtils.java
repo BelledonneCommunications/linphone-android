@@ -589,59 +589,87 @@ public final class LinphoneUtils {
 		}
 	}
 
-	public static String errorForStatus(LinphoneAccountCreator.Status status) {
+	public static String errorForPhoneNumberStatus(int status) {
 		Context ctxt = getContext();
 		if (ctxt != null) {
-			if (status.equals(LinphoneAccountCreator.Status.EmailInvalid))
-				return ctxt.getString(R.string.invalid_email);
-			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalid))
-				return ctxt.getString(R.string.invalid_username);
-			if (status.equals(LinphoneAccountCreator.Status.UsernameTooShort))
-				return ctxt.getString(R.string.username_too_short);
-			if (status.equals(LinphoneAccountCreator.Status.UsernameTooLong))
-				return ctxt.getString(R.string.username_too_long);
-			if (status.equals(LinphoneAccountCreator.Status.UsernameInvalidSize))
-				return ctxt.getString(R.string.username_invalid_size);
-			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberTooShort))
-				return ctxt.getString(R.string.phone_number_too_short);
-			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberTooLong))
-				return ctxt.getString(R.string.phone_number_too_long);
-			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberInvalid))
-				return ctxt.getString(R.string.phone_number_invalid);
-			if (status.equals(LinphoneAccountCreator.Status.PasswordTooShort))
-				return ctxt.getString(R.string.password_too_short);
-			if (status.equals(LinphoneAccountCreator.Status.PasswordTooLong))
-				return ctxt.getString(R.string.password_too_long);
-			if (status.equals(LinphoneAccountCreator.Status.DomainInvalid))
-				return ctxt.getString(R.string.invalid_domain);
-			if (status.equals(LinphoneAccountCreator.Status.RouteInvalid))
-				return ctxt.getString(R.string.invalid_route);
-			if (status.equals(LinphoneAccountCreator.Status.DisplayNameInvalid))
-				return ctxt.getString(R.string.invalid_display_name);
-			if (status.equals(LinphoneAccountCreator.Status.Failed))
-				return ctxt.getString(R.string.request_failed);
-			if (status.equals(LinphoneAccountCreator.Status.ErrorServer))
-				return ctxt.getString(R.string.wizard_failed);
-			if (status.equals(LinphoneAccountCreator.Status.TransportNotSupported))
-				return ctxt.getString(R.string.transport_unsupported);
-			if (status.equals(LinphoneAccountCreator.Status.AccountExist)
-					|| status.equals(LinphoneAccountCreator.Status.AccountExistWithAlias))
-				return ctxt.getString(R.string.account_already_exist);
-			if (status.equals(LinphoneAccountCreator.Status.CountryCodeInvalid))
+			if (LinphoneAccountCreator.PhoneNumberCheck.CountryCodeInvalid.value()
+					== (status & LinphoneAccountCreator.PhoneNumberCheck.CountryCodeInvalid.value()))
 				return ctxt.getString(R.string.country_code_invalid);
-			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAccount)
-					|| status.equals(LinphoneAccountCreator.Status.PhoneNumberUsedAlias))
+			if (LinphoneAccountCreator.PhoneNumberCheck.TooShort.value()
+					== (status & LinphoneAccountCreator.PhoneNumberCheck.TooShort.value()))
+				return ctxt.getString(R.string.phone_number_too_short);
+			if (LinphoneAccountCreator.PhoneNumberCheck.TooLong.value()
+					== (status & LinphoneAccountCreator.PhoneNumberCheck.TooLong.value()))
+				return ctxt.getString(R.string.phone_number_too_long);
+			if (LinphoneAccountCreator.PhoneNumberCheck.Invalid.value()
+					== (status & LinphoneAccountCreator.PhoneNumberCheck.Invalid.value()))
+				return ctxt.getString(R.string.phone_number_invalid);
+
+		}
+		return null;
+	}
+
+	public static String errorForEmailStatus(LinphoneAccountCreator.EmailCheck status) {
+		Context ctxt = getContext();
+		if (ctxt != null) {
+			if (status.equals(LinphoneAccountCreator.EmailCheck.InvalidCharacters)
+					|| status.equals(LinphoneAccountCreator.EmailCheck.Malformed))
+				return ctxt.getString(R.string.invalid_email);
+		}
+		return null;
+	}
+
+	public static String errorForUsernameStatus(LinphoneAccountCreator.UsernameCheck status) {
+		Context ctxt = getContext();
+		if (ctxt != null) {
+			if (status.equals(LinphoneAccountCreator.UsernameCheck.InvalidCharacters))
+				return ctxt.getString(R.string.invalid_username);
+			if (status.equals(LinphoneAccountCreator.UsernameCheck.TooShort))
+				return ctxt.getString(R.string.username_too_short);
+			if (status.equals(LinphoneAccountCreator.UsernameCheck.TooLong))
+				return ctxt.getString(R.string.username_too_long);
+			if (status.equals(LinphoneAccountCreator.UsernameCheck.Invalid))
+				return ctxt.getString(R.string.username_invalid_size);
+			if (status.equals(LinphoneAccountCreator.UsernameCheck.InvalidCharacters))
+				return ctxt.getString(R.string.invalid_display_name);
+		}
+		return null;
+	}
+
+	public static String errorForPasswordStatus(LinphoneAccountCreator.PasswordCheck status) {
+		Context ctxt = getContext();
+		if (ctxt != null) {
+			if (status.equals(LinphoneAccountCreator.PasswordCheck.TooShort))
+				return ctxt.getString(R.string.password_too_short);
+			if (status.equals(LinphoneAccountCreator.PasswordCheck.TooLong))
+				return ctxt.getString(R.string.password_too_long);
+		}
+		return null;
+	}
+
+	public static String errorForRequestStatus(LinphoneAccountCreator.RequestStatus status) {
+		Context ctxt = getContext();
+		if (ctxt != null) {
+			if (status.equals(LinphoneAccountCreator.RequestStatus.Failed))
+				return ctxt.getString(R.string.request_failed);
+			if (status.equals(LinphoneAccountCreator.RequestStatus.ErrorServer))
+				return ctxt.getString(R.string.wizard_failed);
+			if (status.equals(LinphoneAccountCreator.RequestStatus.AccountExist)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountExistWithAlias))
+				return ctxt.getString(R.string.account_already_exist);
+			if (status.equals(LinphoneAccountCreator.RequestStatus.AliasIsAccount)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.AliasExist))
 				return ctxt.getString(R.string.assistant_phone_number_unavailable);
-			if (status.equals(LinphoneAccountCreator.Status.AccountNotExist))
+			if (status.equals(LinphoneAccountCreator.RequestStatus.AccountNotExist))
 				return ctxt.getString(R.string.assistant_error_bad_credentials);
-			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberNotUsed))
+			if (status.equals(LinphoneAccountCreator.RequestStatus.AliasNotExist))
 				return ctxt.getString(R.string.phone_number_not_exist);
-			if (status.equals(LinphoneAccountCreator.Status.PhoneNumberNotUsed)
-					|| status.equals(LinphoneAccountCreator.Status.AccountNotActivated)
-					|| status.equals(LinphoneAccountCreator.Status.AccountAlreadyActivated)
-					|| status.equals(LinphoneAccountCreator.Status.AccountActivated)
-					|| status.equals(LinphoneAccountCreator.Status.AccountNotCreated)
-					|| status.equals(LinphoneAccountCreator.Status.Ok))
+			if (status.equals(LinphoneAccountCreator.RequestStatus.AliasNotExist)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountNotActivated)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountAlreadyActivated)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountActivated)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountNotCreated)
+					|| status.equals(LinphoneAccountCreator.RequestStatus.Ok))
 				return "";
 		}
 		return null;

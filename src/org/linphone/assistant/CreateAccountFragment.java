@@ -30,7 +30,7 @@ import org.linphone.R;
 import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
-import org.linphone.core.LinphoneAccountCreator.Status;
+import org.linphone.core.LinphoneAccountCreator.RequestStatus;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneProxyConfig;
 
@@ -88,7 +88,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		//Initialize accountCreator
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
 				, LinphonePreferences.instance().getXmlrpcUrl());
-		accountCreator.setDomain(getResources().getString(R.string.default_domain));
 		accountCreator.setListener(this);
 
 		instruction = (TextView) view.findViewById(R.id.message_create_account);
@@ -331,7 +330,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
 					accountCreator.isAccountUsed();
 				} else {
-					LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(Status.UsernameTooShort)
+					LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForUsernameStatus(LinphoneAccountCreator.UsernameCheck.TooShort)
 							, AssistantActivity.instance());
 					createAccount.setEnabled(true);
 				}
@@ -352,34 +351,34 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(
 				LinphonePreferences.instance().getDefaultAccountIndex())
 		);
-		Status status = accountCreator.setPhoneNumber(
+		int status = accountCreator.setPhoneNumber(
 				phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode));
-		boolean isOk = status.equals(LinphoneAccountCreator.Status.Ok);
+		boolean isOk = status == LinphoneAccountCreator.PhoneNumberCheck.Ok.value();
 		if (isOk) {
 			accountCreator.linkPhoneNumberWithAccount();
 		} else {
 			createAccount.setEnabled(true);
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
-			LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPhoneNumberStatus(status), AssistantActivity.instance());
+			LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
 		}
 	}
 
 	private void createAccount() {
 		if ((getResources().getBoolean(R.bool.isTablet) || !getResources().getBoolean(R.bool.use_phone_number_validation))
 				&& useEmail.isChecked()) {
-			Status emailStatus;
-			Status passwordStatus;
+			LinphoneAccountCreator.EmailCheck emailStatus;
+			LinphoneAccountCreator.PasswordCheck passwordStatus;
 
 			passwordStatus = accountCreator.setPassword(passwordEdit.getText().toString());
 			emailStatus = accountCreator.setEmail(emailEdit.getText().toString());
 
 			if (!emailOk) {
-				LinphoneUtils.displayError(false, emailError, LinphoneUtils.errorForStatus(emailStatus));
-				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(emailStatus)
+				LinphoneUtils.displayError(false, emailError, LinphoneUtils.errorForEmailStatus(emailStatus));
+				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForEmailStatus(emailStatus)
 						, AssistantActivity.instance());
 			} else if (!passwordOk) {
-				LinphoneUtils.displayError(false, passwordError, LinphoneUtils.errorForStatus(passwordStatus));
-				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(passwordStatus)
+				LinphoneUtils.displayError(false, passwordError, LinphoneUtils.errorForPasswordStatus(passwordStatus));
+				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPasswordStatus(passwordStatus)
 						, AssistantActivity.instance());
 			} else if (!confirmPasswordOk) {
 				String msg;
@@ -395,11 +394,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 		} else {
 			if (phoneNumberEdit.length() > 0 || dialCode.length() > 1) {
-				Status phoneStatus;
+				int phoneStatus;
 				boolean isOk;
 				phoneStatus = accountCreator.setPhoneNumber(
 						phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode));
-				isOk = phoneStatus.equals(LinphoneAccountCreator.Status.Ok);
+				isOk = phoneStatus == LinphoneAccountCreator.PhoneNumberCheck.Ok.value();
 				if (!useUsername.isChecked() && accountCreator.getUsername() == null) {
 					accountCreator.setUsername(accountCreator.getPhoneNumber());
 				} else {
@@ -410,10 +409,10 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				if (isOk) {
 					accountCreator.createAccount();
 				} else {
-					LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(phoneStatus)
+					LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPhoneNumberStatus(phoneStatus)
 							, AssistantActivity.instance());
 					LinphoneUtils.displayError(isOk, phoneNumberError
-							, LinphoneUtils.errorForStatus(phoneStatus));
+							, LinphoneUtils.errorForPhoneNumberStatus(phoneStatus));
 				}
 			} else {
 				LinphoneUtils.displayErrorAlert(getString(R.string.assistant_create_account_part_1)
@@ -423,8 +422,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		createAccount.setEnabled(true);
 	}
 
-	private LinphoneAccountCreator.Status getPhoneNumberStatus() {
-		LinphoneAccountCreator.Status status = accountCreator.setPhoneNumber(
+	private int getPhoneNumberStatus() {
+		int status = accountCreator.setPhoneNumber(
 				phoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(dialCode));
 		addressSip = accountCreator.getPhoneNumber();
 		return status;
@@ -435,9 +434,9 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		accountCreator.setUsername(getUsername());
 
 		if (!useEmail.isChecked() && getResources().getBoolean(R.bool.use_phone_number_validation)) {
-			LinphoneAccountCreator.Status status = getPhoneNumberStatus();
-			boolean isOk = status.equals(LinphoneAccountCreator.Status.Ok);
-			LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForStatus(status));
+			int status = getPhoneNumberStatus();
+			boolean isOk = (status == LinphoneAccountCreator.PhoneNumberCheck.Ok.value());
+			LinphoneUtils.displayError(isOk, phoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
 
 			// Username or phone number
 			if (getResources().getBoolean(R.bool.assistant_allow_username) && useUsername.isChecked()) {
@@ -445,7 +444,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 
 			if (!isOk) {
-				if (status.equals(LinphoneAccountCreator.Status.CountryCodeInvalid)) {
+				if (status == LinphoneAccountCreator.PhoneNumberCheck.CountryCodeInvalid.value()) {
 					dialCode.setBackgroundResource(R.drawable.resizable_textfield_error);
 					phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
 				} else {
@@ -517,14 +516,14 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		field.addTextChangedListener(new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				emailOk = false;
-				Status status = accountCreator.setEmail(field.getText().toString());
-				if (status.equals(Status.Ok)) {
+				LinphoneAccountCreator.EmailCheck status = accountCreator.setEmail(field.getText().toString());
+				if (status.equals(LinphoneAccountCreator.EmailCheck.Ok)) {
 					emailOk = true;
 					LinphoneUtils.displayError(emailOk, emailError, "");
 				}
 				else {
 					LinphoneUtils.displayError(emailOk
-							, emailError, LinphoneUtils.errorForStatus(status));
+							, emailError, LinphoneUtils.errorForEmailStatus(status));
 				}
 			}
 
@@ -540,14 +539,13 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		TextWatcher passwordListener = new TextWatcher() {
 			public void afterTextChanged(Editable s) {
 				passwordOk = false;
-				Status status = accountCreator.setPassword(field1.getText().toString());
+				LinphoneAccountCreator.PasswordCheck status = accountCreator.setPassword(field1.getText().toString());
 				if (isPasswordCorrect(field1.getText().toString())) {
 					passwordOk = true;
 					LinphoneUtils.displayError(passwordOk, passwordError, "");
-				}
-				else {
+				} else {
 					LinphoneUtils.displayError(passwordOk
-							, passwordError, LinphoneUtils.errorForStatus(status));
+							, passwordError, LinphoneUtils.errorForPasswordStatus(status));
 				}
 			}
 
@@ -589,11 +587,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, final Status status) {
-		if (status.equals(Status.AccountExist) || status.equals(Status.AccountExistWithAlias)) {
+	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, final RequestStatus status) {
+		if (status.equals(RequestStatus.AccountExist) || status.equals(RequestStatus.AccountExistWithAlias)) {
 			if (useEmail.isChecked()) {
 				createAccount.setEnabled(true);
-				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status)
+				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status)
 						, AssistantActivity.instance());
 			} else {
 				accountCreator.isPhoneNumberUsed();
@@ -604,8 +602,8 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, Status status) {
-		if (status.equals(Status.AccountCreated)) {
+	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, RequestStatus status) {
+		if (status.equals(RequestStatus.AccountCreated)) {
 			if (useEmail.isChecked() || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
 				AssistantActivity.instance().displayAssistantConfirm(getUsername()
 						, passwordEdit.getText().toString(), emailEdit.getText().toString());
@@ -616,21 +614,21 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 		} else {
 			createAccount.setEnabled(true);
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status)
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status)
 					, AssistantActivity.instance());
 		}
 	}
 
 	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if (status.equals(Status.Ok)) {
+		if (status.equals(RequestStatus.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, phoneNumberEdit.getText().toString()
 					, LinphoneUtils.getCountryCode(dialCode), false);
@@ -638,11 +636,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if (status.equals(Status.Ok)) {
+		if (status.equals(RequestStatus.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, phoneNumberEdit.getText().toString()
 					, LinphoneUtils.getCountryCode(dialCode), false);
@@ -650,11 +648,11 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if (status.equals(Status.AccountNotActivated)) {
+		if (status.equals(RequestStatus.AccountNotActivated)) {
 			if (getResources().getBoolean(R.bool.isTablet)
 					|| !getResources().getBoolean(R.bool.use_phone_number_validation)) {
 				//accountCreator.activateAccount(); // Resend email TODO
@@ -663,17 +661,17 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			}
 		} else {
 			createAccount.setEnabled(true);
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status)
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status)
 					, AssistantActivity.instance());
 		}
 	}
 
 	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if (status.equals(Status.Ok)) {
+		if (status.equals(RequestStatus.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
 					, dialCode.getText().toString() , phoneNumberEdit.getText().toString(), false);
 		} else {
@@ -685,21 +683,21 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, RequestStatus status) {
 	}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator ac, Status status) {
+	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator ac, RequestStatus status) {
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if (status.equals(Status.PhoneNumberUsedAccount) || status.equals(Status.PhoneNumberUsedAlias)) {
+		if (status.equals(RequestStatus.AliasIsAccount) || status.equals(RequestStatus.AliasExist)) {
 			if (accountCreator.getPhoneNumber() != null && accountCreator.getUsername() != null
 					&& accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername()) == 0) {
 				accountCreator.isAccountActivated();
 			} else {
 				createAccount.setEnabled(true);
-				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status)
+				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status)
 						, AssistantActivity.instance());
 			}
 		} else {
@@ -708,7 +706,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 	}
 
 	@Override
-	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, Status status) {
+	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, RequestStatus status) {
 
 	}
 }
