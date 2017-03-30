@@ -146,7 +146,8 @@
 		    android:layout_alignTop="@id/background"
 			android:layout_width="15dp"
 			android:layout_height="15dp"
-			android:paddingTop="5dp">
+			android:paddingTop="5dp"
+			android:paddingBottom="3dp">
 			
 			<ImageView
 				android:id="@+id/status"

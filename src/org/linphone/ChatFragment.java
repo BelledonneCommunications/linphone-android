@@ -745,7 +745,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				dialog.dismiss();
 			}
 		});
-		dialog.show();
+		if(LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory)
+			dialog.show();
 	}
 
 	private LinphoneChatMessage getMessageForId(int id) {
@@ -1048,7 +1049,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			@Override
 			public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
-					Log.e(" /////////====>> onLinphoneChatMessageStateChanged - state = "+state.toString());
+
 			}
 
 			@Override
@@ -1192,10 +1193,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			if (status == LinphoneChatMessage.State.InProgress) {
 				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
-			} else if (!message.isSecured() && !message.isOutgoing() &&
-					LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
+			}
+			if (!message.isSecured() && !message.isOutgoing() &&
+					LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory && status != LinphoneChatMessage.State.InProgress) {
 				holder.messageStatus.setVisibility(View.VISIBLE);
-				holder.messageStatus.setImageResource(R.drawable.lime_ko);
+				holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
 			}
 			if(status == State.DeliveredToUser && message.isOutgoing()){
 				holder.imdmLayout.setVisibility(View.VISIBLE);

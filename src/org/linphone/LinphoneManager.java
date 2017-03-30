@@ -1107,7 +1107,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
 					}
 				});
-				dialog.show();
+				if(LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory)
+					dialog.show();
 			}
 		} catch (Exception e) {
 			Log.e(e);
