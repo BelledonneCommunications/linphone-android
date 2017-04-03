@@ -28,7 +28,8 @@ buildscript {
 apply plugin: 'com.android.application'
 
 dependencies {
-  compile fileTree(dir: 'libs', include: '*.jar')
+  compile fileTree(include: '*.jar', dir: 'libs')
+  androidTestCompile fileTree(include: '*.jar', dir: 'libs-test')
   if (firebaseEnable()) {
     compile 'com.google.firebase:firebase-messaging:9.0.0'
   } else {
@@ -82,138 +83,98 @@ android {
         println '[Push Notification] Firebase enabled'
       }
       manifest.srcFile 'AndroidManifest.xml'
-      java.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
-      resources.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
-      aidl.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
-      renderscript.srcDirs = ['submodules/linphone/mediastreamer2/java/src','submodules/linphone/java/j2se','submodules/linphone/java/common','submodules/linphone/java/impl','submodules/externals/axmlrpc/src/main/java','submodules/linphone/coreapi/help/java','src']
+      java.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                      'submodules/linphone/java/j2se',
+                      'submodules/linphone/java/common',
+                      'submodules/linphone/java/impl',
+                      'submodules/linphone/coreapi/help/java',
+                      'src/com',
+                      'src/org']
+      resources.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                           'submodules/linphone/java/j2se',
+                           'submodules/linphone/java/common',
+                           'submodules/linphone/java/impl',
+                           'submodules/linphone/coreapi/help/java',
+                           'src/com',
+                           'src/org']
+      aidl.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                      'submodules/linphone/java/j2se',
+                      'submodules/linphone/java/common',
+                      'submodules/linphone/java/impl',
+                      'submodules/linphone/coreapi/help/java',
+                      'src/com',
+                      'src/org']
+      renderscript.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                              'submodules/linphone/java/j2se',
+                              'submodules/linphone/java/common',
+                              'submodules/linphone/java/impl',
+                              'submodules/linphone/coreapi/help/java',
+                              'src/com',
+                              'src/org']
       res.srcDirs = ['res']
       assets.srcDirs = ['assets']
-      jniLibs.srcDir 'libs'
+      jniLibs.srcDirs = ['libs']
 
-      java.exclude '**/mediastream/MediastreamerActivity.java'
-      java.exclude firebase
+      java.excludes = ['**/mediastream/MediastreamerActivity.java', firebase]
+
+      // Exclude some useless files
+      packagingOptions {
+        exclude '**/gdb.*'
+      }
     }
 
-    // Move the tests to tests/java, tests/res, etc...
-    instrumentTest.setRoot('tests')
-
-    // Move the build types to build-types/<type>
-    // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-    // This moves them out of them default location under src/<type>/... which would
-    // conflict with src/ being used by the main source set.
-    // Adding new build types or product flavors should be accompanied
-    // by a similar customization.
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
   }
-  buildToolsVersion '25.0.2'
-}
 
-///////////// Task /////////////
-// TODO
-def getSdkDir() {
-  Properties local = new Properties()
-  if (new File("${rootDir}/local.properties").exists()) {
-    local.load(new FileInputStream("${rootDir}/local.properties"))
-  }
-  return local.getProperty('sdk.dir')
-}
+  sourceSets {
+    androidTest {
+      String firebase = ''
+      // Exclude firebase file if not enable
+      if (!firebaseEnable()) {
+        firebase = '**/Firebase*'
+        println '[Push Notification] Firebase disabled'
+      } else {
+        println '[Push Notification] Firebase enabled'
+      }
+      manifest.srcFile 'AndroidManifest.xml'
+      java.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                      'submodules/linphone/java/j2se',
+                      'submodules/linphone/java/common',
+                      'submodules/linphone/java/impl',
+                      'submodules/linphone/coreapi/help/java',
+                      'src']
+      resources.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                           'submodules/linphone/java/j2se',
+                           'submodules/linphone/java/common',
+                           'submodules/linphone/java/impl',
+                           'submodules/linphone/coreapi/help/java',
+                           'src']
+      aidl.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                      'submodules/linphone/java/j2se',
+                      'submodules/linphone/java/common',
+                      'submodules/linphone/java/impl',
+                      'submodules/linphone/coreapi/help/java',
+                      'src']
+      renderscript.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                              'submodules/linphone/java/j2se',
+                              'submodules/linphone/java/common',
+                              'submodules/linphone/java/impl',
+                              'submodules/linphone/coreapi/help/java',
+                              'src']
+      res.srcDirs = ['res']
+      assets.srcDirs = ['assets']
+      jniLibs.srcDirs = ['libs']
 
-def getTarget() {
-  Properties local = new Properties()
-  if (new File("${rootDir}/project.properties").exists()) {
-    local.load(new FileInputStream("${rootDir}/project.properties"))
-  }
-  return local.getProperty('target')
-}
+      java.excludes = ['**/mediastream/MediastreamerActivity.java', firebase]
 
-def getVersionName() {
-  Properties local = new Properties()
-  if (new File("${rootDir}/default.properties").exists()) {
-    local.load(new FileInputStream("${rootDir}/default.properties"))
-  }
-  return local.getProperty('version.name')
-}
-
-ext.toolsDir = getSdkDir()
-ext.versionName = getVersionName()
-
-//task myJavadocs(type: Javadoc) {
- //source = sourceSets.main.allJava
- //classpath = ${toolsDir}/platforms/${target}/android.jar:libs/android-support-v4.jar:libs/gcm.jar
-//}
-
-task createLibJar(type: Jar) {
-  doLast {
-    baseName = "liblinphone"
-    String classDir = compileReleaseJavaWithJavac.destinationDir
-
-    from ('submodules/linphone/java')
-    include "common/org/linphone/core/*.java j2se/org/linphone/core/*.java"
-
-    from (classDir)
-    include "org/linphone/mediastream/**/*.class org/linphone/core/**/*.class org/linphone/tools/**/*.class"
-  }
-}
-
-task createAndroidJar(type: Jar) {
-  doLast {
-    baseName = "linphone"
-    String classDir = compileReleaseJavaWithJavac.destinationDir
-
-    from (['submodules/linphone/java',classDir])
-    include ("common/org/linphone/core/*.java", "j2se/org/linphone/core/*.java", "org/linphone/mediastream/**/*.class", "org/linphone/core/**/*.class", "org/linphone/**/*.class, org/linphone/tools/**/*.class")
-  }
-}
-
-task liblinphoneAndroidSdk(type: Zip) {
-  doLast {
-    createLibJar()
-    archiveName = 'liblinphone-android-sdk-${versionName}.zip'
-
-    from ('libs') {
-      into 'libs'
+      // Exclude some useless files
+      packagingOptions {
+        exclude '**/gdb.*'
+      }
     }
-    include "**/*.so"
-    from ('.') {
-      into 'libs'
-    }
-    include "liblinphone.jar"
 
-    from ('libs-debug') {
-      into 'libs-debug'
-    }
-    include "**/*.so"
-
-    from ('.') {
-      into 'libs-debug'
-    }
-    include "liblinphone.jar"
-  }
-}
-
-task linphoneAndroidSdk(type: Zip) {
-  doLast {
-    createAndroidJar()
-    archiveName = 'linphone-android-sdk-${versionName}.zip'
-
-    from ('libs') {
-      into 'libs'
-    }
-    include "**/*.so"
-    from ('.') {
-      into 'libs'
-    }
-    include "linphone.jar"
-
-    from ('libs-debug') {
-      into 'libs-debug'
-    }
-    include "**/*.so"
-
-    from ('.') {
-      into 'libs-debug'
-    }
-    include "linphone.jar"
+    debug.setRoot('build-types/debug')
+    release.setRoot('build-types/release')
   }
 }

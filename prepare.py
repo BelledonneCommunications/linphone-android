@@ -332,7 +332,7 @@ release: java-clean build copy-libs
 generate-sdk: liblinphone-android-sdk
 
 liblinphone-android-sdk: generate-apk
-\tant liblinphone-android-sdk
+\ttant liblinphone-android-sdk
 
 linphone-android-sdk: generate-apk
 \tant linphone-android-sdk
@@ -351,11 +351,8 @@ run-liblinphone-tests:
 \t@cd liblinphone_tester && \\
 \tmake run-all-tests
 
-run-basic-tests: clean
-\t$(MAKE) -C tests run-basic-tests ANT_SILENT=$(ANT_SILENT)
-
 run-all-tests: clean
-\t$(MAKE) -C tests run-all-tests ANT_SILENT=$(ANT_SILENT)
+\t./gradlew connectedAndroidTest
 
 pull-transifex:
 \ttx pull -af

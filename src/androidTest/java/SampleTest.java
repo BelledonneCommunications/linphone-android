@@ -1,5 +1,3 @@
-package org.linphone.test;
-
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
@@ -22,7 +20,7 @@ import com.robotium.solo.Solo;
 public abstract class SampleTest extends ActivityInstrumentationTestCase2<LinphoneLauncherActivity>{
 
 	protected final int STRING_LENGTH_MAX = 20;
-	
+
 	protected Solo solo;
 	protected Context aContext, iContext;
 
@@ -45,7 +43,7 @@ public abstract class SampleTest extends ActivityInstrumentationTestCase2<Linpho
 		}
 		solo.finishOpenedActivities();
 	}
-	
+
 	protected void selectItemInListOnUIThread(final int item) {
 		solo.sleep(500);
 		getActivity().runOnUiThread(new Runnable() {
@@ -55,7 +53,7 @@ public abstract class SampleTest extends ActivityInstrumentationTestCase2<Linpho
 			}
 		});
 	}
-	
+
 	protected void waitForRegistration(final LinphoneProxyConfig lpc) {
 		if(lpc == null) return;
 		solo.waitForCondition(new Condition() {

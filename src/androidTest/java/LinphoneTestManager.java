@@ -1,5 +1,3 @@
-package org.linphone.test;
-
 import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -190,13 +188,13 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 
 		String username, password, domain;
 		if (mLc.equals(mLc1)) {
-			username = mIContext.getString(org.linphone.test.R.string.account_test_calls_login);
-			password = mIContext.getString(org.linphone.test.R.string.account_test_calls_pwd);
-			domain = mIContext.getString(org.linphone.test.R.string.account_test_calls_domain);
+			username = mIContext.getString(org.linphone.R.string.account_test_calls_login);
+			password = mIContext.getString(org.linphone.R.string.account_test_calls_pwd);
+			domain = mIContext.getString(org.linphone.R.string.account_test_calls_domain);
 		} else {
-			username = mIContext.getString(org.linphone.test.R.string.conference_account_login);
-			password = mIContext.getString(org.linphone.test.R.string.conference_account_password);
-			domain = mIContext.getString(org.linphone.test.R.string.conference_account_domain);
+			username = mIContext.getString(org.linphone.R.string.conference_account_login);
+			password = mIContext.getString(org.linphone.R.string.conference_account_password);
+			domain = mIContext.getString(org.linphone.R.string.conference_account_domain);
 		}
 
 		LinphoneAuthInfo lAuthInfo =  LinphoneCoreFactory.instance().createAuthInfo(username, password, null, domain);
@@ -436,14 +434,14 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 	public void authInfoRequested(LinphoneCore lc, String realm,
 			String username, String domain) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public void authenticationRequested(LinphoneCore lc,
 			LinphoneAuthInfo authInfo, AuthMethod method) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -492,9 +490,20 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 	public void friendListCreated(LinphoneCore lc, LinphoneFriendList list) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void friendListRemoved(LinphoneCore lc, LinphoneFriendList list) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void networkReachableChanged(LinphoneCore lc, boolean enable) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void messageReceivedUnableToDecrypted(LinphoneCore lc, LinphoneChatRoom cr,
+												 LinphoneChatMessage message) {
 		// TODO Auto-generated method stub
 	}
 }

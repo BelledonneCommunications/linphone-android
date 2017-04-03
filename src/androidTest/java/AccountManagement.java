@@ -1,5 +1,3 @@
-package org.linphone.test;
-
 import junit.framework.Assert;
 
 import org.linphone.FragmentsAvailable;
@@ -17,16 +15,16 @@ public class AccountManagement extends SampleTest {
 	@LargeTest
 	public void testAEditAccount() {
 		goToSettings();
-		solo.clickOnText(iContext.getString(R.string.account_generic_login) + "@" + iContext.getString(R.string.account_generic_domain));
+		solo.clickOnText(iContext.getString(org.linphone.R.string.account_generic_login) + "@" + iContext.getString(org.linphone.R.string.account_generic_domain));
 		solo.clickOnText(aContext.getString(org.linphone.R.string.pref_username));
 		solo.enterText(0, "new");
-		
+
 		solo.clickOnView(solo.getView(android.R.id.button1));
-		
+
 		solo.goBack();
 		solo.goBack();
 		solo.waitForFragmentByTag(FragmentsAvailable.DIALER.toString(), 2000);
-		
+
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
 		LinphoneProxyConfig proxyConfig = proxyConfigs[0];
 		waitForRegistration(proxyConfig);
@@ -39,13 +37,13 @@ public class AccountManagement extends SampleTest {
 	@LargeTest
 	public void testBDeleteAccount() {
 		goToSettings();
-		solo.clickOnText(iContext.getString(R.string.account_generic_login) + "new");
+		solo.clickOnText(iContext.getString(org.linphone.R.string.account_generic_login) + "new");
 		selectItemInListOnUIThread(16);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_delete_account));
-		
+
 		solo.goBack();
 		solo.goBack();
-		
+
 		LinphoneProxyConfig[] proxyConfigs = LinphoneManager.getLc().getProxyConfigList();
 		Assert.assertEquals(1, proxyConfigs.length);
 	}
@@ -53,29 +51,29 @@ public class AccountManagement extends SampleTest {
 	@LargeTest
 	public void testCDisableAccount() {
 		goToSettings();
-		solo.clickOnText(iContext.getString(R.string.account_linphone_login));
+		solo.clickOnText(iContext.getString(org.linphone.R.string.account_linphone_login));
 		selectItemInListOnUIThread(14);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_disable_account));
-		
+
 		solo.goBack();
 		solo.goBack();
-		
+
 		Assert.assertFalse(LinphonePreferences.instance().isAccountEnabled(0));
 	}
-	
+
 	@LargeTest
 	public void testDEnableAccount() {
 		goToSettings();
-		solo.clickOnText(iContext.getString(R.string.account_linphone_login));
+		solo.clickOnText(iContext.getString(org.linphone.R.string.account_linphone_login));
 		selectItemInListOnUIThread(14);
 		solo.clickLongOnText(aContext.getString(org.linphone.R.string.pref_disable_account));
-		
+
 		solo.goBack();
 		solo.goBack();
-		
+
 		Assert.assertTrue(LinphonePreferences.instance().isAccountEnabled(0));
 	}
-	
+
 	private void goToSettings() {
 		solo.waitForActivity("LinphoneActivity", 2000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
