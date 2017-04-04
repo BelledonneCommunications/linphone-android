@@ -42,7 +42,7 @@ if (firebaseEnable()) {
 }
 
 //// Submodule Dir /////
-def submoduleDir = ['submodules/linphone/mediastreamer2/java/src',
+def submoduleDir = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/j2se',
                     'submodules/linphone/java/common',
                     'submodules/linphone/java/impl',

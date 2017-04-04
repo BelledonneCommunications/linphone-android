@@ -28,7 +28,7 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 
 
-def srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+def srcDirs = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/j2se',
                     'submodules/linphone/java/common',
                     'submodules/linphone/java/impl',
@@ -92,7 +92,7 @@ android {
 ///////////// Task /////////////
 
 task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
-    source = ['submodules/linphone/mediastreamer2/java/src',
+    source = ['submodules/mediastreamer2/java/src',
               'submodules/linphone/java/j2se',
               'submodules/linphone/java/common',
               'submodules/linphone/java/impl',
