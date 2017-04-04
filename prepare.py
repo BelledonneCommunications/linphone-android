@@ -330,7 +330,8 @@ linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 
 mediastreamer2-sdk: build copy-libs
 \t@cd $(TOPDIR)/submodules/mediastreamer2/java && \\
-\t./gradlew assembleRelease
+\t./gradlew -b mediastreamerSdk.gradle assembleRelease
+\t./gradlew -b mediastreamerSdk.gradle sdkZip
 
 liblinphone_tester:
 \t$(MAKE) -C liblinphone_tester
