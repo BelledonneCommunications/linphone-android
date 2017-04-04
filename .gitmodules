@@ -107,3 +107,9 @@
 [submodule "submodules/externals/libjpeg-turbo"]
 	path = submodules/externals/libjpeg-turbo
 	url = git://git.linphone.org/libjpeg-turbo.git
+[submodule "submodules/mediastreamer2"]
+	path = submodules/mediastreamer2
+	url = git://git.linphone.org/mediastreamer2.git
+[submodule "submodules/oRTP"]
+	path = submodules/oRTP
+	url = git://git.linphone.org/ortp.git
