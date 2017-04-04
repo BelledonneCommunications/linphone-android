@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 dependencies {
   compile project(":libLinphoneAndroidSdk")
   compile fileTree(dir: 'libs', include: '*.jar')
-  androidTestCompile project(":libLinphoneAndroidSdk")
+  //androidTestCompile project(":libLinphoneAndroidSdk")
   androidTestCompile fileTree(dir: 'libs', include: '*.jar')
 }
 
@@ -31,9 +31,6 @@ android {
     buildToolsVersion "25.0.2"
     applicationId getPackageName()
     multiDexEnabled true
-    ndk {
-      ldLibs "log"
-    }
   }
 
   sourceSets {

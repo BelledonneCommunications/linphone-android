@@ -2,9 +2,8 @@ all: copy-files
 	../gradlew clean
 	../gradlew uninstallDebug
 
-run-all-tests: all
-	../gradlew installDebug
-	$(shell adb shell am instrument -r -w org.linphone.tester/org.linphone.tester.TestRunner | tee report.txt)
+run-all-tests:
+	../gradlew :connectedAndroidTest
 
 copy-libs:
 	rm -rf libs/arm64-v8a
