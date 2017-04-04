@@ -49,3 +49,4 @@ WORK
 .d
 google-services.json
 gradle.properties
+.*clang*

@@ -41,6 +41,26 @@ if (firebaseEnable()) {
   apply plugin: 'com.google.gms.google-services'
 }
 
+//// Submodule Dir /////
+def submoduleDir = ['submodules/linphone/mediastreamer2/java/src',
+                    'submodules/linphone/java/j2se',
+                    'submodules/linphone/java/common',
+                    'submodules/linphone/java/impl',
+                    'submodules/linphone/coreapi/help/java']
+////////////////////////
+
+///// Exclude Files /////
+def excludeFiles = []
+// Exclude firebase file if not enable
+if (!firebaseEnable()) {
+  excludeFiles.add('**/Firebase*')
+  println '[Push Notification] Firebase disabled'
+} else {
+  println '[Push Notification] Firebase enabled'
+}
+excludeFiles.add('**/mediastream/MediastreamerActivity.java')
+/////////////////////////
+
 android {
   defaultConfig {
     compileSdkVersion 23
@@ -74,48 +94,18 @@ android {
 
   sourceSets {
     main {
-      String firebase = ''
-      // Exclude firebase file if not enable
-      if (!firebaseEnable()) {
-        firebase = '**/Firebase*'
-        println '[Push Notification] Firebase disabled'
-      } else {
-        println '[Push Notification] Firebase enabled'
-      }
       manifest.srcFile 'AndroidManifest.xml'
-      java.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                      'submodules/linphone/java/j2se',
-                      'submodules/linphone/java/common',
-                      'submodules/linphone/java/impl',
-                      'submodules/linphone/coreapi/help/java',
-                      'src/com',
-                      'src/org']
-      resources.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                           'submodules/linphone/java/j2se',
-                           'submodules/linphone/java/common',
-                           'submodules/linphone/java/impl',
-                           'submodules/linphone/coreapi/help/java',
-                           'src/com',
-                           'src/org']
-      aidl.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                      'submodules/linphone/java/j2se',
-                      'submodules/linphone/java/common',
-                      'submodules/linphone/java/impl',
-                      'submodules/linphone/coreapi/help/java',
-                      'src/com',
-                      'src/org']
-      renderscript.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                              'submodules/linphone/java/j2se',
-                              'submodules/linphone/java/common',
-                              'submodules/linphone/java/impl',
-                              'submodules/linphone/coreapi/help/java',
-                              'src/com',
-                              'src/org']
+      def srcDirs = submoduleDir
+      srcDirs.addAll(['src/com',
+                      'src/org'])
+      java.srcDirs = srcDirs
+      resources.srcDirs = srcDirs
+      aidl.srcDirs = srcDirs
+      renderscript.srcDirs = srcDirs
       res.srcDirs = ['res']
       assets.srcDirs = ['assets']
       jniLibs.srcDirs = ['libs']
-
-      java.excludes = ['**/mediastream/MediastreamerActivity.java', firebase]
+      java.excludes = excludeFiles
 
       // Exclude some useless files
       packagingOptions {
@@ -129,44 +119,19 @@ android {
 
   sourceSets {
     androidTest {
-      String firebase = ''
-      // Exclude firebase file if not enable
-      if (!firebaseEnable()) {
-        firebase = '**/Firebase*'
-        println '[Push Notification] Firebase disabled'
-      } else {
-        println '[Push Notification] Firebase enabled'
-      }
       manifest.srcFile 'AndroidManifest.xml'
-      java.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                      'submodules/linphone/java/j2se',
-                      'submodules/linphone/java/common',
-                      'submodules/linphone/java/impl',
-                      'submodules/linphone/coreapi/help/java',
-                      'src']
-      resources.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                           'submodules/linphone/java/j2se',
-                           'submodules/linphone/java/common',
-                           'submodules/linphone/java/impl',
-                           'submodules/linphone/coreapi/help/java',
-                           'src']
-      aidl.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                      'submodules/linphone/java/j2se',
-                      'submodules/linphone/java/common',
-                      'submodules/linphone/java/impl',
-                      'submodules/linphone/coreapi/help/java',
-                      'src']
-      renderscript.srcDirs = ['submodules/linphone/mediastreamer2/java/src',
-                              'submodules/linphone/java/j2se',
-                              'submodules/linphone/java/common',
-                              'submodules/linphone/java/impl',
-                              'submodules/linphone/coreapi/help/java',
-                              'src']
+      def srcDirs = submoduleDir
+      srcDirs.addAll(['src/com',
+                      'src/org',
+                      'src/androidTest'])
+      java.srcDirs = srcDirs
+      resources.srcDirs = srcDirs
+      aidl.srcDirs = srcDirs
+      renderscript.srcDirs = srcDirs
       res.srcDirs = ['res']
       assets.srcDirs = ['assets']
       jniLibs.srcDirs = ['libs']
-
-      java.excludes = ['**/mediastream/MediastreamerActivity.java', firebase]
+      java.excludes = excludeFiles
 
       // Exclude some useless files
       packagingOptions {
@@ -177,4 +142,12 @@ android {
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
   }
+}
+
+task runApplication() {
+  def result = exec {
+    executable = 'adb'
+    args = ['shell', 'monkey', '-p', getPackageName(), '-c', 'android.intent.category.LAUNCHER', '1']
+  }
+  return result
 }

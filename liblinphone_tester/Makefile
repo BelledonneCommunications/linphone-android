@@ -1,30 +1,23 @@
-ANDROID_MOST_RECENT_TARGET=$(shell android list target -c | grep -E 'android-[0-9]+' | tail -n1)
-SDK_PLATFORM_TOOLS_PATH=$(shell dirname `which adb`)
-
-all: update-project copy-files
+all: copy-files
 	../gradlew clean
 	../gradlew uninstallDebug
-	../gradlew installDebug
 
 run-all-tests: all
-	ant test
-
-update-project:
-	android update project --path . --target $(ANDROID_MOST_RECENT_TARGET)
+	../gradlew installDebug
+	$(shell adb shell am instrument -r -w org.linphone.tester/org.linphone.tester.TestRunner | tee report.txt)
 
 copy-libs:
-	rm -rf libs/armeabi
-	mkdir -p assets/config_files
-	if test -d "../liblinphone-sdk/android-arm"; then \
-		mkdir -p libs/armeabi && \
-		cp -f ../liblinphone-sdk/android-arm/lib/libgnustl_shared.so libs/armeabi && \
-		cp -f ../liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs/armeabi && \
-		cp -f ../liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs/armeabi && \
-		cp -f ../liblinphone-sdk/android-arm/share/linphone/rootca.pem assets/config_files; \
+	rm -rf libs/arm64-v8a
+	if test -d "../liblinphone-sdk/android-arm64"; then \
+		mkdir -p libs/arm64-v8a && \
+		cp -f ../liblinphone-sdk/android-arm64/lib/libgnustl_shared.so libs/arm64-v8a && \
+		cp -f ../liblinphone-sdk/android-arm64/lib/lib*-arm64-v8a.so libs/arm64-v8a && \
+		cp -f ../liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs/arm64-v8a && \
+		cp -f ../liblinphone-sdk/android-arm64/share/linphone/rootca.pem assets/config_files; \
 	fi
-	if test -f "../liblinphone-sdk/android-arm/bin/gdbserver"; then \
-		cp -f ../liblinphone-sdk/android-arm/bin/gdbserver libs/armeabi && \
-		cp -f ../liblinphone-sdk/android-arm/bin/gdb.setup libs/armeabi; \
+	if test -f "../liblinphone-sdk/android-arm64/bin/gdbserver"; then \
+		cp -f ../liblinphone-sdk/android-arm64/bin/gdbserver libs/arm64-v8a && \
+		cp -f ../liblinphone-sdk/android-arm64/bin/gdb.setup libs/arm64-v8a; \
 	fi
 	rm -rf libs/armeabi-v7a
 	if test -d "../liblinphone-sdk/android-armv7"; then \
@@ -63,6 +56,3 @@ copy-files: ../submodules/linphone/tester/tester_hosts ../submodules/linphone/te
 	cp -rf ../submodules/linphone/tester/rcfiles assets/config_files
 	cp -rf ../submodules/linphone/tester/sounds assets/config_files
 	cp -rf ../submodules/linphone/tester/vcards assets/config_files
-	if [ -a ../google-services.json ] ; \
-	then cp ../google-services.json . ; \
-	fi;

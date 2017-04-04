@@ -11,13 +11,13 @@ import java.lang.Override;
 public class TestRunner extends JUnitReportTestRunner {
 	String mSuite = null;
 	String mTest = null;
-	
+
 	@Override
 	public void onCreate(Bundle arguments) {
 		mSuite = arguments.getString("suite");
 		mTest = arguments.getString("test");
 		Tester.keepAccounts(true);
-		
+
 		super.onCreate(arguments);
 	}
 
@@ -26,7 +26,7 @@ public class TestRunner extends JUnitReportTestRunner {
 		Tester.clearAccounts();
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public TestSuite getAllTests () {
 		TestSuite suite = new TestSuite("Tests");
@@ -34,7 +34,7 @@ public class TestRunner extends JUnitReportTestRunner {
 		addSuites(suite, mSuite, mTest);
 		return suite;
 	}
-	
+
 	public static void addSuites(TestSuite suite, String suiteCheck, String testCheck) {
 		TesterList testerList = new TesterList();
 		testerList.run(new String[]{"tester", "--list-suites"});
@@ -45,7 +45,7 @@ public class TestRunner extends JUnitReportTestRunner {
 			}
 		}
 	}
-	
+
 	public static void addSuite(TestSuite suite, String suiteStr, String testCheck) {
 		TesterList testerList = new TesterList();
 		testerList.run(new String[]{"tester", "--list-tests", suiteStr});

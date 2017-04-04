@@ -1,0 +1,126 @@
+// Project information
+buildDir = 'bin'
+
+def getPackageName() {
+    return "org.linphone"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.google.gms:google-services:3.0.0'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.google.firebase:firebase-messaging:9.0.0'
+    compile 'com.android.support:support-v4:+'
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+
+def srcDirs = ['submodules/linphone/mediastreamer2/java/src',
+                    'submodules/linphone/java/j2se',
+                    'submodules/linphone/java/common',
+                    'submodules/linphone/java/impl',
+                    'submodules/linphone/coreapi/help/java',
+                    'src/org/',
+                    'src/com']
+
+def excludeFiles = []
+
+excludeFiles.add('**/mediastream/MediastreamerActivity.java')
+
+android {
+    defaultConfig {
+        compileSdkVersion 23
+        buildToolsVersion "25.0.2"
+        multiDexEnabled true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = srcDirs
+            resources.srcDirs = srcDirs
+            aidl.srcDirs = srcDirs
+            renderscript.srcDirs = srcDirs
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+
+            java.excludes = excludeFiles
+
+            // Exclude some useless files
+            packagingOptions {
+                exclude '**/gdb.*'
+            }
+        }
+
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+}
+
+android {
+    libraryVariants.all { variant ->
+        def appName = "linphone-android-sdk"
+
+        variant.outputs.each { output ->
+            def newSdkName = "bin/outputs/aar/${appName}.aar"
+            output.outputFile = new File(newSdkName)
+        }
+    }
+}
+
+///////////// Task /////////////
+
+task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
+    source = ['submodules/linphone/mediastreamer2/java/src',
+              'submodules/linphone/java/j2se',
+              'submodules/linphone/java/common',
+              'submodules/linphone/java/impl',
+              'submodules/linphone/coreapi/help/java']
+    excludes = ['**/mediastream/MediastreamerActivity.java',
+                '**/**.html',
+                '**/**.aidl']
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += files(android.libraryVariants.release.javaCompile.classpath.files)
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: releaseJavadoc) {
+    classifier = 'javadoc'
+    from releaseJavadoc.destinationDir
+}
+
+task sdkZip(type: Zip) {
+    String appName = "linphone-android-sdk"
+    String gitSha = 'git describe --always'.execute().text.trim()
+    String newSdkName = appName + "-" + gitSha + ".zip"
+
+    from('bin/libs',
+        'bin/outputs/aar')
+    include '*'
+    archiveName newSdkName
+}

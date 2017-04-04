@@ -25,9 +25,11 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 8. _(optional)_ To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run `make mediastreamer2-sdk`
 
-9. _(optional)_ To generate a signed apk to publish on the Google Play, run `make release`. Make sure you filled the ant.properties values for version.name, key.store and key.alias in order to correctly sign the generated apk. You also may want to create a file name ant_password.properties with the following:
-  * key.store.password=[your_password]
-  * key.alias.password=[your_password]
+9. _(optional)_ To generate a signed apk to publish on the Google Play, run `make release`. Make sure you filled the gradle.properties values for version.name, store file, store password, key alias and key password to correctly sign the generated apk:
+  * RELEASE_STORE_FILE=""
+  * RELEASE_STORE_PASSWORD=
+  * RELEASE_KEY_ALIAS=
+  * RELEASE_KEY_PASSWORD=
 
   If you don't, the passwords will be asked at the signing phase.
 
@@ -43,9 +45,9 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 ## To create an apk with a different package name
 
-You need to edit the custom_rules.xml file:
+You need to edit the build.gradle file:
 
-1. look for the property named "linphone.package.name" and change it value accordingly
+1. look for the function named "getPackageName()" and change it value accordingly
 2. also update the values in the AndroidManifest file where the comment <!-- Change package ! --> appears
 3. change the package name also in the files: res/xml/syncadapter.xml, res/xml/contacts.xml and res/values/non_localizable_custom where <!-- Change package ! --> appears
 4. run again the Makefile script by calling "make"

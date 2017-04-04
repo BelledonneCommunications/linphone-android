@@ -205,11 +205,9 @@ class AndroidPreparator(prepare.Preparator):
 archs={archs}
 TOPDIR=$(shell pwd)
 LINPHONE_ANDROID_VERSION=$(shell git describe --always)
-ANT_SILENT=$(shell ant -h | grep -q -- -S && echo 1 || echo 0)
-PACKAGE_NAME=$(shell sed -nE 's|<property name="linphone.package.name" value="(.*)" />|\\1|p' custom_rules.xml)
 
 .PHONY: all
-.NOTPARALLEL: all generate-apk generate-mediastreamer2-apk install release
+.NOTPARALLEL: all generate-apk install release
 
 all: generate-apk
 
@@ -221,9 +219,6 @@ install: install-apk run-linphone
 
 java-clean:
 \t./gradlew clean
-
-ant-clean:
-\tant clean
 
 $(TOPDIR)/res/raw/rootca.pem:
 \tcp liblinphone-sdk/android-{first_arch}/share/linphone/rootca.pem $@
@@ -306,17 +301,8 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
 
-update-mediastreamer2-project:
-\t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java
-
 generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
-\techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
 \t./gradlew assembleDebug
-
-generate-mediastreamer2-apk: ant-clean build copy-libs update-mediastreamer2-project
-\t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
-\techo "version.name=$(LINPHONE_ANDROID_VERSION)" > default.properties && \\
-\tant debug
 
 quick: clean install-apk run-linphone
 
@@ -324,28 +310,34 @@ install-apk:
 \t./gradlew installDebug
 
 uninstall:
-\tadb uninstall $(PACKAGE_NAME)
+\t./gradlew uninstallAll
 
 release: java-clean build copy-libs
 \t./gradlew assembleRelease
 
 generate-sdk: liblinphone-android-sdk
 
-liblinphone-android-sdk: generate-apk
-\ttant liblinphone-android-sdk
+liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+\t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
+\t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
+\t./gradlew -b libLinphoneAndroidSdk.gradle assembleRelease
+\t./gradlew -b libLinphoneAndroidSdk.gradle sdkZip
 
-linphone-android-sdk: generate-apk
-\tant linphone-android-sdk
+linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+\t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
+\t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
+\t./gradlew -b linphoneAndroidSdk.gradle assembleRelease
+\t./gradlew -b linphoneAndroidSdk.gradle sdkZip
 
-mediastreamer2-sdk: generate-mediastreamer2-apk
-\t@cd $(TOPDIR)/submodules/linphone/mediastreamer2/java && \\
-\tant mediastreamer2-sdk
+mediastreamer2-sdk: build copy-libs
+\t@cd $(TOPDIR)/submodules/mediastreamer2/java && \\
+\t./gradlew assembleRelease
 
 liblinphone_tester:
 \t$(MAKE) -C liblinphone_tester
 
 run-linphone:
-\tadb shell monkey -p $(PACKAGE_NAME) -c android.intent.category.LAUNCHER 1
+\t./gradlew runApplication
 
 run-liblinphone-tests:
 \t@cd liblinphone_tester && \\

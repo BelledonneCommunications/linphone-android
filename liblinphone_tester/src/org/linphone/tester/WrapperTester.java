@@ -18,7 +18,7 @@ public class WrapperTester extends AndroidTestCase {
 		super();
 		setName("wrapper tester");
 	}
-	
+
 	LinphoneCore mCore;
 	@Override
 	protected void runTest() throws Throwable {
@@ -27,39 +27,39 @@ public class WrapperTester extends AndroidTestCase {
 		Assert.assertEquals(true, mCore.audioMulticastEnabled());
 		mCore.enableAudioMulticast(false);
 		Assert.assertEquals(false, mCore.audioMulticastEnabled());
-		
+
 		mCore.enableVideoMulticast(true);
 		Assert.assertEquals(true, mCore.videoMulticastEnabled());
 		mCore.enableVideoMulticast(false);
 		Assert.assertEquals(false, mCore.videoMulticastEnabled());
-		
+
 		LinphoneCallParams params = mCore.createCallParams(null);
 		params.enableAudioMulticast(true);
 		Assert.assertEquals(true, params.audioMulticastEnabled());
 		params.enableAudioMulticast(false);
 		Assert.assertEquals(false, params.audioMulticastEnabled());
-		
+
 		params.enableVideoMulticast(true);
 		Assert.assertEquals(true, params.videoMulticastEnabled());
 		params.enableVideoMulticast(false);
 		Assert.assertEquals(false, params.videoMulticastEnabled());
-		
-		
+
+
 		String ip = "224.3.2.1";
 		mCore.setAudioMulticastAddr(ip);
 		Assert.assertEquals(ip, mCore.getAudioMulticastAddr());
-		
+
 		ip = "224.3.2.3";
 		mCore.setVideoMulticastAddr(ip);
 		Assert.assertEquals(ip, mCore.getVideoMulticastAddr());
-		
+
 		mCore.setAudioMulticastTtl(3);
 		Assert.assertEquals(3, mCore.getAudioMulticastTtl());
-		
+
 		mCore.setVideoMulticastTtl(4);
 		Assert.assertEquals(4, mCore.getVideoMulticastTtl());
 		//multicast end
-		
+
 		//Test setPrimaryContact
 		String address = "Linphone Android <sip:linphone.android@unknown-host>";
 		mCore.setPrimaryContact(address);
@@ -87,7 +87,7 @@ public class WrapperTester extends AndroidTestCase {
 		LinphoneFriend friend = mCore.createFriendWithAddress("sip:lala@test.linphone.org");
 		friend.setRefKey(key);
 		Assert.assertEquals(friend.getRefKey(),key);
-		
+
 		//Test filter enablement
 		Factory factory = mCore.getMSFactory();
 		factory.enableFilterFromName("MSUlawEnc", false);

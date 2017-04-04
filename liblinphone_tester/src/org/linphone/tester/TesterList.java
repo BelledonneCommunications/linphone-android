@@ -9,7 +9,7 @@ public class TesterList extends Tester {
 		super.printLog(level, message);
 		list.add(message);
 	}
-	
+
 	public List<String> getList() {
 		return list;
 	}

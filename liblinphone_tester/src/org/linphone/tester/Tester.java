@@ -18,12 +18,12 @@ public class Tester {
 		}
 		return false;
 	}
-	
+
 	public static boolean isArmv7()
 	{
 		return System.getProperty("os.arch").contains("armv7");
 	}
-	
+
 	static	{
 		List<String> cpuabis=Version.getCpuAbis();
 		String ffmpegAbi;
@@ -41,7 +41,7 @@ public class Tester {
 				System.loadLibrary("mediastreamer_voip-" + abi);
 				System.loadLibrary("linphone-" + abi);
 				System.loadLibrary("linphonetester-" + abi);
-				
+
 				Log.i("LinphoneCoreFactoryImpl","Loading done with " + abi);
 				libLoaded=true;
 				break;
@@ -49,19 +49,19 @@ public class Tester {
 				if (firstException == null) firstException=e;
 			}
 		}
-		
+
 		if (!libLoaded){
 			throw new RuntimeException(firstException);
-			
+
 		}else{
 			Version.dumpCapabilities();
 		}
 	}
-	
+
 	public native int run(String args[]);
 	public static native void keepAccounts(boolean keep);
 	public static native void clearAccounts();
-	
+
 	public void printLog(final int level, final String message) {
 		switch(level) {
 		case 0:
