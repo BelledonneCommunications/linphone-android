@@ -204,7 +204,6 @@ class AndroidPreparator(prepare.Preparator):
         makefile = """
 archs={archs}
 TOPDIR=$(shell pwd)
-LINPHONE_ANDROID_VERSION=$(shell git describe --always)
 
 .PHONY: all
 .NOTPARALLEL: all generate-apk install release

@@ -147,7 +147,7 @@ android {
 task runApplication() {
   def result = exec {
     executable = 'adb'
+    ignoreExitValue true
     args = ['shell', 'monkey', '-p', getPackageName(), '-c', 'android.intent.category.LAUNCHER', '1']
   }
-  return result
 }
