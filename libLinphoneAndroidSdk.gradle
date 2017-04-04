@@ -91,7 +91,7 @@ task androidJavadocsJar(type: Jar, dependsOn: releaseJavadoc) {
 }
 
 task sdkZip(type: Zip) {
-    String appName = "linphone-android-sdk"
+    String appName = "liblinphone-android-sdk"
     String gitSha = 'git describe --always'.execute().text.trim()
     String newSdkName = appName + "-" + gitSha + ".zip"
 
