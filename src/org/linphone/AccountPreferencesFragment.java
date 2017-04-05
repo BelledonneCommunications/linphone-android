@@ -589,7 +589,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 	@Override
 	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
-		progress.dismiss();
+		if (progress != null) progress.dismiss();
 		if (status.equals(LinphoneAccountCreator.RequestStatus.Ok)) {
 			mPrefs.setAccountPassword(n, accountCreator.getPassword());
 			PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
