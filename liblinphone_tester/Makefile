@@ -2,10 +2,12 @@ all: copy-files
 	../gradlew clean
 	../gradlew uninstallDebug
 
-run-all-tests:
+run-all-tests: copy-files
 	../gradlew :connectedAndroidTest
 
 copy-libs:
+	mkdir -p assets && \
+	mkdir -p assets/config_files && \
 	rm -rf libs/arm64-v8a
 	if test -d "../liblinphone-sdk/android-arm64"; then \
 		mkdir -p libs/arm64-v8a && \
