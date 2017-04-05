@@ -96,8 +96,7 @@ android {
     main {
       manifest.srcFile 'AndroidManifest.xml'
       def srcDirs = submoduleDir
-      srcDirs.addAll(['src/com',
-                      'src/org'])
+      srcDirs.addAll(['src/android'])
       java.srcDirs = srcDirs
       resources.srcDirs = srcDirs
       aidl.srcDirs = srcDirs
@@ -121,8 +120,7 @@ android {
     androidTest {
       manifest.srcFile 'AndroidManifest.xml'
       def srcDirs = submoduleDir
-      srcDirs.addAll(['src/com',
-                      'src/org',
+      srcDirs.addAll(['src/android',
                       'src/androidTest'])
       java.srcDirs = srcDirs
       resources.srcDirs = srcDirs

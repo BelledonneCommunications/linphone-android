@@ -1,3 +1,5 @@
+package org.linphone.ui.tester;
+
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.LinphoneService;

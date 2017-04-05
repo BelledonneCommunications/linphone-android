@@ -1,3 +1,5 @@
+package org.linphone.ui.tester;
+
 import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;

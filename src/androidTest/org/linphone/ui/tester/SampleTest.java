@@ -1,3 +1,5 @@
+package org.linphone.ui.tester;
+
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;

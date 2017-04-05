@@ -1,3 +1,5 @@
+package org.linphone.ui.tester;
+
 import junit.framework.Assert;
 
 import org.linphone.FragmentsAvailable;

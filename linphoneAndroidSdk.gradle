@@ -33,8 +33,7 @@ def srcDirs = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/common',
                     'submodules/linphone/java/impl',
                     'submodules/linphone/coreapi/help/java',
-                    'src/org/',
-                    'src/com']
+                    'src/android']
 
 def excludeFiles = []
 

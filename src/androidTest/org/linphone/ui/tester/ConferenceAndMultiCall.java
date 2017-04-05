@@ -1,3 +1,5 @@
+package org.linphone.ui.tester;
+
 import java.util.ArrayList;
 
 import junit.framework.Assert;
