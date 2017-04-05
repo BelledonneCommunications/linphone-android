@@ -300,6 +300,32 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
 
+copy-libs-mediastreamer:
+\trm -rf submodules/mediastreamer2/java/libs/armeabi
+\tif test -d "liblinphone-sdk/android-arm"; then \\
+\t\tmkdir -p submodules/mediastreamer2/java/libs/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/*mediastreamer*.so submodules/mediastreamer2/java/libs/armeabi && \\
+\t\tsh WORK/android-arm/strip.sh submodules/mediastreamer2/java/libs/armeabi/*.so; \\
+\tfi
+\trm -rf submodules/mediastreamer2/java/libs/armeabi-v7a
+\tif test -d "liblinphone-sdk/android-armv7"; then \\
+\t\tmkdir -p submodules/mediastreamer2/java/libs/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/*mediastreamer*.so submodules/mediastreamer2/java/libs/armeabi-v7a && \\
+\t\tsh WORK/android-armv7/strip.sh submodules/mediastreamer2/java/libs/armeabi-v7a/*.so; \\
+\tfi
+\trm -rf submodules/mediastreamer2/java/libs/arm64-v8a
+\tif test -d "liblinphone-sdk/android-arm64"; then \\
+\t\tmkdir -p submodules/mediastreamer2/java/libs/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/*mediastreamer*.so submodules/mediastreamer2/java/libs/arm64-v8a && \\
+\t\tsh WORK/android-arm64/strip.sh submodules/mediastreamer2/java/libs/arm64-v8a/*.so; \\
+\tfi
+\trm -rf submodules/mediastreamer2/java/libs/x86
+\tif test -d "liblinphone-sdk/android-x86"; then \\
+\t\tmkdir -p submodules/mediastreamer2/java/libs/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/*mediastreamer*.so submodules/mediastreamer2/java/libs/x86 && \\
+\t\tsh WORK/android-x86/strip.sh submodules/mediastreamer2/java/libs/x86/*.so; \\
+\tfi
+
 generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t./gradlew assembleDebug
 
@@ -328,7 +354,7 @@ linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t./gradlew -b linphoneAndroidSdk.gradle assembleRelease
 \t./gradlew -b linphoneAndroidSdk.gradle sdkZip
 
-mediastreamer2-sdk: build copy-libs
+mediastreamer2-sdk: build copy-libs-mediastreamer
 \t@cd $(TOPDIR)/submodules/mediastreamer2/java && \\
 \t./gradlew -b mediastreamerSdk.gradle assembleRelease
 \t@cd $(TOPDIR)/submodules/mediastreamer2/java && \\
