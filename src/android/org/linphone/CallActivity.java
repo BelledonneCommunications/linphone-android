@@ -87,7 +87,7 @@ import java.util.TimerTask;
 /**
  * @author Sylvain Berfini
  */
-public class CallActivity extends LinphoneGenericActivity implements OnClickListener, SensorEventListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class CallActivity extends LinphoneGenericActivity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
 	private final static int SECONDS_BEFORE_DENYING_CALL_UPDATE = 30000;
 	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
@@ -117,19 +117,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private Dialog dialog = null;
 	private static long TimeRemind = 0;
 
-	private static PowerManager powerManager;
-	private static PowerManager.WakeLock wakeLock;
-	private static int field = 0x00000020;
-	private SensorManager mSensorManager;
-	private Sensor mProximity;
-
 	private LinearLayout callsList, conferenceList;
 	private LayoutInflater inflater;
 	private ViewGroup container;
 	private boolean isConferenceRunning = false;
 	private LinphoneCoreListenerBase mListener;
 	private DrawerLayout sideMenu;
-	private boolean mProximitySensingEnabled;
 
 	private Handler mHandler = new Handler();
 	private Timer mTimer;
@@ -160,18 +153,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
 
 		cameraNumber = AndroidCameraConfiguration.retrieveCameras().length;
-
-		try {
-			// Yeah, this is hidden field.
-			field = PowerManager.class.getClass().getField("PROXIMITY_SCREEN_OFF_WAKE_LOCK").getInt(null);
-		} catch (Throwable ignored) {
-		}
-
-		powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wakeLock = powerManager.newWakeLock(field, getLocalClassName());
-
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
 		mEncoderTexts = new HashMap<String, String>();
 		mDecoderTexts = new HashMap<String, String>();
@@ -814,26 +795,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
-	private void enableProximitySensing(boolean enable){
-		if (enable){
-			if (!mProximitySensingEnabled){
-				mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
-				mProximitySensingEnabled = true;
-			}
-		} else {
-			if (mProximitySensingEnabled){
-				mSensorManager.unregisterListener(this);
-				mProximitySensingEnabled = false;
-				// Don't forgeting to release wakelock if held
-				if(wakeLock.isHeld()) {
-					wakeLock.release();
-				}
-			}
-		}
-	}
-
 	private void showAudioView() {
-		enableProximitySensing(true);
+		LinphoneManager.getInstance().enableProximitySensing(true);
 		replaceFragmentVideoByAudio();
 		displayAudioCall();
 		showStatusBar();
@@ -848,7 +811,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 		refreshInCallActions();
 
-		enableProximitySensing(false);
+		LinphoneManager.getInstance().enableProximitySensing(false);
 
 		replaceFragmentAudioByVideo();
 		hideStatusBar();
@@ -1206,7 +1169,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		handleViewIntent();
 
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			enableProximitySensing(true);
+			LinphoneManager.getInstance().enableProximitySensing(true);
 			removeCallbacks();
 		}
 	}
@@ -1267,8 +1230,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 		mControls = null;
 		mControlsHandler = null;
-
-		enableProximitySensing(false);
 
 		unbindDrawables(findViewById(R.id.topLayout));
 		if (mTimer != null) {
@@ -1552,7 +1513,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void displayConference(boolean isInConf){
 		if(isInConf) {
 			mControlsLayout.setVisibility(View.VISIBLE);
-			enableProximitySensing(true);
 			mActiveCallHeader.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.GONE);
 			conferenceList.removeAllViews();
@@ -1572,39 +1532,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		} else {
 			conferenceList.setVisibility(View.GONE);
 		}
-	}
-
-	public static Boolean isProximitySensorNearby(final SensorEvent event) {
-		float threshold = 4.001f; // <= 4 cm is near
-
-		final float distanceInCm = event.values[0];
-		final float maxDistance = event.sensor.getMaximumRange();
-		Log.d("Proximity sensor report ["+distanceInCm+"] , for max range ["+maxDistance+"]");
-
-		if (maxDistance <= threshold) {
-			// Case binary 0/1 and short sensors
-			threshold = maxDistance;
-		}
-		return distanceInCm < threshold;
-	}
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		if (event.timestamp == 0) return;
-		if(isProximitySensorNearby(event)){
-			if(!wakeLock.isHeld()) {
-				wakeLock.acquire();
-			}
-		} else {
-			if(wakeLock.isHeld()) {
-				wakeLock.release();
-			}
-		}
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
 	}
 
 	private void displayMissedChats() {

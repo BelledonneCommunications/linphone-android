@@ -30,6 +30,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -124,7 +128,7 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
  * @author Guillaume Beraudo
  *
  */
-public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessage.LinphoneChatMessageListener, LinphoneAccountCreator.LinphoneAccountCreatorListener {
+public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessage.LinphoneChatMessageListener, SensorEventListener, LinphoneAccountCreator.LinphoneAccountCreatorListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -151,10 +155,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private IntentFilter mHookIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
+	private WakeLock mProximityWakelock;
 	private LinphoneAccountCreator accountCreator;
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
 	private static LinphoneChatMessage mUploadPendingFileMessage;
 	private boolean mAreDisplayAlertMessage = false;
+	private SensorManager mSensorManager;
+	private Sensor mProximity;
+	private boolean mProximitySensingEnabled;
 
 	public String wizardLoginViewDomain = null;
 
@@ -191,6 +199,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mVibrator = (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
 		mPowerManager = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
 		mConnectivityManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+		mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
+		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		mR = c.getResources();
 		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
 
@@ -829,6 +839,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mHookReceiver = new HookReceiver();
 		mServiceContext.registerReceiver(mHookReceiver, mHookIntentFilter);
 
+		mProximityWakelock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "manager_proximity_sensor");
 
 		updateNetworkReachability();
 
@@ -979,6 +990,57 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			dozeModeEnabled = false;
 			mServiceContext.unregisterReceiver(mDozeReceiver);
 		}
+	}
+
+	public void enableProximitySensing(boolean enable){
+		if (enable){
+			if (!mProximitySensingEnabled){
+				mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+				mProximitySensingEnabled = true;
+			}
+		} else {
+			if (mProximitySensingEnabled){
+				mSensorManager.unregisterListener(this);
+				mProximitySensingEnabled = false;
+				// Don't forgeting to release wakelock if held
+				if(mProximityWakelock.isHeld()) {
+					mProximityWakelock.release();
+				}
+			}
+		}
+	}
+
+	public static Boolean isProximitySensorNearby(final SensorEvent event) {
+		float threshold = 4.001f; // <= 4 cm is near
+
+		final float distanceInCm = event.values[0];
+		final float maxDistance = event.sensor.getMaximumRange();
+		Log.d("Proximity sensor report ["+distanceInCm+"] , for max range ["+maxDistance+"]");
+
+		if (maxDistance <= threshold) {
+			// Case binary 0/1 and short sensors
+			threshold = maxDistance;
+		}
+		return distanceInCm < threshold;
+	}
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (event.timestamp == 0) return;
+		if(isProximitySensorNearby(event)){
+			if(!mProximityWakelock.isHeld()) {
+				mProximityWakelock.acquire();
+			}
+		} else {
+			if(mProximityWakelock.isHeld()) {
+				mProximityWakelock.release();
+			}
+		}
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
 	}
 
 	public static void ContactsManagerDestroy() {
@@ -1237,6 +1299,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
+				//Enabling proximity sensor
+				enableProximitySensing(true);
 				//It is for incoming calls, because outgoing calls enter MODE_IN_COMMUNICATION immediately when they start.
 				//However, incoming call first use the MODE_RINGING to play the local ring.
 				if(call.getDirection() == CallDirection.Incoming) {
@@ -1254,6 +1318,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (state == State.CallEnd || state == State.Error) {
 			if (mLc.getCallsNb() == 0) {
+				//Disabling proximity sensor
+				enableProximitySensing(false);
 				Context activity = getContext();
 				if (mAudioFocused) {
 					int res = mAudioManager.abandonAudioFocus(null);
