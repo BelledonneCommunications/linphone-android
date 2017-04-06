@@ -976,6 +976,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		finally {
 			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+			mServiceContext.unregisterReceiver(mHookReceiver);
 			dozeManager(false);
 			mLc = null;
 			instance = null;
