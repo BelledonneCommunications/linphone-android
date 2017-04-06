@@ -77,13 +77,18 @@ class AndroidX86Target(AndroidTarget):
         AndroidTarget.__init__(self, 'x86')
 
 
+class AndroidX86_64Target(AndroidTarget):
+
+    def __init__(self):
+        AndroidTarget.__init__(self,'x86_64')
 
 
 android_targets = {
     'arm': AndroidArmTarget(),
     'armv7': AndroidArmv7Target(),
     'arm64': AndroidArm64Target(),
-    'x86': AndroidX86Target()
+    'x86': AndroidX86Target(),
+    'x86_64': AndroidX86_64Target()
 }
 
 class AndroidPreparator(prepare.Preparator):
