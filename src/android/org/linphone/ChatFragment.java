@@ -422,10 +422,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
 		}
 
-		LinphoneChatMessage msg = getMessageForId(v.getId());
+	/*	LinphoneChatMessage msg = getMessageForId(v.getId());
 		if (msg != null && msg.getStatus() == LinphoneChatMessage.State.NotDelivered) {
 			menu.add(v.getId(), MENU_RESEND_MESSAGE, 0, getString(R.string.retry));
 		}
+	*/
 	}
 
 	@Override
@@ -443,9 +444,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			case MENU_COPY_TEXT:
 				copyTextMessageToClipboard(item.getGroupId());
 				break;
-			case MENU_RESEND_MESSAGE:
+			/*case MENU_RESEND_MESSAGE:
 				resendMessage(item.getGroupId());
 				break;
+			*/
 			case MENU_PICTURE_SMALL:
 				sendImageMessage(filePathToUpload, SIZE_SMALL);
 				break;
@@ -765,19 +767,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		chatRoom.markAsRead();
 	}
 
-	private void resendMessage(int id) {
-		LinphoneChatMessage message = getMessageForId(id);
-		if (message == null)
+	private void resendMessage(LinphoneChatMessage message) {
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (message == null || message.getStatus() != State.NotDelivered || !lc.isNetworkReachable())
 			return;
 
-		chatRoom.deleteMessage(getMessageForId(id));
+		message.reSend();
 		invalidate();
+	}
 
-		if (message.getText() != null && message.getText().length() > 0) {
-			sendTextMessage(message.getText());
-		} else {
-			sendImageMessage(message.getAppData(), 0);
+	private void resendMessage(int id) {
+		LinphoneChatMessage message = getMessageForId(id);
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (message == null || message.getStatus() != State.NotDelivered || !lc.isNetworkReachable()){
+				return;
 		}
+		message.reSend();
+		invalidate();
 	}
 
 	private void copyTextMessageToClipboard(int id) {
@@ -1153,6 +1159,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
 						LinphoneUtils.displayErrorAlert(getString(R.string.message_not_encrypted), LinphoneActivity.instance());
 					}
+					if(message.getStatus() == State.NotDelivered) {
+						resendMessage(message);
+						//resendMessage(holder.id);
+					}
 				}
 			});
 
@@ -1309,6 +1319,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						}
 					}
 				});
+				chatRoom.markAsRead();
 			}
 
 			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
