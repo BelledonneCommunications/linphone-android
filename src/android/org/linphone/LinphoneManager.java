@@ -1364,6 +1364,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			setAudioManagerInCallMode();
 			requestAudioFocus(STREAM_VOICE_CALL);
 			startBluetooth();
+            enableProximitySensing(true);
 		}
 
 		if (state == State.StreamsRunning) {
