@@ -58,6 +58,7 @@ import org.linphone.xmlrpc.XmlRpcListenerBase;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -1076,6 +1077,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	public void quit() {
 		finish();
 		stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+		ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		am.killBackgroundProcesses(getString(R.string.sync_account_type));
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
