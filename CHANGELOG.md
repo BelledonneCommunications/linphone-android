@@ -12,6 +12,16 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+## [3.2.6] - 2017-04-10
+
+### Added
+- Notification of message reading on chat
+- New permission to kill linphone app
+
+### Fixed
+- Crash with firebase push
+- Problems with contacts
+
 ## [3.2.5] - 2017-03-06
 
 ### Added
