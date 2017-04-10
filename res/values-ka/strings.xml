@@ -189,13 +189,9 @@
   <!--Call-->
   <string name="incoming_call">შემომავალი ზარი</string>
   <string name="outgoing_call">გამავალი ზარი</string>
-  <string name="add_video_dialog">თქვენს კონტაქტს სურს ვიდეოს ჩართვა</string>
   <string name="no_current_call">აქტიური ზარი არ არის</string>
-  <string name="call_paused_by_remote">თვენმა კონტაქტმა შეაჩერა ზარი</string>
   <string name="couldnt_accept_call">ზარის მიღებისას მოხდა შეცდომა</string>
   <string name="zrtp_dialog1">დაადასტურეთ შემდეგი SAS მომხმარებელთან:\nთქვით: %s</string>
-  <string name="zrtp_dialog2">
-\nთქვენმა კოლეგამ უნდა თქვას: %s</string>
   <string name="unknown_incoming_call_name">უცნობი</string>
   <string name="call_stats_audio">ხმა</string>
   <string name="call_stats_video">ვიდეო</string>
@@ -232,7 +228,6 @@
   <string name="error_user_busy">მომხმარებელი დაკავებულია</string>
   <string name="error_user_not_found">მომხმარებელი ვერ მოიძებნა</string>
   <string name="error_incompatible_media">შეუთავსებელი მედია პარამეტრები</string>
-  <string name="error_low_bandwidth">თქვენს კონტაკტს აქვს დაბალი გამტარი უნარი, ვიდეოს დაწყება ვერ მოხერხდა</string>
   <string name="error_network_unreachable">ქსელი მიუწვდომელია</string>
   <string name="error_bad_credentials">ცუდი იდენტიფიკატორი</string>
   <string name="error_unauthorized">არაავტორიზებული</string>
@@ -338,6 +333,7 @@
   <!--Network settings-->
   <string name="pref_network_title">ქსელი</string>
   <string name="pref_wifi_only">მხოლოდ WiFi-ს გამოყენება</string>
+  <string name="pref_doze_mode">ძილის რეჟიმი</string>
   <string name="pref_stun_server">STUN / TURN სერვერი</string>
   <string name="pref_ice_enable">ICE-ის ჩართვა</string>
   <string name="pref_turn_enable"> TURN-ის ჩართვა</string>

@@ -135,7 +135,7 @@
   <string name="transport_unsupported">النقل غير مدعوم</string>
   <string name="country_code_invalid">رمز البلد غير صحيح</string>
   <!--In-app-->
-  <string name="inapp">التبضع محمول</string>
+  <string name="inapp">التبضع المحمول</string>
   <string name="inapp_notification_title">شراء بالتبضع محمول</string>
   <string name="inapp_notification_trial_expire">ستنتهي الفترة التجريبية بتاريخ %s</string>
   <string name="inapp_notification_account_expire">سوف تنتهي صلاحية الاشتراك في %s</string>
@@ -191,13 +191,9 @@
   <!--Call-->
   <string name="incoming_call">مكالمة واردة</string>
   <string name="outgoing_call">مكالمة صادرة</string>
-  <string name="add_video_dialog">يود مخاطبك تشغيل الفيديو</string>
   <string name="no_current_call">لا وجود لأي مكالمة نشيطة</string>
-  <string name="call_paused_by_remote">أوقف مخاطبك المكالمة مؤقتا</string>
   <string name="couldnt_accept_call">حدث خطأ خلال قبول المكالمة</string>
   <string name="zrtp_dialog1">أكد رمز الاستيثاق مع نظيرك :\nقل : %s</string>
-  <string name="zrtp_dialog2">
-\nيجب على مخاطبك أن يقول : %s</string>
   <string name="unknown_incoming_call_name">مجهول</string>
   <string name="call_stats_audio">الصوت</string>
   <string name="call_stats_video">الفيديو</string>
@@ -234,7 +230,6 @@
   <string name="error_user_busy">المستخدم مشغول</string>
   <string name="error_user_not_found">لم يعثر على المستخدم</string>
   <string name="error_incompatible_media">مُعامِلات الوسائط غير متوافقة</string>
-  <string name="error_low_bandwidth">لمخاطبك سعة قناة ضيقة، لا يمكن إذن بدء الفيديو</string>
   <string name="error_network_unreachable">تعذر الوصول إلى الشبكة</string>
   <string name="error_bad_credentials">الاعتمادات غير صحيحة</string>
   <string name="error_unauthorized">غير مُصرَّح</string>
@@ -279,7 +274,7 @@
   <string name="pref_sipaccounts">حسابات SIP</string>
   <string name="default_account_flag">الحساب الافتراضي</string>
   <string name="pref_add_account">إضافة حساب</string>
-  <string name="pref_in_app_store">متجر التبضع محمول</string>
+  <string name="pref_in_app_store">متجر التبضع المحمول</string>
   <string name="pref_tunnel">النفق</string>
   <string name="pref_tunnel_host">إسم المضيف</string>
   <string name="pref_tunnel_port">المنفذ</string>
@@ -340,6 +335,7 @@
   <!--Network settings-->
   <string name="pref_network_title">الشبكة</string>
   <string name="pref_wifi_only">استخدم WiFi فقط</string>
+  <string name="pref_doze_mode">وضع Doze</string>
   <string name="pref_stun_server">خادم STUN / TURN</string>
   <string name="pref_ice_enable">تشغيل ICE</string>
   <string name="pref_turn_enable">فعِّل TURN</string>

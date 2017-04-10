@@ -182,9 +182,7 @@
   <!--Call-->
   <string name="incoming_call">Połączenie przychodzące</string>
   <string name="outgoing_call">Połączenie wychodzące</string>
-  <string name="add_video_dialog">Twój rozmówca chciałby włączyć wideo</string>
   <string name="no_current_call">Brak aktywnego połączenia</string>
-  <string name="call_paused_by_remote">Twój rozmówca przerwał połączenie</string>
   <string name="couldnt_accept_call">Wystąpił błąd podczas odebrania</string>
   <string name="unknown_incoming_call_name">Nieznany</string>
   <string name="call_stats_audio">Audio</string>
@@ -221,7 +219,6 @@
   <string name="error_user_busy">Użytkownik zajęty</string>
   <string name="error_user_not_found">Użytkownik nie znaleziony</string>
   <string name="error_incompatible_media">Parametry nośników niekompatybilne</string>
-  <string name="error_low_bandwidth">Twój rozmówca ma niską przepustowość,  nie można uruchomić wideo</string>
   <string name="error_network_unreachable">Sieć jest niedostępna</string>
   <string name="error_bad_credentials">Złe poświadczenia</string>
   <string name="error_unauthorized">Nieautoryzowany</string>

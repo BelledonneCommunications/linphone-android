@@ -116,9 +116,7 @@
   <!--Call-->
   <string name="incoming_call">tuleva puhelu</string>
   <string name="outgoing_call">lähtevä puhelu</string>
-  <string name="add_video_dialog">Vastapuoli haluaisi että otat video kuvan käyttöön</string>
   <string name="no_current_call">Ei aktiivisia puheluita</string>
-  <string name="call_paused_by_remote">Vastapuoli laittoi puhelun tauolle</string>
   <string name="couldnt_accept_call">Virhe puhelua ottaessa</string>
   <string name="unknown_incoming_call_name">Tuntematon</string>
   <string name="call_stats_audio">Ääni</string>
@@ -145,7 +143,6 @@
   <string name="error_call_declined">Puhelu evätty</string>
   <string name="error_user_not_found">Käyttäjää ei löydy</string>
   <string name="error_incompatible_media">Epäsopivat media raja-arvot</string>
-  <string name="error_low_bandwidth">Vastapuolella on hidas internet yhteys, videota ei voi aloittaa</string>
   <string name="error_network_unreachable">Verkko on tavoittamattomissa</string>
   <string name="error_bad_credentials">Huonot kirjautumistiedot</string>
   <string name="error_unauthorized">Luvaton</string>

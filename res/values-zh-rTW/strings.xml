@@ -129,8 +129,6 @@
   <!--Call-->
   <string name="incoming_call">來電</string>
   <string name="outgoing_call">撥出電話</string>
-  <string name="add_video_dialog">對方想要啟用視訊</string>
-  <string name="call_paused_by_remote">對方暫停了通話</string>
   <string name="couldnt_accept_call">接電話時發生錯誤</string>
   <string name="unknown_incoming_call_name">未知</string>
   <string name="call_stats_audio">音訊</string>
@@ -153,7 +151,6 @@
   <string name="error_unknown">未知錯誤</string>
   <string name="error_user_not_found">找不到使用者</string>
   <string name="error_incompatible_media">不相容的媒體參數</string>
-  <string name="error_low_bandwidth">對方的頻寬過低，視訊無法啟動</string>
   <string name="error_network_unreachable">無法連接網路</string>
   <string name="error_io_error">網路錯誤</string>
   <string name="download_image_failed">下載失敗。請檢查你的網路連接或稍候再試。</string>

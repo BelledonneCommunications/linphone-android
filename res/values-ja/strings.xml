@@ -182,9 +182,7 @@
   <!--Call-->
   <string name="incoming_call">着信</string>
   <string name="outgoing_call">発信</string>
-  <string name="add_video_dialog">あなたとのビデオを表示したがっています</string>
   <string name="no_current_call">有効な発信はありません</string>
-  <string name="call_paused_by_remote">あなたとの通話を一時停止しました</string>
   <string name="couldnt_accept_call">通話中にエラーが発生しました</string>
   <string name="unknown_incoming_call_name">不明</string>
   <string name="call_stats_audio">オーディオ</string>
@@ -221,7 +219,6 @@
   <string name="error_user_busy">ビジーです</string>
   <string name="error_user_not_found">ユーザーがおりません</string>
   <string name="error_incompatible_media">互換性のないメディアパラメーター</string>
-  <string name="error_low_bandwidth">あなたの相手の通信幅が狭いのでビデオが使えません</string>
   <string name="error_network_unreachable">ネットワークに到達できません</string>
   <string name="error_bad_credentials">不正な証明書です</string>
   <string name="error_unauthorized">無断</string>

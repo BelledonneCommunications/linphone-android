@@ -116,9 +116,7 @@
   <!--Call-->
   <string name="incoming_call">входящий вызов</string>
   <string name="outgoing_call">исходящий вызов</string>
-  <string name="add_video_dialog">Ваш собеседник хотел бы включить видео</string>
   <string name="no_current_call">Нет активного вызова</string>
-  <string name="call_paused_by_remote">Ваш собеседник поставил звонок на паузу</string>
   <string name="couldnt_accept_call">Произошла ошибка во время принятия вызова</string>
   <string name="unknown_incoming_call_name">Неизвестный</string>
   <string name="call_stats_audio">Аудио</string>
@@ -145,7 +143,6 @@
   <string name="error_call_declined">Вызов сброшен</string>
   <string name="error_user_not_found">Пользователь не найден</string>
   <string name="error_incompatible_media">Несовместимые параметры потока</string>
-  <string name="error_low_bandwidth">У вашего собеседника низкая пропускная способность, видео не может быть запущено</string>
   <string name="error_network_unreachable">Сеть недоступна</string>
   <string name="error_bad_credentials">Неверные учетные данные</string>
   <string name="error_unauthorized">Неавторизован</string>

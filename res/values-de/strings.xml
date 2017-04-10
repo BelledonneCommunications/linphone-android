@@ -170,6 +170,8 @@
   <string name="message_not_encrypted">Diese Nachricht ist nicht verschlüsselt</string>
   <string name="message_cant_be_decrypted_notif">Sie können diese Nachricht nicht entschlüsseln.</string>
   <string name="processing_image">Bild wird verarbeitet. Je nach Größe der Datei kann dies mehrere Sekunden in Anspruch nehmen</string>
+  <string name="displayed">Lesen</string>
+  <string name="resend">Erneut senden</string>
   <!--Status Bar-->
   <string name="status_connected">Registriert</string>
   <string name="status_not_connected">Nicht registriert</string>
@@ -184,11 +186,9 @@
   <!--Call-->
   <string name="incoming_call">eingehender Anruf</string>
   <string name="outgoing_call">ausgehender Anruf</string>
-  <string name="add_video_dialog">Ihr Partner möchte Video einschalten</string>
   <string name="no_current_call">Kein aktiver Anruf</string>
-  <string name="call_paused_by_remote">Ihr Partner hat den Anruf pausiert</string>
+  <string name="call_paused_by_remote">Ihr Anrufer hat den Anruf pausiert</string>
   <string name="couldnt_accept_call">Beim Annehmen des Anrufs ist ein Fehler aufgetreten</string>
-  <string name="zrtp_dialog2">\nIhr Partner sollte sagen: %s</string>
   <string name="unknown_incoming_call_name">Unbekannt</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>
@@ -225,7 +225,6 @@
   <string name="error_user_busy">Benutzer beschäftigt</string>
   <string name="error_user_not_found">Benutzer nicht gefunden</string>
   <string name="error_incompatible_media">Inkompatible Medienparameter</string>
-  <string name="error_low_bandwidth">Ihr Partner hat eine niedrige Bandbreite, Video kann nicht gestartet werden</string>
   <string name="error_network_unreachable">Netzwerk ist nicht erreichbar</string>
   <string name="error_bad_credentials">Falsche Anmeldedaten</string>
   <string name="error_unauthorized">Unzulässig</string>

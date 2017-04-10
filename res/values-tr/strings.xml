@@ -189,12 +189,9 @@
   <!--Call-->
   <string name="incoming_call">Gelen çağrı</string>
   <string name="outgoing_call">Giden çağrı</string>
-  <string name="add_video_dialog">Görüştüğünüz kişi görüntüyü açmak istiyor</string>
   <string name="no_current_call">Etkin arama yok</string>
-  <string name="call_paused_by_remote">Görüştüğünüz kişi aramayı duraklattı</string>
   <string name="couldnt_accept_call">Gelen aramanın kabulünde bir hata oluştu</string>
   <string name="zrtp_dialog1">Eş ile aşağıdaki SAS\'ı doğrulayın:\nSöyleyin: %s</string>
-  <string name="zrtp_dialog2">\nEşiniz şunu söylemeli: %s</string>
   <string name="unknown_incoming_call_name">Bilinmeyen</string>
   <string name="call_stats_audio">Ses</string>
   <string name="call_stats_video">Görüntü</string>
@@ -230,7 +227,6 @@
   <string name="error_user_busy">Kullanıcı meşgul</string>
   <string name="error_user_not_found">Kullanıcı bulunamadı</string>
   <string name="error_incompatible_media">Uyumsuz ortam değişkenleri</string>
-  <string name="error_low_bandwidth">Görüştüğünüz kişinin bant genişliği düşük, görüntü başlatılamaz.</string>
   <string name="error_network_unreachable">Ağa erişim yok</string>
   <string name="error_bad_credentials">Referansı kötü</string>
   <string name="error_unauthorized">Kimlik doğrulanmadı</string>

@@ -126,9 +126,7 @@
   <!--Call-->
   <string name="incoming_call">Chamada recebida</string>
   <string name="outgoing_call">Chamadas efetuadas</string>
-  <string name="add_video_dialog">Seu contato gostaria de adicionar vídeo a chamada atual.</string>
   <string name="no_current_call">Nova Chamada</string>
-  <string name="call_paused_by_remote">Seu contato gostaria de adicionar vídeo a chamada atual</string>
   <string name="couldnt_accept_call">Ocorreu um erro ao aceitar a chamada</string>
   <string name="unknown_incoming_call_name">Erro desconhecido</string>
   <string name="call_stats_audio">Audio</string>
@@ -157,7 +155,6 @@
   <string name="error_call_declined">Chamada recusada</string>
   <string name="error_user_not_found">Usuário não encontrado</string>
   <string name="error_incompatible_media">Parâmetros de mídia incompatíveis</string>
-  <string name="error_low_bandwidth">Seu contato gostaria de adicionar vídeo a chamada atual.</string>
   <string name="error_network_unreachable">Rede inacessível</string>
   <string name="error_bad_credentials">Credenciais erradas</string>
   <string name="error_unauthorized">Não autorizado</string>

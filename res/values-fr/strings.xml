@@ -88,6 +88,8 @@
   <string name="assistant_codec_down_question">Voulez-vous télécharger le codec vidéo OpenH264 fourni par Cisco Systems, Inc. ? </string>
   <string name="assistant_codec_downloading">Téléchargement du codec vidéo OpenH264 fourni par Cisco Systems, Inc.</string>
   <string name="assistant_openh264_downloading">Téléchargement de OpenH264</string>
+  <string name="assistant_openh264_restart">Avant de pouvoir utiliser le codec OpenH264 vous devez redemarrez %s.</string>
+  <string name="assistant_openh264_error">Désolé, une erreur est survenue</string>
   <string name="assistant_codec_downloaded">Téléchargement du codec vidéo OpenH264 fourni par Cisco Systems, Inc effectué.</string>
   <string name="wizard_failed">Une erreur est survenue, réessayez plus tard.</string>
   <string name="wizard_server_unavailable">Serveur indisponible, veuillez vérifier votre connexion réseau.</string>
@@ -97,7 +99,7 @@
   <string name="assistant_phone_number_incorrect">Votre numéro de téléphone est invalide.</string>
   <string name="wizard_email_incorrect">Votre email est invalide.</string>
   <string name="wizard_password_incorrect">Votre mot de passe n\'est pas valide.</string>
-  <string name="wizard_passwords_unmatched">Les mots de passe ne correspondent pas.</string>
+  <string name="wizard_passwords_unmatched">Les mots de passes ne correspondent pas.</string>
   <string name="setup_confirm_username">Votre nom d\'utilisateur sera %s.\r\n\r\nIl peut différer de votre saisie.\r\nContinuer ?</string>
   <string name="first_launch_no_login_password">Entrez votre nom d\'utilisateur et votre mot de passe</string>
   <string name="forgot_password">Mot de passe oublié ?</string>
@@ -169,6 +171,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="image_saved">Image sauvegardée</string>
   <string name="image_not_saved">Erreur, image non sauvegardée</string>
   <string name="wait">Merci de patienter...</string>
+  <string name="image_transfert_error">Une erreur est survenue durant le transfert du fichier</string>
   <string name="message_not_encrypted">Ce message n\'est pas chiffré</string>
   <string name="message_cant_be_decrypted">Vous avez reçu un message chiffré que vous ne pouvez pas déchiffré de la part de %s\nVous devez appeler votre correspondant pour pouvoir echanger votre clef ZRTP avec lui si vous voulez pouvoir déchiffrer les futurs messages qu\'il vous enverra.</string>
   <string name="message_cant_be_decrypted_notif">Vous ne pouvez pas déchiffrer ce message.</string>
@@ -191,12 +194,9 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <!--Call-->
   <string name="incoming_call">appel entrant</string>
   <string name="outgoing_call">appel sortant</string>
-  <string name="add_video_dialog">Votre correspondant souhaite ajouter la vidéo</string>
   <string name="no_current_call">Aucun appel en cours</string>
-  <string name="call_paused_by_remote">Votre correspondant a pausé l\'appel</string>
   <string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation de l\'appel</string>
   <string name="zrtp_dialog1">Indiquez le code SAS suivant à votre interlocuteur:\nDites: %s</string>
-  <string name="zrtp_dialog2">\nVotre correspondant doit dire: %s</string>
   <string name="unknown_incoming_call_name">Inconnu</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Vidéo</string>
@@ -230,7 +230,6 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="error_user_busy">Utilisateur occupé</string>
   <string name="error_user_not_found">Utilisateur non trouvé</string>
   <string name="error_incompatible_media">Paramètres média incompatibles</string>
-  <string name="error_low_bandwidth">Votre correspondant a une bande passante limitée, la vidéo ne peut pas être rajoutée</string>
   <string name="error_network_unreachable">Le réseau n\'est pas joignable</string>
   <string name="error_bad_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
   <string name="error_unauthorized">Non autorisé</string>
@@ -309,9 +308,9 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_overlay_summary">Affiche la video d\'un appel en dehors de l\'application</string>
   <string name="pref_video_use_front_camera_title">Utiliser la caméra en façade</string>
   <string name="pref_video_initiate_call_with_video_title">Initier les appels en vidéo</string>
-  <string name="pref_video_initiate_call_with_video">Toujours envoyer des demandes d\'appels vidéo</string>
+  <string name="pref_video_initiate_call_with_video">Toujours envoyer des demandes de vidéo</string>
   <string name="pref_video_automatically_accept_video_title">Accepter appels vidéo</string>
-  <string name="pref_video_automatically_accept_video">Toujours accepter les demandes d\'appels vidéo</string>
+  <string name="pref_video_automatically_accept_video">Toujours accepter les demandes de vidéo</string>
   <string name="pref_video_preset">Profil vidéo</string>
   <string name="pref_preferred_video_size">Taille de vidéo préférée</string>
   <string name="pref_preferred_fps">Nombre d\'images par seconde souhaité</string>
@@ -335,6 +334,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <!--Network settings-->
   <string name="pref_network_title">Réseau</string>
   <string name="pref_wifi_only">Utiliser WiFi uniquement</string>
+  <string name="pref_doze_mode">Doze mode</string>
   <string name="pref_stun_server">Serveur STUN / TURN</string>
   <string name="pref_ice_enable">Activer ICE</string>
   <string name="pref_turn_enable">Activer TURN</string>
