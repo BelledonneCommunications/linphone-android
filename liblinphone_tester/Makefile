@@ -3,7 +3,7 @@ all: copy-files
 	../gradlew uninstallDebug
 
 run-all-tests: copy-files
-	../gradlew :connectedAndroidTest
+	../gradlew :connectedAndroidTest -i
 
 copy-libs:
 	mkdir -p assets && \

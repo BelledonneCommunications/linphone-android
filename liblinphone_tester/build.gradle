@@ -21,7 +21,6 @@ apply plugin: 'com.android.application'
 dependencies {
   compile project(":libLinphoneAndroidSdk")
   compile fileTree(dir: 'libs', include: '*.jar')
-  //androidTestCompile project(":libLinphoneAndroidSdk")
   androidTestCompile fileTree(dir: 'libs', include: '*.jar')
 }
 
@@ -68,10 +67,31 @@ android {
     release.setRoot('build-types/release')
   }
 
+    testOptions {
+      unitTests.all {
+        // All the usual Gradle options.
+        testLogging {
+          events "passed", "skipped", "failed", "standardOut", "standardError"
+          outputs.upToDateWhen {false}
+          showStandardStreams = true
+        }
+      }
+    }
+
   lintOptions {
     checkReleaseBuilds false
     // Or, if you prefer, you can continue to check for errors in release builds,
     // but continue the build even when errors are found:
     abortOnError false
+  }
+}
+
+tasks.withType(Test) {
+  testLogging {
+    exceptionFormat 'full'
+    showCauses true
+    showExceptions true
+    showStackTraces true
+    showStandardStreams true
   }
 }
