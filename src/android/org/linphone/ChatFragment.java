@@ -198,6 +198,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		message = (EditText) view.findViewById(R.id.message);
 
+		if (getArguments().getString("messageDraft") != null)
+			message.setText(getArguments().getString("messageDraft"));
+
 		sendImage = (ImageView) view.findViewById(R.id.send_picture);
 		if (!getResources().getBoolean(R.bool.disable_chat_send_file)) {
 			sendImage.setOnClickListener(new View.OnClickListener() {
@@ -404,8 +407,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri) {
+	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri, String message) {
 		this.sipUri = newSipUri;
+		this.message.setText(message);
 		initChatRoom(sipUri);
 	}
 
@@ -1296,7 +1300,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					}
 				});
 				chatRoom.markAsRead();
-		
+
 			} else {
 				holder.imdmLayout.setVisibility(View.INVISIBLE);
 				holder.fileTransferAction.setText(getString(R.string.accept));

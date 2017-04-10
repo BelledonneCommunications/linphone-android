@@ -42,7 +42,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private TextView contactName, contactAddress, time, date;
 	private String sipUri, displayName, pictureUri;
 	private LinphoneContact contact;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		String callDate = getArguments().getString("CallDate");
 
 		view = inflater.inflate(R.layout.history_detail, container, false);
-		
+
 		dialBack = (ImageView) view.findViewById(R.id.call);
 		dialBack.setOnClickListener(this);
 
@@ -64,33 +64,33 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else {
 			back.setOnClickListener(this);
 		}
-		
+
 		chat = (ImageView) view.findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 		if (getResources().getBoolean(R.bool.disable_chat))
 			view.findViewById(R.id.chat).setVisibility(View.GONE);
-		
+
 		addToContacts = (ImageView) view.findViewById(R.id.add_contact);
 		addToContacts.setOnClickListener(this);
-		
+
 		goToContact = (ImageView) view.findViewById(R.id.goto_contact);
 		goToContact.setOnClickListener(this);
-		
+
 		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-		
+
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactAddress = (TextView) view.findViewById(R.id.contact_address);
-		
+
 		callDirection = (ImageView) view.findViewById(R.id.direction);
-		
+
 		time = (TextView) view.findViewById(R.id.time);
 		date = (TextView) view.findViewById(R.id.date);
-		
+
 		displayHistory(status, callTime, callDate);
-		
+
 		return view;
 	}
-	
+
 	private void displayHistory(String status, String callTime, String callDate) {
 		if (status.equals(getResources().getString(R.string.missed))) {
 			callDirection.setImageResource(R.drawable.call_missed);
@@ -99,7 +99,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else if (status.equals(getResources().getString(R.string.outgoing))) {
 			callDirection.setImageResource(R.drawable.call_outgoing);
 		}
-		
+
 		time.setText(callTime == null ? "" : callTime);
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format)));
@@ -130,8 +130,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
 		}
 	}
-	
-	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {		
+
+	public void changeDisplayedHistory(String sipUri, String displayName, String pictureUri, String status, String callTime, String callDate) {
 		if (displayName == null ) {
 			displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
 		}
@@ -141,11 +141,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		this.pictureUri = pictureUri;
 		displayHistory(status, callTime, callDate);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_DETAIL);
 			LinphoneActivity.instance().hideTabBar(false);
@@ -161,7 +161,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} if (id == R.id.call) {
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
-			LinphoneActivity.instance().displayChat(sipUri);
+			LinphoneActivity.instance().displayChat(sipUri, null);
 		} else if (id == R.id.add_contact) {
 			String uri = sipUri;
 			try {

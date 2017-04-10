@@ -639,7 +639,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return count;
 	}
 
-	public void displayChat(String sipUri) {
+	public void displayChat(String sipUri, String message) {
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
 		}
@@ -670,10 +670,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
 				ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri);
+				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message);
 			} else {
 				Bundle extras = new Bundle();
 				extras.putString("SipUri", sipUri);
+				extras.putString("messageDraft", message);
 				if (sipUri != null && lAddress.getDisplayName() != null) {
 					extras.putString("DisplayName", displayName);
 					extras.putString("PictureUri", pictureUri);
@@ -684,10 +685,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		} else {
 			if(isTablet()){
 				changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
-				displayChat(sipUri);
+				displayChat(sipUri, message);
 			} else {
 				Bundle extras = new Bundle();
 				extras.putString("SipUri", sipUri);
+				extras.putString("messageDraft", message);
 				if (sipUri != null  && lAddress.getDisplayName() != null) {
 					extras.putString("DisplayName", displayName);
 					extras.putString("PictureUri", pictureUri);
@@ -1419,7 +1421,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			LinphoneService.instance().removeMessageNotification();
 			String sipUri = extras.getString("ChatContactSipUri");
 			doNotGoToCallActivity = true;
-			displayChat(sipUri);
+			displayChat(sipUri, null);
 		} else if (extras != null && extras.getBoolean("GoToHistory", false)) {
 			doNotGoToCallActivity = true;
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);

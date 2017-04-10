@@ -54,8 +54,10 @@ public class LinphoneLauncherActivity extends Activity {
 
 		mHandler = new Handler();
 
+		Intent intent = getIntent();
+
 		if (LinphoneService.isReady()) {
-			onServiceReady();
+			onServiceReady(intent);
 		} else {
 			// start linphone as background
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
@@ -64,7 +66,7 @@ public class LinphoneLauncherActivity extends Activity {
 		}
 	}
 
-	protected void onServiceReady() {
+	protected void onServiceReady(Intent intent) {
 		final Class<? extends Activity> classToStart;
 		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
 			classToStart = TutorialLauncherActivity.class;
@@ -74,15 +76,31 @@ public class LinphoneLauncherActivity extends Activity {
 			classToStart = LinphoneActivity.class;
 		}
 
+		String sharedText = null;
+		if (intent != null) {
+			String action = intent.getAction();
+			String type = intent.getType();
+
+			if (Intent.ACTION_SEND.equals(action) && type != null) {
+				if ("text/plain".equals(type)) {
+					sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+				}
+			}
+		}
+
 		// We need LinphoneService to start bluetoothManager
 		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			BluetoothManager.getInstance().initBluetooth();
 		}
 
+		final String finalSharedText = sharedText;
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, classToStart).setData(getIntent().getData()));
+				if (finalSharedText != null) {
+					LinphoneActivity.instance().displayChat(null, finalSharedText);
+				}
 				finish();
 			}
 		}, 1000);
@@ -100,7 +118,7 @@ public class LinphoneLauncherActivity extends Activity {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					onServiceReady();
+					onServiceReady(null);
 				}
 			});
 			mThread = null;

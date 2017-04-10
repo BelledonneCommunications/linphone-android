@@ -51,32 +51,32 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			}
 		}
 	};
-	
+
 	private OnClickListener chatListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			if (LinphoneActivity.isInstanciated()) {
-				LinphoneActivity.instance().displayChat(v.getTag().toString());
+				LinphoneActivity.instance().displayChat(v.getTag().toString(), null);
 			}
 		}
 	};
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		contact = (LinphoneContact) getArguments().getSerializable("Contact");
-		
+
 		this.inflater = inflater;
 		view = inflater.inflate(R.layout.contact, container, false);
-		
+
 		if (getArguments() != null) {
 			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
 		}
-		
+
 		editContact = (ImageView) view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
-		
+
 		deleteContact = (ImageView) view.findViewById(R.id.deleteContact);
 		deleteContact.setOnClickListener(this);
-		
+
 		organization = (TextView) view.findViewById(R.id.contactOrganization);
 		boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
 		String org = contact.getOrganization();
@@ -95,12 +95,12 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 		return view;
 	}
-	
+
 	public void changeDisplayedContact(LinphoneContact newContact) {
 		contact = newContact;
 		displayContact(inflater, view);
 	}
-	
+
 	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
 		ImageView contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
@@ -109,10 +109,10 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
         } else {
         	contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         }
-		
+
 		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getFullName());
-		
+
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
 		for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
@@ -130,11 +130,11 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				label.setText(R.string.phone_number);
 				skip |= getResources().getBoolean(R.bool.hide_contact_phone_numbers);
 			}
-			
+
 			TextView tv = (TextView) v.findViewById(R.id.numeroOrAddress);
 			tv.setText(displayednumberOrAddress);
 			tv.setSelected(true);
-			
+
 
 			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
@@ -146,7 +146,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			if (contactAddress != null) {
 				v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
 			}
-			
+
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
 				if (contactAddress != null) {
@@ -164,17 +164,17 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			} else {
 				v.findViewById(R.id.contact_chat).setTag(value);
 			}
-			
+
 			if (getResources().getBoolean(R.bool.disable_chat)) {
 				v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
 			}
-			
+
 			if (!skip) {
 				controls.addView(v);
 			}
 		}
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -190,7 +190,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-			
+
 		if (id == R.id.editContact) {
 			LinphoneActivity.instance().editContact(contact);
 		}
