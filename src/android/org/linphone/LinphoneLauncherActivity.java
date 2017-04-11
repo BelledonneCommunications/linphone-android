@@ -40,7 +40,7 @@ import android.os.Handler;
 public class LinphoneLauncherActivity extends Activity {
 
 	private Handler mHandler;
-	private ServiceWaitThread mThread;
+	private ServiceWaitThread mServiceThread;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +54,19 @@ public class LinphoneLauncherActivity extends Activity {
 
 		mHandler = new Handler();
 
-		Intent intent = getIntent();
+
 
 		if (LinphoneService.isReady()) {
-			onServiceReady(intent);
+			onServiceReady();
 		} else {
 			// start linphone as background
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-			mThread = new ServiceWaitThread();
-			mThread.start();
+			mServiceThread = new ServiceWaitThread();
+			mServiceThread.start();
 		}
 	}
 
-	protected void onServiceReady(Intent intent) {
+	protected void onServiceReady() {
 		final Class<? extends Activity> classToStart;
 		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
 			classToStart = TutorialLauncherActivity.class;
@@ -76,35 +76,37 @@ public class LinphoneLauncherActivity extends Activity {
 			classToStart = LinphoneActivity.class;
 		}
 
-		String sharedText = null;
-		if (intent != null) {
-			String action = intent.getAction();
-			String type = intent.getType();
-
-			if (Intent.ACTION_SEND.equals(action) && type != null) {
-				if ("text/plain".equals(type)) {
-					sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-				}
-			}
-		}
-
 		// We need LinphoneService to start bluetoothManager
 		if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
 			BluetoothManager.getInstance().initBluetooth();
 		}
 
-		final String finalSharedText = sharedText;
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				startActivity(new Intent().setClass(LinphoneLauncherActivity.this, classToStart).setData(getIntent().getData()));
-				if (finalSharedText != null) {
-					LinphoneActivity.instance().displayChat(null, finalSharedText);
+				Intent newIntent = new Intent(LinphoneLauncherActivity.this, classToStart);
+				Intent intent = getIntent();
+                String msgShared = null;
+				if (intent != null) {
+					String action = intent.getAction();
+					String type = intent.getType();
+					newIntent.setData(intent.getData());
+					if (Intent.ACTION_SEND.equals(action) && type != null) {
+						if ("text/plain".equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
+                            msgShared = intent.getStringExtra(Intent.EXTRA_TEXT);
+							newIntent.putExtra("msgShared", msgShared);
+						}
+					}
 				}
+				startActivity(newIntent);
+                if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && msgShared != null) {
+                    LinphoneActivity.instance().displayChat(null, msgShared);
+                }
 				finish();
 			}
 		}, 1000);
 	}
+
 
 	private class ServiceWaitThread extends Thread {
 		public void run() {
@@ -118,10 +120,10 @@ public class LinphoneLauncherActivity extends Activity {
 			mHandler.post(new Runnable() {
 				@Override
 				public void run() {
-					onServiceReady(null);
+					onServiceReady();
 				}
 			});
-			mThread = null;
+			mServiceThread = null;
 		}
 	}
 }

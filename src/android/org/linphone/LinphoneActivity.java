@@ -1382,6 +1382,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				}
 			}
 		}
+
+		Intent intent = getIntent();
+
+		if (intent.getStringExtra("msgShared") != null)
+			displayChat(null, intent.getStringExtra("msgShared"));
+
+
 		doNotGoToCallActivity = false;
 		isOnBackground = false;
 	}
