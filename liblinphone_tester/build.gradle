@@ -86,6 +86,37 @@ android {
   }
 }
 
+// Grant permissions
+task grantPermissionCamera(type: Exec, dependsOn: 'installDebugAndroidTest') {
+  def applicationId = "${getPackageName()}.test"
+  def adb = android.getAdbExe().toString()
+  outputs.dir '.'
+  commandLine "${adb} shell pm grant ${applicationId} android.permission.CAMERA"
+}
+
+task grantPermissionStorage(type: Exec, dependsOn: 'installDebugAndroidTest') {
+  def applicationId = "${getPackageName()}.test"
+  def adb = android.getAdbExe().toString()
+  outputs.dir '.'
+  commandLine "${adb} shell pm grant ${applicationId} android.permission.WRITE_EXTERNAL_STORAGE"
+}
+
+task grantPermissionAudio(type: Exec, dependsOn: 'installDebugAndroidTest') {
+  def applicationId = "${getPackageName()}.test"
+  def adb = android.getAdbExe().toString()
+  outputs.dir '.'
+  commandLine "${adb} shell pm grant ${applicationId} android.permission.RECORD_AUDIO"
+}
+
+// When we launch test
+tasks.whenTaskAdded { task ->
+  if (task.name.startsWith('connectedDebugAndroidTest')) {
+    task.dependsOn grantPermissionCamera
+    task.dependsOn grantPermissionAudio
+    task.dependsOn grantPermissionStorage
+  }
+}
+
 tasks.withType(Test) {
   testLogging {
     exceptionFormat 'full'
