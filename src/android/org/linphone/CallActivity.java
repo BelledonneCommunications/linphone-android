@@ -796,7 +796,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void showAudioView() {
-		LinphoneManager.getInstance().enableProximitySensing(true);
+		if (LinphoneManager.getLc().getCurrentCall() != null) {
+			LinphoneManager.getInstance().enableProximitySensing(true);
+		}
 		replaceFragmentVideoByAudio();
 		displayAudioCall();
 		showStatusBar();
