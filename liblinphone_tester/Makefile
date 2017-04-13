@@ -4,6 +4,7 @@ all: copy-files
 
 run-all-tests: copy-files
 	../gradlew :installDebugAndroidTest && \
+	../gradlew :installDebug && \
 	../gradlew :grantDebugPermissions -i && \
 	../gradlew :connectedAndroidTest -i \
 
