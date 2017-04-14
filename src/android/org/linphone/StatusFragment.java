@@ -387,6 +387,17 @@ public class StatusFragment extends Fragment {
 		}
 
 		if(ZRTPdialog == null || !ZRTPdialog.isShowing()) {
+			String token = call.getAuthenticationToken();
+			
+			if (token == null){
+				Log.w("Can't display ZRTP popup, no token !");
+				return;
+			}
+			if (token.length()<4){
+				Log.w("Can't display ZRTP popup, token is invalid ("+token+")");
+				return;
+			}
+			
 			ZRTPdialog = new Dialog(getActivity());
 			ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
@@ -395,13 +406,14 @@ public class StatusFragment extends Fragment {
 			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 			ZRTPdialog.getWindow().setBackgroundDrawable(d);
 			String zrtpToRead, zrtpToListen;
+			
 
 			if (call.getDirection().equals(CallDirection.Incoming)) {
-				zrtpToRead = call.getAuthenticationToken().substring(0,2);
-				zrtpToListen = call.getAuthenticationToken().substring(2);
+				zrtpToRead = token.substring(0,2);
+				zrtpToListen = token.substring(2);
 			} else {
-				zrtpToListen = call.getAuthenticationToken().substring(0,2);
-				zrtpToRead = call.getAuthenticationToken().substring(2);
+				zrtpToListen = token.substring(0,2);
+				zrtpToRead = token.substring(2);
 			}
 
 			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
