@@ -164,11 +164,9 @@ class AndroidPreparator(prepare.Preparator):
 
     def check_environment(self):
         ret = 0
-        ret_sdk = not self.check_is_installed('android', 'Android SDK tools')
         ret_ndk = not self.check_is_installed('ndk-build', 'Android NDK r{}'.format(self.max_supported_ndk))
         if not ret_ndk:
             ret_ndk = self.check_ndk_version()
-        ret |= ret_sdk
         ret |= ret_ndk
         ret |= prepare.Preparator.check_environment(self)
         return ret
