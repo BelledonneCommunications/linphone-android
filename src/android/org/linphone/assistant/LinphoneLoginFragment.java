@@ -328,10 +328,8 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 		}
 		if (status.equals(LinphoneAccountCreator.RequestStatus.AccountExist) || status.equals(LinphoneAccountCreator.RequestStatus.AccountExistWithAlias)) {
 			String phone = accountCreator.getPhoneNumber();
-			String dial = null;
 			if (phone != null && phone.length() > 0)
-				dial = accountCreator.getPrefix(phone);
-			AssistantActivity.instance().linphoneLogIn(login.getText().toString(), password.getText().toString(), null, dial, getResources().getBoolean(R.bool.assistant_account_validation_mandatory));
+			AssistantActivity.instance().linphoneLogIn(accountCreator);
 		} else {
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status), AssistantActivity.instance());
 		}

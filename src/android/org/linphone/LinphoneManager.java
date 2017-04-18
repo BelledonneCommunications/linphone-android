@@ -185,6 +185,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mLinphoneConfigFile = basePath + "/.linphonerc";
 		mLinphoneRootCaFile = basePath + "/rootca.pem";
+		mDynamicConfigFile = basePath + "/assistant_create.rc";
 		mRingSoundFile = basePath + "/ringtone.mkv";
 		mRingbackSoundFile = basePath + "/ringback.wav";
 		mPauseSoundFile = basePath + "/hold.mkv";
@@ -217,6 +218,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private final String mLPConfigXsd;
 	private final String mLinphoneFactoryConfigFile;
 	private final String mLinphoneRootCaFile;
+	private final String mDynamicConfigFile;
 	public final String mLinphoneConfigFile;
 	private final String mRingSoundFile;
 	private final String mRingbackSoundFile;
@@ -873,6 +875,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
 		copyFromPackage(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
+		copyFromPackage(R.raw.assistant_create, new File(mDynamicConfigFile).getName());
 	}
 
 	public void copyIfNotExist(int ressourceId, String target) throws IOException {
@@ -1717,6 +1720,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			servers[i++] = address.getHostAddress();
 		}
 		mLc.setDnsServers(servers);
+	}
+
+	public String getmDynamicConfigFile() {
+		return mDynamicConfigFile;
 	}
 
 	@SuppressWarnings("serial")
