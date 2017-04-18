@@ -102,7 +102,7 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 		if (status.equals(LinphoneAccountCreator.RequestStatus.AccountNotActivated)) {
 			Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
 		} else if (status.equals(LinphoneAccountCreator.RequestStatus.AccountActivated)) {
-			AssistantActivity.instance().saveCreatedAccount(username, password, null, null, getString(R.string.default_domain), null);
+			AssistantActivity.instance().linphoneLogIn(accountCreator);
 			AssistantActivity.instance().isAccountVerified(username);
 		} else {
 			Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();

@@ -35,6 +35,7 @@ import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
+import org.linphone.core.LinphoneAuthInfo;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
@@ -104,7 +105,6 @@ private static AssistantActivity instance;
 	public DialPlan country;
 	public String phone_number;
 	public String email;
-	public String activation_code;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -345,31 +345,63 @@ private static AssistantActivity instance;
 		}
 	}
 
-	private void logIn(String username, String password, String ha1, String prefix, String domain, TransportType transport, boolean sendEcCalibrationResult) {
+	private void logIn(String username, String password, String ha1, String prefix, String domain, TransportType transport) {
 		saveCreatedAccount(username, password, ha1, prefix, domain, transport);
 	}
 
-	public void checkAccount(String username, String password, String prefix, String domain) {
-		saveCreatedAccount(username, password, null, prefix, domain, null);
+	public void configureLinphoneProxyConfig(LinphoneAccountCreator accountCreator) {
+		LinphoneCore lc = LinphoneManager.getLc();
+		LinphoneProxyConfig proxyConfig = lc.createProxyConfig();
+		LinphoneAddress addr;
+		LinphoneAuthInfo authInfo;
+
+		try {
+			String identity = proxyConfig.getIdentity();
+			identity = identity.replace("?", accountCreator.getUsername());
+			addr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
+
+			addr.setDisplayName(accountCreator.getUsername());
+			address = addr;
+			proxyConfig.edit();
+
+
+			proxyConfig.setIdentity(addr.asString());
+
+			proxyConfig.done();
+
+			authInfo = LinphoneCoreFactory.instance().createAuthInfo(
+											accountCreator.getUsername(),
+											null,
+											accountCreator.getPassword(),
+											accountCreator.getHa1(),
+											proxyConfig.getRealm(),
+											proxyConfig.getDomain());
+
+
+			lc.addProxyConfig(proxyConfig);
+
+			lc.addAuthInfo(authInfo);
+
+			lc.setDefaultProxyConfig(proxyConfig);
+			if (!newAccount) {
+				displayRegistrationInProgressDialog();
+			}
+			accountCreated = true;
+		} catch (LinphoneCoreException e) {
+			Log.e("Canno't configure proxy config ", e);
+		}
 	}
 
-	public void linphoneLogIn(String username, String password, String ha1,  String prefix, boolean validate) {
-		if (validate) {
-			checkAccount(username, password, prefix, getString(R.string.default_domain));
-		} else {
-			if(accountCreated) {
-				retryLogin(username, password, prefix, getString(R.string.default_domain), null);
-			} else {
-				logIn(username, password, ha1,  prefix, getString(R.string.default_domain), null, true);
-			}
-		}
+	public void linphoneLogIn(LinphoneAccountCreator accountCreator) {
+		LinphoneManager.getLc().getConfig().loadXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
+		configureLinphoneProxyConfig(accountCreator);
 	}
 
 	public void genericLogIn(String username, String password, String prefix, String domain, TransportType transport) {
 		if (accountCreated) {
 			retryLogin(username, password, prefix, domain, transport);
 		} else {
-			logIn(username, password, null, prefix, domain, transport, false);
+			logIn(username, password, null, prefix, domain, transport);
 		}
 	}
 
@@ -483,56 +515,24 @@ private static AssistantActivity instance;
 			Log.e(e);
 		}
 
-		boolean isMainAccountLinphoneDotOrg = domain.equals(getString(R.string.default_domain));
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
-		.setUsername(username)
-		.setDomain(domain)
-		.setHa1(ha1)
-		.setPassword(password);
+				.setUsername(username)
+				.setDomain(domain)
+				.setHa1(ha1)
+				.setPassword(password);
 
-		if(prefix != null){
+		if (prefix != null) {
 			builder.setPrefix(prefix);
 		}
 
-		if (isMainAccountLinphoneDotOrg) {
-			if (getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-				builder.setProxy(domain)
-				.setTransport(TransportType.LinphoneTransportTcp);
-			}
-			else {
-				builder.setProxy(domain)
-				.setTransport(TransportType.LinphoneTransportTls);
-			}
-
-			builder.setExpires("604800")
-			.setAvpfEnabled(true)
-			.setAvpfRRInterval(3)
-			.setQualityReportingCollector("sip:voip-metrics@sip.linphone.org")
-			.setQualityReportingEnabled(true)
-			.setQualityReportingInterval(180)
-			.setRealm("sip.linphone.org")
-			.setNoDefault(false);
-
-			mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
-			LinphoneManager.getInstance().subscribeFriendList(getResources().getBoolean(R.bool.use_friendlist_subscription));
-
-			mPrefs.setStunServer(getString(R.string.default_stun));
-			mPrefs.setIceEnabled(true);
-
-			accountCreator.setPassword(password);
-			accountCreator.setHa1(ha1);
-			accountCreator.setUsername(username);
-		} else {
-			String forcedProxy = "";
-			if (!TextUtils.isEmpty(forcedProxy)) {
-				builder.setProxy(forcedProxy)
-				.setOutboundProxyEnabled(true)
-				.setAvpfRRInterval(5);
-			}
-
-			if(transport != null) {
-				builder.setTransport(transport);
-			}
+		String forcedProxy = "";
+		if (!TextUtils.isEmpty(forcedProxy)) {
+			builder.setProxy(forcedProxy)
+					.setOutboundProxyEnabled(true)
+					.setAvpfRRInterval(5);
+		}
+		if (transport != null) {
+			builder.setTransport(transport);
 		}
 
 		if (getResources().getBoolean(R.bool.enable_push_id)) {
@@ -542,16 +542,16 @@ private static AssistantActivity instance;
 				String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
 				builder.setContactParameters(contactInfos);
 			}
-		}
 
-		try {
-			builder.saveNewAccount();
-			if(!newAccount) {
-				displayRegistrationInProgressDialog();
+			try {
+				builder.saveNewAccount();
+				if (!newAccount) {
+					displayRegistrationInProgressDialog();
+				}
+				accountCreated = true;
+			} catch (LinphoneCoreException e) {
+				Log.e(e);
 			}
-			accountCreated = true;
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
 		}
 	}
 
