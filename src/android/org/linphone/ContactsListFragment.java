@@ -349,7 +349,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		}
 		contactsList.setFastScrollEnabled(true);
 		adapter.notifyDataSetInvalidated();
-		
+
 
 		if (adapter.getCount() > 0) {
 			contactsFetchInProgress.setVisibility(View.GONE);
@@ -391,6 +391,10 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		if (editConsumed) {
 			editOnClick = false;
 			sipAddressToAdd = null;
+		}
+
+		if (searchField != null && searchField.getText().toString().length() > 0) {
+			if (contactsFetchInProgress != null) contactsFetchInProgress.setVisibility(View.GONE);
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -463,7 +467,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		ContactsListAdapter(List<LinphoneContact> contactsList) {
 			updateDataSet(contactsList);
 		}
-		
+
 		public void updateDataSet(List<LinphoneContact> contactsList) {
 			contacts = contactsList;
 
@@ -484,7 +488,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			sectionsList = new ArrayList<String>(map.keySet());
 			sections = new String[sectionsList.size()];
 			sectionsList.toArray(sections);
-			
+
 			notifyDataSetChanged();
 		}
 
