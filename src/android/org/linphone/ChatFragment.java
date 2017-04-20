@@ -1424,6 +1424,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (text.contains(">")) {
 				text = text.replace(">", "&gt;");
 			}
+			if (text.contains("\n")) {
+				text = text.replace("\n", "<br>");
+			}
 			if (text.contains("http://")) {
 				int indexHttp = text.indexOf("http://");
 				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
