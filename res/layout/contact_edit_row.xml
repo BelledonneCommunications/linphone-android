@@ -14,8 +14,8 @@
 			style="@style/font6"
 			android:textCursorDrawable="@null"
 			android:inputType="textEmailAddress"
-			android:layout_toLeftOf="@+id/delete"
-			android:layout_toStartOf="@+id/delete"/>
+			android:layout_toLeftOf="@+id/delete_field"
+			android:layout_toStartOf="@+id/delete_field"/>
 
 		<ImageView
 			android:id="@+id/delete_field"
