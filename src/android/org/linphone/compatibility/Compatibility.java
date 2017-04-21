@@ -24,6 +24,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Html;
@@ -57,9 +58,9 @@ public class Compatibility {
 		}
 		return notif;
 	}
-	
+
 	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
-		Notification notif = null;		
+		Notification notif = null;
 		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
 			return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
@@ -69,7 +70,7 @@ public class Compatibility {
 		}
 		return notif;
 	}
-	
+
 	public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 		Notification notif = null;
 		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
@@ -111,7 +112,7 @@ public class Compatibility {
 	}
 
 	public static boolean canDrawOverlays(Context context) {
-		if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			return Settings.canDrawOverlays(context);
 		}
 		return true;
@@ -119,11 +120,10 @@ public class Compatibility {
 
 	@SuppressWarnings("deprecation")
 	public static boolean isScreenOn(PowerManager pm) {
-		if (Version.sdkAboveOrEqual(20)) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
 			return pm.isInteractive();
-		} else {
-			return pm.isScreenOn();
 		}
+		return pm.isScreenOn();
 	}
 
 	@SuppressWarnings("deprecation")
