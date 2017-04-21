@@ -18,7 +18,8 @@ public class HookReceiver extends BroadcastReceiver {
             //handset on
             Log.i(" ======>>>>>> HookReceiver - handset ON");
             LinphoneManager.getLc().enableSpeaker(false);
-            LinphoneManager.getInstance().setHandsetMode(true);
+            if(!LinphoneManager.getInstance().isHansetModeOn())
+                LinphoneManager.getInstance().setHandsetMode(true);
 
 
         }else{
