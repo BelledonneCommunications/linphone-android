@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <LinearLayout 
+
+    <LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 		android:padding="30dp"
@@ -34,7 +34,7 @@
 				android:inputType="text|textEmailAddress"
 				android:layout_width="match_parent"
 				android:layout_height="40dp"
-				android:singleLine="true"/>
+				android:maxLines="1"/>
 
 			<TextView
 				android:id="@+id/username_error"
@@ -43,7 +43,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:visibility="invisible"/>
-        
+
         </LinearLayout>
 
 		<LinearLayout
@@ -70,7 +70,7 @@
 				android:layout_height="40dp"
 				android:paddingLeft="10dp"
 				android:paddingRight="10dp"
-				android:singleLine="true"/>
+				android:maxLines="1"/>
 
 		</LinearLayout>
     </LinearLayout>

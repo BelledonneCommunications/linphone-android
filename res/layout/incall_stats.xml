@@ -6,7 +6,7 @@
 	<LinearLayout
 		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="wrap_content">
 
 		<TextView
 			android:layout_width="match_parent"
@@ -23,7 +23,7 @@
 			android:id="@+id/callStatsAudio"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_gravity="left|center"
+			android:layout_gravity="start|center"
 			android:paddingBottom="10dp"
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp">
@@ -122,8 +122,8 @@
 				android:gravity="center"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
-			
-			<TextView 
+
+			<TextView
 				android:id="@+id/jitterBufferAudio"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

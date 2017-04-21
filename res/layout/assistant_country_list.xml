@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:text="@string/assistant_choose_country"
             style="@style/font6"
-            android:singleLine="true"
+            android:maxLines="1"
             android:gravity="center_vertical|center" />
 
     </LinearLayout>

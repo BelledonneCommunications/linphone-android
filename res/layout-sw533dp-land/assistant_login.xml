@@ -5,7 +5,7 @@
 
 	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:padding="30dp"
 		android:orientation="vertical">
 
@@ -57,7 +57,7 @@
 						android:contentDescription="@string/content_description_username_field"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 				</LinearLayout>
 
 				<LinearLayout
@@ -81,7 +81,7 @@
 						android:inputType="textPassword"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 				</LinearLayout>
 			</TableRow>
 
@@ -111,7 +111,7 @@
 						android:contentDescription="@string/content_description_display_field"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 				</LinearLayout>
 
 				<LinearLayout
@@ -136,7 +136,7 @@
 						android:contentDescription="@string/content_description_domain_field"
 						android:layout_width="match_parent"
 						android:layout_height="40dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 				</LinearLayout>
 
 			</TableRow>

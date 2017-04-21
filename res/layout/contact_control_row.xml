@@ -54,7 +54,7 @@
 			android:marqueeRepeatLimit="marquee_forever"
 			android:scrollHorizontally="true"
 			android:fadingEdge="horizontal"
-			android:singleLine="true"
+			android:maxLines="1"
 			android:gravity="center" />
 
 		<LinearLayout
@@ -85,5 +85,5 @@
 
 		</LinearLayout>
 	</LinearLayout>
-  
+
   </TableRow>

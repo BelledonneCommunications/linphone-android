@@ -91,7 +91,7 @@
 							android:gravity="center"
 							android:layout_width="65dp"
 							android:layout_height="42dp"
-							android:singleLine="true"/>
+							android:maxLines="1"/>
 
 						<EditText
 							android:id="@+id/phone_number"
@@ -101,7 +101,7 @@
 							android:inputType="phone"
 							android:layout_width="match_parent"
 							android:layout_height="40dp"
-							android:singleLine="true"/>
+							android:maxLines="1"/>
 
 					</LinearLayout>
 
@@ -145,7 +145,7 @@
 					android:inputType="text|textNoSuggestions"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
-					android:singleLine="true"/>
+					android:maxLines="1"/>
 
 				<TextView
 					android:id="@+id/username_error"
@@ -188,7 +188,7 @@
 						android:layout_height="40dp"
 						android:paddingLeft="10dp"
 						android:paddingRight="10dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 
 					<TextView
 						android:id="@+id/email_error"
@@ -230,7 +230,7 @@
 						android:layout_height="40dp"
 						android:paddingLeft="10dp"
 						android:paddingRight="10dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 
 					<TextView
 						android:id="@+id/password_error"
@@ -267,7 +267,7 @@
 						android:layout_height="40dp"
 						android:paddingLeft="10dp"
 						android:paddingRight="10dp"
-						android:singleLine="true"/>
+						android:maxLines="1"/>
 
 					<TextView
 						android:id="@+id/confirm_password_error"

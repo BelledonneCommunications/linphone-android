@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
-	
+
 	<RelativeLayout
 		android:id="@+id/bubble"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content">
-	
+
 		<CheckBox
 			android:id="@+id/delete_message"
 			android:button="@drawable/checkbox"
@@ -19,20 +19,19 @@
 			android:adjustViewBounds="true"
 			android:layout_alignParentRight="true"
 			android:visibility="gone"/>
-	
-		
+
+
 		<LinearLayout
 		    android:id="@+id/background"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_toLeftOf="@id/delete_message"
 			android:orientation="horizontal">
-			
+
 		    <RelativeLayout
 				android:id="@+id/avatar_layout"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerHorizontal="true">
+				android:layout_height="wrap_content">
 
 				<ImageView
 					android:id="@+id/contact_picture"
@@ -54,7 +53,7 @@
 					android:adjustViewBounds="true"/>
 
 			</RelativeLayout>
-	
+
 			<LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -65,10 +64,10 @@
 
 				<TextView
 					android:id="@+id/contact_header"
-					android:singleLine="true"
+					android:maxLines="1"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"/>
-	
+
 				<TextView
 					android:id="@+id/message"
 					style="@style/font11"
@@ -77,21 +76,20 @@
 					android:visibility="gone"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" />
-	
+
 				<ImageView
 					android:id="@+id/image"
 					android:visibility="gone"
 					android:layout_width="150dp"
 					android:layout_height="150dp"
-					android:scaleType="centerInside"
-					android:layout_centerInParent="true" />
-	
+					android:scaleType="centerInside"/>
+
 				<RelativeLayout
 					android:id="@+id/file_transfer_layout"
 					android:visibility="gone"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
-	
+
 					<ProgressBar
 						android:id="@+id/progress_bar"
 						style="@android:style/Widget.ProgressBar.Horizontal"
@@ -100,7 +98,7 @@
 						android:layout_marginBottom="10dp"
 						android:layout_width="150dp"
 						android:layout_height="5dp"/>
-	
+
 					<Button
 						android:id="@+id/file_transfer_action"
 						android:layout_width="wrap_content"
@@ -112,7 +110,6 @@
 					android:id="@+id/imdmLayout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_alignParentBottom="true"
 					android:layout_alignParentRight="true"
 					android:layout_marginTop="2dp"
 					android:layout_marginBottom="2dp"
@@ -126,7 +123,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:text="Displayed"
-						android:textSize="10dp"
+						android:textSize="12sp"
 						android:paddingRight="3dp"/>
 					<ImageView
 						android:id="@+id/imdmIcon"
@@ -140,7 +137,7 @@
 			</LinearLayout>
 
 		</LinearLayout>
-	
+
 		<RelativeLayout
 		    android:layout_alignRight="@id/background"
 		    android:layout_alignTop="@id/background"
@@ -148,7 +145,7 @@
 			android:layout_height="15dp"
 			android:paddingTop="5dp"
 			android:paddingBottom="3dp">
-			
+
 			<ImageView
 				android:id="@+id/status"
 				android:contentDescription="@string/content_description_message_status"
@@ -159,7 +156,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:adjustViewBounds="true" />
-	
+
 			<ProgressBar
 				android:id="@+id/inprogress"
 				android:visibility="gone"
@@ -168,9 +165,9 @@
 				android:paddingRight="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"/>
-		
+
 		</RelativeLayout>
 
 	</RelativeLayout>
-	
+
 </RelativeLayout>

@@ -47,7 +47,7 @@
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:singleLine="true"/>
+			android:maxLines="1"/>
 
 		<TextView
 			android:text="@string/password"
@@ -67,7 +67,7 @@
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:singleLine="true"/>
+			android:maxLines="1"/>
 
 
 		<TextView
@@ -89,7 +89,7 @@
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:singleLine="true"/>
+			android:maxLines="1"/>
 
 		<Button
 			android:id="@+id/assistant_connect"
@@ -101,10 +101,8 @@
 			android:layout_height="wrap_content"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
-			android:layout_marginTop="20dp"
-			android:layout_centerInParent="true"
-			android:layout_centerVertical="true"/>
+			android:layout_marginTop="20dp"/>
 
 	</LinearLayout>
- 
+
 </LinearLayout>

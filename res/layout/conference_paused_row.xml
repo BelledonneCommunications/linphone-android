@@ -19,14 +19,14 @@
         android:id="@+id/contact_name"
 		android:text="@string/conference"
 		style="@style/font14"
-		android:singleLine="true"
+		android:maxLines="1"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center_vertical|left"
         android:paddingLeft="20dp"
        	android:paddingRight="10dp"/>
-    
+
     <ImageView
 		android:id="@+id/conference_pause"
 		android:src="@drawable/pause_small_over_selected"

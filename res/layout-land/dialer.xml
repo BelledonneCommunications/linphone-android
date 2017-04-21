@@ -5,6 +5,17 @@
     android:layout_height="match_parent">
 
 	<RelativeLayout
+		android:id="@+id/dialer"
+		android:background="@color/colorH"
+		android:layout_marginBottom="50dp"
+		android:layout_centerHorizontal="true"
+		android:layout_alignParentBottom="true"
+		android:layout_width="300dp"
+		android:layout_height="460dp"
+		android:visibility="gone">
+	</RelativeLayout>
+
+	<RelativeLayout
 		android:id="@+id/address_bar"
 		android:background="@color/colorF"
 		android:layout_width="match_parent"
@@ -55,7 +66,7 @@
 		android:layout_centerHorizontal="true"
 		android:layout_width="100dp"
 		android:layout_height="wrap_content"/>
-    
+
     <LinearLayout
         android:id="@+id/controls"
         android:layout_alignParentBottom="true"

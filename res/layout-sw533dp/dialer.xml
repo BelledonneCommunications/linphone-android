@@ -11,6 +11,7 @@
 		android:layout_height="wrap_content"/>
 
 	<RelativeLayout
+		android:id="@+id/dialer"
 		android:background="@color/colorH"
 		android:layout_marginBottom="50dp"
 		android:layout_centerHorizontal="true"

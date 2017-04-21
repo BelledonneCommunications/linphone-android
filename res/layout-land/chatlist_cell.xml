@@ -67,7 +67,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="5dp"
-				android:singleLine="true"
+				android:maxLines="1"
 				android:layout_alignBottom="@id/sipUri"
 				style="@style/font2"/>
 
@@ -75,7 +75,7 @@
 				android:id="@+id/sipUri"
 				android:lines="1"
 				android:ellipsize="end"
-				android:singleLine="true"
+				android:maxLines="1"
 				style="@style/font6"
 				android:paddingLeft="10dp"
 				android:layout_marginTop="5dp"
@@ -92,7 +92,7 @@
 				android:contentDescription="@string/content_description_unread_chat_message"
 				style="@style/font18"
 				android:gravity="center"
-				android:singleLine="true"
+				android:maxLines="1"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentEnd="true"
 				android:layout_alignParentTop="true"/>
@@ -107,7 +107,7 @@
 				style="@style/font11"/>
 
 		</RelativeLayout>
-	    
+
 	</LinearLayout>
-    
+
 </RelativeLayout>

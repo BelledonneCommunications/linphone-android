@@ -105,7 +105,7 @@
 				style="@style/font6"
 				android:lines="1"
 				android:ellipsize="end"
-				android:singleLine="true"
+				android:maxLines="1"
 				android:gravity="center_vertical"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
