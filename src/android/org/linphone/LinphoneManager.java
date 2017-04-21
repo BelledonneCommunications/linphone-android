@@ -163,6 +163,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private SensorManager mSensorManager;
 	private Sensor mProximity;
 	private boolean mProximitySensingEnabled;
+	private boolean handsetON = false;
 
 	public String wizardLoginViewDomain = null;
 
@@ -854,16 +855,23 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	protected void setHandsetMode(Boolean on){
 		if(mLc.isInComingInvitePending() && on){
+			handsetON = true;
 			try {
 				mLc.acceptCall(mLc.getCurrentCall());
 				LinphoneActivity.instance().startIncallActivity(mLc.getCurrentCall());
 			}catch(LinphoneCoreException e){}
 		}else if(on && CallActivity.isInstanciated()){
+			handsetON = true;
 			CallActivity.instance().setSpeakerEnabled(true);
 			CallActivity.instance().refreshInCallActions();
 		}else if (!on){
+			handsetON = false;
 			LinphoneManager.getInstance().terminateCall();
 		}
+	}
+
+	protected boolean isHansetModeOn(){
+		return handsetON;
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
