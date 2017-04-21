@@ -327,8 +327,6 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			return;
 		}
 		if (status.equals(LinphoneAccountCreator.RequestStatus.AccountExist) || status.equals(LinphoneAccountCreator.RequestStatus.AccountExistWithAlias)) {
-			String phone = accountCreator.getPhoneNumber();
-			if (phone != null && phone.length() > 0)
 			AssistantActivity.instance().linphoneLogIn(accountCreator);
 		} else {
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status), AssistantActivity.instance());

@@ -388,7 +388,7 @@ private static AssistantActivity instance;
 			}
 			accountCreated = true;
 		} catch (LinphoneCoreException e) {
-			Log.e("Canno't configure proxy config ", e);
+			Log.e("Can't configure proxy config ", e);
 		}
 	}
 
