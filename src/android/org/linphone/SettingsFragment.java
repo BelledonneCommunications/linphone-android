@@ -433,7 +433,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		if (value.toString().equals(getString(R.string.media_encryption_srtp)))
 			key = getString(R.string.pref_media_encryption_key_srtp);
 		else if (value.toString().equals(getString(R.string.media_encryption_zrtp)))
-			key = getString(R.string.pref_media_encryption_key_zrtp);
+			key = getString(R.string.pref_media_encryption_key_0zrtp);
 		else if (value.toString().equals(getString(R.string.media_encryption_dtls)))
 			key = getString(R.string.pref_media_encryption_key_dtls);
 		pref.setValue(key);
