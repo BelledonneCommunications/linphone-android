@@ -112,6 +112,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 		TextView contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getFullName());
+		organization.setText((contact.getOrganization() != null) ? contact.getOrganization() : "");
 
 		TableLayout controls = (TableLayout) view.findViewById(R.id.controls);
 		controls.removeAllViews();
