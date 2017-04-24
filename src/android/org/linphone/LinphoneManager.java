@@ -206,11 +206,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mR = c.getResources();
 		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			dozeModeEnabled = ((PowerManager)c.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
-		} else {
-			dozeModeEnabled = false;
-		}
+		dozeModeEnabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ((PowerManager) c.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -829,8 +825,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mKeepAliveReceiver = new KeepAliveReceiver();
 		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 
-		mDozeIntentFilter = new IntentFilter(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-		mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+		mDozeIntentFilter = new IntentFilter();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+		}
 
 		mDozeReceiver = new DozeReceiver();
 
