@@ -108,7 +108,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private StatusFragment status;
 	private CallAudioFragment audioCallFragment;
 	private CallVideoFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed, isVideoAsk;
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
 	private int cameraNumber;
@@ -258,6 +258,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					TimeRemind = savedInstanceState.getLong("TimeRemind");
 					createTimerForDialog(TimeRemind);
 				}
+                if (status != null && savedInstanceState.getBoolean("AskingZrtp")) {
+                    status.setisZrtpAsk(savedInstanceState.getBoolean("AskingZrtp"));
+                }
 				refreshInCallActions();
 				return;
 			} else {
@@ -313,8 +316,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		outState.putBoolean("Speaker", LinphoneManager.getLc().isSpeakerEnabled());
 		outState.putBoolean("Mic", LinphoneManager.getLc().isMicMuted());
 		outState.putBoolean("VideoCallPaused", isVideoCallPaused);
-		outState.putBoolean("AskingVideo", (dialog != null));
+		outState.putBoolean("AskingVideo", isVideoAsk);
 		outState.putLong("TimeRemind", TimeRemind);
+        if (status != null) outState.putBoolean("AskingZrtp", status.getisZrtpAsk());
 		if (dialog != null) dialog.dismiss();
 		super.onSaveInstanceState(outState);
 	}
@@ -1122,6 +1126,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		delete.setText(R.string.accept);
 		Button cancel = (Button) dialog.findViewById(R.id.cancel);
 		cancel.setText(R.string.decline);
+        isVideoAsk = true;
 
 		delete.setOnClickListener(new OnClickListener() {
 			@Override
@@ -1134,7 +1139,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				} else {
 					checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
 				}
-
+                isVideoAsk = false;
 				dialog.dismiss();
 				dialog = null;
 			}
@@ -1146,6 +1151,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				if (CallActivity.isInstanciated()) {
 					CallActivity.instance().acceptCallUpdate(false);
 				}
+                isVideoAsk = false;
 				dialog.dismiss();
 				dialog = null;
 			}
@@ -1167,6 +1173,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		refreshIncallUi();
 		handleViewIntent();
+
+        if (status != null && status.getisZrtpAsk() && lc != null) {
+            status.showZRTPDialog(lc.getCurrentCall());
+        }
 
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			LinphoneManager.getInstance().enableProximitySensing(true);

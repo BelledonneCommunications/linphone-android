@@ -56,7 +56,7 @@ public class StatusFragment extends Fragment {
 	private TextView statusText, voicemailCount;
 	private ImageView statusLed, callQuality, encryption, menu, voicemail;
 	private Runnable mCallQualityUpdater;
-	private boolean isInCall, isAttached = false;
+	private boolean isInCall, isAttached = false, isZrtpAsk;
 	private LinphoneCoreListenerBase mListener;
 	private Dialog ZRTPdialog = null;
 	private int mDisplayedQuality = -1;
@@ -395,6 +395,7 @@ public class StatusFragment extends Fragment {
 			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 			ZRTPdialog.getWindow().setBackgroundDrawable(d);
 			String zrtpToRead, zrtpToListen;
+			isZrtpAsk = true;
 
 			if (call.getDirection().equals(CallDirection.Incoming)) {
 				zrtpToRead = call.getAuthenticationToken().substring(0,2);
@@ -420,6 +421,7 @@ public class StatusFragment extends Fragment {
 					if (encryption != null) {
 						encryption.setImageResource(R.drawable.security_ok);
 					}
+					isZrtpAsk = false;
 					ZRTPdialog.dismiss();
 				}
 			});
@@ -433,10 +435,19 @@ public class StatusFragment extends Fragment {
 							encryption.setImageResource(R.drawable.security_ko);
 						}
 					}
+					isZrtpAsk = false;
 					ZRTPdialog.dismiss();
 				}
 			});
 			ZRTPdialog.show();
 		}
+	}
+
+	public boolean getisZrtpAsk() {
+		return isZrtpAsk;
+	}
+
+	public void setisZrtpAsk(boolean bool) {
+		isZrtpAsk = bool;
 	}
 }
