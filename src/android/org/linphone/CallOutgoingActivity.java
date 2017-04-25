@@ -135,6 +135,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 			lc.addListener(mListener);
 		}
 
+		mCall = null;
+
 		// Only one call ringing at a time is allowed
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
