@@ -48,6 +48,7 @@ import org.linphone.tools.OpenH264DownloadHelper;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -688,7 +689,10 @@ private static AssistantActivity instance;
 		AlarmManager mgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500, mPendingIntent);
 
+		finish();
 		stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+		ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		am.killBackgroundProcesses(getString(R.string.sync_account_type));
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
