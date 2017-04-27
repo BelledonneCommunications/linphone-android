@@ -74,6 +74,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;
@@ -441,6 +442,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					LinphoneChatMessage message = getMessageForId(item.getGroupId());
 					if (message != null) {
 						chatRoom.deleteMessage(message);
+						if (getResources().getBoolean(R.bool.isTablet) && chatRoom.getHistorySize() <= 0) {
+							if (LinphoneActivity.isInstanciated()) {
+								LinphoneActivity.instance().displayChat("", null);
+								LinphoneActivity.instance().onMessageSent("", null);
+								initNewChatConversation();
+							}
+						}
 						invalidate();
 					}
 				}
@@ -573,6 +581,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				chatRoom.deleteMessage(message);
 			}
 		}
+		if (getResources().getBoolean(R.bool.isTablet) && chatRoom.getHistorySize() <= 0) {
+			if (LinphoneActivity.isInstanciated()) {
+				LinphoneActivity.instance().displayChat("", null);
+				LinphoneActivity.instance().onMessageSent("", null);
+				initNewChatConversation();
+			}
+		}
 		invalidate();
 	}
 
@@ -654,6 +669,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				&& chatRoom != null && chatRoom.islimeAvailable())){
 			sendTextMessage(message.getText().toString());
 			message.setText("");
+			invalidate();
 			return;
 		}
 
@@ -961,6 +977,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void initNewChatConversation(){
+		newChatConversation = true;
+		chatRoom = null;
 		messagesList.setVisibility(View.GONE);
 		edit.setVisibility(View.INVISIBLE);
 		startCall.setVisibility(View.INVISIBLE);
@@ -969,6 +987,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		searchAdapter = new SearchContactsListAdapter(null);
 		resultContactsSearch.setAdapter(searchAdapter);
 		searchContactField.setVisibility(View.VISIBLE);
+		searchContactField.setText("");
 		searchContactField.requestFocus();
 		searchContactField.addTextChangedListener(new TextWatcher() {
 			@Override
