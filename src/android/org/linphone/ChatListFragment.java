@@ -130,6 +130,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				}
 			}
 		}
+		quitEditMode();
 		LinphoneActivity.instance().updateMissedChatCount();
 	}
 
@@ -180,6 +181,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	public void refresh() {
 		mConversations = LinphoneActivity.instance().getChatList();
+		if (getResources().getBoolean(R.bool.isTablet)) {
+			LinphoneActivity.instance().displayChat("", null);
+		}
 		hideAndDisplayMessageIfNoChat();
 	}
 
@@ -249,6 +253,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		LinphoneActivity.instance().removeFromChatList(sipUri);
 		mConversations = LinphoneActivity.instance().getChatList();
+        if (getResources().getBoolean(R.bool.isTablet)) {
+			quitEditMode();
+        }
 		hideAndDisplayMessageIfNoChat();
 		return true;
 	}
