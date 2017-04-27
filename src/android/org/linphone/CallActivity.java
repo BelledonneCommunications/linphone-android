@@ -1194,13 +1194,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				LinphonePlayer player = call.getPlayer();
 				String path = intent.getData().getPath();
 				Log.i("Openning " + path);
-				int openRes = player.open(path, new LinphonePlayer.Listener() {
-
-					@Override
-					public void endOfFile(LinphonePlayer player) {
-						player.close();
-					}
-				});
+				int openRes = player.open(path);
 				if(openRes == -1) {
 					String message = "Could not open " + path;
 					Log.e(message);
