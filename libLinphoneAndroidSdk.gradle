@@ -12,10 +12,18 @@ buildscript {
     }
 }
 
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: 'commons-compress-1.11.jar')
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
 }
 
 def submoduleDir = ['submodules/mediastreamer2/java/src',

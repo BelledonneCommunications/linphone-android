@@ -18,21 +18,32 @@ buildscript {
     mavenLocal()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.2.2'
+    classpath 'com.android.tools.build:gradle:2.3.0'
     if (googleFile.exists()) {
       classpath 'com.google.gms:google-services:3.0.0'
     }
   }
 }
 
+allprojects {
+  repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+  }
+}
+
 apply plugin: 'com.android.application'
 
 dependencies {
-  compile fileTree(include: '*.jar', dir: 'libs')
-  androidTestCompile fileTree(include: '*.jar', dir: 'libs-test')
+  androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
+    exclude module: 'support-annotations'
+  }
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
   if (firebaseEnable()) {
     compile 'com.google.firebase:firebase-messaging:9.0.0'
   } else {
+    compile "com.google.android.gms:play-services-gcm:10.2.0"
     compile 'com.android.support:support-v4:+'
   }
 }
@@ -56,6 +67,7 @@ if (!firebaseEnable()) {
   excludeFiles.add('**/Firebase*')
   println '[Push Notification] Firebase disabled'
 } else {
+  excludeFiles.add('**/gcm*')
   println '[Push Notification] Firebase enabled'
 }
 excludeFiles.add('**/mediastream/MediastreamerActivity.java')
@@ -67,6 +79,8 @@ android {
     buildToolsVersion "25.0.2"
     applicationId getPackageName()
     multiDexEnabled true
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   lintOptions {
@@ -117,7 +131,7 @@ android {
     release.setRoot('build-types/release')
   }
 
-  sourceSets {
+  /*sourceSets {
     androidTest {
       manifest.srcFile 'AndroidManifest.xml'
       def srcDirs = submoduleDir
@@ -134,13 +148,13 @@ android {
 
       // Exclude some useless files
       packagingOptions {
-        exclude '**/gdb.*'
+        exclude '**//*gdb.*'
       }
     }
 
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
-  }
+  }*/
 }
 
 task runApplication() {

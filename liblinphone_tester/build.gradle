@@ -16,12 +16,19 @@ buildscript {
   }
 }
 
+allprojects {
+  repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+  }
+}
+
 apply plugin: 'com.android.application'
 
 dependencies {
+  androidTestCompile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
   compile project(":libLinphoneAndroidSdk")
-  compile fileTree(dir: 'libs', include: '*.jar')
-  androidTestCompile fileTree(dir: 'libs', include: '*.jar')
 }
 
 android {

@@ -40,16 +40,16 @@ import com.google.android.gcm.GCMBaseIntentService;
 public class GCMService extends GCMBaseIntentService {
 
 	public GCMService() {
-		
+
 	}
-	
+
 	private void initLogger(Context context) {
 		LinphonePreferences.instance().setContext(context);
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
 		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
 		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 	}
-	
+
 	@Override
 	protected void onError(Context context, String errorId) {
 		initLogger(context);
@@ -60,7 +60,7 @@ public class GCMService extends GCMBaseIntentService {
 	protected void onMessage(Context context, Intent intent) {
 		initLogger(context);
 		Log.d("[Push Notification] Received");
-		
+
 		if (!LinphoneService.isReady()) {
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 		} else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
@@ -92,7 +92,7 @@ public class GCMService extends GCMBaseIntentService {
 	protected void onUnregistered(Context context, String regId) {
 		initLogger(context);
 		Log.w("[Push Notification] Unregistered: " + regId);
-		
+
 		UIThreadDispatcher.dispatch(new Runnable(){
 			@Override
 			public void run() {
@@ -100,7 +100,7 @@ public class GCMService extends GCMBaseIntentService {
 			}
 		});
 	}
-	
+
 	protected String[] getSenderIds(Context context) {
 	    return new String[] { context.getString(R.string.push_sender_id) };
 	}
