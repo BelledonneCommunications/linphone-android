@@ -28,6 +28,13 @@ apply plugin: 'com.android.application'
 
 dependencies {
   androidTestCompile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
+  androidTestCompile group: 'junit', name: 'junit', version: '4.12'
+  androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium', version: '5.6.3'
+  androidTestCompile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
+  compile group: 'junit', name: 'junit', version: '4.12'
+  compile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '5.6.3'
+  compile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
   compile project(":libLinphoneAndroidSdk")
 }
 
