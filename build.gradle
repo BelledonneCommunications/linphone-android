@@ -43,7 +43,7 @@ dependencies {
   if (firebaseEnable()) {
     compile 'com.google.firebase:firebase-messaging:9.0.0'
   } else {
-    compile "com.google.android.gms:play-services-gcm:10.2.0"
+    compile fileTree(include: 'gcm.jar', dir: 'libs')
     compile 'com.android.support:support-v4:+'
   }
 }
