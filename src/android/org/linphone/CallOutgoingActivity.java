@@ -104,16 +104,21 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 					return;
 				} else if (state == State.Error) {
 					// Convert LinphoneCore message for internalization
-					if (message != null && call.getErrorInfo().getReason() == Reason.Declined) {
+					if (call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getErrorInfo().getReason() == Reason.NotFound) {
+					} else if (call.getErrorInfo().getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getErrorInfo().getReason() == Reason.Media) {
+					} else if (call.getErrorInfo().getReason() == Reason.Media) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
-					} else if (message != null && call.getErrorInfo().getReason() == Reason.Busy) {
+					} else if (call.getErrorInfo().getReason() == Reason.Busy) {
 						displayCustomToast(getString(R.string.error_user_busy), Toast.LENGTH_SHORT);
 					} else if (message != null) {
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
+					}
+				}else if (state == State.CallEnd) {
+					// Convert LinphoneCore message for internalization
+					if (call.getErrorInfo().getReason() == Reason.Declined) {
+						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
 					}
 				}
 
