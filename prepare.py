@@ -373,7 +373,8 @@ run-liblinphone-tests:
 \t@cd liblinphone_tester && \\
 \tmake run-all-tests
 
-run-all-tests: clean
+run-all-tests: clean install
+\t./gradlew grantDebugPermissions
 \t./gradlew connectedAndroidTest
 
 pull-transifex:

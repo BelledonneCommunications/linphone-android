@@ -131,7 +131,7 @@ android {
     release.setRoot('build-types/release')
   }
 
-  /*sourceSets {
+  sourceSets {
     androidTest {
       manifest.srcFile 'AndroidManifest.xml'
       def srcDirs = submoduleDir
@@ -154,7 +154,23 @@ android {
 
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
-  }*/
+  }
+}
+
+// Grant permissions
+android.applicationVariants.all { variant ->
+  def applicationId = getPackageName()
+  def adb = android.getAdbExe().toString()
+  def variantName = variant.name.capitalize()
+  def grantPermissionTask = tasks.create("grant${variantName}Permissions") << {
+    "${adb} devices".execute().text.eachLine {
+      "${adb} shell pm grant ${applicationId} android.permission.RECORD_AUDIO".execute()
+      "${adb} shell pm grant ${applicationId} android.permission.WRITE_EXTERNAL_STORAGE".execute()
+      "${adb} shell pm grant ${applicationId} android.permission.CAMERA".execute()
+      "${adb} shell pm grant ${applicationId} android.permission.READ_PHONE_STATE".execute()
+      "${adb} shell pm grant ${applicationId} android.permission.READ_CONTACTS".execute()
+    }
+  }
 }
 
 task runApplication() {
