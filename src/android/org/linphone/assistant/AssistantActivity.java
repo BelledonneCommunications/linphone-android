@@ -358,6 +358,10 @@ private static AssistantActivity instance;
 
 		try {
 			String identity = proxyConfig.getIdentity();
+            if (identity == null) {
+                LinphoneUtils.displayErrorAlert(getString(R.string.error), this);
+                return;
+            }
 			identity = identity.replace("?", accountCreator.getUsername());
 			addr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
 
