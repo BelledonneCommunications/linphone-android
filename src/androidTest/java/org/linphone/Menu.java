@@ -1,6 +1,5 @@
 package org.linphone;
 
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -16,33 +15,25 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.linphone.core.LinphoneProxyConfig;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.linphone.Utils.waitUi;
 
+/**
+ * Created by ecroze on 04/05/17.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LinphoneLauncherActivityTest {
+public class Menu {
 
     @Rule
     public ActivityTestRule<LinphoneLauncherActivity> mActivityTestRule = new ActivityTestRule<>(LinphoneLauncherActivity.class);
-
-    private void waitUi(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Before
     public void launchActivity() {
@@ -251,60 +242,6 @@ public class LinphoneLauncherActivityTest {
         pressBack();
     }
 
-    @Test
-    public void LoginLinphone() {
-
-        waitUi(2000);
-
-        LinphoneActivity.instance().displayDialer();
-
-        onView(withId(R.id.side_menu_button)).perform(click());
-
-        onView(Matchers.allOf(
-                withId(R.id.item_name),
-                withText(LinphoneActivity.instance().getString(R.string.assistant)),
-                childAtPosition(
-                        withId(R.id.item_list),
-                        0),
-                isDisplayed())).perform(click());
-
-        ViewInteraction button = onView(
-                Matchers.allOf(withId(R.id.login_linphone),
-                        withText(LinphoneActivity.instance().getString(R.string.assistant_login_linphone))));
-        button.perform(scrollTo(), click());
-
-        ViewInteraction checkBox = onView(
-                Matchers.allOf(withId(R.id.use_username)));
-        checkBox.perform(scrollTo(), click());
-
-        ViewInteraction editText = onView(
-                Matchers.allOf(withId(R.id.assistant_username),
-                        withParent(withId(R.id.username_layout))));
-        editText.perform(scrollTo(),
-                replaceText(LinphoneActivity.instance().getString(R.string.account_linphone_login)),
-                closeSoftKeyboard());
-
-        ViewInteraction editText2 = onView(
-                Matchers.allOf(withId(R.id.assistant_password),
-                        withParent(withId(R.id.password_layout))));
-        editText2.perform(scrollTo(),
-                replaceText(LinphoneActivity.instance().getString(R.string.account_linphone_pwd)),
-                closeSoftKeyboard());
-
-        ViewInteraction button2 = onView(
-                Matchers.allOf(withId(R.id.assistant_apply)));
-        button2.perform(scrollTo(), click());
-
-        waitUi(5000);
-
-        ViewInteraction textView = onView(
-                Matchers.allOf(withId(R.id.assistant_skip)));
-        textView.perform(scrollTo(), click());
-
-        //Delete account
-        deleteDefaultAccount();
-    }
-
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
@@ -322,14 +259,5 @@ public class LinphoneLauncherActivityTest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
-    }
-
-    private void deleteDefaultAccount() {
-        LinphoneProxyConfig proxyCfg = LinphoneManager.getLc().getDefaultProxyConfig();
-
-        if (proxyCfg != null)
-            LinphoneManager.getLc().removeProxyConfig(proxyCfg);
-        if (LinphoneManager.getLc().getProxyConfigList().length == 0)
-            LinphoneManager.getLc().setDefaultProxyConfig(null);
     }
 }
