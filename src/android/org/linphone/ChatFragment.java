@@ -527,16 +527,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
 		}
 
-		if(LinphoneManager.getLc().isIncall()){
-			backToCall.setVisibility(View.VISIBLE);
-			startCall.setVisibility(View.GONE);
-		} else {
-			if(!newChatConversation) {
-				backToCall.setVisibility(View.GONE);
-				startCall.setVisibility(View.VISIBLE);
-			}
-		}
-
 		LinphoneManager.addListener(this);
 
 		// Force hide keyboard
@@ -548,7 +538,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (contact != null) {
 			contactName.setText(contact.getFullName());
 			sipUri = getArguments().getString("sipUriDraft");
+			newChatConversation = false;
 			getArguments().clear();
+		}
+
+		if(LinphoneManager.getLc().isIncall()){
+			backToCall.setVisibility(View.VISIBLE);
+			startCall.setVisibility(View.GONE);
+		} else {
+			if(!newChatConversation) {
+				backToCall.setVisibility(View.GONE);
+				startCall.setVisibility(View.VISIBLE);
+			}
 		}
 
 		if (!newChatConversation || contact != null) {
