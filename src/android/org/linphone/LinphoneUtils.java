@@ -704,7 +704,7 @@ public final class LinphoneUtils {
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
 			builder.setMessage(msg)
 					.setCancelable(false)
-					.setNeutralButton("Ok", null)
+					.setNeutralButton(ctxt.getString(R.string.ok), null)
 					.show();
 		}
 	}
