@@ -742,6 +742,7 @@ public class LinphonePreferences {
 
 	public void setAccountEnabled(int n, boolean enabled) {
 		LinphoneProxyConfig prxCfg = getProxyConfig(n);
+		if (prxCfg == null) return;
 		prxCfg.edit();
 		prxCfg.enableRegister(enabled);
 		prxCfg.done();
