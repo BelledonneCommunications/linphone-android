@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.firebase;
 
-import android.util.Log;
+import org.linphone.mediastream.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -35,13 +35,13 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Linphone", "[Push Notification] Refreshed token: " + refreshedToken);
+        Log.i("[Push Notification] Refreshed token: " + refreshedToken);
 
         sendRegistrationToServer(refreshedToken);
     }
 
     private void sendRegistrationToServer(final String refreshedToken) {
-        Log.d("Linphone", "[Push Notification] Send token to server: " + refreshedToken);
+        Log.i("[Push Notification] Send token to server: " + refreshedToken);
         UIThreadDispatcher.dispatch(new Runnable() {
             @Override
             public void run() {
