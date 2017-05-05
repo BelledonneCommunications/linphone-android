@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.linphone.ContactsManager;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
@@ -391,6 +392,9 @@ private static AssistantActivity instance;
 			lc.addAuthInfo(authInfo);
 
 			lc.setDefaultProxyConfig(proxyConfig);
+
+            if (ContactsManager.getInstance() != null)
+                ContactsManager.getInstance().fetchContactsAsync();
 
 			if (LinphonePreferences.instance() != null)
 				mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
