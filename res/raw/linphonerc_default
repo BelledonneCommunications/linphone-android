@@ -26,6 +26,3 @@ port=443
 [misc]
 log_collection_upload_server_url=https://www.linphone.org:444/lft.php
 file_transfer_server_url=https://www.linphone.org:444/lft.php
-
-[proxy_default_values]
-rls_uri=sips:rls@sip.linphone.org
