@@ -18,6 +18,7 @@ size=qvga
 tunnel=disabled
 push_notification=1
 auto_start=1
+debug=1
 
 [tunnel]
 host=
@@ -28,6 +29,4 @@ log_collection_upload_server_url=https://www.linphone.org:444/lft.php
 file_transfer_server_url=https://www.linphone.org:444/lft.php
 
 [proxy_default_values]
-reg_proxy=<sip:sip.linphone.org>
-realm=sip.linphone.org
-reg_identity=sip:user@sip.linphone.org
+rls_uri=sips:rls@sip.linphone.org
