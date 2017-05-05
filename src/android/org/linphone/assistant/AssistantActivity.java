@@ -388,6 +388,7 @@ private static AssistantActivity instance;
 			lc.addAuthInfo(authInfo);
 
 			lc.setDefaultProxyConfig(proxyConfig);
+            LinphoneManager.getInstance().subscribeFriendList(true);
 			if (!newAccount) {
 				displayRegistrationInProgressDialog();
 			}
