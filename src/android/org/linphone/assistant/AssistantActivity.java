@@ -372,6 +372,9 @@ private static AssistantActivity instance;
 
 			proxyConfig.setIdentity(addr.asString());
 
+			if (LinphonePreferences.instance() != null)
+				proxyConfig.setContactUriParameters(LinphonePreferences.instance().getPushNotificationRegistrationID());
+
 			proxyConfig.done();
 
 			authInfo = LinphoneCoreFactory.instance().createAuthInfo(
