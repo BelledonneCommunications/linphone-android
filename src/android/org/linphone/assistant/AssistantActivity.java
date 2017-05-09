@@ -359,7 +359,7 @@ private static AssistantActivity instance;
 
 		try {
 			String identity = proxyConfig.getIdentity();
-            if (identity == null) {
+            if (identity == null || accountCreator.getUsername() == null) {
                 LinphoneUtils.displayErrorAlert(getString(R.string.error), this);
                 return;
             }
