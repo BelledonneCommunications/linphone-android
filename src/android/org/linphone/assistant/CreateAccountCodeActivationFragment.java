@@ -44,7 +44,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 	private TextView title, phonenumber;
 	private EditText code;
 	private boolean recoverAccount = false, linkAccount = false;
-	private int code_length;
+	private int code_length, accountNumber;
 	private ImageView back;
 	private Button checkAccount;
 	private LinphoneAccountCreator accountCreator;
@@ -59,6 +59,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 		dialcode = getArguments().getString("Dialcode");
 		recoverAccount = getArguments().getBoolean("RecoverAccount");
 		linkAccount = getArguments().getBoolean("LinkAccount");
+		accountNumber = getArguments().getInt("AccountNumber");
 
 		code_length = LinphonePreferences.instance().getCodeLength();
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
@@ -118,8 +119,8 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 	}
 
 	private void linkAccount(){
-		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
-		accountCreator.setHa1(LinphonePreferences.instance().getAccountHa1(LinphonePreferences.instance().getDefaultAccountIndex()));
+		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(accountNumber));
+		accountCreator.setHa1(LinphonePreferences.instance().getAccountHa1(accountNumber));
 		accountCreator.activatePhoneNumberLink();
 	}
 
@@ -179,6 +180,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 			return;
 		}
 		if(status.equals(LinphoneAccountCreator.RequestStatus.Ok)){
+			LinphonePreferences.instance().setPrefix(accountNumber, accountCreator.getPrefix(accountCreator.getPhoneNumber()));
 			LinphonePreferences.instance().setLinkPopupTime("");
 			AssistantActivity.instance().hideKeyboard();
 			AssistantActivity.instance().success();

@@ -254,6 +254,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
 			assistant.putExtra("LinkPhoneNumber", true);
 			assistant.putExtra("FromPref", true);
+			assistant.putExtra("AccountNumber", n);
 			startActivity(assistant);
 			return true;
 		}

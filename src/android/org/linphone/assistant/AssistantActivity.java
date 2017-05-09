@@ -376,6 +376,9 @@ private static AssistantActivity instance;
 			if (LinphonePreferences.instance() != null)
 				proxyConfig.setContactUriParameters(LinphonePreferences.instance().getPushNotificationRegistrationID());
 
+			if (accountCreator.getPhoneNumber() != null && accountCreator.getPhoneNumber().length() > 0)
+				proxyConfig.setDialPrefix(accountCreator.getPrefix(accountCreator.getPhoneNumber()));
+
 			proxyConfig.done();
 
 			authInfo = LinphoneCoreFactory.instance().createAuthInfo(
