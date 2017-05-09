@@ -1062,7 +1062,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			dozeModeEnabled = true;
 		} else {
 			Log.i("[Doze Mode]: unregister");
-			if (dozeModeEnabled) mServiceContext.unregisterReceiver(mDozeReceiver);
+			mServiceContext.unregisterReceiver(mDozeReceiver);
 			dozeModeEnabled = false;
 		}
 	}
