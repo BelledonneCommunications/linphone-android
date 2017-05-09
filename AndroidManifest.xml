@@ -271,7 +271,7 @@
 
         <receiver
             android:name=".AccountEnableReceiver"
-            android:permission="android.permission.CONFIGURE_SIP">
+            android:permission="android.permission.USE_SIP">
             <intent-filter>
                 <action android:name="org.linphone.intent.ACCOUNTACTIVATE"/>
             </intent-filter>
