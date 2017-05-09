@@ -151,9 +151,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private BroadcastReceiver mKeepAliveReceiver;
 	private BroadcastReceiver mDozeReceiver;
 	private BroadcastReceiver mHookReceiver;
+	private BroadcastReceiver mNetworkReceiver;
 	private IntentFilter mKeepAliveIntentFilter;
 	private IntentFilter mDozeIntentFilter;
 	private IntentFilter mHookIntentFilter;
+	private IntentFilter mNetworkIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
 	private WakeLock mProximityWakelock;
@@ -697,8 +699,23 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 		finally {
 			try {
-				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+					mServiceContext.unregisterReceiver(mNetworkReceiver);
+				}
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
 				mServiceContext.unregisterReceiver(mHookReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
+				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
 				dozeManager(false);
 			} catch (Exception e) {
 				Log.e(e);
@@ -843,6 +860,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		mProximityWakelock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "manager_proximity_sensor");
 
+		// Since Android N we need to register the network manager
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+			mNetworkReceiver = new NetworkManager();
+			mNetworkIntentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+			mServiceContext.registerReceiver(mNetworkReceiver, mNetworkIntentFilter);
+		}
+
 		updateNetworkReachability();
 
 		resetCameraFromPreferences();
@@ -984,9 +1008,28 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			Log.e(e);
 		}
 		finally {
-			mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-			mServiceContext.unregisterReceiver(mHookReceiver);
-			dozeManager(false);
+			try {
+				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+					mServiceContext.unregisterReceiver(mNetworkReceiver);
+				}
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
+				mServiceContext.unregisterReceiver(mHookReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
+				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
+				dozeManager(false);
+			} catch (Exception e) {
+				Log.e(e);
+			}
 			mLc = null;
 			instance = null;
 		}
@@ -998,7 +1041,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 		} else {
 			Log.i("[Doze Mode]: unregister");
-			if (dozeModeEnabled) mServiceContext.unregisterReceiver(mDozeReceiver);
+			mServiceContext.unregisterReceiver(mDozeReceiver);
 			dozeModeEnabled = false;
 		}
 	}
