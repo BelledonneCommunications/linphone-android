@@ -179,7 +179,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Lin
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if(status.equals(LinphoneAccountCreator.RequestStatus.Ok)){
+		if(status.equals(LinphoneAccountCreator.RequestStatus.AccountActivated)){
 			LinphonePreferences.instance().setPrefix(accountNumber, accountCreator.getPrefix(accountCreator.getPhoneNumber()));
 			LinphonePreferences.instance().setLinkPopupTime("");
 			AssistantActivity.instance().hideKeyboard();
