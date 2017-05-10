@@ -96,7 +96,7 @@
 			android:src="@drawable/call_hangup"
 			android:background="@drawable/hangup"
 			android:contentDescription="@string/content_description_decline"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:padding="12dp"/>
@@ -137,7 +137,7 @@
 			android:src="@drawable/call_audio_start"
 			android:background="@drawable/call"
 			android:contentDescription="@string/content_description_accept"
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:padding="12dp"/>
