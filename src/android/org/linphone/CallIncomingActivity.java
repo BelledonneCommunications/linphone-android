@@ -48,13 +48,13 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 	private static CallIncomingActivity instance;
 
 	private TextView name, number;
-	private ImageView contactPicture, accept, decline;
+	private ImageView contactPicture, accept, decline, arrow;
 	private LinphoneCall mCall;
 	private LinphoneCoreListenerBase mListener;
 	private LinearLayout acceptUnlock;
 	private LinearLayout declineUnlock;
-	private boolean alreadyAcceptedOrDeniedCall;
-	private float answerX;
+	private boolean alreadyAcceptedOrDeniedCall, begin;
+	private float answerX, oldMove;
 	private float declineX;
 
 	public static CallIncomingActivity instance() {
@@ -91,6 +91,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 		accept = (ImageView) findViewById(R.id.accept);
 		decline = (ImageView) findViewById(R.id.decline);
+		arrow = (ImageView) findViewById(R.id.arrow_hangup);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -110,14 +111,18 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 					case MotionEvent.ACTION_DOWN:
 						acceptUnlock.setVisibility(View.VISIBLE);
 						decline.setVisibility(View.GONE);
-						answerX = motionEvent.getX();
+						answerX = motionEvent.getX()+accept.getWidth()/2;
+						begin = true;
+						oldMove = 0;
 						break;
 					case MotionEvent.ACTION_MOVE:
 						curX = motionEvent.getX();
-						if((answerX - curX) >= 0)
-							view.scrollBy((int) (answerX - curX), view.getScrollY());
+						view.scrollBy((int) (answerX - curX), view.getScrollY());
+						oldMove -= answerX - curX;
 						answerX = curX;
-						if (curX < screenWidth/4) {
+						if (oldMove < -25)
+							begin = false;
+						if (curX < arrow.getWidth() && !begin) {
 							answer();
 							return true;
 						}
@@ -146,8 +151,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 						curX = motionEvent.getX();
 						view.scrollBy((int) (declineX - curX), view.getScrollY());
 						declineX = curX;
-						Log.w(curX);
-						if (curX > (screenWidth/2)){
+						if (curX > (screenWidth-arrow.getWidth()*4)) {
 							decline();
 							return true;
 						}
@@ -157,7 +161,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 						accept.setVisibility(View.VISIBLE);
 						declineUnlock.setVisibility(View.GONE);
 						break;
-
 				}
 				return true;
 			}
