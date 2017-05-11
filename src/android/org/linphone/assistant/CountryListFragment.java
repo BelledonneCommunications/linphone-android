@@ -53,6 +53,7 @@ public class CountryListFragment extends Fragment implements AdapterView.OnItemC
 
 			}
 		});
+		search.setText("");
 
 		return view;
 	}
