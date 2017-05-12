@@ -1590,13 +1590,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			statusFragment.resetAccountStatus();
 			LinphoneManager.getInstance().subscribeFriendList(false);
 
-			defaultAccount.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					LinphoneActivity.instance().displayAccountSettings(0);
-					openOrCloseSideMenu(false);
-				}
-			});
+			defaultAccount.setOnClickListener(null);
 		} else {
 			address.setText(proxy.getAddress().asStringUriOnly());
 			displayName.setText(LinphoneUtils.getAddressDisplayName(proxy.getAddress()));

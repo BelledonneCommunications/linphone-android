@@ -523,9 +523,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
     	delete.setEnabled(!isNewAccount);
     	delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        public boolean onPreferenceClick(Preference preference) {
-	        	mPrefs.deleteAccount(n);
+	    		mPrefs.deleteAccount(n);
+				LinphoneActivity.instance().displaySettings();
 				LinphoneActivity.instance().refreshAccounts();
-	        	LinphoneActivity.instance().displaySettings();
 	        	return true;
 	        }
         });
