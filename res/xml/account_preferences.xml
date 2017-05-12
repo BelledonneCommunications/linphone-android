@@ -48,6 +48,17 @@
 			android:key="@string/pref_transport_key"
             android:persistent="false"/>
 
+		<CheckBoxPreference
+			android:title="@string/pref_ice_enable"
+			android:key="@string/pref_ice_enable_key"
+			android:persistent="false"/>
+
+		<EditTextPreference
+			android:title="@string/pref_stun_server"
+			android:key="@string/pref_stun_server_key"
+			android:inputType="textUri"
+			android:persistent="false"/>
+
         <EditTextPreference
         	android:title="@string/pref_proxy"
 			android:inputType="textUri"

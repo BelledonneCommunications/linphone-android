@@ -48,6 +48,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 /**
@@ -292,6 +293,40 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		}
 	};
 
+	OnPreferenceChangeListener iceChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean value = (Boolean) newValue;
+			if (isNewAccount) {
+			} else {
+				if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+						&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
+					LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().enableIce(value);
+				else
+					return false;
+			}
+			return true;
+		}
+	};
+
+	OnPreferenceChangeListener stunTurnChangedListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			String value = newValue.toString();
+			if (isNewAccount) {
+			} else {
+				if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+						&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null) {
+					LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().setStunServer(value);
+					preference.setSummary(value);
+				}
+				else
+					return false;
+			}
+			return true;
+		}
+	};
+
 	private void initAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
 
@@ -342,27 +377,39 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			mTransportPreference.setSummary(mPrefs.getAccountTransportString(n));
 		}
 
-		mProxyPreference = (EditTextPreference) advanced.getPreference(1);
+		CheckBoxPreference ice = (CheckBoxPreference) advanced.getPreference(1);
+		ice.setOnPreferenceChangeListener(iceChangedListener);
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+				&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
+			ice.setChecked(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().iceEnabled());
+
+		EditTextPreference stunTurn = (EditTextPreference) advanced.getPreference(2);
+		stunTurn.setOnPreferenceChangeListener(stunTurnChangedListener);
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+				&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
+			stunTurn.setText(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
+
+		mProxyPreference = (EditTextPreference) advanced.getPreference(3);
 		mProxyPreference.setOnPreferenceChangeListener(proxyChangedListener);
 		if (!isNewAccount){
 			mProxyPreference.setText(mPrefs.getAccountProxy(n));
 			mProxyPreference.setSummary("".equals(mProxyPreference.getText()) || (mProxyPreference.getText() == null) ? getString(R.string.pref_help_proxy) : mProxyPreference.getText());
 		}
 
-    	CheckBoxPreference outboundProxy = (CheckBoxPreference) advanced.getPreference(2);
+    	CheckBoxPreference outboundProxy = (CheckBoxPreference) advanced.getPreference(4);
     	outboundProxy.setOnPreferenceChangeListener(outboundProxyChangedListener);
 		if (!isNewAccount){
 			outboundProxy.setChecked(mPrefs.isAccountOutboundProxySet(n));
 		}
 
-    	EditTextPreference expires = (EditTextPreference) advanced.getPreference(3);
+    	EditTextPreference expires = (EditTextPreference) advanced.getPreference(5);
     	expires.setOnPreferenceChangeListener(expiresChangedListener);
 		if(!isNewAccount){
 			expires.setText(mPrefs.getExpires(n));
 			expires.setSummary(mPrefs.getExpires(n));
 		}
 
-    	EditTextPreference prefix = (EditTextPreference) advanced.getPreference(4);
+    	EditTextPreference prefix = (EditTextPreference) advanced.getPreference(6);
     	prefix.setOnPreferenceChangeListener(prefixChangedListener);
 		if(!isNewAccount){
 			String prefixValue = mPrefs.getPrefix(n);
@@ -370,26 +417,26 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			prefix.setSummary(prefixValue);
 		}
 
-		CheckBoxPreference avpf = (CheckBoxPreference) advanced.getPreference(5);
+		CheckBoxPreference avpf = (CheckBoxPreference) advanced.getPreference(7);
 		avpf.setOnPreferenceChangeListener(avpfChangedListener);
 		if (!isNewAccount){
 			avpf.setChecked(mPrefs.avpfEnabled(n));
 		}
 
-		EditTextPreference avpfRRInterval = (EditTextPreference) advanced.getPreference(6);
+		EditTextPreference avpfRRInterval = (EditTextPreference) advanced.getPreference(8);
 		avpfRRInterval.setOnPreferenceChangeListener(avpfRRIntervalChangedListener);
 		if (!isNewAccount){
 			avpfRRInterval.setText(mPrefs.getAvpfRRInterval(n));
 			avpfRRInterval.setSummary(mPrefs.getAvpfRRInterval(n));
 		}
 
-    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(7);
+    	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(9);
 		escape.setOnPreferenceChangeListener(escapeChangedListener);
 		if(!isNewAccount){
 			escape.setChecked(mPrefs.getReplacePlusByZeroZero(n));
 		}
 
-		Preference linkAccount = advanced.getPreference(8);
+		Preference linkAccount = advanced.getPreference(10);
 		linkAccount.setOnPreferenceClickListener(linkAccountListener);
 
 		PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
