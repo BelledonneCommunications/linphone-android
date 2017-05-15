@@ -12,6 +12,11 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+## [3.2.7] - 2017-05-15
+
+### Fixed
+- Crash with devices X86 on Android < 5
+
 ## [3.2.6] - 2017-04-10
 
 ### Added
