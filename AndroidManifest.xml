@@ -2,11 +2,11 @@
 <manifest package="org.linphone"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="3265"
-          android:versionName="3.2.6">
+          android:versionCode="3270"
+          android:versionName="3.2.7">
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="23"/>
 
     <!-- Permissions for Push Notification -->
