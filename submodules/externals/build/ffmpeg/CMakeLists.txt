@@ -31,11 +31,11 @@ find_library(AVUTIL_LIBRARY avutil)
 find_library(SWRESAMPLE_LIBRARY swresample)
 find_library(SWSCALE_LIBRARY swscale)
 
-add_library(ffmpeg-linphone-${CMAKE_ANDROID_ARCH_ABI} SHARED)
-target_link_libraries(ffmpeg-linphone-${CMAKE_ANDROID_ARCH_ABI} LINK_PRIVATE "m" "-Wl,-whole-archive" ${AVCODEC_LIBRARY} ${AVUTIL_LIBRARY} ${SWRESAMPLE_LIBRARY} ${SWSCALE_LIBRARY} "-Wl,-no-whole-archive")
-set_target_properties(ffmpeg-linphone-${CMAKE_ANDROID_ARCH_ABI} PROPERTIES LINKER_LANGUAGE C)
+add_library(ffmpeg-linphone SHARED)
+target_link_libraries(ffmpeg-linphone LINK_PRIVATE "m" "-Wl,-whole-archive" ${AVCODEC_LIBRARY} ${AVUTIL_LIBRARY} ${SWRESAMPLE_LIBRARY} ${SWSCALE_LIBRARY} "-Wl,-no-whole-archive")
+set_target_properties(ffmpeg-linphone PROPERTIES LINKER_LANGUAGE C)
 
-install(TARGETS ffmpeg-linphone-${CMAKE_ANDROID_ARCH_ABI}
+install(TARGETS ffmpeg-linphone
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

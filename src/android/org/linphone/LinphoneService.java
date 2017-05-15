@@ -712,7 +712,6 @@ public final class LinphoneService extends Service {
 			sb.append(abi + ", ");
 		}
 		sb.append("\n");
-		sb.append("Used ABI=").append(LinphoneCoreFactoryImpl.ABI).append("\n");
 		Log.i(sb.toString());
 	}
 

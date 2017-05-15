@@ -230,12 +230,10 @@ copy-libs:
 \trm -rf libs/armeabi
 \tif test -d "liblinphone-sdk/android-arm"; then \\
 \t\tmkdir -p libs-debug/armeabi && \\
-\t\tcp -f liblinphone-sdk/android-arm/lib/libgnustl_shared.so libs-debug/armeabi && \\
-\t\tcp -f liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs-debug/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/lib*.so libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs-debug/armeabi && \\
 \t\tmkdir -p libs/armeabi && \\
-\t\tcp -f liblinphone-sdk/android-arm/lib/libgnustl_shared.so libs/armeabi && \\
-\t\tcp -f liblinphone-sdk/android-arm/lib/lib*-armeabi.so libs/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/lib*.so libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/mediastreamer/plugins/*.so libs/armeabi && \\
 \t\tsh WORK/android-arm/strip.sh libs/armeabi/*.so; \\
 \tfi
@@ -249,12 +247,10 @@ copy-libs:
 \trm -rf libs/armeabi-v7a
 \tif test -d "liblinphone-sdk/android-armv7"; then \\
 \t\tmkdir -p libs-debug/armeabi-v7a && \\
-\t\tcp -f liblinphone-sdk/android-armv7/lib/libgnustl_shared.so libs-debug/armeabi-v7a && \\
-\t\tcp -f liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs-debug/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/lib*.so libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs-debug/armeabi-v7a && \\
 \t\tmkdir -p libs/armeabi-v7a && \\
-\t\tcp -f liblinphone-sdk/android-armv7/lib/libgnustl_shared.so libs/armeabi-v7a && \\
-\t\tcp -f liblinphone-sdk/android-armv7/lib/lib*-armeabi-v7a.so libs/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/lib*.so libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/lib/mediastreamer/plugins/*.so libs/armeabi-v7a && \\
 \t\tsh WORK/android-armv7/strip.sh libs/armeabi-v7a/*.so; \\
 \tfi
@@ -268,12 +264,10 @@ copy-libs:
 \trm -rf libs/arm64-v8a
 \tif test -d "liblinphone-sdk/android-arm64"; then \\
 \t\tmkdir -p libs-debug/arm64-v8a && \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib/libgnustl_shared.so libs-debug/arm64-v8a && \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib/lib*-arm64-v8a.so libs-debug/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/lib*.so libs-debug/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs-debug/arm64-v8a && \\
 \t\tmkdir -p libs/arm64-v8a && \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib/libgnustl_shared.so libs/arm64-v8a && \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib/lib*-arm64-v8a.so libs/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/lib*.so libs/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs/arm64-v8a && \\
 \t\tsh WORK/android-arm64/strip.sh libs/arm64-v8a/*.so; \\
 \tfi
@@ -287,12 +281,10 @@ copy-libs:
 \trm -rf libs/x86
 \tif test -d "liblinphone-sdk/android-x86"; then \\
 \t\tmkdir -p libs-debug/x86 && \\
-\t\tcp -f liblinphone-sdk/android-x86/lib/libgnustl_shared.so libs-debug/x86 && \\
-\t\tcp -f liblinphone-sdk/android-x86/lib/lib*-x86.so libs-debug/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/lib*.so libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs-debug/x86 && \\
 \t\tmkdir -p libs/x86 && \\
-\t\tcp -f liblinphone-sdk/android-x86/lib/libgnustl_shared.so libs/x86 && \\
-\t\tcp -f liblinphone-sdk/android-x86/lib/lib*-x86.so libs/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/lib*.so libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/lib/mediastreamer/plugins/*.so libs/x86 && \\
 \t\tsh WORK/android-x86/strip.sh libs/x86/*.so; \\
 \tfi
