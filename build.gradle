@@ -43,7 +43,7 @@ dependencies {
   androidTestCompile 'junit:junit:4.12'
   compile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
   if (firebaseEnable()) {
-    compile 'com.google.firebase:firebase-messaging:9.0.0'
+    compile 'com.google.firebase:firebase-messaging:10.2.4'
   } else {
     compile fileTree(include: 'gcm.jar', dir: 'libs')
     compile 'com.android.support:support-v4:+'
@@ -73,6 +73,12 @@ if (!firebaseEnable()) {
   println '[Push Notification] Firebase enabled'
 }
 excludeFiles.add('**/mediastream/MediastreamerActivity.java')
+
+def excludePackage = []
+
+excludePackage.add('**/gdb.*')
+excludePackage.add('**/libopenh264**')
+excludePackage.add('**/**tester**')
 /////////////////////////
 
 android {
@@ -125,7 +131,7 @@ android {
 
       // Exclude some useless files
       packagingOptions {
-        exclude '**/gdb.*'
+        excludes = excludePackage
       }
     }
 
@@ -150,7 +156,7 @@ android {
 
       // Exclude some useless files
       packagingOptions {
-        exclude '**/*gdb.*'
+        excludes = excludePackage
       }
     }
 
