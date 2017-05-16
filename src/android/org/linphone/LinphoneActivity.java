@@ -96,6 +96,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * @author Sylvain Berfini
@@ -284,6 +285,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			LinphoneManager.getLc().setDeviceRotation(rotation);
 		}
 		mAlwaysChangingPhoneAngle = rotation;
+
+		if (getString(R.string.push_type).equals("firebase")) {
+			if (FirebaseInstanceId.getInstance() != null) {
+				if (LinphonePreferences.instance() != null) {
+					Log.i("[Push Notification] Get Token " + FirebaseInstanceId.getInstance().getToken());
+					LinphonePreferences.instance().setPushNotificationRegistrationID(FirebaseInstanceId.getInstance().getToken());
+				} else {
+					Log.i("[Push Notification] Can't set new token to LinphonePreferences");
+				}
+			}
+		}
 	}
 
 	private void initButtons() {
