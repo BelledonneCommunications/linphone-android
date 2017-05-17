@@ -386,8 +386,10 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		EditTextPreference stunTurn = (EditTextPreference) advanced.getPreference(2);
 		stunTurn.setOnPreferenceChangeListener(stunTurnChangedListener);
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-				&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
+				&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null) {
 			stunTurn.setText(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
+			stunTurn.setSummary(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
+		}
 
 		mProxyPreference = (EditTextPreference) advanced.getPreference(3);
 		mProxyPreference.setOnPreferenceChangeListener(proxyChangedListener);
