@@ -1098,13 +1098,13 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	}
 
 	public static void ContactsManagerDestroy() {
-		if (ContactsManager.getInstance() != null)
-			ContactsManager.getInstance().destroy();
+		if (LinphoneManager.instance != null && LinphoneManager.instance.mServiceContext != null)
+			LinphoneManager.instance.mServiceContext.getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
+		ContactsManager.getInstance().destroy();
 	}
 
 	public static void BluetoothManagerDestroy() {
-		if (BluetoothManager.getInstance() != null)
-			BluetoothManager.getInstance().destroy();
+		BluetoothManager.getInstance().destroy();
 	}
 
 	public static synchronized void destroy() {

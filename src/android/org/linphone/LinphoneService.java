@@ -799,7 +799,6 @@ public final class LinphoneService extends Service {
 		}
 
 		instance = null;
-		getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
 		LinphoneManager.destroy();
 
 	    // Make sure our notification is gone.
