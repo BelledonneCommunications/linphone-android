@@ -512,11 +512,8 @@ public class LinphonePreferences {
 	}
 
 	public String getAccountDisplayName(int n) {
-		LinphoneAddress addr = getProxyConfig(n).getAddress();
-		if(addr != null) {
-			return addr.getDisplayName();
-		}
-		return null;
+		if (getProxyConfig(n) == null || getProxyConfig(n).getAddress() == null) return null;
+		return getProxyConfig(n).getAddress().getDisplayName();
 	}
 
 	public void setAccountUserId(int n, String userId) {
