@@ -46,6 +46,7 @@ import org.linphone.purchase.Purchasable;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 /**
  * @author Sylvain Berfini
@@ -1474,6 +1475,8 @@ public class LinphonePreferences {
 	}
 
 	public boolean isDozeModeEnabled() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			return false;
 		return getConfig().getBool("app", "doze_mode", true);
 	}
 

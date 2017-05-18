@@ -208,8 +208,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		mR = c.getResources();
 		mPendingChatFileMessage = new ArrayList<LinphoneChatMessage>();
-
-		dozeModeEnabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ((PowerManager) c.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -849,6 +847,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (mPrefs.isDozeModeEnabled()) {
 			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				dozeModeEnabled = ((PowerManager) mServiceContext.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
+			}
 		}
 
 		mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
@@ -1037,9 +1038,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (enable) {
 			Log.i("[Doze Mode]: register");
 			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
+			dozeModeEnabled = true;
 		} else {
 			Log.i("[Doze Mode]: unregister");
-			mServiceContext.unregisterReceiver(mDozeReceiver);
+			if (dozeModeEnabled) mServiceContext.unregisterReceiver(mDozeReceiver);
 			dozeModeEnabled = false;
 		}
 	}
