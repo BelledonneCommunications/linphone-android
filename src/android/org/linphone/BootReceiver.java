@@ -31,7 +31,7 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
-			Log.w("Device is shutting down, destroying LinphoneCore to unregister");
+			android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying LinphoneCore to unregister");
 			LinphoneManager.destroy();
 		} else {
 			String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
