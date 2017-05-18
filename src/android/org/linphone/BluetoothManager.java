@@ -308,12 +308,17 @@ public class BluetoothManager extends BroadcastReceiver {
 			//int type = intent.getExtras().getInt(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_CMD_TYPE);
 
 			Object[] args = (Object[]) intent.getExtras().get(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_ARGS);
-			String eventName = (String) args[0];
-
+			if (args.length <= 0) {
+				Log.d("[Bluetooth] Event: " + command + ", no args");
+				return;
+			}
+			String eventName = (args[0]).toString();
 			if (eventName.equals("BUTTON") && args.length >= 3) {
-				Integer buttonID = (Integer) args[1];
-				Integer mode = (Integer) args[2];
+				String buttonID = args[1].toString();
+				String mode = args[2].toString();
 				Log.d("[Bluetooth] Event: " + command + " : " + eventName + ", id = " + buttonID + " (" + mode + ")");
+			} else {
+				Log.d("[Bluetooth] Event: " + command + " : " + eventName);
 			}
     	}
     }
