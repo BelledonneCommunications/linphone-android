@@ -167,7 +167,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			startActivity(wizard);
 			finish();
 			return;
-		} else if (savedInstanceState == null && (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch())) {
+		} else if (savedInstanceState == null && (useFirstLoginActivity && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+				&& LinphonePreferences.instance().isFirstLaunch())) {
 			if (LinphonePreferences.instance().getAccountCount() > 0) {
 				LinphonePreferences.instance().firstLaunchSuccessful();
 			} else {
