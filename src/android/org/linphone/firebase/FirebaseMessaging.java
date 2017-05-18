@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.firebase;
 
 import android.content.Intent;
-import org.linphone.mediastream.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -39,7 +38,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.i("[Push Notification] Received");
+        android.util.Log.i("FirebaseMessaging","[Push Notification] Received");
 
         if (!LinphoneService.isReady()) {
             startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
