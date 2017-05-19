@@ -29,26 +29,16 @@ public class Tester {
 		String ffmpegAbi;
 		boolean libLoaded=false;
 		Throwable firstException=null;
-		for (String abi : cpuabis){
-			Log.i("LinphoneCoreFactoryImpl","Trying to load liblinphone for " + abi);
-			loadOptionalLibrary("ffmpeg-linphone-" + abi);
-			//Main library
-			try {
-				System.loadLibrary("bctoolbox-" + abi);
-				System.loadLibrary("bctoolbox-tester-" + abi);
-				System.loadLibrary("ortp-" + abi);
-				System.loadLibrary("mediastreamer_base-" + abi);
-				System.loadLibrary("mediastreamer_voip-" + abi);
-				System.loadLibrary("linphone-" + abi);
-				System.loadLibrary("linphonetester-" + abi);
 
-				Log.i("LinphoneCoreFactoryImpl","Loading done with " + abi);
-				libLoaded=true;
-				break;
-			}catch(Throwable e) {
-				if (firstException == null) firstException=e;
-			}
-		}
+		loadOptionalLibrary("ffmpeg-linphone");
+		System.loadLibrary("bctoolbox");
+		System.loadLibrary("bctoolbox-tester");
+		System.loadLibrary("ortp");
+		System.loadLibrary("mediastreamer_base");
+		System.loadLibrary("mediastreamer_voip");
+		System.loadLibrary("linphone");
+		System.loadLibrary("linphonetester");
+		libLoaded=true;
 
 		if (!libLoaded){
 			throw new RuntimeException(firstException);
