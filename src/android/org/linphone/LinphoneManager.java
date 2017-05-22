@@ -1946,7 +1946,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {}
+	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+		if (status.equals(LinphoneAccountCreator.RequestStatus.AccountNotLinked)) {
+			askLinkWithPhoneNumber();
+		}
+	}
 
 	@Override
 	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {}
