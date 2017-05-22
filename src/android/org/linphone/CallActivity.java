@@ -1230,6 +1230,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	@Override
 	protected void onDestroy() {
 		LinphoneManager.getInstance().changeStatusToOnline();
+		LinphoneManager.getInstance().enableProximitySensing(false);
 
 		if (mControlsHandler != null && mControls != null) {
 			mControlsHandler.removeCallbacks(mControls);
