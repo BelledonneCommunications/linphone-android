@@ -26,6 +26,7 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
 
@@ -300,6 +301,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			if (isNewAccount) {
 			} else {
 				if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+						&& LinphoneManager.getLc().getProxyConfigList() != null
+						&& LinphoneManager.getLc().getProxyConfigList().length > n
 						&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
 					LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().enableIce(value);
 				else
@@ -316,6 +319,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			if (isNewAccount) {
 			} else {
 				if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+						&& LinphoneManager.getLc().getProxyConfigList() != null
+						&& LinphoneManager.getLc().getProxyConfigList().length > n
 						&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null) {
 					LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().setStunServer(value);
 					preference.setSummary(value);
@@ -329,6 +334,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 	private void initAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
+		LinphoneProxyConfig proxyConfig = null;
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null &&
+				LinphoneManager.getLc().getProxyConfigList() != null &&
+				LinphoneManager.getLc().getProxyConfigList().length > n) {
+			proxyConfig = (LinphoneProxyConfig) LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy();
+		}
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
 				, LinphonePreferences.instance().getXmlrpcUrl());
@@ -379,14 +390,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 		CheckBoxPreference ice = (CheckBoxPreference) advanced.getPreference(1);
 		ice.setOnPreferenceChangeListener(iceChangedListener);
-		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-				&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
+		if (proxyConfig != null)
 			ice.setChecked(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().iceEnabled());
 
 		EditTextPreference stunTurn = (EditTextPreference) advanced.getPreference(2);
 		stunTurn.setOnPreferenceChangeListener(stunTurnChangedListener);
-		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-				&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null) {
+		if (proxyConfig != null) {
 			stunTurn.setText(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
 			stunTurn.setSummary(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
 		}
