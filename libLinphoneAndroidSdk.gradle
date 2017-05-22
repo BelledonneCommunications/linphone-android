@@ -20,10 +20,15 @@ allprojects {
     }
 }
 
+configurations {
+    javadocDeps
+}
+
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
+    javadocDeps group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
 }
 
 def submoduleDir = ['submodules/mediastreamer2/java/src',
@@ -86,6 +91,7 @@ task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
                 '**/**.aidl']
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += files(android.libraryVariants.release.javaCompile.classpath.files)
+    classpath += configurations.javadocDeps
 }
 
 task sourcesJar(type: Jar) {
