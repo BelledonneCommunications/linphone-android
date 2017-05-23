@@ -41,7 +41,7 @@ dependencies {
   }
   androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '5.6.3'
   androidTestCompile 'junit:junit:4.12'
-  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.5'
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
   if (firebaseEnable()) {
     compile 'com.google.firebase:firebase-messaging:10.2.4'
   } else {
