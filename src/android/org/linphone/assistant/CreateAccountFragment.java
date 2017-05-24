@@ -673,7 +673,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		}
 		if (status.equals(RequestStatus.Ok)) {
 			AssistantActivity.instance().displayAssistantCodeConfirm(getUsername()
-					, dialCode.getText().toString() , phoneNumberEdit.getText().toString(), false);
+					, phoneNumberEdit.getText().toString(), dialCode.getText().toString(), false);
 		} else {
 			createAccount.setEnabled(true);
 			//SMS error
