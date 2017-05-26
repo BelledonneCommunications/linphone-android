@@ -184,7 +184,7 @@ android.applicationVariants.all { variant ->
 
 task runApplication() {
   def result = exec {
-    executable = 'adb'
+    executable = android.getAdbExe().toString()
     ignoreExitValue true
     args = ['shell', 'monkey', '-p', getPackageName(), '-c', 'android.intent.category.LAUNCHER', '1']
   }
