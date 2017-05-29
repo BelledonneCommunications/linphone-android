@@ -259,13 +259,32 @@
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
 
-
 			<TextView
 				android:id="@+id/video_resolution_received"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:paddingLeft="5dp"
 				android:text="@string/call_stats_video_resolution_received"
+				android:gravity="center"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+
+			<TextView
+				android:id="@+id/video_fps_sent"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:text="@string/call_stats_video_fps_sent"
+				android:gravity="center"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
+
+			<TextView
+				android:id="@+id/video_fps_received"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:text="@string/call_stats_video_fps_received"
 				android:gravity="center"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>

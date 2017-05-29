@@ -1585,7 +1585,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
 			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
 			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
-			, TextView videoResolutionReceived, boolean isVideo, TextView jitterBuffer) {
+			, TextView videoResolutionReceived, TextView videoFpsSent, TextView videoFpsReceived
+			, boolean isVideo, TextView jitterBuffer) {
 		if (stats != null) {
 			String mime = null;
 
@@ -1621,6 +1622,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				formatText(videoResolutionReceived,
 						getString(R.string.call_stats_video_resolution_received),
 						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
+				formatText(videoFpsSent,
+						getString(R.string.call_stats_video_fps_sent),
+						"\u2191 " + params.getSentFramerate());
+				formatText(videoFpsReceived,
+						getString(R.string.call_stats_video_fps_received),
+						"\u2193 " + params.getReceivedFramerate());
 			} else {
 				formatText(jitterBuffer, getString(R.string.call_stats_jitter_buffer),
 						new DecimalFormat("##.##").format(stats.getJitterBufferSize()) + " ms");
@@ -1652,6 +1659,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		final TextView iceVideo = (TextView) view.findViewById(R.id.ice_video);
 		final TextView videoResolutionSent = (TextView) view.findViewById(R.id.video_resolution_sent);
 		final TextView videoResolutionReceived = (TextView) view.findViewById(R.id.video_resolution_received);
+		final TextView videoFpsSent = (TextView) view.findViewById(R.id.video_fps_sent);
+		final TextView videoFpsReceived = (TextView) view.findViewById(R.id.video_fps_received);
 		final TextView senderLossRateAudio = (TextView) view.findViewById(R.id.senderLossRateAudio);
 		final TextView receiverLossRateAudio = (TextView) view.findViewById(R.id.receiverLossRateAudio);
 		final TextView senderLossRateVideo = (TextView) view.findViewById(R.id.senderLossRateVideo);
@@ -1701,7 +1710,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 									displayMediaStats(params, audioStats, payloadAudio, audioLayout
 											, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
 											, ipAudio, senderLossRateAudio, receiverLossRateAudio
-											, encoderAudio, decoderAudio, null, null
+											, encoderAudio, decoderAudio, null, null, null, null
 											, false, jitterBufferAudio);
 
 									displayMediaStats(params, videoStats, payloadVideo, videoLayout
@@ -1709,6 +1718,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 											, ipVideo, senderLossRateVideo, receiverLossRateVideo
 											, encoderVideo, decoderVideo
 											, videoResolutionSent, videoResolutionReceived
+											,videoFpsSent, videoFpsReceived
 											, true, null);
 								}
 							}
