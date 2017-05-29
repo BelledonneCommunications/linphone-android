@@ -338,7 +338,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null &&
 				LinphoneManager.getLc().getProxyConfigList() != null &&
 				LinphoneManager.getLc().getProxyConfigList().length > n) {
-			proxyConfig = (LinphoneProxyConfig) LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy();
+			proxyConfig = (LinphoneProxyConfig) LinphoneManager.getLc().getProxyConfigList()[n];
 		}
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
