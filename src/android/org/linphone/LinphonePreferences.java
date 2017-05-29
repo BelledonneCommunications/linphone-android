@@ -530,15 +530,18 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountPassword(int n, String password) {
-		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
-			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, null, null, getAccountDomain(n));
-			LinphoneManager.getLc().addAuthInfo(authInfo);
-		}
+		setAccountPassword(n, password, null);
 	}
 
 	public void setAccountHa1(int n, String ha1) {
+		setAccountPassword(n, null, ha1);
+	}
+
+	private void setAccountPassword(int n, String password, String ha1) {
 		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
-			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, null, ha1, null, getAccountDomain(n));
+			if (LinphoneManager.getLc().getAuthInfosList()[n] != null)
+				LinphoneManager.getLc().removeAuthInfo(LinphoneManager.getLc().getAuthInfosList()[n]);
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, ha1, null, getAccountDomain(n));
 			LinphoneManager.getLc().addAuthInfo(authInfo);
 		}
 	}
