@@ -846,9 +846,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mDozeReceiver = new DozeReceiver();
 
 		if (mPrefs.isDozeModeEnabled()) {
-			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 				dozeModeEnabled = ((PowerManager) mServiceContext.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
+				if (dozeModeEnabled)
+					mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 			}
 		}
 
