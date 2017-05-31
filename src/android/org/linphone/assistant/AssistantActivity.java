@@ -559,7 +559,7 @@ private static AssistantActivity instance;
 			String regId = mPrefs.getPushNotificationRegistrationID();
 			String appId = getString(R.string.push_sender_id);
 			if (regId != null && mPrefs.isPushNotificationEnabled()) {
-				String contactInfos = "app-id=" + appId + ";pn-type=google;pn-tok=" + regId;
+				String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId;
 				builder.setContactParameters(contactInfos);
 			}
 
