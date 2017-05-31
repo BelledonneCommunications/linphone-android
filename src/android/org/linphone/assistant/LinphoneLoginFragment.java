@@ -255,6 +255,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 			int status = getPhoneNumberStatus();
 			boolean isOk = status == LinphoneAccountCreator.PhoneNumberCheck.Ok.value();
 			if (isOk) {
+				LinphoneManager.getLc().getConfig().loadXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
 				accountCreator.isPhoneNumberUsed();
 			} else {
 				apply.setEnabled(true);
