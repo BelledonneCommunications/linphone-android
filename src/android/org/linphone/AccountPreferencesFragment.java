@@ -26,6 +26,7 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneNatPolicy;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
@@ -334,11 +335,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 	private void initAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
-		LinphoneProxyConfig proxyConfig = null;
+		LinphoneNatPolicy natPolicy = null;
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null &&
 				LinphoneManager.getLc().getProxyConfigList() != null &&
 				LinphoneManager.getLc().getProxyConfigList().length > n) {
-			proxyConfig = (LinphoneProxyConfig) LinphoneManager.getLc().getProxyConfigList()[n];
+			natPolicy = LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy();
 		}
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
@@ -390,14 +391,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 		CheckBoxPreference ice = (CheckBoxPreference) advanced.getPreference(1);
 		ice.setOnPreferenceChangeListener(iceChangedListener);
-		if (proxyConfig != null)
-			ice.setChecked(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().iceEnabled());
+		if (natPolicy != null)
+			ice.setChecked(natPolicy.iceEnabled());
 
 		EditTextPreference stunTurn = (EditTextPreference) advanced.getPreference(2);
 		stunTurn.setOnPreferenceChangeListener(stunTurnChangedListener);
-		if (proxyConfig != null) {
-			stunTurn.setText(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
-			stunTurn.setSummary(LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().getStunServer());
+		if (natPolicy != null) {
+			stunTurn.setText(natPolicy.getStunServer());
+			stunTurn.setSummary(natPolicy.getStunServer());
 		}
 
 		mProxyPreference = (EditTextPreference) advanced.getPreference(3);
