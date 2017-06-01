@@ -36,17 +36,19 @@ import android.widget.Toast;
  * @author Sylvain Berfini
  */
 public class LoginFragment extends Fragment implements OnClickListener, TextWatcher {
-	private EditText login, password, domain;
+	private EditText login, userid, password, domain;
 	private RadioGroup transports;
 	private Button apply;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_login, container, false);
-		
+
 		login = (EditText) view.findViewById(R.id.assistant_username);
 		login.addTextChangedListener(this);
+		userid = (EditText) view.findViewById(R.id.assistant_userid);
+		userid.addTextChangedListener(this);
 		password = (EditText) view.findViewById(R.id.assistant_password);
 		password.addTextChangedListener(this);
 		domain = (EditText) view.findViewById(R.id.assistant_domain);
@@ -55,14 +57,14 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
-		
+
 		return view;
 	}
 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+
 		if (id == R.id.assistant_apply) {
 			if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0 || domain.getText() == null || domain.length() == 0) {
 				Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
@@ -80,7 +82,11 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 				}
 			}
 
-			AssistantActivity.instance().genericLogIn(login.getText().toString(), password.getText().toString(), null, domain.getText().toString(), transport);
+			if (domain.getText().toString().compareTo(getString(R.string.default_domain)) == 0) {
+				AssistantActivity.instance().displayLoginLinphone(login.getText().toString(), password.getText().toString());
+			} else {
+				AssistantActivity.instance().genericLogIn(login.getText().toString(), userid.getText().toString(), password.getText().toString(), null, domain.getText().toString(), transport);
+			}
 		}
 	}
 

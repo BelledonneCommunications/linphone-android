@@ -62,7 +62,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	private Boolean recoverAccount;
 	private LinphoneAccountCreator accountCreator;
 	private int countryCode;
-	private String phone, dialcode;
+	private String phone, dialcode, username, pwd;
 	private ImageView phoneNumberInfo;
 
 	@Override
@@ -168,6 +168,16 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 			usernameLayout.setVisibility(View.VISIBLE);
 			passwordLayout.setVisibility(View.VISIBLE);
+		}
+
+		// When we come from generic login fragment
+		username = getArguments().getString("Username");
+		pwd = getArguments().getString("Password");
+		if (username != null && pwd != null) {
+			useUsername.setChecked(true);
+			onCheckedChanged(useUsername, true);
+			login.setText(username);
+			password.setText(pwd);
 		}
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -52,6 +52,24 @@
 				android:maxLines="1"/>
 
 			<TextView
+				android:text="@string/userid"
+				style="@style/font13"
+				android:textAllCaps="true"
+				android:paddingTop="20dp"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+			<EditText
+				android:id="@+id/assistant_userid"
+				android:background="@drawable/resizable_textfield"
+				android:textColor="@color/colorB"
+				android:inputType="text|textNoSuggestions"
+				android:contentDescription="@string/content_description_username_field"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:maxLines="1"/>
+
+			<TextView
 				android:text="@string/password"
 				style="@style/font13"
 				android:textAllCaps="true"

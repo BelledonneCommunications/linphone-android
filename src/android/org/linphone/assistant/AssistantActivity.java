@@ -285,7 +285,7 @@ private static AssistantActivity instance;
 			finish();
 		} else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER){
 			if(lastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)){
-				displayLoginLinphone();
+				displayLoginLinphone(null, null);
 			} else {
 				displayCreateAccount();
 			}
@@ -345,10 +345,6 @@ private static AssistantActivity instance;
 		} else {
 			checkAndRequestAudioPermission();
 		}
-	}
-
-	private void logIn(String username, String password, String ha1, String prefix, String domain, TransportType transport) {
-		saveCreatedAccount(username, password, ha1, prefix, domain, transport);
 	}
 
 	public void configureLinphoneProxyConfig(LinphoneAccountCreator accountCreator) {
@@ -417,12 +413,8 @@ private static AssistantActivity instance;
 		configureLinphoneProxyConfig(accountCreator);
 	}
 
-	public void genericLogIn(String username, String password, String prefix, String domain, TransportType transport) {
-		if (accountCreated) {
-			retryLogin(username, password, prefix, domain, transport);
-		} else {
-			logIn(username, password, null, prefix, domain, transport);
-		}
+	public void genericLogIn(String username, String userid, String password, String prefix, String domain, TransportType transport) {
+		saveCreatedAccount(username, userid, password, null, prefix, domain, transport);
 	}
 
 	private void display(AssistantFragmentsEnum fragment) {
@@ -431,7 +423,7 @@ private static AssistantActivity instance;
 				displayMenu();
 				break;
 			case LINPHONE_LOGIN:
-				displayLoginLinphone();
+				displayLoginLinphone(null, null);
 				break;
 		default:
 			throw new IllegalStateException("Can't handle " + fragment);
@@ -453,11 +445,13 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void displayLoginLinphone() {
+	public void displayLoginLinphone(String username, String password) {
 		fragment = new LinphoneLoginFragment();
 		Bundle extras = new Bundle();
 		extras.putString("Phone", null);
 		extras.putString("Dialcode", null);
+		extras.putString("Username", username);
+		extras.putString("Password", password);
 		fragment.setArguments(extras);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
@@ -490,11 +484,6 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void retryLogin(String username, String password, String prefix, String domain, TransportType transport) {
-		accountCreated = false;
-		saveCreatedAccount(username, password, null, prefix, domain, transport);
-	}
-
 	private void launchDownloadCodec() {
 		if (LinphoneManager.getLc().downloadOpenH264Enabled()) {
 			OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
@@ -521,9 +510,7 @@ private static AssistantActivity instance;
 		return phoneNumberWithCountry;
 	}
 
-	public void saveCreatedAccount(String username, String password, String ha1, String prefix, String domain, TransportType transport) {
-		if (accountCreated)
-			return;
+	public void saveCreatedAccount(String username, String userid, String password, String ha1, String prefix, String domain, TransportType transport) {
 
 		username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
 		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
@@ -539,6 +526,7 @@ private static AssistantActivity instance;
 				.setUsername(username)
 				.setDomain(domain)
 				.setHa1(ha1)
+				.setUserId(userid)
 				.setPassword(password);
 
 		if (prefix != null) {
@@ -555,23 +543,14 @@ private static AssistantActivity instance;
 			builder.setTransport(transport);
 		}
 
-		if (getResources().getBoolean(R.bool.enable_push_id)) {
-			String regId = mPrefs.getPushNotificationRegistrationID();
-			String appId = getString(R.string.push_sender_id);
-			if (regId != null && mPrefs.isPushNotificationEnabled()) {
-				String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId;
-				builder.setContactParameters(contactInfos);
+		try {
+			builder.saveNewAccount();
+			if (!newAccount) {
+				displayRegistrationInProgressDialog();
 			}
-
-			try {
-				builder.saveNewAccount();
-				if (!newAccount) {
-					displayRegistrationInProgressDialog();
-				}
-				accountCreated = true;
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
+			accountCreated = true;
+		} catch (LinphoneCoreException e) {
+			Log.e(e);
 		}
 	}
 
