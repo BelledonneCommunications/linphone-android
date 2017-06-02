@@ -529,6 +529,11 @@ public class LinphonePreferences {
 		return authInfo == null ? null : authInfo.getUserId();
 	}
 
+	public String getAccountRealm(int n) {
+		LinphoneAuthInfo authInfo = getAuthInfo(n);
+		return authInfo == null ? null : authInfo.getRealm();
+	}
+
 	public void setAccountPassword(int n, String password) {
 		setAccountPassword(n, password, null);
 	}
@@ -538,10 +543,18 @@ public class LinphonePreferences {
 	}
 
 	private void setAccountPassword(int n, String password, String ha1) {
-		if(getAccountDomain(n) != null && getAccountUsername(n) != null) {
-			if (LinphoneManager.getLc().getAuthInfosList()[n] != null)
+		String user = getAccountUsername(n);
+		String domain = getAccountDomain(n);
+		String userid = null;
+		String realm = null;
+		if(user != null && domain != null) {
+			if (LinphoneManager.getLc().getAuthInfosList()[n] != null) {
+				userid = getAccountUserId(n);
+				realm = getAccountRealm(n);
 				LinphoneManager.getLc().removeAuthInfo(LinphoneManager.getLc().getAuthInfosList()[n]);
-			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(getAccountUsername(n), null, password, ha1, null, getAccountDomain(n));
+			}
+			LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(
+					user, userid, password, ha1, realm, domain);
 			LinphoneManager.getLc().addAuthInfo(authInfo);
 		}
 	}
