@@ -1,6 +1,5 @@
 // Project information
 buildDir = 'bin'
-
 buildscript {
     repositories {
         jcenter()
@@ -37,6 +36,14 @@ def submoduleDir = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/impl',
                     'submodules/linphone/coreapi/help/java']
 
+
+def excludePackage = []
+
+excludePackage.add('**/gdb.*')
+excludePackage.add('**/libopenh264**')
+excludePackage.add('**/**tester**')
+excludePackage.add('**/LICENSE.txt')
+
 android {
     defaultConfig {
         compileSdkVersion 23
@@ -64,21 +71,11 @@ android {
 
             // Exclude some useless files
             packagingOptions {
-                exclude '**/gdb.*'
+                exclude = excludePackage
             }
         }
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
-    }
-}
-
-android {
-    libraryVariants.all { variant ->
-        def appName = "liblinphone-android-sdk"
-        variant.outputs.each { output ->
-            def newSdkName = "bin/outputs/aar/${appName}.aar"
-            output.outputFile = new File(newSdkName)
-        }
     }
 }
 
