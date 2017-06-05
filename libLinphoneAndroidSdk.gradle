@@ -71,7 +71,7 @@ android {
 
             // Exclude some useless files
             packagingOptions {
-                exclude = excludePackage
+                excludes = excludePackage
             }
         }
         debug.setRoot('build-types/debug')
