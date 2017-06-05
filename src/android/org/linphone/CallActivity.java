@@ -546,18 +546,20 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 
 		try {
-			if (isSpeakerEnabled) {
-				routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
+			routeSpeaker.setImageResource(R.drawable.route_speaker);
+			if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
+				isSpeakerEnabled = false; // We need this if isSpeakerEnabled wasn't set correctly
 				routeEarpiece.setImageResource(R.drawable.route_earpiece);
+				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				return;
+			} else {
+				routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
 				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			}
 
-			routeSpeaker.setImageResource(R.drawable.route_speaker);
-			if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
+			if (isSpeakerEnabled) {
+				routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
 				routeEarpiece.setImageResource(R.drawable.route_earpiece);
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
-			} else {
-				routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
 				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			}
 		} catch (NullPointerException npe) {
@@ -1008,8 +1010,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
-	private void hideOrDisplayAudioRoutes()
-	{
+	private void hideOrDisplayAudioRoutes() {
 		if (routeSpeaker.getVisibility() == View.VISIBLE) {
 			routeSpeaker.setVisibility(View.INVISIBLE);
 			routeBluetooth.setVisibility(View.INVISIBLE);

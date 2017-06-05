@@ -129,6 +129,12 @@ public class BluetoothManager extends BroadcastReceiver {
 		}
 	}
 
+	private void refreshCallView() {
+		if (CallActivity.isInstanciated()) {
+			CallActivity.instance().refreshInCallActions();
+		}
+	}
+
 	private boolean ensureInit() {
 		if (mBluetoothAdapter == null) {
 			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -257,6 +263,8 @@ public class BluetoothManager extends BroadcastReceiver {
 		if (LinphoneManager.isInstanciated()) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
 		}
+
+		refreshCallView();
 	}
 
 	public void destroy() {
@@ -279,17 +287,22 @@ public class BluetoothManager extends BroadcastReceiver {
         String action = intent.getAction();
         if (AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED.equals(action)) {
         	int state = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
-    		if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
-    			Log.d("[Bluetooth] SCO state: connected");
+			if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
+				Log.d("[Bluetooth] SCO state: connected");
 //				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
     			isScoConnected = true;
-        	} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
-        		Log.d("[Bluetooth] SCO state: disconnected");
+			} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
+				Log.d("[Bluetooth] SCO state: disconnected");
 //				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
         		isScoConnected = false;
-        	} else {
+			} else if (state == AudioManager.SCO_AUDIO_STATE_CONNECTING) {
+				Log.d("[Bluetooth] SCO state: connecting");
+//				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
+				isScoConnected = true;
+			} else {
         		Log.d("[Bluetooth] SCO state: " + state);
         	}
+	        refreshCallView();
         }
         else if (BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED.equals(action)) {
         	int state = intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, BluetoothAdapter.STATE_DISCONNECTED);
