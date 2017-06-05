@@ -976,6 +976,14 @@ public class LinphonePreferences {
 		getLc().setUseSipInfoForDtmfs(use);
 	}
 
+	public int getIncTimeout() {
+		return getLc().getIncomingTimeout();
+	}
+
+	public void setIncTimeout(int timeout) {
+		getLc().setIncomingTimeout(timeout);
+	}
+
 	public String getVoiceMailUri() {
 		return getConfig().getString("app", "voice_mail", null);
 	}

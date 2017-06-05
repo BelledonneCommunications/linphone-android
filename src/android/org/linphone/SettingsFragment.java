@@ -860,11 +860,15 @@ public class SettingsFragment extends PreferencesListFragment {
 		CheckBoxPreference autoAnswer = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
+		EditTextPreference incTimeout = (EditTextPreference) findPreference(getString(R.string.pref_incoming_call_timeout_key));
+
 
 		rfc2833.setChecked(mPrefs.useRfc2833Dtmfs());
 		sipInfo.setChecked(mPrefs.useSipInfoDtmfs());
 		deviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
 		autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
+		incTimeout.setText(String.valueOf(mPrefs.getIncTimeout()));
+		incTimeout.setSummary((String.valueOf(mPrefs.getIncTimeout())));
 
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 	}
@@ -951,6 +955,16 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean use = (Boolean) newValue;
 				mPrefs.sendDTMFsAsSipInfo(use);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_incoming_call_timeout_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String value = (String) newValue;
+				mPrefs.setIncTimeout(Integer.valueOf(value));
+				preference.setSummary(value);
 				return true;
 			}
 		});
