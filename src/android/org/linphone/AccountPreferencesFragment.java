@@ -301,13 +301,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			boolean value = (Boolean) newValue;
 			if (isNewAccount) {
 			} else {
-				if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-						&& LinphoneManager.getLc().getProxyConfigList() != null
-						&& LinphoneManager.getLc().getProxyConfigList().length > n
-						&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null)
-					LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().enableIce(value);
-				else
-					return false;
+				mPrefs.setAccountIce(n, value);
+				((CheckBoxPreference)preference).setChecked(mPrefs.getAccountIce(n));
 			}
 			return true;
 		}
@@ -319,15 +314,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			String value = newValue.toString();
 			if (isNewAccount) {
 			} else {
-				if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-						&& LinphoneManager.getLc().getProxyConfigList() != null
-						&& LinphoneManager.getLc().getProxyConfigList().length > n
-						&& LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy() != null) {
-					LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy().setStunServer(value);
-					preference.setSummary(value);
-				}
-				else
-					return false;
+				mPrefs.setAccountStunServer(n, value);
+				preference.setSummary(value);
 			}
 			return true;
 		}
@@ -339,7 +327,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null &&
 				LinphoneManager.getLc().getProxyConfigList() != null &&
 				LinphoneManager.getLc().getProxyConfigList().length > n) {
-			natPolicy = LinphoneManager.getLc().getProxyConfigList()[n].getNatPolicy();
+			LinphoneProxyConfig proxy = LinphoneManager.getLc().getProxyConfigList()[n];
+			natPolicy = proxy.getNatPolicy();
+			if (natPolicy == null) {
+				natPolicy = LinphoneManager.getLc().createNatPolicy();
+				proxy.edit();
+				proxy.setNatPolicy(natPolicy);
+				proxy.done();
+			}
 		}
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()

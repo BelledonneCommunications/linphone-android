@@ -569,6 +569,38 @@ public class LinphonePreferences {
 		return authInfo == null ? null : authInfo.getHa1();
 	}
 
+	public void setAccountIce(int n, boolean ice) {
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
+			prxCfg.getNatPolicy().enableIce(ice);
+			prxCfg.done();
+		} catch (Exception e) {
+			Log.e(e);
+		}
+	}
+
+	public boolean getAccountIce(int n) {
+		if (getProxyConfig(n) == null || getProxyConfig(n).getNatPolicy() == null) return false;
+		return getProxyConfig(n).getNatPolicy().iceEnabled();
+	}
+
+	public void setAccountStunServer(int n, String stun) {
+		try {
+			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			prxCfg.edit();
+			prxCfg.getNatPolicy().setStunServer(stun);
+			prxCfg.done();
+		} catch (Exception e) {
+			Log.e(e);
+		}
+	}
+
+	public String getAccountStunServer(int n) {
+		if (getProxyConfig(n) == null || getProxyConfig(n).getNatPolicy() == null) return "";
+		return getProxyConfig(n).getNatPolicy().getStunServer();
+	}
+
 	public void setAccountDomain(int n, String domain) {
 		String identity = "sip:" + getAccountUsername(n) + "@" + domain;
 		LinphoneAuthInfo old_info = getAuthInfo(n);

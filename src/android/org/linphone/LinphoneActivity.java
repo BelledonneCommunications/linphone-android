@@ -216,9 +216,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 			@Override
 			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
+				LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
 				if (state.equals(RegistrationState.RegistrationCleared)) {
 					if (lc != null) {
-						LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
 						if (authInfo != null)
 							lc.removeAuthInfo(authInfo);
 					}
@@ -227,7 +227,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				refreshAccounts();
 
 				if(getResources().getBoolean(R.bool.use_phone_number_validation)
-						&& proxy.getDomain().equals(getString(R.string.default_domain))) {
+						&& authInfo != null && authInfo.getDomain().equals(getString(R.string.default_domain))) {
 					if (state.equals(RegistrationState.RegistrationOk)) {
 						LinphoneManager.getInstance().isAccountWithAlias();
 					}
