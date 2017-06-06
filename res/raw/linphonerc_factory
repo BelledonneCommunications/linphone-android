@@ -7,7 +7,6 @@ mtu=1300
 
 [sip]
 guess_hostname=1
-inc_timeout=15
 register_only_when_network_is_up=1
 auto_net_state_mon=0
 auto_answer_replacing_calls=1

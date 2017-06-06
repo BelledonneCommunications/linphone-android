@@ -207,6 +207,12 @@
 					android:persistent="false"/>
 
 				<EditTextPreference
+					android:title="@string/pref_auto_answer_time"
+					android:key="@string/pref_auto_answer_time_key"
+					android:numeric="integer"
+					android:persistent="false"/>
+
+				<EditTextPreference
 					android:title="@string/pref_incoming_call_timeout_title"
 					android:key="@string/pref_incoming_call_timeout_key"
 					android:numeric="integer"
@@ -365,12 +371,6 @@
 				<CheckBoxPreference
 				    android:title="@string/pref_autostart"
 					android:key="@string/pref_autostart_key"
-					android:persistent="false"/>
-
-				<EditTextPreference
-				    android:title="@string/pref_incoming_call_timeout_title"
-				    android:key="@string/pref_incoming_call_timeout_key"
-				    android:layout="@layout/hidden"
 					android:persistent="false"/>
 
 				 <EditTextPreference

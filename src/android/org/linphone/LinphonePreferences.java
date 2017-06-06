@@ -984,6 +984,14 @@ public class LinphonePreferences {
 		getLc().setIncomingTimeout(timeout);
 	}
 
+	public int getInCallTimeout() {
+		return getLc().getInCallTimeout();
+	}
+
+	public void setInCallTimeout(int timeout) {
+		getLc().setInCallTimeout(timeout);
+	}
+
 	public String getVoiceMailUri() {
 		return getConfig().getString("app", "voice_mail", null);
 	}
@@ -1521,6 +1529,14 @@ public class LinphonePreferences {
 
 	public void enableAutoAnswer(boolean enable) {
 		getConfig().setBool("app", "auto_answer", enable);
+	}
+
+	public void setAutoAnswerTime(int time) {
+		getConfig().setInt("app", "auto_answer_delay", time);
+	}
+
+	public int getAutoAnswerTime() {
+		return getConfig().getInt("app", "auto_answer_delay", 0);
 	}
 
 	public int getCodeLength(){

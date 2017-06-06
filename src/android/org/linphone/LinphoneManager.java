@@ -1332,11 +1332,24 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		if (state == State.IncomingReceived && (LinphonePreferences.instance().isAutoAnswerEnabled())) {
-			try {
-				mLc.acceptCall(call);
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
+			TimerTask lTask = new TimerTask() {
+					@Override
+					public void run() {
+					if (mLc != null) {
+						try {
+							if (mLc.getCallsNb() > 0) {
+								mLc.acceptCall(call);
+								LinphoneManager.getInstance().routeAudioToReceiver();
+								LinphoneActivity.instance().startIncallActivity(call);
+							}
+						} catch (LinphoneCoreException e) {
+							Log.e(e);
+						}
+					}
+				}
+			};
+			mTimer = new Timer("Auto answer");
+			mTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
 		}
 		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
