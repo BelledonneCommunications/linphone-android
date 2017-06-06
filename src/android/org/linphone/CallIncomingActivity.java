@@ -189,7 +189,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 			}
 		};
 
-		super.onCreate(savedInstanceState);
+		// super.onCreate(savedInstanceState);
 		instance = this;
 	}
 
