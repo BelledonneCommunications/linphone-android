@@ -90,6 +90,12 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		declineUnlock = (LinearLayout) findViewById(R.id.declineUnlock);
 
 		accept = (ImageView) findViewById(R.id.accept);
+		lookupCurrentCall();
+		if (LinphonePreferences.instance() != null && mCall != null && mCall.getRemoteParams() != null &&
+				LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests() &&
+				mCall.getRemoteParams().getVideoEnabled()) {
+			accept.setImageResource(R.drawable.call_video_start);
+		}
 		decline = (ImageView) findViewById(R.id.decline);
 		arrow = (ImageView) findViewById(R.id.arrow_hangup);
 		accept.setOnClickListener(new View.OnClickListener() {
@@ -206,15 +212,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		mCall = null;
 
 		// Only one call ringing at a time is allowed
-		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
-			for (LinphoneCall call : calls) {
-				if (State.IncomingReceived == call.getState()) {
-					mCall = call;
-					break;
-				}
-			}
-		}
+		lookupCurrentCall();
 		if (mCall == null) {
 			//The incoming call no longer exists.
 			Log.d("Couldn't find incoming call");
@@ -262,6 +260,18 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 			finish();
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	private void lookupCurrentCall() {
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
+			for (LinphoneCall call : calls) {
+				if (State.IncomingReceived == call.getState()) {
+					mCall = call;
+					break;
+				}
+			}
+		}
 	}
 
 	private void decline() {
