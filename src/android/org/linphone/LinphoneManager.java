@@ -37,6 +37,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -956,15 +957,30 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	public void updateNetworkReachability() {
 		if (mConnectivityManager == null) return;
 
-		NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+		boolean connected = false;
+		NetworkInfo networkInfo = null;
+		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+			for (Network network : mConnectivityManager.getAllNetworks()) {
+				if (network != null) {
+					networkInfo = mConnectivityManager.getNetworkInfo(network);
+					if (networkInfo != null && networkInfo.isConnected()) {
+						connected = true;
+						break;
+					}
+				}
+			}
+		} else {
+			networkInfo = mConnectivityManager.getActiveNetworkInfo();
+			connected = networkInfo != null && networkInfo.isConnected();
+		}
 
-		if (networkInfo == null || !networkInfo.isConnected()) {
+		if (networkInfo == null || !connected) {
 			Log.i("No connectivity: setting network unreachable");
 			mLc.setNetworkReachable(false);
 		} else if (dozeModeEnabled) {
 			Log.i("Doze Mode enabled: shutting down network");
 			mLc.setNetworkReachable(false);
-		}else if (networkInfo.isConnected()){
+		} else if (connected){
 			manageTunnelServer(networkInfo);
 
 			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
