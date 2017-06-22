@@ -59,7 +59,7 @@ def submoduleDir = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/j2se',
                     'submodules/linphone/java/common',
                     'submodules/linphone/java/impl',
-                    'submodules/linphone/coreapi/help/java']
+                    'submodules/linphone/coreapi/help/examples/java']
 ////////////////////////
 
 ///// Exclude Files /////
