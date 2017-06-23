@@ -414,21 +414,12 @@ public final class LinphoneService extends Service {
 			}
 		});
 
-		// Retrieve methods to publish notification and keep Android
-		// from killing us and keep the audio quality high.
-		if (Version.sdkStrictlyBelow(Version.API05_ECLAIR_20)) {
-			try {
-				mSetForeground = getClass().getMethod("setForeground", mSetFgSign);
-			} catch (NoSuchMethodException e) {
-				Log.e(e, "Couldn't find foreground method");
-			}
-		} else {
-			try {
-				mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
-				mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
-			} catch (NoSuchMethodException e) {
-				Log.e(e, "Couldn't find startForeground or stopForeground");
-			}
+		
+		try {
+			mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
+			mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
+		} catch (NoSuchMethodException e) {
+			Log.e(e, "Couldn't find startForeground or stopForeground");
 		}
 
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
@@ -487,7 +478,11 @@ public final class LinphoneService extends Service {
 
 		switch (state) {
 		case IDLE:
-			mNM.cancel(INCALL_NOTIF_ID);
+			if (!displayServiceNotification()) {
+				stopForegroundCompat(INCALL_NOTIF_ID);
+			} else {
+				mNM.cancel(INCALL_NOTIF_ID);
+			}
 			return;
 		case INCALL:
 			inconId = R.drawable.topbar_call_notification;
@@ -527,7 +522,11 @@ public final class LinphoneService extends Service {
 		String name = address.getDisplayName() == null ? address.getUserName() : address.getDisplayName();
 		mIncallNotif = Compatibility.createInCallNotification(getApplicationContext(), mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
 
-		notifyWrapper(INCALL_NOTIF_ID, mIncallNotif);
+		if (!displayServiceNotification()) {
+			startForegroundCompat(INCALL_NOTIF_ID, mIncallNotif);
+		} else {
+			notifyWrapper(INCALL_NOTIF_ID, mIncallNotif);
+		}
 	}
 
 	public void refreshIncallIcon(LinphoneCall currentCall) {
