@@ -119,7 +119,7 @@ public final class LinphoneService extends Service {
 	private Notification mMsgNotif;
 	private Notification mCustomNotif;
 	private int mMsgNotifCount;
-	private PendingIntent mNotifContentIntent, mMissedCallsNotifContentIntent;
+	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
 	private LinphoneCoreListenerBase mListener;
@@ -317,10 +317,6 @@ public final class LinphoneService extends Service {
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		Intent missedCallNotifIntent = new Intent(this, incomingReceivedActivity);
-		missedCallNotifIntent.putExtra("GoToHistory", true);
-		mMissedCallsNotifContentIntent = PendingIntent.getActivity(this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
 		Bitmap bm = null;
 		try {
 			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
@@ -371,7 +367,12 @@ public final class LinphoneService extends Service {
 							}
 						}
 					}
-					Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, mMissedCallsNotifContentIntent);
+
+
+					Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
+					missedCallNotifIntent.putExtra("GoToHistory", true);
+					PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+					Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, intent);
 					notifyWrapper(MISSED_NOTIF_ID, notif);
 				}
 
@@ -520,6 +521,9 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 		}
 		String name = address.getDisplayName() == null ? address.getUserName() : address.getDisplayName();
+		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		notifIntent.putExtra("Notification", true);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		mIncallNotif = Compatibility.createInCallNotification(getApplicationContext(), mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
 
 		if (!displayServiceNotification()) {
