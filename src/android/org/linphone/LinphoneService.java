@@ -264,7 +264,7 @@ public final class LinphoneService extends Service {
 		mMsgNotifCount = 0;
 	}
 
-	private boolean displayServiceNotification() {
+	public boolean displayServiceNotification() {
 		return LinphonePreferences.instance().getServiceNotificationVisibility();
 	}
 

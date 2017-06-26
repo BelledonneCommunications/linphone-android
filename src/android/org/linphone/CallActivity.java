@@ -803,7 +803,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	private void showAudioView() {
 		if (LinphoneManager.getLc().getCurrentCall() != null) {
-			LinphoneManager.getInstance().enableProximitySensing(true);
+			if (!isSpeakerEnabled) {
+				LinphoneManager.getInstance().enableProximitySensing(true);
+			}
 		}
 		replaceFragmentVideoByAudio();
 		displayAudioCall();
@@ -886,6 +888,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	protected void toggleSpeaker() {
 		isSpeakerEnabled = !isSpeakerEnabled;
+		if (LinphoneManager.getLc().getCurrentCall() != null) {
+			LinphoneManager.getInstance().enableProximitySensing(!isSpeakerEnabled);
+		}
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			speaker.setImageResource(R.drawable.speaker_selected);
@@ -1182,8 +1187,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         }
 
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-			LinphoneManager.getInstance().enableProximitySensing(true);
-			removeCallbacks();
+			if (!isSpeakerEnabled) {
+				LinphoneManager.getInstance().enableProximitySensing(true);
+				removeCallbacks();
+			}
 		}
 	}
 

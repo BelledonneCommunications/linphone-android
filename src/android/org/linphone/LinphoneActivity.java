@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.linphone.SettingsFragment;
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.LinphoneService;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.compatibility.Compatibility;
@@ -1345,6 +1346,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
+			if (!LinphoneService.instance().displayServiceNotification()) {
+				lc.refreshRegisters();
+			}
 		}
 
 		if (isTablet()) {

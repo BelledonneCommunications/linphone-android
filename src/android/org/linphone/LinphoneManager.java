@@ -1383,8 +1383,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (state == State.Connected) {
 			if (mLc.getCallsNb() == 1) {
-				//Enabling proximity sensor
-				enableProximitySensing(true);
 				//It is for incoming calls, because outgoing calls enter MODE_IN_COMMUNICATION immediately when they start.
 				//However, incoming call first use the MODE_RINGING to play the local ring.
 				if(call.getDirection() == CallDirection.Incoming) {
@@ -1446,7 +1444,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			setAudioManagerInCallMode();
 			requestAudioFocus(STREAM_VOICE_CALL);
 			startBluetooth();
-            enableProximitySensing(true);
 		}
 
 		if (state == State.StreamsRunning) {
