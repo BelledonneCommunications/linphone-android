@@ -254,7 +254,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initTunnelSettings() {
-		if (!LinphoneManager.getLc().isTunnelAvailable()) {
+		if (!LinphoneManager.isInstanciated() || !LinphoneManager.getLc().isTunnelAvailable()) {
 			return;
 		}
 
