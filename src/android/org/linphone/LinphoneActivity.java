@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.linphone.SettingsFragment;
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
@@ -1423,6 +1424,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		
+		if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
+			if (fragment instanceof SettingsFragment) {
+				((SettingsFragment) fragment).closePreferenceScreen();
+			}
+		}
 
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {

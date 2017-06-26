@@ -67,9 +67,24 @@ public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private LinphoneCoreListenerBase mListener;
+	private PreferenceScreen currentPreferenceScreen;
+	private Preference.OnPreferenceClickListener prefClickListener = new Preference.OnPreferenceClickListener() {
+		@Override
+		public boolean onPreferenceClick(Preference preference) {
+			currentPreferenceScreen = (PreferenceScreen) preference;
+			return false;
+		}
+	};
 
 	public SettingsFragment() {
 		super(R.xml.preferences);
+	}
+	
+	public void closePreferenceScreen() {
+		if (currentPreferenceScreen != null) {
+			currentPreferenceScreen.getDialog().dismiss();
+		    currentPreferenceScreen = null;
+		}
 	}
 
 	@Override
@@ -145,6 +160,15 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	// Sets listener for each preference to update the matching value in linphonecore
 	private void setListeners() {
+		findPreference(getString(R.string.pref_tunnel_key)).setOnPreferenceClickListener(prefClickListener);
+		findPreference(getString(R.string.pref_audio_key)).setOnPreferenceClickListener(prefClickListener);
+		findPreference(getString(R.string.pref_video_key)).setOnPreferenceClickListener(prefClickListener);
+		findPreference(getString(R.string.pref_call_key)).setOnPreferenceClickListener(prefClickListener);
+		findPreference(getString(R.string.pref_chat_key)).setOnPreferenceClickListener(prefClickListener);
+		findPreference(getString(R.string.pref_network_key)).setOnPreferenceClickListener(prefClickListener);
+		findPreference(getString(R.string.pref_advanced_key)).setOnPreferenceClickListener(prefClickListener);
+		
+		
 		setTunnelPreferencesListener();
 		setAudioPreferencesListener();
 		setVideoPreferencesListener();
