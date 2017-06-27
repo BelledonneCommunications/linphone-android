@@ -74,7 +74,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;
@@ -1279,10 +1278,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					if (appData == null) {
 						//LinphoneManager.addListener(holder);
 						holder.fileTransferLayout.setVisibility(View.VISIBLE);
-					} else {
-						if (LinphoneManager.getInstance().isMessagePending(message)) {
+					}else if(status == State.NotDelivered && message.isOutgoing()){
+						holder.fileTransferLayout.setVisibility(View.VISIBLE);
+						holder.imdmLayout.setVisibility(View.VISIBLE);
+						holder.imdmIcon.setImageResource(R.drawable.chat_error);
+						holder.imdmLabel.setText(R.string.resend);
+						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorI));
+					}else {
+						if (LinphoneManager.getInstance().isMessagePending(message) && status != State.FileTransferDone) {
 							//LinphoneManager.addListener(holder);
-							holder.fileTransferAction.setEnabled(false);
+							//holder.fileTransferAction.setEnabled(false);
 							holder.fileTransferLayout.setVisibility(View.VISIBLE);
 						} else {
 							//LinphoneManager.removeListener(holder);
