@@ -89,6 +89,7 @@ android {
           outputs.upToDateWhen {false}
           showStandardStreams = true
         }
+        setIgnoreFailures(true)
       }
     }
 
@@ -128,6 +129,6 @@ tasks.withType(Test) {
     showCauses true
     showExceptions true
     showStackTraces true
-    showStandardStreams true
+    showStandardStreams false
   }
 }
