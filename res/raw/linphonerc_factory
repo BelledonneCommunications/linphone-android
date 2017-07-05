@@ -38,7 +38,7 @@ history_max_size=100
 activation_code_length=4
 
 [in-app-purchase]
-server_url=https://sip3.linphone.org:444/inapp.php
+server_url=https://subscribe.linphone.org:444/inapp.php
 purchasable_items_ids=test_account_subscription
 
 [assistant]
@@ -49,4 +49,4 @@ username_length=-1
 username_max_length=64
 username_min_length=1
 username_regex=^[a-z0-9_.\-]*$
-xmlrpc_url=https://sip3.linphone.org:444/wizard.php
+xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
