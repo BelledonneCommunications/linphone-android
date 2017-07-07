@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -96,6 +97,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener {
@@ -876,11 +879,18 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		@Override
 		protected byte[] doInBackground(Bitmap... params) {
 			Bitmap bm = params[0];
+			Bitmap bm_tmp = null;
 
 			if (bm.getWidth() >= bm.getHeight() && bm.getWidth() > SIZE_MAX) {
-				bm = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
+				bm_tmp = Bitmap.createScaledBitmap(bm, SIZE_MAX, (SIZE_MAX * bm.getHeight()) / bm.getWidth(), false);
+
 			} else if (bm.getHeight() >= bm.getWidth() && bm.getHeight() > SIZE_MAX) {
-				bm = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+				bm_tmp = Bitmap.createScaledBitmap(bm, (SIZE_MAX * bm.getWidth()) / bm.getHeight(), SIZE_MAX, false);
+			}
+
+			if (bm_tmp != null) {
+				bm.recycle();
+				bm = bm_tmp;
 			}
 
 			// Rotate the bitmap if possible/needed, using EXIF data
@@ -896,10 +906,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					} else if (pictureOrientation == 8) {
 						matrix.postRotate(270);
 					}
-					bm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+					bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
 				}
 			} catch (Exception e) {
 				Log.e(e);
+			}
+
+			if (bm_tmp != null) {
+				bm.recycle();
+				bm = bm_tmp;
 			}
 
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -909,6 +924,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			} else {
 				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 			}
+
+			if (bm_tmp != null) {
+				bm_tmp.recycle();
+				bm_tmp = null;
+			}
+			bm.recycle();
+			bm = null;
+
 			byte[] byteArray = stream.toByteArray();
 			return byteArray;
 		}
@@ -1494,6 +1517,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			protected Bitmap doInBackground(String... params) {
 				path = params[0];
 				Bitmap bm = null;
+				Bitmap thumbnail = null;
 
 				if (path.startsWith("content")) {
 					try {
@@ -1505,13 +1529,33 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					}
 				} else {
 					bm = BitmapFactory.decodeFile(path);
-					path = "file://" + path;
+				}
+
+				// Rotate the bitmap if possible/needed, using EXIF data
+				try {
+					Bitmap bm_tmp;
+					ExifInterface exif = new ExifInterface(path);
+					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+					Matrix matrix = new Matrix();
+					if (pictureOrientation == 6) {
+						matrix.postRotate(90);
+					} else if (pictureOrientation == 3) {
+						matrix.postRotate(180);
+					} else if (pictureOrientation == 8) {
+						matrix.postRotate(270);
+					}
+					bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+					bm.recycle();
+					bm = bm_tmp;
+				} catch (Exception e) {
+					Log.e(e);
 				}
 
 				if (bm != null) {
-					bm = ThumbnailUtils.extractThumbnail(bm, SIZE_MAX, SIZE_MAX);
+					thumbnail = ThumbnailUtils.extractThumbnail(bm, SIZE_SMALL, SIZE_SMALL);
+					bm.recycle();
 				}
-				return bm;
+				return thumbnail;
 			}
 
 			// Once complete, see if ImageView is still around and set bitmap.
@@ -1531,7 +1575,21 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							@Override
 							public void onClick(View v) {
 								Intent intent = new Intent(Intent.ACTION_VIEW);
-								intent.setDataAndType(Uri.parse((String)v.getTag()), "image/*");
+
+								Uri contentUri = null;
+								String imageUri = (String)v.getTag();
+								if (imageUri.startsWith("file://")) {
+									imageUri = imageUri.substring("file://".length());
+									File file = new File(imageUri);
+									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+								} else if (imageUri.startsWith("content://")) {
+									contentUri = Uri.parse(imageUri);
+								} else {
+									File file = new File(imageUri);
+									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+								}
+								intent.setDataAndType(contentUri, "image/*");
+								intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
 								context.startActivity(intent);
 							}
 						});
