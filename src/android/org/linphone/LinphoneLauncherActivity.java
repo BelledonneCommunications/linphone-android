@@ -21,6 +21,7 @@ package org.linphone;
 import static android.content.Intent.ACTION_MAIN;
 
 import org.linphone.assistant.RemoteProvisioningActivity;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.tutorials.TutorialLauncherActivity;
 
@@ -41,19 +42,19 @@ public class LinphoneLauncherActivity extends Activity {
 
 	private Handler mHandler;
 	private ServiceWaitThread mServiceThread;
+	private String addressToCall;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Hack to avoid to draw twice LinphoneActivity on tablets
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		setContentView(R.layout.launch_screen);
 
 		mHandler = new Handler();
-
 
 
 		if (LinphoneService.isReady()) {
@@ -63,6 +64,21 @@ public class LinphoneLauncherActivity extends Activity {
 			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
 			mServiceThread = new ServiceWaitThread();
 			mServiceThread.start();
+		}
+
+		Intent intent = getIntent();
+		if (intent != null) {
+			String action = intent.getAction();
+			if (Intent.ACTION_CALL.equals(action)) {
+				if (intent.getData() != null) {
+					addressToCall = intent.getData().toString();
+					addressToCall = addressToCall.replace("%40", "@");
+					addressToCall = addressToCall.replace("%3A", ":");
+					if (addressToCall.startsWith("sip:")) {
+						addressToCall = addressToCall.substring("sip:".length());
+					}
+				}
+			}
 		}
 	}
 
@@ -97,6 +113,11 @@ public class LinphoneLauncherActivity extends Activity {
 							newIntent.putExtra("msgShared", msgShared);
 						}
 					}
+				}
+				if (addressToCall != null) {
+					newIntent.putExtra("SipUriOrNumber", addressToCall);
+					Log.i("Intent has address to call : " + addressToCall);
+					addressToCall = null;
 				}
 				startActivity(newIntent);
                 if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && msgShared != null) {

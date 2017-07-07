@@ -141,6 +141,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private boolean callTransfer = false;
 	private boolean isOnBackground = false;
 
+	public String mAddressWaitingToBeCalled;
+
 	static final boolean isInstanciated() {
 		return instance != null;
 	}
@@ -1428,6 +1430,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+
+
 		
 		if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
 			if (fragment instanceof SettingsFragment) {
@@ -1464,6 +1468,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 					}
 				} else {
 					((DialerFragment) dialerFragment).newOutgoingCall(intent);
+				}
+			} else {
+				if (extras != null && extras.containsKey("SipUriOrNumber")) {
+					mAddressWaitingToBeCalled = extras.getString("SipUriOrNumber");
+					goToDialerFragment();
 				}
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {

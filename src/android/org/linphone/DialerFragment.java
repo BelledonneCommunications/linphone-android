@@ -169,6 +169,15 @@ public class DialerFragment extends Fragment {
 			shouldEmptyAddressField = true;
 		}
 		resetLayout(isCallTransferOngoing);
+
+		String addressWaitingToBeCalled = LinphoneActivity.instance().mAddressWaitingToBeCalled;
+		if (addressWaitingToBeCalled != null) {
+			mAddress.setText(addressWaitingToBeCalled);
+			if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
+				newOutgoingCall(addressWaitingToBeCalled);
+			}
+			LinphoneActivity.instance().mAddressWaitingToBeCalled = null;
+		}
 	}
 
 	public void resetLayout(boolean callTransfer) {
