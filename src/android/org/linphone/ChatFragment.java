@@ -913,8 +913,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			if (bm_tmp != null) {
-				bm.recycle();
-				bm = bm_tmp;
+				if (bm_tmp != bm) {
+					bm.recycle();
+					bm = bm_tmp;
+				} else {
+					bm_tmp = null;
+				}
 			}
 
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -1545,8 +1549,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						matrix.postRotate(270);
 					}
 					bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-					bm.recycle();
-					bm = bm_tmp;
+					if (bm_tmp != bm) {
+						bm.recycle();
+						bm = bm_tmp;
+					} else {
+						bm_tmp = null;
+					}
 				} catch (Exception e) {
 					Log.e(e);
 				}
