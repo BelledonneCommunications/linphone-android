@@ -958,8 +958,10 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (mConnectivityManager == null) return;
 
 		boolean connected = false;
-		NetworkInfo networkInfo = null;
-		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+		NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+		connected = networkInfo != null && networkInfo.isConnected();
+
+		if (networkInfo == null && Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
 			for (Network network : mConnectivityManager.getAllNetworks()) {
 				if (network != null) {
 					networkInfo = mConnectivityManager.getNetworkInfo(network);
@@ -969,9 +971,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 					}
 				}
 			}
-		} else {
-			networkInfo = mConnectivityManager.getActiveNetworkInfo();
-			connected = networkInfo != null && networkInfo.isConnected();
 		}
 
 		if (networkInfo == null || !connected) {
@@ -985,23 +984,26 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
 			if (wifiOnly){
-				if (networkInfo.getType()==ConnectivityManager.TYPE_WIFI)
+				if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+					setDnsServers();
 					mLc.setNetworkReachable(true);
+				}
 				else {
 					Log.i("Wifi-only mode, setting network not reachable");
 					mLc.setNetworkReachable(false);
 				}
-			}else{
+			} else {
 				int curtype=networkInfo.getType();
 
-				if (curtype!=mLastNetworkType){
+				if (curtype != mLastNetworkType) {
 					//if kind of network has changed, we need to notify network_reachable(false) to make sure all current connections are destroyed.
 					//they will be re-created during setNetworkReachable(true).
 					Log.i("Connectivity has changed.");
 					mLc.setNetworkReachable(false);
 				}
+				setDnsServers();
 				mLc.setNetworkReachable(true);
-				mLastNetworkType=curtype;
+				mLastNetworkType = curtype;
 			}
 		}
 
@@ -1926,8 +1928,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	@Override
 	public void networkReachableChanged(LinphoneCore lc, boolean enable) {
-		Log.d("Set Dns servers");
-		setDnsServers();
+
 	}
 
 	@Override
