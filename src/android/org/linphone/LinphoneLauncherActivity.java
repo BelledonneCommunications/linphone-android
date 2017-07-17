@@ -28,6 +28,7 @@ import org.linphone.tutorials.TutorialLauncherActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -43,6 +44,7 @@ public class LinphoneLauncherActivity extends Activity {
 	private Handler mHandler;
 	private ServiceWaitThread mServiceThread;
 	private String addressToCall;
+	private Uri uriToResolve;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +58,6 @@ public class LinphoneLauncherActivity extends Activity {
 
 		mHandler = new Handler();
 
-
-		if (LinphoneService.isReady()) {
-			onServiceReady();
-		} else {
-			// start linphone as background
-			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-			mServiceThread = new ServiceWaitThread();
-			mServiceThread.start();
-		}
-
 		Intent intent = getIntent();
 		if (intent != null) {
 			String action = intent.getAction();
@@ -78,7 +70,22 @@ public class LinphoneLauncherActivity extends Activity {
 						addressToCall = addressToCall.substring("sip:".length());
 					}
 				}
+			} else if (Intent.ACTION_VIEW.equals(action)) {
+				if (LinphoneService.isReady()) {
+					addressToCall = ContactsManager.getInstance().getAddressOrNumberForAndroidContact(getContentResolver(), intent.getData());
+				} else {
+					uriToResolve = intent.getData();
+				}
 			}
+		}
+
+		if (LinphoneService.isReady()) {
+			onServiceReady();
+		} else {
+			// start linphone as background
+			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+			mServiceThread = new ServiceWaitThread();
+			mServiceThread.start();
 		}
 	}
 
@@ -113,6 +120,11 @@ public class LinphoneLauncherActivity extends Activity {
 							newIntent.putExtra("msgShared", msgShared);
 						}
 					}
+				}
+				if (uriToResolve != null) {
+					addressToCall = ContactsManager.getInstance().getAddressOrNumberForAndroidContact(getContentResolver(), uriToResolve);
+					Log.i("Intent has uri to resolve : " + uriToResolve.toString());
+					uriToResolve = null;
 				}
 				if (addressToCall != null) {
 					newIntent.putExtra("SipUriOrNumber", addressToCall);

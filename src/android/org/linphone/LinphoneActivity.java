@@ -1396,9 +1396,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if (intent.getStringExtra("msgShared") != null)
 			displayChat(null, intent.getStringExtra("msgShared"));
 
-
 		doNotGoToCallActivity = false;
 		isOnBackground = false;
+
+		if (intent != null) {
+			Bundle extras = intent.getExtras();
+			if (extras != null && extras.containsKey("SipUriOrNumber")) {
+				mAddressWaitingToBeCalled = extras.getString("SipUriOrNumber");
+				intent.removeExtra("SipUriOrNumber");
+				goToDialerFragment();
+			}
+		}
 	}
 
 	@Override
@@ -1430,8 +1438,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-
-
 		
 		if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
 			if (fragment instanceof SettingsFragment) {
@@ -1449,9 +1455,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			doNotGoToCallActivity = true;
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
 		} else if (extras != null && extras.getBoolean("GoToInapp", false)) {
-				LinphoneService.instance().removeMessageNotification();
-				doNotGoToCallActivity = true;
-				displayInapp();
+			LinphoneService.instance().removeMessageNotification();
+			doNotGoToCallActivity = true;
+			displayInapp();
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
