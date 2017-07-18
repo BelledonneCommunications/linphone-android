@@ -94,6 +94,7 @@ public final class LinphoneService extends Service {
 	private final static int MESSAGE_NOTIF_ID=3;
 	private final static int CUSTOM_NOTIF_ID=4;
 	private final static int MISSED_NOTIF_ID=5;
+	private final static int SAS_NOTIF_ID=6;
 
 	public static boolean isReady() {
 		return instance != null && instance.mTestDelayElapsed;
@@ -118,6 +119,7 @@ public final class LinphoneService extends Service {
 	private Notification mIncallNotif;
 	private Notification mMsgNotif;
 	private Notification mCustomNotif;
+	private Notification mSasNotif;
 	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
@@ -347,6 +349,12 @@ public final class LinphoneService extends Service {
 				}
 
 				if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
+					if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() == 0) {
+						if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getStatusFragment() != null) {
+							removeSasNotification();
+							LinphoneActivity.instance().getStatusFragment().setisZrtpAsk(false);
+						}
+					}
 					destroyOverlay();
 				}
 
@@ -415,7 +423,7 @@ public final class LinphoneService extends Service {
 			}
 		});
 
-		
+
 		try {
 			mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
 			mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
@@ -632,6 +640,19 @@ public final class LinphoneService extends Service {
 	public void removeMessageNotification() {
 		mNM.cancel(MESSAGE_NOTIF_ID);
 		resetIntentLaunchedOnNotificationClick();
+	}
+
+	public void displaySasNotification(String sas) {
+		mSasNotif = Compatibility.createSimpleNotification(getApplicationContext(),
+				getString(R.string.zrtp_notification_title),
+				sas + " " + getString(R.string.zrtp_notification_message),
+				null);
+
+		notifyWrapper(SAS_NOTIF_ID, mSasNotif);
+	}
+
+	public void removeSasNotification() {
+		mNM.cancel(SAS_NOTIF_ID);
 	}
 
 	private static final Class<?>[] mSetFgSign = new Class[] {boolean.class};

@@ -212,6 +212,8 @@
     <string name="couldnt_accept_call">An error occurred while accepting the call</string>
     <string name="zrtp_dialog1">Confirm the following SAS with peer:\nSay: %s</string>
     <string name="zrtp_dialog2">\nYour caller should say: %s</string>
+    <string name="zrtp_notification_title">SAS</string>
+    <string name="zrtp_notification_message">Confirm the previous SAS code with your correspondant</string>
     <string name="unknown_incoming_call_name">Unknown</string>
     <string name="call_stats_audio">Audio</string>
     <string name="call_stats_video">Video</string>

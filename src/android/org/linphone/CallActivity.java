@@ -166,6 +166,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			@Override
 			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
+					if (status != null) {
+						LinphoneService.instance().removeSasNotification();
+						status.setisZrtpAsk(false);
+					}
 					finish();
 					return;
 				}

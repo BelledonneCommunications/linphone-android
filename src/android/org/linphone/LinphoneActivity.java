@@ -1438,7 +1438,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		
+
 		if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
 			if (fragment instanceof SettingsFragment) {
 				((SettingsFragment) fragment).closePreferenceScreen();

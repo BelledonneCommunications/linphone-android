@@ -416,6 +416,8 @@ public class StatusFragment extends Fragment {
 				zrtpToRead = token.substring(2);
 			}
 
+			LinphoneService.instance().displaySasNotification(token);
+
 			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
 			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
 					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
@@ -434,6 +436,7 @@ public class StatusFragment extends Fragment {
 					}
 					isZrtpAsk = false;
 					ZRTPdialog.dismiss();
+					LinphoneService.instance().removeSasNotification();
 				}
 			});
 
@@ -448,6 +451,7 @@ public class StatusFragment extends Fragment {
 					}
 					isZrtpAsk = false;
 					ZRTPdialog.dismiss();
+					LinphoneService.instance().removeSasNotification();
 				}
 			});
 			ZRTPdialog.show();
