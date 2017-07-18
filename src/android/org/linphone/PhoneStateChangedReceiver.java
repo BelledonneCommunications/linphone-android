@@ -30,17 +30,26 @@ import android.telephony.TelephonyManager;
  *
  */
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
+	private static int oldTimeOut;
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
+		if (!LinphoneManager.isInstanciated())
+			return;
+
 		if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
-			LinphoneManager.setGsmIdle(false);
-			if (!LinphoneManager.isInstanciated())
-				return;
+			if (LinphonePreferences.instance() != null) {
+				oldTimeOut = LinphoneManager.getLc().getIncomingTimeout();
+				LinphoneManager.getLc().setIncomingTimeout(0);
+			}
+			LinphoneManager.getInstance().setCallGsmON(true);
 			LinphoneManager.getLc().pauseAllCalls();
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
-        	LinphoneManager.setGsmIdle(true);
+			if (LinphonePreferences.instance() != null)
+				LinphoneManager.getLc().setIncomingTimeout(oldTimeOut);
+			LinphoneManager.getInstance().setCallGsmON(false);
         }
 	}
 }

@@ -79,9 +79,9 @@ public class SettingsFragment extends PreferencesListFragment {
 	public SettingsFragment() {
 		super(R.xml.preferences);
 	}
-	
+
 	public void closePreferenceScreen() {
-		if (currentPreferenceScreen != null) {
+		if (currentPreferenceScreen != null && currentPreferenceScreen.getDialog() != null) {
 			currentPreferenceScreen.getDialog().dismiss();
 		    currentPreferenceScreen = null;
 		}
@@ -167,8 +167,8 @@ public class SettingsFragment extends PreferencesListFragment {
 		findPreference(getString(R.string.pref_chat_key)).setOnPreferenceClickListener(prefClickListener);
 		findPreference(getString(R.string.pref_network_key)).setOnPreferenceClickListener(prefClickListener);
 		findPreference(getString(R.string.pref_advanced_key)).setOnPreferenceClickListener(prefClickListener);
-		
-		
+
+
 		setTunnelPreferencesListener();
 		setAudioPreferencesListener();
 		setVideoPreferencesListener();

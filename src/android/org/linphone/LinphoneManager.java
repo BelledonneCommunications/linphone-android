@@ -147,6 +147,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private boolean mAudioFocused;
 	private boolean echoTesterIsRunning;
 	private boolean dozeModeEnabled;
+	private boolean callGsmON;
 	private int mLastNetworkType=-1;
 	private ConnectivityManager mConnectivityManager;
 	private BroadcastReceiver mKeepAliveReceiver;
@@ -874,6 +875,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
+		callGsmON = false;
 	}
 
 	protected void setHandsetMode(Boolean on){
@@ -1349,7 +1351,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 
-		if (state == State.IncomingReceived && (LinphonePreferences.instance().isAutoAnswerEnabled())) {
+
+		if (state == State.IncomingReceived && (LinphonePreferences.instance().isAutoAnswerEnabled()) && !getCallGsmON()) {
 			TimerTask lTask = new TimerTask() {
 					@Override
 					public void run() {
@@ -1802,6 +1805,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public String getmDynamicConfigFile() {
 		return mDynamicConfigFile;
+	}
+
+	public boolean getCallGsmON() {
+		return callGsmON;
+	}
+
+	public void setCallGsmON(boolean on) {
+		callGsmON = on;
 	}
 
 	@SuppressWarnings("serial")
