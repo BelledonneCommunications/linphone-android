@@ -3,6 +3,7 @@ package org.linphone;
 import junit.framework.Assert;
 
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.LinphoneNatPolicy;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -10,7 +11,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 
@@ -40,9 +40,8 @@ public class AccountAssistant extends SampleTest {
 		solo.enterText((EditText) solo.getView(R.id.assistant_username), aContext.getString(R.string.account_linphone_login));
 		solo.enterText((EditText) solo.getView(R.id.assistant_password), aContext.getString(R.string.account_linphone_pwd));
 		solo.clickOnView(solo.getView(R.id.assistant_apply));
-
+		solo.sleep(3000);
 		solo.clickOnView(solo.getView(R.id.assistant_skip));
-
 		solo.sleep(1000);
 
 		//Test download openh264
@@ -61,8 +60,9 @@ public class AccountAssistant extends SampleTest {
 		waitForRegistration(proxyConfig);
 
 		//Check the wizard added sip.linphone.org custom settings
+		LinphoneNatPolicy natPolicy = proxyConfig.getNatPolicy();
 		LinphonePreferences prefs = LinphonePreferences.instance();
-		String stunServer = prefs.getStunServer();
+		String stunServer = natPolicy.getStunServer();
 		Assert.assertEquals(aContext.getString(R.string.default_stun), stunServer);
 
 		String transport = prefs.getAccountTransportKey(0);
@@ -74,7 +74,7 @@ public class AccountAssistant extends SampleTest {
 		String username = prefs.getAccountUsername(0);
 		Assert.assertEquals(aContext.getString(R.string.account_linphone_login), username);
 
-		boolean ice = prefs.isIceEnabled();
+		boolean ice = natPolicy.iceEnabled();
 		Assert.assertEquals(ice, true);
 	}
 
@@ -109,56 +109,99 @@ public class AccountAssistant extends SampleTest {
 
 	@LargeTest
 	public void testECreateNewAccount() {
+		int sleepingTime = 1500;
 		startAssistant();
 
 		solo.clickOnView(solo.getView(R.id.create_account));
 
-		solo.enterText((EditText) solo.getView(R.id.username), iContext.getString(R.string.account_create_login).substring(0, 2));
-		solo.sleep(200);
-		TextView error = (TextView) solo.getView(R.id.username_error);
-		int sleepingTime = 1500;
-		Button createAccount = (Button) solo.getView(R.id.assistant_create);
+		if (aContext.getResources().getBoolean(R.bool.isTablet)) {
+			solo.enterText((EditText) solo.getView(R.id.username), iContext.getString(R.string.account_create_login).substring(0, 2));
+			solo.sleep(200);
+			TextView error = (TextView) solo.getView(R.id.username_error);
+			Button createAccount = (Button) solo.getView(R.id.assistant_create);
 
-		Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_username_incorrect));
-		Assert.assertFalse(createAccount.isEnabled());
+			Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_username_incorrect));
+			Assert.assertFalse(createAccount.isEnabled());
 
-		solo.clearEditText((EditText) solo.getView(R.id.username));
-		solo.enterText((EditText) solo.getView(R.id.username), iContext.getString(R.string.account_linphone_login));
-		solo.sleep(sleepingTime * 2);
-		Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_username_unavailable));
-		Assert.assertFalse(createAccount.isEnabled());
+			solo.clearEditText((EditText) solo.getView(R.id.username));
+			solo.enterText((EditText) solo.getView(R.id.username), iContext.getString(R.string.account_linphone_login));
+			solo.sleep(sleepingTime * 2);
+			Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_username_unavailable));
+			Assert.assertFalse(createAccount.isEnabled());
 
-		solo.enterText((EditText) solo.getView(R.id.password), iContext.getString(R.string.account_create_pwd).substring(0, 2));
-		solo.sleep(sleepingTime);
-		error = (TextView) solo.getView(R.id.confirm_password_error);
-		Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_passwords_unmatched));
-		Assert.assertFalse(createAccount.isEnabled());
+			solo.enterText((EditText) solo.getView(R.id.password), iContext.getString(R.string.account_create_pwd).substring(0, 2));
+			solo.sleep(sleepingTime);
+			error = (TextView) solo.getView(R.id.confirm_password_error);
+			Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_passwords_unmatched));
+			Assert.assertFalse(createAccount.isEnabled());
 
-		solo.clearEditText((EditText) solo.getView(R.id.password));
-		solo.enterText((EditText) solo.getView(R.id.password), iContext.getString(R.string.account_create_pwd).substring(0, 2));
-		solo.enterText((EditText) solo.getView(R.id.confirm_password), iContext.getString(R.string.account_create_pwd).substring(0,2));
-		solo.sleep(sleepingTime);
-		error = (TextView) solo.getView(R.id.password_error);
-		Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_password_incorrect));
-		Assert.assertFalse(createAccount.isEnabled());
+			solo.clearEditText((EditText) solo.getView(R.id.password));
+			solo.enterText((EditText) solo.getView(R.id.password), iContext.getString(R.string.account_create_pwd).substring(0, 2));
+			solo.enterText((EditText) solo.getView(R.id.confirm_password), iContext.getString(R.string.account_create_pwd).substring(0, 2));
+			solo.sleep(sleepingTime);
+			error = (TextView) solo.getView(R.id.password_error);
+			Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_password_incorrect));
+			Assert.assertFalse(createAccount.isEnabled());
 
-		solo.enterText((EditText) solo.getView(R.id.email), iContext.getString(R.string.account_create_email).substring(0, 12));
-		solo.sleep(sleepingTime);
-		error = (TextView) solo.getView(R.id.email_error);
-		Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_email_incorrect));
-		Assert.assertFalse(createAccount.isEnabled());
+			solo.enterText((EditText) solo.getView(R.id.email), iContext.getString(R.string.account_create_email).substring(0, 12));
+			solo.sleep(sleepingTime);
+			error = (TextView) solo.getView(R.id.email_error);
+			Assert.assertEquals(error.getText(), aContext.getString(R.string.wizard_email_incorrect));
+			Assert.assertFalse(createAccount.isEnabled());
 
-		solo.clearEditText((EditText) solo.getView(R.id.username));
-		solo.clearEditText((EditText) solo.getView(R.id.password));
-		solo.clearEditText((EditText) solo.getView(R.id.confirm_password));
-		solo.clearEditText((EditText) solo.getView(R.id.email));
-		solo.enterText((EditText) solo.getView(R.id.username), iContext.getString(R.string.account_create_login));
-		solo.enterText((EditText) solo.getView(R.id.password), iContext.getString(R.string.account_create_pwd));
-		solo.enterText((EditText) solo.getView(R.id.confirm_password), iContext.getString(R.string.account_create_pwd));
-		solo.enterText((EditText) solo.getView(R.id.email), iContext.getString(R.string.account_create_email));
-		solo.sleep(sleepingTime);
-		Assert.assertEquals(error.getText(), "");
-		Assert.assertTrue(createAccount.isEnabled());
+			solo.clearEditText((EditText) solo.getView(R.id.username));
+			solo.clearEditText((EditText) solo.getView(R.id.password));
+			solo.clearEditText((EditText) solo.getView(R.id.confirm_password));
+			solo.clearEditText((EditText) solo.getView(R.id.email));
+			solo.enterText((EditText) solo.getView(R.id.username), iContext.getString(R.string.account_create_login));
+			solo.enterText((EditText) solo.getView(R.id.password), iContext.getString(R.string.account_create_pwd));
+			solo.enterText((EditText) solo.getView(R.id.confirm_password), iContext.getString(R.string.account_create_pwd));
+			solo.enterText((EditText) solo.getView(R.id.email), iContext.getString(R.string.account_create_email));
+			solo.sleep(sleepingTime);
+			Assert.assertEquals(error.getText(), "");
+			Assert.assertTrue(createAccount.isEnabled());
+		} else {
+			solo.clickOnView(solo.getView(R.id.select_country));
+
+			solo.enterText((EditText) solo.getView(R.id.search_country), aContext.getString(R.string.account_create_country_name));
+			solo.sleep(500);
+			solo.clickInList(0);
+			solo.sleep(500);
+			Assert.assertEquals(((Button)solo.getView(R.id.select_country)).getText().toString().toLowerCase(),
+					aContext.getString(R.string.account_create_country_name).toLowerCase());
+			Assert.assertEquals(((EditText)solo.getView(R.id.dial_code)).getText().toString(),
+					"+"+aContext.getString(R.string.account_create_country_code));
+
+			Assert.assertEquals(((TextView)solo.getView(R.id.sip_uri)).getText().toString(), "");
+			solo.enterText((EditText) solo.getView(R.id.phone_number),
+					aContext.getString(R.string.account_create_phone_number).substring(2));
+			Assert.assertEquals(((TextView)solo.getView(R.id.phone_number_error)).getText().toString(),
+					aContext.getString(R.string.phone_number_too_short));
+			solo.clearEditText((EditText) solo.getView(R.id.phone_number));
+			solo.enterText((EditText) solo.getView(R.id.phone_number), aContext.getString(R.string.account_create_phone_number)+"1234");
+			Assert.assertEquals(((TextView)solo.getView(R.id.phone_number_error)).getText().toString(),
+					aContext.getString(R.string.phone_number_too_long));
+			solo.clearEditText((EditText) solo.getView(R.id.phone_number));
+			solo.enterText((EditText) solo.getView(R.id.phone_number), aContext.getString(R.string.account_create_phone_number));
+			Assert.assertEquals(((TextView)solo.getView(R.id.phone_number_error)).getText().toString(), "");
+			Assert.assertEquals(((TextView)solo.getView(R.id.sip_uri)).getText().toString(),
+					aContext.getString(R.string.assistant_create_account_phone_number_address)
+							+ " <" + "+" + aContext.getString(R.string.account_create_country_code)
+							+ aContext.getString(R.string.account_create_phone_number)
+							+ "@" + aContext.getString(R.string.default_domain) + ">");
+
+			solo.clickOnView(solo.getView(R.id.use_username));
+			Assert.assertEquals(((TextView)solo.getView(R.id.sip_uri)).getText().toString(), "");
+			solo.enterText((EditText) solo.getView(R.id.username), aContext.getString(R.string.account_create_login));
+			Assert.assertEquals(((TextView)solo.getView(R.id.sip_uri)).getText().toString(),
+					aContext.getString(R.string.assistant_create_account_phone_number_address)
+							+ " <" + aContext.getString(R.string.account_create_login)
+							+ "@" + aContext.getString(R.string.default_domain) + ">");
+
+			Button createAccount = (Button) solo.getView(R.id.assistant_create);
+
+			Assert.assertTrue(createAccount.isEnabled());
+		}
 	}
 
 	@LargeTest

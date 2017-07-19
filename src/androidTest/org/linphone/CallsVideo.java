@@ -17,7 +17,12 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+
+import static android.test.TouchUtils.dragViewToX;
+import static android.view.Gravity.CENTER_HORIZONTAL;
+import static android.view.Gravity.CENTER_VERTICAL;
 
 /**
  * @author Sylvain Berfini
@@ -72,7 +77,9 @@ public class CallsVideo extends SampleTest {
 	@LargeTest
 	public void testCDTMFRFC2833InPCMUCall() {
 		disableAllEnabledAudioCodecs();
+		solo.scrollUp();
 		solo.clickOnText("PCMU");
+		solo.sleep(500);
 		goBackToDialerAfterCodecChanges();
 		solo.sleep(1000);
 
@@ -175,7 +182,7 @@ public class CallsVideo extends SampleTest {
 
 		LinphoneTestManager.getInstance().autoAnswer = true;
 
-		solo.clickOnView(solo.getView(R.id.hang_up));
+		solo.clickOnView(solo.getView(R.id.outgoing_hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
@@ -213,7 +220,8 @@ public class CallsVideo extends SampleTest {
 		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
-		solo.clickOnView(solo.getView(R.id.accept));
+		dragViewToX(this, solo.getView(R.id.accept), Gravity.CENTER_HORIZONTAL, 0);
+		getInstrumentation().waitForIdleSync();
 
 		assertCallIsCorrectlyRunning();
 	}
@@ -234,7 +242,10 @@ public class CallsVideo extends SampleTest {
 		solo.waitForActivity("IncomingCallActivity", 5000);
 		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
-		solo.clickOnView(solo.getView(R.id.accept));
+
+		solo.sleep(1000);
+		dragViewToX(this, solo.getView(R.id.accept), Gravity.CENTER_HORIZONTAL, 0);
+		getInstrumentation().waitForIdleSync();
 
 		assertCallIsCorrectlyRunning();
 		assertCallIsRunningWithVideo();
@@ -259,18 +270,18 @@ public class CallsVideo extends SampleTest {
 
 		assertCallIsCorrectlyRunning();
 
-		solo.clickOnView(solo.getView(R.id.video_frame));
+		solo.clickOnView(solo.getView(R.id.active_call));
 		solo.clickOnView(solo.getView(R.id.pause));
 		solo.sleep(1000);
 
 		waitForCallPaused(LinphoneManager.getLc().getCalls()[0]);
-		solo.clickOnView(solo.getView(R.id.video_frame));
+		solo.clickOnView(solo.getView(R.id.active_call));
 		solo.clickOnView(solo.getView(R.id.call_pause));
 		solo.sleep(1000);
 
 		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
 
-		solo.clickOnView(solo.getView(R.id.video_frame));
+		solo.clickOnView(solo.getView(R.id.active_call));
 		solo.clickOnView(solo.getView(R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
@@ -288,13 +299,13 @@ public class CallsVideo extends SampleTest {
 		solo.sleep(1000);
 
 		waitForCallState(LinphoneManager.getLc().getCalls()[0], LinphoneCall.State.PausedByRemote);
-		solo.clickOnView(solo.getView(R.id.video_frame));
+		solo.clickOnView(solo.getView(R.id.active_call));
 		LinphoneTestManager.getLc().resumeCall(LinphoneTestManager.getLc().getCalls()[0]);
 		solo.sleep(1000);
 
 		waitForCallResumed(LinphoneManager.getLc().getCalls()[0]);
 
-		solo.clickOnView(solo.getView(R.id.video_frame));
+		solo.clickOnView(solo.getView(R.id.active_call));
 		solo.clickOnView(solo.getView(R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
@@ -395,6 +406,16 @@ public class CallsVideo extends SampleTest {
 			solo.sleep(500);
 		}
 
+		if (isAudioCodecEnabled("PCMU", 8000)) {
+			solo.clickOnText("PCMU");
+			solo.sleep(500);
+		}
+
+		if (isAudioCodecEnabled("PCMA", 8000)) {
+			solo.clickOnText("PCMA");
+			solo.sleep(500);
+		}
+
 		if (isAudioCodecEnabled("iLBC", 8000)) {
 			solo.clickOnText("iLBC");
 			solo.sleep(500);
@@ -440,15 +461,7 @@ public class CallsVideo extends SampleTest {
 			solo.sleep(500);
 		}
 
-		if (isAudioCodecEnabled("PCMU", 8000)) {
-			solo.clickOnText("PCMU");
-			solo.sleep(500);
-		}
 
-		if (isAudioCodecEnabled("PCMA", 8000)) {
-			solo.clickOnText("PCMA");
-			solo.sleep(500);
-		}
 	}
 
 	private boolean isVideoCodecEnabled(String mime) {

@@ -2,11 +2,6 @@ package org.linphone;
 
 import junit.framework.Assert;
 
-import org.linphone.CallActivity;
-import org.linphone.CallIncomingActivity;
-import org.linphone.CallOutgoingActivity;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneManager;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
@@ -15,8 +10,13 @@ import org.linphone.core.PayloadType;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
+
+import static android.test.TouchUtils.dragViewToX;
+import static android.view.Gravity.CENTER_HORIZONTAL;
+import static android.view.Gravity.CENTER_VERTICAL;
 
 /**
  * @author Sylvain Berfini
@@ -61,7 +61,9 @@ public class CallsAudio extends SampleTest {
 	@LargeTest
 	public void testCDTMFRFC2833InPCMUCall() {
 		disableAllEnabledAudioCodecs();
+		solo.scrollUp();
 		solo.clickOnText("PCMU");
+		solo.sleep(500);
 		goBackToDialerAfterCodecChanges();
 		solo.sleep(1000);
 
@@ -160,7 +162,8 @@ public class CallsAudio extends SampleTest {
 
 		LinphoneTestManager.getInstance().autoAnswer = true;
 
-		solo.clickOnView(solo.getView(R.id.outgoing_hang_up));
+		ImageView hangUp = (ImageView) solo.getView(R.id.outgoing_hang_up);
+		solo.clickOnView(hangUp);
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
@@ -201,15 +204,8 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
-		/*View topLayout = solo.getView(R.id.topLayout);
-		int topLayoutHeigh = topLayout.getMeasuredHeight();
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int topOffset = dm.heightPixels - topLayoutHeigh;
-		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);*/
-
-		solo.clickOnView(solo.getView(R.id.accept));
+		dragViewToX(this, solo.getView(R.id.accept), Gravity.CENTER_HORIZONTAL, 0);
+		getInstrumentation().waitForIdleSync();
 
 		assertCallIsCorrectlyRunning();
 	}
@@ -228,16 +224,9 @@ public class CallsAudio extends SampleTest {
 		solo.waitForActivity("CallIncomingActivity", 5000);
 		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
-		/*solo.sleep(1000);
-		View topLayout = solo.getView(R.id.topLayout);
-		int topLayoutHeigh = topLayout.getMeasuredHeight();
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int topOffset = dm.heightPixels - topLayoutHeigh;
-		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);*/
-
-		solo.clickOnView(solo.getView(R.id.accept));
+		solo.sleep(1000);
+		dragViewToX(this, solo.getView(R.id.accept), Gravity.CENTER_HORIZONTAL, 0);
+		getInstrumentation().waitForIdleSync();
 
 		assertCallIsCorrectlyRunning();
 	}
@@ -319,13 +308,10 @@ public class CallsAudio extends SampleTest {
 		solo.assertCurrentActivity("Expected Incoming Call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
+
 		View topLayout = solo.getView(R.id.topLayout);
-		int topLayoutHeigh = topLayout.getMeasuredHeight();
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int topOffset = dm.heightPixels - topLayoutHeigh;
-		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(topLayout.getMeasuredWidth() - 10, 10, slidersTop, slidersTop, 10);
+		dragViewToX(this, solo.getView(R.id.decline), Gravity.CENTER_HORIZONTAL, topLayout.getMeasuredWidth());
+		getInstrumentation().waitForIdleSync();
 	}
 
 	@MediumTest
@@ -420,6 +406,16 @@ public class CallsAudio extends SampleTest {
 			solo.sleep(500);
 		}
 
+		if (isAudioCodecEnabled("PCMU", 8000)) {
+			solo.clickOnText("PCMU");
+			solo.sleep(500);
+		}
+
+		if (isAudioCodecEnabled("PCMA", 8000)) {
+			solo.clickOnText("PCMA");
+			solo.sleep(500);
+		}
+
 		if (isAudioCodecEnabled("iLBC", 8000)) {
 			solo.clickOnText("iLBC");
 			solo.sleep(500);
@@ -462,16 +458,6 @@ public class CallsAudio extends SampleTest {
 
 		if (isAudioCodecEnabled("SILK", 8000)) {
 			solo.clickOnText("SILK", 2);
-			solo.sleep(500);
-		}
-
-		if (isAudioCodecEnabled("PCMU", 8000)) {
-			solo.clickOnText("PCMU");
-			solo.sleep(500);
-		}
-
-		if (isAudioCodecEnabled("PCMA", 8000)) {
-			solo.clickOnText("PCMA");
 			solo.sleep(500);
 		}
 	}

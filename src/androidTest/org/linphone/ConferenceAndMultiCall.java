@@ -16,7 +16,10 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+
+import static android.test.TouchUtils.dragViewToX;
 
 public class ConferenceAndMultiCall extends SampleTest {
 
@@ -67,7 +70,6 @@ public class ConferenceAndMultiCall extends SampleTest {
 
 		solo.clickOnView(solo.getView(R.id.hang_up));
 		solo.sleep(1000);
-		solo.clickOnView(solo.getView(R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
 	}
@@ -192,17 +194,14 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.assertCurrentActivity("Expected Incoming call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
-		View topLayout = solo.getView(R.id.topLayout);
-		int topLayoutHeigh = topLayout.getMeasuredHeight();
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int topOffset = dm.heightPixels - topLayoutHeigh;
-		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(topLayout.getMeasuredWidth() - 10, 10, slidersTop, slidersTop, 10);
+		dragViewToX(this, solo.getView(R.id.accept), Gravity.CENTER_HORIZONTAL, 0);
+		getInstrumentation().waitForIdleSync();
 
 		assertCallIsCorrectlyRunning(1);
 
 		solo.sleep(2000);
+		solo.clickOnView(solo.getView(R.id.hang_up));
+		solo.sleep(1000);
 		solo.clickOnView(solo.getView(R.id.hang_up));
 		solo.waitForActivity("LinphoneActivity", 5000);
 		solo.assertCurrentActivity("Expected Linphone Activity", LinphoneActivity.class);
@@ -226,13 +225,8 @@ public class ConferenceAndMultiCall extends SampleTest {
 		solo.assertCurrentActivity("Expected Incoming call Activity", CallIncomingActivity.class);
 
 		solo.sleep(1000);
-		View topLayout = solo.getView(R.id.topLayout);
-		int topLayoutHeigh = topLayout.getMeasuredHeight();
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int topOffset = dm.heightPixels - topLayoutHeigh;
-		int slidersTop = topLayoutHeigh - 80 - topOffset; // 80 is the bottom margin set in incoming.xml
-		solo.drag(10, topLayout.getMeasuredWidth() - 10, slidersTop, slidersTop, 10);
+		dragViewToX(this, solo.getView(R.id.accept), Gravity.CENTER_HORIZONTAL, 0);
+		getInstrumentation().waitForIdleSync();
 
 		solo.sleep(1000);
 		LinphoneCall call1 = LinphoneTestManager.getLc(1).getCalls()[0];

@@ -30,6 +30,7 @@ public class Chat extends SampleTest {
 
 		LinphoneChatRoom[] chats = LinphoneTestManager.getInstance().getLc().getChatRooms();
 		for (LinphoneChatRoom chatroom : chats) {
+			chatroom.markAsRead();
 			chatroom.deleteHistory();
 		}
 
@@ -76,13 +77,7 @@ public class Chat extends SampleTest {
 
 		LinphoneChatRoom chatRoom = LinphoneTestManager.getLc().getOrCreateChatRoom("sip:" + iContext.getString(R.string.account_linphone_login) + "@" + iContext.getString(R.string.account_linphone_domain));
 		LinphoneChatMessage msg = chatRoom.createLinphoneChatMessage(iContext.getString(R.string.chat_test_text_received));
-		chatRoom.sendMessage(msg, new LinphoneChatMessage.StateListener() {
-			@Override
-			public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg,
-					State state) {
-				Log.e("Chat message state = " + state.toString());
-			}
-		});
+		chatRoom.sendChatMessage(msg);
 
 		solo.sleep(1000);
 		Assert.assertTrue(solo.searchText(iContext.getString(R.string.chat_test_text_received)));
