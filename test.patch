@@ -1,0 +1,23 @@
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 9ee95b62..bb763a24 100755
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -287,15 +287,15 @@
+             </intent-filter>
+         </service>
+ 
+-        <provider
++        <!--<provider
+             android:name="android.support.v4.content.FileProvider"
+-            android:authorities="org.linphone.provider"
++            android:authorities="org.linphone.provider${linphone_app_id}"
+             android:exported="false"
+             android:grantUriPermissions="true">
+             <meta-data
+                 android:name="android.support.FILE_PROVIDER_PATHS"
+                 android:resource="@xml/provider_paths"/>
+-        </provider>
++        </provider>-->
+ 
+         <activity
+             android:name=".tutorials.TutorialLauncherActivity"

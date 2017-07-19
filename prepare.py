@@ -366,8 +366,10 @@ run-liblinphone-tests:
 \tmake run-all-tests
 
 run-all-tests: clean install
+\tpatch -p1 < test.patch
 \t./gradlew grantDebugPermissions
 \t./gradlew connectedAndroidTest
+\tpatch -Rp1 < test.patch
 
 pull-transifex:
 \ttx pull -af
