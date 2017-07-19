@@ -106,19 +106,25 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 					// Convert LinphoneCore message for internalization
 					if (call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
+						decline();
 					} else if (call.getErrorInfo().getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
+						decline();
 					} else if (call.getErrorInfo().getReason() == Reason.Media) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
+						decline();
 					} else if (call.getErrorInfo().getReason() == Reason.Busy) {
 						displayCustomToast(getString(R.string.error_user_busy), Toast.LENGTH_SHORT);
+						decline();
 					} else if (message != null) {
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
+						decline();
 					}
 				}else if (state == State.CallEnd) {
 					// Convert LinphoneCore message for internalization
 					if (call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
+						decline();
 					}
 				}
 
