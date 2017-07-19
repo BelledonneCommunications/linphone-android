@@ -21,7 +21,7 @@ public class Contacts extends SampleTest {
 		solo.clickOnView(solo.getView(R.id.add_contact));
 		solo.clickOnView(solo.getView(R.id.newContact));
 
-		Assert.assertTrue(solo.searchText(aContext.getString(R.string.account_test_calls_login) + "@" + aContext.getString(R.string.account_test_calls_domain)));
+		Assert.assertTrue(solo.searchText(aContext.getString(R.string.account_test_calls_login)));
 
 		solo.enterText(0, iContext.getString(R.string.contact_name));
 		solo.clickOnView(solo.getView(R.id.ok));
