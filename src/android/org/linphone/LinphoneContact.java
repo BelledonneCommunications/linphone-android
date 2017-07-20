@@ -489,6 +489,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			String[] args = new String[] { getAndroidId() };
 			changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
 			save();
+			ContactsManager.getInstance().delete(getAndroidId());
 		}
 		if (isLinphoneFriend()) {
 			deleteFriend();
@@ -500,7 +501,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
 		}
 	}
-	
+
 	public void clearAddresses() {
 		addresses.clear();
 	}

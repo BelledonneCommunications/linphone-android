@@ -178,6 +178,7 @@ android.applicationVariants.all { variant ->
       "${adb} shell pm grant ${applicationId} android.permission.CAMERA".execute()
       "${adb} shell pm grant ${applicationId} android.permission.READ_PHONE_STATE".execute()
       "${adb} shell pm grant ${applicationId} android.permission.READ_CONTACTS".execute()
+      "${adb} shell pm grant ${applicationId} android.permission.WRITE_CONTACTS".execute()
     }
   })
 }
