@@ -69,10 +69,6 @@
 	path = submodules/externals/openh264
 	url = https://github.com/cisco/openh264
 	ignore = dirty
-[submodule "submodules/externals/libmatroska-c"]
-	path = submodules/externals/libmatroska-c
-	url = git://git.linphone.org/libmatroska-c.git
-	ignore = dirty
 [submodule "submodules/mscodec2"]
 	path = submodules/mscodec2
 	url = git://git.linphone.org/mscodec2.git
@@ -113,3 +109,6 @@
 [submodule "submodules/oRTP"]
 	path = submodules/oRTP
 	url = git://git.linphone.org/ortp.git
+[submodule "submodules/bcmatroska2"]
+	path = submodules/bcmatroska2
+	url = git://git.linphone.org/bcmatroska2.git
