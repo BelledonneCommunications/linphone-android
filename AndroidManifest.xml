@@ -342,5 +342,4 @@
         <activity android:name=".LinphoneGenericActivity">
         </activity>
     </application>
-
 </manifest>
