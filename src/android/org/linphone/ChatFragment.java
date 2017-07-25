@@ -75,7 +75,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneBuffer;
 import org.linphone.core.LinphoneChatMessage;

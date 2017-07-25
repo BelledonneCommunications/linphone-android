@@ -548,6 +548,7 @@ private static AssistantActivity instance;
 			if (!newAccount) {
 				displayRegistrationInProgressDialog();
 			}
+			accountCreated = true;
 		} catch (LinphoneCoreException e) {
 			Log.e(e);
 		}
