@@ -361,7 +361,6 @@ private static AssistantActivity instance;
             }
 			identity = identity.replace("?", accountCreator.getUsername());
 			addr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
-
 			addr.setDisplayName(accountCreator.getUsername());
 			address = addr;
 			proxyConfig.edit();
@@ -549,7 +548,6 @@ private static AssistantActivity instance;
 			if (!newAccount) {
 				displayRegistrationInProgressDialog();
 			}
-			accountCreated = true;
 		} catch (LinphoneCoreException e) {
 			Log.e(e);
 		}
