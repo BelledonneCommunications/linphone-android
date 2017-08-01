@@ -325,38 +325,39 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initAccounts() {
-		PreferenceCategory accounts = (PreferenceCategory) findPreference(getString(R.string.pref_sipaccounts_key));
-		accounts.removeAll();
+		if (!getResources().getBoolean(R.bool.hide_accounts)) {
+			PreferenceCategory accounts = (PreferenceCategory) findPreference(getString(R.string.pref_sipaccounts_key));
+			accounts.removeAll();
 
-		// Get already configured extra accounts
-		int defaultAccountID = mPrefs.getDefaultAccountIndex();
-		int nbAccounts = mPrefs.getAccountCount();
-		for (int i = 0; i < nbAccounts; i++) {
-			final int accountId = i;
-			// For each, add menus to configure it
-			String username = mPrefs.getAccountUsername(accountId);
-			String domain = mPrefs.getAccountDomain(accountId);
-			LedPreference account = new LedPreference(getActivity());
+			// Get already configured extra accounts
+			int defaultAccountID = mPrefs.getDefaultAccountIndex();
+			int nbAccounts = mPrefs.getAccountCount();
+			for (int i = 0; i < nbAccounts; i++) {
+				final int accountId = i;
+				// For each, add menus to configure it
+				String username = mPrefs.getAccountUsername(accountId);
+				String domain = mPrefs.getAccountDomain(accountId);
+				LedPreference account = new LedPreference(getActivity());
 
-			if (username == null) {
-				account.setTitle(getString(R.string.pref_sipaccount));
-			} else {
-				account.setTitle(username + "@" + domain);
-			}
-
-			if (defaultAccountID == i) {
-				account.setSummary(R.string.default_account_flag);
-			}
-
-			account.setOnPreferenceClickListener(new OnPreferenceClickListener()
-			{
-				public boolean onPreferenceClick(Preference preference) {
-					LinphoneActivity.instance().displayAccountSettings(accountId);
-					return false;
+				if (username == null) {
+					account.setTitle(getString(R.string.pref_sipaccount));
+				} else {
+					account.setTitle(username + "@" + domain);
 				}
-			});
-			updateAccountLed(account, username, domain, mPrefs.isAccountEnabled(i));
-			accounts.addPreference(account);
+
+				if (defaultAccountID == i) {
+					account.setSummary(R.string.default_account_flag);
+				}
+
+				account.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+					public boolean onPreferenceClick(Preference preference) {
+						LinphoneActivity.instance().displayAccountSettings(accountId);
+						return false;
+					}
+				});
+				updateAccountLed(account, username, domain, mPrefs.isAccountEnabled(i));
+				accounts.addPreference(account);
+			}
 		}
 	}
 
