@@ -487,7 +487,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 		if (sExited) {
 			throw new RuntimeException("Linphone Manager was already destroyed. "
-					+ "Better use getLcIfManagerNotDestroyed and check returned value");
+					+ "Better use getLcIfManagerNotDestroyedOrNull and check returned value");
 		}
 
 		throw new RuntimeException("Linphone Manager should be created before accessed");
