@@ -46,8 +46,8 @@ excludePackage.add('**/LICENSE.txt')
 
 android {
     defaultConfig {
-        compileSdkVersion 23
-        buildToolsVersion "25.0.2"
+        compileSdkVersion 26
+        buildToolsVersion "26.0.0"
         multiDexEnabled true
     }
 

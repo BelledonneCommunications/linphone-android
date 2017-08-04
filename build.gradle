@@ -84,8 +84,8 @@ excludePackage.add('**/LICENSE.txt')
 
 android {
   defaultConfig {
-    compileSdkVersion 23
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
     applicationId getPackageName()
     multiDexEnabled true
 
@@ -169,7 +169,7 @@ android {
 // Grant permissions
 android.applicationVariants.all { variant ->
   def applicationId = getPackageName()
-  def adb = android.getAdbExe().toString()
+  def adb = android.getAdbExecutable().toString()
   def variantName = variant.name.capitalize()
   def grantPermissionTask = tasks.create("grant${variantName}Permissions").doLast({
     "${adb} devices".execute().text.eachLine {
@@ -185,7 +185,7 @@ android.applicationVariants.all { variant ->
 
 task runApplication() {
   def result = exec {
-    executable = android.getAdbExe().toString()
+    executable = android.getAdbExecutable().toString()
     ignoreExitValue true
     args = ['shell', 'monkey', '-p', getPackageName(), '-c', 'android.intent.category.LAUNCHER', '1']
   }
