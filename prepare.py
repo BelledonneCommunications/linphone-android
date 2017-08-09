@@ -337,6 +337,10 @@ release: java-clean build copy-libs
 
 generate-sdk: liblinphone-android-sdk
 
+generate-javadoc:
+\t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
+\t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
+
 liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
