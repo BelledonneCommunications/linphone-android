@@ -18,19 +18,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package org.linphone;
 
-import static android.content.Intent.ACTION_MAIN;
-
-import org.linphone.assistant.RemoteProvisioningActivity;
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
-import org.linphone.tutorials.TutorialLauncherActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+
+import org.linphone.assistant.RemoteProvisioningActivity;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.tutorials.TutorialLauncherActivity;
+
+import static android.content.Intent.ACTION_MAIN;
 
 /**
  *
@@ -104,20 +104,30 @@ public class LinphoneLauncherActivity extends Activity {
 			BluetoothManager.getInstance().initBluetooth();
 		}
 
+		//TODO :
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Intent newIntent = new Intent(LinphoneLauncherActivity.this, classToStart);
 				Intent intent = getIntent();
                 String msgShared = null;
+				Uri imageUri = null;
 				if (intent != null) {
 					String action = intent.getAction();
 					String type = intent.getType();
 					newIntent.setData(intent.getData());
 					if (Intent.ACTION_SEND.equals(action) && type != null) {
 						if ("text/plain".equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
+							Log.e(" ====>>> type = "+type+" share msg");
                             msgShared = intent.getStringExtra(Intent.EXTRA_TEXT);
 							newIntent.putExtra("msgShared", msgShared);
+						}else if ( type.contains("image") ){
+							msgShared = intent.getStringExtra(Intent.EXTRA_STREAM);
+							imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+							Log.e(" ====>>> type = "+type+" share images msgShared = "+msgShared +" VS toPath() = "+imageUri.getPath());
+							newIntent.putExtra("fileShared", imageUri.getPath());
+						}else{
+							Log.e(" ====>>> type = "+type+" share something else");
 						}
 					}
 				}
@@ -132,8 +142,14 @@ public class LinphoneLauncherActivity extends Activity {
 					addressToCall = null;
 				}
 				startActivity(newIntent);
-                if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && msgShared != null) {
-                    LinphoneActivity.instance().displayChat(null, msgShared);
+                if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && (msgShared != null || imageUri != null)) {
+
+					if(msgShared != null) {
+						LinphoneActivity.instance().displayChat(null, msgShared, null);
+					}
+					if(imageUri != null) {
+						LinphoneActivity.instance().displayChat(null, null, imageUri.toString());
+					}
                 }
 				finish();
 			}
@@ -159,6 +175,7 @@ public class LinphoneLauncherActivity extends Activity {
 			mServiceThread = null;
 		}
 	}
+
 }
 
 

@@ -19,44 +19,6 @@ package org.linphone;
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import org.linphone.SettingsFragment;
-import org.linphone.LinphoneManager.AddressType;
-import org.linphone.LinphoneService;
-import org.linphone.assistant.AssistantActivity;
-import org.linphone.assistant.RemoteProvisioningLoginActivity;
-import org.linphone.compatibility.Compatibility;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneAuthInfo;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallLog;
-import org.linphone.core.LinphoneCallLog.CallStatus;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.Reason;
-import org.linphone.mediastream.Log;
-import org.linphone.purchase.InAppPurchaseActivity;
-import org.linphone.ui.AddressText;
-import org.linphone.xmlrpc.XmlRpcHelper;
-import org.linphone.xmlrpc.XmlRpcListenerBase;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -98,6 +60,42 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.linphone.LinphoneManager.AddressType;
+import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.RemoteProvisioningLoginActivity;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneAuthInfo;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCall.State;
+import org.linphone.core.LinphoneCallLog;
+import org.linphone.core.LinphoneCallLog.CallStatus;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Reason;
+import org.linphone.mediastream.Log;
+import org.linphone.purchase.InAppPurchaseActivity;
+import org.linphone.ui.AddressText;
+import org.linphone.xmlrpc.XmlRpcHelper;
+import org.linphone.xmlrpc.XmlRpcListenerBase;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Sylvain Berfini
@@ -644,17 +642,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return count;
 	}
 
-	public void displayChat(String sipUri, String message) {
+	public void displayChat(String sipUri, String message, String fileUri) {
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
 		}
 
+		Log.e(" ===>>> displayChat : message = "+message+" - fileUri = "+fileUri);
 		String pictureUri = null;
 		String thumbnailUri = null;
 		String displayName = null;
 
 		LinphoneAddress lAddress = null;
 		if(sipUri != null) {
+			Log.e(" ===>>> displayChat : sipUri = "+ sipUri);
 			try {
 				lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
 			} catch (LinphoneCoreException e) {
@@ -672,14 +672,18 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 
 		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.CHAT) {
+			Log.e(" ===>>> displayChat : currentFragment = "+ currentFragment.toString());
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
 				ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message);
+				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message, fileUri);
 			} else {
 				Bundle extras = new Bundle();
 				extras.putString("SipUri", sipUri);
-				extras.putString("messageDraft", message);
+				if(message != null)
+					extras.putString("messageDraft", message);
+				if(fileUri != null)
+					extras.putString("fileSharedUri", fileUri);
 				if (sipUri != null && lAddress.getDisplayName() != null) {
 					extras.putString("DisplayName", displayName);
 					extras.putString("PictureUri", pictureUri);
@@ -688,13 +692,18 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 			}
 		} else {
+			Log.e(" ===>>> displayChat : currentFragment != Chat");
 			if(isTablet()){
 				changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
-				displayChat(sipUri, message);
+				//displayChat(sipUri, message, fileUri);
 			} else {
 				Bundle extras = new Bundle();
-				extras.putString("SipUri", sipUri);
-				extras.putString("messageDraft", message);
+				if(sipUri != null || sipUri != "")
+					extras.putString("SipUri", sipUri);
+				if(message != null)
+					extras.putString("messageDraft", message);
+				if(fileUri != null)
+					extras.putString("fileSharedUri", fileUri);
 				if (sipUri != null  && lAddress.getDisplayName() != null) {
 					extras.putString("DisplayName", displayName);
 					extras.putString("PictureUri", pictureUri);
@@ -1276,6 +1285,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			ContactsManager.getInstance().enableContactsAccess();
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
+
+				Log.e(" ====>>>> LinphoneActivity - ContactsManager.getInstance().fetchContactsAsync() 1 !!!");
 				ContactsManager.getInstance().fetchContactsAsync();
 			}
 		}
@@ -1315,6 +1326,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		} else {
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
+				Log.e(" ====>>>> LinphoneActivity - ContactsManager.getInstance().fetchContactsAsync() 2 !!!");
 				ContactsManager.getInstance().fetchContactsAsync();
 			}
 		}
@@ -1393,9 +1405,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		Intent intent = getIntent();
 
-		if (intent.getStringExtra("msgShared") != null)
-			displayChat(null, intent.getStringExtra("msgShared"));
-
+		if (intent.getStringExtra("msgShared") != null) {
+			displayChat(null, intent.getStringExtra("msgShared"), null);
+			intent.putExtra("msgShared", "");
+		}
+		if (intent.getStringExtra("fileShared") != null && intent.getStringExtra("fileShared") != "") {
+			displayChat(null, null, intent.getStringExtra("fileShared"));
+			intent.putExtra("fileShared", "");
+		}
 		doNotGoToCallActivity = false;
 		isOnBackground = false;
 
@@ -1450,7 +1467,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			LinphoneService.instance().removeMessageNotification();
 			String sipUri = extras.getString("ChatContactSipUri");
 			doNotGoToCallActivity = true;
-			displayChat(sipUri, null);
+			displayChat(sipUri, null, null);
 		} else if (extras != null && extras.getBoolean("GoToHistory", false)) {
 			doNotGoToCallActivity = true;
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);

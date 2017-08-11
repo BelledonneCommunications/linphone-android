@@ -56,7 +56,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		@Override
 		public void onClick(View v) {
 			if (LinphoneActivity.isInstanciated()) {
-				LinphoneActivity.instance().displayChat(v.getTag().toString(), null);
+				LinphoneActivity.instance().displayChat(v.getTag().toString(), null, null);
 			}
 		}
 	};

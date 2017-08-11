@@ -17,17 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import java.util.List;
-
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.mediastream.Log;
-
 import android.app.Dialog;
 import android.app.Fragment;
 import android.graphics.Typeface;
@@ -51,6 +40,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneChatMessage;
+import org.linphone.core.LinphoneChatRoom;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.mediastream.Log;
+
+import java.util.List;
 
 /**
  * @author Sylvain Berfini
@@ -182,14 +182,14 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	public void refresh() {
 		mConversations = LinphoneActivity.instance().getChatList();
 		if (getResources().getBoolean(R.bool.isTablet)) {
-			LinphoneActivity.instance().displayChat("", null);
+			LinphoneActivity.instance().displayChat("", null, null);
 		}
 		hideAndDisplayMessageIfNoChat();
 	}
 
 	public void displayFirstChat(){
 		if (mConversations != null && mConversations.size() > 0) {
-			LinphoneActivity.instance().displayChat(mConversations.get(0), null);
+			LinphoneActivity.instance().displayChat(mConversations.get(0), null, null);
 		} else {
 			LinphoneActivity.instance().displayEmptyFragment();
 		}
@@ -321,7 +321,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			enabledDeleteButton(false);
 		}
 		else if (id == R.id.new_discussion) {
-			LinphoneActivity.instance().displayChat(null, null);
+			LinphoneActivity.instance().displayChat(null, null, null);
 			/*String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);
@@ -345,7 +345,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		String sipUri = chatList.getAdapter().getItem(position).toString();
 
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
-			LinphoneActivity.instance().displayChat(sipUri, null);
+			LinphoneActivity.instance().displayChat(sipUri, null, null);
 		}
 	}
 

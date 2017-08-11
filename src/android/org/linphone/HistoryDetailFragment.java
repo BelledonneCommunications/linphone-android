@@ -17,11 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.mediastream.Log;
-
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +26,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCoreException;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.mediastream.Log;
 
 /**
  * @author Sylvain Berfini
@@ -161,7 +161,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} if (id == R.id.call) {
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
-			LinphoneActivity.instance().displayChat(sipUri, null);
+			LinphoneActivity.instance().displayChat(sipUri, null, null);
 		} else if (id == R.id.add_contact) {
 			String uri = sipUri;
 			try {

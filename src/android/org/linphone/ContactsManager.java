@@ -19,23 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneFriend;
-import org.linphone.core.LinphoneFriendImpl;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
@@ -52,6 +35,23 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Data;
+
+import org.linphone.core.LinphoneAddress;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneFriend;
+import org.linphone.core.LinphoneFriendImpl;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 interface ContactsUpdatedListener {
 	void onContactsUpdated();
@@ -299,6 +299,7 @@ public class ContactsManager extends ContentObserver {
 					}
 				}
 			}
+			Log.e(" =====>>>> ContacsManager - fetchContactsSync Ended");
 		}
 
 		long timeElapsed = (new Date()).getTime() - contactsTime.getTime();

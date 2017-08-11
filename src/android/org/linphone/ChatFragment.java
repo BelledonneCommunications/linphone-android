@@ -101,7 +101,7 @@ import java.util.Locale;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 
-public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener {
+public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener, ContactsUpdatedListener{
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_PICTURE_SMALL = 2;
@@ -138,6 +138,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private LinphoneCoreListenerBase mListener;
 	private boolean newChatConversation = false;
+	private String fileSharedUri, fileAlreadySharedUri;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -155,6 +156,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		} else {
 			//Retrieve parameter from intent
 			sipUri = getArguments().getString("SipUri");
+			newChatConversation = false;
 		}
 
 		//Initialize UI
@@ -195,7 +197,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
+		if (getArguments().getString("fileSharedUri") != null && getArguments().getString("fileSharedUri") != "")
+			fileSharedUri = getArguments().getString("fileSharedUri");
+		else
+			fileSharedUri = null;
 		if (newChatConversation) {
+			Log.e(" ===>>> ChatFragment : onCreateView  - newChatConversation = "+newChatConversation+" - fileSharedUri = "+fileSharedUri);
 			initNewChatConversation();
 		}
 
@@ -283,7 +290,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (contact != null) {
 			outState.putSerializable("contactDraft",contact);
 			outState.putString("sipUriDraft",sipUri);
+
 		}
+		if (sipUri != null) {
+			Log.e("====>>>> ChatFragment - onSaveInstanceState : sipUri = "+sipUri);
+			outState.putString("sipUriDraft", sipUri);
+			outState.putString("SipUri", sipUri);
+
+		}
+		outState.putString("fileSharedUri", "");
+
 		super.onSaveInstanceState(outState);
 	}
 
@@ -350,7 +366,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	public void initChatRoom(String sipUri) {
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-
 		LinphoneAddress lAddress = null;
 		if (sipUri == null) {
 			contact = null; // Tablet rotation issue
@@ -410,9 +425,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri, String message) {
+	public void changeDisplayedChat(String newSipUri, String displayName, String pictureUri, String message, String fileUri) {
 		this.sipUri = newSipUri;
-		this.message.setText(message);
+		if(message != null)
+			this.message.setText(message);
+		if(fileUri != null)
+			fileSharedUri = fileUri;
 		initChatRoom(sipUri);
 	}
 
@@ -446,7 +464,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						chatRoom.deleteMessage(message);
 						if (getResources().getBoolean(R.bool.isTablet) && chatRoom.getHistorySize() <= 0) {
 							if (LinphoneActivity.isInstanciated()) {
-								LinphoneActivity.instance().displayChat("", null);
+								LinphoneActivity.instance().displayChat("", null, null);
 								LinphoneActivity.instance().onMessageSent("", null);
 								initNewChatConversation();
 							}
@@ -516,7 +534,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		ContactsManager.addContactsListener(this);
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
 
@@ -537,11 +555,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
 		contact = (LinphoneContact)getArguments().getSerializable("contactDraft");
+
+		Log.e("===>>>> ChatFragment - onResume : sipUriDraft = "+getArguments().getString("sipUriDraft")+" - sipUri = "+getArguments().getString("sipUri")+" - VS sipUri = "+sipUri);
+
 		if (contact != null) {
+			Log.e("===>>> onResume - loop 1");
 			contactName.setText(contact.getFullName());
-			sipUri = getArguments().getString("sipUriDraft");
+			sipUri = getArguments().getString("SipUri");
 			newChatConversation = false;
 			getArguments().clear();
+		}else if(getArguments().getString("sipUriDraft") != null){
+			Log.e("===>>> onResume - loop 2");
+			sipUri = getArguments().getString("sipUriDraft");
+			newChatConversation = false;
+		}else if (sipUri != null) {
+			Log.e("===>>> onResume - loop 3");
+			newChatConversation = false;
+		}else {
+			Log.e("===>>> onResume - loop 4");
+			sipUri = null;
+			newChatConversation = true;
 		}
 
 		if(LinphoneManager.getLc().isIncall()){
@@ -586,7 +619,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		if (getResources().getBoolean(R.bool.isTablet) && chatRoom.getHistorySize() <= 0) {
 			if (LinphoneActivity.isInstanciated()) {
-				LinphoneActivity.instance().displayChat("", null);
+				LinphoneActivity.instance().displayChat("", null, null);
 				LinphoneActivity.instance().onMessageSent("", null);
 				initNewChatConversation();
 			}
@@ -714,9 +747,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void sendImageMessage(String path, int imageSize) {
+		Log.e("====>>> ChatFragment - sendImageMessage() : path = "+path+" - imageSize = "+imageSize);
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
-
+		Log.e("====>>> ChatFragment - sendImageMessage() : newChatConversation = "+ newChatConversation +" - chatRoom = "+chatRoom);
 		if(newChatConversation && chatRoom == null) {
 			String address = searchContactField.getText().toString();
 			if (address != null && !address.equals("")) {
@@ -725,6 +759,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
+			Log.e("====>>> ChatFragment - sendImageMessage() : Do something loop 2 ");
 			try {
 				Bitmap bm = BitmapFactory.decodeFile(path);
 				if (bm != null) {
@@ -736,6 +771,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			} catch (RuntimeException e) {
 				Log.e("Error, not enough memory to create the bitmap");
 			}
+			 fileSharedUri = null;
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
@@ -833,6 +869,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	//File transfer
 	private void pickImage() {
+		//TODO : update to use with any file types
 		List<Intent> cameraIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())));
@@ -841,7 +878,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		cameraIntents.add(captureIntent);
 
 		Intent galleryIntent = new Intent();
-		galleryIntent.setType("image/*");
+		//galleryIntent.setType("image/*");
+		galleryIntent.setType("*/*");
 		galleryIntent.setAction(Intent.ACTION_PICK);
 
 		Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
@@ -861,6 +899,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			return result;
 		}
 		return null;
+	}
+
+	@Override
+	public void onContactsUpdated() {
+		if(fileSharedUri != null){
+			initNewChatConversation();
+		}
 	}
 
 	class FileUploadPrepareTask extends AsyncTask<Bitmap, Void, byte[]> {
@@ -974,11 +1019,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				fileToUploadPath = imageToUploadUri.getPath();
 			}
 
-			if (fileToUploadPath != null) {
-				//showPopupMenuAskingImageSize(fileToUploadPath);
-				sendImageMessage(fileToUploadPath,0);
-			}
+			Log.e(" ====>>>> onActivityResult - requestCode = "+requestCode+" - resultCode = "+resultCode+" - data = "+data.toString()+" - fileToUploadPath = "+fileToUploadPath);
 		} else {
+			Log.e(" ====>>>> onActivityResult - requestCode = "+requestCode+" - resultCode = "+resultCode+" - data = "+data.toString());
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
@@ -1001,6 +1044,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		newChatConversation = false;
 		initChatRoom(sipUri);
+
+		//TODO :
+		if(fileSharedUri != null){
+			Log.e(" ===>>> exitNewConversationMode - sendImage from Uri");
+			//save SipUri into bundle
+			onSaveInstanceState(getArguments());
+			sendImageMessage(fileSharedUri,0);
+			fileSharedUri = null;
+		}
 	}
 
 	private void initNewChatConversation(){
