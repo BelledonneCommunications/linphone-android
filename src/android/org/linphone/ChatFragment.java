@@ -748,6 +748,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void sendImageMessage(String path, int imageSize) {
 		Log.e("====>>> ChatFragment - sendImageMessage() : path = "+path+" - imageSize = "+imageSize);
+		if(path.contains("file://")) {
+			//path.replace("file://", "");
+			path = path.substring(7);
+			Log.e("===>>> path replaced = "+path);
+		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
 		Log.e("====>>> ChatFragment - sendImageMessage() : newChatConversation = "+ newChatConversation +" - chatRoom = "+chatRoom);
