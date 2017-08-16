@@ -1633,6 +1633,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		public void loadBitmap(String path, ImageView imageView) {
 			if (cancelPotentialWork(path, imageView)) {
+				if(LinphoneUtils.getExtensionFromFileName(path).matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*"))
+					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_picture_over);
+				else
+					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_attachment_over);
+
 				BitmapWorkerTask task = new BitmapWorkerTask(imageView);
 				final AsyncBitmap asyncBitmap = new AsyncBitmap(context.getResources(), defaultBitmap, task);
 				imageView.setImageDrawable(asyncBitmap);
