@@ -19,11 +19,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone;
 
 import android.app.Activity;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.mediastream.Log;
@@ -110,8 +113,8 @@ public class LinphoneLauncherActivity extends Activity {
 			public void run() {
 				Intent newIntent = new Intent(LinphoneLauncherActivity.this, classToStart);
 				Intent intent = getIntent();
-                String msgShared = null;
-				Uri imageUri = null;
+                String stringFileShared = null;
+				Uri fileUri = null;
 				if (intent != null) {
 					String action = intent.getAction();
 					String type = intent.getType();
@@ -119,16 +122,20 @@ public class LinphoneLauncherActivity extends Activity {
 					if (Intent.ACTION_SEND.equals(action) && type != null) {
 						if ("text/plain".equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
 							Log.e(" ====>>> type = "+type+" share msg");
-                            msgShared = intent.getStringExtra(Intent.EXTRA_TEXT);
-							newIntent.putExtra("msgShared", msgShared);
-						}else if ( type.contains("image") ){
-							msgShared = intent.getStringExtra(Intent.EXTRA_STREAM);
-							imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-							Log.e(" ====>>> type = "+type+" share images msgShared = "+msgShared +" VS toPath() = "+imageUri.getPath());
-							newIntent.putExtra("fileShared", imageUri.getPath());
-						}else{
+							stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
+							newIntent.putExtra("msgShared", stringFileShared);
+						}else {//if ( type.contains("image") ){
+							if(intent.getStringExtra(Intent.EXTRA_STREAM) != null){
+								stringFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);
+							}else {
+								fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+								stringFileShared = getRealPathFromURI(fileUri);
+							}
+							Log.e(" ====>>> type = "+type+" share images msgShared = "+getRealPathFromURI(fileUri) +" VS toPath() = "+fileUri.getPath());
+							newIntent.putExtra("fileShared", stringFileShared);
+						}/*else{
 							Log.e(" ====>>> type = "+type+" share something else");
-						}
+						}*/
 					}
 				}
 				if (uriToResolve != null) {
@@ -142,13 +149,13 @@ public class LinphoneLauncherActivity extends Activity {
 					addressToCall = null;
 				}
 				startActivity(newIntent);
-                if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && (msgShared != null || imageUri != null)) {
+                if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && (stringFileShared != null || fileUri != null)) {
 
-					if(msgShared != null) {
-						LinphoneActivity.instance().displayChat(null, msgShared, null);
+					if(stringFileShared != null) {
+						LinphoneActivity.instance().displayChat(null, stringFileShared, null);
 					}
-					if(imageUri != null) {
-						LinphoneActivity.instance().displayChat(null, null, imageUri.toString());
+					if(fileUri != null) {
+						LinphoneActivity.instance().displayChat(null, null, fileUri.toString());
 					}
                 }
 				finish();
@@ -156,6 +163,18 @@ public class LinphoneLauncherActivity extends Activity {
 		}, 1000);
 	}
 
+	public String getRealPathFromURI(Uri contentUri) {
+		String[] proj = {MediaStore.Images.Media.DATA};
+		CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
+		Cursor cursor = loader.loadInBackground();
+		if (cursor != null && cursor.moveToFirst()) {
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			String result = cursor.getString(column_index);
+			cursor.close();
+			return result;
+		}
+		return null;
+	}
 
 	private class ServiceWaitThread extends Thread {
 		public void run() {
