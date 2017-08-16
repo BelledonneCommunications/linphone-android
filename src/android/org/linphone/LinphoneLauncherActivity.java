@@ -107,7 +107,6 @@ public class LinphoneLauncherActivity extends Activity {
 			BluetoothManager.getInstance().initBluetooth();
 		}
 
-		//TODO :
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -121,21 +120,19 @@ public class LinphoneLauncherActivity extends Activity {
 					newIntent.setData(intent.getData());
 					if (Intent.ACTION_SEND.equals(action) && type != null) {
 						if ("text/plain".equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
-							Log.e(" ====>>> type = "+type+" share msg");
 							stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
 							newIntent.putExtra("msgShared", stringFileShared);
-						}else {//if ( type.contains("image") ){
+						}else {
 							if(intent.getStringExtra(Intent.EXTRA_STREAM) != null){
 								stringFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);
 							}else {
 								fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 								stringFileShared = getRealPathFromURI(fileUri);
+								if(stringFileShared == null)
+									stringFileShared = fileUri.getPath();
 							}
-							Log.e(" ====>>> type = "+type+" share images msgShared = "+getRealPathFromURI(fileUri) +" VS toPath() = "+fileUri.getPath());
 							newIntent.putExtra("fileShared", stringFileShared);
-						}/*else{
-							Log.e(" ====>>> type = "+type+" share something else");
-						}*/
+						}
 					}
 				}
 				if (uriToResolve != null) {

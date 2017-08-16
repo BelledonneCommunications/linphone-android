@@ -88,6 +88,7 @@ import org.linphone.mediastream.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -202,7 +203,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		else
 			fileSharedUri = null;
 		if (newChatConversation) {
-			Log.e(" ===>>> ChatFragment : onCreateView  - newChatConversation = "+newChatConversation+" - fileSharedUri = "+fileSharedUri);
 			initNewChatConversation();
 		}
 
@@ -293,11 +293,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		}
 		if (sipUri != null) {
-			Log.e("====>>>> ChatFragment - onSaveInstanceState : sipUri = "+sipUri);
 			outState.putString("sipUriDraft", sipUri);
 			outState.putString("SipUri", sipUri);
-
-		}
+	}
 		outState.putString("fileSharedUri", "");
 
 		super.onSaveInstanceState(outState);
@@ -555,24 +553,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		String draft = getArguments().getString("messageDraft");
 		message.setText(draft);
 		contact = (LinphoneContact)getArguments().getSerializable("contactDraft");
-
-		Log.e("===>>>> ChatFragment - onResume : sipUriDraft = "+getArguments().getString("sipUriDraft")+" - sipUri = "+getArguments().getString("sipUri")+" - VS sipUri = "+sipUri);
-
 		if (contact != null) {
-			Log.e("===>>> onResume - loop 1");
 			contactName.setText(contact.getFullName());
 			sipUri = getArguments().getString("SipUri");
 			newChatConversation = false;
 			getArguments().clear();
 		}else if(getArguments().getString("sipUriDraft") != null){
-			Log.e("===>>> onResume - loop 2");
 			sipUri = getArguments().getString("sipUriDraft");
 			newChatConversation = false;
 		}else if (sipUri != null) {
-			Log.e("===>>> onResume - loop 3");
 			newChatConversation = false;
 		}else {
-			Log.e("===>>> onResume - loop 4");
 			sipUri = null;
 			newChatConversation = true;
 		}
@@ -747,16 +738,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void sendImageMessage(String path, int imageSize) {
-		Log.e("====>>> ChatFragment - sendImageMessage() : path = "+path+" - imageSize = "+imageSize);
 		if(path.contains("file://")) {
-			//path.replace("file://", "");
 			path = path.substring(7);
-			Log.e("===>>> path replaced = "+path);
 		}
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
-		Log.e("====>>> ChatFragment - sendImageMessage() : newChatConversation = "+ newChatConversation +" - chatRoom = "+chatRoom);
 		if(newChatConversation && chatRoom == null) {
 			String address = searchContactField.getText().toString();
 			if (address != null && !address.equals("")) {
@@ -765,7 +752,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
-			Log.e("====>>> ChatFragment - sendImageMessage() : Do something loop 2 ");
 			try {
 				Bitmap bm = BitmapFactory.decodeFile(path);
 				if (bm != null) {
@@ -778,6 +764,38 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				Log.e("Error, not enough memory to create the bitmap");
 			}
 			 fileSharedUri = null;
+		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+		}
+	}
+
+	private void sendFileSharingMessage(String path, int size ) {
+		if(path.contains("file://")) {
+			path = path.substring(7);
+		}
+
+		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
+		if(newChatConversation && chatRoom == null) {
+			String address = searchContactField.getText().toString();
+			if (address != null && !address.equals("")) {
+				initChatRoom(address);
+			}
+		}
+
+		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
+			try {
+				File fileShared = new File(path);
+				if (fileShared != null) {
+					FileSharingUploadPrepareTask task = new FileSharingUploadPrepareTask(getActivity(), path, size);
+					task.execute(fileShared);
+				} else {
+					Log.e("Error, fileShared can't be read " + path);
+				}
+			} catch (RuntimeException e) {
+				Log.e("Error, not enough memory to create the fileShared");
+			}
+			fileSharedUri = null;
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
@@ -1014,20 +1032,74 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
+	class FileSharingUploadPrepareTask extends AsyncTask<File, Void, byte[]> {
+		private String path;
+		private ProgressDialog progressDialog;
+
+		public FileSharingUploadPrepareTask(Context context, String fileToUploadPath, int size) {
+			path = fileToUploadPath;
+
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setMessage(getString(R.string.processing_image));
+			progressDialog.show();
+		}
+
+		@Override
+		protected byte[] doInBackground(File... params) {
+			File file = params[0];
+			//FileInputStream fileInputStream = null;
+			//ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			//String extension = LinphoneUtils.getExtensionFromFileName(path);
+
+			byte[] byteArray = new byte[(int) file.length()];
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				fis.read(byteArray); //read file into bytes[]
+				fis.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return byteArray;
+		}
+
+		@Override
+		protected void onPostExecute(byte[] result) {
+			if (progressDialog != null && progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+
+			String fileName = path.substring(path.lastIndexOf("/") + 1);
+			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
+			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("file", extension, result, null);
+			content.setName(fileName);
+
+			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
+			message.setListener(LinphoneManager.getInstance());
+			message.setAppData(path);
+
+			LinphoneManager.getInstance().setUploadPendingFileMessage(message);
+			LinphoneManager.getInstance().setUploadingImage(result);
+
+			chatRoom.sendChatMessage(message);
+			adapter.addMessage(message);
+		}
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
 			String fileToUploadPath = null;
-
 			if (data != null && data.getData() != null) {
 				fileToUploadPath = getRealPathFromURI(data.getData());
 			} else if (imageToUploadUri != null) {
 				fileToUploadPath = imageToUploadUri.getPath();
 			}
-
-			Log.e(" ====>>>> onActivityResult - requestCode = "+requestCode+" - resultCode = "+resultCode+" - data = "+data.toString()+" - fileToUploadPath = "+fileToUploadPath);
 		} else {
-			Log.e(" ====>>>> onActivityResult - requestCode = "+requestCode+" - resultCode = "+resultCode+" - data = "+data.toString());
 			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
@@ -1053,10 +1125,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		//TODO :
 		if(fileSharedUri != null){
-			Log.e(" ===>>> exitNewConversationMode - sendImage from Uri");
 			//save SipUri into bundle
 			onSaveInstanceState(getArguments());
-			sendImageMessage(fileSharedUri,0);
+			String extension = LinphoneUtils.getExtensionFromFileName(fileSharedUri);
+			if(extension.matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*")) {
+				sendImageMessage(fileSharedUri, 0);
+			}else {
+				sendFileSharingMessage(fileSharedUri, 0);
+			}
 			fileSharedUri = null;
 		}
 	}
