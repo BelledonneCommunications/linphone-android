@@ -1128,7 +1128,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			//save SipUri into bundle
 			onSaveInstanceState(getArguments());
 			String extension = LinphoneUtils.getExtensionFromFileName(fileSharedUri);
-			if(extension.matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*")) {
+			if(extension != null && extension.matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*")) {
 				sendImageMessage(fileSharedUri, 0);
 			}else {
 				sendFileSharingMessage(fileSharedUri, 0);
@@ -1633,7 +1633,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		public void loadBitmap(String path, ImageView imageView) {
 			if (cancelPotentialWork(path, imageView)) {
-				if(LinphoneUtils.getExtensionFromFileName(path).matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*"))
+				String extension = LinphoneUtils.getExtensionFromFileName(path);
+				if(extension != null && extension.matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*"))
 					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_picture_over);
 				else
 					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_attachment_over);
