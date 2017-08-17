@@ -1127,8 +1127,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if(fileSharedUri != null){
 			//save SipUri into bundle
 			onSaveInstanceState(getArguments());
-			String extension = LinphoneUtils.getExtensionFromFileName(fileSharedUri);
-			if(extension != null && extension.matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*")) {
+			if(LinphoneUtils.isExtensionImage(fileSharedUri)) {
 				sendImageMessage(fileSharedUri, 0);
 			}else {
 				sendFileSharingMessage(fileSharedUri, 0);
@@ -1633,8 +1632,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		public void loadBitmap(String path, ImageView imageView) {
 			if (cancelPotentialWork(path, imageView)) {
-				String extension = LinphoneUtils.getExtensionFromFileName(path);
-				if(extension != null && extension.matches(".*(.png|.jpg|.jpeg|.bmp|.gif).*"))
+				if(LinphoneUtils.isExtensionImage(path))
 					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_picture_over);
 				else
 					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_attachment_over);
@@ -1663,47 +1661,50 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				Bitmap bm = null;
 				Bitmap thumbnail = null;
 
-				if (path.startsWith("content")) {
-					try {
-						bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(path));
-					} catch (FileNotFoundException e) {
-						Log.e(e);
-					} catch (IOException e) {
-						Log.e(e);
-					}
-				} else {
-					bm = BitmapFactory.decodeFile(path);
-				}
-
-				// Rotate the bitmap if possible/needed, using EXIF data
-				try {
-					Bitmap bm_tmp;
-					ExifInterface exif = new ExifInterface(path);
-					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-					Matrix matrix = new Matrix();
-					if (pictureOrientation == 6) {
-						matrix.postRotate(90);
-					} else if (pictureOrientation == 3) {
-						matrix.postRotate(180);
-					} else if (pictureOrientation == 8) {
-						matrix.postRotate(270);
-					}
-					bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-					if (bm_tmp != bm) {
-						bm.recycle();
-						bm = bm_tmp;
+				if(LinphoneUtils.isExtensionImage(path)) {
+					if (path.startsWith("content")) {
+						try {
+							bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(path));
+						} catch (FileNotFoundException e) {
+							Log.e(e);
+						} catch (IOException e) {
+							Log.e(e);
+						}
 					} else {
-						bm_tmp = null;
+						bm = BitmapFactory.decodeFile(path);
 					}
-				} catch (Exception e) {
-					Log.e(e);
-				}
 
-				if (bm != null) {
-					thumbnail = ThumbnailUtils.extractThumbnail(bm, SIZE_SMALL, SIZE_SMALL);
-					bm.recycle();
-				}
-				return thumbnail;
+					// Rotate the bitmap if possible/needed, using EXIF data
+					try {
+						Bitmap bm_tmp;
+						ExifInterface exif = new ExifInterface(path);
+						int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+						Matrix matrix = new Matrix();
+						if (pictureOrientation == 6) {
+							matrix.postRotate(90);
+						} else if (pictureOrientation == 3) {
+							matrix.postRotate(180);
+						} else if (pictureOrientation == 8) {
+							matrix.postRotate(270);
+						}
+						bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+						if (bm_tmp != bm) {
+							bm.recycle();
+							bm = bm_tmp;
+						} else {
+							bm_tmp = null;
+						}
+					} catch (Exception e) {
+						Log.e(e);
+					}
+
+					if (bm != null) {
+						thumbnail = ThumbnailUtils.extractThumbnail(bm, SIZE_SMALL, SIZE_SMALL);
+						bm.recycle();
+					}
+					return thumbnail;
+				}else
+					return defaultBitmap;
 			}
 
 			// Once complete, see if ImageView is still around and set bitmap.
@@ -1712,7 +1713,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				if (isCancelled()) {
 					bitmap = null;
 				}
-
 				if (imageViewReference != null && bitmap != null) {
 					final ImageView imageView = imageViewReference.get();
 					final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
@@ -1736,7 +1736,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 									File file = new File(imageUri);
 									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 								}
-								intent.setDataAndType(contentUri, "image/*");
+								intent.setDataAndType(contentUri, "*/*");
 								intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
 								context.startActivity(intent);
 							}
