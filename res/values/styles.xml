@@ -146,4 +146,15 @@
 		<item name="android:textStyle">italic</item>
 	</style>
 
+	<style name="font24" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorB</item>
+		<item name="android:textSize">13sp</item>
+	</style>
+
+	<style name="font25" parent="@android:style/TextAppearance.Small">
+		<item name="android:textColor">@color/colorH</item>
+		<item name="android:textSize">21sp</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
 </resources>

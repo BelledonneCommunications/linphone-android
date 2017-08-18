@@ -647,14 +647,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			return;
 		}
 
-		Log.e(" ===>>> displayChat : message = "+message+" - fileUri = "+fileUri);
 		String pictureUri = null;
 		String thumbnailUri = null;
 		String displayName = null;
 
 		LinphoneAddress lAddress = null;
 		if(sipUri != null) {
-			Log.e(" ===>>> displayChat : sipUri = "+ sipUri);
 			try {
 				lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
 			} catch (LinphoneCoreException e) {
@@ -692,7 +690,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
 			}
 		} else {
-			Log.e(" ===>>> displayChat : currentFragment != Chat");
 			if(isTablet()){
 				changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
 				//displayChat(sipUri, message, fileUri);
@@ -1326,7 +1323,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		} else {
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
-				Log.e(" ====>>>> LinphoneActivity - ContactsManager.getInstance().fetchContactsAsync() 2 !!!");
 				ContactsManager.getInstance().fetchContactsAsync();
 			}
 		}

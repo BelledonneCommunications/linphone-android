@@ -19,14 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone;
 
 import android.app.Activity;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.mediastream.Log;
@@ -127,9 +124,13 @@ public class LinphoneLauncherActivity extends Activity {
 								stringFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);
 							}else {
 								fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-								stringFileShared = getRealPathFromURI(fileUri);
+								stringFileShared = LinphoneUtils.getRealPathFromURI(getBaseContext(), fileUri);
 								if(stringFileShared == null)
-									stringFileShared = fileUri.getPath();
+									if(fileUri.getPath().contains("/0/1/mediakey:/local"))
+										stringFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
+									else
+										stringFileShared = fileUri.getPath();
+
 							}
 							newIntent.putExtra("fileShared", stringFileShared);
 						}
@@ -160,18 +161,7 @@ public class LinphoneLauncherActivity extends Activity {
 		}, 1000);
 	}
 
-	public String getRealPathFromURI(Uri contentUri) {
-		String[] proj = {MediaStore.Images.Media.DATA};
-		CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-		Cursor cursor = loader.loadInBackground();
-		if (cursor != null && cursor.moveToFirst()) {
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			String result = cursor.getString(column_index);
-			cursor.close();
-			return result;
-		}
-		return null;
-	}
+
 
 	private class ServiceWaitThread extends Thread {
 		public void run() {

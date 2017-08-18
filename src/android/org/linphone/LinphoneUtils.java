@@ -23,8 +23,10 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -32,9 +34,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
@@ -60,6 +64,8 @@ import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,6 +79,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
@@ -472,6 +479,16 @@ public final class LinphoneUtils {
 		}
 	}
 
+	public static String getNameFromFilePath(String filePath) {
+		String name = filePath;
+		int i = filePath.lastIndexOf('/');
+		if (i > 0) {
+			name = filePath.substring(i+1);
+		}
+		return name;
+	}
+
+
 	public static String getExtensionFromFileName(String fileName) {
 		String extension = null;
 		int i = fileName.lastIndexOf('.');
@@ -713,5 +730,148 @@ public final class LinphoneUtils {
 					.show();
 		}
 	}
+
+
+	/************************************************************************************************
+	 *							Picasa/Photos management workaround									*
+	 ************************************************************************************************/
+
+	public static String getFilePath(final Context context, final Uri uri) {
+
+		// Google photo uri example
+		// content://com.google.android.apps.photos.contentprovider/0/1/mediakey%3A%2FAF1QipMObgoK_wDY66gu0QkMAi/ORIGINAL/NONE/114919
+
+		if ("content".equalsIgnoreCase(uri.getScheme())) {
+			String result = getDataColumn(context, uri, null, null); //
+			if (TextUtils.isEmpty(result))
+				if (uri.getAuthority().contains("com.google.android")) {
+					try {
+						File localFile = createImageFile(context, null);
+						FileInputStream remoteFile = getSourceStream(context, uri);
+						if(copyToFile(remoteFile, localFile))
+							result = localFile.getAbsolutePath();
+						remoteFile.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			return result;
+		}
+		// File
+		else if ("file".equalsIgnoreCase(uri.getScheme())) {
+			return uri.getPath();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Copy data from a source stream to destFile.
+	 * Return true if succeed, return false if failed.
+	 */
+	private static boolean copyToFile(InputStream inputStream, File destFile) {
+		if (inputStream == null || destFile == null) return false;
+		try {
+			OutputStream out = new FileOutputStream(destFile);
+			try {
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = inputStream.read(buffer)) >= 0) {
+					out.write(buffer, 0, bytesRead);
+				}
+			} finally {
+				out.close();
+			}
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public static String getTimestamp() {
+		try {
+			return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
+		} catch (RuntimeException e) {
+			return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+		}
+	}
+
+	public static File createImageFile(Context context, String imageFileName) throws IOException {
+		if (TextUtils.isEmpty(imageFileName))
+			imageFileName = getTimestamp()+".JPEG"; // make random filename if you want.
+
+		final File root;
+		imageFileName = imageFileName;
+		root = context.getExternalCacheDir();
+
+		if (root != null && !root.exists())
+			root.mkdirs();
+		return new File(root, imageFileName);
+	}
+
+
+	public static FileInputStream getSourceStream(Context context, Uri u) throws FileNotFoundException {
+		FileInputStream out = null;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			ParcelFileDescriptor parcelFileDescriptor =
+					context.getContentResolver().openFileDescriptor(u, "r");
+			FileDescriptor fileDescriptor = null;
+			if (parcelFileDescriptor != null) {
+				fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+				out = new FileInputStream(fileDescriptor);
+			}
+		} else {
+			out = (FileInputStream) context.getContentResolver().openInputStream(u);
+		}
+		return out;
+	}
+
+	/**
+	 * Get the value of the data column for this Uri. This is useful for
+	 * MediaStore Uris, and other file-based ContentProviders.
+	 *
+	 * @param context       The context.
+	 * @param uri           The Uri to query.
+	 * @param selection     (Optional) Filter used in the query.
+	 * @param selectionArgs (Optional) Selection arguments used in the query.
+	 * @return The value of the _data column, which is typically a file path.
+	 */
+	static String getDataColumn(Context context, Uri uri, String selection,
+								String[] selectionArgs) {
+
+		Cursor cursor = null;
+		final String column = "_data";
+		final String[] projection = {
+				column
+		};
+
+		try {
+			cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+					null);
+			if (cursor != null && cursor.moveToFirst()) {
+				final int column_index = cursor.getColumnIndexOrThrow(column);
+				return cursor.getString(column_index);
+			}
+		} finally {
+			if (cursor != null)
+				cursor.close();
+		}
+
+		return null;
+	}
+
+	public static String getRealPathFromURI(Context context, Uri contentUri) {
+		String[] proj = {MediaStore.Images.Media.DATA};
+		CursorLoader loader = new CursorLoader(context, contentUri, proj, null, null, null);
+		Cursor cursor = loader.loadInBackground();
+		if (cursor != null && cursor.moveToFirst()) {
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			String result = cursor.getString(column_index);
+			cursor.close();
+			return result;
+		}
+		return null;
+	}
+
 }
 

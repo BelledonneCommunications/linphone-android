@@ -893,7 +893,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	//File transfer
 	private void pickImage() {
-		//TODO : update to use with any file types
 		List<Intent> cameraIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())));
@@ -902,7 +901,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		cameraIntents.add(captureIntent);
 
 		Intent galleryIntent = new Intent();
-		//galleryIntent.setType("image/*");
 		galleryIntent.setType("*/*");
 		galleryIntent.setAction(Intent.ACTION_PICK);
 
@@ -1048,9 +1046,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		@Override
 		protected byte[] doInBackground(File... params) {
 			File file = params[0];
-			//FileInputStream fileInputStream = null;
-			//ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			//String extension = LinphoneUtils.getExtensionFromFileName(path);
 
 			byte[] byteArray = new byte[(int) file.length()];
 			FileInputStream fis = null;
@@ -1096,9 +1091,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			String fileToUploadPath = null;
 			if (data != null && data.getData() != null) {
 				fileToUploadPath = getRealPathFromURI(data.getData());
+				if(fileToUploadPath == null)
+					fileToUploadPath = data.getData().toString();
 			} else if (imageToUploadUri != null) {
 				fileToUploadPath = imageToUploadUri.getPath();
 			}
+			sendImageMessage(fileToUploadPath, 0);
+
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
 		}
@@ -1123,7 +1122,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		newChatConversation = false;
 		initChatRoom(sipUri);
 
-		//TODO :
 		if(fileSharedUri != null){
 			//save SipUri into bundle
 			onSaveInstanceState(getArguments());
@@ -1215,6 +1213,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			public LinearLayout imdmLayout;
 			public ImageView imdmIcon;
 			public TextView imdmLabel;
+			public TextView fileExtensionLabel;
+			public TextView fileNameLabel;
 
 			public ViewHolder(View view) {
 				id = view.getId();
@@ -1234,6 +1234,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				imdmLayout = (LinearLayout) view.findViewById(R.id.imdmLayout);
 				imdmIcon = (ImageView) view.findViewById(R.id.imdmIcon);
 				imdmLabel = (TextView) view.findViewById(R.id.imdmText);
+				fileExtensionLabel = (TextView) view.findViewById(R.id.file_extension);
+				fileNameLabel = (TextView) view.findViewById(R.id.file_name);
 			}
 
 			@Override
@@ -1356,6 +1358,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			holder.delete.setVisibility(View.GONE);
 			holder.messageText.setVisibility(View.GONE);
 			holder.messageImage.setVisibility(View.GONE);
+			holder.fileExtensionLabel.setVisibility(View.GONE);
+			holder.fileNameLabel.setVisibility(View.GONE);
 			holder.fileTransferLayout.setVisibility(View.GONE);
 			holder.fileTransferProgressBar.setProgress(0);
 			holder.fileTransferAction.setEnabled(true);
@@ -1415,8 +1419,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				holder.imdmLayout.setVisibility(View.INVISIBLE);
 			}
 
+
+
+
+
 			if (externalBodyUrl != null || fileTransferContent != null) {
 				String appData = message.getAppData();
+
 
 				if (message.isOutgoing() && appData != null) {
 					holder.messageImage.setVisibility(View.VISIBLE);
@@ -1457,6 +1466,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								loadBitmap(appData, holder.messageImage);
 								holder.messageImage.setTag(message.getAppData());
 							}
+
 						}
 					}
 				}
@@ -1494,10 +1504,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					public void onClick(View v) {
 						if (context.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 							v.setEnabled(false);
-							String extension = message.getFileTransferInformation().getSubtype();
-							String filename = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())) + "." + extension;
+							String filename = message.getFileTransferInformation().getName();
+							String filename2 = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())) ; //+ "." + extension;
 							File file = new File(Environment.getExternalStorageDirectory(), filename);
-							message.setAppData(filename);
+							message.setAppData(file.getPath());
 							LinphoneManager.getInstance().addDownloadMessagePending(message);
 							message.setListener(LinphoneManager.getInstance());
 							message.setFileTransferFilepath(file.getPath());
@@ -1535,6 +1545,51 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 			}
 			holder.bubbleLayout.setLayoutParams(layoutParams);
+
+			if(message.getAppData() != null && holder.fileTransferLayout.getVisibility() != View.VISIBLE){
+				if(LinphoneUtils.isExtensionImage(message.getAppData())){
+					holder.fileExtensionLabel.setVisibility(View.GONE);
+					holder.fileNameLabel.setVisibility(View.GONE);
+				}else {
+					String extension = (LinphoneUtils.getExtensionFromFileName(message.getAppData()));
+					if(extension != null)
+						extension = extension.toUpperCase();
+					else
+						extension = "FILE";
+
+					if (extension.length() > 4)
+						extension = extension.substring(0, 3);
+
+					//holder.messageImage.setImageResource(R.drawable.chat_attachment);
+					holder.fileExtensionLabel.setText(extension);
+					holder.fileExtensionLabel.setVisibility(View.VISIBLE);
+					//holder.fileExtensionLabel.setTag(message.getAppData());
+					holder.fileNameLabel.setText(LinphoneUtils.getNameFromFilePath(message.getAppData()));
+					holder.fileNameLabel.setVisibility(View.VISIBLE);
+					holder.fileExtensionLabel.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							File file = null;
+							Uri contentUri = null;
+							String imageUri = (String)holder.messageImage.getTag();
+							if (imageUri.startsWith("file://")) {
+								imageUri = imageUri.substring("file://".length());
+								file = new File(imageUri);
+								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+							} else if (imageUri.startsWith("content://")) {
+								contentUri = Uri.parse(imageUri);
+							} else {
+								file = new File(imageUri);
+								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+							}
+							intent.setDataAndType(contentUri, "*/*");
+							intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+							context.startActivity(intent);
+						}
+					});
+				}
+			}
 
 			if (isEditMode) {
 				holder.delete.setVisibility(View.VISIBLE);
@@ -1635,7 +1690,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				if(LinphoneUtils.isExtensionImage(path))
 					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_picture_over);
 				else
-					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_attachment_over);
+					defaultBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_attachment);
 
 				BitmapWorkerTask task = new BitmapWorkerTask(imageView);
 				final AsyncBitmap asyncBitmap = new AsyncBitmap(context.getResources(), defaultBitmap, task);
@@ -1660,7 +1715,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				path = params[0];
 				Bitmap bm = null;
 				Bitmap thumbnail = null;
-
 				if(LinphoneUtils.isExtensionImage(path)) {
 					if (path.startsWith("content")) {
 						try {
@@ -1723,17 +1777,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							@Override
 							public void onClick(View v) {
 								Intent intent = new Intent(Intent.ACTION_VIEW);
-
+								File file = null;
 								Uri contentUri = null;
 								String imageUri = (String)v.getTag();
 								if (imageUri.startsWith("file://")) {
 									imageUri = imageUri.substring("file://".length());
-									File file = new File(imageUri);
+									file = new File(imageUri);
 									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 								} else if (imageUri.startsWith("content://")) {
 									contentUri = Uri.parse(imageUri);
 								} else {
-									File file = new File(imageUri);
+									file = new File(imageUri);
 									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 								}
 								intent.setDataAndType(contentUri, "*/*");

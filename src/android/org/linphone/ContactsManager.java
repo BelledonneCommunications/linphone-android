@@ -299,7 +299,6 @@ public class ContactsManager extends ContentObserver {
 					}
 				}
 			}
-			Log.e(" =====>>>> ContacsManager - fetchContactsSync Ended");
 		}
 
 		long timeElapsed = (new Date()).getTime() - contactsTime.getTime();

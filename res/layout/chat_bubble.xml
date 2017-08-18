@@ -77,13 +77,53 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" />
 
-				<ImageView
-					android:id="@+id/image"
-					android:visibility="gone"
-					android:layout_width="150dp"
-					android:layout_height="150dp"
-					android:scaleType="centerInside"/>
+				<RelativeLayout
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:layout_gravity="center">
 
+					<RelativeLayout
+						android:id="@+id/relativeLayoutCentered"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="center"
+						android:layout_gravity="center">
+						<ImageView
+							android:id="@+id/image"
+							android:visibility="gone"
+							android:layout_width="150dp"
+							android:layout_height="wrap_content"
+							android:scaleType="centerInside"
+							android:layout_marginTop="12dp"
+							android:layout_marginBottom="12dp"/>
+
+						<TextView
+							android:id="@+id/file_extension"
+							android:gravity="center"
+							android:textAlignment="center"
+							android:layout_centerHorizontal="true"
+							android:layout_centerVertical="true"
+							android:maxLines="1"
+							style="@style/font25"
+							android:layout_width="150dp"
+							android:layout_height="wrap_content"
+							android:text="FILE"/>
+
+					</RelativeLayout>
+
+					<TextView
+						android:id="@+id/file_name"
+						android:layout_below="@+id/relativeLayoutCentered"
+						android:gravity="center_horizontal"
+						android:textAlignment="center"
+						android:maxLines="1"
+						style="@style/font24"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:text=""/>
+
+				</RelativeLayout>
 				<RelativeLayout
 					android:id="@+id/file_transfer_layout"
 					android:visibility="gone"
