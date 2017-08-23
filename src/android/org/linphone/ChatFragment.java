@@ -84,12 +84,14 @@ import org.linphone.core.LinphoneContent;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneFriend;
 import org.linphone.mediastream.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -923,6 +925,32 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		return null;
 	}
 
+	public Uri getCVSPathFromLookupUri(Uri contentUri) {
+		String contactId = LinphoneUtils.getNameFromFilePath(contentUri.getPath());
+		LinphoneFriend[] friendList = LinphoneManager.getLc().getFriendList();
+		for(LinphoneFriend friend : friendList){
+			if(friend.getRefKey().toString().equals(contactId)) {
+				String contactVcard = friend.getVcardToString();
+				Uri path = createCvsFromString(contactVcard, contactId);
+				return path;
+			}
+		}
+		return null;
+	}
+
+	public Uri createCvsFromString(String vcardString, String contactId){
+		File vcfFile = new File(Environment.getExternalStorageDirectory(), "contact-"+contactId+".cvs");
+		try {
+			FileWriter fw = new FileWriter(vcfFile);
+			fw.write(vcardString);
+			fw.close();
+			return Uri.fromFile(vcfFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@Override
 	public void onContactsUpdated() {
 		if(fileSharedUri != null){
@@ -1087,19 +1115,29 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
-			String fileToUploadPath = null;
-			if (data != null && data.getData() != null) {
-				fileToUploadPath = getRealPathFromURI(data.getData());
-				if(fileToUploadPath == null)
-					fileToUploadPath = data.getData().toString();
-			} else if (imageToUploadUri != null) {
-				fileToUploadPath = imageToUploadUri.getPath();
+       	if(data != null) {
+			if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
+				String fileToUploadPath = null;
+				if (data != null && data.getData() != null) {
+					if(data.getData().toString().contains("com.android.contacts/contacts/")){
+						fileToUploadPath = getCVSPathFromLookupUri(data.getData()).toString();
+					} else {
+						fileToUploadPath = getRealPathFromURI(data.getData());
+					}
+					if (fileToUploadPath == null)
+						fileToUploadPath = data.getData().toString();
+				} else if (imageToUploadUri != null) {
+					fileToUploadPath = imageToUploadUri.getPath();
+				}
+				if (LinphoneUtils.isExtensionImage(fileToUploadPath))
+					sendImageMessage(fileToUploadPath, 0);
+				else
+					sendFileSharingMessage(fileToUploadPath, 0);
+			} else {
+				super.onActivityResult(requestCode, resultCode, data);
 			}
-			sendImageMessage(fileToUploadPath, 0);
-
 		} else {
-			super.onActivityResult(requestCode, resultCode, data);
+			LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
 		}
 	}
 
