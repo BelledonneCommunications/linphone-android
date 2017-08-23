@@ -116,9 +116,18 @@ public class LinphoneLauncherActivity extends Activity {
 					String type = intent.getType();
 					newIntent.setData(intent.getData());
 					if (Intent.ACTION_SEND.equals(action) && type != null) {
-						if ("text/plain".equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
-							stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
-							newIntent.putExtra("msgShared", stringFileShared);
+						Log.e("====>>> LinphoneLauncherActivity : onServiceReady - type = "+type);
+						if (type.contains("text/")){ //&& intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
+
+							if(("text/plain").equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT)!= null) {
+								stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
+								Log.e("====>>> LinphoneLauncherActivity : onServiceReady - stringText = "+stringFileShared);
+								newIntent.putExtra("msgShared", stringFileShared);
+							} else if(((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)) != null){
+								stringFileShared = ((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)).getPath();
+								Log.e("====>>> LinphoneLauncherActivity : onServiceReady - stringFileShared = "+stringFileShared);
+								newIntent.putExtra("fileShared", stringFileShared);
+							}
 						}else {
 							if(intent.getStringExtra(Intent.EXTRA_STREAM) != null){
 								stringFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);

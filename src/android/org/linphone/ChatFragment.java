@@ -683,8 +683,21 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, LinphoneUtils.getUsernameFromAddress(sipUri), null);
 		}
 		if (id == R.id.back) {
+			cleanIntentAndFiles();
 			getFragmentManager().popBackStackImmediate();
 		}
+	}
+
+	private void cleanIntentAndFiles() {
+		if (getArguments().getString("fileSharedUri") != null){
+			getArguments().remove("fileSharedUri");
+			fileSharedUri = null;
+		}
+		message.setText("");
+		if (getArguments().getString("messageDraft") != null)
+			getArguments().remove("messageDraft");
+
+		this.getArguments().clear();
 	}
 
 	private void sendTextMessage() {
@@ -774,6 +787,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void sendFileSharingMessage(String path, int size ) {
 		if(path.contains("file://")) {
 			path = path.substring(7);
+		}else if(path.contains("com.android.contacts/contacts/")){
+			Log.e("===>>> ChatFragment - sendFileSharingMessage : path = "+path);
+			path = getCVSPathFromLookupUri(path).toString();
+		}else if(path.contains(".vcf")){
+			//TODO : do something
 		}
 
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -926,7 +944,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	public Uri getCVSPathFromLookupUri(Uri contentUri) {
-		String contactId = LinphoneUtils.getNameFromFilePath(contentUri.getPath());
+		return getCVSPathFromLookupUri(contentUri.getPath());
+	}
+
+	public Uri getCVSPathFromLookupUri(String content) {
+		String contactId = LinphoneUtils.getNameFromFilePath(content);
 		LinphoneFriend[] friendList = LinphoneManager.getLc().getFriendList();
 		for(LinphoneFriend friend : friendList){
 			if(friend.getRefKey().toString().equals(contactId)) {
@@ -953,7 +975,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onContactsUpdated() {
-		if(fileSharedUri != null){
+		if(fileSharedUri != null || message.getText() != null){
 			initNewChatConversation();
 		}
 	}
