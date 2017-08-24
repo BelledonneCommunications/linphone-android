@@ -61,6 +61,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -1611,10 +1612,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					if (extension.length() > 4)
 						extension = extension.substring(0, 3);
 
-					//holder.messageImage.setImageResource(R.drawable.chat_attachment);
 					holder.fileExtensionLabel.setText(extension);
 					holder.fileExtensionLabel.setVisibility(View.VISIBLE);
-					//holder.fileExtensionLabel.setTag(message.getAppData());
 					holder.fileNameLabel.setText(LinphoneUtils.getNameFromFilePath(message.getAppData()));
 					holder.fileNameLabel.setVisibility(View.VISIBLE);
 					holder.fileExtensionLabel.setOnClickListener(new OnClickListener() {
@@ -1633,6 +1632,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							} else {
 								file = new File(imageUri);
 								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+							}
+							String type = null;
+							String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+							if (extension != null) {
+								type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+							}
+							if(type != null) {
+								intent.setDataAndType(contentUri, type);
+							}else {
+								intent.setDataAndType(contentUri, "*/*");
 							}
 							intent.setDataAndType(contentUri, "*/*");
 							intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
@@ -1841,8 +1850,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 									file = new File(imageUri);
 									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 								}
-								intent.setDataAndType(contentUri, "*/*");
-								intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+							    String type = null;
+                                String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+                                if (extension != null) {
+                                    type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                                }
+                                if(type != null) {
+                                    intent.setDataAndType(contentUri, type);
+                                }else {
+                                    intent.setDataAndType(contentUri, "*/*");
+                                }
+                                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
 								context.startActivity(intent);
 							}
 						});

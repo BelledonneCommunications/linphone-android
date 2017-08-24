@@ -1285,8 +1285,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			ContactsManager.getInstance().enableContactsAccess();
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
-
-				Log.e(" ====>>>> LinphoneActivity - ContactsManager.getInstance().fetchContactsAsync() 1 !!!");
 				ContactsManager.getInstance().fetchContactsAsync();
 			}
 		}

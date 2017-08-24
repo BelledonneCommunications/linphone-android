@@ -121,7 +121,7 @@ public class LinphoneLauncherActivity extends Activity {
 								stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
 								newIntent.putExtra("msgShared", stringFileShared);
 							} else if(((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)) != null){
-								stringFileShared = ((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)).getPath();
+								//stringFileShared = ((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)).getPath();
 								stringFileShared = (LinphoneUtils.createCvsFromString(LinphoneUtils.processContactUri(getApplicationContext(), (Uri)intent.getExtras().get(Intent.EXTRA_STREAM)))).toString();
 								newIntent.putExtra("fileShared", stringFileShared);
 							}
@@ -136,7 +136,6 @@ public class LinphoneLauncherActivity extends Activity {
 										stringFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
 									else
 										stringFileShared = fileUri.getPath();
-
 							}
 							newIntent.putExtra("fileShared", stringFileShared);
 						}
