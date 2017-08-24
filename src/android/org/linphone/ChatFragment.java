@@ -1643,7 +1643,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							}else {
 								intent.setDataAndType(contentUri, "*/*");
 							}
-							intent.setDataAndType(contentUri, "*/*");
 							intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
 							context.startActivity(intent);
 						}
