@@ -91,7 +91,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -788,12 +787,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if(path.contains("file://")) {
 			path = path.substring(7);
 		}else if(path.contains("com.android.contacts/contacts/")){
-			Log.e("===>>> ChatFragment - sendFileSharingMessage : path = "+path);
 			path = getCVSPathFromLookupUri(path).toString();
-		}else if(path.contains(".vcf")){
-			//TODO : do something
+		} else if(path.contains("vcard") || path.contains("vcf")) {
+			path = (LinphoneUtils.createCvsFromString(LinphoneActivity.instance().getCVSPathFromOtherUri(path).toString())).toString();
 		}
-
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
 		if(newChatConversation && chatRoom == null) {
@@ -943,34 +940,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		return null;
 	}
 
-	public Uri getCVSPathFromLookupUri(Uri contentUri) {
-		return getCVSPathFromLookupUri(contentUri.getPath());
-	}
-
 	public Uri getCVSPathFromLookupUri(String content) {
 		String contactId = LinphoneUtils.getNameFromFilePath(content);
 		LinphoneFriend[] friendList = LinphoneManager.getLc().getFriendList();
 		for(LinphoneFriend friend : friendList){
 			if(friend.getRefKey().toString().equals(contactId)) {
 				String contactVcard = friend.getVcardToString();
-				Uri path = createCvsFromString(contactVcard, contactId);
+				Uri path = LinphoneUtils.createCvsFromString(contactVcard);
 				return path;
 			}
 		}
 		return null;
 	}
 
-	public Uri createCvsFromString(String vcardString, String contactId){
-		File vcfFile = new File(Environment.getExternalStorageDirectory(), "contact-"+contactId+".cvs");
-		try {
-			FileWriter fw = new FileWriter(vcfFile);
-			fw.write(vcardString);
-			fw.close();
-			return Uri.fromFile(vcfFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public Uri getCVSPathFromLookupUri(Uri contentUri) {
+		String content = contentUri.getPath();
+		Uri uri = getCVSPathFromLookupUri(content);
+		return uri;
 	}
 
 	@Override
@@ -1142,7 +1128,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				String fileToUploadPath = null;
 				if (data != null && data.getData() != null) {
 					if(data.getData().toString().contains("com.android.contacts/contacts/")){
-						fileToUploadPath = getCVSPathFromLookupUri(data.getData()).toString();
+						if(getCVSPathFromLookupUri(data.getData()) != null)
+							fileToUploadPath = getCVSPathFromLookupUri(data.getData()).toString();
+						else {
+							LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+							return;
+						}
 					} else {
 						fileToUploadPath = getRealPathFromURI(data.getData());
 					}

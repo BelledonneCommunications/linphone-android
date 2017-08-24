@@ -27,6 +27,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -87,6 +88,9 @@ import org.linphone.ui.AddressText;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -670,7 +674,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 
 		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.CHAT) {
-			Log.e(" ===>>> displayChat : currentFragment = "+ currentFragment.toString());
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
 				ChatFragment chatFragment = (ChatFragment) fragment2;
@@ -1813,6 +1816,31 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		return -1;
 	}
+
+	public String getCVSPathFromOtherUri(String path) {
+		Uri contactUri = Uri.parse(path);
+
+		ContentResolver cr = getContentResolver();
+		InputStream stream = null;
+		try {
+			stream = cr.openInputStream(contactUri);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		StringBuffer fileContent = new StringBuffer("");
+		int ch;
+		try {
+			while( (ch = stream.read()) != -1)
+				fileContent.append((char)ch);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String data = new String(fileContent);
+		return data;
+	}
+
 }
 
 interface ContactPicked {

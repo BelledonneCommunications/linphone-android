@@ -68,6 +68,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -872,6 +873,57 @@ public final class LinphoneUtils {
 		}
 		return null;
 	}
+
+    public static String processContactUri(Context context, Uri contactUri){
+		ContentResolver cr = context.getContentResolver();
+        InputStream stream = null;
+		if(cr !=null) {
+			try {
+				stream = cr.openInputStream(contactUri);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			if(stream != null) {
+				StringBuffer fileContent = new StringBuffer("");
+				int ch;
+				try {
+					while ((ch = stream.read()) != -1)
+						fileContent.append((char) ch);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				String data = new String(fileContent);
+				return data;
+			}
+			return null;
+		}
+		return null;
+    }
+
+    public static String getContactNameFromVcard(String vcard){
+		if(vcard != null) {
+			String contactName = vcard.substring(vcard.indexOf("FN:") + 3);
+			contactName = contactName.substring(0, contactName.indexOf("\n") - 1);
+			contactName = contactName.replace(";", "");
+			contactName = contactName.replace(" ", "");
+			return contactName;
+		}
+		return null;
+	}
+
+    public static Uri createCvsFromString(String vcardString){
+		String contactName = getContactNameFromVcard(vcardString);
+        File vcfFile = new File(Environment.getExternalStorageDirectory(), contactName+".cvs");
+        try {
+            FileWriter fw = new FileWriter(vcfFile);
+            fw.write(vcardString);
+            fw.close();
+            return Uri.fromFile(vcfFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }
 
