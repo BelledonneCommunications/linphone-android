@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 /*
 ApiElevenPlus.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -85,14 +85,14 @@ public class ApiElevenPlus {
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).getNotification();
 		notif.flags |= Notification.FLAG_ONGOING_EVENT;
-		
+
 		return notif;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent) {
 		Notification notif;
-		
+
 		if (largeIcon != null) {
 			notif = new Notification.Builder(context)
 	        .setContentTitle(title)
@@ -114,40 +114,40 @@ public class ApiElevenPlus {
 		if (isOngoingEvent) {
 			notif.flags |= Notification.FLAG_ONGOING_EVENT;
 		}
-		
+
 		return notif;
 	}
-	
+
 	public static Intent prepareAddContactIntent(String displayName, String sipUri) {
 		Intent intent = new Intent(Intent.ACTION_INSERT, Contacts.CONTENT_URI);
 		intent.putExtra(ContactsContract.Intents.Insert.NAME, displayName);
-		
+
 		if (sipUri != null && sipUri.startsWith("sip:")) {
 			sipUri = sipUri.substring(4);
 		}
-		
+
 		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
 		ContentValues sipAddressRow = new ContentValues();
 		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
 		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
 		data.add(sipAddressRow);
 		intent.putParcelableArrayListExtra(Insert.DATA, data);
-		
+
 		return intent;
 	}
-	
+
 	public static Intent prepareEditContactIntentWithSipAddress(int id, String sipUri) {
 		Intent intent = new Intent(Intent.ACTION_EDIT, Contacts.CONTENT_URI);
 		Uri contactUri = ContentUris.withAppendedId(Contacts.CONTENT_URI, id);
 		intent.setData(contactUri);
-		
+
 		ArrayList<ContentValues> data = new ArrayList<ContentValues>();
 		ContentValues sipAddressRow = new ContentValues();
 		sipAddressRow.put(Contacts.Data.MIMETYPE, SipAddress.CONTENT_ITEM_TYPE);
 		sipAddressRow.put(SipAddress.SIP_ADDRESS, sipUri);
 		data.add(sipAddressRow);
 		intent.putParcelableArrayListExtra(Insert.DATA, data);
-		
+
 		return intent;
 	}
 

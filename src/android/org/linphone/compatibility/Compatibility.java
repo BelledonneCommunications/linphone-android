@@ -1,7 +1,7 @@
 package org.linphone.compatibility;
 /*
 Compatibility.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -59,9 +59,11 @@ public class Compatibility {
 		return notif;
 	}
 
-	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
+	public static Notification createMessageNotification(Context context, int msgCount,String to, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
 		Notification notif = null;
-		if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
+		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+
+		} else if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
 			return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
 			notif = ApiSixteenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);

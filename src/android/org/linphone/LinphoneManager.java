@@ -751,7 +751,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			mTimer.schedule(lTask, 0, 20);
 		}
 		catch (Exception e) {
-			Log.e(e);
 			Log.e(e, "Cannot start linphone");
 		}
 	}
@@ -1180,6 +1179,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		LinphoneAddress from = message.getFrom();
+		String to = message.getTo().asString();
 
 		String textMessage = (message.getFileTransferInformation() != null) ?
 				getString(R.string.content_description_incoming_file) : message.getText();
@@ -1187,9 +1187,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				if (contact != null) {
-					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), textMessage);
+					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), contact.getFullName(), textMessage);
 				} else {
-					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName(), textMessage);
+					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), from.getUserName(), textMessage);
 				}
 			}
 		} catch (Exception e) {
@@ -1205,15 +1205,16 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 
 		final LinphoneAddress from = message.getFrom();
+		String to = message.getTo().asString();
 		try {
 			final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (LinphoneActivity.instance().isOnBackground()) {
 				if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 					if (contact != null) {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName()
+						LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), contact.getFullName()
 								, getString(R.string.message_cant_be_decrypted_notif));
 					} else {
-						LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUserName()
+						LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), from.getUserName()
 								, getString(R.string.message_cant_be_decrypted_notif));
 					}
 				}

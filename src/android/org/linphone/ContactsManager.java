@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone;
 
+import android.*;
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
@@ -42,6 +44,7 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriendImpl;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,9 +174,15 @@ public class ContactsManager extends ContentObserver {
 	public boolean hasContactsAccess() {
 		if (context == null)
 			return false;
-		int contacts = context.getPackageManager().checkPermission(android.Manifest.permission.READ_CONTACTS, context.getPackageName());
+		boolean contactsR = (PackageManager.PERMISSION_GRANTED ==
+				context.getPackageManager().checkPermission(android.Manifest.permission.READ_CONTACTS, context.getPackageName()));
+		boolean contactsW = true;
 		context.getPackageManager();
-		return contacts == PackageManager.PERMISSION_GRANTED && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
+		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+			contactsW = (PackageManager.PERMISSION_GRANTED ==
+					context.getPackageManager().checkPermission(Manifest.permission.WRITE_CONTACTS, context.getPackageName()));
+		}
+		return contactsW && contactsR && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {

@@ -11,7 +11,7 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /*
 ApiSixteenPlus.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -74,13 +74,13 @@ public class ApiSixteenPlus {
 						.setWhen(System.currentTimeMillis())
 						.setLargeIcon(contactIcon).build();
 		notif.flags |= Notification.FLAG_ONGOING_EVENT;
-		
+
 		return notif;
 	}
-	
+
 	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
 		Notification notif;
-		
+
 		if (largeIcon != null) {
 			notif = new Notification.Builder(context)
 	        .setContentTitle(title)
@@ -104,12 +104,12 @@ public class ApiSixteenPlus {
 		if (isOngoingEvent) {
 			notif.flags |= Notification.FLAG_ONGOING_EVENT;
 		}
-		
+
 		return notif;
 	}
 
 	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
-		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);		
+		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
 	}
 
 	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {

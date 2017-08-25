@@ -431,6 +431,7 @@ public final class LinphoneService extends Service {
 			Log.e(e, "Couldn't find startForeground or stopForeground");
 		}
 
+
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
 
 		if (displayServiceNotification()) {
@@ -586,7 +587,7 @@ public final class LinphoneService extends Service {
 		resetIntentLaunchedOnNotificationClick();
 	}
 
-	public void displayMessageNotification(String fromSipUri, String fromName, String message) {
+	public void displayMessageNotification(String to, String fromSipUri, String fromName, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
 		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
@@ -622,7 +623,7 @@ public final class LinphoneService extends Service {
 		} else {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
-		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
+		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, to, fromName, message, bm, notifContentIntent);
 
 		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
 	}
