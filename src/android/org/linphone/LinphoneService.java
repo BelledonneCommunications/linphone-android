@@ -431,8 +431,10 @@ public final class LinphoneService extends Service {
 			Log.e(e, "Couldn't find startForeground or stopForeground");
 		}
 
-
-		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
+		if (!Version.sdkAboveOrEqual(Version.API26_O_80)
+				|| (ContactsManager.getInstance() != null && ContactsManager.getInstance().hasContactsAccess())) {
+			getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
+		}
 
 		if (displayServiceNotification()) {
 			startForegroundCompat(NOTIF_ID, mNotif);
