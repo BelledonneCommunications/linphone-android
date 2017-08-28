@@ -500,7 +500,7 @@ public final class LinphoneUtils {
 	}
 
 	public static Boolean isExtensionImage(String path){
-		String extension = LinphoneUtils.getExtensionFromFileName(path);
+		String extension = LinphoneUtils.getExtensionFromFileName(path).toLowerCase();
 		return (extension != null && extension.matches(".*(png|jpg|jpeg|bmp|gif).*"));
 	}
 

@@ -49,7 +49,6 @@ public class LinphoneLauncherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		// Hack to avoid to draw twice LinphoneActivity on tablets
 		if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -89,6 +88,16 @@ public class LinphoneLauncherActivity extends Activity {
 		}
 	}
 
+	@Override
+	protected void onResume(){
+		super.onResume();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+	}
+
 	protected void onServiceReady() {
 		final Class<? extends Activity> classToStart;
 		if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
@@ -110,34 +119,34 @@ public class LinphoneLauncherActivity extends Activity {
 				Intent newIntent = new Intent(LinphoneLauncherActivity.this, classToStart);
 				Intent intent = getIntent();
                 String stringFileShared = null;
+				String stringUriFileShared = null;
 				Uri fileUri = null;
 				if (intent != null) {
 					String action = intent.getAction();
 					String type = intent.getType();
 					newIntent.setData(intent.getData());
 					if (Intent.ACTION_SEND.equals(action) && type != null) {
-						if (type.contains("text/")){ //&& intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
+						if (type.contains("text/")){
 							if(("text/plain").equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT)!= null) {
 								stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
 								newIntent.putExtra("msgShared", stringFileShared);
 							} else if(((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)) != null){
-								//stringFileShared = ((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)).getPath();
 								stringFileShared = (LinphoneUtils.createCvsFromString(LinphoneUtils.processContactUri(getApplicationContext(), (Uri)intent.getExtras().get(Intent.EXTRA_STREAM)))).toString();
 								newIntent.putExtra("fileShared", stringFileShared);
 							}
 						}else {
 							if(intent.getStringExtra(Intent.EXTRA_STREAM) != null){
-								stringFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);
+								stringUriFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);
 							}else {
 								fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-								stringFileShared = LinphoneUtils.getRealPathFromURI(getBaseContext(), fileUri);
-								if(stringFileShared == null)
-									if(fileUri.getPath().contains("/0/1/mediakey:/local"))
-										stringFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
-									else
-										stringFileShared = fileUri.getPath();
+								stringUriFileShared = LinphoneUtils.getRealPathFromURI(getBaseContext(), fileUri);
+								if(stringUriFileShared == null)
+									if(fileUri.getPath().contains("/0/1/mediakey:/local")) {
+										stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
+									}else
+										stringUriFileShared = fileUri.getPath();
 							}
-							newIntent.putExtra("fileShared", stringFileShared);
+							newIntent.putExtra("fileShared", stringUriFileShared);
 						}
 					}
 				}
@@ -153,12 +162,11 @@ public class LinphoneLauncherActivity extends Activity {
 				}
 				startActivity(newIntent);
                 if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && (stringFileShared != null || fileUri != null)) {
-
 					if(stringFileShared != null) {
 						LinphoneActivity.instance().displayChat(null, stringFileShared, null);
 					}
-					if(fileUri != null) {
-						LinphoneActivity.instance().displayChat(null, null, fileUri.toString());
+					else if(fileUri != null) {
+						LinphoneActivity.instance().displayChat(null, null, stringUriFileShared);
 					}
                 }
 				finish();

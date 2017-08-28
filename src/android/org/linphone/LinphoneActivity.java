@@ -163,7 +163,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
 		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
 			Intent wizard = new Intent();
@@ -1349,7 +1348,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onResume() {
 		super.onResume();
-
 		if (!LinphoneService.isReady()) {
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
@@ -1452,7 +1450,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-
 		if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
 			if (fragment instanceof SettingsFragment) {
 				((SettingsFragment) fragment).closePreferenceScreen();
