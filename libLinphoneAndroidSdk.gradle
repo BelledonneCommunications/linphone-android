@@ -5,9 +5,10 @@ buildscript {
         jcenter()
         mavenCentral()
         mavenLocal()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
@@ -16,6 +17,7 @@ allprojects {
         jcenter()
         mavenCentral()
         mavenLocal()
+        google()
     }
 }
 
@@ -26,8 +28,8 @@ configurations {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
-    javadocDeps group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    javadocDeps group: 'org.apache.commons', name: 'commons-compress', version: '+'
 }
 
 def submoduleDir = ['submodules/mediastreamer2/java/src',

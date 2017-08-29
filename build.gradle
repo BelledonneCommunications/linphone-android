@@ -16,6 +16,7 @@ buildscript {
     jcenter()
     mavenCentral()
     mavenLocal()
+    google()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
@@ -30,20 +31,21 @@ allprojects {
     jcenter()
     mavenCentral()
     mavenLocal()
+    google()
   }
 }
 
 apply plugin: 'com.android.application'
 
 dependencies {
-  androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.2') {
+  androidTestCompile ('com.android.support.test.espresso:espresso-core:+') {
     exclude module: 'support-annotations'
   }
-  androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '5.6.3'
-  androidTestCompile 'junit:junit:4.12'
-  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
+  androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
+  androidTestCompile 'junit:junit:+'
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
   if (firebaseEnable()) {
-    compile 'com.google.firebase:firebase-messaging:11.0.4'
+    compile 'com.google.firebase:firebase-messaging:11.2.0'
   } else {
     compile fileTree(include: 'gcm.jar', dir: 'libs')
     compile 'com.android.support:support-v4:+'
