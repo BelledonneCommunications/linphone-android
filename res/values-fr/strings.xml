@@ -45,7 +45,6 @@
   <string name="maybe_later">Plus tard</string>
   <string name="later">Plus tard</string>
   <string name="no">Non</string>
-  <string name="ok">Ok</string>
   <string name="yes">Oui</string>
   <string name="link_account">Associer votre compte</string>
   <!--Launch screen-->
@@ -197,8 +196,6 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="no_current_call">Aucun appel en cours</string>
   <string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation de l\'appel</string>
   <string name="zrtp_dialog1">Indiquez le code SAS suivant à votre interlocuteur:\nDites: %s</string>
-  <string name="zrtp_notification_title">SAS</string>
-  <string name="zrtp_notification_message">Veulliez vérifier par oral avec votre interlocatueur qu\'il dispose de ce code.</string>
   <string name="unknown_incoming_call_name">Inconnu</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Vidéo</string>
@@ -329,7 +326,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>
   <string name="pref_image_sharing_server_desc">Ne changez pas cette valeur sans savoir ce que vous faites !</string>
-  <string name="pref_use_lime_encryption">Encrypter avec LIME</string>
+  <string name="pref_use_lime_encryption">Chiffrer avec LIME</string>
   <string name="lime_encryption_entry_disabled">Désactivé</string>
   <string name="lime_encryption_entry_mandatory">Obligatoire</string>
   <string name="lime_encryption_entry_preferred">Préferré</string>
@@ -349,7 +346,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_audio_port_title">Port ou plage de port audio</string>
   <string name="pref_video_port_description">Port ou plage (min-max) pour l\'audio</string>
   <string name="pref_audio_port_description">Port ou plage (min-max) pour la video</string>
-  <string name="pref_media_encryption">Encryption</string>
+  <string name="pref_media_encryption">Chiffrement</string>
   <string name="pref_push_notification">Activer les notifications poussées</string>
   <string name="pref_ipv6_title">Autoriser l\'IPv6</string>
   <!--Advanced settings-->

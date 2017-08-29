@@ -45,7 +45,6 @@
   <string name="maybe_later">შესაძლოა მოგვიანებით</string>
   <string name="later">მოგვიანებით</string>
   <string name="no">არა</string>
-  <string name="ok">OK</string>
   <string name="yes">დიახ</string>
   <string name="link_account">ანგარიშის მიბმა</string>
   <!--Launch screen-->
@@ -175,6 +174,9 @@
   <string name="message_cant_be_decrypted_notif">თქვენ არ შეგიძლიათ ამ შეტყობინების განშიფრვა.</string>
   <string name="lime_not_verified">თქვენ სცდილობთ შეტყობინების გაგზავნას LIME-ს გამოყენებით კონტაქტის მიმართულებით, რომელიც არ არის დამოწმებული ZRTP-ით.\nგთხოვთ, დაურეკოთ ამ კონტაქტს და შეამოწმოთ მისი ZRTP გასაღები შეტყობინებების გაგზავნამდე.</string>
   <string name="processing_image">მიმდინარეობს სურათის დამუშავება, შეიძლება დაიკავოს რამოდენიმე წამი, ფაილის ზომის მიხედვით</string>
+  <string name="displayed">წაკითხულია</string>
+  <string name="delivered">მიღებულია</string>
+  <string name="resend">თავიდან გაგზავნა</string>
   <!--Status Bar-->
   <string name="status_connected">რეგისტრირებული</string>
   <string name="status_not_connected">არ არის რეგისტრირებული</string>
@@ -189,9 +191,12 @@
   <!--Call-->
   <string name="incoming_call">შემომავალი ზარი</string>
   <string name="outgoing_call">გამავალი ზარი</string>
+  <string name="add_video_dialog">თქვენს მხმობელს სურს ვიდეოს ჩართვა</string>
   <string name="no_current_call">აქტიური ზარი არ არის</string>
+  <string name="call_paused_by_remote">თქვენმა მხმობლემა შეაჩერა ზარი</string>
   <string name="couldnt_accept_call">ზარის მიღებისას მოხდა შეცდომა</string>
   <string name="zrtp_dialog1">დაადასტურეთ შემდეგი SAS მომხმარებელთან:\nთქვით: %s</string>
+  <string name="zrtp_dialog2">\nთქვენმა მხმობელმა უნდა თქვას: %s</string>
   <string name="unknown_incoming_call_name">უცნობი</string>
   <string name="call_stats_audio">ხმა</string>
   <string name="call_stats_video">ვიდეო</string>
@@ -228,6 +233,7 @@
   <string name="error_user_busy">მომხმარებელი დაკავებულია</string>
   <string name="error_user_not_found">მომხმარებელი ვერ მოიძებნა</string>
   <string name="error_incompatible_media">შეუთავსებელი მედია პარამეტრები</string>
+  <string name="error_low_bandwidth">თქვენს მხმობლეს აქვს დაბალი გამტარი უნარი, ვიდეო ვერ ჩაირთვება</string>
   <string name="error_network_unreachable">ქსელი მიუწვდომელია</string>
   <string name="error_bad_credentials">ცუდი იდენტიფიკატორი</string>
   <string name="error_unauthorized">არაავტორიზებული</string>

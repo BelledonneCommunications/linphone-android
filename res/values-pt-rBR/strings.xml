@@ -40,7 +40,6 @@
   <string name="decline">Rejeitar</string>
   <string name="conference">Conferência</string>
   <string name="no">Não</string>
-  <string name="ok">Ok</string>
   <string name="yes">Sim</string>
   <!--Launch screen-->
   <!--Assistant-->
@@ -64,9 +63,9 @@
   <string name="assistant_account_not_validated">Sua conta ainda não foi validada.</string>
   <string name="assistant_account_validated">Sua conta foi validada.</string>
   <string name="assistant_error_bad_credentials">Usuário ou senha incorretos</string>
-  <string name="assistant_codec_down_question">Você concorda com download OpenH264 Video Codec fornecido por Cisco Systems, Inc?</string>
-  <string name="assistant_codec_downloading">Baixando OpenH264 Video Codec fornecido por Cisco Systems, Inc</string>
-  <string name="assistant_codec_downloaded">OpenH264 Video Codec fornecido por Cisco Systems, Inc. baixado.</string>
+  <string name="assistant_codec_down_question">Você concorda com download OpenH264 Vídeo Codec fornecido por Cisco Systems, Inc?</string>
+  <string name="assistant_codec_downloading">Baixando OpenH264 Vídeo Codec fornecido por Cisco Systems, Inc</string>
+  <string name="assistant_codec_downloaded">OpenH264 Vídeo Codec fornecido por Cisco Systems, Inc. baixado.</string>
   <string name="wizard_failed">Ocorreu um erro, tente novamente mais tarde.</string>
   <string name="wizard_server_unavailable">Servido inacessível, verifique sua conexão de rede.</string>
   <string name="wizard_username_unavailable">Este nome de usuário já está em uso.</string>
@@ -130,7 +129,7 @@
   <string name="couldnt_accept_call">Ocorreu um erro ao aceitar a chamada</string>
   <string name="unknown_incoming_call_name">Erro desconhecido</string>
   <string name="call_stats_audio">Audio</string>
-  <string name="call_stats_video">Video</string>
+  <string name="call_stats_video">Vídeo</string>
   <string name="call_stats_codec">Codec:</string>
   <string name="call_stats_upload">Velocidade de Upload</string>
   <string name="call_stats_download">Velocidade de Download:</string>
@@ -225,7 +224,7 @@
   <string name="pref_codec_bitrate_limit">Limite de taxa de Codec</string>
   <string name="pref_codecs">Codecs</string>
   <!--Video settings-->
-  <string name="pref_video_title">Video</string>
+  <string name="pref_video_title">Vídeo</string>
   <string name="pref_overlay">Sobreposição de vídeo</string>
   <string name="pref_overlay_summary">Mostrar chamada de video quando estiver fora do aplicativo.</string>
   <string name="pref_video_use_front_camera_title">Usar câmera frontal</string>
@@ -321,7 +320,7 @@
   <string name="content_description_call_direction">Direção da Chamada</string>
   <string name="content_description_all_calls">Todas as Chamadas</string>
   <string name="content_description_missed_calls">Chamadas Perdidas</string>
-  <string name="content_description_switch_video">Switch video</string>
+  <string name="content_description_switch_video">Switch vídeo</string>
   <string name="content_description_add_call">Adicionar Chamada</string>
   <string name="content_description_pause">Pausar</string>
   <string name="content_description_numpad">Numpad</string>
