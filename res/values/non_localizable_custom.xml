@@ -93,6 +93,7 @@
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 	<bool name="enable_call_notification">true</bool>
 	<bool name="kill_service_with_task_manager">true</bool>
+	<string name="notification_channel_id">linphone_notification_id</string>
 
     <!-- Tutorial settings -->
     <bool name="show_tutorials_instead_of_app">false</bool> <!-- Be careful ! Setting this to true prevent the app from working ! It will only display tutorial activities -->

@@ -483,4 +483,5 @@
     <string name="content_description_call_options">Call options</string>
     <string name="content_description_audio_route">Audio route</string>
     <string name="content_description_exit_conference">Exit conference</string>
+    <string name="content_title_notification">Linphone Notification</string>
 </resources>
