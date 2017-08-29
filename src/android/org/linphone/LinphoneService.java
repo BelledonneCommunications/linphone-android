@@ -32,7 +32,6 @@ import org.linphone.core.LinphoneCore.GlobalState;
 import org.linphone.core.LinphoneCore.RegistrationState;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreFactoryImpl;
 import org.linphone.core.LinphoneCoreListenerBase;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
@@ -314,6 +313,7 @@ public final class LinphoneService extends Service {
 
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
+		Compatibility.CreateChannel(this);
 
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);

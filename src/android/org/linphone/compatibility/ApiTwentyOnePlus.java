@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 /*
@@ -50,8 +51,12 @@ public class ApiTwentyOnePlus {
 			.setSmallIcon(R.drawable.topbar_chat_notification)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
-			.setDefaults(Notification.DEFAULT_ALL)
+			.setDefaults(Notification.DEFAULT_SOUND
+					| Notification.DEFAULT_VIBRATE)
 			.setLargeIcon(contactIcon)
+			.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
+					context.getResources().getInteger(R.integer.notification_ms_on),
+					context.getResources().getInteger(R.integer.notification_ms_off))
 			.setCategory(Notification.CATEGORY_MESSAGE)
 			.setVisibility(Notification.VISIBILITY_PRIVATE)
 			.setPriority(Notification.PRIORITY_HIGH)
@@ -74,6 +79,9 @@ public class ApiTwentyOnePlus {
 			.setCategory(Notification.CATEGORY_CALL)
 			.setVisibility(Notification.VISIBILITY_PUBLIC)
 			.setPriority(Notification.PRIORITY_HIGH)
+			.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
+					context.getResources().getInteger(R.integer.notification_ms_on),
+					context.getResources().getInteger(R.integer.notification_ms_off))
 			.build();
 
 		return notif;
@@ -91,6 +99,9 @@ public class ApiTwentyOnePlus {
 		        .setContentIntent(intent)
 				.setCategory(Notification.CATEGORY_SERVICE)
 				.setVisibility(Notification.VISIBILITY_SECRET)
+				.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
+						context.getResources().getInteger(R.integer.notification_ms_on),
+						context.getResources().getInteger(R.integer.notification_ms_off))
 				.setPriority(priority)
 		        .build();
 		} else {
@@ -101,6 +112,9 @@ public class ApiTwentyOnePlus {
 		        .setContentIntent(intent)
 				.setCategory(Notification.CATEGORY_SERVICE)
 				.setVisibility(Notification.VISIBILITY_SECRET)
+				.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
+						context.getResources().getInteger(R.integer.notification_ms_on),
+						context.getResources().getInteger(R.integer.notification_ms_off))
 				.setPriority(priority)
 		        .build();
 		}
@@ -119,9 +133,13 @@ public class ApiTwentyOnePlus {
 		.setSmallIcon(R.drawable.call_status_missed)
 		.setAutoCancel(true)
 		.setContentIntent(intent)
-		.setDefaults(Notification.DEFAULT_ALL)
+		.setDefaults(Notification.DEFAULT_SOUND
+				| Notification.DEFAULT_VIBRATE)
 		.setCategory(Notification.CATEGORY_MESSAGE)
 		.setVisibility(Notification.VISIBILITY_PRIVATE)
+		.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
+				context.getResources().getInteger(R.integer.notification_ms_on),
+				context.getResources().getInteger(R.integer.notification_ms_off))
 		.setPriority(Notification.PRIORITY_HIGH)
 		.build();
 
@@ -135,9 +153,13 @@ public class ApiTwentyOnePlus {
 		.setSmallIcon(R.drawable.linphone_logo)
 		.setAutoCancel(true)
 		.setContentIntent(intent)
-		.setDefaults(Notification.DEFAULT_ALL)
+		.setDefaults(Notification.DEFAULT_SOUND
+				| Notification.DEFAULT_VIBRATE)
 		.setCategory(Notification.CATEGORY_MESSAGE)
 		.setVisibility(Notification.VISIBILITY_PRIVATE)
+		.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
+				context.getResources().getInteger(R.integer.notification_ms_on),
+				context.getResources().getInteger(R.integer.notification_ms_off))
 		.setPriority(Notification.PRIORITY_HIGH)
 		.build();
 

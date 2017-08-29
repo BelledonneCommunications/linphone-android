@@ -1,16 +1,19 @@
 package org.linphone.compatibility;
 
+
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.widget.TextView;
-import android.annotation.TargetApi;
+import android.view.ViewTreeObserver;
 
 import org.linphone.R;
 
 /*
-ApiTwentyThreePlus.java
+ApiTwentyOnePlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -27,11 +30,28 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 /**
  * @author Erwan Croze
  */
 @TargetApi(26)
 public class ApiTwentySixPlus {
+
+	public static void CreateChannel(Context context) {
+		NotificationManager notificationManager =
+				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		String id = context.getString(R.string.notification_channel_id);
+		CharSequence name = context.getString(R.string.content_title_notification);
+		String description = context.getString(R.string.content_title_notification);
+		int importance = NotificationManager.IMPORTANCE_HIGH;
+		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+		mChannel.setDescription(description);
+		mChannel.enableLights(true);
+		mChannel.setLightColor(context.getColor(R.color.notification_color_led));
+		mChannel.enableLights(true);
+		notificationManager.createNotificationChannel(mChannel);
+	}
+
 	public static Notification createMessageNotification(Context context,
 	                                                     int msgCount, String msgSender, String msg, Bitmap contactIcon,
 	                                                     PendingIntent intent) {
@@ -39,23 +59,111 @@ public class ApiTwentySixPlus {
 		if (msgCount == 1) {
 			title = msgSender;
 		} else {
-			title = context.getString(R.string.unread_messages)
-					.replace("%i", String.valueOf(msgCount));
+			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
 		}
 
-		Notification notif = new Notification.Builder(context)
-				.setContentTitle(title)
+		NotificationManager notificationManager =
+				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification notif = null;
+		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+					.setContentTitle(title)
+					.setContentText(msg)
+					.setSmallIcon(R.drawable.topbar_chat_notification)
+					.setAutoCancel(true)
+					.setContentIntent(intent)
+					.setDefaults(Notification.DEFAULT_SOUND
+							| Notification.DEFAULT_VIBRATE)
+					.setLargeIcon(contactIcon)
+					.setCategory(Notification.CATEGORY_MESSAGE)
+					.setVisibility(Notification.VISIBILITY_PRIVATE)
+					.setPriority(Notification.PRIORITY_HIGH)
+					.setNumber(msgCount)
+					.build();
+
+		return notif;
+	}
+
+	public static Notification createInCallNotification(Context context,
+	                                                    String title, String msg, int iconID, Bitmap contactIcon,
+	                                                    String contactName, PendingIntent intent) {
+
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+				.setContentTitle(contactName)
 				.setContentText(msg)
-				.setSmallIcon(R.drawable.topbar_chat_notification)
+				.setSmallIcon(iconID)
+				.setAutoCancel(false)
+				.setContentIntent(intent)
+				.setLargeIcon(contactIcon)
+				.setCategory(Notification.CATEGORY_CALL)
+				.setVisibility(Notification.VISIBILITY_PUBLIC)
+				.setPriority(Notification.PRIORITY_HIGH)
+				.build();
+
+		return notif;
+	}
+
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
+		Notification notif;
+
+		if (largeIcon != null) {
+			notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+					.setContentTitle(title)
+					.setContentText(message)
+					.setSmallIcon(icon, level)
+					.setLargeIcon(largeIcon)
+					.setContentIntent(intent)
+					.setCategory(Notification.CATEGORY_SERVICE)
+					.setVisibility(Notification.VISIBILITY_SECRET)
+					.setPriority(priority)
+					.build();
+		} else {
+			notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+					.setContentTitle(title)
+					.setContentText(message)
+					.setSmallIcon(icon, level)
+					.setContentIntent(intent)
+					.setCategory(Notification.CATEGORY_SERVICE)
+					.setVisibility(Notification.VISIBILITY_SECRET)
+					.setPriority(priority)
+					.build();
+		}
+
+		return notif;
+	}
+
+	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, ViewTreeObserver.OnGlobalLayoutListener keyboardListener) {
+		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
+	}
+
+	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+				.setContentTitle(title)
+				.setContentText(text)
+				.setSmallIcon(R.drawable.call_status_missed)
 				.setAutoCancel(true)
 				.setContentIntent(intent)
-				.setDefaults(
-						Notification.DEFAULT_LIGHTS
-								| Notification.DEFAULT_SOUND
-								| Notification.DEFAULT_VIBRATE)
-				.setWhen(System.currentTimeMillis())
-				.setLargeIcon(contactIcon)
-				.setNumber(msgCount)
+				.setDefaults(Notification.DEFAULT_SOUND
+						| Notification.DEFAULT_VIBRATE)
+				.setCategory(Notification.CATEGORY_MESSAGE)
+				.setVisibility(Notification.VISIBILITY_PRIVATE)
+				.setPriority(Notification.PRIORITY_HIGH)
+				.build();
+
+		return notif;
+	}
+
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+				.setContentTitle(title)
+				.setContentText(text)
+				.setSmallIcon(R.drawable.linphone_logo)
+				.setAutoCancel(true)
+				.setContentIntent(intent)
+				.setDefaults(Notification.DEFAULT_SOUND
+						| Notification.DEFAULT_VIBRATE)
+				.setCategory(Notification.CATEGORY_MESSAGE)
+				.setVisibility(Notification.VISIBILITY_PRIVATE)
+				.setPriority(Notification.PRIORITY_HIGH)
 				.build();
 
 		return notif;
