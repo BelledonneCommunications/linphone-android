@@ -10,9 +10,10 @@ buildscript {
     jcenter()
     mavenCentral()
     mavenLocal()
+    google()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.0.0-alpha9'
+    classpath 'com.android.tools.build:gradle:2.3.3'
   }
 }
 
@@ -21,19 +22,20 @@ allprojects {
     jcenter()
     mavenCentral()
     mavenLocal()
+    google()
   }
 }
 
 apply plugin: 'com.android.application'
 
 dependencies {
-  androidTestCompile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
-  androidTestCompile group: 'junit', name: 'junit', version: '4.12'
-  androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium', version: '5.6.3'
+  androidTestCompile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+  androidTestCompile group: 'junit', name: 'junit', version: '+'
+  androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium', version: '+'
   androidTestCompile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
-  compile group: 'org.apache.commons', name: 'commons-compress', version: '1.14'
-  compile group: 'junit', name: 'junit', version: '4.12'
-  compile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '5.6.3'
+  compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+  compile group: 'junit', name: 'junit', version: '+'
+  compile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
   compile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
   compile project(":libLinphoneAndroidSdk")
 }
