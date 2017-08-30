@@ -489,7 +489,6 @@ public final class LinphoneUtils {
 		return name;
 	}
 
-
 	public static String getExtensionFromFileName(String fileName) {
 		String extension = null;
 		int i = fileName.lastIndexOf('.');
@@ -500,7 +499,9 @@ public final class LinphoneUtils {
 	}
 
 	public static Boolean isExtensionImage(String path){
-		String extension = LinphoneUtils.getExtensionFromFileName(path).toLowerCase();
+		String extension = LinphoneUtils.getExtensionFromFileName(path);
+		if(extension != null)
+			extension = extension.toLowerCase();
 		return (extension != null && extension.matches(".*(png|jpg|jpeg|bmp|gif).*"));
 	}
 
@@ -627,7 +628,6 @@ public final class LinphoneUtils {
 			if (LinphoneAccountCreator.PhoneNumberCheck.Invalid.value()
 					== (status & LinphoneAccountCreator.PhoneNumberCheck.Invalid.value()))
 				return ctxt.getString(R.string.phone_number_invalid);
-
 		}
 		return null;
 	}
