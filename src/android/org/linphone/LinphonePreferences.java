@@ -589,7 +589,9 @@ public class LinphonePreferences {
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
-			prxCfg.getNatPolicy().setStunServer(stun);
+			LinphoneNatPolicy np = prxCfg.getNatPolicy();
+			np.setStunServer(stun);
+			np.enableStun(stun!=null);
 			prxCfg.done();
 		} catch (Exception e) {
 			Log.e(e);
