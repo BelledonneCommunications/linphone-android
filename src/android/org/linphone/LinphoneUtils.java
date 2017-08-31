@@ -43,6 +43,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -738,16 +739,15 @@ public final class LinphoneUtils {
 	 ************************************************************************************************/
 
 	public static String getFilePath(final Context context, final Uri uri) {
-
 		// Google photo uri example
 		// content://com.google.android.apps.photos.contentprovider/0/1/mediakey%3A%2FAF1QipMObgoK_wDY66gu0QkMAi/ORIGINAL/NONE/114919
-
 		if ("content".equalsIgnoreCase(uri.getScheme())) {
+			String type = getTypeFromUri(uri, context);
 			String result = getDataColumn(context, uri, null, null); //
 			if (TextUtils.isEmpty(result))
-				if (uri.getAuthority().contains("com.google.android")) {
+				if (uri.getAuthority().contains("com.google.android") || uri.getAuthority().contains("com.android")) {
 					try {
-						File localFile = createImageFile(context, null);
+						File localFile = createFile(context, null, type);
 						FileInputStream remoteFile = getSourceStream(context, uri);
 						if(copyToFile(remoteFile, localFile))
 							result = localFile.getAbsolutePath();
@@ -762,8 +762,15 @@ public final class LinphoneUtils {
 		else if ("file".equalsIgnoreCase(uri.getScheme())) {
 			return uri.getPath();
 		}
-
 		return null;
+	}
+
+
+	private static String getTypeFromUri(Uri uri, Context context){
+		ContentResolver cR = context.getContentResolver();
+		MimeTypeMap mime = MimeTypeMap.getSingleton();
+		String type = mime.getExtensionFromMimeType(cR.getType(uri));
+		return type;
 	}
 
 	/**
@@ -797,9 +804,9 @@ public final class LinphoneUtils {
 		}
 	}
 
-	public static File createImageFile(Context context, String imageFileName) throws IOException {
+	public static File createFile(Context context, String imageFileName, String type) throws IOException {
 		if (TextUtils.isEmpty(imageFileName))
-			imageFileName = getTimestamp()+".JPEG"; // make random filename if you want.
+			imageFileName = getTimestamp()+"."+type; // make random filename if you want.
 
 		final File root;
 		imageFileName = imageFileName;

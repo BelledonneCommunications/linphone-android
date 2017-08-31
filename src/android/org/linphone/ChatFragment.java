@@ -756,7 +756,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if(path.contains("file://")) {
 			path = path.substring(7);
 		}
-
+		if(path.contains("%20")) {
+			path = path.replace("%20", "-");
+		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
 		if(newChatConversation && chatRoom == null) {
@@ -765,7 +767,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				initChatRoom(address);
 			}
 		}
-
 		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
 			try {
 				Bitmap bm = BitmapFactory.decodeFile(path);
@@ -785,12 +786,17 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void sendFileSharingMessage(String path, int size ) {
-		if(path.contains("file://")) {
+		if (path.contains("file://")) {
 			path = path.substring(7);
-		}else if(path.contains("com.android.contacts/contacts/")){
+		} else if (path.contains("com.android.contacts/contacts/")) {
 			path = getCVSPathFromLookupUri(path).toString();
-		} else if(path.contains("vcard") || path.contains("vcf")) {
+		} else if (path.contains("vcard") || path.contains("vcf")) {
 			path = (LinphoneUtils.createCvsFromString(LinphoneActivity.instance().getCVSPathFromOtherUri(path).toString())).toString();
+		} else if (path.contains("content://")){
+			path = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(path));
+		}
+		if(path.contains("%20")) {
+			path = path.replace("%20", "-");
 		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
@@ -913,14 +919,19 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void pickImage() {
 		List<Intent> cameraIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())));
+		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())+".jpeg"));
 		imageToUploadUri = Uri.fromFile(file);
 		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
 		cameraIntents.add(captureIntent);
 
 		Intent galleryIntent = new Intent();
-		galleryIntent.setType("*/*");
+		galleryIntent.setType("image/*");
 		galleryIntent.setAction(Intent.ACTION_PICK);
+
+		Intent fileIntent = new Intent();
+		fileIntent.setType("*/*");
+		fileIntent.setAction(Intent.ACTION_GET_CONTENT);
+		cameraIntents.add(fileIntent);
 
 		Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
 		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
@@ -1124,7 +1135,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       	if(data != null) {
+		if(data != null) {
 			if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
 				String fileToUploadPath = null;
 				if (data != null && data.getData() != null) {
@@ -1138,8 +1149,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					} else {
 						fileToUploadPath = getRealPathFromURI(data.getData());
 					}
-					if (fileToUploadPath == null)
+					if (fileToUploadPath == null) {
 						fileToUploadPath = data.getData().toString();
+					}
 				} else if (imageToUploadUri != null) {
 					fileToUploadPath = imageToUploadUri.getPath();
 				}
@@ -1518,7 +1530,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								loadBitmap(appData, holder.messageImage);
 								holder.messageImage.setTag(message.getAppData());
 							}
-
 						}
 					}
 				}
@@ -1628,6 +1639,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								file = new File(imageUri);
 								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 							} else if (imageUri.startsWith("content://")) {
+								Log.e("===>>> ChatFragment - getView() - imageUri = "+imageUri);
 								contentUri = Uri.parse(imageUri);
 							} else {
 								file = new File(imageUri);
