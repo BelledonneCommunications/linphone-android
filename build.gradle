@@ -38,12 +38,12 @@ allprojects {
 apply plugin: 'com.android.application'
 
 dependencies {
-  androidTestCompile ('com.android.support.test.espresso:espresso-core:+') {
+  androidTestCompile('com.android.support.test.espresso:espresso-core:+') {
     exclude module: 'support-annotations'
   }
-  androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
+  androidTestCompile 'com.jayway.android.robotium:robotium-solo:+'
   androidTestCompile 'junit:junit:+'
-  compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+  compile 'org.apache.commons:commons-compress:+'
   if (firebaseEnable()) {
     compile 'com.google.firebase:firebase-messaging:11.2.0'
   } else {
@@ -93,7 +93,6 @@ android {
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
-
   lintOptions {
     checkReleaseBuilds false
     // Or, if you prefer, you can continue to check for errors in release builds,
@@ -101,7 +100,6 @@ android {
     abortOnError false
     disable 'MissingTranslation', 'UnusedResources'
   }
-
   // Signing
   signingConfigs {
     release {
@@ -111,13 +109,11 @@ android {
       keyPassword RELEASE_KEY_PASSWORD
     }
   }
-
   buildTypes {
     release {
       signingConfig signingConfigs.release
     }
   }
-
   sourceSets {
     main {
       manifest.srcFile 'AndroidManifest.xml'
@@ -141,7 +137,6 @@ android {
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
   }
-
   sourceSets {
     androidTest {
       manifest.srcFile 'AndroidManifest.xml'
@@ -166,6 +161,8 @@ android {
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
   }
+  compileSdkVersion 26
+  buildToolsVersion '26.0.1'
 }
 
 // Grant permissions
