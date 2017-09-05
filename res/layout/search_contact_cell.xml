@@ -1,26 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:background="@drawable/list_selector"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
+	android:layout_width="match_parent"
+	android:layout_height="60dp"
 	android:padding="5dp"
-    android:gravity="center_vertical"
-    android:orientation="vertical" >
+	android:gravity="center_vertical"
+	android:orientation="vertical">
 
-	<TextView
-		android:id="@+id/contact_name"
-		style="@style/font6"
-		android:lines="1"
+	<LinearLayout
+		android:id="@+id/layout"
+		android:background="@drawable/list_selector"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_centerVertical="true" />
+		android:gravity="center_vertical"
+		android:orientation="vertical"
+		android:layout_toLeftOf="@+id/contact_linphone"
+		android:layout_toStartOf="@+id/contact_linphone"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentBottom="true">
 
-	<TextView
-		android:id="@+id/contact_address"
-		style="@style/font2"
-		android:lines="1"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"/>
-</LinearLayout>
+		<TextView
+			android:id="@+id/contact_name"
+			style="@style/font6"
+			android:lines="1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true" />
+
+		<TextView
+			android:id="@+id/contact_address"
+			style="@style/font2"
+			android:lines="1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"/>
+
+	</LinearLayout>
+
+	<ImageView
+		android:id="@+id/contact_linphone"
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:layout_gravity="right"
+		android:paddingRight="10dp"
+		android:src="@drawable/linphone_user"
+		android:layout_centerVertical="true"
+		android:layout_toLeftOf="@+id/contact_is_select"
+		android:layout_toStartOf="@+id/contact_is_select"/>
+
+	<ImageView
+		android:id="@+id/contact_is_select"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_alignParentRight="true"
+		android:layout_centerInParent="true"
+		android:layout_gravity="right"
+		android:paddingRight="20dp"
+		android:src="@drawable/check_unselected"/>
+</RelativeLayout>
