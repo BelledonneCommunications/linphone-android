@@ -1,7 +1,7 @@
 package org.linphone;
 /*
 ChatFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -1206,7 +1206,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		startCall.setVisibility(View.INVISIBLE);
 		contactName.setVisibility(View.INVISIBLE);
 		resultContactsSearch.setVisibility(View.VISIBLE);
-		searchAdapter = new SearchContactsListAdapter(null);
+		searchAdapter = new SearchContactsListAdapter(null, inflater, null);
+		searchAdapter.setListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				exitNewConversationMode((String)view.getTag(R.id.contact_search_name));
+			}
+		});
 		resultContactsSearch.setAdapter(searchAdapter);
 		searchContactField.setVisibility(View.VISIBLE);
 		searchContactField.setText("");
@@ -1221,41 +1227,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				searchContacts(searchContactField.getText().toString());
+				searchAdapter.searchContacts(searchContactField.getText().toString(), resultContactsSearch);
 			}
 		});
-	}
-
-	private class ContactAddress {
-		LinphoneContact contact;
-		String address;
-
-		private ContactAddress(LinphoneContact c, String a){
-			this.contact = c;
-			this.address = a;
-		}
-	}
-
-	private void searchContacts(String search) {
-		if (search == null || search.length() == 0) {
-			resultContactsSearch.setAdapter(new SearchContactsListAdapter(null));
-			return;
-		}
-
-		List<ContactAddress> result = new ArrayList<ContactAddress>();
-		if(search != null) {
-			for (ContactAddress c : searchAdapter.contacts) {
-				String address = c.address;
-				if (address.startsWith("sip:")) address = address.substring(4);
-				if (c.contact.getFullName() != null && c.contact.getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
-						|| address.toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))) {
-					result.add(c);
-				}
-			}
-		}
-
-		resultContactsSearch.setAdapter(new SearchContactsListAdapter(result));
-		searchAdapter.notifyDataSetChanged();
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
@@ -1920,99 +1894,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 			}
 			return null;
-		}
-	}
-
-	class SearchContactsListAdapter extends BaseAdapter {
-		private class ViewHolder {
-			public TextView name;
-			public TextView address;
-
-			public ViewHolder(View view) {
-				name = (TextView) view.findViewById(R.id.contact_name);
-				address = (TextView) view.findViewById(R.id.contact_address);
-			}
-		}
-
-		private List<ContactAddress> contacts;
-		private LayoutInflater mInflater;
-
-		SearchContactsListAdapter(List<ContactAddress> contactsList) {
-			mInflater = inflater;
-			if (contactsList == null) {
-				contacts = getContactsList();
-			} else {
-				contacts = contactsList;
-			}
-		}
-
-		public List<ContactAddress> getContactsList() {
-			List<ContactAddress> list = new ArrayList<ContactAddress>();
-			if(ContactsManager.getInstance().hasContacts()) {
-				for (LinphoneContact con : ContactsManager.getInstance().getContacts()) {
-					for (LinphoneNumberOrAddress noa : con.getNumbersOrAddresses()) {
-						String value = noa.getValue();
-						// Fix for sip:username compatibility issue
-						if (value.startsWith("sip:") && !value.contains("@")) {
-							value = value.substring(4);
-							value = LinphoneUtils.getFullAddressFromUsername(value);
-						}
-						list.add(new ContactAddress(con, value));
-					}
-				}
-			}
-			return list;
-		}
-
-		public int getCount() {
-			return contacts.size();
-		}
-
-		public ContactAddress getItem(int position) {
-			if (contacts == null || position >= contacts.size()) {
-				contacts = getContactsList();
-				return contacts.get(position);
-			} else {
-				return contacts.get(position);
-			}
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = null;
-			ContactAddress contact;
-			ViewHolder holder = null;
-
-			do {
-				contact = getItem(position);
-			} while (contact == null);
-
-			if (convertView != null) {
-				view = convertView;
-				holder = (ViewHolder) view.getTag();
-			} else {
-				view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
-				holder = new ViewHolder(view);
-				view.setTag(holder);
-			}
-
-			final String a = contact.address;
-			LinphoneContact c = contact.contact;
-
-			holder.name.setText(c.getFullName());
-			holder.address.setText(a);
-
-			view.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					exitNewConversationMode(a);
-				}
-			});
-
-			return view;
 		}
 	}
 

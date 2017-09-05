@@ -404,6 +404,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		case CHAT:
 			fragment = new ChatFragment();
 			break;
+		case CREATE_CHAT:
+			fragment = new ChatCreationFragment();
+			break;
 		default:
 			break;
 		}
@@ -645,6 +648,25 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return count;
 	}
 
+	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, LinphoneAddress lAddress) {
+		Bundle extras = new Bundle();
+		extras.putString("SipUri", sipUri);
+		if(message != null)
+			extras.putString("messageDraft", message);
+		if(fileUri != null)
+			extras.putString("fileSharedUri", fileUri);
+		if (sipUri != null && lAddress.getDisplayName() != null) {
+			extras.putString("DisplayName", displayName);
+			extras.putString("PictureUri", pictureUri);
+			extras.putString("ThumbnailUri", thumbnailUri);
+		}
+		if(sipUri == null && message == null && fileUri == null) {
+			changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
+		} else {
+			changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+		}
+	}
+
 	public void displayChat(String sipUri, String message, String fileUri) {
 		if (getResources().getBoolean(R.bool.disable_chat)) {
 			return;
@@ -678,37 +700,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				ChatFragment chatFragment = (ChatFragment) fragment2;
 				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message, fileUri);
 			} else {
-				Bundle extras = new Bundle();
-				extras.putString("SipUri", sipUri);
-				if(message != null)
-					extras.putString("messageDraft", message);
-				if(fileUri != null)
-					extras.putString("fileSharedUri", fileUri);
-				if (sipUri != null && lAddress.getDisplayName() != null) {
-					extras.putString("DisplayName", displayName);
-					extras.putString("PictureUri", pictureUri);
-					extras.putString("ThumbnailUri", thumbnailUri);
-				}
-				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+				displayChat(sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);
 			}
 		} else {
 			if(isTablet()){
 				changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
-				//displayChat(sipUri, message, fileUri);
 			} else {
-				Bundle extras = new Bundle();
-				if(sipUri != null || sipUri != "")
-					extras.putString("SipUri", sipUri);
-				if(message != null)
-					extras.putString("messageDraft", message);
-				if(fileUri != null)
-					extras.putString("fileSharedUri", fileUri);
-				if (sipUri != null  && lAddress.getDisplayName() != null) {
-					extras.putString("DisplayName", displayName);
-					extras.putString("PictureUri", pictureUri);
-					extras.putString("ThumbnailUri", thumbnailUri);
-				}
-				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+				displayChat(sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);
 			}
 		}
 
@@ -788,6 +786,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			hideTabBar(true);
 			break;
 		case CHAT_LIST:
+		case CREATE_CHAT:
 		case CHAT:
 			chat_selected.setVisibility(View.VISIBLE);
 			break;
