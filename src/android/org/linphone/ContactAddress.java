@@ -19,14 +19,33 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.view.View;
+
 public class ContactAddress {
-	LinphoneContact contact;
-	String address;
-	boolean isLinphoneContact;
-	boolean isSelect = false;
+	private LinphoneContact contact;
+	private String address;
+	private boolean isLinphoneContact;
+	private boolean isSelect = false;
+	private View view;
 
 	public boolean isSelect() {
 		return isSelect;
+	}
+
+	public void setView(View v) {
+		view = v;
+	}
+
+	public View getView() {
+		return view;
+	}
+
+	public LinphoneContact getContact() {
+		return contact;
+	}
+
+	public String getAddress() {
+		return address;
 	}
 
 	public void setSelect(boolean select) {
@@ -41,5 +60,14 @@ public class ContactAddress {
 		this.contact = c;
 		this.address = a;
 		this.isLinphoneContact = isLC;
+	}
+
+	@Override
+	public boolean equals(Object other){
+		if (other == null) return false;
+		if (other == this) return true;
+		if (!(other instanceof ContactAddress))return false;
+		if (((ContactAddress)other).getAddress() == this.getAddress()) return true;
+		return false;
 	}
 }

@@ -112,10 +112,32 @@
 
 	</RelativeLayout>
 
-	<RelativeLayout
-		android:layout_below="@+id/layoutSearchField"
+	<HorizontalScrollView
+		android:id="@+id/layoutContactsSelected"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="50dp"
+		android:layout_below="@+id/layoutSearchField"
+		android:layout_marginTop="5dp"
+		android:background="@drawable/resizable_textfield"
+		android:lines="1"
+		android:visibility="gone">
+
+		<LinearLayout
+			android:id="@+id/contactsSelected"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:lines="1"
+			android:orientation="horizontal"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:scrollIndicators="bottom"/>
+	</HorizontalScrollView>
+
+	<RelativeLayout
+		android:layout_below="@+id/layoutContactsSelected"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/relativeLayout">
 
 		<ListView
 			android:id="@+id/contactsList"

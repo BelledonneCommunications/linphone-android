@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +37,7 @@ import java.util.Locale;
  */
 
 public class SearchContactsListAdapter extends BaseAdapter {
+
 	private class ViewHolder {
 		public TextView name;
 		public TextView address;
@@ -52,14 +52,16 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		}
 	}
 
-	public List<ContactAddress> getContacts() {
-		return contacts;
-	}
-
 	private List<ContactAddress> contacts;
+	private List<ContactAddress> contactsSelected;
 	private LayoutInflater mInflater;
 	private ProgressBar progressBar;
 	private boolean mOnlySipContact = false;
+	private View.OnClickListener listener;
+
+	public List<ContactAddress> getContacts() {
+		return contacts;
+	}
 
 	public void setOnlySipContact(boolean enable) {
 		mOnlySipContact = enable;
@@ -69,11 +71,10 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		this.listener = listener;
 	}
 
-	private View.OnClickListener listener;
-
 	SearchContactsListAdapter(List<ContactAddress> contactsList, LayoutInflater inflater, ProgressBar pB) {
 		mInflater = inflater;
 		progressBar = pB;
+		setContactsSelectedList(null);
 		setContactsList(contactsList);
 	}
 
@@ -84,6 +85,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				progressBar.setVisibility(View.GONE);
 		} else {
 			contacts = contactsList;
+		}
+	}
+
+	public void setContactsSelectedList(List<ContactAddress> contactsList) {
+		if (contactsList == null) {
+			contactsSelected = new ArrayList<ContactAddress>();
+		} else {
+			contactsSelected = contactsList;
 		}
 	}
 
@@ -99,8 +108,15 @@ public class SearchContactsListAdapter extends BaseAdapter {
 						value = value.substring(4);
 						value = LinphoneUtils.getFullAddressFromUsername(value);
 					}
-					list.add(new ContactAddress(con, value, con.isInLinphoneFriendList()));
+					ContactAddress ca = new ContactAddress(con, value, con.isInLinphoneFriendList());
+					list.add(ca);
 				}
+			}
+		}
+
+		for (ContactAddress caS : contactsSelected) {
+			for (ContactAddress ca : list) {
+				if (ca.equals(caS)) ca.setSelect(true);
 			}
 		}
 		return list;
@@ -125,7 +141,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 	public void searchContacts(String search, ListView resultContactsSearch) {
 		if (search == null || search.length() == 0) {
-			setContactsList(null);
+			contacts = getContactsList();
 			resultContactsSearch.setAdapter(this);
 			return;
 		}
@@ -133,9 +149,10 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		List<ContactAddress> result = new ArrayList<ContactAddress>();
 		if(search != null) {
 			for (ContactAddress c : getContacts()) {
-				String address = c.address;
+				String address = c.getAddress();
 				if (address.startsWith("sip:")) address = address.substring(4);
-				if (c.contact.getFullName() != null && c.contact.getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
+				if (c.getContact().getFullName() != null
+						&& c.getContact().getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
 						|| address.toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))) {
 					result.add(c);
 				}
@@ -166,8 +183,8 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			view.setTag(holder);
 		}
 
-		final String a = contact.address;
-		LinphoneContact c = contact.contact;
+		final String a = contact.getAddress();
+		LinphoneContact c = contact.getContact();
 
 		holder.name.setText(c.getFullName());
 		holder.address.setText(a);
@@ -180,14 +197,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		}
 		if (holder.isSelect != null) {
 			if (contact.isSelect()) {
-				holder.isSelect.setImageResource(R.drawable.check_selected);
+				holder.isSelect.setVisibility(View.VISIBLE);
 			} else {
-				holder.isSelect.setImageResource(R.drawable.check_unselected);
+				holder.isSelect.setVisibility(View.INVISIBLE);
 			}
 		}
 		view.setTag(R.id.contact_search_name, a);
-		view.setOnClickListener(listener);
-
+		if (listener != null)
+			view.setOnClickListener(listener);
 		return view;
 	}
 }

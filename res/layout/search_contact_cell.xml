@@ -55,6 +55,7 @@
 		android:layout_alignParentRight="true"
 		android:layout_centerInParent="true"
 		android:layout_gravity="right"
+		android:visibility="invisible"
 		android:paddingRight="20dp"
-		android:src="@drawable/check_unselected"/>
+		android:src="@drawable/check_selected"/>
 </RelativeLayout>
