@@ -21,7 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.view.View;
 
-public class ContactAddress {
+import java.io.Serializable;
+
+public class ContactAddress implements Serializable {
 	private LinphoneContact contact;
 	private String address;
 	private boolean isLinphoneContact;

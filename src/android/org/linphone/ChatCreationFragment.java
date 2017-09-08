@@ -80,9 +80,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		allContactsSelected = view.findViewById(R.id.all_contacts_select);
 		linphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
 
-		allContacts.setEnabled(onlyDisplayLinphoneContacts);
-		linphoneContacts.setEnabled(!allContacts.isEnabled());
-
 		back = (ImageView) view.findViewById(R.id.back);
 		back.setOnClickListener(this);
 
@@ -96,9 +93,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		contactsFetchInProgress.setVisibility(View.VISIBLE);
 
 		searchAdapter = new SearchContactsListAdapter(null, mInflater, contactsFetchInProgress);
-		contactsList.setAdapter(searchAdapter);
-		contactsList.setOnItemClickListener(this);
-
 
 		searchField = (EditText) view.findViewById(R.id.searchField);
 		searchField.addTextChangedListener(new TextWatcher() {
@@ -119,6 +113,38 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			}
 		});
 
+		contactsList.setAdapter(searchAdapter);
+		contactsList.setOnItemClickListener(this);
+		if (savedInstanceState != null && savedInstanceState.getStringArrayList("contactsSelected") != null) {
+			// We need to get all contacts not only sip
+			for (String uri : savedInstanceState.getStringArrayList("contactsSelected")) {
+				for (ContactAddress ca : searchAdapter.getContactsList()) {
+					if (ca.getAddress() == uri) {
+						updateContactsClick(ca);
+						break;
+					}
+				}
+			}
+			updateList();
+			updateListSelected();
+		}
+
+		if (savedInstanceState != null ) {
+			onlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact");
+			if (onlyDisplayLinphoneContacts) {
+				allContactsSelected.setVisibility(View.INVISIBLE);
+				linphoneContactsSelected.setVisibility(View.VISIBLE);
+			} else {
+				allContactsSelected.setVisibility(View.VISIBLE);
+				linphoneContactsSelected.setVisibility(View.INVISIBLE);
+			}
+			updateList();
+		}
+
+		searchAdapter.setOnlySipContact(onlyDisplayLinphoneContacts);
+		allContacts.setEnabled(onlyDisplayLinphoneContacts);
+		linphoneContacts.setEnabled(!allContacts.isEnabled());
+
 		return view;
 	}
 
@@ -130,12 +156,14 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private void updateListSelected() {
 		if (contactsSelected.size() > 0) {
 			contactsSelectLayout.setVisibility(View.VISIBLE);
+			contactsSelectLayout.invalidate();
 		} else {
 			contactsSelectLayout.setVisibility(View.GONE);
 		}
 	}
 
 	private void updateContactsClick(ContactAddress ca) {
+		ca.setSelect(!ca.isSelect());
 		if(ca.isSelect()) {
 			ContactSelectView csv = new ContactSelectView(LinphoneActivity.instance());
 			csv.setListener(this);
@@ -144,13 +172,15 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
 			((TextView)viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
 			viewContact.findViewById(R.id.contactChatDelete).setOnClickListener(this);
+			viewContact.setOnClickListener(this);
 			ca.setView(viewContact);
 			contactsSelectedLayout.addView(viewContact);
 		} else {
 			contactsSelected.remove(ca);
 			contactsSelectedLayout.removeAllViews();
 			for (ContactAddress contactAddress : contactsSelected) {
-				contactsSelectedLayout.addView(contactAddress.getView());
+				if (contactAddress.getView() != null)
+					contactsSelectedLayout.addView(contactAddress.getView());
 			}
 		}
 		searchAdapter.setContactsSelectedList(contactsSelected);
@@ -164,6 +194,21 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				updateContactsClick(ca);
 			}
 		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (contactsSelected != null && contactsSelected.size() > 0) {
+			ArrayList<String> listUri = new ArrayList<String>();
+			for (ContactAddress ca : contactsSelected) {
+				listUri.add(ca.getAddress());
+			}
+			outState.putStringArrayList("contactsSelected", listUri);
+		}
+
+		outState.putBoolean("onlySipContact", onlyDisplayLinphoneContacts);
+
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -200,7 +245,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 		// Get contact
 		ContactAddress ca = searchAdapter.getContacts().get(i);
-		ca.setSelect(!ca.isSelect());
 		updateContactsClick(ca);
 		updateList();
 		updateListSelected();
