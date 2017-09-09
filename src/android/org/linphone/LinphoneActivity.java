@@ -833,26 +833,39 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return statusFragment;
 	}
 
+	static class ChatRoomContainer{
+		private LinphoneChatRoom mCr;
+		long mTime;
+		public ChatRoomContainer(LinphoneChatRoom chatroom){
+			mCr = chatroom;
+			LinphoneChatMessage[] lastMsg = chatroom.getHistory(1);
+			if (lastMsg != null && lastMsg[0] != null) {
+				mTime = lastMsg[0].getTime();
+			}else mTime = 0;
+		}
+		LinphoneChatRoom getChatRoom(){
+			return mCr;
+		}
+		long getTime(){
+			return mTime;
+		}
+	};
 	public List<String> getChatList() {
 		ArrayList<String> chatList = new ArrayList<String>();
 
 		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-		List<LinphoneChatRoom> rooms = new ArrayList<LinphoneChatRoom>();
+		List<ChatRoomContainer> rooms = new ArrayList<ChatRoomContainer>();
 
 		for (LinphoneChatRoom chatroom : chats) {
-			if (chatroom.getHistorySize() > 0) {
-				rooms.add(chatroom);
-			}
+			rooms.add(new ChatRoomContainer(chatroom));
 		}
 
 		if (rooms.size() > 1) {
-			Collections.sort(rooms, new Comparator<LinphoneChatRoom>() {
+			Collections.sort(rooms, new Comparator<ChatRoomContainer>() {
 				@Override
-				public int compare(LinphoneChatRoom a, LinphoneChatRoom b) {
-					LinphoneChatMessage[] messagesA = a.getHistory(1);
-					LinphoneChatMessage[] messagesB = b.getHistory(1);
-					long atime = messagesA[0].getTime();
-					long btime = messagesB[0].getTime();
+				public int compare(ChatRoomContainer a, ChatRoomContainer b) {
+					long atime = a.getTime();
+					long btime = b.getTime();
 
 					if (atime > btime)
 						return -1;
@@ -864,8 +877,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			});
 		}
 
-		for (LinphoneChatRoom chatroom : rooms) {
-			chatList.add(chatroom.getPeerAddress().asStringUriOnly());
+		for (ChatRoomContainer chatroomContainer : rooms) {
+			chatList.add(chatroomContainer.getChatRoom().getPeerAddress().asStringUriOnly());
 		}
 
 		return chatList;
