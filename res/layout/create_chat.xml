@@ -120,7 +120,8 @@
 		android:layout_marginTop="5dp"
 		android:background="@drawable/resizable_textfield"
 		android:lines="1"
-		android:visibility="gone">
+		android:visibility="gone"
+		android:fadeScrollbars="false">
 
 		<LinearLayout
 			android:id="@+id/contactsSelected"
