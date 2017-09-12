@@ -101,6 +101,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static org.linphone.LinphoneActivity.ChatRoomContainer.createChatroomContainer;
+
 /**
  * @author Sylvain Berfini
  */
@@ -837,10 +839,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	static class ChatRoomContainer{
 		private LinphoneChatRoom mCr;
 		long mTime;
+		static public ChatRoomContainer createChatroomContainer(LinphoneChatRoom chatRoom) {
+			if (chatRoom.getHistorySize() <= 0) return null;
+			return new ChatRoomContainer(chatRoom);
+		}
 		public ChatRoomContainer(LinphoneChatRoom chatroom){
 			mCr = chatroom;
 			LinphoneChatMessage[] lastMsg = chatroom.getHistory(1);
-			if (lastMsg != null && lastMsg[0] != null) {
+			if (lastMsg != null && lastMsg.length > 0 && lastMsg[0] != null) {
 				mTime = lastMsg[0].getTime();
 			}else mTime = 0;
 		}
@@ -858,7 +864,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		List<ChatRoomContainer> rooms = new ArrayList<ChatRoomContainer>();
 
 		for (LinphoneChatRoom chatroom : chats) {
-			rooms.add(new ChatRoomContainer(chatroom));
+			ChatRoomContainer crc = createChatroomContainer(chatroom);
+			if (crc != null) rooms.add(crc);
 		}
 
 		if (rooms.size() > 1) {
