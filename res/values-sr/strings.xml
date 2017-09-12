@@ -78,6 +78,7 @@
   <string name="call_stats_codec">Кодек:</string>
   <string name="call_stats_upload">Пропусни опсег отпремања:</string>
   <string name="call_stats_download">Пропусни опсег преузимања:</string>
+  <string name="call_stats_estimated_download">Процењени пропусни опсег преноса:</string>
   <string name="call_stats_ice">ИЦЕ повезивост:</string>
   <string name="call">Позови</string>
   <!--About-->

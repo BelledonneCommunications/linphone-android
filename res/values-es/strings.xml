@@ -73,6 +73,7 @@
   <string name="call_stats_codec">Codec:</string>
   <string name="call_stats_upload">Ancho de banda de subida:</string>
   <string name="call_stats_download">Ancho de banda de bajada:</string>
+  <string name="call_stats_estimated_download">Ancho de banda de bajada estimado:</string>
   <string name="call_stats_ice">Conectividad ICE</string>
   <string name="call">Llamar</string>
   <!--About-->

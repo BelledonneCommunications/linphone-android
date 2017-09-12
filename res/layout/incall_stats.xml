@@ -207,6 +207,16 @@
 				android:gravity="center"
 				android:textColor="@color/colorB"
 				android:textSize="12sp"/>
+				
+			<TextView
+				android:id="@+id/estimatedDownloadBandwidth_video"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:text="@string/call_stats_estimated_download"
+				android:gravity="center"
+				android:textColor="@color/colorB"
+				android:textSize="12sp"/>
 
 			<TextView
 				android:id="@+id/ice_video"

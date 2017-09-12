@@ -124,6 +124,7 @@
   <string name="call_stats_codec">Кодек:</string>
   <string name="call_stats_upload">Полоса пропускания загрузки:</string>
   <string name="call_stats_download">Полоса пропускания скачивания:</string>
+  <string name="call_stats_estimated_download">Предполагаемая ширина загрузки:</string>
   <string name="call_stats_ice">Подключение ICE:</string>
   <string name="call">Вызов</string>
   <!--About-->

@@ -195,6 +195,7 @@
   <string name="call_stats_ip">IP-Familie:</string>
   <string name="call_stats_upload">Upload-Bandbreite:</string>
   <string name="call_stats_download">Download-Bandbreite:</string>
+  <string name="call_stats_estimated_download">Geschätzte Download-Bandbreite:</string>
   <string name="call_stats_ice">ICE-Konnektivität:</string>
   <string name="call_stats_video_resolution_sent">Gesendete Videoauflösung:</string>
   <string name="call_stats_video_resolution_received">Empfangene Videoauflösung:</string>

@@ -1595,7 +1595,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
 			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
-			, TextView ul, TextView ice, TextView ip, TextView senderLossRate
+			, TextView ul, TextView edl, TextView ice, TextView ip, TextView senderLossRate
 			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
 			, TextView videoResolutionReceived, TextView videoFpsSent, TextView videoFpsReceived
 			, boolean isVideo, TextView jitterBuffer) {
@@ -1617,6 +1617,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					String.valueOf((int) stats.getDownloadBandwidth()) + " kbits/s");
 			formatText(ul, getString(R.string.call_stats_upload),
 					String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
+			if (isVideo) {
+				formatText(edl, getString(R.string.call_stats_estimated_download),
+						String.valueOf((int) stats.getEstimatedDownloadBandwidth()) + " kbits/s");
+			}
 			formatText(ice, getString(R.string.call_stats_ice),
 					stats.getIceState().toString());
 			formatText(ip, getString(R.string.call_stats_ip),
@@ -1667,6 +1671,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		final TextView ulAudio = (TextView) view.findViewById(R.id.uploadBandwith_audio);
 		final TextView dlVideo = (TextView) view.findViewById(R.id.downloadBandwith_video);
 		final TextView ulVideo = (TextView) view.findViewById(R.id.uploadBandwith_video);
+		final TextView edlVideo = (TextView) view.findViewById(R.id.estimatedDownloadBandwidth_video);
 		final TextView iceAudio = (TextView) view.findViewById(R.id.ice_audio);
 		final TextView iceVideo = (TextView) view.findViewById(R.id.ice_video);
 		final TextView videoResolutionSent = (TextView) view.findViewById(R.id.video_resolution_sent);
@@ -1693,7 +1698,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					return;
 				}
 
-				if (titleAudio == null || codecAudio == null || dlVideo == null || iceAudio == null
+				if (titleAudio == null || codecAudio == null || dlVideo == null || edlVideo == null || iceAudio == null
 						|| videoResolutionSent == null || videoLayout == null || titleVideo == null
 						|| ipVideo == null || ipAudio == null || codecVideo == null
 						|| dlAudio == null || ulAudio == null || ulVideo == null || iceVideo == null
@@ -1720,13 +1725,13 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 									PayloadType payloadVideo = params.getUsedVideoCodec();
 
 									displayMediaStats(params, audioStats, payloadAudio, audioLayout
-											, titleAudio, codecAudio, dlAudio, ulAudio, iceAudio
+											, titleAudio, codecAudio, dlAudio, ulAudio, null, iceAudio
 											, ipAudio, senderLossRateAudio, receiverLossRateAudio
 											, encoderAudio, decoderAudio, null, null, null, null
 											, false, jitterBufferAudio);
 
 									displayMediaStats(params, videoStats, payloadVideo, videoLayout
-											, titleVideo, codecVideo, dlVideo, ulVideo, iceVideo
+											, titleVideo, codecVideo, dlVideo, ulVideo, edlVideo, iceVideo
 											, ipVideo, senderLossRateVideo, receiverLossRateVideo
 											, encoderVideo, decoderVideo
 											, videoResolutionSent, videoResolutionReceived

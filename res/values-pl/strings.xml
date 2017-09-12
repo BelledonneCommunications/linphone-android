@@ -190,6 +190,7 @@
   <string name="call_stats_ip">IP Rodzina:</string>
   <string name="call_stats_upload">Prześlij przepustowość:</string>
   <string name="call_stats_download">Pobierz przepustowość:</string>
+  <string name="call_stats_estimated_download">Szacowana przepustowość pobierania:</string>
   <string name="call_stats_ice">Łączność ICE:</string>
   <string name="call_stats_video_resolution_sent">Wysłana rozdzielczość wideo:</string>
   <string name="call_stats_video_resolution_received">Odebrana rozdzielczość wideo:</string>

@@ -201,6 +201,7 @@
   <string name="call_stats_ip">IP Family:</string>
   <string name="call_stats_upload">上传带宽</string>
   <string name="call_stats_download">上传带宽</string>
+  <string name="call_stats_estimated_download">估計下載帶寬</string>
   <string name="call_stats_ice">ICE connectivity:</string>
   <string name="call_stats_video_resolution_sent">发送视频分辨率</string>
   <string name="call_stats_video_resolution_received">接受视频分辨率</string>

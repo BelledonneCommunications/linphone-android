@@ -133,6 +133,7 @@
   <string name="call_stats_codec">Codec:</string>
   <string name="call_stats_upload">Velocidade de Upload</string>
   <string name="call_stats_download">Velocidade de Download:</string>
+  <string name="call_stats_estimated_download">Velocidade de Download estimada:</string>
   <string name="call_stats_ice">Conectividade ICE:</string>
   <string name="call">Ligar</string>
   <!--About-->

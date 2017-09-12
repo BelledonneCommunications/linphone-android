@@ -123,6 +123,7 @@
   <string name="call_stats_codec">Koodekki:</string>
   <string name="call_stats_upload">Lähetyskaistanleveys:</string>
   <string name="call_stats_download">Latauskaistanleveys:</string>
+  <string name="call_stats_estimated_download">Arvioitu latauskaistanleveys:</string>
   <string name="call_stats_ice">ICE yhdistettävyys:</string>
   <string name="call">Puhelu</string>
   <!--About-->

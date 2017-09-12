@@ -200,6 +200,7 @@
   <string name="call_stats_ip">صنف IP :</string>
   <string name="call_stats_upload">صبيب الرفع :</string>
   <string name="call_stats_download">صبيب التنزيل :</string>
+  <string name="call_stats_estimated_download">عرض النطاق الترددي المتوقع للتنزيل :</string>
   <string name="call_stats_ice">توصيل ICE :</string>
   <string name="call_stats_video_resolution_sent">دقة الفيديو المُرسَل :</string>
   <string name="call_stats_video_resolution_received">دقة الفيديو المُستلَم :</string>

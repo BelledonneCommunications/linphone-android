@@ -70,6 +70,7 @@
   <string name="call_stats_video">Video</string>
   <string name="call_stats_upload">Uppladdningsbandbredd:</string>
   <string name="call_stats_download">Nerladdningsbandbredd:</string>
+  <string name="call_stats_estimated_download">Beräknad nedladdning bandbredd:</string>
   <string name="call_stats_ice">ICE-anslutning:</string>
   <string name="call">Ring</string>
   <!--About-->

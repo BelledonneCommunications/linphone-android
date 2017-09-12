@@ -221,6 +221,7 @@
     <string name="call_stats_ip">IP Family:</string>
     <string name="call_stats_upload">Upload bandwidth:</string>
     <string name="call_stats_download">Download bandwidth:</string>
+    <string name="call_stats_estimated_download">Estimated download bandwidth:</string>
     <string name="call_stats_ice">ICE connectivity:</string>
     <string name="call_stats_video_resolution_sent">Sent video resolution:</string>
     <string name="call_stats_video_resolution_received">Received video resolution:</string>

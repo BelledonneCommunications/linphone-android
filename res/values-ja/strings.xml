@@ -190,6 +190,7 @@
   <string name="call_stats_ip">IP：</string>
   <string name="call_stats_upload">アップロード幅:</string>
   <string name="call_stats_download">ダウンロード幅:</string>
+  <string name="call_stats_estimated_download">推定ダウンロード帯域幅:</string>
   <string name="call_stats_ice">ICE 接続:</string>
   <string name="call_stats_video_resolution_sent">送信ビデオ解像度：</string>
   <string name="call_stats_video_resolution_received">受信ビデオ解像度：</string>

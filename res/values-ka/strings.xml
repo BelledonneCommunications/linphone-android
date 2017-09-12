@@ -204,6 +204,7 @@
   <string name="call_stats_ip">IP ოჯახი:</string>
   <string name="call_stats_upload">ატვირთვის გამტარი უნარი:</string>
   <string name="call_stats_download">გადმოტვირთვის გამტარი უნარი:</string>
+  <string name="call_stats_estimated_download">სავარაუდო ჩამოტვირთვა სიჩქარის:</string>
   <string name="call_stats_ice">ICE კავშირი:</string>
   <string name="call_stats_video_resolution_sent">გაგზავნილი ვიდეოს გაფართოება:</string>
   <string name="call_stats_video_resolution_received">მიღებული ვიდეოს გაფართოება:</string>
