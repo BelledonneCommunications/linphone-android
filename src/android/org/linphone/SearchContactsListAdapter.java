@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.linphone.core.LinphoneAddress;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +60,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	private ProgressBar progressBar;
 	private boolean mOnlySipContact = false;
 	private View.OnClickListener listener;
+	private int oldSize;
 
 	public List<ContactAddress> getContacts() {
 		return contacts;
@@ -76,6 +79,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		progressBar = pB;
 		setContactsSelectedList(null);
 		setContactsList(contactsList);
+		oldSize = 0;
 	}
 
 	public void setContactsList(List<ContactAddress> contactsList) {
@@ -99,18 +103,16 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	public List<ContactAddress> getContactsList() {
 		List<ContactAddress> list = new ArrayList<ContactAddress>();
 		if(ContactsManager.getInstance().hasContacts()) {
-			for (LinphoneContact con : (mOnlySipContact)
-					? ContactsManager.getInstance().getSIPContacts() : ContactsManager.getInstance().getContacts()) {
-				for (LinphoneNumberOrAddress noa : con.getNumbersOrAddresses()) {
-					String value = noa.getValue();
-					// Fix for sip:username compatibility issue
-					if (value.startsWith("sip:") && !value.contains("@")) {
-						value = value.substring(4);
-						value = LinphoneUtils.getFullAddressFromUsername(value);
-					}
-					ContactAddress ca = new ContactAddress(con, value, con.isInLinphoneFriendList());
-					list.add(ca);
+			for (LinphoneAddress addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
+				LinphoneContact cont = ContactsManager.getInstance().findContactFromAddress(addr);
+				if (cont == null) {
+					cont = new LinphoneContact();
+					cont.setFullName(addr.getUserName());
 				}
+				// TODO Rechercher si un contact est associé à cette sip uri
+				// TODO Rechercher si un displayname est associé à cette sip uri
+				ContactAddress ca = new ContactAddress(cont , addr.asString(), cont.isLinphoneFriend());
+				list.add(ca);
 			}
 		}
 
@@ -143,12 +145,13 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		if (search == null || search.length() == 0) {
 			contacts = getContactsList();
 			resultContactsSearch.setAdapter(this);
+			oldSize = 0;
 			return;
 		}
 
 		List<ContactAddress> result = new ArrayList<ContactAddress>();
 		if(search != null) {
-			for (ContactAddress c : getContacts()) {
+			for (ContactAddress c : (search.length() < oldSize) ? getContactsList() : getContacts()) {
 				String address = c.getAddress();
 				if (address.startsWith("sip:")) address = address.substring(4);
 				if (c.getContact().getFullName() != null
@@ -158,8 +161,8 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				}
 			}
 		}
-
-		setContactsList(result);
+		oldSize = search.length();
+		contacts = result;
 		resultContactsSearch.setAdapter(this);
 		this.notifyDataSetChanged();
 	}
