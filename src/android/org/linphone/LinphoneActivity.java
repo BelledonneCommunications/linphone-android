@@ -373,7 +373,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			fragment = new HistoryDetailFragment();
 			break;
 		case CONTACTS_LIST:
-			checkAndRequestReadContactsPermission();
+			checkAndRequestWriteContactsPermission();
 			fragment = new ContactsListFragment();
 			break;
 		case CONTACT_DETAIL:
