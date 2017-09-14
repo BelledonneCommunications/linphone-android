@@ -1393,7 +1393,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				//However, incoming call first use the MODE_RINGING to play the local ring.
 				if(call.getDirection() == CallDirection.Incoming) {
 					setAudioManagerInCallMode();
-					mAudioManager.abandonAudioFocus(null);
+					//mAudioManager.abandonAudioFocus(null);
 					requestAudioFocus(STREAM_VOICE_CALL);
 				}
 			}
@@ -1572,7 +1572,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mRingerPlayer = new MediaPlayer();
 				mRingerPlayer.setAudioStreamType(STREAM_RING);
 
-				String ringtone = LinphonePreferences.instance().getRingtone(android.provider.Settings.System.DEFAULT_RINGTONE_URI.toString());
+				String ringtone = LinphonePreferences.instance().getRingtone(Settings.System.DEFAULT_RINGTONE_URI.toString());
 				try {
 					if (ringtone.startsWith("content://")) {
 						mRingerPlayer.setDataSource(mServiceContext, Uri.parse(ringtone));
