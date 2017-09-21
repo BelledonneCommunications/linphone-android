@@ -87,6 +87,7 @@ import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.PublishState;
+import org.linphone.core.Reason;
 import org.linphone.core.SubscriptionState;
 import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
@@ -1352,8 +1353,11 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			}
 		}
 
-
-		if (state == State.IncomingReceived && (LinphonePreferences.instance().isAutoAnswerEnabled()) && !getCallGsmON()) {
+		if (state == State.IncomingReceived && getCallGsmON()) {
+			if (mLc != null) {
+				mLc.declineCall(call, Reason.Busy);
+			}
+		} else if (state == State.IncomingReceived && (LinphonePreferences.instance().isAutoAnswerEnabled()) && !getCallGsmON()) {
 			TimerTask lTask = new TimerTask() {
 					@Override
 					public void run() {
@@ -1372,8 +1376,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			};
 			mTimer = new Timer("Auto answer");
 			mTimer.schedule(lTask, mPrefs.getAutoAnswerTime());
-		}
-		else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
+		} else if (state == State.IncomingReceived || (state == State.CallIncomingEarlyMedia && mR.getBoolean(R.bool.allow_ringing_while_early_media))) {
 			// Brighten screen for at least 10 seconds
 			if (mLc.getCallsNb() == 1) {
 				requestAudioFocus(STREAM_RING);
