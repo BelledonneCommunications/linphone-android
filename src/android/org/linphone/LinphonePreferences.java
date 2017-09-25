@@ -19,12 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneAddress.TransportType;
@@ -43,10 +41,12 @@ import org.linphone.core.TunnelConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.Purchasable;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 /**
  * @author Sylvain Berfini
@@ -1001,7 +1001,15 @@ public class LinphonePreferences {
 	public void setVoiceMailUri(String uri) {
 		getConfig().setString("app", "voice_mail", uri);
 	}
-	// End of call settings
+
+	public boolean getNativeDialerCall() {
+		return getConfig().getBool("app", "native_dialer_call", false);
+	}
+
+	public void setNativeDialerCall(boolean use) {
+		getConfig().setBool("app", "native_dialer_call", use);
+	}
+// End of call settings
 
 	// Network settings
 	public void setWifiOnlyEnabled(Boolean enable) {

@@ -885,6 +885,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		CheckBoxPreference autoAnswer = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
+		CheckBoxPreference dialerCall = (CheckBoxPreference) findPreference(getString(R.string.pref_dialer_call_key));
 		EditTextPreference incTimeout = (EditTextPreference) findPreference(getString(R.string.pref_incoming_call_timeout_key));
 		EditTextPreference autoAnswerTime = (EditTextPreference) findPreference(getString(R.string.pref_auto_answer_time_key));
 
@@ -904,6 +905,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
+		dialerCall.setChecked(mPrefs.getNativeDialerCall());
 	}
 
 	public void enableDeviceRingtone(boolean enabled) {
@@ -993,6 +995,15 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean use = (Boolean) newValue;
 				mPrefs.sendDTMFsAsSipInfo(use);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_dialer_call_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean use = (Boolean) newValue;
+				mPrefs.setNativeDialerCall(use);
 				return true;
 			}
 		});

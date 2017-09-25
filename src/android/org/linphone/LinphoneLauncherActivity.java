@@ -41,6 +41,8 @@ import static android.content.Intent.ACTION_MAIN;
  */
 public class LinphoneLauncherActivity extends Activity {
 
+	private final String ACTION_CALL_LINPHONE  = "org.linphone.intent.action.CallLaunched";
+
 	private Handler mHandler;
 	private ServiceWaitThread mServiceThread;
 	private String addressToCall;
@@ -147,6 +149,13 @@ public class LinphoneLauncherActivity extends Activity {
 										stringUriFileShared = fileUri.getPath();
 							}
 							newIntent.putExtra("fileShared", stringUriFileShared);
+						}
+					}else if( ACTION_CALL_LINPHONE.equals(action) && (intent.getStringExtra("NumberToCall") != null)) {
+						String numberToCall = intent.getStringExtra("NumberToCall");
+						if (CallActivity.isInstanciated()) {
+							CallActivity.instance().startIncomingCallActivity();
+						} else {
+							LinphoneManager.getInstance().newOutgoingCall(numberToCall, null);
 						}
 					}
 				}

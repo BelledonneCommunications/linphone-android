@@ -1475,7 +1475,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				((SettingsFragment) fragment).closePreferenceScreen();
 			}
 		}
-
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			LinphoneService.instance().removeMessageNotification();
@@ -1493,6 +1492,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
 				startIncallActivity(call);
+			}
+		}else if (extras != null && extras.getBoolean("StartCall", false)) {
+			boolean extraBool = extras.getBoolean("StartCall", false);
+			if (CallActivity.isInstanciated()) {
+				CallActivity.instance().startIncomingCallActivity();
+			} else {
+				mAddressWaitingToBeCalled = extras.getString("NumberToCall");
+				goToDialerFragment();
+				//startActivity(new Intent(this, CallIncomingActivity.class));
 			}
 		} else {
 			DialerFragment dialerFragment = DialerFragment.instance();

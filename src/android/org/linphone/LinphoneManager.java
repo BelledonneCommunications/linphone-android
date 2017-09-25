@@ -154,10 +154,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private BroadcastReceiver mKeepAliveReceiver;
 	private BroadcastReceiver mDozeReceiver;
 	private BroadcastReceiver mHookReceiver;
+	private BroadcastReceiver mCallReceiver;
 	private BroadcastReceiver mNetworkReceiver;
 	private IntentFilter mKeepAliveIntentFilter;
 	private IntentFilter mDozeIntentFilter;
 	private IntentFilter mHookIntentFilter;
+	private IntentFilter mCallIntentFilter;
 	private IntentFilter mNetworkIntentFilter;
 	private Handler mHandler = new Handler();
 	private WakeLock mIncallWakeLock;
@@ -708,13 +710,20 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				Log.e(e);
 			}
 			try {
+				mServiceContext.unregisterReceiver(mCallReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
 				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
 			} catch (Exception e) {
 				Log.e(e);
 			}
 			try {
 				dozeManager(false);
-			} catch (Exception e) {
+			} catch (IllegalArgumentException iae) {
+				Log.e(iae);
+			}catch (Exception e) {
 				Log.e(e);
 			}
 			mLc = null;
@@ -731,9 +740,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-
 			mLc = LinphoneCoreFactory.instance().createLinphoneCore(this, mLinphoneConfigFile, mLinphoneFactoryConfigFile, null, c);
-
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
@@ -750,8 +757,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
 			mTimer = new Timer("Linphone scheduler");
 			mTimer.schedule(lTask, 0, 20);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.e(e, "Cannot start linphone");
 		}
 	}
@@ -840,15 +846,21 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mKeepAliveReceiver = new KeepAliveReceiver();
 		mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 
-		mDozeIntentFilter = new IntentFilter();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-		}
+		mCallIntentFilter = new IntentFilter("android.intent.action.ACTION_NEW_OUTGOING_CALL");
+		mCallIntentFilter.setPriority(99999999);
+		mCallReceiver = new OutgoingCallReceiver();
+		try {
+			mServiceContext.registerReceiver(mCallReceiver, mCallIntentFilter);
+		}catch(IllegalArgumentException e){e.printStackTrace();}
+		mProximityWakelock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "manager_proximity_sensor");
 
-		mDozeReceiver = new DozeReceiver();
+
 
 		if (mPrefs.isDozeModeEnabled()) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				mDozeIntentFilter = new IntentFilter();
+				mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+				mDozeReceiver = new DozeReceiver();
 				dozeModeEnabled = ((PowerManager) mServiceContext.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
 				if (dozeModeEnabled)
 					mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
@@ -859,8 +871,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mHookIntentFilter.setPriority(999);
 		mHookReceiver = new HookReceiver();
 		mServiceContext.registerReceiver(mHookReceiver, mHookIntentFilter);
-
-		mProximityWakelock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "manager_proximity_sensor");
 
 		// Since Android N we need to register the network manager
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
@@ -1046,7 +1056,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				Log.e(e);
 			}
 			try {
+				mServiceContext.unregisterReceiver(mCallReceiver);
+			} catch (Exception e) {
+				Log.e(e);
+			}
+			try {
 				dozeManager(false);
+			} catch (IllegalArgumentException iae) {
+				Log.e(iae);
 			} catch (Exception e) {
 				Log.e(e);
 			}
@@ -1062,7 +1079,14 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			dozeModeEnabled = true;
 		} else {
 			Log.i("[Doze Mode]: unregister");
-			mServiceContext.unregisterReceiver(mDozeReceiver);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				try {
+					mServiceContext.unregisterReceiver(mDozeReceiver);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				}
+
+			}
 			dozeModeEnabled = false;
 		}
 	}
@@ -1274,6 +1298,8 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				Log.e("LinphoneManager"," globalState ON");
 				initLiblinphone(lc);
 
+			}catch(IllegalArgumentException iae){
+				Log.e(iae);
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}

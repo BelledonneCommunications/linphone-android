@@ -1639,7 +1639,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								file = new File(imageUri);
 								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 							} else if (imageUri.startsWith("content://")) {
-								Log.e("===>>> ChatFragment - getView() - imageUri = "+imageUri);
 								contentUri = Uri.parse(imageUri);
 							} else {
 								file = new File(imageUri);

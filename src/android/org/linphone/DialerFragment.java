@@ -17,24 +17,24 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import org.linphone.core.LinphoneCore;
-import org.linphone.mediastream.Log;
-import org.linphone.ui.AddressAware;
-import org.linphone.ui.AddressText;
-import org.linphone.ui.CallButton;
-import org.linphone.ui.EraseButton;
-
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.linphone.core.LinphoneCore;
+import org.linphone.mediastream.Log;
+import org.linphone.ui.AddressAware;
+import org.linphone.ui.AddressText;
+import org.linphone.ui.CallButton;
+import org.linphone.ui.EraseButton;
 
 /**
  * @author Sylvain Berfini
@@ -63,14 +63,14 @@ public class DialerFragment extends Fragment {
 
 		mCall = (CallButton) view.findViewById(R.id.call);
 		mCall.setAddressWidget(mAddress);
-		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
+		if (LinphoneActivity.isInstanciated() && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCallsNb() > 0) {
 			if (isCallTransferOngoing) {
 				mCall.setImageResource(R.drawable.call_transfer);
 			} else {
 				mCall.setImageResource(R.drawable.call_add);
 			}
 		} else {
-			if (LinphoneManager.getLc().getVideoAutoInitiatePolicy()) {
+			if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoAutoInitiatePolicy()) {
 				mCall.setImageResource(R.drawable.call_video_start);
 			} else {
 				mCall.setImageResource(R.drawable.call_audio_start);
@@ -83,7 +83,7 @@ public class DialerFragment extends Fragment {
 		}
 
 		mAddContact = (ImageView) view.findViewById(R.id.add_contact);
-		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0));
+		mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLc().getCallsNb() > 0));
 
 		addContactListener = new OnClickListener() {
 			@Override
@@ -215,7 +215,7 @@ public class DialerFragment extends Fragment {
 	}
 
 	public void enableDisableAddContact() {
-		mAddContact.setEnabled(LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
+		mAddContact.setEnabled(LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
 	}
 
 	public void displayTextInAddressBar(String numberOrSipAddress) {

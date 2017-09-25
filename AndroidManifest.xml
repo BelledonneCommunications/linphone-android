@@ -115,6 +115,10 @@
                 <data android:mimeType="video/*"/>
                 <data android:mimeType="application/*"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="org.linphone.intent.action.CallLaunched" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".LinphoneActivity"
@@ -256,6 +260,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".OutgoingCallReceiver"
+                  android:permission="android.permission.PROCESS_OUTGOING_CALLS">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
         <!-- Needed for push notification -->
         <!--
             <receiver
