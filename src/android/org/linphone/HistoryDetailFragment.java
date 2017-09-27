@@ -164,13 +164,17 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().displayChat(sipUri, null, null);
 		} else if (id == R.id.add_contact) {
 			String uri = sipUri;
+			LinphoneAddress addr = null;
 			try {
-				LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
+				addr = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
 				uri = addr.asStringUriOnly();
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
-			LinphoneActivity.instance().displayContactsForEdition(uri);
+			if(addr != null && !addr.getDisplayName().equals("Dust Android"))
+				LinphoneActivity.instance().displayContactsForEdition(addr.asStringUriOnly(), addr.getDisplayName());
+			else
+				LinphoneActivity.instance().displayContactsForEdition(uri);
 		} else if (id == R.id.goto_contact) {
 			LinphoneActivity.instance().displayContact(contact, false);
 		}

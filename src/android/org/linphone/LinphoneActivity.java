@@ -628,6 +628,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		changeCurrentFragment(FragmentsAvailable.ABOUT, null);
 	}
 
+	public void displayContactsForEdition(String sipAddress, String displayName) {
+		Bundle extras = new Bundle();
+		extras.putBoolean("EditOnClick", true);
+		extras.putString("SipAddress", sipAddress);
+		extras.putString("DisplayName", displayName);
+		changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, extras);
+	}
+
 	public void displayAssistant() {
 		startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
 	}
@@ -1091,6 +1099,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	{
 		Bundle extras = new Bundle();
 		extras.putSerializable("NewSipAdress", sipUri);
+		extras.putSerializable("NewDisplayName", displayName);
 		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 

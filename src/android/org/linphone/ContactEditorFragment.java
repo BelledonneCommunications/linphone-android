@@ -18,16 +18,6 @@ package org.linphone;
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -57,6 +47,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactEditorFragment extends Fragment {
 	private View view;
 	private ImageView cancel, deleteContact, ok;
@@ -73,7 +73,7 @@ public class ContactEditorFragment extends Fragment {
 	private List<LinphoneNumberOrAddress> numbersAndAddresses;
 	private int firstSipAddressIndex = -1;
 	private LinearLayout sipAddresses, numbers;
-	private String newSipOrNumberToAdd;
+	private String newSipOrNumberToAdd, newDisplayName;
 	private Uri pickedPhotoForContactUri;
 	private byte[] photoToAdd;
 
@@ -90,9 +90,14 @@ public class ContactEditorFragment extends Fragment {
 				isNewContact = false;
 				if (getArguments().getString("NewSipAdress") != null) {
 					newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
+				}if (getArguments().getString("NewDisplayName") != null) {
+					newDisplayName = getArguments().getString("NewDisplayName");
 				}
 			} else if (getArguments().getString("NewSipAdress") != null) {
 				newSipOrNumberToAdd = getArguments().getString("NewSipAdress");
+				if (getArguments().getString("NewDisplayName") != null) {
+					newDisplayName = getArguments().getString("NewDisplayName");
+				}
 			}
 		}
 
@@ -437,6 +442,12 @@ public class ContactEditorFragment extends Fragment {
 				if (view != null)
 					controls.addView(view);
 			}
+		}
+
+		if (newDisplayName != null) {
+			EditText lastNameEditText = (EditText) view.findViewById(R.id.contactLastName);
+			if (view != null)
+				lastNameEditText.setText(newDisplayName);
 		}
 
 		if (controls.getChildCount() == 0) {

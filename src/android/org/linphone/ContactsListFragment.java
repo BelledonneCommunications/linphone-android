@@ -19,12 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -49,6 +43,12 @@ import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * @author Sylvain Berfini
  */
@@ -62,7 +62,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	private LinearLayout editList, topbar;
 	private int lastKnownPosition;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
-	private String sipAddressToAdd;
+	private String sipAddressToAdd, displayName = null;
 	private ImageView clearSearchField;
 	private EditText searchField;
 	private ProgressBar contactsFetchInProgress;
@@ -75,8 +75,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
         if (getArguments() != null) {
 	        editOnClick = getArguments().getBoolean("EditOnClick");
 	        sipAddressToAdd = getArguments().getString("SipAddress");
-
-	        onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
+			if(getArguments().getString("DisplayName") != null)
+				displayName = getArguments().getString("DisplayName");
+			onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
 
         noSipContact = (TextView) view.findViewById(R.id.noSipContact);
@@ -253,7 +254,10 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		if (id == R.id.newContact) {
 			editConsumed = true;
-			LinphoneActivity.instance().addContact(null, sipAddressToAdd);
+			if(displayName != null)
+				LinphoneActivity.instance().addContact(displayName, sipAddressToAdd);
+			else
+				LinphoneActivity.instance().addContact(null, sipAddressToAdd);
 		}
 		else if (id == R.id.clearSearchField) {
 			searchField.setText("");
