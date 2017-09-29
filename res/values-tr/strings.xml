@@ -198,7 +198,6 @@
   <string name="call_stats_ip">IP Ailesi:</string>
   <string name="call_stats_upload">Karşıya yükleme hızı:</string>
   <string name="call_stats_download">İndirme hızı:</string>
-  <string name="call_stats_estimated_download">Tahmini karşıdan yükleme bant genişliği:</string>
   <string name="call_stats_ice">İCE bağlanılabilirliği:</string>
   <string name="call_stats_video_resolution_sent">Giden video çözünürlüğü:</string>
   <string name="call_stats_video_resolution_received">Alınan video çözünürlüğü:</string>

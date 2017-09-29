@@ -74,7 +74,6 @@
   <string name="call_stats_codec">Codec:</string>
   <string name="call_stats_upload">Uploadbandbreedte:</string>
   <string name="call_stats_download">Downloadbandbreedte:</string>
-  <string name="call_stats_estimated_download">Geschatte downloadbandbreedte:</string>
   <string name="call">Oproep</string>
   <!--About-->
   <string name="menu_send_log">Log versturen</string>

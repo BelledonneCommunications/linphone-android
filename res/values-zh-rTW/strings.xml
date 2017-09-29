@@ -135,7 +135,6 @@
   <string name="call_stats_codec">編解碼器：</string>
   <string name="call_stats_upload">上傳頻寬：</string>
   <string name="call_stats_download">下載頻寬：</string>
-  <string name="call_stats_estimated_download">估计下载带宽：</string>
   <string name="call_stats_encoder_name">編碼器：</string>
   <string name="call_stats_decoder_name">解碼器：</string>
   <string name="call">通話</string>

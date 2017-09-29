@@ -45,6 +45,7 @@
   <string name="maybe_later">ربما لاحقا</string>
   <string name="later">لاحقا</string>
   <string name="no">لا</string>
+  <string name="ok">حسنا</string>
   <string name="yes">نعم</string>
   <string name="link_account">اربط حسابك</string>
   <!--Launch screen-->
@@ -176,6 +177,9 @@
   <string name="message_cant_be_decrypted_notif">تعذر عليك فك تعمية هذه الرسالة.</string>
   <string name="lime_not_verified">إنك تحاول إرسال رسالة عبر LIME لجهة اتصال لم تتحقق منها بواسطة ZRTP.\nيُرجى الاتصال بجهة الاتصال هذه والتحقق من مفتاحها ZRTP قبل إرسال رسائلك.</string>
   <string name="processing_image">قد تستلزم معالجة الصور بضع ثوان حسب حجم الملف.</string>
+  <string name="displayed">قُرِأ</string>
+  <string name="delivered">سُلِّم</string>
+  <string name="resend">أعد اﻹرسال</string>
   <!--Status Bar-->
   <string name="status_connected">مُسجَّل</string>
   <string name="status_not_connected">غير مُسجَّل</string>
@@ -190,9 +194,14 @@
   <!--Call-->
   <string name="incoming_call">مكالمة واردة</string>
   <string name="outgoing_call">مكالمة صادرة</string>
+  <string name="add_video_dialog">يود مخاطبك تشغيل الفيديو </string>
   <string name="no_current_call">لا وجود لأي مكالمة نشيطة</string>
+  <string name="call_paused_by_remote">أوقف مخاطبك المكالمة مؤقتا </string>
   <string name="couldnt_accept_call">حدث خطأ خلال قبول المكالمة</string>
   <string name="zrtp_dialog1">أكد رمز الاستيثاق مع نظيرك :\nقل : %s</string>
+  <string name="zrtp_dialog2">\nمخاطبك يجب أن يقول : %s</string>
+  <string name="zrtp_notification_title">رمز الاستيثاق</string>
+  <string name="zrtp_notification_message">قم بتأكيد رمز الاستيثاق السابق مع مخاطبك</string>
   <string name="unknown_incoming_call_name">مجهول</string>
   <string name="call_stats_audio">الصوت</string>
   <string name="call_stats_video">الفيديو</string>
@@ -200,7 +209,6 @@
   <string name="call_stats_ip">صنف IP :</string>
   <string name="call_stats_upload">صبيب الرفع :</string>
   <string name="call_stats_download">صبيب التنزيل :</string>
-  <string name="call_stats_estimated_download">عرض النطاق الترددي المتوقع للتنزيل :</string>
   <string name="call_stats_ice">توصيل ICE :</string>
   <string name="call_stats_video_resolution_sent">دقة الفيديو المُرسَل :</string>
   <string name="call_stats_video_resolution_received">دقة الفيديو المُستلَم :</string>
@@ -230,6 +238,7 @@
   <string name="error_user_busy">المستخدم مشغول</string>
   <string name="error_user_not_found">لم يعثر على المستخدم</string>
   <string name="error_incompatible_media">مُعامِلات الوسائط غير متوافقة</string>
+  <string name="error_low_bandwidth">لمخاطبك سعة قناة ضيقة، لا يمكن بدء الفيديو</string>
   <string name="error_network_unreachable">تعذر الوصول إلى الشبكة</string>
   <string name="error_bad_credentials">الاعتمادات غير صحيحة</string>
   <string name="error_unauthorized">غير مُصرَّح</string>
@@ -320,6 +329,7 @@
   <string name="pref_call_title">المكالمة</string>
   <string name="pref_device_ringtone">استخدم رنة الجهاز</string>
   <string name="pref_auto_answer">رد تلقائيا على المكالمات الواردة</string>
+  <string name="pref_auto_answer_time">مهلة التشغيل التلقائي (بالميلي-ثواني)</string>
   <string name="pref_rfc2833_dtmf">أرسل DTMF مع التدفق (RFC2833)</string>
   <string name="pref_sipinfo_dtmf">أرسل DTMF خارج التدفق (SIP INFO)</string>
   <string name="pref_voice_mail">عنوان العلبة الصوتية</string>
@@ -444,4 +454,5 @@
   <string name="content_description_call_options">خيارات المكالمة</string>
   <string name="content_description_audio_route">توجيه الصوت</string>
   <string name="content_description_exit_conference">مغادرة الاجتماع</string>
+  <string name="content_title_notification">إشعارات لِنْفُونْ</string>
 </resources>
