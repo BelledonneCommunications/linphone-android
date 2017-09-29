@@ -1484,9 +1484,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 
-
-
-
 			if (externalBodyUrl != null || fileTransferContent != null) {
 				String appData = message.getAppData();
 
@@ -1530,6 +1527,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								loadBitmap(appData, holder.messageImage);
 								holder.messageImage.setTag(message.getAppData());
 							}
+							//displayMessageList();
 						}
 					}
 				}
@@ -1842,6 +1840,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 					if (this == bitmapWorkerTask && imageView != null) {
 						imageView.setImageBitmap(bitmap);
+						//Force scroll too bottom with setSelection() after image loaded and last messages
+						if(((messagesList.getLastVisiblePosition() >= (getCount() - 1)) && (messagesList.getFirstVisiblePosition() <= (getCount() - 1))))
+							messagesList.setSelection(getCount() - 1);
 						imageView.setTag(path);
 						imageView.setOnClickListener(new OnClickListener() {
 							@Override
