@@ -4,11 +4,11 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 ## To build liblinphone for Android, you must:
 
-1. Download the Android sdk (API 25.2.3 at max) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
+1. Download the Android sdk (API 26.0.1 at max) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
 
-2. Download the Android ndk (version r11c or 13b) from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
+2. Download the Android ndk (version r11c or 15) from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
 
-3. Install _yasm_, _nasm_, _ant_, _python_, _intltoolize_, _cmake_ and _vim-common_.
+3. Install _yasm_, _nasm_, _ant_, _python_, _intltoolize_, _cmake(3.7)_ and _vim-common_.
   * On 64 bits linux systems you'll need the _ia32-libs_ package.
   * With the latest Debian (multiarch), you need this:
     * `dpkg --add-architecture i386`
