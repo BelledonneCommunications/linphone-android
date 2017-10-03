@@ -702,7 +702,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void sendTextMessage() {
-		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc() == null || searchContactField.getText().toString().length() < 1)
+		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc() == null ||
+				(searchContactField.getVisibility() == View.VISIBLE
+						&& searchContactField.getText().toString().length() < 1))
 			return;
 		LinphoneCore.LinphoneLimeState state = LinphoneManager.getLc().getLimeEncryption();
 
