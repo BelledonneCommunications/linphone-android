@@ -1553,16 +1553,6 @@ public class LinphonePreferences {
 		return getConfig().getInt("app", "activation_code_length", 0);
 	}
 
-	public boolean isDozeModeEnabled() {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-			return false;
-		return getConfig().getBool("app", "doze_mode", true);
-	}
-
-	public void enableDozeMode(boolean enable) {
-		getConfig().setBool("app", "doze_mode", enable);
-	}
-
 	public void disableFriendsStorage() {
 		getConfig().setBool("misc", "store_friends", false);
 	}

@@ -856,15 +856,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 
 
-		if (mPrefs.isDozeModeEnabled()) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				mDozeIntentFilter = new IntentFilter();
-				mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-				mDozeReceiver = new DozeReceiver();
-				dozeModeEnabled = ((PowerManager) mServiceContext.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
-				if (dozeModeEnabled)
-					mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
-			}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			mDozeIntentFilter = new IntentFilter();
+			mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+			mDozeReceiver = new DozeReceiver();
+			dozeModeEnabled = ((PowerManager) mServiceContext.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
+			mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
 		}
 
 		mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
@@ -1085,7 +1082,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();
 				}
-
 			}
 			dozeModeEnabled = false;
 		}

@@ -270,11 +270,6 @@
 				    android:key="@string/pref_wifi_only_key"
 					android:persistent="false"/>
 
-				<CheckBoxPreference
-					android:title="@string/pref_doze_mode"
-					android:key="@string/pref_doze_mode_key"
-					android:persistent="false"/>
-
 				<EditTextPreference
 				    android:title="@string/pref_stun_server"
 					android:key="@string/pref_stun_server_key"
