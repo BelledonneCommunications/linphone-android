@@ -1351,9 +1351,11 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	@Override
 	public void onPause() {
-		if (LinphoneManager.getInstance().getEchoTesterStatus())
-			stopEchoTester();
-		LinphoneActivity.instance().hideTopBar();
+		if (LinphoneActivity.isInstanciated() && LinphoneManager.isInstanciated()) {
+			if (LinphoneManager.getInstance().getEchoTesterStatus())
+				stopEchoTester();
+			LinphoneActivity.instance().hideTopBar();
+		}
 		super.onPause();
 	}
 }

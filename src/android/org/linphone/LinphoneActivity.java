@@ -1683,7 +1683,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void refreshAccounts(){
-		if (LinphoneManager.getLc().getProxyConfigList().length > 1) {
+		if (LinphoneManager.getLc().getProxyConfigList() != null &&
+				LinphoneManager.getLc().getProxyConfigList().length > 1) {
 			accountsList.setVisibility(View.VISIBLE);
 			accountsList.setAdapter(new AccountsListAdapter());
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

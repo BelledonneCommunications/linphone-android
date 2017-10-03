@@ -1344,6 +1344,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		public void refreshHistory() {
+			if (history == null || chatRoom == null) return;
 			history.clear();
 			LinphoneChatMessage[] messages = chatRoom.getHistory();
 			history.addAll(Arrays.asList(messages));

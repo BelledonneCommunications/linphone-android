@@ -476,6 +476,10 @@ public class LinphonePreferences {
 		LinphoneAuthInfo old_info = getAuthInfo(n);
 		try {
 			LinphoneProxyConfig prxCfg = getProxyConfig(n);
+			if (prxCfg == null) {
+				Log.e("Error, no proxy config at index " + n);
+				return;
+			}
 			prxCfg.edit();
 			prxCfg.setIdentity(identity);
 			prxCfg.enableRegister(true);

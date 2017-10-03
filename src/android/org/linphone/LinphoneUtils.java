@@ -279,7 +279,7 @@ public final class LinphoneUtils {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
 			} catch (IOException e) {
-				LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+				Log.e("Error in setThumbnailPictureFromUri: " + e);
 				return;
 			}
 			if (bm != null) {

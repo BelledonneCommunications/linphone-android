@@ -427,6 +427,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				view.setTag(holder);
 			}
 
+			if (mLogs == null || mLogs.size() < position) return view;
+
 			final LinphoneCallLog log = mLogs.get(position);
 			long timestamp = log.getTimestamp();
 			LinphoneAddress address;
