@@ -12,6 +12,15 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+## [3.2.8]
+
+### Added
+- File sharing
+
+### Fixed
+- Crashs in new chat view
+- Contacts management
+
 ## [3.2.7] - 2017-05-15
 
 ### Fixed
