@@ -48,6 +48,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.linphone.core.DialPlan;
 import org.linphone.core.LinphoneAccountCreator;
@@ -278,6 +279,8 @@ public final class LinphoneUtils {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
 			} catch (IOException e) {
+				LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+				return;
 			}
 			if (bm != null) {
 				view.setImageBitmap(bm);

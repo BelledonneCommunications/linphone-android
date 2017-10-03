@@ -551,7 +551,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			}
 
 			if (contact.hasPhoto()) {
-				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 			} else {
 				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}

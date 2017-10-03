@@ -803,7 +803,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
-		if(newChatConversation && chatRoom == null) {
+		if (newChatConversation && chatRoom == null) {
 			String address = searchContactField.getText().toString();
 			if (address != null && !address.equals("")) {
 				initChatRoom(address);
@@ -1445,7 +1445,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						displayName = contact.getFullName();
 					}
 					if (contact.hasPhoto()) {
-						LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
+						LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 					} else {
 						holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 					}

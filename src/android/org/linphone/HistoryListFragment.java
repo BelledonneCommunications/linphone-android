@@ -471,7 +471,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			final String sipUri = address.asString();
 			if (c != null) {
 				displayName = c.getFullName();
-				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, c.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, c.getThumbnailUri());
 			} else {
 				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
