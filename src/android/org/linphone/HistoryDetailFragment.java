@@ -171,7 +171,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			} catch (LinphoneCoreException e) {
 				Log.e(e);
 			}
-			if(addr != null && !addr.getDisplayName().equals("Dust Android"))
+			if (addr != null && addr.getDisplayName() != null)
 				LinphoneActivity.instance().displayContactsForEdition(addr.asStringUriOnly(), addr.getDisplayName());
 			else
 				LinphoneActivity.instance().displayContactsForEdition(uri);
