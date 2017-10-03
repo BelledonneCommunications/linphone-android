@@ -1,6 +1,4 @@
-[net]
-download_bw=380
-upload_bw=380
+
 
 [sip]
 contact="Linphone Android" <sip:linphone.android@unknown-host>

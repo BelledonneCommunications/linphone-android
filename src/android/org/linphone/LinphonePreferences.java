@@ -927,20 +927,6 @@ public class LinphonePreferences {
 
 	public void setPreferredVideoSize(String preferredVideoSize) {
 		getLc().setPreferredVideoSizeByName(preferredVideoSize);
-		String preset = getVideoPreset();
-		if (!preset.equals("custom")) {
-			int bandwidth = 512;
-			if (preferredVideoSize.equals("720p")) {
-				bandwidth = 1024 + 128;
-			} else if (preferredVideoSize.equals("vga")) {
-				bandwidth = 660;
-			} else if (preferredVideoSize.equals("qvga")) {
-				bandwidth = 380;
-			} else if (preferredVideoSize.equals("qcif")) {
-				bandwidth = 256;
-			}
-			setBandwidthLimit(bandwidth);
-		}
 	}
 
 	public int getPreferredVideoFps() {
