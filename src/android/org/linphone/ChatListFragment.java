@@ -52,6 +52,8 @@ import org.linphone.mediastream.Log;
 
 import java.util.List;
 
+import static org.linphone.FragmentsAvailable.CHAT_LIST;
+
 /**
  * @author Sylvain Berfini
  */
@@ -231,6 +233,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	@Override
 	public void onContactsUpdated() {
+		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST)
+			return;
+
 		ChatListAdapter adapter = (ChatListAdapter)chatList.getAdapter();
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();

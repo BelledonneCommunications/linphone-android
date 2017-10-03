@@ -50,6 +50,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import static org.linphone.FragmentsAvailable.HISTORY_LIST;
+
 /**
  * @author Sylvain Berfini
  */
@@ -222,6 +224,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	@Override
 	public void onContactsUpdated() {
+		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != HISTORY_LIST)
+			return;
 		CallHistoryAdapter adapter = (CallHistoryAdapter)historyList.getAdapter();
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();

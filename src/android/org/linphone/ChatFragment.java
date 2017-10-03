@@ -102,6 +102,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static org.linphone.FragmentsAvailable.CHAT;
 
 
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener, ContactsUpdatedListener{
@@ -544,7 +545,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
+			LinphoneActivity.instance().selectMenu(CHAT);
 		}
 
 		LinphoneManager.addListener(this);
@@ -973,7 +974,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onContactsUpdated() {
-		if(fileSharedUri != null || message.getText() != null){
+		if(LinphoneActivity.isInstanciated()
+				&& LinphoneActivity.instance().getCurrentFragment() == CHAT
+				&& fileSharedUri != null || message.getText() != null){
 			initNewChatConversation();
 		}
 	}

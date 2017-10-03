@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.linphone.FragmentsAvailable.CONTACTS_LIST;
+
 /**
  * @author Sylvain Berfini
  */
@@ -418,6 +420,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 	@Override
 	public void onContactsUpdated() {
+		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CONTACTS_LIST)
+			return;
 		ContactsListAdapter adapter = (ContactsListAdapter)contactsList.getAdapter();
 		if (adapter != null) {
 			contactsList.setFastScrollEnabled(false);
