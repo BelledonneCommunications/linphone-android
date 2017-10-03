@@ -548,7 +548,7 @@ public class LinphonePreferences {
 		String userid = null;
 		String realm = null;
 		if(user != null && domain != null) {
-			if (LinphoneManager.getLc().getAuthInfosList()[n] != null) {
+			if (LinphoneManager.getLc().getAuthInfosList().length >= n && LinphoneManager.getLc().getAuthInfosList()[n] != null) {
 				userid = getAccountUserId(n);
 				realm = getAccountRealm(n);
 				LinphoneManager.getLc().removeAuthInfo(LinphoneManager.getLc().getAuthInfosList()[n]);
