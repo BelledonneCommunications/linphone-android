@@ -22,7 +22,7 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
             Log.e(TAG, "===>>>> Linphone OutgoingCallReceiver : ACTION_NEW_OUTGOING_CALL");
             String number = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
-            if(mPrefs.getNativeDialerCall()){
+            if(mPrefs.getConfig() != null && mPrefs.getNativeDialerCall()){
                 abortBroadcast();
                 setResultData(null);
                 Intent newIntent = new Intent(ACTION_CALL_LINPHONE);
