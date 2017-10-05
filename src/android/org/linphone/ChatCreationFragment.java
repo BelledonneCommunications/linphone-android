@@ -157,7 +157,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		if (contactsSelected.size() > 0) {
 			contactsSelectLayout.setVisibility(View.VISIBLE);
 			contactsSelectLayout.invalidate();
+			next.setImageResource(R.drawable.next);
 		} else {
+			next.setImageResource(R.drawable.dialer_alt_next);
 			contactsSelectLayout.setVisibility(View.GONE);
 		}
 	}
