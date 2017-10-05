@@ -119,8 +119,8 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			// We need to get all contacts not only sip
 			for (String uri : savedInstanceState.getStringArrayList("contactsSelected")) {
 				for (ContactAddress ca : searchAdapter.getContactsList()) {
-					if (ca.getAddress() == uri) {
-						updateContactsClick(ca);
+					if (ca.getAddress().compareTo(uri) == 0) {
+						updateContactsClick(ca, searchAdapter.getContactsSelectedList());
 						break;
 					}
 				}
@@ -162,8 +162,16 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		}
 	}
 
-	private void updateContactsClick(ContactAddress ca) {
-		ca.setSelect(!ca.isSelect());
+	private int getIndexOfCa(ContactAddress ca, List<ContactAddress> caList) {
+		for (int i = 0 ; i < caList.size() ; i++) {
+			if (caList.get(i).getAddress().compareTo(ca.getAddress()) == 0)
+				return i;
+		}
+		return -1;
+	}
+
+	private void updateContactsClick(ContactAddress ca, List<ContactAddress> caSelectedList) {
+		ca.setSelect((getIndexOfCa(ca, caSelectedList) == -1));
 		if(ca.isSelect()) {
 			ContactSelectView csv = new ContactSelectView(LinphoneActivity.instance());
 			csv.setListener(this);
@@ -176,7 +184,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			ca.setView(viewContact);
 			contactsSelectedLayout.addView(viewContact);
 		} else {
-			contactsSelected.remove(ca);
+			contactsSelected.remove(getIndexOfCa(ca, contactsSelected));
 			contactsSelectedLayout.removeAllViews();
 			for (ContactAddress contactAddress : contactsSelected) {
 				if (contactAddress.getView() != null)
@@ -191,7 +199,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		for (ContactAddress ca : contactsSelected) {
 			if (ca.getView() == v) {
 				ca.setSelect(false);
-				updateContactsClick(ca);
+				updateContactsClick(ca, searchAdapter.getContactsSelectedList());
 			}
 		}
 	}
@@ -245,7 +253,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 		// Get contact
 		ContactAddress ca = searchAdapter.getContacts().get(i);
-		updateContactsClick(ca);
+		updateContactsClick(ca, searchAdapter.getContactsSelectedList());
 		updateList();
 		updateListSelected();
 	}

@@ -82,6 +82,13 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		oldSize = 0;
 	}
 
+	private boolean contactIsSelected(ContactAddress ca) {
+		for (ContactAddress c : contactsSelected) {
+			if (c.getAddress().compareTo(ca.getAddress()) == 0) return true;
+		}
+		return false;
+	}
+
 	public void setContactsList(List<ContactAddress> contactsList) {
 		if (contactsList == null) {
 			contacts = getContactsList();
@@ -98,6 +105,10 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		} else {
 			contactsSelected = contactsList;
 		}
+	}
+
+	public List<ContactAddress> getContactsSelectedList() {
+		return contactsSelected;
 	}
 
 	public List<ContactAddress> getContactsList() {
@@ -199,7 +210,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			}
 		}
 		if (holder.isSelect != null) {
-			if (contact.isSelect()) {
+			if (contactIsSelected(contact)) {
 				holder.isSelect.setVisibility(View.VISIBLE);
 			} else {
 				holder.isSelect.setVisibility(View.INVISIBLE);
