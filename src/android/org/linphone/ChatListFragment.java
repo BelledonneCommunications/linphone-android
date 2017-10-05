@@ -57,7 +57,7 @@ import static org.linphone.FragmentsAvailable.CHAT_LIST;
 /**
  * @author Sylvain Berfini
  */
-public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
+public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener, ChatUpdatedListener {
 	private LayoutInflater mInflater;
 	private List<String> mConversations;
 	private ListView chatList;
@@ -109,6 +109,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				refresh();
 			}
 		};
+
+		ChatFragment.createIfNotExist();
+		ChatFragment.addChatListener(this);
 		return view;
 	}
 
@@ -183,9 +186,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	public void refresh() {
 		mConversations = LinphoneActivity.instance().getChatList();
-		if (getResources().getBoolean(R.bool.isTablet)) {
-			LinphoneActivity.instance().displayChat("", null, null);
-		}
 		hideAndDisplayMessageIfNoChat();
 	}
 
@@ -352,6 +352,11 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
 			LinphoneActivity.instance().displayChat(sipUri, null, null);
 		}
+	}
+
+	@Override
+	public void onChatUpdated() {
+		refresh();
 	}
 
 	class ChatListAdapter extends BaseAdapter {

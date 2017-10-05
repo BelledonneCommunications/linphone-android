@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone;
 
-import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
@@ -43,7 +42,6 @@ import org.linphone.core.LinphoneFriend;
 import org.linphone.core.LinphoneFriendImpl;
 import org.linphone.core.LinphoneProxyConfig;
 import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
 
 import java.util.ArrayList;
 import java.util.Collections;

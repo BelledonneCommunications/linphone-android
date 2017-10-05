@@ -104,6 +104,9 @@ import java.util.Locale;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static org.linphone.FragmentsAvailable.CHAT;
 
+interface ChatUpdatedListener {
+	void onChatUpdated();
+}
 
 public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener, ContactsUpdatedListener{
 	private static final int ADD_PHOTO = 1337;
@@ -143,6 +146,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private LinphoneCoreListenerBase mListener;
 	private boolean newChatConversation = false;
 	private String fileSharedUri, fileAlreadySharedUri;
+
+	private static ArrayList<ChatUpdatedListener> ChatUpdatedListeners;
+
+	public static void createIfNotExist() {
+		if (ChatUpdatedListeners == null)
+			ChatUpdatedListeners = new ArrayList<>();
+	}
+
+	public static void addChatListener(ChatUpdatedListener listener) {
+		ChatUpdatedListeners.add(listener);
+	}
+	public static void removeChatListener(ChatUpdatedListener listener) {
+		ChatUpdatedListeners.remove(listener);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -254,6 +271,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					LinphoneContent fileTransferContent = message.getFileTransferInformation();
 					if (externalBodyUrl != null || fileTransferContent != null) {
 						LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+					}
+				}
+				if (getResources().getBoolean(R.bool.isTablet)) {
+					for (ChatUpdatedListener c : ChatUpdatedListeners) {
+						c.onChatUpdated();
 					}
 				}
 			}
@@ -389,6 +411,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					resultContactsSearch.setVisibility(View.GONE);
 					displayChatHeader(lAddress);
 					displayMessageList();
+					remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 				}
 			}
 		}
@@ -875,6 +898,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void invalidate() {
 		adapter.refreshHistory();
 		chatRoom.markAsRead();
+		if (getResources().getBoolean(R.bool.isTablet)) {
+			for (ChatUpdatedListener c : ChatUpdatedListeners) {
+				c.onChatUpdated();
+			}
+		}
 	}
 
 	private void resendMessage(LinphoneChatMessage message) {
@@ -1588,6 +1616,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				chatRoom.markAsRead();
 			}
 
+
 			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 			if (message.isOutgoing()) {
 				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -1693,6 +1722,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					holder.delete.setChecked(true);
 				} else {
 					holder.delete.setChecked(false);
+				}
+			}
+
+			if (getResources().getBoolean(R.bool.isTablet)) {
+				for (ChatUpdatedListener c : ChatUpdatedListeners) {
+					c.onChatUpdated();
 				}
 			}
 
