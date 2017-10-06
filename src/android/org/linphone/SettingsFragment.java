@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
 SettingsFragment.java
-Copyright (C) 2013  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -61,9 +61,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 
-/**
- * @author Sylvain Berfini
- */
 public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();

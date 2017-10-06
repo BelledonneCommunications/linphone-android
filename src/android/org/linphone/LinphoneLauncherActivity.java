@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 LinphoneLauncherActivity.java
-Copyright (C) 2011  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.linphone;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,11 +34,7 @@ import org.linphone.tutorials.TutorialLauncherActivity;
 import static android.content.Intent.ACTION_MAIN;
 
 /**
- *
  * Launch Linphone main activity when Service is ready.
- *
- * @author Guillaume Beraudo
- *
  */
 public class LinphoneLauncherActivity extends Activity {
 

@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 RemoteProvisioningActivity.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -43,21 +43,18 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-/**
- * @author Sylvain Berfini
- */
 public class RemoteProvisioningActivity extends Activity {
 	private Handler mHandler = new Handler();
 	private String configUriParam = null;
 	private ProgressBar spinner;
 	private LinphoneCoreListenerBase mListener;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.remote_provisioning);
 		spinner = (ProgressBar) findViewById(R.id.spinner);
-		
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void configuringStatus(LinphoneCore lc, final RemoteProvisioningState state, String message) {

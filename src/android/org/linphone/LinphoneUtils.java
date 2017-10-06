@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 SoftVolume.java
-Copyright (C) 2011  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -93,8 +94,6 @@ import static android.view.View.VISIBLE;
 
 /**
  * Helpers.
- * @author Guillaume Beraudo
- *
  */
 public final class LinphoneUtils {
 	private static Context context = null;

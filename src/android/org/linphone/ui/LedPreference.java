@@ -2,7 +2,7 @@ package org.linphone.ui;
 
 /*
 LedPreference.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -26,13 +26,10 @@ import android.preference.Preference;
 import android.view.View;
 import android.widget.ImageView;
 
-/**
- * @author Sylvain Berfini
- */
 public class LedPreference extends Preference
 {
 	private int ledDrawable;
-	
+
 	public LedPreference(Context context) {
         super(context);
         ledDrawable = R.drawable.led_disconnected;

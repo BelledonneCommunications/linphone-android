@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
 LinphonePreferences.java
-Copyright (C) 2013  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -48,9 +48,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphonePreferences {
 	private static final int LINPHONE_CORE_RANDOM_PORT = -1;
 	private static LinphonePreferences instance;

@@ -2,7 +2,7 @@ package org.linphone.assistant;
 
 /*
 EchoCancellerCalibrationFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -41,9 +41,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * @author Ghislain MARY
- */
 public class EchoCancellerCalibrationFragment extends Fragment implements LinphoneXmlRpcRequestListener {
 	private Handler mHandler = new Handler();
 	private boolean mSendEcCalibrationResult = false;
@@ -56,7 +53,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements Linpho
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_ec_calibration, container, false);
-		
+
 		mListener = new LinphoneCoreListenerBase(){
 			@Override
 			public void ecCalibrationStatus(LinphoneCore lc, LinphoneCore.EcCalibratorStatus status, int delay_ms, Object data) {
@@ -73,7 +70,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements Linpho
 				AssistantActivity.instance().isEchoCalibrationFinished();
 			}
 		};
-		
+
 		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getXmlrpcUrl());
 		xmlRpcRequest = new LinphoneXmlRpcRequestImpl("add_ec_calibration_result", LinphoneXmlRpcRequest.ArgType.None);
 		xmlRpcRequest.setListener(this);

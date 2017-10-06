@@ -11,7 +11,7 @@ import android.view.View;
 
 /*
 LinphoneSliders.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -28,9 +28,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneSliders extends View implements OnGestureListener {
 	private Drawable leftSliderImg, rightSliderImg;
 	private int leftSliderX, rightSliderX;
@@ -39,36 +36,36 @@ public class LinphoneSliders extends View implements OnGestureListener {
 	private LinphoneSliderTriggered mTriggerListener;
 	private boolean slidingLeftHandle, slidingRightHandle;
 	private static final double mCoeff = 0.5;
-	
+
 	public LinphoneSliders(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mGestures = new GestureDetector(getContext(), this);
 		//leftSliderImg = getResources().getDrawable(R.drawable.slider_left);
 		//rightSliderImg = getResources().getDrawable(R.drawable.slider_right);
-		
+
 		slidersHeight = leftSliderImg.getIntrinsicHeight();
 		slidersWidth = leftSliderImg.getIntrinsicWidth();
-		
+
 		leftSliderX = 0;
 		rightSliderX = 0;
 		slidingLeftHandle = slidingRightHandle = false;
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		rightSliderImg.setBounds(getWidth() - slidersWidth - rightSliderX, getHeight() - slidersHeight, getWidth(), getHeight());
 		rightSliderImg.draw(canvas);
-		
+
 		leftSliderImg.setBounds(0, getHeight() - slidersHeight, slidersWidth + leftSliderX, getHeight());
 		leftSliderImg.draw(canvas);
-		
+
 		if (slidingLeftHandle && Math.abs(leftSliderX) >= mCoeff * getWidth()) {
 			mTriggerListener.onLeftHandleTriggered();
 		} else if (slidingRightHandle && rightSliderX >= mCoeff * getWidth()) {
 			mTriggerListener.onRightHandleTriggered();
 		}
 	}
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -77,8 +74,8 @@ public class LinphoneSliders extends View implements OnGestureListener {
 			slidingLeftHandle = slidingRightHandle = false;
 			invalidate();
 		}
-		
-		return mGestures.onTouchEvent(event); 
+
+		return mGestures.onTouchEvent(event);
 	}
 
 	@Override
@@ -94,7 +91,7 @@ public class LinphoneSliders extends View implements OnGestureListener {
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		
+
 	}
 
 	@Override
@@ -103,7 +100,7 @@ public class LinphoneSliders extends View implements OnGestureListener {
 		if (e1.getY() < getHeight() - slidersHeight) {
 			return false;
 		}
-		
+
 		if (e1.getX() < getWidth() / 2) {
 			leftSliderX -= distanceX;
 			slidingLeftHandle = true;
@@ -112,20 +109,20 @@ public class LinphoneSliders extends View implements OnGestureListener {
 			slidingRightHandle = true;
 		}
 		invalidate();
-		
+
 		return true;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-		
+
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
 		return false;
 	}
-	
+
 	public void setOnTriggerListener(LinphoneSliderTriggered listener) {
         mTriggerListener = listener;
     }

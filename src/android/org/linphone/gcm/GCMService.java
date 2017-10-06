@@ -1,7 +1,7 @@
 package org.linphone.gcm;
 /*
 GCMService.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -33,9 +33,6 @@ import android.content.Intent;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
-/**
- * @author Sylvain Berfini
- */
 // Warning ! Do not rename the service !
 public class GCMService extends GCMBaseIntentService {
 

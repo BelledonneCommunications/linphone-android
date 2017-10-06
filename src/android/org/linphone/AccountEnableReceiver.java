@@ -1,7 +1,8 @@
 package org.linphone;
+
 /*
-RemoteProvisioningActivity.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+AccountEnableReceiver.java
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,15 +19,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-/**
- * @author Graham Barnett
- */
 public class AccountEnableReceiver extends BroadcastReceiver {
 	private static final String TAG = "AccountEnableReceiver";
 	private static final String FIELD_ID = "id";

@@ -1,3 +1,5 @@
+package org.linphone.firebase;
+
 /*
 FirebaseMessaging.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -17,8 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.firebase;
-
 import android.content.Intent;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -29,9 +29,7 @@ import org.linphone.LinphoneService;
 import org.linphone.UIThreadDispatcher;
 import static android.content.Intent.ACTION_MAIN;
 
-/**
- * @author Erwan Croze
- */
+
 public class FirebaseMessaging extends FirebaseMessagingService {
     public FirebaseMessaging() {
     }

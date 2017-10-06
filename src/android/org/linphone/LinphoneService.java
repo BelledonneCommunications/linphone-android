@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 LinphoneService.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -63,7 +64,6 @@ import android.provider.MediaStore;
 import android.view.WindowManager;
 
 /**
- *
  * Linphone service, reacting to Incoming calls, ...<br />
  *
  * Roles include:<ul>
@@ -71,10 +71,6 @@ import android.view.WindowManager;
  * <li>Starting C libLinphone through LinphoneManager</li>
  * <li>Reacting to LinphoneManager state changes</li>
  * <li>Delegating GUI state change actions to GUI listener</li>
- *
- *
- * @author Guillaume Beraudo
- *
  */
 public final class LinphoneService extends Service {
 	/* Listener needs to be implemented in the Service as it calls

@@ -25,9 +25,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import org.linphone.LinphonePreferences;
 import org.linphone.UIThreadDispatcher;
 
-/**
- * @author Erwan Croze
- */
+
 public class FirebaseIdService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {

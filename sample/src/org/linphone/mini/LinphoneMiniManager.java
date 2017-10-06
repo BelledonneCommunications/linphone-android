@@ -1,7 +1,8 @@
 package org.linphone.mini;
+
 /*
 LinphoneMiniManager.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -51,25 +52,22 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneMiniManager implements LinphoneCoreListener {
 	private static LinphoneMiniManager mInstance;
 	private Context mContext;
 	private LinphoneCore mLinphoneCore;
 	private Timer mTimer;
-	
+
 	public LinphoneMiniManager(Context c) {
 		mContext = c;
 		LinphoneCoreFactory.instance().setDebugMode(true, "Linphone Mini");
-		
+
 		try {
 			String basePath = mContext.getFilesDir().getAbsolutePath();
 			copyAssetsFromPackage(basePath);
 			mLinphoneCore = LinphoneCoreFactory.instance().createLinphoneCore(this, basePath + "/.linphonerc", basePath + "/linphonerc", null, mContext);
 			initLinphoneCoreValues(basePath);
-			
+
 			setUserAgent();
 			setFrontCamAsDefault();
 			startIterate();
@@ -79,11 +77,11 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 		} catch (IOException e) {
 		}
 	}
-	
+
 	public static LinphoneMiniManager getInstance() {
 		return mInstance;
 	}
-	
+
 	public void destroy() {
 		try {
 			mTimer.cancel();
@@ -96,7 +94,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 			mInstance = null;
 		}
 	}
-	
+
 	private void startIterate() {
 		TimerTask lTask = new TimerTask() {
 			@Override
@@ -104,12 +102,12 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 				mLinphoneCore.iterate();
 			}
 		};
-		
+
 		/*use schedule instead of scheduleAtFixedRate to avoid iterate from being call in burst after cpu wake up*/
 		mTimer = new Timer("LinphoneMini scheduler");
-		mTimer.schedule(lTask, 0, 20); 
+		mTimer.schedule(lTask, 0, 20);
 	}
-	
+
 	private void setUserAgent() {
 		try {
 			String versionName = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName;
@@ -120,7 +118,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 		} catch (NameNotFoundException e) {
 		}
 	}
-	
+
 	private void setFrontCamAsDefault() {
 		int camId = 0;
 		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
@@ -130,7 +128,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 		}
 		mLinphoneCore.setVideoDevice(camId);
 	}
-	
+
 	private void copyAssetsFromPackage(String basePath) throws IOException {
 		LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.oldphone_mono, basePath + "/oldphone_mono.wav");
 		LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.ringback, basePath + "/ringback.wav");
@@ -140,21 +138,21 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 		LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.lpconfig, basePath + "/lpconfig.xsd");
 		LinphoneMiniUtils.copyIfNotExist(mContext, R.raw.rootca, basePath + "/rootca.pem");
 	}
-	
+
 	private void initLinphoneCoreValues(String basePath) {
 		mLinphoneCore.setContext(mContext);
 		mLinphoneCore.setRing(null);
 		mLinphoneCore.setRootCA(basePath + "/rootca.pem");
 		mLinphoneCore.setPlayFile(basePath + "/toy_mono.wav");
 		mLinphoneCore.setChatDatabasePath(basePath + "/linphone-history.db");
-		
+
 		int availableCores = Runtime.getRuntime().availableProcessors();
 		mLinphoneCore.setCpuCount(availableCores);
 	}
-	
+
 	@Override
 	public void authInfoRequested(LinphoneCore lc, String realm, String username) {
-		
+
 	}
 
 	@Override
@@ -171,13 +169,13 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 	@Override
 	public void callStatsUpdated(LinphoneCore lc, LinphoneCall call,
 			LinphoneCallStats stats) {
-		
+
 	}
 
 	@Override
 	public void callEncryptionChanged(LinphoneCore lc, LinphoneCall call,
 			boolean encrypted, String authenticationToken) {
-		
+
 	}
 
 	@Override
@@ -189,18 +187,18 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 	@Override
 	public void newSubscriptionRequest(LinphoneCore lc, LinphoneFriend lf,
 			String url) {
-		
+
 	}
 
 	@Override
 	public void notifyPresenceReceived(LinphoneCore lc, LinphoneFriend lf) {
-		
+
 	}
 
 	@Override
 	public void textReceived(LinphoneCore lc, LinphoneChatRoom cr,
 			LinphoneAddress from, String message) {
-		
+
 	}
 
 	@Override
@@ -216,37 +214,37 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 
 	@Override
 	public void dtmfReceived(LinphoneCore lc, LinphoneCall call, int dtmf) {
-		
+
 	}
 
 	@Override
 	public void ecCalibrationStatus(LinphoneCore lc, EcCalibratorStatus status,
 			int delay_ms, Object data) {
-		
+
 	}
 
 	@Override
 	public void notifyReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneAddress from, byte[] event) {
-		
+
 	}
 
 	@Override
 	public void transferState(LinphoneCore lc, LinphoneCall call,
 			State new_call_state) {
-		
+
 	}
 
 	@Override
 	public void infoReceived(LinphoneCore lc, LinphoneCall call,
 			LinphoneInfoMessage info) {
-		
+
 	}
 
 	@Override
 	public void subscriptionStateChanged(LinphoneCore lc, LinphoneEvent ev,
 			SubscriptionState state) {
-		
+
 	}
 
 	@Override
@@ -258,7 +256,7 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 	@Override
 	public void publishStateChanged(LinphoneCore lc, LinphoneEvent ev,
 			PublishState state) {
-		
+
 	}
 
 	@Override
@@ -269,22 +267,22 @@ public class LinphoneMiniManager implements LinphoneCoreListener {
 
 	@Override
 	public void show(LinphoneCore lc) {
-		
+
 	}
 
 	@Override
 	public void displayStatus(LinphoneCore lc, String message) {
-		
+
 	}
 
 	@Override
 	public void displayMessage(LinphoneCore lc, String message) {
-		
+
 	}
 
 	@Override
 	public void displayWarning(LinphoneCore lc, String message) {
-		
+
 	}
 
 }

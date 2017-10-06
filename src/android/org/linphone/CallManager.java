@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 CallManager.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import org.linphone.core.LinphoneAddress;
 import org.linphone.core.LinphoneCall;
@@ -28,30 +29,27 @@ import org.linphone.mediastream.Log;
 
 /**
  * Handle call updating, reinvites.
- * 
- * @author Guillaume Beraudo
- *
  */
 public class CallManager {
 
 	private static CallManager instance;
-	
+
 	private CallManager() {}
 	public static final synchronized CallManager getInstance() {
 		if (instance == null) instance = new CallManager();
 		return instance;
 	}
-	
+
 	private BandwidthManager bm() {
 		return BandwidthManager.getInstance();
 	}
-	
 
-	
-	
+
+
+
 	public void inviteAddress(LinphoneAddress lAddress, boolean videoEnabled, boolean lowBandwidth) throws LinphoneCoreException {
 		LinphoneCore lc = LinphoneManager.getLc();
-		
+
 		LinphoneCallParams params = lc.createCallParams(null);
 		bm().updateWithProfileSettings(lc, params);
 
@@ -60,7 +58,7 @@ public class CallManager {
 		} else {
 			params.setVideoEnabled(false);
 		}
-		
+
 		if (lowBandwidth) {
 			params.enableLowBandwidth(true);
 			Log.d("Low bandwidth enabled in call params");
@@ -71,7 +69,7 @@ public class CallManager {
 
 
 
-	
+
 	/**
 	 * Add video to a currently running voice only call.
 	 * No re-invite is sent if the current call is already video
@@ -88,7 +86,7 @@ public class CallManager {
 		LinphoneCallParams params = lc.createCallParams(lCall);
 
 		if (params.getVideoEnabled()) return false;
-		
+
 
 		// Check if video possible regarding bandwidth limitations
 		bm().updateWithProfileSettings(lc, params);
@@ -104,7 +102,7 @@ public class CallManager {
 	}
 
 
-	
+
 	/**
 	 * Re-invite with parameters updated from profile.
 	 */
@@ -136,5 +134,5 @@ public class CallManager {
 		bm().updateWithProfileSettings(lc, params);
 		lc.updateCall(lCall, null);
 	}
-	
+
 }

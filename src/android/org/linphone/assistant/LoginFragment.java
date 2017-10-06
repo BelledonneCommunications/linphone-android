@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 LoginFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -32,9 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-/**
- * @author Sylvain Berfini
- */
+
 public class LoginFragment extends Fragment implements OnClickListener, TextWatcher {
 	private EditText login, userid, password, domain;
 	private RadioGroup transports;

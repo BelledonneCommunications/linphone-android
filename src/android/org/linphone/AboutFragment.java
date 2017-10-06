@@ -1,7 +1,7 @@
 package org.linphone;
 /*
 AboutFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -40,9 +40,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * @author Sylvain Berfini
- */
 public class AboutFragment extends Fragment implements OnClickListener {
 	View sendLogButton = null;
 	View resetLogButton = null;
@@ -74,12 +71,12 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		resetLogButton = view.findViewById(R.id.reset_log);
 		resetLogButton.setOnClickListener(this);
 		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
-		
+
 		mListener = new LinphoneCoreListenerBase() {
 			@Override
 			public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
 			}
-			
+
 			@Override
 			public void uploadStateChanged(LinphoneCore lc, LogCollectionUploadState state, String info) {
 				if (state == LogCollectionUploadState.LogCollectionUploadStateInProgress) {
@@ -96,13 +93,13 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 		return view;
 	}
-	
+
 	private void displayUploadLogsInProgress() {
 		if (uploadInProgress) {
 			return;
 		}
 		uploadInProgress = true;
-		
+
 		progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
 		Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorE));
 		d.setAlpha(200);
@@ -134,7 +131,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
-		
+
 		super.onPause();
 	}
 
@@ -144,11 +141,11 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
-		
+
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(FragmentsAvailable.ABOUT);
 		}
-		
+
 		super.onResume();
 	}
 
@@ -169,7 +166,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();

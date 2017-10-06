@@ -7,7 +7,7 @@ import java.util.Locale;
 
 /*
 Purchasable.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -24,15 +24,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-/**
- * @author Sylvain Berfini
- */
 public class Purchasable {
 	private String id, title, description, price;
 	private long expire;
-	private String purchasePayload, purchasePayloadSignature; 
+	private String purchasePayload, purchasePayloadSignature;
 	private String userData;
-	
+
 	public Purchasable(String id) {
 		this.id = id;
 	}
@@ -71,7 +68,7 @@ public class Purchasable {
 	public long getExpire() {
 		return expire;
 	}
-	
+
 	public String getExpireDate() {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
 		Date date = new Date(expire);
@@ -82,26 +79,26 @@ public class Purchasable {
 		this.expire = expire;
 		return this;
 	}
-	
+
 	public Purchasable setPayloadAndSignature(String payload, String signature) {
 		this.purchasePayload = payload;
 		this.purchasePayloadSignature = signature;
 		return this;
 	}
-	
+
 	public String getPayload() {
 		return this.purchasePayload;
 	}
-	
+
 	public String getPayloadSignature() {
 		return this.purchasePayloadSignature;
 	}
-	
+
 	public Purchasable setUserData(String data) {
 		this.userData = data;
 		return this;
 	}
-	
+
 	public String getUserData() {
 		return this.userData;
 	}

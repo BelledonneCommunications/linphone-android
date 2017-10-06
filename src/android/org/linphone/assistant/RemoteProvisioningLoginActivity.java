@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 RemoteProvisioningLoginActivity.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -34,9 +34,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-/**
- * @author Sylvain Berfini
- */
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
 	private EditText login, password, domain;
 	private Button connect;
@@ -46,7 +43,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.assistant_remote_provisioning_login);
-		
+
 		login = (EditText) findViewById(R.id.assistant_username);
 		password = (EditText) findViewById(R.id.assistant_password);
 		domain = (EditText) findViewById(R.id.assistant_domain);
@@ -71,7 +68,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			}
 		};
 	}
-	
+
 	private void cancelWizard(boolean bypassCheck) {
 		if (bypassCheck || getResources().getBoolean(R.bool.allow_cancel_remote_provisioning_login_activity)) {
 			LinphonePreferences.instance().disableProvisioningLoginView();
@@ -79,7 +76,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			finish();
 		}
 	}
-	
+
 	private boolean storeAccount(String username, String password, String domain) {
 		XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
 		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
@@ -102,10 +99,10 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			Log.e(e);
 			return false;
 		}
-		
+
 		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, null, password, null, null, domain);
 		lc.addAuthInfo(authInfo);
-		
+
 		if (LinphonePreferences.instance().getAccountCount() == 1)
 			lc.setDefaultProxyConfig(prxCfg);
 		*/
@@ -133,7 +130,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+
 		if (id == R.id.cancel) {
 			cancelWizard(false);
 		}

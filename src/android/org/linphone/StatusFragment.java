@@ -1,7 +1,7 @@
 package org.linphone;
 /*
 StatusFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -48,9 +48,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * @author Sylvain Berfini
- */
 public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, voicemailCount;

@@ -1,6 +1,8 @@
+package org.linphone.tutorials;
+
 /*
 TutorialChatRoomActivity.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone.tutorials;
 
 import org.linphone.R;
 import org.linphone.core.LinphoneCoreException;
@@ -33,8 +34,6 @@ import android.widget.TextView;
 
 /**
  * Activity for displaying and starting the chatroom example on Android phone.
- *
- * @author Guillaume Beraudo
  *
  */
 public class TutorialChatRoomActivity extends Activity {
@@ -56,12 +55,12 @@ public class TutorialChatRoomActivity extends Activity {
 		final TextView outputText = (TextView) findViewById(R.id.OutputText);
 		final TutorialNotifier notifier = new AndroidTutorialNotifier(mHandler, outputText);
 
-		
+
 		// Create HelloWorld object
 		tutorial = new TutorialChatRoom(notifier);
 
-		
-		
+
+
 		// Assign call action to call button
 		buttonCall = (Button) findViewById(R.id.CallButton);
 		buttonCall.setOnClickListener(new View.OnClickListener() {
@@ -80,8 +79,8 @@ public class TutorialChatRoomActivity extends Activity {
 			}
 		});
 	}
-	
-	
+
+
 	private class TutorialLaunchingThread extends Thread {
 		@Override
 		public void run() {

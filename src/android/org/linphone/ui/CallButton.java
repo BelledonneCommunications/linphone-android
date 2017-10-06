@@ -1,6 +1,8 @@
+package org.linphone.ui;
+
 /*
 CallButton.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.linphone.ui;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -33,9 +34,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-/**
- * @author Guillaume Beraudo
- */
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
 
 	private AddressText mAddress;
@@ -52,7 +50,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 	public void onClick(View v) {
 		try {
 			if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
-				if (mAddress.getText().length() > 0) { 
+				if (mAddress.getText().length() > 0) {
 					LinphoneManager.getInstance().newOutgoingCall(mAddress);
 				} else {
 					if (LinphonePreferences.instance().isBisFeatureEnabled()) {
@@ -67,7 +65,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 						if (log == null) {
 							return;
 						}
-						
+
 						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 						if (lpc != null && log.getTo().getDomain().equals(lpc.getDomain())) {
 							mAddress.setText(log.getTo().getUserName());
@@ -84,7 +82,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 			onWrongDestinationAddress();
 		}
 	}
-	
+
 	protected void onWrongDestinationAddress() {
 		Toast.makeText(getContext()
 				,String.format(getResources().getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())

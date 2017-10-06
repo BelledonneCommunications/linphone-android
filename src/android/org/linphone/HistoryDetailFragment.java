@@ -1,7 +1,8 @@
 package org.linphone;
+
 /*
 HistoryDetailFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,9 +34,6 @@ import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.LinphoneCoreFactory;
 import org.linphone.mediastream.Log;
 
-/**
- * @author Sylvain Berfini
- */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts, goToContact, back;
 	private View view;

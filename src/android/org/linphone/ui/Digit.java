@@ -1,6 +1,8 @@
+package org.linphone.ui;
+
 /*
 Digit.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone.ui;
 
 import org.linphone.CallActivity;
 import org.linphone.LinphoneManager;
@@ -52,7 +53,7 @@ public class Digit extends Button implements AddressAware {
 	protected void onTextChanged(CharSequence text, int start, int before,
 			int after) {
 		super.onTextChanged(text, start, before, after);
-		
+
 		if (text == null || text.length() < 1) {
 			return;
 		}
@@ -60,21 +61,21 @@ public class Digit extends Button implements AddressAware {
 		DialKeyListener lListener = new DialKeyListener();
 		setOnClickListener(lListener);
 		setOnTouchListener(lListener);
-		
+
 		if ("0+".equals(text)) {
 			setOnLongClickListener(lListener);
 		}
-		
+
 		if ("1".equals(text)) {
 			setOnLongClickListener(lListener);
 		}
 	}
-	
+
 	public Digit(Context context, AttributeSet attrs, int style) {
 		super(context, attrs, style);
 		setLongClickable(true);
 	}
-	
+
 	public Digit(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setLongClickable(true);
@@ -112,7 +113,7 @@ public class Digit extends Button implements AddressAware {
 					lc.sendDtmf(mKeyCode);
 				}
 			}
-			
+
 			if (mAddress != null) {
 				int lBegin = mAddress.getSelectionStart();
 				if (lBegin == -1) {
@@ -169,7 +170,7 @@ public class Digit extends Button implements AddressAware {
 			if (CallActivity.isInstanciated()) {
 				CallActivity.instance().resetControlsHidingCallBack();
 			}
-			
+
 			LinphoneCore lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
 				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
@@ -182,7 +183,7 @@ public class Digit extends Button implements AddressAware {
 			}
 			return false;
 		}
-		
+
 		public boolean onLongClick(View v) {
 			int id = v.getId();
 			LinphoneCore lc = LinphoneManager.getLc();
@@ -192,7 +193,7 @@ public class Digit extends Button implements AddressAware {
 				// Called if "0+" dtmf
 				lc.stopDtmf();
 			}
-			
+
 			if(id == R.id.Digit1 && lc.getCalls().length == 0){
 				String voiceMail = LinphonePreferences.instance().getVoiceMailUri();
 				mAddress.getEditableText().clear();
@@ -202,8 +203,8 @@ public class Digit extends Button implements AddressAware {
 				}
 				return true;
 			}
-			
-			
+
+
 			if (mAddress == null) return true;
 
 			int lBegin = mAddress.getSelectionStart();

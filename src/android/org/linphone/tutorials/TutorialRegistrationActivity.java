@@ -1,6 +1,8 @@
+package org.linphone.tutorials;
+
 /*
 TutorialRegistrationActivity.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone.tutorials;
 
 import org.linphone.R;
 import org.linphone.core.LinphoneCoreException;
@@ -32,8 +33,6 @@ import android.widget.TextView;
 
 /**
  * Activity for displaying and starting the registration example on Android phone.
- * 
- * @author Guillaume Beraudo
  *
  */
 public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
@@ -62,12 +61,12 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 		outputText = (TextView) findViewById(R.id.OutputText);
 		final TutorialNotifier notifier = new AndroidTutorialNotifier(mHandler, outputText);
 
-		
+
 		// Create Tutorial object
 		tutorial = new TutorialRegistration(notifier);
 
-		
-		
+
+
 		// Assign call action to call button
 		buttonCall = (Button) findViewById(R.id.CallButton);
 		buttonCall.setText("Register");
@@ -87,8 +86,8 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 			}
 		});
 	}
-	
-	
+
+
 	private class TutorialLaunchingThread extends Thread {
 		@Override
 		public void run() {

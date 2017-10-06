@@ -1,7 +1,7 @@
 package org.linphone.tutorials;
 /*
 TutorialLauncherActivity.java
-Copyright (C) 2013  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,32 +25,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-/**
- * @author Sylvain Berfini
- */
 public class TutorialLauncherActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tutorials);
 	}
-	
+
 	public void startHelloWorldTutorial(View v) {
 		startActivity(new Intent().setClass(TutorialLauncherActivity.this, TutorialHelloWorldActivity.class));
 	}
-	
+
 	public void startRegistrationTutorial(View v) {
 		startActivity(new Intent().setClass(TutorialLauncherActivity.this, TutorialRegistrationActivity.class));
 	}
-	
+
 	public void startChatRoomTutorial(View v) {
 		startActivity(new Intent().setClass(TutorialLauncherActivity.this, TutorialChatRoomActivity.class));
 	}
-	
+
 	public void startBuddyStatusTutorial(View v) {
 		startActivity(new Intent().setClass(TutorialLauncherActivity.this, TutorialBuddyStatusActivity.class));
 	}
-	
+
 	public void startCardDavSyncTutorial(View v) {
 		startActivity(new Intent().setClass(TutorialLauncherActivity.this, TutorialCardDavSync.class));
 	}

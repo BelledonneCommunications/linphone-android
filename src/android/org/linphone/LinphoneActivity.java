@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
  LinphoneActivity.java
- Copyright (C) 2012  Belledonne Communications, Grenoble, France
+ Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -103,9 +103,6 @@ import java.util.List;
 
 import static org.linphone.LinphoneActivity.ChatRoomContainer.createChatroomContainer;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneActivity extends LinphoneGenericActivity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;

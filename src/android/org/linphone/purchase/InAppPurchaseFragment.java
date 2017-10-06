@@ -1,7 +1,7 @@
 package org.linphone.purchase;
 /*
 InAppPurchaseFragment.java
-Copyright (C) 2016  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -50,7 +50,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 						 Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 
 		View view = inflater.inflate(R.layout.in_app_store, container, false);

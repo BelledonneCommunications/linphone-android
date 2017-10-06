@@ -2,7 +2,7 @@ package org.linphone.assistant;
 
 /*
 CodecDownloaderFragment.java
-Copyright (C) 2016  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -37,9 +37,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-/**
- * @author Erwan CROZE
- */
 public class CodecDownloaderFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private TextView question;

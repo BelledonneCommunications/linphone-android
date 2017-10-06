@@ -32,9 +32,7 @@ import android.text.Spanned;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
-/**
- * @author Sylvain Berfini
- */
+
 public class Compatibility {
 	public static void CreateChannel(Context context) {
 		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {

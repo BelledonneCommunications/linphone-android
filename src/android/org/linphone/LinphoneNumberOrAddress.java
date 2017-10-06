@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 LinphoneNumberOrAddress.java
-Copyright (C) 2016  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,30 +19,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.linphone;
-
 import java.io.Serializable;
 
 public class LinphoneNumberOrAddress implements Serializable, Comparable<LinphoneNumberOrAddress> {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2301689469730072896L;
-	
+
 	private boolean isSIPAddress;
 	private String value, oldValueForUpdatePurpose;
-	
+
 	public LinphoneNumberOrAddress(String v, boolean isSIP) {
 		value = v;
 		isSIPAddress = isSIP;
 		oldValueForUpdatePurpose = null;
 	}
-	
+
 	public LinphoneNumberOrAddress(String v, boolean isSip, String old) {
 		this(v, isSip);
 		oldValueForUpdatePurpose = old;
 	}
-	
+
 	@Override
 	public int compareTo(LinphoneNumberOrAddress noa) {
 		if (noa.isSIPAddress() == isSIPAddress()) {
@@ -53,7 +50,7 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 	public boolean isSIPAddress() {
 		return isSIPAddress;
 	}
-	
+
 	public String getOldValue() {
 		return oldValueForUpdatePurpose;
 	}
@@ -61,11 +58,11 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 	public void setOldValue(String v) {
 		oldValueForUpdatePurpose = v;
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
-	
+
 	public void setValue(String v) {
 		value = v;
 	}

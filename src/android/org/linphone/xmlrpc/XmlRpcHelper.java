@@ -1,5 +1,24 @@
 package org.linphone.xmlrpc;
 
+/*
+XmlRpcHelper.java
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.core.LinphoneXmlRpcRequest;
@@ -20,7 +39,7 @@ public class XmlRpcHelper {
     public static final String SERVER_ERROR_SIGNATURE_VERIFICATION_FAILED = "ERROR_SIGNATURE_VERIFICATION_FAILED";
     public static final String SERVER_ERROR_ACCOUNT_ALREADY_EXISTS = "ERROR_ACCOUNT_ALREADY_EXISTS";
     public static final String SERVER_ERROR_UNKNOWN_ERROR = "ERROR_UNKNOWN_ERROR";
-    
+
     public static final String CLIENT_ERROR_INVALID_SERVER_URL = "INVALID_SERVER_URL";
     public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
 
@@ -29,7 +48,7 @@ public class XmlRpcHelper {
     public XmlRpcHelper() {
 		xmlRpcSession = new LinphoneXmlRpcSessionImpl(LinphoneManager.getLcIfManagerNotDestroyedOrNull(), LinphonePreferences.instance().getInAppPurchaseValidatingServerUrl());
     }
-	
+
 	public void createAccountAsync(final XmlRpcListener listener, String username, String email, String password) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("create_account", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -54,7 +73,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(password == null ? "" : password);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void getAccountExpireAsync(final XmlRpcListener listener, String username, String password) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("get_account_expiration", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -78,7 +97,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(password);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void updateAccountExpireAsync(final XmlRpcListener listener, String username, String password, String domain, String payload, String signature) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("update_expiration_date", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -105,7 +124,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(signature);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void activateAccountAsync(final XmlRpcListener listener, String username, String password) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("activate_account", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -129,7 +148,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(password);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void isAccountActivatedAsync(final XmlRpcListener listener, String username) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_activated", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -154,7 +173,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(username);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void isTrialAccountAsync(final XmlRpcListener listener, String username, String password) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("is_account_trial", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -176,7 +195,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(password);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void isAccountAsync(final XmlRpcListener listener, String username) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_account_activated", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -201,7 +220,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(username);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void changeAccountEmailAsync(final XmlRpcListener listener, String username, String password, String newEmail) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("change_email", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -214,7 +233,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onAccountEmailChanged(result);
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
@@ -227,7 +246,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(newEmail);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void changeAccountPasswordAsync(final XmlRpcListener listener, String username, String oldPassword, String newPassword) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("change_password", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -240,7 +259,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onAccountPasswordChanged(result);
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
@@ -253,7 +272,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(newPassword);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void changeAccountHashPasswordAsync(final XmlRpcListener listener, String username, String oldPassword, String newPassword) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("change_hash", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -266,7 +285,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onAccountPasswordChanged(result);
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
@@ -279,7 +298,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(newPassword);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void sendRecoverPasswordLinkByEmailAsync(final XmlRpcListener listener, String usernameOrEmail) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("send_reset_account_password_email", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -292,7 +311,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onRecoverPasswordLinkSent(result);
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
@@ -303,7 +322,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(usernameOrEmail);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void sendActivateAccountLinkByEmailAsync(final XmlRpcListener listener, String usernameOrEmail) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("resend_activation_email", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -316,7 +335,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onActivateAccountLinkSent(result);
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
@@ -327,7 +346,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(usernameOrEmail);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void sendUsernameByEmailAsync(final XmlRpcListener listener, String email) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("recover_username_from_email", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -340,7 +359,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onUsernameSent(result);
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);
@@ -351,7 +370,7 @@ public class XmlRpcHelper {
 		xmlRpcRequest.addStringArg(email);
 		xmlRpcSession.sendRequest(xmlRpcRequest);
 	}
-	
+
 	public void verifySignatureAsync(final XmlRpcListener listener, String payload, String signature) {
 		LinphoneXmlRpcRequest xmlRpcRequest = new LinphoneXmlRpcRequestImpl("check_payload_signature", LinphoneXmlRpcRequest.ArgType.String);
 		xmlRpcRequest.setListener(new LinphoneXmlRpcRequestListener() {
@@ -365,7 +384,7 @@ public class XmlRpcHelper {
 						listener.onError(result);
 						return;
 					}
-					
+
 					listener.onSignatureVerified("OK".equals(result));
 				} else if (request.getStatus() == LinphoneXmlRpcRequest.Status.Failed) {
 					Log.e(result);

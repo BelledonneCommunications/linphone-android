@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 CreateAccountActivationFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -33,9 +33,7 @@ import org.linphone.R;
 import org.linphone.core.LinphoneAccountCreator;
 import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
 import org.linphone.core.LinphoneCoreFactory;
-/**
- * @author Sylvain Berfini
- */
+
 public class CreateAccountActivationFragment extends Fragment implements OnClickListener, LinphoneAccountCreatorListener {
 	private String username, password;
 	private Button checkAccount;
