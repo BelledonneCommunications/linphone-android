@@ -189,6 +189,8 @@
     <string name="displayed">Read</string>
     <string name="delivered">Delivered</string>
     <string name="resend">Resend</string>
+    <string name="conversation_information">Conversation Infos</string>
+    <string name="administrator">Admin</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>
