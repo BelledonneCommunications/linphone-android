@@ -101,6 +101,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static org.linphone.FragmentsAvailable.CHAT;
@@ -1782,14 +1783,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
 				String link = text.substring(indexHttp, indexFinHttp);
 				String linkWithoutScheme = link.replace("http://", "");
-				text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+				text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
 			}
 			if (text.contains("https://")) {
 				int indexHttp = text.indexOf("https://");
 				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
 				String link = text.substring(indexHttp, indexFinHttp);
 				String linkWithoutScheme = link.replace("https://", "");
-				text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+				text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
 			}
 
 			return Compatibility.fromHtml(text);
