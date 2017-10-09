@@ -174,10 +174,11 @@ public class ContactEditorFragment extends Fragment {
 		lastName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (lastName.getText().length() > 0 || firstName.getText().length() > 0) {
+				if (lastName.getText().length() > 0 && firstName.getText().length() > 0) {
 					ok.setEnabled(true);
 				} else {
 					ok.setEnabled(false);
+					Toast.makeText(getActivity(), "First and Last name can't be empty",Toast.LENGTH_SHORT).show();
 				}
 			}
 
@@ -194,10 +195,11 @@ public class ContactEditorFragment extends Fragment {
 		firstName.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (firstName.getText().length() > 0 || lastName.getText().length() > 0) {
+				if (firstName.getText().length() > 0 && lastName.getText().length() > 0) {
 					ok.setEnabled(true);
 				} else {
 					ok.setEnabled(false);
+					Toast.makeText(getActivity(), "First and Last name can't be empty",Toast.LENGTH_SHORT).show();
 				}
 			}
 
