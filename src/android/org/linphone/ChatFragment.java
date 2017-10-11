@@ -1095,12 +1095,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (progressDialog != null && progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
-
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
 			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
 			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", extension, result, null);
 			content.setName(fileName);
-
 			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
 			message.setListener(LinphoneManager.getInstance());
 			message.setAppData(path);
@@ -1198,7 +1196,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				super.onActivityResult(requestCode, resultCode, data);
 			}
 		} else {
-			LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+			if (LinphoneUtils.isExtensionImage(imageToUploadUri.getPath()))
+				sendImageMessage(imageToUploadUri.getPath(), 0);
 		}
 	}
 
