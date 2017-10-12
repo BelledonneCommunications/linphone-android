@@ -28,7 +28,16 @@ public class ContactAddress implements Serializable {
 	private String address;
 	private boolean isLinphoneContact;
 	private boolean isSelect = false;
+	private boolean isAdmin = false;
 	private View view;
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
+	}
 
 	public boolean isSelect() {
 		return isSelect;

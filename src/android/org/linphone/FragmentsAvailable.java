@@ -34,7 +34,9 @@ public enum FragmentsAvailable {
 	SETTINGS,
 	CHAT_LIST,
 	CHAT,
-	CREATE_CHAT;
+	CREATE_CHAT,
+	INFO_GROUP_CHAT,
+	GROUP_CHAT;
 
 	public boolean shouldAnimate() {
 		return true;

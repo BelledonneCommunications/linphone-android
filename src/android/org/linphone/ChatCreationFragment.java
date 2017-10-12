@@ -242,6 +242,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			getFragmentManager().popBackStackImmediate();
 		} else if (id == R.id.next) {
 			//TODO aller selon le nombre de selectionner en chat ou en groupe
+			if (contactsSelected.size() == 1) {
+				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
+			} else {
+
+			}
 		} else if (id == R.id.clearSearchField) {
 			searchField.setText("");
 			searchAdapter.searchContacts("", contactsList);

@@ -307,10 +307,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		keyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
-			Rect visibleArea = new Rect();
-			getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleArea);
+				Rect visibleArea = new Rect();
+				getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleArea);
 
-			int heightDiff = getActivity().getWindow().getDecorView().getRootView().getHeight() - (visibleArea.bottom - visibleArea.top);
+				int heightDiff = getActivity().getWindow().getDecorView().getRootView().getHeight() - (visibleArea.bottom - visibleArea.top);
 				if (heightDiff > 200) {
 					showKeyboardVisibleMode();
 				} else {

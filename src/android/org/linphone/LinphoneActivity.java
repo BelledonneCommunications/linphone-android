@@ -409,6 +409,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		case CREATE_CHAT:
 			fragment = new ChatCreationFragment();
 			break;
+		case INFO_GROUP_CHAT:
+			fragment = new InfoGroupChatFragment();
+			break;
+		case GROUP_CHAT:
+			fragment = new GroupChatFragment();
+			break;
 		default:
 			break;
 		}
@@ -648,6 +654,21 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			count += chatroom.getUnreadMessagesCount();
 		}
 		return count;
+	}
+
+	public void displayInfoChat(List<ContactAddress> list) {
+		Bundle extras = new Bundle();
+		ArrayList<String> listUri = new ArrayList<String>();
+		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null
+				&& LinphoneManager.getLc().getDefaultProxyConfig() != null
+				&& LinphoneManager.getLc().getDefaultProxyConfig().getIdentity() != null) {
+			listUri.add(LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly());
+		}
+		for (ContactAddress ca : list) {
+			listUri.add(ca.getAddress());
+		}
+		extras.putStringArrayList("contactsSelected", listUri);
+		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
 	}
 
 	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, LinphoneAddress lAddress) {
