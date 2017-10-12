@@ -410,8 +410,8 @@ private static AssistantActivity instance;
 		configureLinphoneProxyConfig(accountCreator);
 	}
 
-	public void genericLogIn(String username, String userid, String password, String prefix, String domain, TransportType transport) {
-		saveCreatedAccount(username, userid, password, null, prefix, domain, transport);
+	public void genericLogIn(String username, String userid, String password, String displayname, String prefix, String domain, TransportType transport) {
+		saveCreatedAccount(username, userid, password, displayname, null, prefix, domain, transport);
 	}
 
 	private void display(AssistantFragmentsEnum fragment) {
@@ -507,7 +507,7 @@ private static AssistantActivity instance;
 		return phoneNumberWithCountry;
 	}
 
-	public void saveCreatedAccount(String username, String userid, String password, String ha1, String prefix, String domain, TransportType transport) {
+	public void saveCreatedAccount(String username, String userid, String password, String displayname, String ha1, String prefix, String domain, TransportType transport) {
 
 		username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
 		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
@@ -524,6 +524,7 @@ private static AssistantActivity instance;
 				.setDomain(domain)
 				.setHa1(ha1)
 				.setUserId(userid)
+				.setDisplayName(displayname)
 				.setPassword(password);
 
 		if (prefix != null) {
