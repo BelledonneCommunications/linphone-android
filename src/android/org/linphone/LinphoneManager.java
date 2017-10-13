@@ -179,7 +179,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 	private IntentFilter mCallIntentFilter;
 	private IntentFilter mNetworkIntentFilter;
 	private Handler mHandler = new Handler();
-	private WakeLock mIncallWakeLock;
 	private WakeLock mProximityWakelock;
 	private LinphoneAccountCreator accountCreator;
 	private static List<LinphoneChatMessage> mPendingChatFileMessage;
@@ -1011,7 +1010,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 			boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
 			if (wifiOnly){
 				if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-					setDnsServers();
 					mLc.setNetworkReachable(true);
 				}
 				else {
@@ -1027,7 +1025,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 					Log.i("Connectivity has changed.");
 					mLc.setNetworkReachable(false);
 				}
-				setDnsServers();
 				mLc.setNetworkReachable(true);
 				mLastNetworkType = curtype;
 			}
@@ -1465,12 +1462,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						routeAudioToReceiver();
 					}
 				}
-				if (mIncallWakeLock != null && mIncallWakeLock.isHeld()) {
-					mIncallWakeLock.release();
-					Log.i("Last call ended: releasing incall (CPU only) wake lock");
-				} else {
-					Log.i("Last call ended: no incall (CPU only) wake lock were held");
-				}
 			}
 		}
 		if (state == State.CallUpdatedByRemote) {
@@ -1497,15 +1488,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		if (state == State.StreamsRunning) {
 			startBluetooth();
 			setAudioManagerInCallMode();
-			if (mIncallWakeLock == null) {
-				mIncallWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,	"incall");
-			}
-			if (!mIncallWakeLock.isHeld()) {
-				Log.i("New call active : acquiring incall (CPU only) wake lock");
-				mIncallWakeLock.acquire();
-			} else {
-				Log.i("New call active while incall (CPU only) wake lock already active");
-			}
 		}
 	}
 
@@ -1824,26 +1806,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 
 	public void setDozeModeEnabled(boolean b) {
 		dozeModeEnabled = b;
-	}
-
-	public void setDnsServers() {
-		if (mConnectivityManager == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-			return;
-
-		if (mConnectivityManager.getActiveNetwork() == null
-				|| mConnectivityManager.getLinkProperties(mConnectivityManager.getActiveNetwork()) == null)
-			return;
-
-		int i = 0;
-		List<InetAddress> inetServers = null;
-		inetServers = mConnectivityManager.getLinkProperties(mConnectivityManager.getActiveNetwork()).getDnsServers();
-
-		String[] servers = new String[inetServers.size()];
-
-		for (InetAddress address : inetServers) {
-			servers[i++] = address.getHostAddress();
-		}
-		mLc.setDnsServers(servers);
 	}
 
 	public String getmDynamicConfigFile() {
