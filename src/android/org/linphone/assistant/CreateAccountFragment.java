@@ -325,6 +325,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 			} else {
 				if (useEmail.isChecked()) accountCreator.setPhoneNumber(null, null);
 				if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
+					LinphoneManager.getLc().getConfig().loadXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
 					accountCreator.isAccountUsed();
 				} else {
 					LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForUsernameStatus(LinphoneAccountCreator.UsernameCheck.TooShort)
