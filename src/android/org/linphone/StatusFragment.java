@@ -17,21 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import org.linphone.assistant.AssistantActivity;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneContent;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneEvent;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.mediastream.Log;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -47,6 +37,18 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.CallDirection;
+import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneContent;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.LinphoneCore.MediaEncryption;
+import org.linphone.core.LinphoneCore.RegistrationState;
+import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.LinphoneEvent;
+import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.mediastream.Log;
 
 public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
@@ -413,8 +415,12 @@ public class StatusFragment extends Fragment {
 				zrtpToRead = token.substring(2);
 			}
 
-			LinphoneService.instance().displaySasNotification(token);
-
+			// Obiane specific dev : display sas notif only if screen locked
+			KeyguardManager myKM = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
+			if( myKM.inKeyguardRestrictedInputMode()) {
+				//Screen is locked
+				LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
+			}
 			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
 			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
 					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
