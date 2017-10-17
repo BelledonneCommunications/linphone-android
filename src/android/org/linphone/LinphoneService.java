@@ -315,10 +315,6 @@ public final class LinphoneService extends Service {
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-			disableNotificationsAutomaticRegistrationStatusContent();
-		}
-
 		Bitmap bm = null;
 		try {
 			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
@@ -754,10 +750,6 @@ public final class LinphoneService extends Service {
 		} else {
 			Log.i("Linphone version is unknown");
 		}
-	}
-
-	public void disableNotificationsAutomaticRegistrationStatusContent() {
-		mDisableRegistrationStatus = true;
 	}
 
 	private synchronized void sendNotification(int level, int textId) {

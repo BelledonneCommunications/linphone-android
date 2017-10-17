@@ -40,7 +40,7 @@ public class ApiTwentySixPlus {
 		String id = context.getString(R.string.notification_channel_id);
 		CharSequence name = context.getString(R.string.content_title_notification);
 		String description = context.getString(R.string.content_title_notification);
-		int importance = NotificationManager.IMPORTANCE_HIGH;
+		int importance = NotificationManager.IMPORTANCE_DEFAULT;
 		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
 		mChannel.setDescription(description);
 		mChannel.enableLights(true);
