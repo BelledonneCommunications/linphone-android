@@ -591,6 +591,7 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 				LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status)
 						, AssistantActivity.instance());
 			} else {
+				LinphoneManager.getLc().getConfig().loadXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
 				accountCreator.isPhoneNumberUsed();
 			}
 		} else {
