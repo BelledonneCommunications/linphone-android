@@ -18,7 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.R;
-import org.linphone.core.LinphoneAddress.TransportType;
+import org.linphone.core.Address.TransportType;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -71,12 +71,12 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 
 			TransportType transport;
 			if(transports.getCheckedRadioButtonId() == R.id.transport_udp){
-				transport = TransportType.LinphoneTransportUdp;
+				transport = TransportType.Udp;
 			} else {
 				if(transports.getCheckedRadioButtonId() == R.id.transport_tcp){
-					transport = TransportType.LinphoneTransportTcp;
+					transport = TransportType.Tcp;
 				} else {
-					transport = TransportType.LinphoneTransportTls;
+					transport = TransportType.Tls;
 				}
 			}
 

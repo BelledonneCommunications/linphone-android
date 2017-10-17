@@ -29,9 +29,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Address;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
@@ -103,12 +103,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format)));
 
-		LinphoneAddress lAddress = null;
-		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
-		}
+		Address lAddress = null;
+		lAddress = Factory.instance().createAddress(sipUri);
 
 		if (lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());
@@ -163,13 +159,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().displayChat(sipUri, null, null);
 		} else if (id == R.id.add_contact) {
 			String uri = sipUri;
-			LinphoneAddress addr = null;
-			try {
-				addr = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-				uri = addr.asStringUriOnly();
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
+			Address addr = null;
+			addr = Factory.instance().createAddress(sipUri);
+			uri = addr.asStringUriOnly();
 			if (addr != null && addr.getDisplayName() != null)
 				LinphoneActivity.instance().displayContactsForEdition(addr.asStringUriOnly(), addr.getDisplayName());
 			else

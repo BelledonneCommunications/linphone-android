@@ -22,10 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneCallLog;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Call;
+import org.linphone.core.Call.Dir;
+import org.linphone.core.CallLog;
+import org.linphone.core.CoreException;
+import org.linphone.core.ProxyConfig;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -54,10 +55,10 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 					LinphoneManager.getInstance().newOutgoingCall(mAddress);
 				} else {
 					if (LinphonePreferences.instance().isBisFeatureEnabled()) {
-						LinphoneCallLog[] logs = LinphoneManager.getLc().getCallLogs();
-						LinphoneCallLog log = null;
-						for (LinphoneCallLog l : logs) {
-							if (l.getDirection() == CallDirection.Outgoing) {
+						CallLog[] logs = LinphoneManager.getLc().getCallLogs();
+						CallLog log = null;
+						for (CallLog l : logs) {
+							if (l.getDir() == Call.Dir.Outgoing) {
 								log = l;
 								break;
 							}
@@ -66,18 +67,18 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
 							return;
 						}
 
-						LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-						if (lpc != null && log.getTo().getDomain().equals(lpc.getDomain())) {
-							mAddress.setText(log.getTo().getUserName());
+						ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+						if (lpc != null && log.getToAddress().getDomain().equals(lpc.getDomain())) {
+							mAddress.setText(log.getToAddress().getUsername());
 						} else {
-							mAddress.setText(log.getTo().asStringUriOnly());
+							mAddress.setText(log.getToAddress().asStringUriOnly());
 						}
 						mAddress.setSelection(mAddress.getText().toString().length());
-						mAddress.setDisplayedName(log.getTo().getDisplayName());
+						mAddress.setDisplayedName(log.getToAddress().getDisplayName());
 					}
 				}
 			}
-		} catch (LinphoneCoreException e) {
+		} catch (CoreException e) {
 			LinphoneManager.getInstance().terminateCall();
 			onWrongDestinationAddress();
 		}

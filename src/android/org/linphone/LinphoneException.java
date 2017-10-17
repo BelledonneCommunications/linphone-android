@@ -1,7 +1,7 @@
 package org.linphone;
 
 /*
-LinphoneCoreException.java
+CoreException.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or

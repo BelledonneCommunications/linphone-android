@@ -25,7 +25,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.UIThreadDispatcher;
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -43,8 +43,8 @@ public class GCMService extends GCMBaseIntentService {
 	private void initLogger(Context context) {
 		LinphonePreferences.instance().setContext(context);
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
-		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
+		Factory.instance().enableLogCollection(isDebugEnabled);
+		Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class GCMService extends GCMBaseIntentService {
 		Log.d("[Push Notification] Received");
 
 		if (!LinphoneService.isReady()) {
-			startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+			context.startService(new Intent(ACTION_MAIN).setClass(context, LinphoneService.class));
 		} else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
 			UIThreadDispatcher.dispatch(new Runnable(){
 				@Override

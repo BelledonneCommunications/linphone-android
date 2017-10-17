@@ -58,10 +58,7 @@ if (firebaseEnable()) {
 
 //// Submodule Dir /////
 def submoduleDir = ['submodules/mediastreamer2/java/src',
-                    'submodules/linphone/java/j2se',
-                    'submodules/linphone/java/common',
-                    'submodules/linphone/java/impl',
-                    'submodules/linphone/coreapi/help/examples/java']
+                    'liblinphone-sdk/android-arm64/share/linphonej/java/']
 ////////////////////////
 
 ///// Exclude Files /////
@@ -75,6 +72,7 @@ if (!firebaseEnable()) {
   println '[Push Notification] Firebase enabled'
 }
 excludeFiles.add('**/mediastream/MediastreamerActivity.java')
+excludeFiles.add('src/android/org/linphone/tutorials/*.java')
 
 def excludePackage = []
 

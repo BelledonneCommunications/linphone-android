@@ -19,8 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCore;
+import org.linphone.core.CallParams;
+import org.linphone.core.Core;
 
 public class BandwidthManager {
 
@@ -47,15 +47,15 @@ public class BandwidthManager {
 	}
 
 
-	public void updateWithProfileSettings(LinphoneCore lc, LinphoneCallParams callParams) {
+	public void updateWithProfileSettings(Core lc, CallParams callParams) {
 		if (callParams != null) { // in call
 			// Update video parm if
 			if (!isVideoPossible()) { // NO VIDEO
-				callParams.setVideoEnabled(false);
-				callParams.setAudioBandwidth(40);
+				callParams.enableVideo(false);
+				callParams.setAudioBandwidthLimit(40);
 			} else {
-				callParams.setVideoEnabled(true);
-				callParams.setAudioBandwidth(0); // disable limitation
+				callParams.enableVideo(true);
+				callParams.setAudioBandwidthLimit(0); // disable limitation
 			}
 		}
 	}

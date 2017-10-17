@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.compatibility.Compatibility;
 import org.linphone.compatibility.CompatibilityScaleGestureDetector;
 import org.linphone.compatibility.CompatibilityScaleGestureListener;
-import org.linphone.core.LinphoneCall;
+import org.linphone.core.Call;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -57,7 +57,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
         Bundle savedInstanceState) {
 		View view;
-		if (LinphoneManager.getLc().hasCrappyOpenGL()) {
+		if (LinphoneManager.getLc().hasCrappyOpengl()) {
 			view = inflater.inflate(R.layout.video_no_opengl, container, false);
 		} else {
         	view = inflater.inflate(R.layout.video, container, false);
@@ -72,7 +72,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mCaptureView, new AndroidVideoWindowImpl.VideoWindowListener() {
 			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				mVideoView = surface;
-				LinphoneManager.getLc().setVideoWindow(vw);
+				LinphoneManager.getLc().setNativeVideoWindowId(vw);
 			}
 
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -81,7 +81,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				mCaptureView = surface;
-				LinphoneManager.getLc().setPreviewWindow(mCaptureView);
+				LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -147,15 +147,17 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 	public void switchCamera() {
 		try {
-			int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
+			/*int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
 			videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-			LinphoneManager.getLc().setVideoDevice(videoDeviceId);
+			LinphoneManager.getLc().setVideoDevice(videoDeviceId);*/
+			Log.e("TODO FIXME switchCamera");
+
 			CallManager.getInstance().updateCall();
 
 			// previous call will cause graph reconstruction -> regive preview
 			// window
 			if (mCaptureView != null) {
-				LinphoneManager.getLc().setPreviewWindow(mCaptureView);
+				LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
 			}
 		} catch (ArithmeticException ae) {
 			Log.e("Cannot swtich camera : no camera");
@@ -171,7 +173,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		}
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
-				LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
+				LinphoneManager.getLc().setNativeVideoWindowId(androidVideoWindowImpl);
 			}
 		}
 
@@ -187,7 +189,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				 * this call will destroy native opengl renderer which is used by
 				 * androidVideoWindowImpl
 				 */
-				LinphoneManager.getLc().setVideoWindow(null);
+				LinphoneManager.getLc().setNativeVideoWindowId(null);
 			}
 		}
 		if (LinphonePreferences.instance().isOverlayEnabled()) {
@@ -206,9 +208,9 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
     	mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, Math.max(portraitZoomFactor, landscapeZoomFactor)));
 
-    	LinphoneCall currentCall = LinphoneManager.getLc().getCurrentCall();
+    	Call currentCall = LinphoneManager.getLc().getCurrentCall();
     	if (currentCall != null) {
-    		currentCall.zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+    		currentCall.zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
             return true;
     	}
         return false;
@@ -239,7 +241,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				if (mZoomCenterY < 0)
 					mZoomCenterY = 0;
 
-				LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+				LinphoneManager.getLc().getCurrentCall().zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
 				return true;
 			}
 		}
@@ -262,7 +264,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 				resetZoom();
 			}
 
-			LinphoneManager.getLc().getCurrentCall().zoomVideo(mZoomFactor, mZoomCenterX, mZoomCenterY);
+			LinphoneManager.getLc().getCurrentCall().zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
 			return true;
 		}
 

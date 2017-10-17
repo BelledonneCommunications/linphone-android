@@ -62,19 +62,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCallStats;
-import org.linphone.core.LinphoneCallStats.LinphoneAddressFamily;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphonePlayer;
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.Call.State;
+import org.linphone.core.CallParams;
+import org.linphone.core.CallStats;
+import org.linphone.core.CallStats.AddressFamily;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Core;
+import org.linphone.core.CoreException;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.Player;
 import org.linphone.core.PayloadType;
+import org.linphone.core.StreamType;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.ui.Numpad;
@@ -120,7 +121,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private LayoutInflater inflater;
 	private ViewGroup container;
 	private boolean isConferenceRunning = false;
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 	private DrawerLayout sideMenu;
 
 	private Handler mHandler = new Handler();
@@ -156,14 +157,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		mEncoderTexts = new HashMap<String, String>();
 		mDecoderTexts = new HashMap<String, String>();
 
-		mListener = new LinphoneCoreListenerBase() {
+		mListener = new CoreListenerStub() {
 			@Override
-			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+			public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
 		        displayMissedChats();
 			}
 
 			@Override
-			public void callState(LinphoneCore lc, final LinphoneCall call, LinphoneCall.State state, String message) {
+			public void onCallStateChanged(Core lc, final Call call, Call.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
 					if (status != null) {
 						LinphoneService.instance().removeSasNotification();
@@ -186,7 +187,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				} else if (state == State.Resuming) {
 					if(LinphonePreferences.instance().isVideoEnabled()){
 						status.refreshStatusItems(call, isVideoEnabled(call));
-						if(call.getCurrentParams().getVideoEnabled()){
+						if(call.getCurrentParams().videoEnabled()){
 							showVideoView();
 						}
 					}
@@ -201,21 +202,21 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 						videoProgress.setVisibility(View.GONE);
 						status.refreshStatusItems(call, isVideoEnabled(call));
 					}
-				} else if (state == State.CallUpdatedByRemote) {
+				} else if (state == State.UpdatedByRemote) {
 					// If the correspondent proposes video while audio call
 					boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
 					if (!videoEnabled) {
 						acceptCallUpdate(false);
 					}
 
-					boolean remoteVideo = call.getRemoteParams().getVideoEnabled();
-					boolean localVideo = call.getCurrentParams().getVideoEnabled();
+					boolean remoteVideo = call.getRemoteParams().videoEnabled();
+					boolean localVideo = call.getCurrentParams().videoEnabled();
 					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !(LinphoneManager.getLc().getConference() != null)) {
 							showAcceptCallUpdateDialog();
 							createTimerForDialog(SECONDS_BEFORE_DENYING_CALL_UPDATE);
 					}
-//        			else if (remoteVideo && !LinphoneManager.getLc().isInConference() && autoAcceptCameraPolicy) {
+//        			else if (remoteVideo && !LinphoneManager.getLc().(getConference() != null) && autoAcceptCameraPolicy) {
 //        				mHandler.post(new Runnable() {
 //        					@Override
 //        					public void run() {
@@ -230,12 +231,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 
 			@Override
-			public void callEncryptionChanged(LinphoneCore lc, final LinphoneCall call, boolean encrypted, String authenticationToken) {
+			public void onCallEncryptionChanged(Core lc, final Call call, boolean encrypted, String authenticationToken) {
 				if (status != null) {
-					if(call.getCurrentParams().getMediaEncryption().equals(LinphoneCore.MediaEncryption.ZRTP) && !call.isAuthenticationTokenVerified()){
+					if(call.getCurrentParams().getMediaEncryption().equals(Core.MediaEncryption.ZRTP) && !call.getAuthenticationTokenVerified()){
 						status.showZRTPDialog(call);
 					}
-					status.refreshStatusItems(call, call.getCurrentParams().getVideoEnabled());
+					status.refreshStatusItems(call, call.getCurrentParams().videoEnabled());
 				}
 			}
 
@@ -245,7 +246,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			initUI();
 
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
-				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+				Call call = LinphoneManager.getLc().getCalls()[0];
 
 				if (LinphoneUtils.isCallEstablished(call)) {
 					enableAndRefreshInCallActions();
@@ -267,8 +268,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				refreshInCallActions();
 				return;
 			} else {
-				isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
-				isMicMuted = LinphoneManager.getLc().isMicMuted();
+				isSpeakerEnabled = LinphoneManager.getInstance().isSpeakerEnabled();
+				isMicMuted = !LinphoneManager.getLc().micEnabled();
 			}
 
 			Fragment callFragment;
@@ -307,17 +308,17 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}.start();
 	}
 
-	private boolean isVideoEnabled(LinphoneCall call) {
+	private boolean isVideoEnabled(Call call) {
 		if(call != null){
-			return call.getCurrentParams().getVideoEnabled();
+			return call.getCurrentParams().videoEnabled();
 		}
 		return false;
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean("Speaker", LinphoneManager.getLc().isSpeakerEnabled());
-		outState.putBoolean("Mic", LinphoneManager.getLc().isMicMuted());
+		outState.putBoolean("Speaker", LinphoneManager.getInstance().isSpeakerEnabled());
+		outState.putBoolean("Mic", !LinphoneManager.getLc().micEnabled());
 		outState.putBoolean("VideoCallPaused", isVideoCallPaused);
 		outState.putBoolean("AskingVideo", isVideoAsk);
 		outState.putLong("TimeRemind", TimeRemind);
@@ -573,8 +574,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void enableAndRefreshInCallActions() {
 		int confsize = 0;
 
-		if(LinphoneManager.getLc().isInConference()) {
-			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().isInConference() ? 1 : 0);
+		if( LinphoneManager.getLc().getConference() != null) {
+			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().getConference() != null ? 1 : 0);
 		}
 
 		//Enabled transfer button
@@ -706,7 +707,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 
 		else if (id == R.id.call_pause) {
-			LinphoneCall call = (LinphoneCall) v.getTag();
+			Call call = (Call) v.getTag();
 			pauseOrResumeCall(call);
 		}
 		else if (id == R.id.conference_pause) {
@@ -749,18 +750,18 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void disableVideo(final boolean videoDisabled) {
-		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		final Call call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
 			return;
 		}
 
 		if (videoDisabled) {
-			LinphoneCallParams params = LinphoneManager.getLc().createCallParams(call);
-			params.setVideoEnabled(false);
+			CallParams params = LinphoneManager.getLc().createCallParams(call);
+			params.enableVideo(false);
 			LinphoneManager.getLc().updateCall(call, params);
 		} else {
 			videoProgress.setVisibility(View.VISIBLE);
-			if (call.getRemoteParams() != null && !call.getRemoteParams().isLowBandwidthEnabled()) {
+			if (call.getRemoteParams() != null && !call.getRemoteParams().lowBandwidthEnabled()) {
 				LinphoneManager.getInstance().addVideo();
 			} else {
 				displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
@@ -783,18 +784,18 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void switchVideo(final boolean displayVideo) {
-		final LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		final Call call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
 			return;
 		}
 
 		//Check if the call is not terminated
-		if(call.getState() == State.CallEnd || call.getState() == State.CallReleased) return;
+		if(call.getState() == State.End || call.getState() == State.Released) return;
 
 		if (!displayVideo) {
 			showAudioView();
 		} else {
-			if (!call.getRemoteParams().isLowBandwidthEnabled()) {
+			if (!call.getRemoteParams().lowBandwidthEnabled()) {
 				LinphoneManager.getInstance().addVideo();
 				if (videoCallFragment == null || !videoCallFragment.isVisible())
 					showVideoView();
@@ -879,9 +880,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void toggleMicro() {
-		LinphoneCore lc = LinphoneManager.getLc();
+		Core lc = LinphoneManager.getLc();
 		isMicMuted = !isMicMuted;
-		lc.muteMic(isMicMuted);
+		lc.enableMic(!isMicMuted);
 		if (isMicMuted) {
 			micro.setImageResource(R.drawable.micro_selected);
 		} else {
@@ -897,7 +898,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			speaker.setImageResource(R.drawable.speaker_selected);
-			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+			LinphoneManager.getInstance().enableSpeaker(isSpeakerEnabled);
 		} else {
 			Log.d("Toggle speaker off, routing back to earpiece");
 			LinphoneManager.getInstance().routeAudioToReceiver();
@@ -905,8 +906,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
-	public void pauseOrResumeCall(LinphoneCall call) {
-		LinphoneCore lc = LinphoneManager.getLc();
+	public void pauseOrResumeCall(Call call) {
+		Core lc = LinphoneManager.getLc();
 		if (call != null && LinphoneManager.getLc().getCurrentCall() == call) {
 			lc.pauseCall(call);
 			if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
@@ -925,12 +926,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void hangUp() {
-		LinphoneCore lc = LinphoneManager.getLc();
-		LinphoneCall currentCall = lc.getCurrentCall();
+		Core lc = LinphoneManager.getLc();
+		Call currentCall = lc.getCurrentCall();
 
 		if (currentCall != null) {
 			lc.terminateCall(currentCall);
-		} else if (lc.isInConference()) {
+		} else if (lc.getConference() != null) {
 			lc.terminateConference();
 		} else {
 			lc.terminateAllCalls();
@@ -1076,22 +1077,19 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			timer.cancel();
 		}
 
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+		Call call = LinphoneManager.getLc().getCurrentCall();
 		if (call == null) {
 			return;
 		}
 
-		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(call);
+		CallParams params = LinphoneManager.getLc().createCallParams(call);
 		if (accept) {
-			params.setVideoEnabled(true);
-			LinphoneManager.getLc().enableVideo(true, true);
+			params.enableVideo(true);
+			LinphoneManager.getLc().enableVideoCapture(true);
+			LinphoneManager.getLc().enableVideoDisplay(true);
 		}
 
-		try {
-			LinphoneManager.getLc().acceptCallUpdate(call, params);
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
-		}
+		LinphoneManager.getLc().acceptCallUpdate(call, params);
 	}
 
 	public void startIncomingCallActivity() {
@@ -1176,11 +1174,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		instance = this;
 		super.onResume();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
-		isSpeakerEnabled = LinphoneManager.getLc().isSpeakerEnabled();
+		isSpeakerEnabled = LinphoneManager.getInstance().isSpeakerEnabled();
 
 		refreshIncallUi();
 		handleViewIntent();
@@ -1200,32 +1198,32 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void handleViewIntent() {
 		Intent intent = getIntent();
 		if(intent != null && intent.getAction() == "android.intent.action.VIEW") {
-			LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+			Call call = LinphoneManager.getLc().getCurrentCall();
 			if(call != null && isVideoEnabled(call)) {
-				LinphonePlayer player = call.getPlayer();
+				Player player = call.getPlayer();
 				String path = intent.getData().getPath();
 				Log.i("Openning " + path);
-				int openRes = player.open(path);
-				if(openRes == -1) {
+				/*int openRes = */player.open(path);
+				/*if(openRes == -1) {
 					String message = "Could not open " + path;
 					Log.e(message);
 					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 					return;
-				}
+				}*/
 				Log.i("Start playing");
-				if(player.start() == -1) {
-					player.close();
+				/*if(*/player.start()/* == -1) {*/;
+					/*player.close();
 					String message = "Could not start playing " + path;
 					Log.e(message);
 					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-				}
+				}*/
 			}
 		}
 	}
 
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -1300,14 +1298,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 
 	//CALL INFORMATION
-	private void displayCurrentCall(LinphoneCall call){
-		LinphoneAddress lAddress = call.getRemoteAddress();
+	private void displayCurrentCall(Call call){
+		Address lAddress = call.getRemoteAddress();
 		TextView contactName = (TextView) findViewById(R.id.current_contact_name);
 		setContactInformation(contactName, contactPicture, lAddress);
 		registerCallDurationTimer(null, call);
 	}
 
-	private void displayPausedCalls(Resources resources, final LinphoneCall call, int index) {
+	private void displayPausedCalls(Resources resources, final Call call, int index) {
 		// Control Row
 		LinearLayout callView;
 
@@ -1327,7 +1325,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			TextView contactName = (TextView) callView.findViewById(R.id.contact_name);
 			ImageView contactImage = (ImageView) callView.findViewById(R.id.contact_picture);
 
-			LinphoneAddress lAddress = call.getRemoteAddress();
+			Address lAddress = call.getRemoteAddress();
 			setContactInformation(contactName, contactImage, lAddress);
 			displayCallStatusIconAndReturnCallPaused(callView, call);
 			registerCallDurationTimer(callView, call);
@@ -1335,7 +1333,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		callsList.addView(callView);
 	}
 
-	private void setContactInformation(TextView contactName, ImageView contactPicture,  LinphoneAddress lAddress) {
+	private void setContactInformation(TextView contactName, ImageView contactPicture,  Address lAddress) {
 		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(lAddress);
 		if (lContact == null) {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
@@ -1346,28 +1344,28 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
-	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, LinphoneCall call) {
+	private boolean displayCallStatusIconAndReturnCallPaused(LinearLayout callView, Call call) {
 		boolean isCallPaused, isInConference;
-		ImageView callState = (ImageView) callView.findViewById(R.id.call_pause);
-		callState.setTag(call);
-		callState.setOnClickListener(this);
+		ImageView onCallStateChanged = (ImageView) callView.findViewById(R.id.call_pause);
+		onCallStateChanged.setTag(call);
+		onCallStateChanged.setOnClickListener(this);
 
 		if (call.getState() == State.Paused || call.getState() == State.PausedByRemote || call.getState() == State.Pausing) {
-			callState.setImageResource(R.drawable.pause);
+			onCallStateChanged.setImageResource(R.drawable.pause);
 			isCallPaused = true;
 			isInConference = false;
 		} else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {
 			isCallPaused = false;
 			isInConference = false;
 		} else {
-			isInConference = isConferenceRunning && call.isInConference();
+			isInConference = isConferenceRunning && call.getConference() != null;
 			isCallPaused = false;
 		}
 
 		return isCallPaused || isInConference;
 	}
 
-	private void registerCallDurationTimer(View v, LinphoneCall call) {
+	private void registerCallDurationTimer(View v, Call call) {
 		int callDuration = call.getDuration();
 		if (callDuration == 0 && call.getState() != State.StreamsRunning) {
 			return;
@@ -1389,8 +1387,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	public void refreshCallList(Resources resources) {
-		isConferenceRunning = LinphoneManager.getLc().isInConference();
-		List<LinphoneCall> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
+		isConferenceRunning = LinphoneManager.getLc().getConference() != null;
+		List<Call> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 
 		//MultiCalls
 		if(LinphoneManager.getLc().getCallsNb() > 1){
@@ -1430,12 +1428,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 
 			boolean isConfPaused = false;
-			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
-				if (call.isInConference() && !isConferenceRunning) {
+			for (Call call : LinphoneManager.getLc().getCalls()) {
+				if (call.getConference() != null && !isConferenceRunning) {
 					isConfPaused = true;
 					index++;
 				} else {
-					if (call != LinphoneManager.getLc().getCurrentCall() && !call.isInConference()) {
+					if (call != LinphoneManager.getLc().getCurrentCall() && !(call.getConference() != null)) {
 						displayPausedCalls(resources, call, index);
 						index++;
 					} else {
@@ -1463,10 +1461,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	//Conference
-	private void exitConference(final LinphoneCall call){
-		LinphoneCore lc = LinphoneManager.getLc();
+	private void exitConference(final Call call){
+		Core lc = LinphoneManager.getLc();
 
-		if (call.isInConference()) {
+		if (call.getConference() != null) {
 			lc.removeFromConference(call);
 			if (lc.getConferenceSize() <= 1) {
 				lc.leaveConference();
@@ -1480,10 +1478,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	public void pauseOrResumeConference() {
-		LinphoneCore lc = LinphoneManager.getLc();
+		Core lc = LinphoneManager.getLc();
 		conferenceStatus = (ImageView) findViewById(R.id.conference_pause);
 		if(conferenceStatus != null) {
-			if (lc.isInConference()) {
+			if (lc.getConference() != null) {
 				conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
 				lc.leaveConference();
 			} else {
@@ -1494,14 +1492,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		refreshCallList(getResources());
 	}
 
-	private void displayConferenceParticipant(int index, final LinphoneCall call){
+	private void displayConferenceParticipant(int index, final Call call){
 		LinearLayout confView = (LinearLayout) inflater.inflate(R.layout.conf_call_control_row, container, false);
 		conferenceList.setId(index + 1);
 		TextView contact = (TextView) confView.findViewById(R.id.contactNameOrNumber);
 
 		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(call.getRemoteAddress());
 		if (lContact == null) {
-			contact.setText(call.getRemoteAddress().getUserName());
+			contact.setText(call.getRemoteAddress().getUsername());
 		} else {
 			contact.setText(lContact.getFullName());
 		}
@@ -1540,8 +1538,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 			//Conference participant
 			int index = 1;
-			for (LinphoneCall call : LinphoneManager.getLc().getCalls()) {
-				if (call.isInConference()) {
+			for (Call call : LinphoneManager.getLc().getCalls()) {
+				if (call.getConference() != null) {
 					displayConferenceParticipant(index, call);
 					index++;
 				}
@@ -1554,8 +1552,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	private void displayMissedChats() {
 		int count = 0;
-		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-		for (LinphoneChatRoom chatroom : chats) {
+		ChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+		for (ChatRoom chatroom : chats) {
 			count += chatroom.getUnreadMessagesCount();
 		}
 
@@ -1576,7 +1574,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private String getEncoderText(String mime){
 		String ret = mEncoderTexts.get(mime);
 		if (ret == null){
-			org.linphone.mediastream.Factory msfactory = LinphoneManager.getLc().getMSFactory();
+			org.linphone.mediastream.Factory msfactory = LinphoneManager.getLc().getMediastreamerFactory();
 			ret = msfactory.getEncoderText(mime);
 			mEncoderTexts.put(mime, ret);
 		}
@@ -1585,14 +1583,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private String getDecoderText(String mime){
 		String ret = mDecoderTexts.get(mime);
 		if (ret == null){
-			org.linphone.mediastream.Factory msfactory = LinphoneManager.getLc().getMSFactory();
+			org.linphone.mediastream.Factory msfactory = LinphoneManager.getLc().getMediastreamerFactory();
 			ret = msfactory.getDecoderText(mime);
 			mDecoderTexts.put(mime, ret);
 		}
 		return ret;
 	}
 
-	private void displayMediaStats(LinphoneCallParams params, LinphoneCallStats stats
+	private void displayMediaStats(CallParams params, CallStats stats
 			, PayloadType media , View layout, TextView title, TextView codec, TextView dl
 			, TextView ul, TextView edl, TextView ice, TextView ip, TextView senderLossRate
 			, TextView receiverLossRate, TextView enc, TextView dec, TextView videoResolutionSent
@@ -1604,9 +1602,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			layout.setVisibility(View.VISIBLE);
 			title.setVisibility(TextView.VISIBLE);
 			if (media != null) {
-				mime = media.getMime();
+				mime = media.getMimeType();
 				formatText(codec, getString(R.string.call_stats_codec),
-						mime + " / " + (media.getRate() / 1000) + "kHz");
+						mime + " / " + (media.getClockRate() / 1000) + "kHz");
 			}
 			if (mime != null ){
 				formatText(enc, getString(R.string.call_stats_encoder_name), getEncoderText(mime));
@@ -1623,8 +1621,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			formatText(ice, getString(R.string.call_stats_ice),
 					stats.getIceState().toString());
 			formatText(ip, getString(R.string.call_stats_ip),
-					(stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET_6.getInt()) ?
-							"IpV6" : (stats.getIpFamilyOfRemote() == LinphoneAddressFamily.INET.getInt()) ?
+					(stats.getIpFamilyOfRemote() == AddressFamily.Inet6) ?
+							"IpV6" : (stats.getIpFamilyOfRemote() == AddressFamily.Inet) ?
 							"IpV4" : "Unknown");
 			formatText(senderLossRate, getString(R.string.call_stats_sender_loss_rate),
 					new DecimalFormat("##.##").format(stats.getSenderLossRate()) + "%");
@@ -1633,10 +1631,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			if (isVideo) {
 				formatText(videoResolutionSent,
 						getString(R.string.call_stats_video_resolution_sent),
-						"\u2191 " + params.getSentVideoSize().toDisplayableString());
+						"\u2191 " + params.getSentVideoDefinition().getName());
 				formatText(videoResolutionReceived,
 						getString(R.string.call_stats_video_resolution_received),
-						"\u2193 " + params.getReceivedVideoSize().toDisplayableString());
+						"\u2193 " + params.getReceivedVideoDefinition().getName());
 				formatText(videoFpsSent,
 						getString(R.string.call_stats_video_fps_sent),
 						"\u2191 " + params.getSentFramerate());
@@ -1645,7 +1643,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 						"\u2193 " + params.getReceivedFramerate());
 			} else {
 				formatText(jitterBuffer, getString(R.string.call_stats_jitter_buffer),
-						new DecimalFormat("##.##").format(stats.getJitterBufferSize()) + " ms");
+						new DecimalFormat("##.##").format(stats.getJitterBufferSizeMs()) + " ms");
 			}
 		} else {
 			layout.setVisibility(View.GONE);
@@ -1653,7 +1651,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 	}
 
-	public void initCallStatsRefresher(final LinphoneCall call, final View view) {
+	public void initCallStatsRefresher(final Call call, final View view) {
 		if (mTimer != null && mTask != null) {
 			return;
 		}
@@ -1712,16 +1710,16 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 						if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() == null) return;
 						synchronized(LinphoneManager.getLc()) {
 							if (LinphoneActivity.isInstanciated()) {
-								LinphoneCallParams params = call.getCurrentParams();
+								CallParams params = call.getCurrentParams();
 								if (params != null) {
-									LinphoneCallStats audioStats = call.getAudioStats();
-									LinphoneCallStats videoStats = null;
+									CallStats audioStats = call.getStats(StreamType.Audio);
+									CallStats videoStats = null;
 
-									if (params.getVideoEnabled())
-										videoStats = call.getVideoStats();
+									if (params.videoEnabled())
+										videoStats = call.getStats(StreamType.Video);
 
-									PayloadType payloadAudio = params.getUsedAudioCodec();
-									PayloadType payloadVideo = params.getUsedVideoCodec();
+									PayloadType payloadAudio = params.getUsedAudioPayloadType();
+									PayloadType payloadVideo = params.getUsedVideoPayloadType();
 
 									displayMediaStats(params, audioStats, payloadAudio, audioLayout
 											, titleAudio, codecAudio, dlAudio, ulAudio, null, iceAudio

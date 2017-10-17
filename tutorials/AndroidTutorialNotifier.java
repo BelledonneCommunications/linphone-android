@@ -19,10 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.core.tutorials.TutorialNotifier;
-
 import android.os.Handler;
 import android.widget.TextView;
+
+import org.linphone.core.tutorials.TutorialNotifier;
 
 /**
  * Write notifications to a TextView widget.

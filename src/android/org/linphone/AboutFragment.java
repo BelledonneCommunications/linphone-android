@@ -18,9 +18,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.LogCollectionUploadState;
-import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Core;
+import org.linphone.core.Core.LogCollectionUploadState;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
 
 import android.app.Fragment;
@@ -44,7 +44,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	View sendLogButton = null;
 	View resetLogButton = null;
 	ImageView cancel;
-	LinphoneCoreListenerBase mListener;
+	CoreListenerStub mListener;
 	private ProgressDialog progress;
 	private boolean uploadInProgress;
 
@@ -72,19 +72,19 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		resetLogButton.setOnClickListener(this);
 		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-		mListener = new LinphoneCoreListenerBase() {
+		mListener = new CoreListenerStub() {
 			@Override
-			public void uploadProgressIndication(LinphoneCore lc, int offset, int total) {
+			public void onLogCollectionUploadProgressIndication(Core lc, int offset, int total) {
 			}
 
 			@Override
-			public void uploadStateChanged(LinphoneCore lc, LogCollectionUploadState state, String info) {
-				if (state == LogCollectionUploadState.LogCollectionUploadStateInProgress) {
+			public void onLogCollectionUploadStateChanged(Core lc, LogCollectionUploadState state, String info) {
+				if (state == LogCollectionUploadState.InProgress) {
 					displayUploadLogsInProgress();
-				} else if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered || state == LogCollectionUploadState.LogCollectionUploadStateNotDelivered) {
+				} else if (state == LogCollectionUploadState.Delivered || state == LogCollectionUploadState.NotDelivered) {
 					uploadInProgress = false;
 					if (progress != null) progress.dismiss();
-					if (state == LogCollectionUploadState.LogCollectionUploadStateDelivered) {
+					if (state == LogCollectionUploadState.Delivered) {
 						sendLogs(LinphoneService.instance().getApplicationContext(), info);
 					}
 				}
@@ -127,7 +127,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -137,7 +137,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onResume() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -152,7 +152,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (v == sendLogButton) {
 				if (lc != null) {
 					lc.uploadLogCollection();

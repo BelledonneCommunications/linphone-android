@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import org.linphone.core.LinphoneCore;
+import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.AddressAware;
 import org.linphone.ui.AddressText;
@@ -69,7 +69,7 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_add);
 			}
 		} else {
-			if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoAutoInitiatePolicy()) {
+			if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
 			} else {
 				mCall.setImageResource(R.drawable.call_audio_start);
@@ -99,7 +99,7 @@ public class DialerFragment extends Fragment {
 		transferListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneCore lc = LinphoneManager.getLc();
+				Core lc = LinphoneManager.getLc();
 				if (lc.getCurrentCall() == null) {
 					return;
 				}
@@ -184,7 +184,7 @@ public class DialerFragment extends Fragment {
 			return;
 		}
 		isCallTransferOngoing = LinphoneActivity.instance().isCallTransfer();
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) {
 			return;
 		}
@@ -201,7 +201,7 @@ public class DialerFragment extends Fragment {
 			mAddContact.setImageResource(R.drawable.call_alt_back);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			if (LinphoneManager.getLc().getVideoAutoInitiatePolicy()) {
+			if (LinphoneManager.getLc().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
 			} else {
 				mCall.setImageResource(R.drawable.call_audio_start);

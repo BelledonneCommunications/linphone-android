@@ -24,8 +24,8 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 
 import android.app.AlertDialog;
@@ -106,11 +106,11 @@ public class Digit extends Button implements AddressAware {
 		public void onClick(View v) {
 			if (mPlayDtmf) {
 				if (!linphoneServiceReady()) return;
-				LinphoneCore lc = LinphoneManager.getLc();
+				Core lc = LinphoneManager.getLc();
 				lc.stopDtmf();
 				mIsDtmfStarted =false;
-				if (lc.isIncall()) {
-					lc.sendDtmf(mKeyCode);
+				if (lc.inCall()) {
+					lc.getCurrentCall().sendDtmf(mKeyCode);
 				}
 			}
 
@@ -138,10 +138,10 @@ public class Digit extends Button implements AddressAware {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0){
 							LinphonePreferences.instance().setDebugEnabled(false);
-							LinphoneCoreFactory.instance().enableLogCollection(false);
+							Factory.instance().enableLogCollection(false);
 						}
 						if(which == 1) {
-							LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+							Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 							if (lc != null) {
 								lc.uploadLogCollection();
 							}
@@ -154,7 +154,7 @@ public class Digit extends Button implements AddressAware {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0) {
 							LinphonePreferences.instance().setDebugEnabled(true);
-							LinphoneCoreFactory.instance().enableLogCollection(true);
+							Factory.instance().enableLogCollection(true);
 						}
 					}
 				});
@@ -171,7 +171,7 @@ public class Digit extends Button implements AddressAware {
 				CallActivity.instance().resetControlsHidingCallBack();
 			}
 
-			LinphoneCore lc = LinphoneManager.getLc();
+			Core lc = LinphoneManager.getLc();
 			if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
 				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
 				mIsDtmfStarted = true;
@@ -186,7 +186,7 @@ public class Digit extends Button implements AddressAware {
 
 		public boolean onLongClick(View v) {
 			int id = v.getId();
-			LinphoneCore lc = LinphoneManager.getLc();
+			Core lc = LinphoneManager.getLc();
 
 			if (mPlayDtmf) {
 				if (!linphoneServiceReady()) return true;

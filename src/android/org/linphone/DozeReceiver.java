@@ -19,8 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -38,9 +38,9 @@ public class DozeReceiver extends android.content.BroadcastReceiver {
         if (!LinphoneService.isReady()) return;
 
         boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-        LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
-        LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
-        LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Factory.instance().enableLogCollection(isDebugEnabled);
+        Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
+        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc == null) return;
 
         pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);

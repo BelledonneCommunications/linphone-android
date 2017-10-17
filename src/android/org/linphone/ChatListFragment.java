@@ -43,13 +43,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Address;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Core;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, cancel, backInCall;
 	private LinearLayout editList, topbar;
 	private boolean isEditMode = false;
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,9 +102,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		delete = (ImageView) view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
-		mListener = new LinphoneCoreListenerBase() {
+		mListener = new CoreListenerStub() {
 			@Override
-			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+			public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
 				refresh();
 			}
 		};
@@ -127,7 +127,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			if (chatList.isItemChecked(i)) {
 				String sipUri = chatList.getAdapter().getItem(i).toString();
 				if (sipUri != null) {
-					LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(sipUri);
+					ChatRoom chatroom = LinphoneManager.getLc().getChatRoomFromUri(sipUri);
 					if (chatroom != null) {
 						chatroom.deleteHistory();
 					}
@@ -212,7 +212,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			LinphoneActivity.instance().hideTabBar(false);
 		}
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -222,7 +222,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 	@Override
 	public void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -405,24 +405,19 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				view.setTag(holder);
 			}
 
-			LinphoneAddress address;
-			try {
-				address = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-			} catch (LinphoneCoreException e) {
-				Log.e("Chat view cannot parse address", e);
-				return view;
-			}
+			Address address;
+			address = Factory.instance().createAddress(sipUri);
 
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 			String message = "";
 			Long time;
 
-			LinphoneChatRoom chatRoom = LinphoneManager.getLc().getChatRoom(address);
+			ChatRoom chatRoom = LinphoneManager.getLc().getChatRoom(address);
 			int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
-			LinphoneChatMessage[] history = chatRoom.getHistory(1);
-			LinphoneChatMessage msg = history[0];
+			ChatMessage[] history = chatRoom.getHistory(1);
+			ChatMessage msg = history[0];
 
-			if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppData() != null ){
+			if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppdata() != null ){
 				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 				time = msg.getTime();
 				holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));

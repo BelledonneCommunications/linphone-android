@@ -25,10 +25,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCallLog;
-import org.linphone.core.LinphoneCallLog.CallStatus;
+import org.linphone.core.Call;
+import org.linphone.core.Call.Dir;
+import org.linphone.core.Address;
+import org.linphone.core.CallLog;
+import org.linphone.core.CallLog.CallStatus;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -62,7 +63,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private View allCallsSelected, missedCallsSelected;
 	private LinearLayout editList, topBar;
 	private boolean onlyDisplayMissedCalls, isEditMode;
-	private List<LinphoneCallLog> mLogs;
+	private List<CallLog> mLogs;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,11 +124,11 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	public void displayFirstLog(){
 		if (mLogs != null && mLogs.size() > 0) {
-			LinphoneCallLog log = mLogs.get(0);
-			if (log.getDirection() == CallDirection.Incoming) {
-				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getFrom().toString(), mLogs.get(0));
+			CallLog log = mLogs.get(0);
+			if (log.getDir() == Call.Dir.Incoming) {
+				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getFromAddress().toString(), mLogs.get(0));
 			} else {
-				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getTo().toString(), mLogs.get(0));
+				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getToAddress().toString(), mLogs.get(0));
 			}
 		} else {
 			LinphoneActivity.instance().displayEmptyFragment();
@@ -138,7 +139,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		int size = historyList.getAdapter().getCount();
 		for(int i=0; i<size; i++) {
 			if(historyList.isItemChecked(i)){
-				LinphoneCallLog log = mLogs.get(i);
+				CallLog log = mLogs.get(i);
 				LinphoneManager.getLc().removeCallLog(log);
 			}
 		}
@@ -167,8 +168,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	private void removeNotMissedCallsFromLogs() {
 		if (onlyDisplayMissedCalls) {
-			List<LinphoneCallLog> missedCalls = new ArrayList<LinphoneCallLog>();
-			for (LinphoneCallLog log : mLogs) {
+			List<CallLog> missedCalls = new ArrayList<CallLog>();
+			for (CallLog log : mLogs) {
 				if (log.getStatus() == CallStatus.Missed) {
 					missedCalls.add(log);
 				}
@@ -323,7 +324,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		if (isEditMode) {
-			LinphoneCallLog log = mLogs.get(position);
+			CallLog log = mLogs.get(position);
 			LinphoneManager.getLc().removeCallLog(log);
 			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		}
@@ -428,9 +429,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 			if (mLogs == null || mLogs.size() < position) return view;
 
-			final LinphoneCallLog log = mLogs.get(position);
-			long timestamp = log.getTimestamp();
-			LinphoneAddress address;
+			final CallLog log = mLogs.get(position);
+			long timestamp = log.getStartDate();
+			Address address;
 
 			holder.contact.setSelected(true); // For automated horizontal scrolling of long texts
 
@@ -441,8 +442,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			separatorText.setText(timestampToHumanDate(logTime));
 
 			if (position > 0) {
-				LinphoneCallLog previousLog = mLogs.get(position-1);
-				long previousTimestamp = previousLog.getTimestamp();
+				CallLog previousLog = mLogs.get(position-1);
+				long previousTimestamp = previousLog.getStartDate();
 				Calendar previousLogTime = Calendar.getInstance();
 				previousLogTime.setTimeInMillis(previousTimestamp);
 
@@ -455,15 +456,15 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				separator.setVisibility(View.VISIBLE);
 			}
 
-			if (log.getDirection() == CallDirection.Incoming) {
-				address = log.getFrom();
+			if (log.getDir() == Call.Dir.Incoming) {
+				address = log.getFromAddress();
 				if (log.getStatus() == CallStatus.Missed) {
 					holder.callDirection.setImageResource(R.drawable.call_status_missed);
 				} else {
 					holder.callDirection.setImageResource(R.drawable.call_status_incoming);
 				}
 			} else {
-				address = log.getTo();
+				address = log.getToAddress();
 				holder.callDirection.setImageResource(R.drawable.call_status_outgoing);
 			}
 
@@ -528,12 +529,12 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 					@Override
 					public void onClick(View v) {
 						if (LinphoneActivity.isInstanciated()) {
-							LinphoneCallLog log = mLogs.get(position);
-							LinphoneAddress address;
-							if (log.getDirection() == CallDirection.Incoming) {
-								address = log.getFrom();
+							CallLog log = mLogs.get(position);
+							Address address;
+							if (log.getDir() == Call.Dir.Incoming) {
+								address = log.getFromAddress();
 							} else {
-								address = log.getTo();
+								address = log.getToAddress();
 							}
 							LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
 						}

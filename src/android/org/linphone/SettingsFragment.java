@@ -23,19 +23,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.EcCalibratorStatus;
-import org.linphone.core.LinphoneCore.LinphoneLimeState;
-import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Address;
+import org.linphone.core.Core;
+import org.linphone.core.Core.EcCalibratorStatus;
+import org.linphone.core.Core.LimeState;
+import org.linphone.core.Core.MediaEncryption;
+import org.linphone.core.CoreException;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.Factory;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.VideoDefinition;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.tools.OpenH264DownloadHelper;
+import org.linphone.core.tools.OpenH264DownloadHelper;
 import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
@@ -64,7 +66,7 @@ import android.provider.Settings;
 public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 	private PreferenceScreen currentPreferenceScreen;
 	private Preference.OnPreferenceClickListener prefClickListener = new Preference.OnPreferenceClickListener() {
 		@Override
@@ -92,9 +94,9 @@ public class SettingsFragment extends PreferencesListFragment {
 		mPrefs = LinphonePreferences.instance();
 		removePreviousPreferencesFile(); // Required when updating the preferences order
 
-		mListener = new LinphoneCoreListenerBase() {
+		mListener = new CoreListenerStub() {
 			@Override
-			public void ecCalibrationStatus(LinphoneCore lc, final EcCalibratorStatus status, final int delayMs, Object data) {
+			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delayMs) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
 
 				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
@@ -107,7 +109,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
 					Log.i("Set audio mode on 'Normal'");
 				} else if (status == EcCalibratorStatus.Done) {
-					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), delayMs));
+					echoCancellerCalibration.setSummary(String.format(getString(R.string.ec_calibrated), String.valueOf(delayMs)));
 					echoCancellation.setChecked(true);
 					LinphonePreferences.instance().setEchoCancellation(true);
 					((AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
@@ -194,7 +196,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			hidePreference(R.string.pref_push_notification_key);
 		}
 
-		if (!Version.isVideoCapable() || !LinphoneManager.getLcIfManagerNotDestroyedOrNull().isVideoSupported()) {
+		if (!Version.isVideoCapable() || !LinphoneManager.getLcIfManagerNotDestroyedOrNull().videoSupported()) {
 			emptyAndHidePreference(R.string.pref_video_key);
 		} else {
 			if (!AndroidCameraConfiguration.hasFrontCamera()) {
@@ -202,7 +204,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 		}
 
-		if (!LinphoneManager.getLc().isTunnelAvailable()) {
+		if (!LinphoneManager.getLc().tunnelAvailable()) {
 			emptyAndHidePreference(R.string.pref_tunnel_key);
 		}
 
@@ -276,20 +278,20 @@ public class SettingsFragment extends PreferencesListFragment {
 	}
 
 	private void initTunnelSettings() {
-		if (!LinphoneManager.isInstanciated() || !LinphoneManager.getLc().isTunnelAvailable()) {
+		if (!LinphoneManager.isInstanciated() || !LinphoneManager.getLc().tunnelAvailable()) {
 			return;
 		}
 
-		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
+		/*setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
 		ListPreference tunnelModePref = (ListPreference) findPreference(getString(R.string.pref_tunnel_mode_key));
 		String tunnelMode = mPrefs.getTunnelMode();
 		tunnelModePref.setSummary(tunnelMode);
-		tunnelModePref.setValue(tunnelMode);
+		tunnelModePref.setValue(tunnelMode);*/
 	}
 
 	private void setTunnelPreferencesListener() {
-		findPreference(getString(R.string.pref_tunnel_host_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		/*findPreference(getString(R.string.pref_tunnel_host_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String host = newValue.toString();
@@ -319,7 +321,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				preference.setSummary(mode);
 				return true;
 			}
-		});
+		});*/
 	}
 
 	private void initAccounts() {
@@ -366,14 +368,14 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-			for (LinphoneProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
-				LinphoneAddress addr = lpc.getAddress();
-				if (addr.getUserName().equals(username) && addr.getDomain().equals(domain)) {
-					if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationOk) {
+			for (ProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
+				Address addr = lpc.getIdentityAddress();
+				if (addr.getUsername().equals(username) && addr.getDomain().equals(domain)) {
+					if (lpc.getState() == Core.RegistrationState.Ok) {
 						me.setLed(R.drawable.led_connected);
-					} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationFailed) {
+					} else if (lpc.getState() == Core.RegistrationState.Failed) {
 						me.setLed(R.drawable.led_error);
-					} else if (lpc.getState() == LinphoneCore.RegistrationState.RegistrationProgress) {
+					} else if (lpc.getState() == Core.RegistrationState.Progress) {
 						me.setLed(R.drawable.led_inprogress);
 						mHandler.postDelayed(new Runnable() {
 							@Override
@@ -396,7 +398,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		entries.add(getString(R.string.pref_none));
 		values.add(getString(R.string.pref_media_encryption_key_none));
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null || getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
 			setListPreferenceValues(pref, entries, values);
 			return;
@@ -441,9 +443,9 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initializePreferredVideoSizePreferences(ListPreference pref) {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
-		for (String name : LinphoneManager.getLc().getSupportedVideoSizes()) {
-			entries.add(name);
-			values.add(name);
+		for (VideoDefinition vd : Factory.instance().getSupportedVideoDefinitions()) {
+			entries.add(vd.getName());
+			values.add(vd.getName());
 		}
 
 		setListPreferenceValues(pref, entries, values);
@@ -476,27 +478,27 @@ public class SettingsFragment extends PreferencesListFragment {
 		List<CharSequence> entries = new ArrayList<CharSequence>();
 		List<CharSequence> values = new ArrayList<CharSequence>();
 		entries.add(getString(R.string.lime_encryption_entry_disabled));
-		values.add(LinphoneLimeState.Disabled.toString());
+		values.add(LimeState.Disabled.toString());
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc == null || !lc.isLimeEncryptionAvailable()) {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null || !lc.limeAvailable()) {
 			setListPreferenceValues(pref, entries, values);
 			pref.setEnabled(false);
 			return;
 		}
 
 		entries.add(getString(R.string.lime_encryption_entry_mandatory));
-		values.add(LinphoneLimeState.Mandatory.toString());
+		values.add(LimeState.Mandatory.toString());
 		entries.add(getString(R.string.lime_encryption_entry_preferred));
-		values.add(LinphoneLimeState.Preferred.toString());
+		values.add(LimeState.Preferred.toString());
 		setListPreferenceValues(pref, entries, values);
 
-		LinphoneLimeState lime = mPrefs.getLimeEncryption();
-		if (lime == LinphoneLimeState.Disabled) {
+		LimeState lime = mPrefs.limeEnabled();
+		if (lime == LimeState.Disabled) {
 			pref.setSummary(getString(R.string.lime_encryption_entry_disabled));
-		} else if (lime == LinphoneLimeState.Mandatory) {
+		} else if (lime == LimeState.Mandatory) {
 			pref.setSummary(getString(R.string.lime_encryption_entry_mandatory));
-		} else if (lime == LinphoneLimeState.Preferred) {
+		} else if (lime == LimeState.Preferred) {
 			pref.setSummary(getString(R.string.lime_encryption_entry_preferred));
 		}
 		pref.setValue(lime.toString());
@@ -515,37 +517,29 @@ public class SettingsFragment extends PreferencesListFragment {
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_codecs_key));
 		codecs.removeAll();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		for (final PayloadType pt : lc.getAudioCodecs()) {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		for (final PayloadType pt : lc.getAudioPayloadTypes()) {
 			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
-			codec.setTitle(pt.getMime());
+			codec.setTitle(pt.getMimeType());
 			/* Special case */
-			if (pt.getMime().equals("mpeg4-generic")) {
+			if (pt.getMimeType().equals("mpeg4-generic")) {
 				if (android.os.Build.VERSION.SDK_INT < 16) {
 					/* Make sure AAC is disabled */
-					try {
-						lc.enablePayloadType(pt, false);
-					} catch (LinphoneCoreException e) {
-						Log.e(e);
-					}
+					pt.enable(false);
 					continue;
 				} else {
 					codec.setTitle("AAC-ELD");
 				}
 			}
 
-			codec.setSummary(pt.getRate() + " Hz");
-			codec.setChecked(lc.isPayloadTypeEnabled(pt));
+			codec.setSummary(pt.getClockRate() + " Hz");
+			codec.setChecked(pt.enabled());
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
-					try {
-						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
-					} catch (LinphoneCoreException e) {
-						Log.e(e);
-					}
+					pt.enable(enable);
 					return true;
 				}
 			});
@@ -554,15 +548,15 @@ public class SettingsFragment extends PreferencesListFragment {
 		}
 
 		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
-		echoCancellation.setChecked(mPrefs.isEchoCancellationEnabled());
+		echoCancellation.setChecked(mPrefs.echoCancellationEnabled());
 
-		if (mPrefs.isEchoCancellationEnabled()) {
+		if (mPrefs.echoCancellationEnabled()) {
 			Preference echoCalibration = findPreference(getString(R.string.pref_echo_canceller_calibration_key));
-			echoCalibration.setSummary(String.format(getString(R.string.ec_calibrated), mPrefs.getEchoCalibration()));
+			echoCalibration.setSummary(String.format(getString(R.string.ec_calibrated), String.valueOf(mPrefs.getEchoCalibration())));
 		}
 
 		CheckBoxPreference adaptiveRateControl = (CheckBoxPreference) findPreference(getString(R.string.pref_adaptive_rate_control_key));
-		adaptiveRateControl.setChecked(mPrefs.isAdaptiveRateControlEnabled());
+		adaptiveRateControl.setChecked(mPrefs.adaptiveRateControlEnabled());
 
 		ListPreference bitrateLimit = (ListPreference) findPreference(getString(R.string.pref_codec_bitrate_limit_key));
 		bitrateLimit.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
@@ -592,12 +586,12 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				mPrefs.setCodecBitrateLimit(Integer.parseInt(newValue.toString()));
-				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				int bitrate = Integer.parseInt(newValue.toString());
 
-				for (final PayloadType pt : lc.getAudioCodecs()) {
-					if (lc.payloadTypeIsVbr(pt)) {
-						lc.setPayloadTypeBitrate(pt, bitrate);
+				for (final PayloadType pt : lc.getAudioPayloadTypes()) {
+					if (pt.isVbr()) {
+						pt.setNormalBitrate(bitrate);
 					}
 				}
 
@@ -648,7 +642,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			if (LinphoneManager.getInstance().startEchoTester() > 0) {
 				preference.setSummary("Is running");
 			}
-		} catch (LinphoneCoreException e) {
+		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
@@ -659,7 +653,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			if (LinphoneManager.getInstance().stopEchoTester() > 0) {
 				preference.setSummary("Is stopped");
 			}
-		} catch (LinphoneCoreException e) {
+		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
@@ -669,7 +663,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			if (LinphoneManager.getInstance().getEchoTesterStatus())
 				stopEchoTester();
 			LinphoneManager.getInstance().startEcCalibration(mListener);
-		} catch (LinphoneCoreException e) {
+		} catch (CoreException e) {
 			Log.e(e);
 		}
 	}
@@ -694,19 +688,19 @@ public class SettingsFragment extends PreferencesListFragment {
 		PreferenceCategory codecs = (PreferenceCategory) findPreference(getString(R.string.pref_video_codecs_key));
 		codecs.removeAll();
 
-		final LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		final Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 
 		final OpenH264DownloadHelper mCodecDownloader = LinphoneManager.getInstance().getOpenH264DownloadHelper();
 
-		for (final PayloadType pt : lc.getVideoCodecs()) {
+		for (final PayloadType pt : lc.getVideoPayloadTypes()) {
 			final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
-			codec.setTitle(pt.getMime());
+			codec.setTitle(pt.getMimeType());
 
-			if (!pt.getMime().equals("VP8")) {
+			if (!pt.getMimeType().equals("VP8")) {
 				if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
 					continue;
 				} else {
-					if (!Version.hasFastCpuWithAsmOptim() && pt.getMime().equals("H264"))
+					if (!Version.hasFastCpuWithAsmOptim() && pt.getMimeType().equals("H264"))
 					{
 						// Android without neon doesn't support H264
 						Log.w("CPU does not have asm optimisations available, disabling H264");
@@ -714,49 +708,45 @@ public class SettingsFragment extends PreferencesListFragment {
 					}
 				}
 			}
-			if (lc.downloadOpenH264Enabled()) {
-				if (pt.getMime().equals("H264") && mCodecDownloader.isCodecFound()) {
+			if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
+				if (pt.getMimeType().equals("H264") && mCodecDownloader.isCodecFound()) {
 					codec.setSummary(mCodecDownloader.getLicenseMessage());
 					codec.setTitle("OpenH264");
 				}
 			}
-			codec.setChecked(lc.isPayloadTypeEnabled(pt));
+			codec.setChecked(pt.enabled());
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
-					try {
-						if (lc.downloadOpenH264Enabled()) {
-							if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
-									&& pt.getMime().equals("H264") && !mCodecDownloader.isCodecFound()) {
-								mCodecDownloader.setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
-								mCodecDownloader.setUserData(0, LinphoneManager.getInstance().getContext());
-								mCodecDownloader.setUserData(1, codec);
+					if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
+						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
+								&& pt.getMimeType().equals("H264") && !mCodecDownloader.isCodecFound()) {
+							mCodecDownloader.setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
+							mCodecDownloader.setUserData(0, LinphoneManager.getInstance().getContext());
+							mCodecDownloader.setUserData(1, codec);
 
-								AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
-								builder.setCancelable(false);
-								builder.setMessage("Do you agree to download " + mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										if (which == DialogInterface.BUTTON_POSITIVE)
-											mCodecDownloader.downloadCodec();
+							AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
+							builder.setCancelable(false);
+							builder.setMessage("Do you agree to download " + mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == DialogInterface.BUTTON_POSITIVE)
+										mCodecDownloader.downloadCodec();
+								}
+							});
+							builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (which == DialogInterface.BUTTON_NEGATIVE) {
+										// Disable H264
 									}
-								});
-								builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										if (which == DialogInterface.BUTTON_NEGATIVE) {
-											// Disable H264
-										}
-									}
-								}).show();
-							}
+								}
+							}).show();
 						}
-						LinphoneManager.getLcIfManagerNotDestroyedOrNull().enablePayloadType(pt, enable);
-					} catch (LinphoneCoreException e) {
-						Log.e(e);
 					}
+					pt.enable(enable);
 					return true;
 				}
 			});
@@ -1053,20 +1043,20 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String value = newValue.toString();
-				LinphoneLimeState lime = LinphoneLimeState.Disabled;
-				if (value.equals(LinphoneLimeState.Mandatory.toString()))
-					lime = LinphoneLimeState.Mandatory;
-				else if (value.equals(LinphoneLimeState.Preferred.toString()))
-					lime = LinphoneLimeState.Preferred;
-				mPrefs.setLimeEncryption(lime);
+				LimeState lime = LimeState.Disabled;
+				if (value.equals(LimeState.Mandatory.toString()))
+					lime = LimeState.Mandatory;
+				else if (value.equals(LimeState.Preferred.toString()))
+					lime = LimeState.Preferred;
+				mPrefs.enableLime(lime);
 
-				lime = mPrefs.getLimeEncryption();
-				if (lime == LinphoneLimeState.Disabled) {
+				lime = mPrefs.limeEnabled();
+				if (lime == LimeState.Disabled) {
 					preference.setSummary(getString(R.string.lime_encryption_entry_disabled));
-				} else if (lime == LinphoneLimeState.Mandatory) {
+				} else if (lime == LimeState.Mandatory) {
 					setEncryptionZrtp();
 					preference.setSummary(getString(R.string.lime_encryption_entry_mandatory));
-				} else if (lime == LinphoneLimeState.Preferred) {
+				} else if (lime == LimeState.Preferred) {
 					setEncryptionZrtp();
 					preference.setSummary(getString(R.string.lime_encryption_entry_preferred));
 				}

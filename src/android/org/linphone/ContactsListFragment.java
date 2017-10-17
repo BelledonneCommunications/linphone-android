@@ -542,7 +542,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.separator.setVisibility(View.GONE);
 			}
 
-			if (contact.isInLinphoneFriendList()) {
+			if (contact.isInFriendList()) {
 				holder.linphoneFriend.setVisibility(View.VISIBLE);
 			} else {
 				holder.linphoneFriend.setVisibility(View.GONE);
@@ -595,7 +595,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.delete.setVisibility(View.INVISIBLE);
 			}
 
-			/*LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();
+			/*Friend[] friends = LinphoneManager.getLc().getFriendsLists();
 			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
 				holder.friendStatus.setVisibility(View.VISIBLE);
 				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();

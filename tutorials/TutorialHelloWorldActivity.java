@@ -1,8 +1,6 @@
-package org.linphone.tutorials;
-
 /*
-TutorialRegistrationActivity.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+TutorialHelloWorldActivity.java
+Copyright (C) 2010  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,34 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+package org.linphone.tutorials;
 
-import org.linphone.R;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.tutorials.TutorialNotifier;
-import org.linphone.core.tutorials.TutorialRegistration;
-import org.linphone.mediastream.Log;
-
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.linphone.R;
+import org.linphone.core.CoreException;
+import org.linphone.core.tutorials.TutorialHelloWorld;
+import org.linphone.core.tutorials.TutorialNotifier;
+import org.linphone.mediastream.Log;
+
 /**
- * Activity for displaying and starting the registration example on Android phone.
+ * Activity for displaying and starting the HelloWorld example on Android phone.
+ *
+ * @author Guillaume Beraudo
  *
  */
-public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
+public class TutorialHelloWorldActivity extends Activity {
 
 	private static final String defaultSipAddress = "sip:";
-	private static final String defaultSipPassword = "";
 	private TextView sipAddressWidget;
-	private TextView sipPasswordWidget;
-	private TutorialRegistration tutorial;
+	private TutorialHelloWorld tutorial;
+	private Handler mHandler =  new Handler() ;
 	private Button buttonCall;
-	private Handler mHandler =  new Handler();
-	private TextView outputText;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +51,19 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 		setContentView(R.layout.hello_world);
 		sipAddressWidget = (TextView) findViewById(R.id.AddressId);
 		sipAddressWidget.setText(defaultSipAddress);
-		sipPasswordWidget = (TextView) findViewById(R.id.Password);
-		sipPasswordWidget.setVisibility(TextView.VISIBLE);
-		sipPasswordWidget.setText(defaultSipPassword);
 
 		// Output text to the outputText widget
-		outputText = (TextView) findViewById(R.id.OutputText);
+		final TextView outputText = (TextView) findViewById(R.id.OutputText);
 		final TutorialNotifier notifier = new AndroidTutorialNotifier(mHandler, outputText);
 
+		
+		// Create HelloWorld object
+		tutorial = new TutorialHelloWorld(notifier);
 
-		// Create Tutorial object
-		tutorial = new TutorialRegistration(notifier);
-
-
-
+		
+		
 		// Assign call action to call button
 		buttonCall = (Button) findViewById(R.id.CallButton);
-		buttonCall.setText("Register");
 		buttonCall.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				TutorialLaunchingThread thread = new TutorialLaunchingThread();
@@ -78,7 +72,7 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 			}
 		});
 
-
+		// Assign stop action to stop button
 		Button buttonStop = (Button) findViewById(R.id.ButtonStop);
 		buttonStop.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -86,19 +80,21 @@ public class TutorialRegistrationActivity extends TutorialHelloWorldActivity {
 			}
 		});
 	}
-
-
+	
+	
 	private class TutorialLaunchingThread extends Thread {
 		@Override
 		public void run() {
 			super.run();
 			try {
-				tutorial.launchTutorial(
-						sipAddressWidget.getText().toString(),
-						sipPasswordWidget.getText().toString());
-			} catch (LinphoneCoreException e) {
+				tutorial.launchTutorial(sipAddressWidget.getText().toString());
+				mHandler.post(new Runnable() {
+					public void run() {
+						buttonCall.setEnabled(true);
+					}
+				});
+			} catch (CoreException e) {
 				Log.e(e);
-				outputText.setText(e.getMessage() +"\n"+outputText.getText());
 			}
 		}
 	}

@@ -23,11 +23,12 @@ import java.util.List;
 
 import org.linphone.LinphonePreferences.AccountBuilder;
 import org.linphone.assistant.AssistantActivity;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneNatPolicy;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.AccountCreatorListener;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
+import org.linphone.core.NatPolicy;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
 
@@ -53,14 +54,14 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-public class AccountPreferencesFragment extends PreferencesListFragment implements LinphoneAccountCreator.LinphoneAccountCreatorListener {
+public class AccountPreferencesFragment extends PreferencesListFragment implements AccountCreatorListener {
 	private int n;
 	private boolean isNewAccount=false;
 	private LinphonePreferences mPrefs;
 	private EditTextPreference mProxyPreference;
 	private ListPreference mTransportPreference;
 	private AccountBuilder builder;
-	private LinphoneAccountCreator accountCreator;
+	private AccountCreator accountCreator;
 	private ProgressDialog progress;
 
 	public AccountPreferencesFragment() {
@@ -104,7 +105,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			if (isNewAccount) {
-				builder.setUserId(newValue.toString());
+				builder.setUserid(newValue.toString());
 			} else {
 				mPrefs.setAccountUserId(n, newValue.toString());
 			}
@@ -154,7 +155,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
 			String value = newValue.toString();
 			if (isNewAccount) {
-				builder.setProxy(newValue.toString());
+				builder.setServerAddr(newValue.toString());
 				preference.setSummary(newValue.toString());
 			} else {
 				mPrefs.setAccountProxy(n, value);
@@ -211,7 +212,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			if (isNewAccount) {
 				builder.setAvpfEnabled(value);
 			} else {
-				mPrefs.enableAvpf(n, value);
+				mPrefs.setAvpfMode(n, value);
 			}
 			return true;
 		}
@@ -229,7 +230,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			if (isNewAccount) {
 				//TODO
 			} else {
-				mPrefs.setAvpfRRInterval(n, value);
+				mPrefs.setAvpfRrInterval(n, value);
 			}
 			preference.setSummary(value);
 			return true;
@@ -320,11 +321,11 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 	private void initAccountPreferencesFields(PreferenceScreen parent) {
 		boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == n;
-		LinphoneNatPolicy natPolicy = null;
+		NatPolicy natPolicy = null;
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null &&
 				LinphoneManager.getLc().getProxyConfigList() != null &&
 				LinphoneManager.getLc().getProxyConfigList().length > n) {
-			LinphoneProxyConfig proxy = LinphoneManager.getLc().getProxyConfigList()[n];
+			ProxyConfig proxy = LinphoneManager.getLc().getProxyConfigList()[n];
 			natPolicy = proxy.getNatPolicy();
 			if (natPolicy == null) {
 				natPolicy = LinphoneManager.getLc().createNatPolicy();
@@ -334,8 +335,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			}
 		}
 
-		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
-				, LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 
     	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
@@ -430,8 +430,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		EditTextPreference avpfRRInterval = (EditTextPreference) advanced.getPreference(8);
 		avpfRRInterval.setOnPreferenceChangeListener(avpfRRIntervalChangedListener);
 		if (!isNewAccount){
-			avpfRRInterval.setText(mPrefs.getAvpfRRInterval(n));
-			avpfRRInterval.setSummary(mPrefs.getAvpfRRInterval(n));
+			avpfRRInterval.setText(mPrefs.getAvpfRrInterval(n));
+			avpfRRInterval.setSummary(mPrefs.getAvpfRrInterval(n));
 		}
 
     	CheckBoxPreference escape = (CheckBoxPreference) advanced.getPreference(9);
@@ -483,17 +483,17 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 							dialog.dismiss();
 						}
 					});
-					alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					/*alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							LinphoneAccountCreator.PasswordCheck status = accountCreator.setPassword(pass1.getText().toString());
-							if (status.equals(LinphoneAccountCreator.PasswordCheck.Ok)) {
+							AccountCreator.PasswordStatus status = accountCreator.setPassword(pass1.getText().toString());
+							if (status.equals(AccountCreator.PasswordStatus.Ok)) {
 								if (pass1.getText().toString().compareTo(pass2.getText().toString()) == 0) {
 									accountCreator.setUsername(mPrefs.getAccountUsername(n));
 									accountCreator.setHa1(mPrefs.getAccountHa1(n));
-									LinphoneAccountCreator.RequestStatus req_status = accountCreator.updatePassword(pass1.getText().toString());
-									if (!req_status.equals(LinphoneAccountCreator.RequestStatus.Ok)) {
-										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(req_status)
+									AccountCreator.Status req_status = accountCreator.updatePassword(pass1.getText().toString());
+									if (!req_status.equals(AccountCreator.Status.RequestOk)) {
+										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(req_status)
 												, LinphoneActivity.instance());
 									} else {
 										progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
@@ -512,7 +512,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 							}
 							LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPasswordStatus(status), LinphoneActivity.instance());
 						}
-					});
+					});*/ // TODO FIXME
 
 					alert.setView(layout);
 					alert.show();
@@ -587,7 +587,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 				if(isNewAccount){
 					builder.saveNewAccount();
 				}
-			} catch (LinphoneCoreException e) {
+			} catch (CoreException e) {
 				Log.e(e);
 			}
 			LinphoneActivity.instance().isNewProxyConfig();
@@ -597,58 +597,58 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
-
-	}
-
-	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onCreateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onActivateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onLinkAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onActivateAlias(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountActivated(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onRecoverAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountLinked(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+
 	}
 
 	@Override
-	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAliasUsed(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+	}
+
+	@Override
+	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 		if (progress != null) progress.dismiss();
-		if (status.equals(LinphoneAccountCreator.RequestStatus.Ok)) {
+		if (status.equals(AccountCreator.Status.RequestOk)) {
 			mPrefs.setAccountPassword(n, accountCreator.getPassword());
 			PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
 			((EditTextPreference) account.getPreference(2)).setText(mPrefs.getAccountPassword(n));
 			LinphoneUtils.displayErrorAlert(getString(R.string.pref_password_changed), LinphoneActivity.instance());
 		} else {
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForRequestStatus(status), LinphoneActivity.instance());
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
 		}
 	}
 }

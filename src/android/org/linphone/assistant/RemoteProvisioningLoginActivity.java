@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
@@ -37,7 +37,7 @@ import android.widget.Toast;
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
 	private EditText login, password, domain;
 	private Button connect;
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,12 +57,12 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			domain.setEnabled(false);
 		}
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new CoreListenerStub(){
 			@Override
-			public void configuringStatus(LinphoneCore lc, final LinphoneCore.RemoteProvisioningState state, String message) {
-				if (state == LinphoneCore.RemoteProvisioningState.ConfiguringSuccessful) {
+			public void onConfiguringStatus(Core lc, final Core.ConfiguringState state, String message) {
+				if (state == Core.ConfiguringState.Successful) {
 					//TODO
-				} else if (state == LinphoneCore.RemoteProvisioningState.ConfiguringFailed) {
+				} else if (state == Core.ConfiguringState.Failed) {
 					Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
 				}
 			}
@@ -83,7 +83,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			@Override
 			public void onRemoteProvisioningFilenameSent(String result) {
 				LinphonePreferences.instance().setRemoteProvisioningUrl(result);
-				LinphoneManager.getInstance().restartLinphoneCore();
+				LinphoneManager.getInstance().restartCore();
 			}
 		}, username.toString(), password.toString(), domain.toString());
 
@@ -91,16 +91,16 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		setResult(Activity.RESULT_OK);
 		finish();
 		/*String identity = "sip:" + username + "@" + domain;
-		LinphoneProxyConfig prxCfg = lc.createProxyConfig();
+		ProxyConfig prxCfg = lc.createProxyConfig();
 		try {
-			prxCfg.setIdentity(identity);
+			prxCfg.setIdentityAddress(identity);
 			lc.addProxyConfig(prxCfg);
-		} catch (LinphoneCoreException e) {
+		} catch (CoreException e) {
 			Log.e(e);
 			return false;
 		}
 
-		LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, null, password, null, null, domain);
+		AuthInfo authInfo = Factory.instance().createAuthInfo(username, null, password, null, null, domain);
 		lc.addAuthInfo(authInfo);
 
 		if (LinphonePreferences.instance().getAccountCount() == 1)
@@ -112,7 +112,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	@Override
 	protected void onResume() {
 		super.onResume();
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -120,7 +120,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}

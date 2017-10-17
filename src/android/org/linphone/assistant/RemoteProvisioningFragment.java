@@ -60,8 +60,8 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 			String url = remoteProvisioningUrl.getText().toString();
 			AssistantActivity.instance().displayRemoteProvisioningInProgressDialog();
 			LinphonePreferences.instance().setRemoteProvisioningUrl(url);
-			LinphoneManager.getInstance().restartLinphoneCore();
-			AssistantActivity.instance().setLinphoneCoreListener();
+			LinphoneManager.getInstance().restartCore();
+			AssistantActivity.instance().setCoreListener();
 		}
 	}
 
