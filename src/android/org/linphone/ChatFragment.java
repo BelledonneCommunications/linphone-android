@@ -1101,7 +1101,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 			}
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
 			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
-			Content content = chatRoom.getCore().createContent(); // "image", extension, result, null
+			Content content = Factory.instance().createContent(); // "image", extension, result, null
 			content.setType("image");
 			content.setSubtype(extension);
 			content.setBuffer(result, result.length);
@@ -1158,7 +1158,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
 			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
-			Content content = chatRoom.getCore().createContent();//"file", extension, result, null
+			Content content = Factory.instance().createContent();//"file", extension, result, null
 			content.setType("file");
 			content.setSubtype(extension);
 			content.setBuffer(result, result.length);

@@ -460,6 +460,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 				}
 				bufferToFill.setContent(data, size);
 				bufferToFill.setSize(size);
+				return bufferToFill;
 			} else {
 				Log.e("Error, upload task asking for more bytes( " + (size+offset) + " ) than available (" + mUploadingImage.length + ")");
 			}
