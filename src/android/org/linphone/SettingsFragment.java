@@ -542,7 +542,6 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					pt.enable(enable);
-					//((CheckBoxPreference)preference).setChecked(enable);
 					return true;
 				}
 			});
@@ -751,7 +750,6 @@ public class SettingsFragment extends PreferencesListFragment {
 						}
 					}
 					pt.enable(enable);
-					//((CheckBoxPreference)preference).setChecked(enable);
 					return true;
 				}
 			});
