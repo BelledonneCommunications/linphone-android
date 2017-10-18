@@ -658,6 +658,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		Address lAddress = null;
 		if(sipUri != null) {
 			lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
+			if (lAddress == null) return;
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			displayName = contact != null ? contact.getFullName() : null;
 

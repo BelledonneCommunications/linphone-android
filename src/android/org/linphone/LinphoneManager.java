@@ -569,6 +569,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 		Address lAddress;
 		lAddress = mLc.interpretUrl(to);
+		if (lAddress == null) return;
 		if (mR.getBoolean(R.bool.forbid_self_call) && lpc != null && lAddress.asStringUriOnly().equals(lpc.getIdentityAddress())) {
 			return;
 		}

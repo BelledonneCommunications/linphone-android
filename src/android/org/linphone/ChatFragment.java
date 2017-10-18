@@ -400,6 +400,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 		} else {
 			try {
 				lAddress = lc.interpretUrl(sipUri);
+				if (lAddress == null) LinphoneActivity.instance().goToDialerFragment();
 			} catch (Exception e) {
 				//TODO Error popup
 				LinphoneActivity.instance().goToDialerFragment();
