@@ -307,6 +307,12 @@ public final class LinphoneService extends Service {
 		dumpDeviceInformation();
 		dumpInstalledLinphoneInformation();
 
+		//Disable service notification for Android O
+		if ((Version.sdkAboveOrEqual(Version.API26_O_80))) {
+			LinphonePreferences.instance().setServiceNotificationVisibility(false);
+			mDisableRegistrationStatus = true;
+		}
+
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
 		Compatibility.CreateChannel(this);
@@ -393,7 +399,7 @@ public final class LinphoneService extends Service {
 
 			@Override
 			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
-				if (state == GlobalState.GlobalOn && displayServiceNotification()) {
+				if (!mDisableRegistrationStatus && state == GlobalState.GlobalOn && displayServiceNotification()) {
 					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}

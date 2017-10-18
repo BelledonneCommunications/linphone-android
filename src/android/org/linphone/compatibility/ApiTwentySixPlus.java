@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.AudioAttributes;
 import android.view.ViewTreeObserver;
 
 import org.linphone.R;
@@ -37,11 +38,21 @@ public class ApiTwentySixPlus {
 	public static void CreateChannel(Context context) {
 		NotificationManager notificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		String id = context.getString(R.string.notification_channel_id);
-		CharSequence name = context.getString(R.string.content_title_notification);
-		String description = context.getString(R.string.content_title_notification);
-		int importance = NotificationManager.IMPORTANCE_DEFAULT;
+		// Create service notification channel
+		String id = context.getString(R.string.notification_service_channel_id);
+		CharSequence name = context.getString(R.string.content_title_notification_service);
+		String description = context.getString(R.string.content_title_notification_service);
+		int importance = NotificationManager.IMPORTANCE_NONE;
 		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+		mChannel.setDescription(description);
+		mChannel.enableVibration(false);
+		notificationManager.createNotificationChannel(mChannel);
+		// Create message/call notification channel
+		id = context.getString(R.string.notification_channel_id);
+		name = context.getString(R.string.content_title_notification);
+		description = context.getString(R.string.content_title_notification);
+		importance = NotificationManager.IMPORTANCE_HIGH;
+		mChannel = new NotificationChannel(id, name, importance);
 		mChannel.setDescription(description);
 		mChannel.enableLights(true);
 		mChannel.setLightColor(context.getColor(R.color.notification_color_led));
@@ -103,7 +114,7 @@ public class ApiTwentySixPlus {
 		Notification notif;
 
 		if (largeIcon != null) {
-			notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
 					.setContentTitle(title)
 					.setContentText(message)
 					.setSmallIcon(icon, level)
@@ -114,7 +125,7 @@ public class ApiTwentySixPlus {
 					.setPriority(priority)
 					.build();
 		} else {
-			notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
 					.setContentTitle(title)
 					.setContentText(message)
 					.setSmallIcon(icon, level)
