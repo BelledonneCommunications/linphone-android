@@ -161,7 +161,7 @@ public class LinphonePreferences {
 		ProxyConfig prxCfg = getProxyConfig(n);
 		if (prxCfg == null) return null;
 		Address addr = prxCfg.getIdentityAddress();
-		AuthInfo authInfo = getLc().findAuthInfo(addr.getUsername(), null, addr.getDomain());
+		AuthInfo authInfo = getLc().findAuthInfo(null, addr.getUsername(), addr.getDomain());
 		return authInfo;
 	}
 
@@ -1089,7 +1089,7 @@ public class LinphonePreferences {
 
 	public void setTurnUsername(String username) {
 		NatPolicy nat = getOrCreateNatPolicy();
-		AuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
+		AuthInfo authInfo = getLc().findAuthInfo(null, nat.getStunServerUsername(), null);
 
 		if (authInfo != null) {
 			AuthInfo cloneAuthInfo = authInfo.clone();
@@ -1107,7 +1107,7 @@ public class LinphonePreferences {
 
 	public void setTurnPassword(String password) {
 		NatPolicy nat = getOrCreateNatPolicy();
-		AuthInfo authInfo = getLc().findAuthInfo(nat.getStunServerUsername(), null, null);
+		AuthInfo authInfo = getLc().findAuthInfo(null, nat.getStunServerUsername(), null);
 
 		if (authInfo != null) {
 			AuthInfo cloneAuthInfo = authInfo.clone();

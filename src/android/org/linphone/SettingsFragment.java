@@ -751,7 +751,6 @@ public class SettingsFragment extends PreferencesListFragment {
 						}
 					}
 					pt.enable(enable);
-					((CheckBoxPreference)preference).setChecked(enable);
 					return true;
 				}
 			});
