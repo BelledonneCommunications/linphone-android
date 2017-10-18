@@ -1542,7 +1542,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 			boolean encrypted, String authenticationToken) {
 	}
 
-	public void startEcCalibration(CoreListener l) throws CoreException {
+	public void startEcCalibration() throws CoreException {
 		routeAudioToSpeaker();
 		setAudioManagerInCallMode();
 		Log.i("Set audio mode on 'Voice Communication'");

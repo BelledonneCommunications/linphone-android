@@ -50,6 +50,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,6 +98,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		mListener = new CoreListenerStub() {
 			@Override
 			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delayMs) {
+				lc.removeListener(mListener);
 				LinphoneManager.getInstance().routeAudioToReceiver();
 
 				CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
@@ -540,6 +542,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean enable = (Boolean) newValue;
 					pt.enable(enable);
+					((CheckBoxPreference)preference).setChecked(enable);
 					return true;
 				}
 			});
@@ -662,7 +665,8 @@ public class SettingsFragment extends PreferencesListFragment {
 		try {
 			if (LinphoneManager.getInstance().getEchoTesterStatus())
 				stopEchoTester();
-			LinphoneManager.getInstance().startEcCalibration(mListener);
+			LinphoneManager.getLc().addListener(mListener);
+			LinphoneManager.getInstance().startEcCalibration();
 		} catch (CoreException e) {
 			Log.e(e);
 		}
@@ -747,6 +751,7 @@ public class SettingsFragment extends PreferencesListFragment {
 						}
 					}
 					pt.enable(enable);
+					((CheckBoxPreference)preference).setChecked(enable);
 					return true;
 				}
 			});

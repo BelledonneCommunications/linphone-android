@@ -57,6 +57,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 		mListener = new CoreListenerStub(){
 			@Override
 			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delay_ms) {
+				lc.removeListener(mListener);
 				LinphoneManager.getInstance().routeAudioToReceiver();
 				if (mSendEcCalibrationResult) {
 					sendEcCalibrationResult(status, delay_ms);
@@ -76,7 +77,8 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 		xmlRpcRequest.setListener(this);
 
 		try {
-			LinphoneManager.getInstance().startEcCalibration(mListener);
+			LinphoneManager.getLc().addListener(mListener);
+			LinphoneManager.getInstance().startEcCalibration();
 		} catch (CoreException e) {
 			Log.e(e, "Unable to calibrate EC");
 			AssistantActivity.instance().isEchoCalibrationFinished();
