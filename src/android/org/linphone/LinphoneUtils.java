@@ -541,7 +541,7 @@ public final class LinphoneUtils {
 	public static String getFullAddressFromUsername(String username) {
 		String sipAddress = username;
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc == null) return sipAddress;
+		if (lc == null || username == null) return sipAddress;
 
 		if (!sipAddress.startsWith("sip:")) {
 			sipAddress = "sip:" + sipAddress;
