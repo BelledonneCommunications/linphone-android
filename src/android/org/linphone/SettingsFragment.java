@@ -535,7 +535,7 @@ public class SettingsFragment extends PreferencesListFragment {
 			}
 
 			codec.setSummary(pt.getClockRate() + " Hz");
-			codec.setChecked(pt.enabled());
+			codec.setDefaultValue(pt.enabled());
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
@@ -717,7 +717,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					codec.setTitle("OpenH264");
 				}
 			}
-			codec.setChecked(pt.enabled());
+			codec.setDefaultValue(pt.enabled());
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				@Override
