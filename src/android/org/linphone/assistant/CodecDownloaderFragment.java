@@ -200,11 +200,7 @@ public class CodecDownloaderFragment extends Fragment {
 		}
 
 		if (h264 != null) {
-			try {
-				LinphoneManager.getLc().enablePayloadType(h264, enable);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+			h264.enable(enable);
 		}
 	}
 }

@@ -147,10 +147,17 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 	public void switchCamera() {
 		try {
-			/*int videoDeviceId = LinphoneManager.getLc().getVideoDevice();
-			videoDeviceId = (videoDeviceId + 1) % AndroidCameraConfiguration.retrieveCameras().length;
-			LinphoneManager.getLc().setVideoDevice(videoDeviceId);*/
-			Log.e("TODO FIXME switchCamera");
+			String currentDevice = LinphoneManager.getLc().getVideoDevice();
+			String[] devices = LinphoneManager.getLc().getVideoDevicesList();
+			int index = 0;
+			for (String d : devices) {
+				if (d == currentDevice) {
+					break;
+				}
+				index++;
+			}
+			String newDevice = devices[(index + 1) % devices.length];
+			LinphoneManager.getLc().setVideoDevice(newDevice);
 
 			CallManager.getInstance().updateCall();
 

@@ -112,7 +112,7 @@ interface ChatUpdatedListener {
 	void onChatUpdated();
 }
 
-public class ChatFragment extends Fragment implements OnClickListener, ChatMessageListener, ContactsUpdatedListener{
+public class ChatFragment extends Fragment implements OnClickListener, ChatMessageListener, ContactsUpdatedListener {
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_PICTURE_SMALL = 2;

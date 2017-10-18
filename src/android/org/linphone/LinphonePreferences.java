@@ -1235,7 +1235,9 @@ public class LinphonePreferences {
 	}
 
 	public void setDefaultDisplayName(String displayName) {
-		//getLc().setPrimaryContact(displayName, getDefaultUsername()); //TODO FIXME
+		Address primary = getLc().getPrimaryContactParsed();
+		primary.setDisplayName(displayName);
+		getLc().setPrimaryContact(primary.asString());
 	}
 
 	public String getDefaultDisplayName() {
@@ -1243,7 +1245,9 @@ public class LinphonePreferences {
 	}
 
 	public void setDefaultUsername(String username) {
-		//getLc().setPrimaryContact(getDefaultDisplayName(), username); // TODO FIXME
+		Address primary = getLc().getPrimaryContactParsed();
+		primary.setUsername(username);
+		getLc().setPrimaryContact(primary.asString());
 	}
 
 	public String getDefaultUsername() {

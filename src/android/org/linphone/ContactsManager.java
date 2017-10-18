@@ -289,7 +289,7 @@ public class ContactsManager extends ContentObserver {
 					} else {
 						if (friend.getRefKey() != null) {
 							// Friend has a refkey and but no LinphoneContact => represents a native contact stored in db from a previous version of Linphone, remove it
-							//lc.removeFriend(friend); //TODO FIXME
+							list.removeFriend(friend);
 						} else {
 							// No refkey so it's a standalone contact
 							contact = new LinphoneContact();
@@ -359,7 +359,9 @@ public class ContactsManager extends ContentObserver {
 				String id = contact.getAndroidId();
 				if (id != null && !nativeIds.contains(id)) {
 					// Has been removed since last fetch
-					//lc.removeFriend(contact.getFriend()); //TODO FIXME
+					for (FriendList list : lc.getFriendsLists()) {
+						list.removeFriend(contact.getFriend());
+					}
 					contacts.remove(contact);
 				}
 			}

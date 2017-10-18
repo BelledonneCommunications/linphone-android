@@ -30,6 +30,7 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreException;
 import org.linphone.core.Friend;
 import org.linphone.core.Friend.SubscribePolicy;
+import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
@@ -486,8 +487,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	public void deleteFriend() {
-		if (friend != null) {
-			//LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend); //TODO FIXME
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (friend != null && lc != null) {
+			for (FriendList list : lc.getFriendsLists()) {
+				list.removeFriend(friend);
+			}
 		}
 	}
 

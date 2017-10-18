@@ -56,7 +56,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 
 		mListener = new CoreListenerStub(){
 			@Override
-			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delay_ms, Object data) {
+			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delay_ms) {
 				LinphoneManager.getInstance().routeAudioToReceiver();
 				if (mSendEcCalibrationResult) {
 					sendEcCalibrationResult(status, delay_ms);

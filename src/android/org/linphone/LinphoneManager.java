@@ -87,6 +87,7 @@ import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Core.AuthMethod;
@@ -102,6 +103,7 @@ import org.linphone.core.Event;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.InfoMessage;
+import org.linphone.core.Participant;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.VersionUpdateCheckResult;
@@ -153,7 +155,7 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
  * Add Service Listener to react to Linphone state changes.
  *
  */
-public class LinphoneManager implements CoreListener, ChatMessageListener, SensorEventListener, AccountCreatorListener {
+public class LinphoneManager implements CoreListener, ChatMessageListener, SensorEventListener, AccountCreatorListener, ChatRoomListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -598,15 +600,100 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	private void resetCameraFromPreferences() {
 		boolean useFrontCam = mPrefs.useFrontCam();
-
-		/*int camId = 0;
+		int camId = 0;
 		AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
 		for (AndroidCamera androidCamera : cameras) {
 			if (androidCamera.frontFacing == useFrontCam)
 				camId = androidCamera.id;
 		}
-		LinphoneManager.getLc().setVideoDevice(camId);*/
-		// TODO FIXME
+		String[] devices = getLc().getVideoDevicesList();
+		String newDevice = devices[camId];
+		LinphoneManager.getLc().setVideoDevice(newDevice);
+	}
+
+	@Override
+	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage message) {
+		if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
+			return;
+		}
+
+		final Address from = message.getFromAddress();
+		String to = message.getToAddress().asString();
+		try {
+			final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
+			if (LinphoneActivity.instance().isOnBackground()) {
+				if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
+					if (contact != null) {
+						LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), contact.getFullName()
+								, getString(R.string.message_cant_be_decrypted_notif));
+					} else {
+						LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), from.getUsername()
+								, getString(R.string.message_cant_be_decrypted_notif));
+					}
+				}
+			} else if (!mAreDisplayAlertMessage){
+				mAreDisplayAlertMessage = true;
+				final Dialog dialog = LinphoneActivity.instance().displayDialog(
+						getString(R.string.message_cant_be_decrypted).replace("%s"
+								, (contact != null) ? contact.getFullName() : from.getUsername()));
+				Button delete = (Button) dialog.findViewById(R.id.delete_button);
+				delete.setText(getString(R.string.call));
+				Button cancel = (Button) dialog.findViewById(R.id.cancel);
+				cancel.setText(getString(R.string.ok));
+
+				delete.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						LinphoneManager.getInstance().newOutgoingCall(from.asStringUriOnly()
+								, (contact != null) ? contact.getFullName() : from.getUsername());
+						dialog.dismiss();
+						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
+					}
+				});
+
+				cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
+					}
+				});
+				if(LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory)
+					dialog.show();
+			}
+		} catch (Exception e) {
+			Log.e(e);
+		}
+	}
+
+	@Override
+	public void onParticipantAdded(ChatRoom cr, Participant participant) {
+
+	}
+
+	@Override
+	public void onSubjectChanged(ChatRoom cr, String subject) {
+
+	}
+
+	@Override
+	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
+
+	}
+
+	@Override
+	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
+
+	}
+
+	@Override
+	public void onParticipantAdminStatusChanged(ChatRoom cr, Participant participant, boolean isAdmin) {
+
+	}
+
+	@Override
+	public void onParticipantRemoved(ChatRoom cr, Participant participant) {
+
 	}
 
 	public static interface AddressType {
@@ -677,7 +764,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	}
 
 	private boolean isTunnelNeeded(NetworkInfo info) {
-		if (info == null) {
+		/*if (info == null) {
 			Log.i("No connectivity: tunnel should be disabled");
 			return false;
 		}
@@ -692,7 +779,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 				&& getString(R.string.tunnel_mode_entry_value_3G_only).equals(pref)) {
 			Log.i("need tunnel: 'no wifi' connection");
 			return true;
-		}
+		}*/ // TODO FIXME
 
 		return false;
 	}
@@ -1253,62 +1340,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
 		mAudioManager.abandonAudioFocus(null);
 		Log.i("Set audio mode on 'Normal'");
-	}
-
-	public void messageReceivedUnableToDecrypted(Core lc, ChatRoom cr,
-												 ChatMessage message) {
-		//TODO FIXME
-		if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
-			return;
-		}
-
-		final Address from = message.getFromAddress();
-		String to = message.getToAddress().asString();
-		try {
-			final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
-			if (LinphoneActivity.instance().isOnBackground()) {
-				if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-					if (contact != null) {
-						LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), contact.getFullName()
-								, getString(R.string.message_cant_be_decrypted_notif));
-					} else {
-						LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), from.getUsername()
-								, getString(R.string.message_cant_be_decrypted_notif));
-					}
-				}
-			} else if (!mAreDisplayAlertMessage){
-				mAreDisplayAlertMessage = true;
-				final Dialog dialog = LinphoneActivity.instance().displayDialog(
-						getString(R.string.message_cant_be_decrypted).replace("%s"
-								, (contact != null) ? contact.getFullName() : from.getUsername()));
-				Button delete = (Button) dialog.findViewById(R.id.delete_button);
-				delete.setText(getString(R.string.call));
-				Button cancel = (Button) dialog.findViewById(R.id.cancel);
-				cancel.setText(getString(R.string.ok));
-
-				delete.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						LinphoneManager.getInstance().newOutgoingCall(from.asStringUriOnly()
-								, (contact != null) ? contact.getFullName() : from.getUsername());
-						dialog.dismiss();
-						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
-					}
-				});
-
-				cancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
-					}
-				});
-				if(LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory)
-					dialog.show();
-			}
-		} catch (Exception e) {
-			Log.e(e);
-		}
 	}
 
 	public void setAreDisplayAlertMessage(boolean b) {
@@ -1882,10 +1913,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	}
 
 	@Override
-	public void removed(Core lc, Call call,
-			Address from, byte[] event) {
-	}
-	@Override
 	public void onTransferStateChanged(Core lc, Call call,
 			State new_call_state) {
 
@@ -1893,7 +1920,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	@Override
 	public void onChatRoomInstantiated(Core lc, ChatRoom cr) {
-
+		cr.setListener(this);
 	}
 
 	@Override

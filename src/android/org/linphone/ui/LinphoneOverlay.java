@@ -79,8 +79,8 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 
 		Call call = LinphoneManager.getLc().getCurrentCall();
 		CallParams callParams = call.getCurrentParams();
-		params.width = callParams.getReceivedVideoDefinition().width;
-		params.height = callParams.getReceivedVideoDefinition().height;
+		params.width = callParams.getReceivedVideoDefinition().getWidth();
+		params.height = callParams.getReceivedVideoDefinition().getHeight();
 		LinphoneManager.getLc().setNativeVideoWindowId(androidVideoWindowImpl);
 
 		setOnClickListener(new OnClickListener() {
