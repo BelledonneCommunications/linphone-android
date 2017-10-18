@@ -34,6 +34,7 @@ import org.linphone.core.Core.RegistrationState;
 import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -299,7 +300,7 @@ public final class LinphoneService extends Service {
 		LinphonePreferences.instance().setContext(getBaseContext());
 		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		Factory.instance().enableLogCollection(isDebugEnabled);
+		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
 		Factory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
 
 		// Dump some debugging information to the logs

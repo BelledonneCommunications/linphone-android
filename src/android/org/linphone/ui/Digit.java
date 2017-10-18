@@ -26,6 +26,7 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.app.AlertDialog;
@@ -138,7 +139,7 @@ public class Digit extends Button implements AddressAware {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0){
 							LinphonePreferences.instance().setDebugEnabled(false);
-							Factory.instance().enableLogCollection(false);
+							Factory.instance().enableLogCollection(LogCollectionState.Disabled);
 						}
 						if(which == 1) {
 							Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -154,7 +155,7 @@ public class Digit extends Button implements AddressAware {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0) {
 							LinphonePreferences.instance().setDebugEnabled(true);
-							Factory.instance().enableLogCollection(true);
+							Factory.instance().enableLogCollection(LogCollectionState.Enabled);
 						}
 					}
 				});

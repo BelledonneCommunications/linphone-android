@@ -31,6 +31,7 @@ import org.linphone.core.AuthInfo;
 import org.linphone.core.Core;
 import org.linphone.core.Core.LimeState;
 import org.linphone.core.Core.MediaEncryption;
+import org.linphone.core.LogCollectionState;
 import org.linphone.core.Transports;
 import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
@@ -1191,7 +1192,7 @@ public class LinphonePreferences {
 	// Advanced settings
 	public void setDebugEnabled(boolean enabled) {
 		getConfig().setBool("app", "debug", enabled);
-		Factory.instance().enableLogCollection(enabled);
+		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
 		Factory.instance().setDebugMode(enabled, getString(R.string.app_name));
 	}
 

@@ -487,8 +487,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.TV) {
 			lc.getPresenceModel().getActivity().setType(PresenceActivityType.TV);
 		} else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
-			PresenceModel model = lc.createPresenceModel();//PresenceActivityType.TV, null);
-			model = model.newWithActivity(PresenceActivityType.TV, null);
+			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivityType.TV, null);
 			lc.setPresenceModel(model);
 		}
 	}
@@ -498,8 +497,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.OnThePhone) {
 			lc.getPresenceModel().getActivity().setType(PresenceActivityType.OnThePhone);
 		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
-			PresenceModel model = lc.createPresenceModel();//PresenceActivityType.OnThePhone, null);
-			model = model.newWithActivity(PresenceActivityType.OnThePhone, null);
+			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivityType.OnThePhone, null);
 			lc.setPresenceModel(model);
 		}
 	}
@@ -667,32 +665,12 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	}
 
 	@Override
-	public void onParticipantAdded(ChatRoom cr, Participant participant) {
-
-	}
-
-	@Override
-	public void onSubjectChanged(ChatRoom cr, String subject) {
-
-	}
-
-	@Override
 	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
 
 	}
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-
-	}
-
-	@Override
-	public void onParticipantAdminStatusChanged(ChatRoom cr, Participant participant, boolean isAdmin) {
-
-	}
-
-	@Override
-	public void onParticipantRemoved(ChatRoom cr, Participant participant) {
 
 	}
 

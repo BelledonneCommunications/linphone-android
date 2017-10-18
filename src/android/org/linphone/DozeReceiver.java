@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -38,7 +39,7 @@ public class DozeReceiver extends android.content.BroadcastReceiver {
         if (!LinphoneService.isReady()) return;
 
         boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-        Factory.instance().enableLogCollection(isDebugEnabled);
+        Factory.instance().enableLogCollection(isDebugEnabled ? LogCollectionState.Enabled : LogCollectionState.Disabled);
         Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc == null) return;
