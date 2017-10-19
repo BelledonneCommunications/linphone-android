@@ -837,7 +837,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			mLc = Factory.instance().createCore(this, mConfigFile, mLinphoneFactoryConfigFile);
+			mLc = Factory.instance().createCore(this, mConfigFile, mLinphoneFactoryConfigFile, c);
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
