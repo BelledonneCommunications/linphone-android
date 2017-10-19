@@ -114,8 +114,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	public List<ContactAddress> getContactsList() {
 		List<ContactAddress> list = new ArrayList<ContactAddress>();
 		if (ContactsManager.getInstance().hasContacts()) {
-			//TODO FIXME
-			/*for (Address addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
+			for (Address addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
 				LinphoneContact cont = ContactsManager.getInstance().findContactFromAddress(addr);
 				if (cont == null) {
 					cont = new LinphoneContact();
@@ -125,7 +124,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				// TODO Rechercher si un displayname est associé à cette sip uri
 				ContactAddress ca = new ContactAddress(cont , addr.asString(), cont.isFriend());
 				list.add(ca);
-			}*/
+			}
 		}
 
 		for (ContactAddress caS : contactsSelected) {
