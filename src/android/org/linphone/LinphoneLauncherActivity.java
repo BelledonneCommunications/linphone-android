@@ -25,9 +25,9 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import org.linphone.assistant.RemoteProvisioningActivity;
-import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
 import static android.content.Intent.ACTION_MAIN;
@@ -157,12 +157,12 @@ public class LinphoneLauncherActivity extends Activity {
 				}
 				if (uriToResolve != null) {
 					addressToCall = ContactsManager.getInstance().getAddressOrNumberForAndroidContact(getContentResolver(), uriToResolve);
-					Log.i("Intent has uri to resolve : " + uriToResolve.toString());
+					Log.i("LinphoneLauncher", "Intent has uri to resolve : " + uriToResolve.toString());
 					uriToResolve = null;
 				}
 				if (addressToCall != null) {
 					newIntent.putExtra("SipUriOrNumber", addressToCall);
-					Log.i("Intent has address to call : " + addressToCall);
+					Log.i("LinphoneLauncher", "Intent has address to call : " + addressToCall);
 					addressToCall = null;
 				}
 				startActivity(newIntent);

@@ -365,9 +365,6 @@ private static AssistantActivity instance;
 
 		proxyConfig.setIdentityAddress(addr);
 
-		if (LinphonePreferences.instance() != null)
-			proxyConfig.setContactUriParameters(LinphonePreferences.instance().getPushNotificationRegistrationID());
-
 		if (accountCreator.getPhoneNumber() != null && accountCreator.getPhoneNumber().length() > 0)
 			proxyConfig.setDialPrefix(org.linphone.core.Utils.getPrefixFromE164(accountCreator.getPhoneNumber()));
 
@@ -388,6 +385,9 @@ private static AssistantActivity instance;
 
 		lc.setDefaultProxyConfig(proxyConfig);
 
+		if (LinphonePreferences.instance() != null)
+			LinphonePreferences.instance().setPushNotificationEnabled(true);
+
 		if (ContactsManager.getInstance() != null)
 			ContactsManager.getInstance().fetchContactsAsync();
 
@@ -407,8 +407,8 @@ private static AssistantActivity instance;
 		configureProxyConfig(accountCreator);
 	}
 
-	public void genericLogIn(String username, String userid, String password, String prefix, String domain, TransportType transport) {
-		saveCreatedAccount(username, userid, password, null, prefix, domain, transport);
+	public void genericLogIn(String username, String userid, String password, String displayname, String prefix, String domain, TransportType transport) {
+		saveCreatedAccount(username, userid, password, displayname, null, prefix, domain, transport);
 	}
 
 	private void display(AssistantFragmentsEnum fragment) {
@@ -504,7 +504,7 @@ private static AssistantActivity instance;
 		return phoneNumberWithCountry;
 	}
 
-	public void saveCreatedAccount(String username, String userid, String password, String ha1, String prefix, String domain, TransportType transport) {
+	public void saveCreatedAccount(String username, String userid, String password, String displayname, String ha1, String prefix, String domain, TransportType transport) {
 
 		username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
 		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
@@ -517,6 +517,7 @@ private static AssistantActivity instance;
 				.setDomain(domain)
 				.setHa1(ha1)
 				.setUserid(userid)
+				.setDisplayName(displayname)
 				.setPassword(password);
 
 		if (prefix != null) {

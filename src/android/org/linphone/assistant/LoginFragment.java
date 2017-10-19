@@ -34,7 +34,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 public class LoginFragment extends Fragment implements OnClickListener, TextWatcher {
-	private EditText login, userid, password, domain;
+	private EditText login, userid, password, domain, displayName;
 	private RadioGroup transports;
 	private Button apply;
 
@@ -45,6 +45,8 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 
 		login = (EditText) view.findViewById(R.id.assistant_username);
 		login.addTextChangedListener(this);
+		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
+		displayName.addTextChangedListener(this);
 		userid = (EditText) view.findViewById(R.id.assistant_userid);
 		userid.addTextChangedListener(this);
 		password = (EditText) view.findViewById(R.id.assistant_password);
@@ -83,7 +85,7 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 			if (domain.getText().toString().compareTo(getString(R.string.default_domain)) == 0) {
 				AssistantActivity.instance().displayLoginLinphone(login.getText().toString(), password.getText().toString());
 			} else {
-				AssistantActivity.instance().genericLogIn(login.getText().toString(), userid.getText().toString(), password.getText().toString(), null, domain.getText().toString(), transport);
+				AssistantActivity.instance().genericLogIn(login.getText().toString(), userid.getText().toString(), password.getText().toString(), displayName.getText().toString(), null, domain.getText().toString(), transport);
 			}
 		}
 	}

@@ -93,6 +93,7 @@
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 	<bool name="enable_call_notification">true</bool>
 	<bool name="kill_service_with_task_manager">true</bool>
+	<string name="notification_service_channel_id">linphone_notification_service_id</string>
 	<string name="notification_channel_id">linphone_notification_id</string>
 	<integer name="notification_ms_on">1000</integer>
 	<integer name="notification_ms_off">7000</integer>

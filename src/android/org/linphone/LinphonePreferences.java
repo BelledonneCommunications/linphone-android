@@ -360,9 +360,7 @@ public class LinphonePreferences {
 			if (tempContactsParams != null)
 				prxCfg.setContactUriParameters(tempContactsParams);
 			if (tempExpire != null) {
-				try {
-					prxCfg.setExpires(Integer.parseInt(tempExpire));
-				} catch (NumberFormatException nfe) { }
+				prxCfg.setExpires(Integer.parseInt(tempExpire));
 			}
 
 			prxCfg.setAvpfMode(AVPFMode.Enabled);

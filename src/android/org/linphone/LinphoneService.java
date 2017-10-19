@@ -308,6 +308,12 @@ public final class LinphoneService extends Service {
 		dumpDeviceInformation();
 		dumpInstalledLinphoneInformation();
 
+		//Disable service notification for Android O
+		if ((Version.sdkAboveOrEqual(Version.API26_O_80))) {
+			LinphonePreferences.instance().setServiceNotificationVisibility(false);
+			mDisableRegistrationStatus = true;
+		}
+
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
 		Compatibility.CreateChannel(this);
@@ -315,10 +321,6 @@ public final class LinphoneService extends Service {
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-			disableNotificationsAutomaticRegistrationStatusContent();
-		}
 
 		Bitmap bm = null;
 		try {
@@ -398,7 +400,7 @@ public final class LinphoneService extends Service {
 
 			@Override
 			public void onGlobalStateChanged(Core lc,Core.GlobalState state, String message) {
-				if (state == Core.GlobalState.On && displayServiceNotification()) {
+				if (!mDisableRegistrationStatus && state == GlobalState.On && displayServiceNotification()) {
 					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}
@@ -751,10 +753,6 @@ public final class LinphoneService extends Service {
 		} else {
 			Log.i("Linphone version is unknown");
 		}
-	}
-
-	public void disableNotificationsAutomaticRegistrationStatusContent() {
-		mDisableRegistrationStatus = true;
 	}
 
 	private synchronized void sendNotification(int level, int textId) {

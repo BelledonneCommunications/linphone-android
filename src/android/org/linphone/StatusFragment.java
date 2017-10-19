@@ -32,6 +32,7 @@ import org.linphone.mediastream.Log;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -413,8 +414,12 @@ public class StatusFragment extends Fragment {
 				zrtpToRead = token.substring(2);
 			}
 
-			LinphoneService.instance().displaySasNotification(token);
-
+			// Obiane specific dev : display sas notif only if screen locked
+			KeyguardManager myKM = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
+			if( myKM.inKeyguardRestrictedInputMode()) {
+				//Screen is locked
+				LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
+			}
 			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
 			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
 					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
