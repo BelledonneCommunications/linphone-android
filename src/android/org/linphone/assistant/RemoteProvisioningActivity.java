@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 RemoteProvisioningActivity.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,9 +27,9 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.RemoteProvisioningState;
-import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Core;
+import org.linphone.core.Core.ConfiguringState;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -43,28 +43,25 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-/**
- * @author Sylvain Berfini
- */
 public class RemoteProvisioningActivity extends Activity {
 	private Handler mHandler = new Handler();
 	private String configUriParam = null;
 	private ProgressBar spinner;
-	private LinphoneCoreListenerBase mListener;
-	
+	private CoreListenerStub mListener;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.remote_provisioning);
 		spinner = (ProgressBar) findViewById(R.id.spinner);
-		
-		mListener = new LinphoneCoreListenerBase(){
+
+		mListener = new CoreListenerStub(){
 			@Override
-			public void configuringStatus(LinphoneCore lc, final RemoteProvisioningState state, String message) {
+			public void onConfiguringStatus(Core lc, final ConfiguringState state, String message) {
 				if (spinner != null) spinner.setVisibility(View.GONE);
-				if (state == RemoteProvisioningState.ConfiguringSuccessful) {
+				if (state == ConfiguringState.Successful) {
 					goToLinphoneActivity();
-				} else if (state == RemoteProvisioningState.ConfiguringFailed) {
+				} else if (state == ConfiguringState.Failed) {
 					Toast.makeText(RemoteProvisioningActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
 				}
 			}
@@ -74,7 +71,7 @@ public class RemoteProvisioningActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -85,7 +82,7 @@ public class RemoteProvisioningActivity extends Activity {
 
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -185,7 +182,7 @@ public class RemoteProvisioningActivity extends Activity {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				LinphoneManager.getInstance().restartLinphoneCore();
+				LinphoneManager.getInstance().restartCore();
 			}
 		}, 1000);
 	}

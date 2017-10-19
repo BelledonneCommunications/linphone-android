@@ -1,10 +1,29 @@
 package org.linphone.ui;
 
+/*
+LinphoneOverlay.java
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCallParams;
+import org.linphone.core.Call;
+import org.linphone.core.CallParams;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.content.Context;
@@ -44,7 +63,7 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(this, null, new AndroidVideoWindowImpl.VideoWindowListener() {
 			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				LinphoneManager.getLc().setVideoWindow(vw);
+				LinphoneManager.getLc().setNativeVideoWindowId(vw);
 			}
 
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -58,11 +77,11 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 			}
 		});
 
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		LinphoneCallParams callParams = call.getCurrentParams();
-		params.width = callParams.getReceivedVideoSize().width;
-		params.height = callParams.getReceivedVideoSize().height;
-		LinphoneManager.getLc().setVideoWindow(androidVideoWindowImpl);
+		Call call = LinphoneManager.getLc().getCurrentCall();
+		CallParams callParams = call.getCurrentParams();
+		params.width = callParams.getReceivedVideoDefinition().getWidth();
+		params.height = callParams.getReceivedVideoDefinition().getHeight();
+		LinphoneManager.getLc().setNativeVideoWindowId(androidVideoWindowImpl);
 
 		setOnClickListener(new OnClickListener() {
 			@Override

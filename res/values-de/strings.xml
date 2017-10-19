@@ -16,6 +16,7 @@
   <string name="sync_account_name">Linphone-Kontakte</string>
   <!--Common-->
   <string name="username">Benutzername</string>
+  <string name="userid">Benutzerkennung (optional)</string>
   <string name="phone_number">Telefonnummer</string>
   <string name="display_name">Anzeigename</string>
   <string name="password">Passwort</string>
@@ -45,6 +46,7 @@
   <string name="maybe_later">Vielleicht später</string>
   <string name="later">Später</string>
   <string name="no">Nein</string>
+  <string name="ok">OK</string>
   <string name="yes">Ja</string>
   <string name="link_account">Verknüpfen Sie Ihr Konto</string>
   <!--Launch screen-->
@@ -170,6 +172,7 @@
   <string name="message_cant_be_decrypted_notif">Sie können diese Nachricht nicht entschlüsseln.</string>
   <string name="processing_image">Bild wird verarbeitet. Je nach Größe der Datei kann dies mehrere Sekunden in Anspruch nehmen</string>
   <string name="displayed">Lesen</string>
+  <string name="delivered">Ausgeliefert</string>
   <string name="resend">Erneut senden</string>
   <!--Status Bar-->
   <string name="status_connected">Registriert</string>
@@ -185,9 +188,13 @@
   <!--Call-->
   <string name="incoming_call">eingehender Anruf</string>
   <string name="outgoing_call">ausgehender Anruf</string>
+  <string name="add_video_dialog">Ihr Anrufer möchte Video einschalten</string>
   <string name="no_current_call">Kein aktiver Anruf</string>
   <string name="call_paused_by_remote">Ihr Anrufer hat den Anruf pausiert</string>
   <string name="couldnt_accept_call">Beim Annehmen des Anrufs ist ein Fehler aufgetreten</string>
+  <string name="zrtp_dialog2">\nIhr Anrufer sollte sagen: %s</string>
+  <string name="zrtp_notification_title">SAS</string>
+  <string name="zrtp_notification_message">Bestätigen Sie den vorherigen SAS-Code mit Ihrem Korrespondenten</string>
   <string name="unknown_incoming_call_name">Unbekannt</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Video</string>
@@ -224,6 +231,7 @@
   <string name="error_user_busy">Benutzer beschäftigt</string>
   <string name="error_user_not_found">Benutzer nicht gefunden</string>
   <string name="error_incompatible_media">Inkompatible Medienparameter</string>
+  <string name="error_low_bandwidth">Ihr Anrufer hat eine geringe Bandbreite, Video kann nicht gestartet werden</string>
   <string name="error_network_unreachable">Netzwerk ist nicht erreichbar</string>
   <string name="error_bad_credentials">Falsche Anmeldedaten</string>
   <string name="error_unauthorized">Unzulässig</string>
@@ -327,6 +335,7 @@
   <!--Network settings-->
   <string name="pref_network_title">Netzwerk</string>
   <string name="pref_wifi_only">Nur WiFi verwenden</string>
+  <string name="pref_doze_mode">Schlummermodus</string>
   <string name="pref_stun_server">STUN / TURN-Server</string>
   <string name="pref_ice_enable">ICE aktivieren</string>
   <string name="pref_turn_enable">TURN aktivieren</string>
@@ -435,4 +444,5 @@
   <string name="content_description_call_options">Anrufoptionen</string>
   <string name="content_description_audio_route">Audioroute</string>
   <string name="content_description_exit_conference">Konferenz beenden</string>
+  <string name="content_title_notification">Linphone-Benachrichtigung</string>
 </resources>

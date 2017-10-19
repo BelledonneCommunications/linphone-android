@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
 PreferencesMigrator.java
-Copyright (C) 2013  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.LinphonePreferences.AccountBuilder;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneProxyConfig;
-import org.linphone.core.LpConfig;
+import org.linphone.core.Core;
+import org.linphone.core.CoreException;
+import org.linphone.core.ProxyConfig;
+import org.linphone.core.Config;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -32,9 +32,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
-/**
- * @author Sylvain Berfini
- */
 public class PreferencesMigrator {
 	private LinphonePreferences mNewPrefs;
 	private SharedPreferences mOldPrefs;
@@ -47,7 +44,7 @@ public class PreferencesMigrator {
 	}
 
 	public boolean isEchoMigratioNeeded() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) {
 			return false;
 		}
@@ -56,7 +53,7 @@ public class PreferencesMigrator {
 			return false;
 		}
 
-		return (!lc.needsEchoCalibration() && mNewPrefs.isEchoCancellationEnabled());
+		return (!lc.isEchoCancellerCalibrationRequired() && mNewPrefs.echoCancellationEnabled());
 	}
 
 	public boolean isMigrationNeeded() {
@@ -102,9 +99,9 @@ public class PreferencesMigrator {
 	}
 
 	private void doAccountsMigration() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		lc.clearAuthInfos();
-		lc.clearProxyConfigs();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		lc.clearAllAuthInfo();
+		lc.clearProxyConfig();
 
 		for (int i = 0; i < mOldPrefs.getInt(getString(R.string.pref_extra_accounts), 1); i++) {
 			doAccountMigration(i, i == getPrefInt(R.string.pref_default_account_key, 0));
@@ -124,10 +121,10 @@ public class PreferencesMigrator {
 
 			AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 			.setUsername(username)
-			.setUserId(userid)
+			.setUserid(userid)
 			.setDomain(domain)
 			.setPassword(password)
-			.setProxy(proxy)
+			.setServerAddr(proxy)
 			.setExpires(expire);
 
 			if (getPrefBoolean(getString(R.string.pref_enable_outbound_proxy_key) + key, false)) {
@@ -144,7 +141,7 @@ public class PreferencesMigrator {
 
 			try {
 				builder.saveNewAccount();
-			} catch (LinphoneCoreException e) {
+			} catch (CoreException e) {
 				Log.e(e);
 			}
 
@@ -155,10 +152,10 @@ public class PreferencesMigrator {
 	}
 
 	public void doPresenceMigrationIfNeeded() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		LpConfig cfg = lc.getConfig();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Config cfg = lc.getConfig();
 		if (cfg.getString("app", "friendlist_subscription_enabled", null) == null){
-			LinphoneProxyConfig proxy = lc.getDefaultProxyConfig();
+			ProxyConfig proxy = lc.getDefaultProxyConfig();
 			if (proxy != null) {
 				String domain = proxy.getDomain();
 				if (domain!=null && domain.equals(getString(R.string.default_domain))) {

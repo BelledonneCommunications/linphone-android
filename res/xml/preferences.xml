@@ -225,6 +225,12 @@
 					android:key="@string/pref_voice_mail_key"
 					android:persistent="false"/>
 
+				<CheckBoxPreference
+					android:title="@string/pref_dialer_call"
+					android:key="@string/pref_dialer_call_key"
+					android:persistent="false"/>
+
+
 			</PreferenceCategory>
 
 	    </PreferenceScreen>
@@ -262,11 +268,6 @@
 				<CheckBoxPreference
 					android:title="@string/pref_wifi_only"
 				    android:key="@string/pref_wifi_only_key"
-					android:persistent="false"/>
-
-				<CheckBoxPreference
-					android:title="@string/pref_doze_mode"
-					android:key="@string/pref_doze_mode_key"
 					android:persistent="false"/>
 
 				<EditTextPreference

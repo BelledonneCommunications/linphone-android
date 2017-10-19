@@ -1,7 +1,8 @@
 package org.linphone.ui;
+
 /*
 PreferencesListFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
@@ -45,13 +47,13 @@ import android.widget.RelativeLayout;
 @SuppressLint("ValidFragment")
 public class PreferencesListFragment extends ListFragment {
     private PreferenceManager mPreferenceManager;
-    
+
     /**
      * The starting request code given out to preference framework.
      */
     private static final int FIRST_REQUEST_CODE = 100;
     private static final int MSG_BIND_PREFERENCES = 0;
-    
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -64,33 +66,33 @@ public class PreferencesListFragment extends ListFragment {
     };
     private ListView preferencesList;
     private int xmlResID;
-    
+
     public PreferencesListFragment(int xmlId) {
         this.xmlResID = xmlId;
     }
-    
+
     // Must be provided
     public PreferencesListFragment() {
-        
+
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
     	// Hack to correctly display preferences
     	View view = inflater.inflate(R.layout.settings, null);
-    	
+
     	ViewParent p = preferencesList.getParent();
         if (p != null) {
             ((ViewGroup)p).removeView(preferencesList);
         }
-    	
+
     	RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.topLayout);
     	layout.addView(preferencesList);
-    	
+
         postBindPreferences();
         return view;
     }
-    
+
     @Override
     public void onDestroyView(){
         super.onDestroyView();
@@ -103,11 +105,11 @@ public class PreferencesListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        
+
         if (bundle != null) {
             xmlResID = bundle.getInt("xml");
         }
-        
+
         mPreferenceManager = onCreatePreferenceManager();
         preferencesList = (ListView) LayoutInflater.from(getActivity()).inflate(R.layout.preference_list_content, null);
         preferencesList.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -168,17 +170,17 @@ public class PreferencesListFragment extends ListFragment {
         if (mHandler.hasMessages(MSG_BIND_PREFERENCES)) return;
         mHandler.obtainMessage(MSG_BIND_PREFERENCES).sendToTarget();
     }
-    
+
     private void bindPreferences() {
         final PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (preferenceScreen != null && preferencesList != null) {
             preferenceScreen.bind(preferencesList);
         }
     }
-    
+
     /**
      * Creates the {@link PreferenceManager}.
-     * 
+     *
      * @return The {@link PreferenceManager} used by this activity.
      */
     private PreferenceManager onCreatePreferenceManager() {
@@ -192,7 +194,7 @@ public class PreferencesListFragment extends ListFragment {
             return null;
         }
     }
-    
+
     /**
      * Returns the {@link PreferenceManager} used by this activity.
      * @return The {@link PreferenceManager}.
@@ -203,7 +205,7 @@ public class PreferencesListFragment extends ListFragment {
 
     /**
      * Sets the root of the preference hierarchy that this activity is showing.
-     * 
+     *
      * @param preferenceScreen The root {@link PreferenceScreen} of the preference hierarchy.
      */
     public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
@@ -218,10 +220,10 @@ public class PreferencesListFragment extends ListFragment {
             Log.e("[PreferencesListFragment] setPreferenceScreen " + e);
         }
     }
-    
+
     /**
      * Gets the root of the preference hierarchy that this activity is showing.
-     * 
+     *
      * @return The {@link PreferenceScreen} that is the root of the preference
      *         hierarchy.
      */
@@ -233,17 +235,17 @@ public class PreferencesListFragment extends ListFragment {
         } catch(Exception e) {
             Log.e("[PreferencesListFragment] getPreferenceScreen " + e);
         }
-        
+
         return null;
     }
-    
+
     /**
      * Inflates the given XML resource and adds the preference hierarchy to the current
      * preference hierarchy.
-     * 
+     *
      * @param preferencesResId The XML resource ID to inflate.
      */
-    public void addPreferencesFromResource(int preferencesResId) {   
+    public void addPreferencesFromResource(int preferencesResId) {
         try {
             Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class, PreferenceScreen.class);
             m.setAccessible(true);
@@ -253,10 +255,10 @@ public class PreferencesListFragment extends ListFragment {
             Log.e("[PreferencesListFragment] addPreferencesFromResource " + e);
         }
     }
-    
+
     /**
      * Finds a {@link Preference} based on its key.
-     * 
+     *
      * @param key The key of the preference to retrieve.
      * @return The {@link Preference} with the key, or null.
      * @see PreferenceGroup#findPreference(CharSequence)

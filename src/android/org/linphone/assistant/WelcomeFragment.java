@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 WelcomeFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,9 +27,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-/**
- * @author Sylvain Berfini
- */
 public class WelcomeFragment extends Fragment implements OnClickListener {
 	private Button createAccount, logLinphoneAccount, logGenericAccount, remoteProvisioning;
 

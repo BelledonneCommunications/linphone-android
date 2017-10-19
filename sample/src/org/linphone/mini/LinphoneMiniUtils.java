@@ -1,7 +1,8 @@
 package org.linphone.mini;
+
 /*
 LinphoneMiniUtils.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,19 +26,16 @@ import java.io.InputStream;
 
 import android.content.Context;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneMiniUtils {
 	public static void copyIfNotExist(Context context, int ressourceId, String target) throws IOException {
 		File lFileToCopy = new File(target);
 		if (!lFileToCopy.exists()) {
-			copyFromPackage(context, ressourceId, lFileToCopy.getName()); 
+			copyFromPackage(context, ressourceId, lFileToCopy.getName());
 		}
 	}
-	
+
 	public static void copyFromPackage(Context context, int ressourceId, String target) throws IOException {
-		FileOutputStream lOutputStream = context.openFileOutput (target, 0); 
+		FileOutputStream lOutputStream = context.openFileOutput (target, 0);
 		InputStream lInputStream = context.getResources().openRawResource(ressourceId);
 		int readByte;
 		byte[] buff = new byte[8048];

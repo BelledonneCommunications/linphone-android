@@ -1,7 +1,8 @@
 package org.linphone;
+
 /*
 HistoryDetailFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,14 +29,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Address;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 
-/**
- * @author Sylvain Berfini
- */
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts, goToContact, back;
 	private View view;
@@ -104,12 +103,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format)));
 
-		LinphoneAddress lAddress = null;
-		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
-		}
+		Address lAddress = null;
+		lAddress = Factory.instance().createAddress(sipUri);
 
 		if (lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());
@@ -164,13 +159,13 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			LinphoneActivity.instance().displayChat(sipUri, null, null);
 		} else if (id == R.id.add_contact) {
 			String uri = sipUri;
-			try {
-				LinphoneAddress addr = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-				uri = addr.asStringUriOnly();
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
-			LinphoneActivity.instance().displayContactsForEdition(uri);
+			Address addr = null;
+			addr = Factory.instance().createAddress(sipUri);
+			uri = addr.asStringUriOnly();
+			if (addr != null && addr.getDisplayName() != null)
+				LinphoneActivity.instance().displayContactsForEdition(addr.asStringUriOnly(), addr.getDisplayName());
+			else
+				LinphoneActivity.instance().displayContactsForEdition(uri);
 		} else if (id == R.id.goto_contact) {
 			LinphoneActivity.instance().displayContact(contact, false);
 		}

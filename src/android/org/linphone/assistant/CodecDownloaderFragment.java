@@ -2,7 +2,7 @@ package org.linphone.assistant;
 
 /*
 CodecDownloaderFragment.java
-Copyright (C) 2016  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,10 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.OpenH264DownloadHelperListener;
+import org.linphone.core.CoreException;
+import org.linphone.core.tools.OpenH264DownloadHelperListener;
 import org.linphone.core.PayloadType;
-import org.linphone.tools.OpenH264DownloadHelper;
+import org.linphone.core.tools.OpenH264DownloadHelper;
 
 import android.app.Fragment;
 import android.os.Build;
@@ -37,9 +37,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-/**
- * @author Erwan CROZE
- */
 public class CodecDownloaderFragment extends Fragment {
 	private Handler mHandler = new Handler();
 	private TextView question;
@@ -198,16 +195,12 @@ public class CodecDownloaderFragment extends Fragment {
 
 	private void enabledH264(boolean enable) {
 		PayloadType h264 = null;
-		for (PayloadType pt : LinphoneManager.getLc().getVideoCodecs()) {
-			if (pt.getMime().equals("H264")) h264 = pt;
+		for (PayloadType pt : LinphoneManager.getLc().getVideoPayloadTypes()) {
+			if (pt.getMimeType().equals("H264")) h264 = pt;
 		}
 
 		if (h264 != null) {
-			try {
-				LinphoneManager.getLc().enablePayloadType(h264, enable);
-			} catch (LinphoneCoreException e) {
-				e.printStackTrace();
-			}
+			h264.enable(enable);
 		}
 	}
 }

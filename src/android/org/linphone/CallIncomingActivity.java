@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 CallIncomingActivity.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import android.Manifest;
 import android.content.pm.ActivityInfo;
@@ -32,12 +33,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallParams;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.Call.State;
+import org.linphone.core.CallParams;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
@@ -49,8 +50,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 	private TextView name, number;
 	private ImageView contactPicture, accept, decline, arrow;
-	private LinphoneCall mCall;
-	private LinphoneCoreListenerBase mListener;
+	private Call mCall;
+	private CoreListenerStub mListener;
 	private LinearLayout acceptUnlock;
 	private LinearLayout declineUnlock;
 	private boolean alreadyAcceptedOrDeniedCall, begin;
@@ -93,7 +94,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		lookupCurrentCall();
 		if (LinphonePreferences.instance() != null && mCall != null && mCall.getRemoteParams() != null &&
 				LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests() &&
-				mCall.getRemoteParams().getVideoEnabled()) {
+				mCall.getRemoteParams().videoEnabled()) {
 			accept.setImageResource(R.drawable.call_video_start);
 		}
 		decline = (ImageView) findViewById(R.id.decline);
@@ -181,16 +182,16 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 			}
 		});
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new CoreListenerStub(){
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, State state, String message) {
-				if (call == mCall && State.CallEnd == state) {
+			public void onCallStateChanged(Core lc, Call call, State state, String message) {
+				if (call == mCall && State.End == state) {
 					finish();
 				}
 				if (state == State.StreamsRunning) {
-					Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = "+LinphoneManager.getLc().isSpeakerEnabled());
+					Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = "+LinphoneManager.getInstance().isSpeakerEnabled());
 					// The following should not be needed except some devices need it (e.g. Galaxy S).
-					LinphoneManager.getLc().enableSpeaker(LinphoneManager.getLc().isSpeakerEnabled());
+					LinphoneManager.getInstance().enableSpeaker(LinphoneManager.getInstance().isSpeakerEnabled());
 				}
 			}
 		};
@@ -203,7 +204,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 	protected void onResume() {
 		super.onResume();
 		instance = this;
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -221,7 +222,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		}
 
 
-		LinphoneAddress address = mCall.getRemoteAddress();
+		Address address = mCall.getRemoteAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
@@ -240,7 +241,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -264,8 +265,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 	private void lookupCurrentCall() {
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
-			for (LinphoneCall call : calls) {
+			List<Call> calls = LinphoneUtils.getCalls(LinphoneManager.getLc());
+			for (Call call : calls) {
 				if (State.IncomingReceived == call.getState()) {
 					mCall = call;
 					break;
@@ -290,7 +291,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		}
 		alreadyAcceptedOrDeniedCall = true;
 
-		LinphoneCallParams params = LinphoneManager.getLc().createCallParams(mCall);
+		CallParams params = LinphoneManager.getLc().createCallParams(mCall);
 
 		boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance().getApplicationContext());
 

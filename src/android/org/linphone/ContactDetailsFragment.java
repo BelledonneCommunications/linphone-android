@@ -1,7 +1,8 @@
 package org.linphone;
+
 /*
 ContactDetailsFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,7 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-import org.linphone.core.LinphoneProxyConfig;
+
+import org.linphone.core.ProxyConfig;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -32,9 +34,6 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-/**
- * @author Sylvain Berfini
- */
 public class ContactDetailsFragment extends Fragment implements OnClickListener {
 	private LinphoneContact contact;
 	private ImageView editContact, deleteContact, back;
@@ -137,13 +136,13 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			tv.setSelected(true);
 
 
-			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+			ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
 			if (lpc != null) {
 				String username = lpc.normalizePhoneNumber(displayednumberOrAddress);
 				value = LinphoneUtils.getFullAddressFromUsername(username);
 			}
 
-			String contactAddress = contact.getPresenceModelForUri(noa.getValue());
+			String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
 			if (contactAddress != null) {
 				v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
 			}

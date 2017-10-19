@@ -1,7 +1,8 @@
 package org.linphone.mini;
+
 /*
 LinphoneMiniActivity.java
-Copyright (C) 2014  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,33 +22,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Activity;
 import android.os.Bundle;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneMiniActivity extends Activity {
 	private LinphoneMiniManager mManager;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		mManager = new LinphoneMiniManager(this);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		mManager.destroy();
-		
+
 		super.onDestroy();
 	}
 }

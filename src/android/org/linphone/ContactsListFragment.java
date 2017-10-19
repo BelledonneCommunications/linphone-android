@@ -1,3 +1,5 @@
+package org.linphone;
+
 /*
 ContactsListFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -17,13 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import android.app.Dialog;
 import android.app.Fragment;
@@ -49,9 +44,14 @@ import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-/**
- * @author Sylvain Berfini
- */
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.linphone.FragmentsAvailable.CONTACTS_LIST;
+
 public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
 	private ListView contactsList;
@@ -62,7 +62,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	private LinearLayout editList, topbar;
 	private int lastKnownPosition;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
-	private String sipAddressToAdd;
+	private String sipAddressToAdd, displayName = null;
 	private ImageView clearSearchField;
 	private EditText searchField;
 	private ProgressBar contactsFetchInProgress;
@@ -75,8 +75,9 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
         if (getArguments() != null) {
 	        editOnClick = getArguments().getBoolean("EditOnClick");
 	        sipAddressToAdd = getArguments().getString("SipAddress");
-
-	        onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
+			if(getArguments().getString("DisplayName") != null)
+				displayName = getArguments().getString("DisplayName");
+			onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
 
         noSipContact = (TextView) view.findViewById(R.id.noSipContact);
@@ -254,7 +255,10 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		if (id == R.id.newContact) {
 			editConsumed = true;
-			LinphoneActivity.instance().addContact(null, sipAddressToAdd);
+			if(displayName != null)
+				LinphoneActivity.instance().addContact(displayName, sipAddressToAdd);
+			else
+				LinphoneActivity.instance().addContact(null, sipAddressToAdd);
 		}
 		else if (id == R.id.clearSearchField) {
 			searchField.setText("");
@@ -415,6 +419,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 	@Override
 	public void onContactsUpdated() {
+		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CONTACTS_LIST)
+			return;
 		ContactsListAdapter adapter = (ContactsListAdapter)contactsList.getAdapter();
 		if (adapter != null) {
 			contactsList.setFastScrollEnabled(false);
@@ -537,14 +543,14 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.separator.setVisibility(View.GONE);
 			}
 
-			if (contact.isInLinphoneFriendList()) {
+			if (contact.isInFriendList()) {
 				holder.linphoneFriend.setVisibility(View.VISIBLE);
 			} else {
 				holder.linphoneFriend.setVisibility(View.GONE);
 			}
 
 			if (contact.hasPhoto()) {
-				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 			} else {
 				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
@@ -590,7 +596,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.delete.setVisibility(View.INVISIBLE);
 			}
 
-			/*LinphoneFriend[] friends = LinphoneManager.getLc().getFriendList();
+			/*Friend[] friends = LinphoneManager.getLc().getFriendsLists();
 			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
 				holder.friendStatus.setVisibility(View.VISIBLE);
 				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();

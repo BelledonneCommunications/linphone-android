@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 AssistantActivity.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -32,20 +32,21 @@ import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.StatusFragment;
+import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.DialPlan;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneAddress.TransportType;
-import org.linphone.core.LinphoneAuthInfo;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.Address;
+import org.linphone.core.Address.TransportType;
+import org.linphone.core.AuthInfo;
+import org.linphone.core.Core;
+import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
-import org.linphone.tools.OpenH264DownloadHelper;
+import org.linphone.core.tools.OpenH264DownloadHelper;
 
 import android.Manifest;
 import android.app.Activity;
@@ -81,10 +82,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * @author Sylvain Berfini
- */
-public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, LinphoneAccountCreator.LinphoneAccountCreatorListener {
+public class AssistantActivity extends Activity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, AccountCreatorListener {
 private static AssistantActivity instance;
 	private ImageView back, cancel;
 	private AssistantFragmentsEnum currentFragment;
@@ -93,15 +91,15 @@ private static AssistantActivity instance;
 	private Fragment fragment;
 	private LinphonePreferences mPrefs;
 	private boolean accountCreated = false, newAccount = false, isLink = false, fromPref = false;
-	private LinphoneCoreListenerBase mListener;
-	private LinphoneAddress address;
+	private CoreListenerStub mListener;
+	private Address address;
 	private StatusFragment status;
 	private ProgressDialog progress;
 	private Dialog dialog;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
-	private LinphoneAccountCreator accountCreator;
+	private AccountCreator accountCreator;
 	private CountryListAdapter countryListAdapter;
 
 	public DialPlan country;
@@ -141,49 +139,49 @@ private static AssistantActivity instance;
         mPrefs = LinphonePreferences.instance();
 		status.enableSideMenu(false);
 
-		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc(), LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 
 		countryListAdapter = new CountryListAdapter(getApplicationContext());
-        mListener = new LinphoneCoreListenerBase() {
+        mListener = new CoreListenerStub() {
 
 			@Override
-			public void configuringStatus(LinphoneCore lc, final LinphoneCore.RemoteProvisioningState state, String message) {
+			public void onConfiguringStatus(Core lc, final Core.ConfiguringState state, String message) {
 				if (progress != null) progress.dismiss();
-				if (state == LinphoneCore.RemoteProvisioningState.ConfiguringSuccessful) {
+				if (state == Core.ConfiguringState.Successful) {
 					goToLinphoneActivity();
-				} else if (state == LinphoneCore.RemoteProvisioningState.ConfiguringFailed) {
+				} else if (state == Core.ConfiguringState.Failed) {
 					Toast.makeText(AssistantActivity.instance(), getString(R.string.remote_provisioning_failure), Toast.LENGTH_LONG).show();
 				}
 			}
 
         	@Override
-        	public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, RegistrationState state, String smessage) {
+        	public void onRegistrationStateChanged(Core lc, ProxyConfig cfg, RegistrationState state, String smessage) {
         		if (remoteProvisioningInProgress) {
         			if (progress != null) progress.dismiss();
-        			if (state == RegistrationState.RegistrationOk) {
+        			if (state == RegistrationState.Ok) {
             			remoteProvisioningInProgress = false;
         				success();
         			}
         		} else if (accountCreated && !newAccount){
-					if (address != null && address.asString().equals(cfg.getAddress().asString()) ) {
-						if (state == RegistrationState.RegistrationOk) {
+					if (address != null && address.asString().equals(cfg.getIdentityAddress().asString()) ) {
+						if (state == RegistrationState.Ok) {
 							if (progress != null) progress.dismiss();
 							if (getResources().getBoolean(R.bool.use_phone_number_validation)
 									&& cfg.getDomain().equals(getString(R.string.default_domain))
 									&& LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								accountCreator.isAccountUsed();
+								accountCreator.isAccountExist();
 							} else {
 								success();
 							}
-						} else if (state == RegistrationState.RegistrationFailed) {
+						} else if (state == RegistrationState.Failed) {
 							if (progress != null) progress.dismiss();
 							if (dialog == null || !dialog.isShowing()) {
 								dialog = createErrorDialog(cfg, smessage);
 								dialog.setCancelable(false);
 								dialog.show();
 							}
-						} else if(!(state == RegistrationState.RegistrationProgress)) {
+						} else if(!(state == RegistrationState.Progress)) {
 							if (progress != null) progress.dismiss();
 						}
 					}
@@ -197,7 +195,7 @@ private static AssistantActivity instance;
 	protected void onResume() {
 		super.onResume();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -205,7 +203,7 @@ private static AssistantActivity instance;
 
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -347,70 +345,66 @@ private static AssistantActivity instance;
 		}
 	}
 
-	public void configureLinphoneProxyConfig(LinphoneAccountCreator accountCreator) {
-		LinphoneCore lc = LinphoneManager.getLc();
-		LinphoneProxyConfig proxyConfig = lc.createProxyConfig();
-		LinphoneAddress addr;
-		LinphoneAuthInfo authInfo;
+	public void configureProxyConfig(AccountCreator accountCreator) {
+		Core lc = LinphoneManager.getLc();
+		ProxyConfig proxyConfig = lc.createProxyConfig();
+		Address addr;
+		AuthInfo authInfo;
 
-		try {
-			String identity = proxyConfig.getIdentity();
-            if (identity == null || accountCreator.getUsername() == null) {
-                LinphoneUtils.displayErrorAlert(getString(R.string.error), this);
-                return;
-            }
-			identity = identity.replace("?", accountCreator.getUsername());
-			addr = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
-			addr.setDisplayName(accountCreator.getUsername());
-			address = addr;
-			proxyConfig.edit();
-
-
-			proxyConfig.setIdentity(addr.asString());
-
-			if (LinphonePreferences.instance() != null)
-				proxyConfig.setContactUriParameters(LinphonePreferences.instance().getPushNotificationRegistrationID());
-
-			if (accountCreator.getPhoneNumber() != null && accountCreator.getPhoneNumber().length() > 0)
-				proxyConfig.setDialPrefix(accountCreator.getPrefix(accountCreator.getPhoneNumber()));
-
-			proxyConfig.done();
-
-			authInfo = LinphoneCoreFactory.instance().createAuthInfo(
-											accountCreator.getUsername(),
-											null,
-											accountCreator.getPassword(),
-											accountCreator.getHa1(),
-											proxyConfig.getRealm(),
-											proxyConfig.getDomain());
-
-
-			lc.addProxyConfig(proxyConfig);
-
-			lc.addAuthInfo(authInfo);
-
-			lc.setDefaultProxyConfig(proxyConfig);
-
-            if (ContactsManager.getInstance() != null)
-                ContactsManager.getInstance().fetchContactsAsync();
-
-			if (LinphonePreferences.instance() != null)
-				mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
-
-			LinphoneManager.getInstance().subscribeFriendList(getResources().getBoolean(R.bool.use_friendlist_subscription));
-
-			if (!newAccount) {
-				displayRegistrationInProgressDialog();
-			}
-			accountCreated = true;
-		} catch (LinphoneCoreException e) {
-			Log.e("Can't configure proxy config ", e);
+		String identity = proxyConfig.getIdentityAddress().asStringUriOnly();
+		if (identity == null || accountCreator.getUsername() == null) {
+			LinphoneUtils.displayErrorAlert(getString(R.string.error), this);
+			return;
 		}
+		identity = identity.replace("?", accountCreator.getUsername());
+		addr = Factory.instance().createAddress(identity);
+		addr.setDisplayName(accountCreator.getUsername());
+		address = addr;
+		proxyConfig.edit();
+
+
+		proxyConfig.setIdentityAddress(addr);
+
+		if (LinphonePreferences.instance() != null)
+			proxyConfig.setContactUriParameters(LinphonePreferences.instance().getPushNotificationRegistrationID());
+
+		if (accountCreator.getPhoneNumber() != null && accountCreator.getPhoneNumber().length() > 0)
+			proxyConfig.setDialPrefix(org.linphone.core.Utils.getPrefixFromE164(accountCreator.getPhoneNumber()));
+
+		proxyConfig.done();
+
+		authInfo = Factory.instance().createAuthInfo(
+										accountCreator.getUsername(),
+										null,
+										accountCreator.getPassword(),
+										accountCreator.getHa1(),
+										proxyConfig.getRealm(),
+										proxyConfig.getDomain());
+
+
+		lc.addProxyConfig(proxyConfig);
+
+		lc.addAuthInfo(authInfo);
+
+		lc.setDefaultProxyConfig(proxyConfig);
+
+		if (ContactsManager.getInstance() != null)
+			ContactsManager.getInstance().fetchContactsAsync();
+
+		if (LinphonePreferences.instance() != null)
+			mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
+
+		LinphoneManager.getInstance().subscribeFriendList(getResources().getBoolean(R.bool.use_friendlist_subscription));
+
+		if (!newAccount) {
+			displayRegistrationInProgressDialog();
+		}
+		accountCreated = true;
 	}
 
-	public void linphoneLogIn(LinphoneAccountCreator accountCreator) {
-		LinphoneManager.getLc().getConfig().loadXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
-		configureLinphoneProxyConfig(accountCreator);
+	public void linphoneLogIn(AccountCreator accountCreator) {
+		LinphoneManager.getLc().getConfig().loadFromXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
+		configureProxyConfig(accountCreator);
 	}
 
 	public void genericLogIn(String username, String userid, String password, String prefix, String domain, TransportType transport) {
@@ -485,8 +479,8 @@ private static AssistantActivity instance;
 	}
 
 	private void launchDownloadCodec() {
-		if (LinphoneManager.getLc().downloadOpenH264Enabled()) {
-			OpenH264DownloadHelper downloadHelper = LinphoneCoreFactory.instance().createOpenH264DownloadHelper();
+		if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
+			OpenH264DownloadHelper downloadHelper = Factory.instance().createOpenH264DownloadHelper(this);
 			if (Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86") && !downloadHelper.isCodecFound()) {
 				CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
 				changeFragment(codecFragment);
@@ -506,7 +500,7 @@ private static AssistantActivity instance;
 
 	public String getPhoneWithCountry() {
 		if(country == null || phone_number == null) return "";
-		String phoneNumberWithCountry = country.getCountryCode() + phone_number.replace("\\D", "");
+		String phoneNumberWithCountry = country.getCountryCallingCode() + phone_number.replace("\\D", "");
 		return phoneNumberWithCountry;
 	}
 
@@ -516,17 +510,13 @@ private static AssistantActivity instance;
 		domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
 
 		String identity = "sip:" + username + "@" + domain;
-		try {
-			address = LinphoneCoreFactory.instance().createLinphoneAddress(identity);
-		} catch (LinphoneCoreException e) {
-			Log.e(e);
-		}
+		address = Factory.instance().createAddress(identity);
 
 		AccountBuilder builder = new AccountBuilder(LinphoneManager.getLc())
 				.setUsername(username)
 				.setDomain(domain)
 				.setHa1(ha1)
-				.setUserId(userid)
+				.setUserid(userid)
 				.setPassword(password);
 
 		if (prefix != null) {
@@ -535,9 +525,9 @@ private static AssistantActivity instance;
 
 		String forcedProxy = "";
 		if (!TextUtils.isEmpty(forcedProxy)) {
-			builder.setProxy(forcedProxy)
+			builder.setServerAddr(forcedProxy)
 					.setOutboundProxyEnabled(true)
-					.setAvpfRRInterval(5);
+					.setAvpfRrInterval(5);
 		}
 		if (transport != null) {
 			builder.setTransport(transport);
@@ -549,7 +539,7 @@ private static AssistantActivity instance;
 				displayRegistrationInProgressDialog();
 			}
 			accountCreated = true;
-		} catch (LinphoneCoreException e) {
+		} catch (CoreException e) {
 			Log.e(e);
 		}
 	}
@@ -631,7 +621,7 @@ private static AssistantActivity instance;
 		launchDownloadCodec();
 	}
 
-	public Dialog createErrorDialog(LinphoneProxyConfig proxy, String message){
+	public Dialog createErrorDialog(ProxyConfig proxy, String message){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		if(message.equals("Forbidden")) {
 			message = getString(R.string.assistant_error_bad_credentials);
@@ -655,7 +645,7 @@ private static AssistantActivity instance;
 	}
 
 	public void success() {
-		boolean needsEchoCalibration = LinphoneManager.getLc().needsEchoCalibration();
+		boolean needsEchoCalibration = LinphoneManager.getLc().isEchoCancellerCalibrationRequired();
 		if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
 			launchEchoCancellerCalibration(true);
 		} else {
@@ -669,13 +659,13 @@ private static AssistantActivity instance;
 		finish();
 	}
 
-	public void setLinphoneCoreListener() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+	public void setCoreListener() {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
 		if (status != null) {
-			status.setLinphoneCoreListener();
+			status.setCoreListener();
 		}
 	}
 
@@ -695,8 +685,8 @@ private static AssistantActivity instance;
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
-		if(status.equals(LinphoneAccountCreator.RequestStatus.AccountExistWithAlias)){
+	public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+		if(status.equals(AccountCreator.Status.AccountExistWithAlias)){
 			success();
 		} else {
 			isLink = true;
@@ -706,47 +696,47 @@ private static AssistantActivity instance;
 	}
 
 	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onCreateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onActivateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onLinkAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onActivateAlias(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountActivated(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onRecoverAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountLinked(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAliasUsed(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
 	@Override
-	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 
@@ -767,7 +757,7 @@ private static AssistantActivity instance;
 
 		public CountryListAdapter(Context ctx) {
 			context = ctx;
-			allCountries = LinphoneCoreFactory.instance().getAllDialPlan();
+			allCountries = Factory.instance().getDialPlans();
 			filteredCountries = new ArrayList<DialPlan>(Arrays.asList(allCountries));
 		}
 
@@ -813,7 +803,7 @@ private static AssistantActivity instance;
 			DialPlan c = filteredCountries.get(position);
 
 			TextView name = (TextView) view.findViewById(R.id.country_name);
-			name.setText(c.getCountryName());
+			name.setText(c.getCountry());
 
 			TextView dial_code = (TextView) view.findViewById(R.id.country_prefix);
 			if (context != null)
@@ -830,7 +820,7 @@ private static AssistantActivity instance;
 				protected FilterResults performFiltering(CharSequence constraint) {
 					ArrayList<DialPlan> filteredCountries = new ArrayList<DialPlan>();
 					for (DialPlan c : allCountries) {
-						if (c.getCountryName().toLowerCase().contains(constraint)
+						if (c.getCountry().toLowerCase().contains(constraint)
 								|| c.getCountryCallingCode().contains(constraint)) {
 							filteredCountries.add(c);
 						}

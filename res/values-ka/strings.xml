@@ -16,6 +16,7 @@
   <string name="sync_account_name">linphone კონტაქტები</string>
   <!--Common-->
   <string name="username">მომხმარებლის სახელი</string>
+  <string name="userid">User-id (არასავალდებულო)</string>
   <string name="phone_number">ტელეფონის ნომერი</string>
   <string name="display_name">სახელი</string>
   <string name="password">პაროლი</string>
@@ -45,6 +46,7 @@
   <string name="maybe_later">შესაძლოა მოგვიანებით</string>
   <string name="later">მოგვიანებით</string>
   <string name="no">არა</string>
+  <string name="ok">OK</string>
   <string name="yes">დიახ</string>
   <string name="link_account">ანგარიშის მიბმა</string>
   <!--Launch screen-->
@@ -197,6 +199,8 @@
   <string name="couldnt_accept_call">ზარის მიღებისას მოხდა შეცდომა</string>
   <string name="zrtp_dialog1">დაადასტურეთ შემდეგი SAS მომხმარებელთან:\nთქვით: %s</string>
   <string name="zrtp_dialog2">\nთქვენმა მხმობელმა უნდა თქვას: %s</string>
+  <string name="zrtp_notification_title">SAS</string>
+  <string name="zrtp_notification_message">დაადასტურეთ წინა SAS კოდი თქვენს მოკავშირესთან</string>
   <string name="unknown_incoming_call_name">უცნობი</string>
   <string name="call_stats_audio">ხმა</string>
   <string name="call_stats_video">ვიდეო</string>
@@ -207,6 +211,8 @@
   <string name="call_stats_ice">ICE კავშირი:</string>
   <string name="call_stats_video_resolution_sent">გაგზავნილი ვიდეოს გაფართოება:</string>
   <string name="call_stats_video_resolution_received">მიღებული ვიდეოს გაფართოება:</string>
+  <string name="call_stats_video_fps_sent">გაგზავნილი ვიდეოს კადრი/წმ:</string>
+  <string name="call_stats_video_fps_received">მიღებული ვიდეოს კადრი/წმ:</string>
   <string name="call_stats_sender_loss_rate">გამგზავნის დაკარგვის სიხშირე:</string>
   <string name="call_stats_receiver_loss_rate">მიმღების დაკარგვის სიხშირე:</string>
   <string name="call_stats_jitter_buffer">ჯიტერის ბუფერი:</string>
@@ -324,8 +330,10 @@
   <string name="pref_call_title">ზარი</string>
   <string name="pref_device_ringtone">მოწყობილობის რეკვის ხმის გამოყენება</string>
   <string name="pref_auto_answer">შემომავალ პასუხებზე ავტო-პასუხი</string>
+  <string name="pref_auto_answer_time">ავტო პასუხის დრო (მილიწამებში)</string>
   <string name="pref_rfc2833_dtmf">არხის-შიდა DTMF-ების გაგზავნა(RFC2833)</string>
   <string name="pref_sipinfo_dtmf">არხის-გარე DTMF-ების გაგზავნა(SIP INFO)</string>
+  <string name="pref_call_timeout_title">ზარის ტაიმაუტი (წამებში)</string>
   <string name="pref_voice_mail">ხმოვანი ფოსტის URI</string>
   <!--Chat settings-->
   <string name="pref_chat_title">ჩატი</string>
@@ -448,4 +456,5 @@
   <string name="content_description_call_options">ზარის პარამეტრები</string>
   <string name="content_description_audio_route">ხმის მარშრუტი</string>
   <string name="content_description_exit_conference">კონფერენციიდან გამოსვლა</string>
+  <string name="content_title_notification">Linphone-ის შეტყობინება</string>
 </resources>

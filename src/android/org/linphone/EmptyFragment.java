@@ -1,7 +1,8 @@
 package org.linphone;
+
 /*
-AboutFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+EmptyFragment.java
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -24,9 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * @author Sylvain Berfini
- */
 public class EmptyFragment extends Fragment {
 
 	@Override

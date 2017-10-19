@@ -1,7 +1,7 @@
 package org.linphone.purchase;
 /*
 InAppPurchaseFragment.java
-Copyright (C) 2016  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@ import java.util.Locale;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.ProxyConfig;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -50,7 +50,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 						 Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 
 		View view = inflater.inflate(R.layout.in_app_store, container, false);
@@ -116,7 +116,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 	}
 
 	private boolean isUsernameCorrect(String username) {
-		LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+		ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
 		return lpc.isPhoneNumber(username);
 	}
 
@@ -139,7 +139,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
 	private String getUsername() {
 		String username = this.username.getText().toString();
-		LinphoneProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+		ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
 		username = lpc.normalizePhoneNumber(username);
 		return username.toLowerCase(Locale.getDefault());
 	}

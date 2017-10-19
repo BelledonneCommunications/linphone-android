@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 CreateAccountActivationFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -30,25 +30,22 @@ import android.widget.Toast;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAccountCreator.LinphoneAccountCreatorListener;
-import org.linphone.core.LinphoneCoreFactory;
-/**
- * @author Sylvain Berfini
- */
-public class CreateAccountActivationFragment extends Fragment implements OnClickListener, LinphoneAccountCreatorListener {
+import org.linphone.core.AccountCreator;
+import org.linphone.core.AccountCreatorListener;
+import org.linphone.core.Factory;
+
+public class CreateAccountActivationFragment extends Fragment implements OnClickListener, AccountCreatorListener {
 	private String username, password;
 	private Button checkAccount;
 	private TextView email;
-	private LinphoneAccountCreator accountCreator;
+	private AccountCreator accountCreator;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_account_creation_email_activation, container, false);
 
-		accountCreator = LinphoneCoreFactory.instance().createAccountCreator(LinphoneManager.getLc()
-				, LinphonePreferences.instance().getXmlrpcUrl());
+		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 
 		username = getArguments().getString("Username");
@@ -75,33 +72,33 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountCreated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onCreateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onActivateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorAccountLinkedWithPhoneNumber(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onLinkAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorPhoneNumberLinkActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onActivateAlias(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountActivated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountActivated(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 		if (AssistantActivity.instance() == null) {
 			return;
 		}
-		if (status.equals(LinphoneAccountCreator.RequestStatus.AccountNotActivated)) {
+		if (status.equals(AccountCreator.Status.AccountNotActivated)) {
 			Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
-		} else if (status.equals(LinphoneAccountCreator.RequestStatus.AccountActivated)) {
+		} else if (status.equals(AccountCreator.Status.AccountActivated)) {
 			AssistantActivity.instance().linphoneLogIn(accountCreator);
 			AssistantActivity.instance().isAccountVerified(username);
 		} else {
@@ -111,19 +108,19 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 	}
 
 	@Override
-	public void onAccountCreatorPhoneAccountRecovered(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onRecoverAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorIsAccountLinked(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAccountLinked(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorIsPhoneNumberUsed(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onIsAliasUsed(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
 	@Override
-	public void onAccountCreatorPasswordUpdated(LinphoneAccountCreator accountCreator, LinphoneAccountCreator.RequestStatus status) {
+	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
 }

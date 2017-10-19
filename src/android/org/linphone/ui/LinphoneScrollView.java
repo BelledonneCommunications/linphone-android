@@ -1,7 +1,7 @@
 package org.linphone.ui;
 /*
 LinphoneScrollView.java
-Copyright (C) 2013  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,9 +21,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneScrollView extends ScrollView {
 	private ScrollViewListener scrollViewListener = null;
 

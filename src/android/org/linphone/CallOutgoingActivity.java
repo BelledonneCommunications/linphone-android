@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 CallOutgoingActivity.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,16 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreListenerBase;
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.Call.State;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 
@@ -50,8 +51,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
 	private TextView name, number;
 	private ImageView contactPicture, micro, speaker, hangUp;
-	private LinphoneCall mCall;
-	private LinphoneCoreListenerBase mListener;
+	private Call mCall;
+	private CoreListenerStub mListener;
 	private boolean isMicMuted, isSpeakerEnabled;
 
 	public static CallOutgoingActivity instance() {
@@ -92,9 +93,9 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		hangUp = (ImageView) findViewById(R.id.outgoing_hang_up);
 		hangUp.setOnClickListener(this);
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new CoreListenerStub(){
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+			public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
 				if (call == mCall && State.Connected == state) {
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
@@ -103,14 +104,14 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 					finish();
 					return;
 				} else if (state == State.Error) {
-					// Convert LinphoneCore message for internalization
+					// Convert Core message for internalization
 					if (call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
 						decline();
 					} else if (call.getErrorInfo().getReason() == Reason.NotFound) {
 						displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
 						decline();
-					} else if (call.getErrorInfo().getReason() == Reason.Media) {
+					} else if (call.getErrorInfo().getReason() == Reason.NotAcceptable) {
 						displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
 						decline();
 					} else if (call.getErrorInfo().getReason() == Reason.Busy) {
@@ -120,8 +121,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 						displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
 						decline();
 					}
-				}else if (state == State.CallEnd) {
-					// Convert LinphoneCore message for internalization
+				}else if (state == State.End) {
+					// Convert Core message for internalization
 					if (call.getErrorInfo().getReason() == Reason.Declined) {
 						displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
 						decline();
@@ -141,7 +142,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 	protected void onResume() {
 		super.onResume();
 		instance = this;
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
@@ -150,8 +151,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
 		// Only one call ringing at a time is allowed
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-			List<LinphoneCall> calls = LinphoneUtils.getLinphoneCalls(LinphoneManager.getLc());
-			for (LinphoneCall call : calls) {
+			List<Call> calls = LinphoneUtils.getCalls(LinphoneManager.getLc());
+			for (Call call : calls) {
 				State cstate = call.getState();
 				if (State.OutgoingInit == cstate || State.OutgoingProgress == cstate
 						|| State.OutgoingRinging == cstate || State.OutgoingEarlyMedia == cstate) {
@@ -174,7 +175,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 			return;
 		}
 
-		LinphoneAddress address = mCall.getRemoteAddress();
+		Address address = mCall.getRemoteAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
@@ -193,7 +194,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
 	@Override
 	protected void onPause() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -217,7 +218,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 			} else {
 				micro.setImageResource(R.drawable.micro_default);
 			}
-			LinphoneManager.getLc().muteMic(isMicMuted);
+			LinphoneManager.getLc().enableMic(!isMicMuted);
 		}
 		if (id == R.id.speaker) {
 			isSpeakerEnabled = !isSpeakerEnabled;
@@ -226,7 +227,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 			} else {
 				speaker.setImageResource(R.drawable.speaker_default);
 			}
-			LinphoneManager.getLc().enableSpeaker(isSpeakerEnabled);
+			LinphoneManager.getInstance().enableSpeaker(isSpeakerEnabled);
 		}
 		if (id == R.id.outgoing_hang_up) {
 			decline();

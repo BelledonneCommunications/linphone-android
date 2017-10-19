@@ -218,6 +218,7 @@ public class SlidingDrawer extends ViewGroup {
 
 	@Override
 	protected void onFinishInflate() {
+		super.onFinishInflate();
 		mHandle = findViewById(mHandleId);
 		if (mHandle == null) {
 			throw new IllegalArgumentException(

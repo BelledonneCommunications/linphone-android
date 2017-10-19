@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 LinphoneService.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,24 +18,24 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallLog.CallStatus;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.GlobalState;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.Call.State;
+import org.linphone.core.CallLog.CallStatus;
+import org.linphone.core.Core;
+import org.linphone.core.Core.GlobalState;
+import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.LogCollectionState;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.ui.LinphoneOverlay;
@@ -63,7 +65,6 @@ import android.provider.MediaStore;
 import android.view.WindowManager;
 
 /**
- *
  * Linphone service, reacting to Incoming calls, ...<br />
  *
  * Roles include:<ul>
@@ -71,10 +72,6 @@ import android.view.WindowManager;
  * <li>Starting C libLinphone through LinphoneManager</li>
  * <li>Reacting to LinphoneManager state changes</li>
  * <li>Delegating GUI state change actions to GUI listener</li>
- *
- *
- * @author Guillaume Beraudo
- *
  */
 public final class LinphoneService extends Service {
 	/* Listener needs to be implemented in the Service as it calls
@@ -123,7 +120,7 @@ public final class LinphoneService extends Service {
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 	public static int notifcationsPriority = (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41) ? Notification.PRIORITY_MIN : 0);
 	private WindowManager mWindowManager;
 	private LinphoneOverlay mOverlay;
@@ -272,11 +269,11 @@ public final class LinphoneService extends Service {
 	public void showServiceNotification() {
 		startForegroundCompat(NOTIF_ID, mNotif);
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return;
-		LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+		ProxyConfig lpc = lc.getDefaultProxyConfig();
 		if (lpc != null) {
-			if (lpc.isRegistered()) {
+			if (lpc.getState() == RegistrationState.Ok) {
 				sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 			} else {
 				sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
@@ -301,10 +298,10 @@ public final class LinphoneService extends Service {
 
 		// Needed in order for the two next calls to succeed, libraries must have been loaded first
 		LinphonePreferences.instance().setContext(getBaseContext());
-		LinphoneCoreFactory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
+		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
-		LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
+		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
+		Factory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
 
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
@@ -340,19 +337,20 @@ public final class LinphoneService extends Service {
 			Log.e(e);
 		}
 
-		LinphoneManager.getLc().addListener(mListener = new LinphoneCoreListenerBase() {
+		LinphoneManager.getLc().addListener(mListener = new CoreListenerStub() {
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+			public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
 				if (instance == null) {
 					Log.i("Service not ready, discarding call state change to ",state.toString());
 					return;
 				}
 
-				if (state == LinphoneCall.State.IncomingReceived) {
-					onIncomingReceived();
+				if (state == Call.State.IncomingReceived) {
+					if(! LinphoneManager.getInstance().getCallGsmON())
+						onIncomingReceived();
 				}
 
-				if (state == State.CallEnd || state == State.CallReleased || state == State.Error) {
+				if (state == State.End || state == State.Released || state == State.Error) {
 					if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() == 0) {
 						if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getStatusFragment() != null) {
 							removeSasNotification();
@@ -362,13 +360,13 @@ public final class LinphoneService extends Service {
 					destroyOverlay();
 				}
 
-				if (state == State.CallEnd && call.getCallLog().getStatus() == CallStatus.Missed) {
+				if (state == State.End && call.getCallLog().getStatus() == CallStatus.Missed) {
 					int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
 					String body;
 					if (missedCallCount > 1) {
 						body = getString(R.string.missed_calls_notif_body).replace("%i", String.valueOf(missedCallCount));
 					} else {
-						LinphoneAddress address = call.getRemoteAddress();
+						Address address = call.getRemoteAddress();
 						LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
 						if (c != null) {
 							body = c.getFullName();
@@ -399,28 +397,28 @@ public final class LinphoneService extends Service {
 			}
 
 			@Override
-			public void globalState(LinphoneCore lc,LinphoneCore.GlobalState state, String message) {
-				if (state == GlobalState.GlobalOn && displayServiceNotification()) {
+			public void onGlobalStateChanged(Core lc,Core.GlobalState state, String message) {
+				if (state == Core.GlobalState.On && displayServiceNotification()) {
 					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}
 
 			@Override
-			public void registrationState(LinphoneCore lc, LinphoneProxyConfig cfg, LinphoneCore.RegistrationState state, String smessage) {
+			public void onRegistrationStateChanged(Core lc, ProxyConfig cfg, Core.RegistrationState state, String smessage) {
 //				if (instance == null) {
 //					Log.i("Service not ready, discarding registration state change to ",state.toString());
 //					return;
 //				}
 				if (!mDisableRegistrationStatus) {
-					if (displayServiceNotification() && state == RegistrationState.RegistrationOk && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().isRegistered()) {
+					if (displayServiceNotification() && state == RegistrationState.Ok && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().getState() == RegistrationState.Ok) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
 					}
 
-					if (displayServiceNotification() && (state == RegistrationState.RegistrationFailed || state == RegistrationState.RegistrationCleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !LinphoneManager.getLc().getDefaultProxyConfig().isRegistered())) {
+					if (displayServiceNotification() && (state == RegistrationState.Failed || state == RegistrationState.Cleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !(LinphoneManager.getLc().getDefaultProxyConfig().getState() == RegistrationState.Ok))) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
 					}
 
-					if (displayServiceNotification() && state == RegistrationState.RegistrationNone) {
+					if (displayServiceNotification() && state == RegistrationState.None) {
 						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 					}
 				}
@@ -465,8 +463,8 @@ public final class LinphoneService extends Service {
 	public void createOverlay() {
 		if (mOverlay != null) destroyOverlay();
 
-		LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
-		if (call == null || !call.getCurrentParams().getVideoEnabled()) return;
+		Call call = LinphoneManager.getLc().getCurrentCall();
+		if (call == null || !call.getCurrentParams().videoEnabled()) return;
 
 		mOverlay = new LinphoneOverlay(this);
 		WindowManager.LayoutParams params = mOverlay.getWindowManagerLayoutParams();
@@ -520,11 +518,11 @@ public final class LinphoneService extends Service {
 			return;
 		}
 
-		LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-		String userName = call.getRemoteAddress().getUserName();
+		Call call = LinphoneManager.getLc().getCalls()[0];
+		String userName = call.getRemoteAddress().getUsername();
 		String domain = call.getRemoteAddress().getDomain();
 		String displayName = call.getRemoteAddress().getDisplayName();
-		LinphoneAddress address = LinphoneCoreFactory.instance().createLinphoneAddress(userName,domain,null);
+		Address address = Factory.instance().createAddress(userName + "@" + domain);
 		address.setDisplayName(displayName);
 
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
@@ -535,7 +533,7 @@ public final class LinphoneService extends Service {
 		} catch (Exception e) {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
 		}
-		String name = address.getDisplayName() == null ? address.getUserName() : address.getDisplayName();
+		String name = address.getDisplayName() == null ? address.getUsername() : address.getDisplayName();
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -548,10 +546,10 @@ public final class LinphoneService extends Service {
 		}
 	}
 
-	public void refreshIncallIcon(LinphoneCall currentCall) {
-		LinphoneCore lc = LinphoneManager.getLc();
+	public void refreshIncallIcon(Call currentCall) {
+		Core lc = LinphoneManager.getLc();
 		if (currentCall != null) {
-			if (currentCall.getCurrentParams().getVideoEnabled() && currentCall.cameraEnabled()) {
+			if (currentCall.getCurrentParams().videoEnabled() && currentCall.cameraEnabled()) {
 				// checking first current params is mandatory
 				setIncallIcon(IncallIconState.VIDEO);
 			} else {
@@ -559,7 +557,7 @@ public final class LinphoneService extends Service {
 			}
 		} else if (lc.getCallsNb() == 0) {
 			setIncallIcon(IncallIconState.IDLE);
-		}  else if (lc.isInConference()) {
+		}  else if (lc.getConference() != null) {
 			setIncallIcon(IncallIconState.INCALL);
 		} else {
 			setIncallIcon(IncallIconState.PAUSE);
@@ -593,7 +591,7 @@ public final class LinphoneService extends Service {
 		resetIntentLaunchedOnNotificationClick();
 	}
 
-	public void displayMessageNotification(String to, String fromSipUri, String fromName, String message) {
+	public void removedNotification(String to, String fromSipUri, String fromName, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
 		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
@@ -611,13 +609,9 @@ public final class LinphoneService extends Service {
 		}
 
 		Uri pictureUri = null;
-		try {
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(LinphoneCoreFactory.instance().createLinphoneAddress(fromSipUri));
-			if (contact != null)
-				pictureUri = contact.getThumbnailUri();
-		} catch (LinphoneCoreException e1) {
-			Log.e("Cannot parse from address ", e1);
-		}
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(Factory.instance().createAddress(fromSipUri));
+		if (contact != null)
+			pictureUri = contact.getThumbnailUri();
 
 		Bitmap bm = null;
 		if (pictureUri != null) {
@@ -767,8 +761,8 @@ public final class LinphoneService extends Service {
 		String text = getString(textId);
 		if (text.contains("%s") && LinphoneManager.getLc() != null) {
 			// Test for null lc is to avoid a NPE when Android mess up badly with the String resources.
-			LinphoneProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-			String id = lpc != null ? lpc.getIdentity() : "";
+			ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+			String id = lpc != null ? lpc.getIdentityAddress().asString() : "";
 			text = String.format(text, id);
 		}
 
@@ -808,7 +802,7 @@ public final class LinphoneService extends Service {
 
 			// If push is enabled, don't unregister account, otherwise do unregister
 			if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-				LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				if (lc != null) lc.setNetworkReachable(false);
 			}
 			stopSelf();
@@ -825,7 +819,7 @@ public final class LinphoneService extends Service {
 		}
 
 		destroyOverlay();
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -880,7 +874,7 @@ public final class LinphoneService extends Service {
 	public void tryingNewOutgoingCallButWrongDestinationAddress() {
 	}
 
-	public void onCallEncryptionChanged(final LinphoneCall call, final boolean encrypted,
+	public void onCallEncryptionChanged(final Call call, final boolean encrypted,
 			final String authenticationToken) {
 	}
 }

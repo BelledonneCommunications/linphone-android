@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 BootReceiver.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,10 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LpConfig;
+import org.linphone.core.Factory;
+import org.linphone.core.Config;
 import org.linphone.mediastream.Log;
 
 import android.content.BroadcastReceiver;
@@ -31,12 +32,10 @@ public class BootReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
-			android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying LinphoneCore to unregister");
+			android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying Core to unregister");
 			LinphoneManager.destroy();
 		} else {
-			String path = context.getFilesDir().getAbsolutePath() + "/.linphonerc";
-			LpConfig lpConfig = LinphoneCoreFactory.instance().createLpConfig(path);
-			boolean autostart = lpConfig.getBool("app", "auto_start", false);
+			boolean autostart = LinphonePreferences.instance().isAutoStartEnabled();
 			android.util.Log.i("LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
 			if (autostart) {
 				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);

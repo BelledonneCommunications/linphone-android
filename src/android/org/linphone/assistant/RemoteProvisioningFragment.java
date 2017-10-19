@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 /*
 RemoteProvisioningFragment.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -37,31 +37,31 @@ import android.widget.EditText;
 public class RemoteProvisioningFragment extends Fragment implements OnClickListener, TextWatcher{
 	private EditText remoteProvisioningUrl;
 	private Button apply;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_remote_provisioning, container, false);
-		
+
 		remoteProvisioningUrl = (EditText) view.findViewById(R.id.assistant_remote_provisioning_url);
 		remoteProvisioningUrl.addTextChangedListener(this);
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
-		
+
 		return view;
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+
 		if (id == R.id.assistant_apply) {
 			String url = remoteProvisioningUrl.getText().toString();
 			AssistantActivity.instance().displayRemoteProvisioningInProgressDialog();
 			LinphonePreferences.instance().setRemoteProvisioningUrl(url);
-			LinphoneManager.getInstance().restartLinphoneCore();
-			AssistantActivity.instance().setLinphoneCoreListener();
+			LinphoneManager.getInstance().restartCore();
+			AssistantActivity.instance().setCoreListener();
 		}
 	}
 

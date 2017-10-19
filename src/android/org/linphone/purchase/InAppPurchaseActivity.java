@@ -1,7 +1,7 @@
 package org.linphone.purchase;
 /*
 InAppPurchaseListener.java
-Copyright (C) 2015  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -39,9 +39,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-/**
- * @author Sylvain Berfini
- */
 public class InAppPurchaseActivity extends Activity implements InAppPurchaseListener, OnClickListener {
 	private static InAppPurchaseActivity instance;
 	private InAppPurchaseHelper inAppPurchaseHelper;
@@ -128,12 +125,12 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	public static InAppPurchaseActivity instance() {
 		return instance;
 	}
-	
+
 	@Override
 	public void onServiceAvailableForQueries() {
 		//email.setText(inAppPurchaseHelper.getGmailAccount());
 		//email.setEnabled(false);
-		
+
 		//inAppPurchaseHelper.getPurchasedItemsAsync();
 		inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
 	}
@@ -189,7 +186,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 			onBackPressed();
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data);
@@ -206,7 +203,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 			@Override
 			public void run() {
 				inProgress.setVisibility(View.GONE);
-				Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();	
+				Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();
 			}
 		});
 	}

@@ -1,6 +1,4 @@
-[net]
-download_bw=380
-upload_bw=380
+
 
 [sip]
 contact="Linphone Android" <sip:linphone.android@unknown-host>
@@ -12,7 +10,7 @@ sip_tcp_port=-1
 sip_tls_port=-1
 
 [video]
-size=qvga
+size=vga
 
 [app]
 tunnel=disabled

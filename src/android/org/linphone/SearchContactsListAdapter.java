@@ -28,7 +28,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.linphone.core.LinphoneAddress;
+import org.linphone.core.Address;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,18 +113,19 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 	public List<ContactAddress> getContactsList() {
 		List<ContactAddress> list = new ArrayList<ContactAddress>();
-		if(ContactsManager.getInstance().hasContacts()) {
-			for (LinphoneAddress addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
+		if (ContactsManager.getInstance().hasContacts()) {
+			//TODO FIXME
+			/*for (Address addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
 				LinphoneContact cont = ContactsManager.getInstance().findContactFromAddress(addr);
 				if (cont == null) {
 					cont = new LinphoneContact();
-					cont.setFullName(addr.getUserName());
+					cont.setFullName(addr.getUsername());
 				}
 				// TODO Rechercher si un contact est associé à cette sip uri
 				// TODO Rechercher si un displayname est associé à cette sip uri
-				ContactAddress ca = new ContactAddress(cont , addr.asString(), cont.isLinphoneFriend());
+				ContactAddress ca = new ContactAddress(cont , addr.asString(), cont.isFriend());
 				list.add(ca);
-			}
+			}*/
 		}
 
 		for (ContactAddress caS : contactsSelected) {

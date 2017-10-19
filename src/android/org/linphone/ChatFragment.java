@@ -1,4 +1,5 @@
 package org.linphone;
+
 /*
 ChatFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -76,16 +77,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneBuffer;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatMessage.State;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneContent;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneFriend;
+import org.linphone.core.Address;
+import org.linphone.core.Buffer;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessage.State;
+import org.linphone.core.ChatMessageListener;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Content;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.Friend;
+import org.linphone.core.FriendList;
 import org.linphone.mediastream.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -100,11 +103,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static org.linphone.FragmentsAvailable.CHAT;
 
+interface ChatUpdatedListener {
+	void onChatUpdated();
+}
 
-public class ChatFragment extends Fragment implements OnClickListener, LinphoneChatMessage.LinphoneChatMessageListener, ContactsUpdatedListener{
+public class ChatFragment extends Fragment implements OnClickListener, ChatMessageListener, ContactsUpdatedListener {
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
 	private static final int MENU_PICTURE_SMALL = 2;
@@ -118,7 +126,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private static final int SIZE_LARGE = 1500;
 	private static final int SIZE_MAX = 2048;
 
-	private LinphoneChatRoom chatRoom;
+	private ChatRoom chatRoom;
 	private String sipUri;
 	private EditText message;
 	private ImageView edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage, cancel;
@@ -139,9 +147,23 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private ViewTreeObserver.OnGlobalLayoutListener keyboardListener;
 	private ChatMessageAdapter adapter;
 
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 	private boolean newChatConversation = false;
 	private String fileSharedUri, fileAlreadySharedUri;
+
+	private static ArrayList<ChatUpdatedListener> ChatUpdatedListeners;
+
+	public static void createIfNotExist() {
+		if (ChatUpdatedListeners == null)
+			ChatUpdatedListeners = new ArrayList<>();
+	}
+
+	public static void addChatListener(ChatUpdatedListener listener) {
+		ChatUpdatedListeners.add(listener);
+	}
+	public static void removeChatListener(ChatUpdatedListener listener) {
+		ChatUpdatedListeners.remove(listener);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -218,8 +240,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			sendImage.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory
-							&& (chatRoom == null || !chatRoom.islimeAvailable())){
+					if (LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory
+							&& (chatRoom == null || !chatRoom.limeAvailable())){
 						askingForLimeCall();
 						return;
 					}
@@ -239,10 +261,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			back.setOnClickListener(this);
 		}
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new CoreListenerStub(){
 			@Override
-			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
-				LinphoneAddress from = cr.getPeerAddress();
+			public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
+				Address from = cr.getPeerAddress();
 				if (from.asStringUriOnly().equals(sipUri)) {
 					//LinphoneService.instance().removeMessageNotification();
 					cr.markAsRead();
@@ -250,15 +272,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					adapter.addMessage(message);
 
 					String externalBodyUrl = message.getExternalBodyUrl();
-					LinphoneContent fileTransferContent = message.getFileTransferInformation();
+					Content fileTransferContent = message.getFileTransferInformation();
 					if (externalBodyUrl != null || fileTransferContent != null) {
 						LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+					}
+				}
+				if (getResources().getBoolean(R.bool.isTablet)) {
+					for (ChatUpdatedListener c : ChatUpdatedListeners) {
+						c.onChatUpdated();
 					}
 				}
 			}
 
 			@Override
-			public void isComposingReceived(LinphoneCore lc, LinphoneChatRoom room) {
+			public void onIsComposingReceived(Core lc, ChatRoom room) {
 				if (chatRoom != null && room != null && chatRoom.getPeerAddress().asStringUriOnly().equals(room.getPeerAddress().asStringUriOnly())) {
 					remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 				}
@@ -365,14 +392,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	public void initChatRoom(String sipUri) {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		LinphoneAddress lAddress = null;
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Address lAddress = null;
 		if (sipUri == null) {
 			contact = null; // Tablet rotation issue
 			initNewChatConversation();
 		} else {
 			try {
 				lAddress = lc.interpretUrl(sipUri);
+				if (lAddress == null) LinphoneActivity.instance().goToDialerFragment();
 			} catch (Exception e) {
 				//TODO Error popup
 				LinphoneActivity.instance().goToDialerFragment();
@@ -387,7 +415,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					searchContactField.setVisibility(View.GONE);
 					resultContactsSearch.setVisibility(View.GONE);
 					displayChatHeader(lAddress);
-					displayMessageList();
+					removedList();
+					remoteComposing.setVisibility(chatRoom.isRemoteComposing() ? View.VISIBLE : View.GONE);
 				}
 			}
 		}
@@ -400,7 +429,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		//messagesList.invalidateViews();
 	}
 
-	private void displayMessageList() {
+	private void removedList() {
 		if (chatRoom != null) {
 			if (adapter != null) {
 				adapter.refreshHistory();
@@ -412,7 +441,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		messagesList.setVisibility(ListView.VISIBLE);
 	}
 
-	private void displayChatHeader(LinphoneAddress address) {
+	private void displayChatHeader(Address address) {
 		if (contact != null || address != null) {
 			if (contact != null) {
 				contactName.setText(contact.getFullName());
@@ -447,8 +476,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
 		}
 
-	/*	LinphoneChatMessage msg = getMessageForId(v.getId());
-		if (msg != null && msg.getStatus() == LinphoneChatMessage.State.NotDelivered) {
+	/*	ChatMessage msg = getMessageForId(v.getId());
+		if (msg != null && msg.getStatus() == ChatMessage.State.NotDelivered) {
 			menu.add(v.getId(), MENU_RESEND_MESSAGE, 0, getString(R.string.retry));
 		}
 	*/
@@ -459,7 +488,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		switch (item.getItemId()) {
 			case MENU_DELETE_MESSAGE:
 				if (chatRoom != null) {
-					LinphoneChatMessage message = getMessageForId(item.getGroupId());
+					ChatMessage message = getMessageForId(item.getGroupId());
 					if (message != null) {
 						chatRoom.deleteMessage(message);
 						if (getResources().getBoolean(R.bool.isTablet) && chatRoom.getHistorySize() <= 0) {
@@ -503,7 +532,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		LinphoneService.instance().removeMessageNotification();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -538,13 +567,13 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		message.addTextChangedListener(textWatcher);
 		addVirtualKeyboardVisiblityListener();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT);
+			LinphoneActivity.instance().selectMenu(CHAT);
 		}
 
 		LinphoneManager.addListener(this);
@@ -570,7 +599,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			newChatConversation = true;
 		}
 
-		if(LinphoneManager.getLc().isIncall()){
+		if(LinphoneManager.getLc().inCall()){
 			backToCall.setVisibility(View.VISIBLE);
 			startCall.setVisibility(View.GONE);
 		} else {
@@ -606,7 +635,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		int size = messagesList.getAdapter().getCount();
 		for (int i = 0; i < size; i++) {
 			if (messagesList.isItemChecked(i)) {
-				LinphoneChatMessage message = (LinphoneChatMessage) messagesList.getAdapter().getItem(i);
+				ChatMessage message = (ChatMessage) messagesList.getAdapter().getItem(i);
 				chatRoom.deleteMessage(message);
 			}
 		}
@@ -701,14 +730,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void sendTextMessage() {
-		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc() == null)
+		if (!LinphoneManager.isInstanciated() || LinphoneManager.getLc() == null ||
+				(searchContactField.getVisibility() == View.VISIBLE
+						&& searchContactField.getText().toString().length() < 1))
 			return;
-		LinphoneCore.LinphoneLimeState state = LinphoneManager.getLc().getLimeEncryption();
+		Core.LimeState state = LinphoneManager.getLc().limeEnabled();
 
-		if ((state == LinphoneCore.LinphoneLimeState.Disabled
-				|| state == LinphoneCore.LinphoneLimeState.Preferred)
-				|| (state == LinphoneCore.LinphoneLimeState.Mandatory
-				&& chatRoom != null && chatRoom.islimeAvailable())){
+		if ((state == Core.LimeState.Disabled
+				|| state == Core.LimeState.Preferred)
+				|| (state == Core.LimeState.Mandatory
+				&& chatRoom != null && chatRoom.limeAvailable())){
 			sendTextMessage(message.getText().toString());
 			message.setText("");
 			invalidate();
@@ -719,9 +750,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	private void sendTextMessage(String messageToSend) {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
-		LinphoneAddress lAddress = null;
+		Address lAddress = null;
 
 		//Start new conversation in fast chat
 		if(newChatConversation && chatRoom == null) {
@@ -731,7 +762,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 		}
 		if (chatRoom != null && messageToSend != null && messageToSend.length() > 0 && isNetworkReachable) {
-			LinphoneChatMessage message = chatRoom.createLinphoneChatMessage(messageToSend);
+			ChatMessage message = chatRoom.createMessage(messageToSend);
 			chatRoom.sendChatMessage(message);
 			lAddress = chatRoom.getPeerAddress();
 
@@ -746,7 +777,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				adapter.addMessage(message);
 			}
 
-			Log.i("Sent message current status: " + message.getStatus());
+			Log.i("Sent message current status: " + message.getState());
 		} else if (!isNetworkReachable && LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 		}
@@ -759,7 +790,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if(path.contains("%20")) {
 			path = path.replace("%20", "-");
 		}
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
 		if(newChatConversation && chatRoom == null) {
 			String address = searchContactField.getText().toString();
@@ -798,9 +829,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if(path.contains("%20")) {
 			path = path.replace("%20", "-");
 		}
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		boolean isNetworkReachable = lc == null ? false : lc.isNetworkReachable();
-		if(newChatConversation && chatRoom == null) {
+		if (newChatConversation && chatRoom == null) {
 			String address = searchContactField.getText().toString();
 			if (address != null && !address.equals("")) {
 				initChatRoom(address);
@@ -854,14 +885,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				dialog.dismiss();
 			}
 		});
-		if(LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory)
+		if(LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory)
 			dialog.show();
 	}
 
-	private LinphoneChatMessage getMessageForId(int id) {
+	private ChatMessage getMessageForId(int id) {
 		if (adapter == null) return null;
 		for (int i = 0; i < adapter.getCount(); i++) {
-			LinphoneChatMessage message = adapter.getItem(i);
+			ChatMessage message = adapter.getItem(i);
 			if (message.getStorageId() == id) {
 				return message;
 			}
@@ -872,31 +903,36 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void invalidate() {
 		adapter.refreshHistory();
 		chatRoom.markAsRead();
+		if (getResources().getBoolean(R.bool.isTablet)) {
+			for (ChatUpdatedListener c : ChatUpdatedListeners) {
+				c.onChatUpdated();
+			}
+		}
 	}
 
-	private void resendMessage(LinphoneChatMessage message) {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (message == null || message.getStatus() != State.NotDelivered || !lc.isNetworkReachable())
+	private void resendMessage(ChatMessage message) {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (message == null || message.getState() != State.NotDelivered || !lc.isNetworkReachable())
 			return;
 
-		message.reSend();
+		message.resend();
 		invalidate();
 	}
 
 	private void resendMessage(int id) {
-		LinphoneChatMessage message = getMessageForId(id);
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (message == null || message.getStatus() != State.NotDelivered || !lc.isNetworkReachable()){
+		ChatMessage message = getMessageForId(id);
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (message == null || message.getState() != State.NotDelivered || !lc.isNetworkReachable()){
 				return;
 		}
-		message.reSend();
+		message.resend();
 		invalidate();
 	}
 
 	private void copyTextMessageToClipboard(int id) {
-		LinphoneChatMessage message = null;
+		ChatMessage message = null;
 		for (int i = 0; i < adapter.getCount(); i++) {
-			LinphoneChatMessage msg = adapter.getItem(i);
+			ChatMessage msg = adapter.getItem(i);
 			if (msg.getStorageId() == id) {
 				message = msg;
 				break;
@@ -954,12 +990,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	public Uri getCVSPathFromLookupUri(String content) {
 		String contactId = LinphoneUtils.getNameFromFilePath(content);
-		LinphoneFriend[] friendList = LinphoneManager.getLc().getFriendList();
-		for(LinphoneFriend friend : friendList){
-			if(friend.getRefKey().toString().equals(contactId)) {
-				String contactVcard = friend.getVcardToString();
-				Uri path = LinphoneUtils.createCvsFromString(contactVcard);
-				return path;
+		FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
+		for (FriendList list : friendList) {
+			for (Friend friend : list.getFriends()) {
+				if (friend.getRefKey().toString().equals(contactId)) {
+					String contactVcard = friend.getVcard().asVcard4String();
+					Uri path = LinphoneUtils.createCvsFromString(contactVcard);
+					return path;
+				}
 			}
 		}
 		return null;
@@ -973,7 +1011,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	@Override
 	public void onContactsUpdated() {
-		if(fileSharedUri != null || message.getText() != null){
+		if(LinphoneActivity.isInstanciated()
+				&& LinphoneActivity.instance().getCurrentFragment() == CHAT
+				&& fileSharedUri != null || message.getText() != null){
 			initNewChatConversation();
 		}
 	}
@@ -1060,15 +1100,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (progressDialog != null && progressDialog.isShowing()) {
 				progressDialog.dismiss();
 			}
-
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
 			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
-			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("image", extension, result, null);
+			Content content = Factory.instance().createContent(); // "image", extension, result, null
+			content.setType("image");
+			content.setSubtype(extension);
+			content.setBuffer(result, result.length);
 			content.setName(fileName);
-
-			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
+			ChatMessage message = chatRoom.createFileTransferMessage(content);
 			message.setListener(LinphoneManager.getInstance());
-			message.setAppData(path);
+			message.setAppdata(path);
 
 			LinphoneManager.getInstance().setUploadPendingFileMessage(message);
 			LinphoneManager.getInstance().setUploadingImage(result);
@@ -1118,12 +1159,16 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 			String fileName = path.substring(path.lastIndexOf("/") + 1);
 			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
-			LinphoneContent content = LinphoneCoreFactory.instance().createLinphoneContent("file", extension, result, null);
+			Content content = Factory.instance().createContent();//"file", extension, result, null
+			content.setType("file");
+			content.setSubtype(extension);
+			content.setBuffer(result, result.length);
+			content.setName(fileName);
 			content.setName(fileName);
 
-			LinphoneChatMessage message = chatRoom.createFileTransferMessage(content);
+			ChatMessage message = chatRoom.createFileTransferMessage(content);
 			message.setListener(LinphoneManager.getInstance());
-			message.setAppData(path);
+			message.setAppdata(path);
 
 			LinphoneManager.getInstance().setUploadPendingFileMessage(message);
 			LinphoneManager.getInstance().setUploadingImage(result);
@@ -1163,7 +1208,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				super.onActivityResult(requestCode, resultCode, data);
 			}
 		} else {
-			LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+			if (LinphoneUtils.isExtensionImage(imageToUploadUri.getPath()))
+				sendImageMessage(imageToUploadUri.getPath(), 0);
 		}
 	}
 
@@ -1233,7 +1279,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
-		private class ViewHolder implements LinphoneChatMessage.LinphoneChatMessageListener {
+		private class ViewHolder implements ChatMessageListener {
 			public int id;
 			public RelativeLayout bubbleLayout;
 			public CheckBox delete;
@@ -1277,32 +1323,32 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 			@Override
-			public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+			public void onMsgStateChanged(ChatMessage msg, State state) {
 
 			}
 
 			@Override
-			public void onLinphoneChatMessageFileTransferReceived(LinphoneChatMessage msg, LinphoneContent content, LinphoneBuffer buffer) {
+			public void onFileTransferRecv(ChatMessage msg, Content content, Buffer buffer) {
 
 			}
 
 			@Override
-			public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {
-
+			public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
+				return null;
 			}
 
 			@Override
-			public void onLinphoneChatMessageFileTransferProgressChanged(LinphoneChatMessage msg, LinphoneContent content, int offset, int total) {
+			public void onFileTransferProgressIndication(ChatMessage msg, Content content, int offset, int total) {
 				if (msg.getStorageId() == id) fileTransferProgressBar.setProgress(offset * 100 / total);
 			}
 		}
 
-		ArrayList<LinphoneChatMessage> history;
+		ArrayList<ChatMessage> history;
 		Context context;
 
 		public ChatMessageAdapter(Context c) {
 			context = c;
-			history = new ArrayList<LinphoneChatMessage>();
+			history = new ArrayList<ChatMessage>();
 			refreshHistory();
 		}
 
@@ -1313,19 +1359,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		public void refreshHistory() {
+			if (history == null || chatRoom == null) return;
 			history.clear();
-			LinphoneChatMessage[] messages = chatRoom.getHistory();
+			ChatMessage[] messages = chatRoom.getHistory(0);
 			history.addAll(Arrays.asList(messages));
 			notifyDataSetChanged();
 		}
 
-		public void addMessage(LinphoneChatMessage message) {
+		public void addMessage(ChatMessage message) {
 			history.add(message);
 			notifyDataSetChanged();
 			messagesList.setSelection(getCount() - 1);
 		}
 
-		public void refreshMessageCell(LinphoneChatMessage msg){
+		public void refreshMessageCell(ChatMessage msg){
 
 		}
 
@@ -1335,7 +1382,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 
 		@Override
-		public LinphoneChatMessage getItem(int position) {
+		public ChatMessage getItem(int position) {
 			return history.get(position);
 		}
 
@@ -1346,7 +1393,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 		@Override
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			final LinphoneChatMessage message = history.get(position);
+			final ChatMessage message = history.get(position);
 			View view = null;
 			final ViewHolder holder;
 			boolean sameMessage = false;
@@ -1365,8 +1412,8 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			if (holder.id == message.getStorageId()) {
 				// Horrible workaround to not reload image on edit chat list
 				if (holder.messageImage.getTag() != null
-						&& (holder.messageImage.getTag().equals(message.getAppData())
-							|| ((String) holder.messageImage.getTag()).substring(7).equals(message.getAppData()))
+						&& (holder.messageImage.getTag().equals(message.getAppdata())
+							|| ((String) holder.messageImage.getTag()).substring(7).equals(message.getAppdata()))
 						){
 					sameMessage = true;
 				}
@@ -1379,19 +1426,19 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				@Override
 				public void onClick(View v) {
 					if (!message.isSecured() && !message.isOutgoing() &&
-							LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory) {
+							LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory) {
 						LinphoneUtils.displayErrorAlert(getString(R.string.message_not_encrypted), LinphoneActivity.instance());
 					}
-					if(message.getStatus() == State.NotDelivered) {
+					if(message.getState() == State.NotDelivered) {
 						resendMessage(message);
 						//resendMessage(holder.id);
 					}
 				}
 			});
 
-			LinphoneChatMessage.State status = message.getStatus();
+			ChatMessage.State status = message.getState();
 			String externalBodyUrl = message.getExternalBodyUrl();
-			LinphoneContent fileTransferContent = message.getFileTransferInformation();
+			Content fileTransferContent = message.getFileTransferInformation();
 
 			holder.delete.setVisibility(View.GONE);
 			holder.messageText.setVisibility(View.GONE);
@@ -1404,9 +1451,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			holder.messageStatus.setVisibility(View.INVISIBLE);
 			holder.messageSendingInProgress.setVisibility(View.GONE);
 
-			String displayName = message.getFrom().getDisplayName();
+			String displayName = message.getFromAddress().getDisplayName();
 			if (displayName == null) {
-				displayName = message.getFrom().getUserName();
+				displayName = message.getFromAddress().getUsername();
 			}
 			if (!message.isOutgoing()) {
 				if (contact != null) {
@@ -1414,7 +1461,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 						displayName = contact.getFullName();
 					}
 					if (contact.hasPhoto()) {
-						LinphoneUtils.setThumbnailPictureFromUri(getActivity(), holder.contactPicture, contact.getThumbnailUri());
+						LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 					} else {
 						holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 					}
@@ -1426,11 +1473,11 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			holder.contactName.setText(timestampToHumanDate(context, message.getTime()) + " - " + displayName);
 
-			if (status == LinphoneChatMessage.State.InProgress) {
+			if (status == ChatMessage.State.InProgress) {
 				holder.messageSendingInProgress.setVisibility(View.VISIBLE);
 			}
 			if (!message.isSecured() && !message.isOutgoing() &&
-					LinphoneManager.getLc().getLimeEncryption() == LinphoneCore.LinphoneLimeState.Mandatory && status != LinphoneChatMessage.State.InProgress) {
+					LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory && status != ChatMessage.State.InProgress) {
 				holder.messageStatus.setVisibility(View.VISIBLE);
 				holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
 			}
@@ -1458,18 +1505,15 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 
 
-
-
-
 			if (externalBodyUrl != null || fileTransferContent != null) {
-				String appData = message.getAppData();
+				String appData = message.getAppdata();
 
 
 				if (message.isOutgoing() && appData != null) {
 					holder.messageImage.setVisibility(View.VISIBLE);
 					if (!sameMessage) {
-						loadBitmap(message.getAppData(), holder.messageImage);
-						holder.messageImage.setTag(message.getAppData());
+						loadBitmap(message.getAppdata(), holder.messageImage);
+						holder.messageImage.setTag(message.getAppdata());
 					}
 
 					if (LinphoneManager.getInstance().getMessageUploadPending() != null  && LinphoneManager.getInstance().getMessageUploadPending().getStorageId() == message.getStorageId()) {
@@ -1502,8 +1546,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							holder.messageImage.setVisibility(View.VISIBLE);
 							if (!sameMessage) {
 								loadBitmap(appData, holder.messageImage);
-								holder.messageImage.setTag(message.getAppData());
+								holder.messageImage.setTag(message.getAppdata());
 							}
+							//removedList();
 						}
 					}
 				}
@@ -1544,7 +1589,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 							String filename = message.getFileTransferInformation().getName();
 							String filename2 = context.getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())) ; //+ "." + extension;
 							File file = new File(Environment.getExternalStorageDirectory(), filename);
-							message.setAppData(file.getPath());
+							message.setAppdata(file.getPath());
 							LinphoneManager.getInstance().addDownloadMessagePending(message);
 							message.setListener(LinphoneManager.getInstance());
 							message.setFileTransferFilepath(file.getPath());
@@ -1557,6 +1602,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				});
 				chatRoom.markAsRead();
 			}
+
 
 			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 			if (message.isOutgoing()) {
@@ -1583,12 +1629,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 			}
 			holder.bubbleLayout.setLayoutParams(layoutParams);
 
-			if(message.getAppData() != null && holder.fileTransferLayout.getVisibility() != View.VISIBLE){
-				if(LinphoneUtils.isExtensionImage(message.getAppData())){
+			if(message.getAppdata() != null && holder.fileTransferLayout.getVisibility() != View.VISIBLE){
+				if(LinphoneUtils.isExtensionImage(message.getAppdata())){
 					holder.fileExtensionLabel.setVisibility(View.GONE);
 					holder.fileNameLabel.setVisibility(View.GONE);
 				}else {
-					String extension = (LinphoneUtils.getExtensionFromFileName(message.getAppData()));
+					String extension = (LinphoneUtils.getExtensionFromFileName(message.getAppdata()));
 					if(extension != null)
 						extension = extension.toUpperCase();
 					else
@@ -1599,7 +1645,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 					holder.fileExtensionLabel.setText(extension);
 					holder.fileExtensionLabel.setVisibility(View.VISIBLE);
-					holder.fileNameLabel.setText(LinphoneUtils.getNameFromFilePath(message.getAppData()));
+					holder.fileNameLabel.setText(LinphoneUtils.getNameFromFilePath(message.getAppdata()));
 					holder.fileNameLabel.setVisibility(View.VISIBLE);
 					holder.fileExtensionLabel.setOnClickListener(new OnClickListener() {
 						@Override
@@ -1613,7 +1659,6 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								file = new File(imageUri);
 								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
 							} else if (imageUri.startsWith("content://")) {
-								Log.e("===>>> ChatFragment - getView() - imageUri = "+imageUri);
 								contentUri = Uri.parse(imageUri);
 							} else {
 								file = new File(imageUri);
@@ -1667,6 +1712,12 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				}
 			}
 
+			if (getResources().getBoolean(R.bool.isTablet)) {
+				for (ChatUpdatedListener c : ChatUpdatedListeners) {
+					c.onChatUpdated();
+				}
+			}
+
 			return view;
 		}
 
@@ -1717,14 +1768,14 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
 				String link = text.substring(indexHttp, indexFinHttp);
 				String linkWithoutScheme = link.replace("http://", "");
-				text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+				text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
 			}
 			if (text.contains("https://")) {
 				int indexHttp = text.indexOf("https://");
 				int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
 				String link = text.substring(indexHttp, indexFinHttp);
 				String linkWithoutScheme = link.replace("https://", "");
-				text = text.replaceFirst(link, "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+				text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
 			}
 
 			return Compatibility.fromHtml(text);
@@ -1817,6 +1868,9 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 					final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 					if (this == bitmapWorkerTask && imageView != null) {
 						imageView.setImageBitmap(bitmap);
+						//Force scroll too bottom with setSelection() after image loaded and last messages
+						if(((messagesList.getLastVisiblePosition() >= (getCount() - 1)) && (messagesList.getFirstVisiblePosition() <= (getCount() - 1))))
+							messagesList.setSelection(getCount() - 1);
 						imageView.setTag(path);
 						imageView.setOnClickListener(new OnClickListener() {
 							@Override
@@ -1897,18 +1951,20 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		}
 	}
 
-	//LinphoneChatMessage Listener
+	//ChatMessage Listener
 	@Override
-	public void onLinphoneChatMessageStateChanged(LinphoneChatMessage msg, State state) {
+	public void onMsgStateChanged(ChatMessage msg, State state) {
 		redrawMessageList();
 	}
 
 	@Override
-	public void onLinphoneChatMessageFileTransferReceived(LinphoneChatMessage msg, LinphoneContent content, LinphoneBuffer buffer) {}
+	public void onFileTransferRecv(ChatMessage msg, Content content, Buffer buffer) {}
 
 	@Override
-	public void onLinphoneChatMessageFileTransferSent(LinphoneChatMessage msg, LinphoneContent content, int offset, int size, LinphoneBuffer bufferToFill) {}
+	public Buffer onFileTransferSend(ChatMessage msg, Content content, int offset, int size) {
+		return null;
+	}
 
 	@Override
-	public void onLinphoneChatMessageFileTransferProgressChanged(LinphoneChatMessage msg, LinphoneContent content, int offset, int total) {}
+	public void onFileTransferProgressIndication(ChatMessage msg, Content content, int offset, int total) {}
 }

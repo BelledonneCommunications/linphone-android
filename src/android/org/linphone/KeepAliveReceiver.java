@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 KeepAliveReceiver.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,11 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
+import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.app.AlarmManager;
@@ -40,9 +42,9 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 			return;
 		} else {
 			boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-			LinphoneCoreFactory.instance().enableLogCollection(isDebugEnabled);
-			LinphoneCoreFactory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			Factory.instance().enableLogCollection(isDebugEnabled ? LogCollectionState.Enabled : LogCollectionState.Disabled);
+			Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc == null) return;
 
 			String action = intent.getAction();

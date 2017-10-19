@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
  LinphoneActivity.java
- Copyright (C) 2012  Belledonne Communications, Grenoble, France
+ Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -66,21 +66,21 @@ import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneAuthInfo;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneCallLog;
-import org.linphone.core.LinphoneCallLog.CallStatus;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneChatRoom;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Call.Dir;
+import org.linphone.core.Address;
+import org.linphone.core.AuthInfo;
+import org.linphone.core.Call;
+import org.linphone.core.Call.State;
+import org.linphone.core.CallLog;
+import org.linphone.core.CallLog.CallStatus;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Core;
+import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.InAppPurchaseActivity;
@@ -103,9 +103,6 @@ import java.util.List;
 
 import static org.linphone.LinphoneActivity.ChatRoomContainer.createChatroomContainer;
 
-/**
- * @author Sylvain Berfini
- */
 public class LinphoneActivity extends LinphoneGenericActivity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
@@ -133,7 +130,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private boolean emptyFragment = false;
 	private boolean isTrialAccount = false;
 	private OrientationEventListener mOrientationHelper;
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 	private LinearLayout mTabBar;
 
 	private DrawerLayout sideMenu;
@@ -215,16 +212,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			currentFragment = (FragmentsAvailable) savedInstanceState.getSerializable("currentFragment");
 		}
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new CoreListenerStub(){
 			@Override
-			public void messageReceived(LinphoneCore lc, LinphoneChatRoom cr, LinphoneChatMessage message) {
+			public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
 		        displayMissedChats(getUnreadMessageCount());
 			}
 
 			@Override
-			public void registrationState(LinphoneCore lc, LinphoneProxyConfig proxy, LinphoneCore.RegistrationState state, String smessage) {
-				LinphoneAuthInfo authInfo = lc.findAuthInfo(proxy.getIdentity(), proxy.getRealm(), proxy.getDomain());
-				if (state.equals(RegistrationState.RegistrationCleared)) {
+			public void onRegistrationStateChanged(Core lc, ProxyConfig proxy, Core.RegistrationState state, String smessage) {
+				AuthInfo authInfo = lc.findAuthInfo(proxy.getRealm(), proxy.getIdentityAddress().getUsername(), proxy.getDomain());
+				if (state.equals(RegistrationState.Cleared)) {
 					if (lc != null) {
 						if (authInfo != null)
 							lc.removeAuthInfo(authInfo);
@@ -235,14 +232,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 				if(getResources().getBoolean(R.bool.use_phone_number_validation)
 						&& authInfo != null && authInfo.getDomain().equals(getString(R.string.default_domain))) {
-					if (state.equals(RegistrationState.RegistrationOk)) {
+					if (state.equals(RegistrationState.Ok)) {
 						LinphoneManager.getInstance().isAccountWithAlias();
 					}
 				}
 
-				if(state.equals(RegistrationState.RegistrationFailed) && newProxyConfig) {
+				if(state.equals(RegistrationState.Failed) && newProxyConfig) {
 					newProxyConfig = false;
-					if (proxy.getError() == Reason.BadCredentials) {
+					if (proxy.getError() == Reason.Forbidden) {
 						//displayCustomToast(getString(R.string.error_bad_credentials), Toast.LENGTH_LONG);
 					}
 					if (proxy.getError() == Reason.Unauthorized) {
@@ -255,12 +252,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 
 			@Override
-			public void callState(LinphoneCore lc, LinphoneCall call, LinphoneCall.State state, String message) {
+			public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
 				if (state == State.IncomingReceived) {
 					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
 				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
 					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
-				} else if (state == State.CallEnd || state == State.Error || state == State.CallReleased) {
+				} else if (state == State.End || state == State.Error || state == State.Released) {
 					resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 				}
 
@@ -548,22 +545,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
-	public void displayHistoryDetail(String sipUri, LinphoneCallLog log) {
-		LinphoneAddress lAddress;
-		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(sipUri);
-		} catch (LinphoneCoreException e) {
-			Log.e("Cannot display history details",e);
-			//TODO display error message
-			return;
-		}
+	public void displayHistoryDetail(String sipUri, CallLog log) {
+		Address lAddress;
+		lAddress = Factory.instance().createAddress(sipUri);
 		LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(lAddress);
 
 		String displayName = c != null ? c.getFullName() : LinphoneUtils.getAddressDisplayName(sipUri);
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
 
 		String status;
-		if (log.getDirection() == CallDirection.Outgoing) {
+		if (log.getDir() == Call.Dir.Outgoing) {
 			status = getString(R.string.outgoing);
 		} else {
 			if (log.getStatus() == CallStatus.Missed) {
@@ -573,8 +564,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		}
 
-		String callTime = secondsToDisplayableString(log.getCallDuration());
-		String callDate = String.valueOf(log.getTimestamp());
+		String callTime = secondsToDisplayableString(log.getDuration());
+		String callDate = String.valueOf(log.getStartDate());
 
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
@@ -637,6 +628,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		changeCurrentFragment(FragmentsAvailable.ABOUT, null);
 	}
 
+	public void displayContactsForEdition(String sipAddress, String displayName) {
+		Bundle extras = new Bundle();
+		extras.putBoolean("EditOnClick", true);
+		extras.putString("SipAddress", sipAddress);
+		extras.putString("DisplayName", displayName);
+		changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, extras);
+	}
+
 	public void displayAssistant() {
 		startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
 	}
@@ -649,8 +648,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	public int getUnreadMessageCount() {
 		int count = 0;
-		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-		for (LinphoneChatRoom chatroom : chats) {
+		ChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+		for (ChatRoom chatroom : chats) {
 			count += chatroom.getUnreadMessagesCount();
 		}
 		return count;
@@ -661,8 +660,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		ArrayList<String> listUri = new ArrayList<String>();
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null
 				&& LinphoneManager.getLc().getDefaultProxyConfig() != null
-				&& LinphoneManager.getLc().getDefaultProxyConfig().getIdentity() != null) {
-			listUri.add(LinphoneManager.getLc().getDefaultProxyConfig().getAddress().asStringUriOnly());
+				&& LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress() != null) {
+			listUri.add(LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress().asStringUriOnly());
 		}
 		for (ContactAddress ca : list) {
 			listUri.add(ca.getAddress());
@@ -671,7 +670,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
 	}
 
-	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, LinphoneAddress lAddress) {
+	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, Address lAddress) {
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", sipUri);
 		if(message != null)
@@ -699,15 +698,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		String thumbnailUri = null;
 		String displayName = null;
 
-		LinphoneAddress lAddress = null;
+		Address lAddress = null;
 		if(sipUri != null) {
-			try {
-				lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
-			} catch (LinphoneCoreException e) {
-				//TODO display error message
-				Log.e("Cannot display chat", e);
-				return;
-			}
+			lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
+			if (lAddress == null) return;
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			displayName = contact != null ? contact.getFullName() : null;
 
@@ -857,20 +851,20 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	static class ChatRoomContainer{
-		private LinphoneChatRoom mCr;
+		private ChatRoom mCr;
 		long mTime;
-		static public ChatRoomContainer createChatroomContainer(LinphoneChatRoom chatRoom) {
+		static public ChatRoomContainer createChatroomContainer(ChatRoom chatRoom) {
 			if (chatRoom.getHistorySize() <= 0) return null;
 			return new ChatRoomContainer(chatRoom);
 		}
-		public ChatRoomContainer(LinphoneChatRoom chatroom){
+		public ChatRoomContainer(ChatRoom chatroom){
 			mCr = chatroom;
-			LinphoneChatMessage[] lastMsg = chatroom.getHistory(1);
+			ChatMessage[] lastMsg = chatroom.getHistory(1);
 			if (lastMsg != null && lastMsg.length > 0 && lastMsg[0] != null) {
 				mTime = lastMsg[0].getTime();
 			}else mTime = 0;
 		}
-		LinphoneChatRoom getChatRoom(){
+		ChatRoom getChatRoom(){
 			return mCr;
 		}
 		long getTime(){
@@ -880,10 +874,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	public List<String> getChatList() {
 		ArrayList<String> chatList = new ArrayList<String>();
 
-		LinphoneChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
+		ChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
 		List<ChatRoomContainer> rooms = new ArrayList<ChatRoomContainer>();
 
-		for (LinphoneChatRoom chatroom : chats) {
+		for (ChatRoom chatroom : chats) {
 			ChatRoomContainer crc = createChatroomContainer(chatroom);
 			if (crc != null) rooms.add(crc);
 		}
@@ -913,7 +907,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void removeFromChatList(String sipUri) {
-		LinphoneChatRoom chatroom = LinphoneManager.getLc().getOrCreateChatRoom(sipUri);
+		ChatRoom chatroom = LinphoneManager.getLc().getChatRoomFromUri(sipUri);
 		chatroom.deleteHistory();
 	}
 
@@ -989,7 +983,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			@Override
 			public void onClick(View view) {
 				String newPassword = ((EditText) dialog.findViewById(R.id.password)).getText().toString();
-				LinphoneAuthInfo authInfo = LinphoneCoreFactory.instance().createAuthInfo(username, null, newPassword, null, realm, domain);
+				AuthInfo authInfo = Factory.instance().createAuthInfo(username, null, newPassword, null, realm, domain);
 				LinphoneManager.getLc().addAuthInfo(authInfo);
 				LinphoneManager.getLc().refreshRegisters();
 				dialog.dismiss();
@@ -1020,7 +1014,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		LinphoneManager.getInstance().newOutgoingCall(address);
 	}
 
-	public void startIncallActivity(LinphoneCall currentCall) {
+	public void startIncallActivity(Call currentCall) {
 		Intent intent = new Intent(this, CallActivity.class);
 		startOrientationSensor();
 		startActivityForResult(intent, CALL_ACTIVITY);
@@ -1064,11 +1058,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 			Log.d("Phone orientation changed to ", degrees);
 			int rotation = (360 - degrees) % 360;
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc != null) {
 				lc.setDeviceRotation(rotation);
-				LinphoneCall currentCall = lc.getCurrentCall();
-				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParams().getVideoEnabled()) {
+				Call currentCall = lc.getCurrentCall();
+				if (currentCall != null && currentCall.cameraEnabled() && currentCall.getCurrentParams().videoEnabled()) {
 					lc.updateCall(currentCall, null);
 				}
 			}
@@ -1094,8 +1088,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
-			LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-			if (call.getState() == LinphoneCall.State.IncomingReceived) {
+			Call call = LinphoneManager.getLc().getCalls()[0];
+			if (call.getState() == Call.State.IncomingReceived) {
 				startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
 			} else {
 				startIncallActivity(call);
@@ -1111,6 +1105,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	{
 		Bundle extras = new Bundle();
 		extras.putSerializable("NewSipAdress", sipUri);
+		extras.putSerializable("NewDisplayName", displayName);
 		changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
 	}
 
@@ -1180,7 +1175,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	protected void onPause() {
 		getIntent().putExtra("PreviousActivity", 0);
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -1392,7 +1387,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 			if (!LinphoneService.instance().displayServiceNotification()) {
@@ -1425,12 +1420,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {
-				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
-				LinphoneCall.State callState = call.getState();
+				Call call = LinphoneManager.getLc().getCalls()[0];
+				Call.State onCallStateChanged = call.getState();
 
-				if (callState == State.IncomingReceived) {
+				if (onCallStateChanged == State.IncomingReceived) {
 					startActivity(new Intent(this, CallIncomingActivity.class));
-				} else if (callState == State.OutgoingInit || callState == State.OutgoingProgress || callState == State.OutgoingRinging) {
+				} else if (onCallStateChanged == State.OutgoingInit || onCallStateChanged == State.OutgoingProgress || onCallStateChanged == State.OutgoingRinging) {
 					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
 					startIncallActivity(call);
@@ -1495,7 +1490,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				((SettingsFragment) fragment).closePreferenceScreen();
 			}
 		}
-
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			LinphoneService.instance().removeMessageNotification();
@@ -1511,8 +1505,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			displayInapp();
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
-				LinphoneCall call = LinphoneManager.getLc().getCalls()[0];
+				Call call = LinphoneManager.getLc().getCalls()[0];
 				startIncallActivity(call);
+			}
+		}else if (extras != null && extras.getBoolean("StartCall", false)) {
+			boolean extraBool = extras.getBoolean("StartCall", false);
+			if (CallActivity.isInstanciated()) {
+				CallActivity.instance().startIncomingCallActivity();
+			} else {
+				mAddressWaitingToBeCalled = extras.getString("NumberToCall");
+				goToDialerFragment();
+				//startActivity(new Intent(this, CallIncomingActivity.class));
 			}
 		} else {
 			DialerFragment dialerFragment = DialerFragment.instance();
@@ -1534,8 +1537,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				// If a call is ringing, start incomingcallactivity
-				Collection<LinphoneCall.State> incoming = new ArrayList<LinphoneCall.State>();
-				incoming.add(LinphoneCall.State.IncomingReceived);
+				Collection<Call.State> incoming = new ArrayList<Call.State>();
+				incoming.add(Call.State.IncomingReceived);
 				if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
 					if (CallActivity.isInstanciated()) {
 						CallActivity.instance().startIncomingCallActivity();
@@ -1635,13 +1638,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		});
 	}
 
-	private int getStatusIconResource(LinphoneCore.RegistrationState state) {
+	private int getStatusIconResource(Core.RegistrationState state) {
 		try {
-			if (state == RegistrationState.RegistrationOk) {
+			if (state == RegistrationState.Ok) {
 				return R.drawable.led_connected;
-			} else if (state == RegistrationState.RegistrationProgress) {
+			} else if (state == RegistrationState.Progress) {
 				return R.drawable.led_inprogress;
-			} else if (state == RegistrationState.RegistrationFailed) {
+			} else if (state == RegistrationState.Failed) {
 				return R.drawable.led_error;
 			} else {
 				return R.drawable.led_disconnected;
@@ -1660,7 +1663,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		TextView displayName = (TextView) defaultAccount.findViewById(R.id.main_account_display_name);
 
 
-		LinphoneProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
+		ProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
 		if(proxy == null) {
 			displayName.setText(getString(R.string.no_account));
 			status.setVisibility(View.GONE);
@@ -1670,8 +1673,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 			defaultAccount.setOnClickListener(null);
 		} else {
-			address.setText(proxy.getAddress().asStringUriOnly());
-			displayName.setText(LinphoneUtils.getAddressDisplayName(proxy.getAddress()));
+			address.setText(proxy.getIdentityAddress().asStringUriOnly());
+			displayName.setText(LinphoneUtils.getAddressDisplayName(proxy.getIdentityAddress()));
 			status.setImageResource(getStatusIconResource(proxy.getState()));
 			status.setVisibility(View.VISIBLE);
 
@@ -1686,7 +1689,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void refreshAccounts(){
-		if (LinphoneManager.getLc().getProxyConfigList().length > 1) {
+		if (LinphoneManager.getLc().getProxyConfigList() != null &&
+				LinphoneManager.getLc().getProxyConfigList().length > 1) {
 			accountsList.setVisibility(View.VISIBLE);
 			accountsList.setAdapter(new AccountsListAdapter());
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -1711,16 +1715,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	class AccountsListAdapter extends BaseAdapter {
-		List<LinphoneProxyConfig> proxy_list;
+		List<ProxyConfig> proxy_list;
 
 		AccountsListAdapter() {
-			proxy_list = new ArrayList<LinphoneProxyConfig>();
+			proxy_list = new ArrayList<ProxyConfig>();
 			refresh();
 		}
 
 		public void refresh(){
-			proxy_list = new ArrayList<LinphoneProxyConfig>();
-			for(LinphoneProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
+			proxy_list = new ArrayList<ProxyConfig>();
+			for(ProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()){
 				if(proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()){
 					proxy_list.add(proxyConfig);
 				}
@@ -1745,7 +1749,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view = null;
-			LinphoneProxyConfig lpc = (LinphoneProxyConfig) getItem(position);
+			ProxyConfig lpc = (ProxyConfig) getItem(position);
 			if (convertView != null) {
 				view = convertView;
 			} else {
@@ -1754,7 +1758,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 			ImageView status = (ImageView) view.findViewById(R.id.account_status);
 			TextView address = (TextView) view.findViewById(R.id.account_address);
-			String sipAddress = lpc.getAddress().asStringUriOnly();
+			String sipAddress = lpc.getIdentityAddress().asStringUriOnly();
 
 			address.setText(sipAddress);
 

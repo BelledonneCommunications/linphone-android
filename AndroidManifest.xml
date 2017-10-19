@@ -2,7 +2,7 @@
 <manifest package="org.linphone"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="3282"
+          android:versionCode="3284"
           android:versionName="3.2.8">
 
     <uses-sdk
@@ -114,6 +114,10 @@
                 <data android:mimeType="audio/*"/>
                 <data android:mimeType="video/*"/>
                 <data android:mimeType="application/*"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.linphone.intent.action.CallLaunched" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -256,6 +260,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".OutgoingCallReceiver"
+                  android:permission="android.permission.PROCESS_OUTGOING_CALLS">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
         <!-- Needed for push notification -->
         <!--
             <receiver

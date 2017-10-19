@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 PhoneStateReceiver.java
-Copyright (C) 2011  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,9 +26,6 @@ import android.telephony.TelephonyManager;
 
 /**
  * Pause current SIP calls when GSM phone rings or is active.
- *
- * @author Guillaume Beraudo
- *
  */
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
 	@Override
@@ -37,7 +35,7 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
 		if (!LinphoneManager.isInstanciated())
 			return;
 
-		if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)) {
+		if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState) || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
 			LinphoneManager.getInstance().setCallGsmON(true);
 			LinphoneManager.getLc().pauseAllCalls();
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {

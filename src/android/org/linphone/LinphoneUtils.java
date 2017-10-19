@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 SoftVolume.java
-Copyright (C) 2011  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-package org.linphone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,17 +49,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.linphone.core.DialPlan;
-import org.linphone.core.LinphoneAccountCreator;
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneCall.State;
-import org.linphone.core.LinphoneChatMessage;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.Call.State;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.Core;
+import org.linphone.core.CoreException;
+import org.linphone.core.Factory;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -92,8 +94,6 @@ import static android.view.View.VISIBLE;
 
 /**
  * Helpers.
- * @author Guillaume Beraudo
- *
  */
 public final class LinphoneUtils {
 	private static Context context = null;
@@ -104,16 +104,12 @@ public final class LinphoneUtils {
 	//private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
 	public static boolean isSipAddress(String numberOrAddress) {
-		try {
-			LinphoneCoreFactory.instance().createLinphoneAddress(numberOrAddress);
-			return true;
-		} catch (LinphoneCoreException e) {
-			return false;
-		}
+		Factory.instance().createAddress(numberOrAddress);
+		return true;
 	}
 
 	public static boolean isNumberAddress(String numberOrAddress) {
-		LinphoneProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
+		ProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
 		return proxy.normalizePhoneNumber(numberOrAddress) != null;
 	}
 
@@ -122,21 +118,17 @@ public final class LinphoneUtils {
 	}
 
 	public static String getAddressDisplayName(String uri){
-		LinphoneAddress lAddress;
-		try {
-			lAddress = LinphoneCoreFactory.instance().createLinphoneAddress(uri);
-			return getAddressDisplayName(lAddress);
-		} catch (LinphoneCoreException e) {
-			return null;
-		}
+		Address lAddress;
+		lAddress = Factory.instance().createAddress(uri);
+		return getAddressDisplayName(lAddress);
 	}
 
-	public static String getAddressDisplayName(LinphoneAddress address){
+	public static String getAddressDisplayName(Address address){
 		if(address.getDisplayName() != null) {
 			return address.getDisplayName();
 		} else {
-			if(address.getUserName() != null){
-				return address.getUserName();
+			if(address.getUsername() != null){
+				return address.getUsername();
 			} else {
 				return address.asStringUriOnly();
 			}
@@ -278,6 +270,8 @@ public final class LinphoneUtils {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
 			} catch (IOException e) {
+				Log.e("Error in setThumbnailPictureFromUri: " + e);
+				return;
 			}
 			if (bm != null) {
 				view.setImageBitmap(bm);
@@ -287,33 +281,33 @@ public final class LinphoneUtils {
 		}
 	}
 
-	public static final List<LinphoneCall> getLinphoneCallsNotInConf(LinphoneCore lc) {
-		List<LinphoneCall> l=new ArrayList<LinphoneCall>();
-		for(LinphoneCall c : lc.getCalls()){
-			if (!c.isInConference()){
+	public static final List<Call> getCallsNotInConf(Core lc) {
+		List<Call> l=new ArrayList<Call>();
+		for(Call c : lc.getCalls()){
+			if (!(c.getConference() != null)){
 				l.add(c);
 			}
 		}
 		return l;
 	}
 
-	public static final List<LinphoneCall> getLinphoneCallsInConf(LinphoneCore lc) {
-		List<LinphoneCall> l=new ArrayList<LinphoneCall>();
-		for(LinphoneCall c : lc.getCalls()){
-			if (c.isInConference()){
+	public static final List<Call> getCallsInConf(Core lc) {
+		List<Call> l=new ArrayList<Call>();
+		for(Call c : lc.getCalls()){
+			if ((c.getConference() != null)){
 				l.add(c);
 			}
 		}
 		return l;
 	}
 
-	public static final List<LinphoneCall> getLinphoneCalls(LinphoneCore lc) {
+	public static final List<Call> getCalls(Core lc) {
 		// return a modifiable list
-		return new ArrayList<LinphoneCall>(Arrays.asList(lc.getCalls()));
+		return new ArrayList<Call>(Arrays.asList(lc.getCalls()));
 	}
 
-	public static final boolean hasExistingResumeableCall(LinphoneCore lc) {
-		for (LinphoneCall c : getLinphoneCalls(lc)) {
+	public static final boolean hasExistingResumeableCall(Core lc) {
+		for (Call c : getCalls(lc)) {
 			if (c.getState() == State.Paused) {
 				return true;
 			}
@@ -321,32 +315,32 @@ public final class LinphoneUtils {
 		return false;
 	}
 
-	public static final List<LinphoneCall> getCallsInState(LinphoneCore lc, Collection<State> states) {
-		List<LinphoneCall> foundCalls = new ArrayList<LinphoneCall>();
-		for (LinphoneCall call : getLinphoneCalls(lc)) {
+	public static final List<Call> getCallsInState(Core lc, Collection<State> states) {
+		List<Call> foundCalls = new ArrayList<Call>();
+		for (Call call : getCalls(lc)) {
 			if (states.contains(call.getState())) {
 				foundCalls.add(call);
 			}
 		}
 		return foundCalls;
 	}
-	public static final List<LinphoneCall> getRunningOrPausedCalls(LinphoneCore lc) {
+	public static final List<Call> getRunningOrPausedCalls(Core lc) {
 		return getCallsInState(lc, Arrays.asList(
 				State.Paused,
 				State.PausedByRemote,
 				State.StreamsRunning));
 	}
 
-	public static final int countConferenceCalls(LinphoneCore lc) {
+	public static final int countConferenceCalls(Core lc) {
 		int count = lc.getConferenceSize();
-		if (lc.isInConference()) count--;
+		if ((lc.getConference() != null)) count--;
 		return count;
 	}
 
-	public static int countVirtualCalls(LinphoneCore lc) {
+	public static int countVirtualCalls(Core lc) {
 		return lc.getCallsNb() - countConferenceCalls(lc);
 	}
-	public static int countNonConferenceCalls(LinphoneCore lc) {
+	public static int countNonConferenceCalls(Core lc) {
 		return lc.getCallsNb() - countConferenceCalls(lc);
 	}
 
@@ -366,32 +360,32 @@ public final class LinphoneUtils {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) pixels, res.getDisplayMetrics());
 	}
 
-	public static boolean isCallRunning(LinphoneCall call)
+	public static boolean isCallRunning(Call call)
 	{
 		if (call == null) {
 			return false;
 		}
 
-		LinphoneCall.State state = call.getState();
+		Call.State state = call.getState();
 
-		return state == LinphoneCall.State.Connected ||
-				state == LinphoneCall.State.CallUpdating ||
-				state == LinphoneCall.State.CallUpdatedByRemote ||
-				state == LinphoneCall.State.StreamsRunning ||
-				state == LinphoneCall.State.Resuming;
+		return state == Call.State.Connected ||
+				state == Call.State.Updating ||
+				state == Call.State.UpdatedByRemote ||
+				state == Call.State.StreamsRunning ||
+				state == Call.State.Resuming;
 	}
 
-	public static boolean isCallEstablished(LinphoneCall call) {
+	public static boolean isCallEstablished(Call call) {
 		if (call == null) {
 			return false;
 		}
 
-		LinphoneCall.State state = call.getState();
+		Call.State state = call.getState();
 
 		return isCallRunning(call) ||
-				state == LinphoneCall.State.Paused ||
-				state == LinphoneCall.State.PausedByRemote ||
-				state == LinphoneCall.State.Pausing;
+				state == Call.State.Paused ||
+				state == Call.State.PausedByRemote ||
+				state == Call.State.Pausing;
 	}
 
 	public static boolean isHighBandwidthConnection(Context context){
@@ -521,7 +515,7 @@ public final class LinphoneUtils {
 
 	public static String getDisplayableUsernameFromAddress(String sipAddress) {
 		String username = sipAddress;
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return username;
 
 		if (username.startsWith("sip:")) {
@@ -530,7 +524,7 @@ public final class LinphoneUtils {
 
 		if (username.contains("@")) {
 			String domain = username.split("@")[1];
-			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			ProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
 				if (domain.equals(lpc.getDomain())) {
 					return username.split("@")[0];
@@ -546,15 +540,15 @@ public final class LinphoneUtils {
 
 	public static String getFullAddressFromUsername(String username) {
 		String sipAddress = username;
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc == null) return sipAddress;
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null || username == null) return sipAddress;
 
 		if (!sipAddress.startsWith("sip:")) {
 			sipAddress = "sip:" + sipAddress;
 		}
 
 		if (!sipAddress.contains("@")) {
-			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			ProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
 				sipAddress = sipAddress + "@" + lpc.getDomain();
 			} else {
@@ -564,9 +558,9 @@ public final class LinphoneUtils {
 		return sipAddress;
 	}
 
-	public static void storeImage(Context context, LinphoneChatMessage msg) {
-		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppData() == null) return;
-		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppData());
+	public static void storeImage(Context context, ChatMessage msg) {
+		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppdata() == null) return;
+		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppdata());
 		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
 		if (bm == null) return;
 
@@ -590,7 +584,7 @@ public final class LinphoneUtils {
 			file.delete();
 	        bm.recycle();
 
-	        msg.setAppData(path.toString());
+	        msg.setAppdata(path.toString());
 		} catch (FileNotFoundException e) {
 			Log.e(e);
 		} catch (IOException e) {
@@ -617,83 +611,83 @@ public final class LinphoneUtils {
 	public static String errorForPhoneNumberStatus(int status) {
 		Context ctxt = getContext();
 		if (ctxt != null) {
-			if (LinphoneAccountCreator.PhoneNumberCheck.CountryCodeInvalid.value()
-					== (status & LinphoneAccountCreator.PhoneNumberCheck.CountryCodeInvalid.value()))
+			if (AccountCreator.PhoneNumberStatus.InvalidCountryCode.toInt()
+					== (status & AccountCreator.PhoneNumberStatus.InvalidCountryCode.toInt()))
 				return ctxt.getString(R.string.country_code_invalid);
-			if (LinphoneAccountCreator.PhoneNumberCheck.TooShort.value()
-					== (status & LinphoneAccountCreator.PhoneNumberCheck.TooShort.value()))
+			if (AccountCreator.PhoneNumberStatus.TooShort.toInt()
+					== (status & AccountCreator.PhoneNumberStatus.TooShort.toInt()))
 				return ctxt.getString(R.string.phone_number_too_short);
-			if (LinphoneAccountCreator.PhoneNumberCheck.TooLong.value()
-					== (status & LinphoneAccountCreator.PhoneNumberCheck.TooLong.value()))
+			if (AccountCreator.PhoneNumberStatus.TooLong.toInt()
+					== (status & AccountCreator.PhoneNumberStatus.TooLong.toInt()))
 				return ctxt.getString(R.string.phone_number_too_long);
-			if (LinphoneAccountCreator.PhoneNumberCheck.Invalid.value()
-					== (status & LinphoneAccountCreator.PhoneNumberCheck.Invalid.value()))
+			if (AccountCreator.PhoneNumberStatus.Invalid.toInt()
+					== (status & AccountCreator.PhoneNumberStatus.Invalid.toInt()))
 				return ctxt.getString(R.string.phone_number_invalid);
 		}
 		return null;
 	}
 
-	public static String errorForEmailStatus(LinphoneAccountCreator.EmailCheck status) {
+	public static String errorForEmailStatus(AccountCreator.EmailStatus status) {
 		Context ctxt = getContext();
 		if (ctxt != null) {
-			if (status.equals(LinphoneAccountCreator.EmailCheck.InvalidCharacters)
-					|| status.equals(LinphoneAccountCreator.EmailCheck.Malformed))
+			if (status.equals(AccountCreator.EmailStatus.InvalidCharacters)
+					|| status.equals(AccountCreator.EmailStatus.Malformed))
 				return ctxt.getString(R.string.invalid_email);
 		}
 		return null;
 	}
 
-	public static String errorForUsernameStatus(LinphoneAccountCreator.UsernameCheck status) {
+	public static String errorForUsernameStatus(AccountCreator.UsernameStatus status) {
 		Context ctxt = getContext();
 		if (ctxt != null) {
-			if (status.equals(LinphoneAccountCreator.UsernameCheck.InvalidCharacters))
+			if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
 				return ctxt.getString(R.string.invalid_username);
-			if (status.equals(LinphoneAccountCreator.UsernameCheck.TooShort))
+			if (status.equals(AccountCreator.UsernameStatus.TooShort))
 				return ctxt.getString(R.string.username_too_short);
-			if (status.equals(LinphoneAccountCreator.UsernameCheck.TooLong))
+			if (status.equals(AccountCreator.UsernameStatus.TooLong))
 				return ctxt.getString(R.string.username_too_long);
-			if (status.equals(LinphoneAccountCreator.UsernameCheck.Invalid))
+			if (status.equals(AccountCreator.UsernameStatus.Invalid))
 				return ctxt.getString(R.string.username_invalid_size);
-			if (status.equals(LinphoneAccountCreator.UsernameCheck.InvalidCharacters))
+			if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
 				return ctxt.getString(R.string.invalid_display_name);
 		}
 		return null;
 	}
 
-	public static String errorForPasswordStatus(LinphoneAccountCreator.PasswordCheck status) {
+	public static String errorForPasswordStatus(AccountCreator.PasswordStatus status) {
 		Context ctxt = getContext();
 		if (ctxt != null) {
-			if (status.equals(LinphoneAccountCreator.PasswordCheck.TooShort))
+			if (status.equals(AccountCreator.PasswordStatus.TooShort))
 				return ctxt.getString(R.string.password_too_short);
-			if (status.equals(LinphoneAccountCreator.PasswordCheck.TooLong))
+			if (status.equals(AccountCreator.PasswordStatus.TooLong))
 				return ctxt.getString(R.string.password_too_long);
 		}
 		return null;
 	}
 
-	public static String errorForRequestStatus(LinphoneAccountCreator.RequestStatus status) {
+	public static String errorForStatus(AccountCreator.Status status) {
 		Context ctxt = getContext();
 		if (ctxt != null) {
-			if (status.equals(LinphoneAccountCreator.RequestStatus.Failed))
+			if (status.equals(AccountCreator.Status.RequestFailed))
 				return ctxt.getString(R.string.request_failed);
-			if (status.equals(LinphoneAccountCreator.RequestStatus.ErrorServer))
+			if (status.equals(AccountCreator.Status.ServerError))
 				return ctxt.getString(R.string.wizard_failed);
-			if (status.equals(LinphoneAccountCreator.RequestStatus.AccountExist)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountExistWithAlias))
+			if (status.equals(AccountCreator.Status.AccountExist)
+					|| status.equals(AccountCreator.Status.AccountExistWithAlias))
 				return ctxt.getString(R.string.account_already_exist);
-			if (status.equals(LinphoneAccountCreator.RequestStatus.AliasIsAccount)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.AliasExist))
+			if (status.equals(AccountCreator.Status.AliasIsAccount)
+					|| status.equals(AccountCreator.Status.AliasExist))
 				return ctxt.getString(R.string.assistant_phone_number_unavailable);
-			if (status.equals(LinphoneAccountCreator.RequestStatus.AccountNotExist))
+			if (status.equals(AccountCreator.Status.AccountNotExist))
 				return ctxt.getString(R.string.assistant_error_bad_credentials);
-			if (status.equals(LinphoneAccountCreator.RequestStatus.AliasNotExist))
+			if (status.equals(AccountCreator.Status.AliasNotExist))
 				return ctxt.getString(R.string.phone_number_not_exist);
-			if (status.equals(LinphoneAccountCreator.RequestStatus.AliasNotExist)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountNotActivated)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountAlreadyActivated)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountActivated)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.AccountNotCreated)
-					|| status.equals(LinphoneAccountCreator.RequestStatus.Ok))
+			if (status.equals(AccountCreator.Status.AliasNotExist)
+					|| status.equals(AccountCreator.Status.AccountNotActivated)
+					|| status.equals(AccountCreator.Status.AccountAlreadyActivated)
+					|| status.equals(AccountCreator.Status.AccountActivated)
+					|| status.equals(AccountCreator.Status.AccountNotCreated)
+					|| status.equals(AccountCreator.Status.RequestOk))
 				return "";
 		}
 		return null;
@@ -712,8 +706,8 @@ public final class LinphoneUtils {
 
 	public static void setCountry(DialPlan c, EditText dialCode, Button selectCountry, int countryCode) {
 		if( c != null && dialCode != null && selectCountry != null) {
-			dialCode.setText(c.getCountryCode());
-			selectCountry.setText(c.getCountryName());
+			dialCode.setText(c.getCountryCallingCode());
+			selectCountry.setText(c.getCountry());
 		} else {
 			if(countryCode != -1){
 				dialCode.setText("+" + countryCode);
@@ -796,7 +790,7 @@ public final class LinphoneUtils {
 		}
 	}
 
-	public static String getTimestamp() {
+	public static String getStartDate() {
 		try {
 			return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
 		} catch (RuntimeException e) {
@@ -806,7 +800,7 @@ public final class LinphoneUtils {
 
 	public static File createFile(Context context, String imageFileName, String type) throws IOException {
 		if (TextUtils.isEmpty(imageFileName))
-			imageFileName = getTimestamp()+"."+type; // make random filename if you want.
+			imageFileName = getStartDate()+"."+type; // make random filename if you want.
 
 		final File root;
 		imageFileName = imageFileName;

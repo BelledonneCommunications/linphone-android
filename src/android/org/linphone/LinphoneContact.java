@@ -1,6 +1,8 @@
+package org.linphone;
+
 /*
 LinphoneContact.java
-Copyright (C) 2016  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.linphone;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,12 +25,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import org.linphone.core.LinphoneAddress;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCoreException;
-import org.linphone.core.LinphoneFriend;
-import org.linphone.core.LinphoneFriendImpl;
-import org.linphone.core.LinphoneFriend.SubscribePolicy;
+import org.linphone.core.Address;
+import org.linphone.core.Core;
+import org.linphone.core.CoreException;
+import org.linphone.core.Friend;
+import org.linphone.core.Friend.SubscribePolicy;
+import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.mediastream.Log;
@@ -44,12 +45,9 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 
 public class LinphoneContact implements Serializable, Comparable<LinphoneContact> {
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 9015568163905205244L;
 
-	private transient LinphoneFriend friend;
+	private transient Friend friend;
 	private String fullName, firstName, lastName, androidId, androidRawId, androidTagId, organization;
 	private transient Uri photoUri, thumbnailUri;
 	private List<LinphoneNumberOrAddress> addresses;
@@ -260,7 +258,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 				}
 			}
 
-			if (isLinphoneFriend()) {
+			if (isFriend()) {
 				if (noa.isSIPAddress()) {
 					if (!noa.getOldValue().startsWith("sip:")) {
 						noa.setOldValue("sip:" + noa.getOldValue());
@@ -366,7 +364,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					}
 				}
 			}
-			if (isLinphoneFriend()) {
+			if (isFriend()) {
 				if (noa.isSIPAddress()) {
 					if (!noa.getValue().startsWith("sip:")) {
 						noa.setValue("sip:" + noa.getValue());
@@ -401,35 +399,35 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return androidId;
 	}
 
-	public LinphoneFriend getLinphoneFriend() {
+	public Friend getFriend() {
 		return friend;
 	}
 
 	private void createOrUpdateFriend() {
 		boolean created = false;
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 
-		if (!isLinphoneFriend()) {
+		if (!isFriend()) {
 			friend = LinphoneManager.getLc().createFriend();
 			friend.enableSubscribes(false);
 			friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 			if (isAndroidContact()) {
 				friend.setRefKey(getAndroidId());
 			}
-			((LinphoneFriendImpl)friend).setUserData(this);
+			friend.setUserData(this);
 			created = true;
 		}
-		if (isLinphoneFriend()) {
+		if (isFriend()) {
 			friend.edit();
 			friend.setName(fullName);
-			friend.setFamilyName(lastName);
-			friend.setGivenName(firstName);
+			friend.getVcard().setFamilyName(lastName);
+			friend.getVcard().setGivenName(firstName);
 			if (organization != null) {
-				friend.setOrganization(organization);
+				friend.getVcard().setOrganization(organization);
 			}
 
 			if (!created) {
-				for (LinphoneAddress address : friend.getAddresses()) {
+				for (Address address : friend.getAddresses()) {
 					friend.removeAddress(address);
 				}
 				for (String phone : friend.getPhoneNumbers()) {
@@ -438,13 +436,9 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			}
 			for (LinphoneNumberOrAddress noa : addresses) {
 				if (noa.isSIPAddress()) {
-					try {
-						LinphoneAddress addr = lc.interpretUrl(noa.getValue());
-						if (addr != null) {
-							friend.addAddress(addr);
-						}
-					} catch (LinphoneCoreException e) {
-						Log.e(e);
+					Address addr = lc.interpretUrl(noa.getValue());
+					if (addr != null) {
+						friend.addAddress(addr);
 					}
 				} else {
 					friend.addPhoneNumber(noa.getValue());
@@ -453,15 +447,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			friend.done();
 		}
 		if (created) {
-			try {
-				lc.addFriend(friend);
-			} catch (LinphoneCoreException e) {
-				Log.e(e);
-			}
+			lc.addFriend(friend);
 		}
 
 		if (!ContactsManager.getInstance().hasContactsAccess()) {
-			// This refresh is only needed if app has no contacts permission to refresh the list of LinphoneFriends.
+			// This refresh is only needed if app has no contacts permission to refresh the list of Friends.
 			// Otherwise contacts will be refreshed due to changes in native contact and the handler in ContactsManager
 			ContactsManager.getInstance().fetchContactsAsync();
 		}
@@ -491,14 +481,17 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			save();
 			ContactsManager.getInstance().delete(getAndroidId());
 		}
-		if (isLinphoneFriend()) {
+		if (isFriend()) {
 			deleteFriend();
 		}
 	}
 
 	public void deleteFriend() {
-		if (friend != null) {
-			LinphoneManager.getLcIfManagerNotDestroyedOrNull().removeFriend(friend);
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (friend != null && lc != null) {
+			for (FriendList list : lc.getFriendsLists()) {
+				list.removeFriend(friend);
+			}
 		}
 	}
 
@@ -516,18 +509,18 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact()) {
 				addNumberOrAddress(noa);
 			}
-		} else if (isLinphoneFriend()) {
+		} else if (isFriend()) {
 			fullName = friend.getName();
-			lastName = friend.getFamilyName();
-			firstName = friend.getGivenName();
+			lastName = friend.getVcard().getFamilyName();
+			firstName = friend.getVcard().getGivenName();
 			thumbnailUri = null;
 			photoUri = null;
 			hasSipAddress = friend.getAddress() != null;
-			organization = friend.getOrganization();
+			organization = friend.getVcard().getOrganization();
 
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (lc != null && lc.isVCardSupported()) {
-				for (LinphoneAddress addr : friend.getAddresses()) {
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null && lc.vcardSupported()) {
+				for (Address addr : friend.getAddresses()) {
 					if (addr != null) {
 						addNumberOrAddress(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
 					}
@@ -538,13 +531,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 					}
 				}
 			} else {
-				LinphoneAddress addr = friend.getAddress();
+				Address addr = friend.getAddress();
 				addNumberOrAddress(new LinphoneNumberOrAddress(addr.asStringUriOnly(), true));
 			}
 		}
 	}
 
-	public void createOrUpdateLinphoneFriendFromNativeContact() {
+	public void createOrUpdateFriendFromNativeContact() {
 		if (isAndroidContact()) {
 			createOrUpdateFriend();
 		}
@@ -554,14 +547,14 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return androidId != null;
 	}
 
-	public boolean isLinphoneFriend() {
+	public boolean isFriend() {
 		return friend != null;
 	}
 
-	public boolean isInLinphoneFriendList() {
+	public boolean isInFriendList() {
 		if (friend == null) return false;
 		for (LinphoneNumberOrAddress noa : addresses) {
-			PresenceModel pm = friend.getPresenceModelForUri(noa.getValue());
+			PresenceModel pm = friend.getPresenceModelForUriOrTel(noa.getValue());
 			if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
 				return true;
 			}
@@ -569,16 +562,16 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return false;
 	}
 
-	public String getPresenceModelForUri(String uri) {
-		if (friend != null && friend.getPresenceModelForUri(uri) != null) {
-			return friend.getPresenceModelForUri(uri).getContact();
+	public String getPresenceModelForUriOrTel(String uri) {
+		if (friend != null && friend.getPresenceModelForUriOrTel(uri) != null) {
+			return friend.getPresenceModelForUriOrTel(uri).getContact();
 		}
 		return null;
 	}
 
-	public void setFriend(LinphoneFriend f) {
+	public void setFriend(Friend f) {
 		friend = f;
-		((LinphoneFriendImpl)friend).setUserData(this);
+		friend.setUserData(this);
 	}
 
 	public void getAndroidIds() {
@@ -592,7 +585,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		if (ContactsManager.getInstance().hasContactsAccess()) {
 			return createAndroidContact();
 		}
-		return createLinphoneFriend();
+		return createFriend();
 	}
 
 	private Uri getContactThumbnailPictureUri() {
@@ -703,14 +696,14 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return contact;
 	}
 
-	private static LinphoneContact createLinphoneFriend() {
+	private static LinphoneContact createFriend() {
 		LinphoneContact contact = new LinphoneContact();
-		LinphoneFriend friend = LinphoneManager.getLc().createFriend();
+		Friend friend = LinphoneManager.getLc().createFriend();
 		// Disable subscribes for now
 		friend.enableSubscribes(false);
 		friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 		contact.friend = friend;
-		((LinphoneFriendImpl)friend).setUserData(contact);
+		friend.setUserData(contact);
 		return contact;
 	}
 

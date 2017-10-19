@@ -1,7 +1,7 @@
 package org.linphone;
 /*
 StatusFragment.java
-Copyright (C) 2012  Belledonne Communications, Grenoble, France
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,15 +18,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 import org.linphone.assistant.AssistantActivity;
-import org.linphone.core.CallDirection;
-import org.linphone.core.LinphoneCall;
-import org.linphone.core.LinphoneContent;
-import org.linphone.core.LinphoneCore;
-import org.linphone.core.LinphoneCore.MediaEncryption;
-import org.linphone.core.LinphoneCore.RegistrationState;
-import org.linphone.core.LinphoneCoreListenerBase;
-import org.linphone.core.LinphoneEvent;
-import org.linphone.core.LinphoneProxyConfig;
+import org.linphone.core.Call.Dir;
+import org.linphone.core.Call;
+import org.linphone.core.Content;
+import org.linphone.core.Core;
+import org.linphone.core.Core.MediaEncryption;
+import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.core.Event;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 
 import android.app.Activity;
@@ -48,16 +48,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * @author Sylvain Berfini
- */
 public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, voicemailCount;
 	private ImageView statusLed, callQuality, encryption, menu, voicemail;
 	private Runnable mCallQualityUpdater;
 	private boolean isInCall, isAttached = false, isZrtpAsk;
-	private LinphoneCoreListenerBase mListener;
+	private CoreListenerStub mListener;
 	private Dialog ZRTPdialog = null;
 	private int mDisplayedQuality = -1;
 
@@ -77,9 +74,9 @@ public class StatusFragment extends Fragment {
 		// We create it once to not delay the first display
 		populateSliderContent();
 
-		mListener = new LinphoneCoreListenerBase(){
+		mListener = new CoreListenerStub(){
 			@Override
-			public void registrationState(final LinphoneCore lc, final LinphoneProxyConfig proxy, final LinphoneCore.RegistrationState state, String smessage) {
+			public void onRegistrationStateChanged(final Core lc, final ProxyConfig proxy, final Core.RegistrationState state, String smessage) {
 				if (!isAttached || !LinphoneService.isReady()) {
 					return;
 				}
@@ -110,15 +107,15 @@ public class StatusFragment extends Fragment {
 			}
 
 			@Override
-			public void notifyReceived(LinphoneCore lc, LinphoneEvent ev, String eventName, LinphoneContent content) {
+			public void onNotifyReceived(Core lc, Event ev, String eventName, Content content) {
 
 				if(!content.getType().equals("application")) return;
 				if(!content.getSubtype().equals("simple-message-summary")) return;
 
-				if (content.getData() == null) return;
+				if (content.getSize() == 0) return;
 
 				int unreadCount = -1;
-				String data = content.getDataAsString();
+				String data = content.getStringBuffer();
 				String[] voiceMail = data.split("voice-message: ");
 				final String[] intToParse = voiceMail[1].split("/",0);
 
@@ -152,14 +149,14 @@ public class StatusFragment extends Fragment {
         return view;
     }
 
-	public void setLinphoneCoreListener() {
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+	public void setCoreListener() {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
 
-			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			ProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
-				mListener.registrationState(lc, lpc, lpc.getState(), null);
+				mListener.onRegistrationStateChanged(lc, lpc, lpc.getState(), null);
 			}
 		}
 	}
@@ -177,7 +174,7 @@ public class StatusFragment extends Fragment {
 			voicemailCount.setVisibility(View.GONE);
 
 			if (isInCall && isAttached) {
-				//LinphoneCall call = LinphoneManager.getLc().getCurrentCall();
+				//Call call = LinphoneManager.getLc().getCurrentCall();
 				//initCallStatsRefresher(call, callStats);
 			} else if (!isInCall) {
 				voicemailCount.setVisibility(View.VISIBLE);
@@ -201,15 +198,15 @@ public class StatusFragment extends Fragment {
 		menu.setEnabled(enabled);
 	}
 
-	private int getStatusIconResource(LinphoneCore.RegistrationState state, boolean isDefaultAccount) {
+	private int getStatusIconResource(Core.RegistrationState state, boolean isDefaultAccount) {
 		try {
-			LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			boolean defaultAccountConnected = (isDefaultAccount && lc != null && lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().isRegistered()) || !isDefaultAccount;
-			if (state == RegistrationState.RegistrationOk && defaultAccountConnected) {
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			boolean defaultAccountConnected = (isDefaultAccount && lc != null && lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().getState() == RegistrationState.Ok) || !isDefaultAccount;
+			if (state == RegistrationState.Ok && defaultAccountConnected) {
 				return R.drawable.led_connected;
-			} else if (state == RegistrationState.RegistrationProgress) {
+			} else if (state == RegistrationState.Progress) {
 				return R.drawable.led_inprogress;
-			} else if (state == RegistrationState.RegistrationFailed) {
+			} else if (state == RegistrationState.Failed) {
 				return R.drawable.led_error;
 			} else {
 				return R.drawable.led_disconnected;
@@ -221,7 +218,7 @@ public class StatusFragment extends Fragment {
 		return R.drawable.led_disconnected;
 	}
 
-	private String getStatusIconText(LinphoneCore.RegistrationState state) {
+	private String getStatusIconText(Core.RegistrationState state) {
 		Context context = getActivity();
 		if (!isAttached && LinphoneActivity.isInstanciated())
 			context = LinphoneActivity.instance();
@@ -229,11 +226,11 @@ public class StatusFragment extends Fragment {
 			context = LinphoneService.instance();
 
 		try {
-			if (state == RegistrationState.RegistrationOk && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().isRegistered()) {
+			if (state == RegistrationState.Ok && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().getState() == RegistrationState.Ok) {
 				return context.getString(R.string.status_connected);
-			} else if (state == RegistrationState.RegistrationProgress) {
+			} else if (state == RegistrationState.Progress) {
 				return context.getString(R.string.status_in_progress);
-			} else if (state == RegistrationState.RegistrationFailed) {
+			} else if (state == RegistrationState.Failed) {
 				return context.getString(R.string.status_error);
 			} else {
 				return context.getString(R.string.status_not_connected);
@@ -249,7 +246,7 @@ public class StatusFragment extends Fragment {
 	private void startCallQuality() {
 		callQuality.setVisibility(View.VISIBLE);
 		refreshHandler.postDelayed(mCallQualityUpdater = new Runnable() {
-			LinphoneCall mCurrentCall = LinphoneManager.getLc()
+			Call mCurrentCall = LinphoneManager.getLc()
 					.getCurrentCall();
 
 			public void run() {
@@ -300,19 +297,19 @@ public class StatusFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.addListener(mListener);
-			LinphoneProxyConfig lpc = lc.getDefaultProxyConfig();
+			ProxyConfig lpc = lc.getDefaultProxyConfig();
 			if (lpc != null) {
-				mListener.registrationState(lc, lpc, lpc.getState(), null);
+				mListener.onRegistrationStateChanged(lc, lpc, lpc.getState(), null);
 			}
 
-			LinphoneCall call = lc.getCurrentCall();
+			Call call = lc.getCurrentCall();
 			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 				if (call != null) {
 					startCallQuality();
-					refreshStatusItems(call, call.getCurrentParams().getVideoEnabled());
+					refreshStatusItems(call, call.getCurrentParams().videoEnabled());
 				}
 				menu.setVisibility(View.INVISIBLE);
 				encryption.setVisibility(View.VISIBLE);
@@ -337,7 +334,7 @@ public class StatusFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 
-		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
 		}
@@ -348,7 +345,7 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
-	public void refreshStatusItems(final LinphoneCall call, boolean isVideoEnabled) {
+	public void refreshStatusItems(final Call call, boolean isVideoEnabled) {
 		if (call != null) {
 			voicemailCount.setVisibility(View.GONE);
 			MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
@@ -359,9 +356,9 @@ public class StatusFragment extends Fragment {
 				//background.setVisibility(View.VISIBLE);
 			}
 
-			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.isAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
+			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
 				encryption.setImageResource(R.drawable.security_ok);
-			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.isAuthenticationTokenVerified()) {
+			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
 				encryption.setImageResource(R.drawable.security_pending);
 			} else {
 				encryption.setImageResource(R.drawable.security_ko);
@@ -380,7 +377,7 @@ public class StatusFragment extends Fragment {
 		}
 	}
 
-	public void showZRTPDialog(final LinphoneCall call) {
+	public void showZRTPDialog(final Call call) {
 		if (getActivity() == null) {
 			Log.w("Can't display ZRTP popup, no Activity");
 			return;
@@ -408,7 +405,7 @@ public class StatusFragment extends Fragment {
 			String zrtpToRead, zrtpToListen;
 			isZrtpAsk = true;
 
-			if (call.getDirection().equals(CallDirection.Incoming)) {
+			if (call.getDir().equals(Call.Dir.Incoming)) {
 				zrtpToRead = token.substring(0,2);
 				zrtpToListen = token.substring(2);
 			} else {
