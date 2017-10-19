@@ -50,3 +50,4 @@ WORK
 google-services.json
 gradle.properties
 .*clang*
+linphone.iml
