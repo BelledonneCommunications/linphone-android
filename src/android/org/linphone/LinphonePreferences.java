@@ -362,7 +362,9 @@ public class LinphonePreferences {
 			if (tempExpire != null) {
 				try {
 					prxCfg.setExpires(Integer.parseInt(tempExpire));
-				} catch (NumberFormatException nfe) { }
+				} catch (NumberFormatException nfe) {
+					throw new LinphoneCoreException(nfe);
+				}
 			}
 
 			prxCfg.enableAvpf(tempAvpfEnabled);

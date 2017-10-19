@@ -365,9 +365,6 @@ private static AssistantActivity instance;
 
 			proxyConfig.setIdentity(addr.asString());
 
-			if (LinphonePreferences.instance() != null)
-				proxyConfig.setContactUriParameters(LinphonePreferences.instance().getPushNotificationRegistrationID());
-
 			if (accountCreator.getPhoneNumber() != null && accountCreator.getPhoneNumber().length() > 0)
 				proxyConfig.setDialPrefix(accountCreator.getPrefix(accountCreator.getPhoneNumber()));
 
@@ -387,6 +384,9 @@ private static AssistantActivity instance;
 			lc.addAuthInfo(authInfo);
 
 			lc.setDefaultProxyConfig(proxyConfig);
+
+			if (LinphonePreferences.instance() != null)
+				LinphonePreferences.instance().setPushNotificationEnabled(true);
 
             if (ContactsManager.getInstance() != null)
                 ContactsManager.getInstance().fetchContactsAsync();
