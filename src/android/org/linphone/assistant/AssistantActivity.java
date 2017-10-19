@@ -169,7 +169,7 @@ private static AssistantActivity instance;
 							if (getResources().getBoolean(R.bool.use_phone_number_validation)
 									&& cfg.getDomain().equals(getString(R.string.default_domain))
 									&& LinphoneManager.getLc().getDefaultProxyConfig() != null) {
-								accountCreator.isAccountUsed();
+								loadAccountCreator(cfg).isAccountUsed();
 							} else {
 								success();
 							}
@@ -223,6 +223,27 @@ private static AssistantActivity instance;
 
 	public void updateStatusFragment(StatusFragment fragment) {
 		status = fragment;
+	}
+
+	private LinphoneAccountCreator loadAccountCreator(LinphoneProxyConfig cfg) {
+		LinphoneAccountCreator accountCreator =
+				LinphoneCoreFactory.instance().createAccountCreator(
+						LinphoneManager.getLc(),
+						LinphonePreferences.instance().getXmlrpcUrl());
+		LinphoneProxyConfig cfgTab[] = LinphoneManager.getLc().getProxyConfigList();
+		accountCreator.setListener(this);
+		int n = -1;
+		for (int i = 0 ; i < cfgTab.length ; i++) {
+			if (cfgTab[i].equals(cfg)) {
+				n = i;
+				break;
+			}
+		}
+		if (n >= 0) {
+			accountCreator.setDomain(mPrefs.getAccountDomain(n));
+			accountCreator.setUsername(mPrefs.getAccountUsername(n));
+		}
+		return accountCreator;
 	}
 
 	private void initUI() {
