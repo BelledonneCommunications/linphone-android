@@ -21,13 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import junit.framework.Assert;
 
-import org.linphone.CallActivity;
-import org.linphone.CallIncomingActivity;
-import org.linphone.CallOutgoingActivity;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneManager;
+import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.LinphoneCall;
-import org.linphone.mediastream.Log;
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.core.PayloadType;
@@ -35,13 +33,9 @@ import org.linphone.core.PayloadType;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.View;
 
 import static android.test.TouchUtils.dragViewToX;
-import static android.view.Gravity.CENTER_HORIZONTAL;
-import static android.view.Gravity.CENTER_VERTICAL;
 
 public class CallsVideo extends SampleTest {
 

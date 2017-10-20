@@ -23,7 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import org.linphone.LinphonePreferences;
-import org.linphone.UIThreadDispatcher;
+import org.linphone.LinphoneUtils;
 
 
 public class FirebaseIdService extends FirebaseInstanceIdService {
@@ -38,7 +38,7 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(final String refreshedToken) {
         android.util.Log.i("FirebaseIdService", "[Push Notification] Send token to server: " + refreshedToken);
-        UIThreadDispatcher.dispatch(new Runnable() {
+        LinphoneUtils.dispatchOnUIThread(new Runnable() {
             @Override
             public void run() {
                 LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);

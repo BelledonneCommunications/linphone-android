@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import org.linphone.LinphoneLauncherActivity;
+import org.linphone.activities.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
@@ -189,7 +189,7 @@ public class RemoteProvisioningActivity extends Activity {
 
 	private void goToLinphoneActivity() {
 		if (LinphoneService.isReady()) {
-			LinphoneService.instance().setActivityToLaunchOnIncomingReceived("org.linphone.LinphoneLauncherActivity");
+			LinphoneService.instance().setActivityToLaunchOnIncomingReceived("org.linphone.activities.LinphoneLauncherActivity");
 			//finish(); // To prevent the user to come back to this page using back button
 			startActivity(new Intent().setClass(this, LinphoneLauncherActivity.class));
 		} else {

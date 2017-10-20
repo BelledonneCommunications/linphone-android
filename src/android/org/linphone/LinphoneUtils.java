@@ -35,6 +35,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
@@ -49,8 +51,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import org.linphone.contacts.ContactsManager;
 import org.linphone.core.DialPlan;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
@@ -58,7 +60,6 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
@@ -97,8 +98,15 @@ import static android.view.View.VISIBLE;
  */
 public final class LinphoneUtils {
 	private static Context context = null;
+	private static Handler mHandler = new Handler(Looper.getMainLooper());
 
-	private LinphoneUtils(){}
+	private LinphoneUtils() {
+
+	}
+
+	public static void dispatchOnUIThread(Runnable r) {
+		mHandler.post(r);
+	}
 
 	//private static final String sipAddressRegExp = "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
 	//private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";

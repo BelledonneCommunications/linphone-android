@@ -26,9 +26,9 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.UIThreadDispatcher;
-import static android.content.Intent.ACTION_MAIN;
+import org.linphone.LinphoneUtils;
 
+import static android.content.Intent.ACTION_MAIN;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
     public FirebaseMessaging() {
@@ -41,7 +41,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         if (!LinphoneService.isReady()) {
             startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
         } else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-            UIThreadDispatcher.dispatch(new Runnable(){
+            LinphoneUtils.dispatchOnUIThread(new Runnable(){
                 @Override
                 public void run() {
                     if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0){

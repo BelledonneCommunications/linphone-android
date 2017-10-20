@@ -72,9 +72,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.assistant.AssistantActivity;
+import org.linphone.call.CallManager;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreatorListener;
-import org.linphone.core.Call.Dir;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
@@ -103,8 +108,6 @@ import org.linphone.core.Event;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.InfoMessage;
-import org.linphone.core.Participant;
-import org.linphone.core.PresenceActivity;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.OpenH264DownloadHelperListener;
@@ -123,14 +126,18 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.core.tools.H264Helper;
 import org.linphone.core.tools.OpenH264DownloadHelper;
+import org.linphone.receivers.BluetoothManager;
+import org.linphone.receivers.DozeReceiver;
+import org.linphone.receivers.HookReceiver;
+import org.linphone.receivers.KeepAliveReceiver;
+import org.linphone.receivers.NetworkManager;
+import org.linphone.receivers.OutgoingCallReceiver;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -840,7 +847,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
-					UIThreadDispatcher.dispatch(new Runnable() {
+					LinphoneUtils.dispatchOnUIThread(new Runnable() {
 						@Override
 						public void run() {
 							if (mLc != null) {
@@ -888,16 +895,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	private synchronized void initLiblinphone(Core lc) throws CoreException {
 		mLc = lc;
-
-
-		PreferencesMigrator prefMigrator = new PreferencesMigrator(mServiceContext);
-		prefMigrator.migrateRemoteProvisioningUriIfNeeded();
-		prefMigrator.migrateSharingServerUrlIfNeeded();
-		prefMigrator.doPresenceMigrationIfNeeded();
-
-		if (prefMigrator.isMigrationNeeded()) {
-			prefMigrator.doMigration();
-		}
 
 		mLc.setZrtpSecretsFile(basePath + "/zrtp_secrets");
 
@@ -981,22 +978,22 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		callGsmON = false;
 	}
 
-	protected void setHandsetMode(Boolean on){
-		if(mLc.isIncomingInvitePending() && on){
+	public void setHandsetMode(Boolean on){
+		if (mLc.isIncomingInvitePending() && on) {
 			handsetON = true;
 			mLc.acceptCall(mLc.getCurrentCall());
 			LinphoneActivity.instance().startIncallActivity(mLc.getCurrentCall());
-		}else if(on && CallActivity.isInstanciated()){
+		} else if(on && CallActivity.isInstanciated()) {
 			handsetON = true;
 			CallActivity.instance().setSpeakerEnabled(true);
 			CallActivity.instance().refreshInCallActions();
-		}else if (!on){
+		} else if (!on) {
 			handsetON = false;
 			LinphoneManager.getInstance().terminateCall();
 		}
 	}
 
-	protected boolean isHansetModeOn(){
+	public boolean isHansetModeOn(){
 		return handsetON;
 	}
 
@@ -1832,26 +1829,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	public void setCallGsmON(boolean on) {
 		callGsmON = on;
-	}
-
-	@SuppressWarnings("serial")
-	public static class ConfigException extends LinphoneException {
-
-		public ConfigException() {
-			super();
-		}
-
-		public ConfigException(String detailMessage, Throwable throwable) {
-			super(detailMessage, throwable);
-		}
-
-		public ConfigException(String detailMessage) {
-			super(detailMessage);
-		}
-
-		public ConfigException(Throwable throwable) {
-			super(throwable);
-		}
 	}
 
 	@Override

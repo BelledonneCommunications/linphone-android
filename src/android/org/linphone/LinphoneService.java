@@ -23,7 +23,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -31,13 +34,13 @@ import org.linphone.core.CallLog.CallStatus;
 import org.linphone.core.Core;
 import org.linphone.core.Core.GlobalState;
 import org.linphone.core.Core.RegistrationState;
-import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
+import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.ui.LinphoneOverlay;
 
 import android.annotation.TargetApi;

@@ -70,7 +70,7 @@
         android:label="@string/app_name"
         android:largeHeap="true">
         <activity
-            android:name=".LinphoneLauncherActivity"
+            android:name=".activities.LinphoneLauncherActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:label="@string/app_name"
@@ -121,7 +121,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LinphoneActivity"
+            android:name=".activities.LinphoneActivity"
             android:launchMode="singleTask"
             android:theme="@style/NoTitle">
             <intent-filter>
@@ -129,7 +129,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CallIncomingActivity"
+            android:name=".call.CallIncomingActivity"
             android:launchMode="singleTop"
             android:theme="@style/NoTitle">
             <intent-filter>
@@ -137,7 +137,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CallOutgoingActivity"
+            android:name=".call.CallOutgoingActivity"
             android:launchMode="singleTop"
             android:theme="@style/NoTitle">
             <intent-filter>
@@ -145,7 +145,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CallActivity"
+            android:name=".call.CallActivity"
             android:launchMode="singleTop"
             android:theme="@style/FullScreen">
             <intent-filter>
@@ -228,16 +228,16 @@
                 android:resource="@xml/authenticator"/>
         </service>
 
-        <receiver android:name=".NetworkManager">
+        <receiver android:name=".receivers.NetworkManager">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".BluetoothManager"
+            android:name=".receivers.BluetoothManager"
             android:enabled="false">
         </receiver>
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -245,22 +245,22 @@
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".PhoneStateChangedReceiver">
+        <receiver android:name=".receivers.PhoneStateChangedReceiver">
             <intent-filter android:priority="999">
                 <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
         </receiver>
 
         <!-- This one needs to be registered from application -->
-        <receiver android:name=".KeepAliveReceiver"/>
+        <receiver android:name=".receivers.KeepAliveReceiver"/>
 
-        <receiver android:name=".HookReceiver" >
+        <receiver android:name=".receivers.HookReceiver" >
             <intent-filter>
                 <action android:name="com.base.module.phone.HOOKEVENT" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".OutgoingCallReceiver"
+        <receiver android:name=".receivers.OutgoingCallReceiver"
                   android:permission="android.permission.PROCESS_OUTGOING_CALLS">
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
@@ -286,7 +286,7 @@
         -->
 
         <receiver
-            android:name=".AccountEnableReceiver"
+            android:name=".receivers.AccountEnableReceiver"
             android:permission="android.permission.USE_SIP">
             <intent-filter>
                 <action android:name="org.linphone.intent.ACCOUNTACTIVATE"/>
@@ -314,49 +314,7 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <activity
-            android:name=".tutorials.TutorialLauncherActivity"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".tutorials.TutorialBuddyStatusActivity"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".tutorials.TutorialChatRoomActivity"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".tutorials.TutorialHelloWorldActivity"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".tutorials.TutorialRegistrationActivity"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".tutorials.TutorialCardDavSync"
-            android:theme="@style/NoTitle">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-        <activity android:name=".LinphoneGenericActivity">
-        </activity>
+        <activity android:name=".activities.LinphoneGenericActivity"/>
+
     </application>
 </manifest>

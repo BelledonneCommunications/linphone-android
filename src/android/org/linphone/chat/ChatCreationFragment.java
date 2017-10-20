@@ -35,12 +35,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.linphone.ContactAddress;
-import org.linphone.ContactSelectView;
-import org.linphone.ContactsUpdatedListener;
-import org.linphone.LinphoneActivity;
+import org.linphone.contacts.ContactAddress;
+import org.linphone.ui.ContactSelectView;
+import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.R;
-import org.linphone.SearchContactsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

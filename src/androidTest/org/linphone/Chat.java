@@ -21,11 +21,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import junit.framework.Assert;
 
-import org.linphone.LinphoneActivity;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.LinphoneChatMessage;
 import org.linphone.core.LinphoneChatMessage.State;
 import org.linphone.core.LinphoneChatRoom;
-import org.linphone.mediastream.Log;
 
 import com.robotium.solo.Solo;
 
@@ -33,7 +32,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.EditText;
-import android.widget.AutoCompleteTextView;
 
 public class Chat extends SampleTest {
 

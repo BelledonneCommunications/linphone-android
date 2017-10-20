@@ -43,11 +43,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.linphone.ContactsManager;
-import org.linphone.ContactsUpdatedListener;
-import org.linphone.FragmentsAvailable;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneContact;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.activities.LinphoneActivity;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
@@ -60,7 +60,7 @@ import org.linphone.core.CoreListenerStub;
 
 import java.util.List;
 
-import static org.linphone.FragmentsAvailable.CHAT_LIST;
+import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
 public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener, ChatUpdatedListener {
 	private LayoutInflater mInflater;

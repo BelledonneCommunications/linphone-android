@@ -26,6 +26,8 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import org.linphone.activities.LinphoneActivity;
+
 public class Contacts extends SampleTest {
 
 	@MediumTest

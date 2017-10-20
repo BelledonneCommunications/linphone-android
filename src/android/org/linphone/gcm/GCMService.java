@@ -23,9 +23,10 @@ import static android.content.Intent.ACTION_MAIN;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.UIThreadDispatcher;
 import org.linphone.core.Factory;
+import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
@@ -43,7 +44,7 @@ public class GCMService extends GCMBaseIntentService {
 	private void initLogger(Context context) {
 		LinphonePreferences.instance().setContext(context);
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		Factory.instance().enableLogCollection(isDebugEnabled);
+		Factory.instance().enableLogCollection(isDebugEnabled ? LogCollectionState.Enabled : LogCollectionState.Disabled);
 		Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 	}
 
@@ -61,7 +62,7 @@ public class GCMService extends GCMBaseIntentService {
 		if (!LinphoneService.isReady()) {
 			context.startService(new Intent(ACTION_MAIN).setClass(context, LinphoneService.class));
 		} else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-			UIThreadDispatcher.dispatch(new Runnable(){
+			LinphoneUtils.dispatchOnUIThread(new Runnable(){
 				@Override
 				public void run() {
 					if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0){
@@ -77,7 +78,7 @@ public class GCMService extends GCMBaseIntentService {
 	protected void onRegistered(Context context, final String regId) {
 		initLogger(context);
 		Log.d("[Push Notification] Registered: " + regId);
-		UIThreadDispatcher.dispatch(new Runnable(){
+		LinphoneUtils.dispatchOnUIThread(new Runnable(){
 			@Override
 			public void run() {
 				LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
@@ -90,7 +91,7 @@ public class GCMService extends GCMBaseIntentService {
 		initLogger(context);
 		Log.w("[Push Notification] Unregistered: " + regId);
 
-		UIThreadDispatcher.dispatch(new Runnable(){
+		LinphoneUtils.dispatchOnUIThread(new Runnable(){
 			@Override
 			public void run() {
 				LinphonePreferences.instance().setPushNotificationRegistrationID(null);

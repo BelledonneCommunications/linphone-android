@@ -8,7 +8,7 @@
 
 	<fragment
 		android:id="@+id/status"
-		android:name="org.linphone.StatusFragment"
+		android:name="org.linphone.fragments.StatusFragment"
 		tools:layout="@layout/status"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"/>

@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.linphone.LinphoneActivity;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
@@ -31,7 +31,6 @@ import org.linphone.core.DialPlan;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.AccountCreator.Status;
-import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 
 import android.accounts.Account;

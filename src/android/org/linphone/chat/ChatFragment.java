@@ -76,15 +76,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.linphone.ContactsManager;
-import org.linphone.ContactsUpdatedListener;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneContact;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.activities.LinphoneActivity;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.SearchContactsListAdapter;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Buffer;
@@ -115,7 +114,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static org.linphone.FragmentsAvailable.CHAT;
+import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
 interface ChatUpdatedListener {
 	void onChatUpdated();

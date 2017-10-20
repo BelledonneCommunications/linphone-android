@@ -133,11 +133,7 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 			t.tcp = -1;
 			mLc.setSignalingTransportPorts(t);
 
-			try {
-				initFromConf(mLc);
-			} catch (LinphoneException e) {
-				Log.w("no config ready yet");
-			}
+			initFromConf(mLc);
 
 			TimerTask lTask = new TimerTask() {
 				@Override
@@ -170,7 +166,7 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 		LinphoneManager.getLc().setVideoDevice(camId);
 	}
 
-	public void initFromConf(LinphoneCore mLc) throws LinphoneConfigException, LinphoneCoreException {
+	public void initFromConf(LinphoneCore mLc) {
 		LinphoneCoreFactory.instance().setDebugMode(true, "LinphoneTester");
 
 		initAccounts(mLc);

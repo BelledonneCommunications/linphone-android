@@ -22,6 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import junit.framework.Assert;
 
 
+import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.LinphoneCall;
 import org.linphone.core.LinphoneCoreException;
 import org.linphone.mediastream.Log;
