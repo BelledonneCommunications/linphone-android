@@ -423,7 +423,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			ChatMessage[] history = chatRoom.getHistory(1);
 			ChatMessage msg = history[0];
 
-			if(msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppdata() != null ){
+			if (msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppdata() != null) {
 				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 				time = msg.getTime();
 				holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
@@ -437,13 +437,17 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 
 			holder.displayName.setSelected(true); // For animation
-			holder.displayName.setText(contact == null ? LinphoneUtils.getAddressDisplayName(address) : contact.getFullName());
-
-
-			if (contact != null) {
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+			if (chatRoom.canHandleParticipants()) {
+				holder.displayName.setText(chatRoom.getSubject());
+				holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
 			} else {
-				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+				if (contact != null) {
+					holder.displayName.setText(contact.getFullName());
+					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+				} else {
+					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(address));
+					holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+				}
 			}
 
 			if (unreadMessagesCount > 0) {
@@ -482,7 +486,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 						}
 					}
 				});
-				if(chatList.isItemChecked(position)) {
+				if (chatList.isItemChecked(position)) {
 					holder.select.setChecked(true);
 				} else {
 					holder.select.setChecked(false);
