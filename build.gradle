@@ -57,8 +57,7 @@ if (firebaseEnable()) {
 }
 
 //// Submodule Dir /////
-def submoduleDir = ['submodules/mediastreamer2/java/src',
-                    'liblinphone-sdk/android-arm64/share/linphonej/java/']
+def submoduleDir = ['submodules/mediastreamer2/java/src']
 ////////////////////////
 
 ///// Exclude Files /////
@@ -116,7 +115,7 @@ android {
     main {
       manifest.srcFile 'AndroidManifest.xml'
       def srcDirs = submoduleDir
-      srcDirs.addAll(['src/android'])
+      srcDirs.addAll(['src/linphone-wrapper', 'src/android'])
       java.srcDirs = srcDirs
       resources.srcDirs = srcDirs
       aidl.srcDirs = srcDirs
