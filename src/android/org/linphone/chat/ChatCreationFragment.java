@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone;
+package org.linphone.chat;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -35,12 +35,15 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.linphone.ContactAddress;
+import org.linphone.ContactSelectView;
+import org.linphone.ContactsUpdatedListener;
+import org.linphone.LinphoneActivity;
+import org.linphone.R;
+import org.linphone.SearchContactsListAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by Erwan Croze.
- */
 
 public class ChatCreationFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
@@ -62,39 +65,40 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.create_chat, container, false);
-		contactsSelected = new ArrayList<ContactAddress>();
+		contactsSelected = new ArrayList<>();
 
-		noSipContact = (TextView) view.findViewById(R.id.noSipContact);
-		noContact = (TextView) view.findViewById(R.id.noContact);
+		noSipContact = view.findViewById(R.id.noSipContact);
+		noContact = view.findViewById(R.id.noContact);
 
-		contactsList = (ListView) view.findViewById(R.id.contactsList);
-		contactsSelectedLayout = (LinearLayout) view.findViewById(R.id.contactsSelected);
-		contactsSelectLayout = (HorizontalScrollView) view.findViewById(R.id.layoutContactsSelected);
+		contactsList = view.findViewById(R.id.contactsList);
+		contactsSelectedLayout = view.findViewById(R.id.contactsSelected);
+		contactsSelectLayout = view.findViewById(R.id.layoutContactsSelected);
 
-		allContacts = (ImageView) view.findViewById(R.id.all_contacts);
+		allContacts = view.findViewById(R.id.all_contacts);
 		allContacts.setOnClickListener(this);
 
-		linphoneContacts = (ImageView) view.findViewById(R.id.linphone_contacts);
+		linphoneContacts = view.findViewById(R.id.linphone_contacts);
 		linphoneContacts.setOnClickListener(this);
 
 		allContactsSelected = view.findViewById(R.id.all_contacts_select);
 		linphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
 
-		back = (ImageView) view.findViewById(R.id.back);
+		back = view.findViewById(R.id.back);
 		back.setOnClickListener(this);
 
-		next = (ImageView) view.findViewById(R.id.next);
+		next = view.findViewById(R.id.next);
 		next.setOnClickListener(this);
+		next.setEnabled(false);
 
-		clearSearchField = (ImageView) view.findViewById(R.id.clearSearchField);
+		clearSearchField = view.findViewById(R.id.clearSearchField);
 		clearSearchField.setOnClickListener(this);
 
-		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
+		contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
 		contactsFetchInProgress.setVisibility(View.VISIBLE);
 
 		searchAdapter = new SearchContactsListAdapter(null, mInflater, contactsFetchInProgress);
 
-		searchField = (EditText) view.findViewById(R.id.searchField);
+		searchField = view.findViewById(R.id.searchField);
 		searchField.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -102,8 +106,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			}
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-			                              int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
 			}
 
@@ -157,9 +160,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		if (contactsSelected.size() > 0) {
 			contactsSelectLayout.setVisibility(View.VISIBLE);
 			contactsSelectLayout.invalidate();
-			next.setImageResource(R.drawable.next);
+			next.setEnabled(true);
 		} else {
-			next.setImageResource(R.drawable.dialer_alt_next);
+			next.setEnabled(false);
 			contactsSelectLayout.setVisibility(View.GONE);
 		}
 	}
@@ -174,14 +177,16 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private void updateContactsClick(ContactAddress ca, List<ContactAddress> caSelectedList) {
 		ca.setSelect((getIndexOfCa(ca, caSelectedList) == -1));
-		if(ca.isSelect()) {
+		if (ca.isSelect()) {
 			ContactSelectView csv = new ContactSelectView(LinphoneActivity.instance());
 			csv.setListener(this);
 			csv.setContactName(ca);
 			contactsSelected.add(ca);
 			View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
 			((TextView)viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
-			viewContact.findViewById(R.id.contactChatDelete).setOnClickListener(this);
+			View removeContact = viewContact.findViewById(R.id.contactChatDelete);
+			removeContact.setTag(ca);
+			removeContact.setOnClickListener(this);
 			viewContact.setOnClickListener(this);
 			ca.setView(viewContact);
 			contactsSelectedLayout.addView(viewContact);
@@ -197,13 +202,10 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		contactsSelectedLayout.invalidate();
 	}
 
-	private void removeContactFromView(View v) {
-		for (ContactAddress ca : contactsSelected) {
-			if (ca.getView() == v) {
-				ca.setSelect(false);
-				updateContactsClick(ca, searchAdapter.getContactsSelectedList());
-			}
-		}
+	private void removeContactFromSelection(ContactAddress ca) {
+		updateContactsClick(ca, searchAdapter.getContactsSelectedList());
+		updateList();
+		updateListSelected();
 	}
 
 	@Override
@@ -250,9 +252,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		} else if (id == R.id.clearSearchField) {
 			searchField.setText("");
 			searchAdapter.searchContacts("", contactsList);
-		} else if (id == R.id.deleteContact) {
-			//TODO
-			removeContactFromView(view);
+		} else if (id == R.id.contactChatDelete) {
+			ContactAddress ca = (ContactAddress) view.getTag();
+			removeContactFromSelection(ca);
 		}
 	}
 
@@ -260,9 +262,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 		// Get contact
 		ContactAddress ca = searchAdapter.getContacts().get(i);
-		updateContactsClick(ca, searchAdapter.getContactsSelectedList());
-		updateList();
-		updateListSelected();
+		removeContactFromSelection(ca);
 	}
 
 	@Override

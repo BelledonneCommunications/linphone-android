@@ -74,7 +74,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		this.listener = listener;
 	}
 
-	SearchContactsListAdapter(List<ContactAddress> contactsList, LayoutInflater inflater, ProgressBar pB) {
+	public SearchContactsListAdapter(List<ContactAddress> contactsList, LayoutInflater inflater, ProgressBar pB) {
 		mInflater = inflater;
 		progressBar = pB;
 		setContactsSelectedList(null);

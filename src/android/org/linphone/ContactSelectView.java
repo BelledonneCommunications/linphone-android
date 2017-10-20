@@ -1,11 +1,5 @@
 package org.linphone;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 /*
 ContactSelectView.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -25,15 +19,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-/**
- * Created by Erwan Croze.
- */
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ContactSelectView extends View {
 	private TextView contactName;
 	private ImageView deleteContact;
 
-	ContactSelectView(Context context) {
+	public ContactSelectView(Context context) {
 		super(context);
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE );

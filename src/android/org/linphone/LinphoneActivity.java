@@ -65,8 +65,10 @@ import android.widget.Toast;
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
+import org.linphone.chat.ChatCreationFragment;
+import org.linphone.chat.ChatFragment;
+import org.linphone.chat.ChatListFragment;
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.Call.Dir;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
 import org.linphone.core.Call;
@@ -77,7 +79,6 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.Core.RegistrationState;
-import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
@@ -144,7 +145,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	public String mAddressWaitingToBeCalled;
 
-	static final boolean isInstanciated() {
+	static public final boolean isInstanciated() {
 		return instance != null;
 	}
 

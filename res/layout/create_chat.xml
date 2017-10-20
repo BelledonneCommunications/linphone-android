@@ -70,7 +70,7 @@
 
 		<ImageView
 			android:id="@+id/next"
-			android:src="@drawable/dialer_alt_next"
+			android:src="@drawable/chat_room_creation_next"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"

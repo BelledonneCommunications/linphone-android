@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.chat;
 
 /*
 ChatFragment.java
@@ -76,6 +76,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.linphone.ContactsManager;
+import org.linphone.ContactsUpdatedListener;
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneContact;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
+import org.linphone.LinphoneUtils;
+import org.linphone.R;
+import org.linphone.SearchContactsListAdapter;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Buffer;

@@ -1,7 +1,7 @@
 package org.linphone;
 
 /*
-ChatGroupCreationFragment.java
+ContactsUpdatedListener.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -19,13 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
-import android.view.View;
-
-public class ChatGroupCreationFragment extends Fragment implements View.OnClickListener {
-
-	@Override
-	public void onClick(View view) {
-
-	}
+public interface ContactsUpdatedListener {
+    void onContactsUpdated();
 }

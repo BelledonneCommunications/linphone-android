@@ -53,10 +53,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-interface ContactsUpdatedListener {
-	void onContactsUpdated();
-}
-
 public class ContactsManager extends ContentObserver {
 	private static ContactsManager instance;
 

@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.chat;
 
 /*
 ChatListFragment.java
@@ -43,14 +43,20 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.linphone.ContactsManager;
+import org.linphone.ContactsUpdatedListener;
+import org.linphone.FragmentsAvailable;
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneContact;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphoneUtils;
+import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.mediastream.Log;
 
 import java.util.List;
 
