@@ -189,6 +189,7 @@
     <string name="displayed">Read</string>
     <string name="delivered">Delivered</string>
     <string name="resend">Resend</string>
+    <string name="error_opening_file">An error occurs when opening this file.</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

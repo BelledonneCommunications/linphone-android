@@ -782,7 +782,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void sendImageMessage(String path, int imageSize) {
 		if(path.contains("file://")) {
-			path = path.substring(7);
+			path = path.split("file:///", 2)[1];
 		}
 		if(path.contains("%20")) {
 			path = path.replace("%20", "-");
@@ -815,7 +815,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 
 	private void sendFileSharingMessage(String path, int size ) {
 		if (path.contains("file://")) {
-			path = path.substring(7);
+			path = path.split("file:///", 2)[1];
 		} else if (path.contains("com.android.contacts/contacts/")) {
 			path = getCVSPathFromLookupUri(path).toString();
 		} else if (path.contains("vcard") || path.contains("vcf")) {
@@ -1676,20 +1676,29 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 								contentUri = Uri.parse(imageUri);
 							} else {
 								file = new File(imageUri);
-								contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+								try {
+									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+								}catch(java.lang.IllegalArgumentException e){
+									Log.e("Something wrong happend : "+e);
+									contentUri = null;
+								}
 							}
 							String type = null;
-							String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
-							if (extension != null) {
-								type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+							if(contentUri != null) {
+								String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+								if (extension != null) {
+									type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+								}
+								if (type != null) {
+									intent.setDataAndType(contentUri, type);
+								} else {
+									intent.setDataAndType(contentUri, "*/*");
+								}
+								intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+								context.startActivity(intent);
+							}else{
+								LinphoneActivity.instance().displayCustomToast(getString(R.string.error_opening_file), Toast.LENGTH_LONG);
 							}
-							if(type != null) {
-								intent.setDataAndType(contentUri, type);
-							}else {
-								intent.setDataAndType(contentUri, "*/*");
-							}
-							intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-							context.startActivity(intent);
 						}
 					});
 				}
@@ -1901,20 +1910,29 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 									contentUri = Uri.parse(imageUri);
 								} else {
 									file = new File(imageUri);
-									contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+									try {
+										contentUri = FileProvider.getUriForFile(getActivity(), "org.linphone.provider", file);
+									}catch(java.lang.IllegalArgumentException e){
+										Log.e("Something wrong happend : "+e);
+										contentUri = null;
+									}
 								}
 							    String type = null;
-                                String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
-                                if (extension != null) {
-                                    type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                                }
-                                if(type != null) {
-                                    intent.setDataAndType(contentUri, type);
-                                }else {
-                                    intent.setDataAndType(contentUri, "*/*");
-                                }
-                                intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-								context.startActivity(intent);
+								if(contentUri != null) {
+									String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+									if (extension != null) {
+										type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+									}
+									if (type != null) {
+										intent.setDataAndType(contentUri, type);
+									} else {
+										intent.setDataAndType(contentUri, "*/*");
+									}
+									intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+									context.startActivity(intent);
+								}else{
+									LinphoneActivity.instance().displayCustomToast(getString(R.string.error_opening_file), Toast.LENGTH_LONG);
+								}
 							}
 						});
 					}
