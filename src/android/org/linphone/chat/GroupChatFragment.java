@@ -127,7 +127,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().displayChatGroupInfos(participants, true, /*TODO*/ false);
+				LinphoneActivity.instance().displayChatGroupInfos(participants, mChatRoom.getSubject(), true, /*TODO*/ false);
 			}
 		});
 

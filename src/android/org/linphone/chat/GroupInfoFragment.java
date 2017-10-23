@@ -58,6 +58,7 @@ public class GroupInfoFragment extends Fragment {
 		mParticipants =  (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 		mIsAlreadyCreatedGroup = getArguments().getBoolean("isAlreadyCreatedGroup");
 		mIsEditionEnabled = getArguments().getBoolean("isEditionEnabled");
+		String subject = getArguments().getString("subject");
 
 		mParticipantsList = view.findViewById(R.id.chat_room_participants);
 		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled);
@@ -73,24 +74,6 @@ public class GroupInfoFragment extends Fragment {
 		});
 		mParticipantsList.setAdapter(mAdapter);
 
-		mSubjectField = view.findViewById(R.id.subjectField);
-		mSubjectField.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable editable) {
-				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 1);
-			}
-		});
-
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -100,13 +83,6 @@ public class GroupInfoFragment extends Fragment {
 		});
 
 		mConfirmButton = view.findViewById(R.id.confirm);
-		mConfirmButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				//TODO
-			}
-		});
-		mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
 
 		mLeaveGroupButton = view.findViewById(R.id.leaveGroupLayout);
 		mLeaveGroupButton.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +105,35 @@ public class GroupInfoFragment extends Fragment {
 			}
 		});
 
+		mSubjectField = view.findViewById(R.id.subjectField);
+		mSubjectField.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 1);
+			}
+		});
+		mSubjectField.setText(subject);
+
+		mConfirmButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//TODO
+			}
+		});
+		mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
+
 		if (!mIsEditionEnabled) {
+			mSubjectField.setEnabled(false);
 			mConfirmButton.setVisibility(View.INVISIBLE);
 			mAddParticipantsButton.setVisibility(View.GONE);
 		}
