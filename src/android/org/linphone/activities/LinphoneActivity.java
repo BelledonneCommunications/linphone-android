@@ -699,9 +699,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, Address lAddress) {
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", sipUri);
-		if(message != null)
+		if (message != null)
 			extras.putString("messageDraft", message);
-		if(fileUri != null)
+		if (fileUri != null)
 			extras.putString("fileSharedUri", fileUri);
 		if (sipUri != null && lAddress.getDisplayName() != null) {
 			extras.putString("DisplayName", displayName);
@@ -711,7 +711,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if(sipUri == null && message == null && fileUri == null) {
 			changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
 		} else {
-			changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+			ChatRoom room = LinphoneManager.getLc().getChatRoom(lAddress);
+			if (room.canHandleParticipants()) {
+				changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+			} else {
+				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
+			}
 		}
 	}
 
@@ -725,7 +730,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		String displayName = null;
 
 		Address lAddress = null;
-		if(sipUri != null) {
+		if (sipUri != null) {
 			lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
 			if (lAddress == null) return;
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lAddress);

@@ -33,7 +33,7 @@ public class GroupChatFragment extends Fragment implements View.OnClickListener 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
-		View view = inflater.inflate(R.layout.create_chat, container, false);
+		View view = inflater.inflate(R.layout.chat, container, false);
 
 		return view;
 	}

@@ -123,15 +123,9 @@ interface ChatUpdatedListener {
 public class ChatFragment extends Fragment implements OnClickListener, ChatMessageListener, ContactsUpdatedListener {
 	private static final int ADD_PHOTO = 1337;
 	private static final int MENU_DELETE_MESSAGE = 0;
-	private static final int MENU_PICTURE_SMALL = 2;
-	private static final int MENU_PICTURE_MEDIUM = 3;
-	private static final int MENU_PICTURE_LARGE = 4;
-	private static final int MENU_PICTURE_REAL = 5;
 	private static final int MENU_COPY_TEXT = 6;
 	private static final int MENU_RESEND_MESSAGE = 7;
 	private static final int SIZE_SMALL = 500;
-	private static final int SIZE_MEDIUM = 1000;
-	private static final int SIZE_LARGE = 1500;
 	private static final int SIZE_MAX = 2048;
 
 	private ChatRoom chatRoom;
@@ -150,14 +144,13 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 	private boolean isEditMode = false;
 	private LinphoneContact contact;
 	private Uri imageToUploadUri;
-	private String filePathToUpload;
 	private TextWatcher textWatcher;
 	private ViewTreeObserver.OnGlobalLayoutListener keyboardListener;
 	private ChatMessageAdapter adapter;
 
 	private CoreListenerStub mListener;
 	private boolean newChatConversation = false;
-	private String fileSharedUri, fileAlreadySharedUri;
+	private String fileSharedUri;
 
 	private static ArrayList<ChatUpdatedListener> ChatUpdatedListeners;
 
@@ -473,16 +466,8 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		if (v.getId() == R.id.send_picture) {
-			menu.add(0, MENU_PICTURE_SMALL, 0, getString(R.string.share_picture_size_small));
-			menu.add(0, MENU_PICTURE_MEDIUM, 0, getString(R.string.share_picture_size_medium));
-			menu.add(0, MENU_PICTURE_LARGE, 0, getString(R.string.share_picture_size_large));
-			//			Not a good idea, very big pictures cause Out of Memory exceptions, slow display, ...
-			//			menu.add(0, MENU_PICTURE_REAL, 0, getString(R.string.share_picture_size_real));
-		} else {
-			menu.add(v.getId(), MENU_DELETE_MESSAGE, 0, getString(R.string.delete));
-			menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
-		}
+		menu.add(v.getId(), MENU_DELETE_MESSAGE, 0, getString(R.string.delete));
+		menu.add(v.getId(), MENU_COPY_TEXT, 0, getString(R.string.copy_text));
 
 	/*	ChatMessage msg = getMessageForId(v.getId());
 		if (msg != null && msg.getStatus() == ChatMessage.State.NotDelivered) {
@@ -517,18 +502,6 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 				resendMessage(item.getGroupId());
 				break;
 			*/
-			case MENU_PICTURE_SMALL:
-				sendImageMessage(filePathToUpload, SIZE_SMALL);
-				break;
-			case MENU_PICTURE_MEDIUM:
-				sendImageMessage(filePathToUpload, SIZE_MEDIUM);
-				break;
-			case MENU_PICTURE_LARGE:
-				sendImageMessage(filePathToUpload, SIZE_LARGE);
-				break;
-			case MENU_PICTURE_REAL:
-				sendImageMessage(filePathToUpload, SIZE_MAX);
-				break;
 		}
 		return true;
 	}
