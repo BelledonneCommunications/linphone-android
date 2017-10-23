@@ -40,10 +40,12 @@ public class GroupInfoAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
+    private boolean mHideAdminFeatures;
 
-    public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items) {
+    public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures) {
         mInflater = inflater;
         mItems = items;
+        mHideAdminFeatures = hideAdminFeatures;
     }
 
     @Override
@@ -73,6 +75,7 @@ public class GroupInfoAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.name);
         ImageView avatar = view.findViewById(R.id.contact_picture);
         ImageView delete = view.findViewById(R.id.delete);
+        LinearLayout adminLayout = view.findViewById(R.id.adminLayout);
         final LinearLayout isAdmin = view.findViewById(R.id.isAdminLayout);
         final LinearLayout isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
 
@@ -111,6 +114,11 @@ public class GroupInfoAdapter extends BaseAdapter {
                 ca.setAdmin(true);
             }
         });
+
+        if (mHideAdminFeatures) {
+            delete.setVisibility(View.GONE);
+            adminLayout.setVisibility(View.GONE);
+        }
 
         return view;
     }

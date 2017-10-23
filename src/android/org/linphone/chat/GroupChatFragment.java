@@ -28,14 +28,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
@@ -129,7 +127,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().displayChatGroupInfos(participants, true);
+				LinphoneActivity.instance().displayChatGroupInfos(participants, true, /*TODO*/ false);
 			}
 		});
 

@@ -44,6 +44,7 @@ public class GroupInfoFragment extends Fragment {
 	private LinearLayout mLeaveGroupButton;
 	private GroupInfoAdapter mAdapter;
 	private boolean mIsAlreadyCreatedGroup;
+	private boolean mIsEditionEnabled;
 	private ArrayList<ContactAddress> mParticipants;
 
 	@Override
@@ -56,9 +57,10 @@ public class GroupInfoFragment extends Fragment {
 		}
 		mParticipants =  (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 		mIsAlreadyCreatedGroup = getArguments().getBoolean("isAlreadyCreatedGroup");
+		mIsEditionEnabled = getArguments().getBoolean("isEditionEnabled");
 
 		mParticipantsList = view.findViewById(R.id.chat_room_participants);
-		mAdapter = new GroupInfoAdapter(mInflater, mParticipants);
+		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled);
 		mAdapter.setOnDeleteClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -127,7 +129,12 @@ public class GroupInfoFragment extends Fragment {
 			}
 		});
 
-		//TODO handle contacts removal
+		if (!mIsEditionEnabled) {
+			mConfirmButton.setVisibility(View.INVISIBLE);
+			mAddParticipantsButton.setVisibility(View.GONE);
+		}
+
+		//TODO Handle back button issue
 
 		return view;
 	}

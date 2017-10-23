@@ -716,9 +716,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
-	public void displayChatGroupInfos(ArrayList<ContactAddress> contacts, boolean isAlreadyCreatedGroup) {
+	public void displayChatGroupInfos(ArrayList<ContactAddress> contacts, boolean isAlreadyCreatedGroup, boolean isEditionEnabled) {
 		Bundle extras = new Bundle();
 		extras.putBoolean("isAlreadyCreatedGroup", isAlreadyCreatedGroup);
+		extras.putBoolean("isEditionEnabled", isEditionEnabled);
 		extras.putSerializable("ContactAddress", contacts);
 		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
 	}
