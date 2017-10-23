@@ -133,9 +133,9 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 	private EditText message;
 	private ImageView edit, selectAll, deselectAll, startCall, delete, sendImage, sendMessage, cancel;
 	private TextView contactName, remoteComposing;
-	private ImageView back, backToCall;
+	private ImageView back, backToCall, infos;
 	private EditText searchContactField;
-	private LinearLayout topBar, editList;
+	private LinearLayout topBar, editList, event;
 	private SearchContactsListAdapter searchAdapter;
 	private ListView messagesList, resultContactsSearch;
 	private LayoutInflater inflater;
@@ -210,6 +210,9 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 
 		startCall = (ImageView) view.findViewById(R.id.start_call);
 		startCall.setOnClickListener(this);
+
+		infos = view.findViewById(R.id.group_infos);
+		infos.setVisibility(View.GONE);
 
 		backToCall = (ImageView) view.findViewById(R.id.back_to_call);
 		backToCall.setOnClickListener(this);
@@ -1262,6 +1265,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 	class ChatMessageAdapter extends BaseAdapter {
 		private class ViewHolder implements ChatMessageListener {
 			public int id;
+			public LinearLayout eventLayout;
 			public RelativeLayout bubbleLayout;
 			public CheckBox delete;
 			public LinearLayout background;
@@ -1283,6 +1287,8 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 
 			public ViewHolder(View view) {
 				id = view.getId();
+
+				eventLayout = (LinearLayout) view.findViewById(R.id.event);
 				bubbleLayout = (RelativeLayout) view.findViewById(R.id.bubble);
 				delete = (CheckBox) view.findViewById(R.id.delete_message);
 				background = (LinearLayout) view.findViewById(R.id.background);
@@ -1421,6 +1427,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 			String externalBodyUrl = message.getExternalBodyUrl();
 			Content fileTransferContent = message.getFileTransferInformation();
 
+			holder.eventLayout.setVisibility(View.GONE);
 			holder.delete.setVisibility(View.GONE);
 			holder.messageText.setVisibility(View.GONE);
 			holder.messageImage.setVisibility(View.GONE);

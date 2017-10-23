@@ -43,6 +43,16 @@
 			android:padding="15dp"/>
 
 		<ImageView
+			android:id="@+id/group_infos"
+			android:src="@drawable/chat_room_group_infos"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_conversation_infos"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<ImageView
 			android:id="@+id/back_to_call"
 			android:src="@drawable/call_back"
 			android:background="@drawable/toolbar_button"

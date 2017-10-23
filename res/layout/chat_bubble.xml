@@ -3,12 +3,48 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 
-	<RelativeLayout
+	<LinearLayout
 		android:id="@+id/event"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical">
 
-	</RelativeLayout>
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_marginRight="10dp"
+			android:src="@drawable/event_gray"
+			android:scaleType="fitXY"/>
+
+		<TextView
+			android:id="@+id/event_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textStyle="italic"
+			android:text="Aujourd'hui"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text=" - "/>
+
+		<TextView
+			android:id="@+id/event_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Machin à ajouté Machine"/>
+
+		<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:layout_marginLeft="10dp"
+			android:src="@drawable/event_gray"
+			android:scaleType="fitXY"/>
+
+	</LinearLayout>
 
 	<RelativeLayout
 		android:id="@+id/bubble"

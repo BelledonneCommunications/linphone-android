@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import org.linphone.R;
 
@@ -28,12 +29,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 public class GroupChatFragment extends Fragment implements View.OnClickListener {
+	private ImageView call, infos;
+
 	private LayoutInflater mInflater;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat, container, false);
+
+		call = view.findViewById(R.id.start_call);
+		call.setVisibility(View.GONE);
+
+		infos = view.findViewById(R.id.group_infos);
+		infos.setVisibility(View.VISIBLE);
 
 		return view;
 	}

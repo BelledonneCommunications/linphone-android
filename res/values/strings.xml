@@ -491,4 +491,5 @@
     <string name="content_title_notification_service">Linphone Service</string>
     <string name="content_title_notification">Linphone Notification</string>
     <string name="content_description_conversation_subject">Group chat room subject</string>
+    <string name="content_description_conversation_infos">Group chat room infos</string>
 </resources>
