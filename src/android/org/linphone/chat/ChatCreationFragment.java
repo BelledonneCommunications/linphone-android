@@ -22,7 +22,9 @@ package org.linphone.chat;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.contacts.ContactAddress;
@@ -49,25 +52,25 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ListView contactsList;
 	private LinearLayout contactsSelectedLayout;
 	private HorizontalScrollView contactsSelectLayout;
-	private TextView noSipContact, noContact;
 	private List<ContactAddress> contactsSelected;
 	private ImageView allContacts, linphoneContacts;
 	private boolean onlyDisplayLinphoneContacts;
 	private View allContactsSelected, linphoneContactsSelected;
+	private RelativeLayout searchLayout, subjectLayout;
 	private ImageView clearSearchField;
-	private EditText searchField;
+	private EditText searchField, subjectField;
 	private ProgressBar contactsFetchInProgress;
 	private SearchContactsListAdapter searchAdapter;
-	private ImageView back, next;
+	private ImageView back, next, confirm;
+	private boolean displayChatGroupCreation;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		displayChatGroupCreation = false;
+
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.create_chat, container, false);
 		contactsSelected = new ArrayList<>();
-
-		noSipContact = view.findViewById(R.id.noSipContact);
-		noContact = view.findViewById(R.id.noContact);
 
 		contactsList = view.findViewById(R.id.contactsList);
 		contactsSelectedLayout = view.findViewById(R.id.contactsSelected);
@@ -88,6 +91,31 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		next = view.findViewById(R.id.next);
 		next.setOnClickListener(this);
 		next.setEnabled(false);
+
+		confirm = view.findViewById(R.id.confirm);
+		confirm.setOnClickListener(this);
+		confirm.setEnabled(false);
+
+		searchLayout = view.findViewById(R.id.layoutSearchField);
+
+		subjectLayout = view.findViewById(R.id.layoutSubjectField);
+		subjectField = view.findViewById(R.id.subjectField);
+		subjectField.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				confirm.setEnabled(subjectField.getText().length() > 0);
+			}
+		});
 
 		clearSearchField = view.findViewById(R.id.clearSearchField);
 		clearSearchField.setOnClickListener(this);
@@ -133,21 +161,51 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 		if (savedInstanceState != null ) {
 			onlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact");
-			if (onlyDisplayLinphoneContacts) {
-				allContactsSelected.setVisibility(View.INVISIBLE);
-				linphoneContactsSelected.setVisibility(View.VISIBLE);
-			} else {
-				allContactsSelected.setVisibility(View.VISIBLE);
-				linphoneContactsSelected.setVisibility(View.INVISIBLE);
-			}
 			updateList();
 		}
-
 		searchAdapter.setOnlySipContact(onlyDisplayLinphoneContacts);
-		allContacts.setEnabled(onlyDisplayLinphoneContacts);
-		linphoneContacts.setEnabled(!allContacts.isEnabled());
+
+		displayChatCreation();
 
 		return view;
+	}
+
+	private void displayChatGroupCreation() {
+		displayChatGroupCreation = true;
+		confirm.setVisibility(View.VISIBLE);
+		confirm.setEnabled(subjectField.getText().length() > 0);
+		next.setVisibility(View.GONE);
+
+		subjectLayout.setVisibility(View.VISIBLE);
+		contactsList.setVisibility(View.GONE);
+		searchLayout.setVisibility(View.GONE);
+		allContacts.setVisibility(View.INVISIBLE);
+		linphoneContacts.setVisibility(View.INVISIBLE);
+		allContactsSelected.setVisibility(View.INVISIBLE);
+		linphoneContactsSelected.setVisibility(View.INVISIBLE);
+	}
+
+	private void displayChatCreation() {
+		displayChatGroupCreation = false;
+		next.setVisibility(View.VISIBLE);
+		next.setEnabled(contactsSelected.size() > 0);
+		confirm.setVisibility(View.GONE);
+
+		subjectLayout.setVisibility(View.GONE);
+		contactsList.setVisibility(View.VISIBLE);
+		searchLayout.setVisibility(View.VISIBLE);
+		allContacts.setVisibility(View.VISIBLE);
+		linphoneContacts.setVisibility(View.VISIBLE);
+		if (onlyDisplayLinphoneContacts) {
+			allContactsSelected.setVisibility(View.INVISIBLE);
+			linphoneContactsSelected.setVisibility(View.VISIBLE);
+		} else {
+			allContactsSelected.setVisibility(View.VISIBLE);
+			linphoneContactsSelected.setVisibility(View.INVISIBLE);
+		}
+
+		allContacts.setEnabled(onlyDisplayLinphoneContacts);
+		linphoneContacts.setEnabled(!allContacts.isEnabled());
 	}
 
 	private void updateList() {
@@ -240,14 +298,19 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			allContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
 		} else if (id == R.id.back) {
-			getFragmentManager().popBackStackImmediate();
+			if (displayChatGroupCreation) {
+				displayChatCreation();
+			} else {
+				getFragmentManager().popBackStackImmediate();
+			}
 		} else if (id == R.id.next) {
-			//TODO aller selon le nombre de selectionner en chat ou en groupe
 			if (contactsSelected.size() == 1) {
 				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 			} else {
-
+				displayChatGroupCreation();
 			}
+		} else if (id == R.id.confirm) {
+			//TODO
 		} else if (id == R.id.clearSearchField) {
 			searchField.setText("");
 			searchAdapter.searchContacts("", contactsList);
@@ -259,7 +322,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-		// Get contact
 		ContactAddress ca = searchAdapter.getContacts().get(i);
 		removeContactFromSelection(ca);
 	}

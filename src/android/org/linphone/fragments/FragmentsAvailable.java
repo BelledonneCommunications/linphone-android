@@ -72,9 +72,9 @@ public enum FragmentsAvailable {
 			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
 
 		case CHAT:
-			return CHAT_LIST.isRightOf(fragment) || fragment == CHAT_LIST;
-
 		case CREATE_CHAT:
+		case GROUP_CHAT:
+		case INFO_GROUP_CHAT:
 			return CHAT_LIST.isRightOf(fragment) || fragment == CHAT_LIST;
 
 		default:

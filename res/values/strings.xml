@@ -191,6 +191,7 @@
     <string name="resend">Resend</string>
     <string name="conversation_information">Conversation Infos</string>
     <string name="administrator">Admin</string>
+    <string name="conversation_subject_hint">Name your group</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>
@@ -489,4 +490,5 @@
     <string name="content_description_exit_conference">Exit conference</string>
     <string name="content_title_notification_service">Linphone Service</string>
     <string name="content_title_notification">Linphone Notification</string>
+    <string name="content_description_conversation_subject">Group chat room subject</string>
 </resources>
