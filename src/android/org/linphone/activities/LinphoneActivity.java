@@ -78,7 +78,7 @@ import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.fragments.HistoryDetailFragment;
 import org.linphone.fragments.HistoryListFragment;
-import org.linphone.chat.InfoGroupChatFragment;
+import org.linphone.chat.GroupInfoFragment;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneManager.AddressType;
@@ -434,7 +434,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			fragment = new ChatCreationFragment();
 			break;
 		case INFO_GROUP_CHAT:
-			fragment = new InfoGroupChatFragment();
+			fragment = new GroupInfoFragment();
 			break;
 		case GROUP_CHAT:
 			fragment = new GroupChatFragment();
@@ -709,11 +709,18 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			extras.putString("PictureUri", pictureUri);
 			extras.putString("ThumbnailUri", thumbnailUri);
 		}
-		if(sipUri == null && message == null && fileUri == null) {
+		if (sipUri == null && message == null && fileUri == null) {
 			changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
 		} else {
 			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 		}
+	}
+
+	public void displayChatGroupInfos(ArrayList<ContactAddress> contacts, boolean isAlreadyCreatedGroup) {
+		Bundle extras = new Bundle();
+		extras.putBoolean("isAlreadyCreatedGroup", isAlreadyCreatedGroup);
+		extras.putSerializable("ContactAddress", contacts);
+		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
 	}
 
 	public void displayChat(String sipUri, String message, String fileUri) {

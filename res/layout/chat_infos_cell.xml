@@ -40,9 +40,9 @@
 
         </RelativeLayout>
 
-        <CheckBox
+        <ImageView
             android:id="@+id/delete"
-            android:button="@drawable/chat_group_delete"
+            android:src="@drawable/chat_group_delete"
             android:contentDescription="@string/content_description_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

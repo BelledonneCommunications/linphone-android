@@ -84,6 +84,7 @@
             android:text="@string/chat_room_participants" />
 
         <ImageView
+            android:id="@+id/addParticipants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -99,13 +100,12 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:divider="@color/colorE"
-        android:dividerHeight="1dp"
-        android:fastScrollAlwaysVisible="true"
-        android:fastScrollEnabled="true">
+        android:dividerHeight="1dp">
 
     </ListView>
 
     <LinearLayout
+        android:id="@+id/leaveGroupLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

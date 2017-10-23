@@ -52,7 +52,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ListView contactsList;
 	private LinearLayout contactsSelectedLayout;
 	private HorizontalScrollView contactsSelectLayout;
-	private List<ContactAddress> contactsSelected;
+	private ArrayList<ContactAddress> contactsSelected;
 	private ImageView allContacts, linphoneContacts;
 	private boolean onlyDisplayLinphoneContacts;
 	private View allContactsSelected, linphoneContactsSelected;
@@ -62,12 +62,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ProgressBar contactsFetchInProgress;
 	private SearchContactsListAdapter searchAdapter;
 	private ImageView back, next, confirm;
-	private boolean displayChatGroupCreation;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		displayChatGroupCreation = false;
-
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat_create, container, false);
 		contactsSelected = new ArrayList<>();
@@ -170,23 +167,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		return view;
 	}
 
-	private void displayChatGroupCreation() {
-		displayChatGroupCreation = true;
-		confirm.setVisibility(View.VISIBLE);
-		confirm.setEnabled(subjectField.getText().length() > 0);
-		next.setVisibility(View.GONE);
-
-		subjectLayout.setVisibility(View.VISIBLE);
-		contactsList.setVisibility(View.GONE);
-		searchLayout.setVisibility(View.GONE);
-		allContacts.setVisibility(View.INVISIBLE);
-		linphoneContacts.setVisibility(View.INVISIBLE);
-		allContactsSelected.setVisibility(View.INVISIBLE);
-		linphoneContactsSelected.setVisibility(View.INVISIBLE);
-	}
-
 	private void displayChatCreation() {
-		displayChatGroupCreation = false;
 		next.setVisibility(View.VISIBLE);
 		next.setEnabled(contactsSelected.size() > 0);
 		confirm.setVisibility(View.GONE);
@@ -298,20 +279,13 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			allContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
 		} else if (id == R.id.back) {
-			if (displayChatGroupCreation) {
-				displayChatCreation();
-			} else {
-				getFragmentManager().popBackStackImmediate();
-			}
+			getFragmentManager().popBackStackImmediate();
 		} else if (id == R.id.next) {
 			if (contactsSelected.size() == 1) {
 				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 			} else {
-				displayChatGroupCreation();
+				LinphoneActivity.instance().displayChatGroupInfos(contactsSelected, false);
 			}
-		} else if (id == R.id.confirm) {
-			//TODO get chatRoom URI
-			//LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 		} else if (id == R.id.clearSearchField) {
 			searchField.setText("");
 			searchAdapter.searchContacts("", contactsList);
