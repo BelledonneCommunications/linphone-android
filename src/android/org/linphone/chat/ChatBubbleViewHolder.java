@@ -67,24 +67,24 @@ public class ChatBubbleViewHolder implements ChatMessageListener {
         eventTime = view.findViewById(R.id.event_date);
         eventMessage = view.findViewById(R.id.event_text);
 
-        bubbleLayout = (RelativeLayout) view.findViewById(R.id.bubble);
-        delete = (CheckBox) view.findViewById(R.id.delete_message);
-        background = (LinearLayout) view.findViewById(R.id.background);
-        contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-        contactName = (TextView) view.findViewById(R.id.contact_header);
-        messageText = (TextView) view.findViewById(R.id.message);
-        messageImage = (ImageView) view.findViewById(R.id.image);
-        fileTransferLayout = (RelativeLayout) view.findViewById(R.id.file_transfer_layout);
-        fileTransferProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        fileTransferAction = (Button) view.findViewById(R.id.file_transfer_action);
-        messageStatus = (ImageView) view.findViewById(R.id.status);
-        messageSendingInProgress = (ProgressBar) view.findViewById(R.id.inprogress);
-        contactPictureMask = (ImageView) view.findViewById(R.id.mask);
-        imdmLayout = (LinearLayout) view.findViewById(R.id.imdmLayout);
-        imdmIcon = (ImageView) view.findViewById(R.id.imdmIcon);
-        imdmLabel = (TextView) view.findViewById(R.id.imdmText);
-        fileExtensionLabel = (TextView) view.findViewById(R.id.file_extension);
-        fileNameLabel = (TextView) view.findViewById(R.id.file_name);
+        bubbleLayout = view.findViewById(R.id.bubble);
+        delete = view.findViewById(R.id.delete_message);
+        background = view.findViewById(R.id.background);
+        contactPicture = view.findViewById(R.id.contact_picture);
+        contactName = view.findViewById(R.id.contact_header);
+        messageText = view.findViewById(R.id.message);
+        messageImage = view.findViewById(R.id.image);
+        fileTransferLayout = view.findViewById(R.id.file_transfer_layout);
+        fileTransferProgressBar = view.findViewById(R.id.progress_bar);
+        fileTransferAction = view.findViewById(R.id.file_transfer_action);
+        messageStatus = view.findViewById(R.id.status);
+        messageSendingInProgress = view.findViewById(R.id.inprogress);
+        contactPictureMask = view.findViewById(R.id.mask);
+        imdmLayout = view.findViewById(R.id.imdmLayout);
+        imdmIcon = view.findViewById(R.id.imdmIcon);
+        imdmLabel = view.findViewById(R.id.imdmText);
+        fileExtensionLabel = view.findViewById(R.id.file_extension);
+        fileNameLabel = view.findViewById(R.id.file_name);
     }
 
     @Override
