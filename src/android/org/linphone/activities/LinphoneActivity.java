@@ -65,6 +65,7 @@ import android.widget.Toast;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.contacts.ContactPicked;
 import org.linphone.fragments.AboutFragment;
 import org.linphone.fragments.AccountPreferencesFragment;
 import org.linphone.contacts.ContactAddress;
@@ -1908,8 +1909,4 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return data;
 	}
 
-}
-
-interface ContactPicked {
-	void setAddresGoToDialerAndCall(String number, String name, Uri photo);
 }
