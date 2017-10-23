@@ -69,7 +69,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		displayChatGroupCreation = false;
 
 		mInflater = inflater;
-		View view = inflater.inflate(R.layout.create_chat, container, false);
+		View view = inflater.inflate(R.layout.chat_create, container, false);
 		contactsSelected = new ArrayList<>();
 
 		contactsList = view.findViewById(R.id.contactsList);
