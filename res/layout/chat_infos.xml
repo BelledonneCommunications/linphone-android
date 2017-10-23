@@ -67,7 +67,7 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorG"
@@ -83,7 +83,15 @@
             android:textColor="@color/colorB"
             android:text="@string/chat_room_participants" />
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="10dp"
+            android:src="@drawable/chat_group_add"/>
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/chat_room_participants"

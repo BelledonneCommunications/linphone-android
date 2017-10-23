@@ -194,6 +194,7 @@
     <string name="administrator">Admin</string>
     <string name="conversation_subject_hint">Name your group</string>
     <string name="chat_room_infos_title">Infos</string>
+    <string name="chat_room_infos_admin">Admin</string>
     <string name="chat_room_participants">Participants</string>
     <string name="chat_room_leave_group">Quitter le groupe</string>
 
