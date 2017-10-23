@@ -66,7 +66,7 @@ public class GroupInfoFragment extends Fragment {
 				mParticipants.remove(ca);
 				mAdapter.updateDataSet(mParticipants);
 				mParticipantsList.setAdapter(mAdapter);
-				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 1);
+				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
 			}
 		});
 		mParticipantsList.setAdapter(mAdapter);
@@ -104,7 +104,7 @@ public class GroupInfoFragment extends Fragment {
 				//TODO
 			}
 		});
-		mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 1);
+		mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
 
 		mLeaveGroupButton = view.findViewById(R.id.leaveGroupLayout);
 		mLeaveGroupButton.setOnClickListener(new View.OnClickListener() {

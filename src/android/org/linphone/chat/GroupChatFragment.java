@@ -38,6 +38,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -111,7 +112,24 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mGroupInfosButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				if (mChatRoom == null) return;
+				ArrayList<ContactAddress> participants = new ArrayList<ContactAddress>();
+				for (Participant p : mChatRoom.getParticipants()) {
+					Address a = p.getAddress();
+					LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(a);
+					if (c == null) {
+						c = new LinphoneContact();
+						String displayName = a.getDisplayName();
+						if (displayName == null || displayName.isEmpty()) {
+							c.setFullName(a.getUsername());
+						} else {
+							c.setFullName(displayName);
+						}
+					}
+					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
+					participants.add(ca);
+				}
+				LinphoneActivity.instance().displayChatGroupInfos(participants, true);
 			}
 		});
 
