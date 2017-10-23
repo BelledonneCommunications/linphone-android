@@ -370,6 +370,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		newProxyConfig = true;
 	}
 
+	public void popBackStack() {
+		getFragmentManager().popBackStackImmediate();
+		currentFragment = FragmentsAvailable.EMPTY;
+	}
+
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
 		changeCurrentFragment(newFragmentType, extras, false);
 	}

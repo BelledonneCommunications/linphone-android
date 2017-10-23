@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class GroupInfoFragment extends Fragment {
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				getFragmentManager().popBackStackImmediate();
+				LinphoneActivity.instance().popBackStack();
 			}
 		});
 
@@ -100,7 +101,7 @@ public class GroupInfoFragment extends Fragment {
 				if (mIsAlreadyCreatedGroup) {
 					//TODO
 				} else {
-					getFragmentManager().popBackStackImmediate();
+					LinphoneActivity.instance().popBackStack();
 				}
 			}
 		});

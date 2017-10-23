@@ -86,7 +86,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				getFragmentManager().popBackStackImmediate();
+				LinphoneActivity.instance().popBackStack();
 			}
 		});
 

@@ -39,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.contacts.ContactAddress;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.receivers.ContactsUpdatedListener;
 import org.linphone.activities.LinphoneActivity;
@@ -279,7 +280,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			allContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
 		} else if (id == R.id.back) {
-			getFragmentManager().popBackStackImmediate();
+			LinphoneActivity.instance().popBackStack();
 		} else if (id == R.id.next) {
 			if (contactsSelected.size() == 1) {
 				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
