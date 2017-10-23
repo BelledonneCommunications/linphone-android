@@ -711,12 +711,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if(sipUri == null && message == null && fileUri == null) {
 			changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
 		} else {
-			ChatRoom room = LinphoneManager.getLc().getChatRoom(lAddress);
-			if (room.canHandleParticipants()) {
-				changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
-			} else {
-				changeCurrentFragment(FragmentsAvailable.CHAT, extras);
-			}
+			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 		}
 	}
 

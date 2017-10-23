@@ -1,5 +1,5 @@
 /*
-InfoGroupChatFragment.java
+GroupChatFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -19,27 +19,40 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 
-import org.linphone.R;
+import org.linphone.core.ChatMessage;
 
-public class InfoGroupChatFragment extends Fragment implements View.OnClickListener {
-	private LayoutInflater mInflater;
+import java.util.ArrayList;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mInflater = inflater;
-		View view = inflater.inflate(R.layout.create_chat, container, false);
+public class ChatEventsAdapter extends BaseAdapter {
+    private ArrayList<ChatMessage> mHistory;
+    private Context mContext;
 
-		return view;
-	}
+    public ChatEventsAdapter() {
 
-	@Override
-	public void onClick(View view) {
+    }
 
-	}
+    @Override
+    public int getCount() {
+        return 0;
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        return null;
+    }
 }

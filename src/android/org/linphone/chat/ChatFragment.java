@@ -1263,72 +1263,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 	}
 
 	class ChatMessageAdapter extends BaseAdapter {
-		private class ViewHolder implements ChatMessageListener {
-			public int id;
-			public LinearLayout eventLayout;
-			public RelativeLayout bubbleLayout;
-			public CheckBox delete;
-			public LinearLayout background;
-			public ImageView contactPicture;
-			public TextView contactName;
-			public TextView messageText;
-			public ImageView messageImage;
-			public RelativeLayout fileTransferLayout;
-			public ProgressBar fileTransferProgressBar;
-			public Button fileTransferAction;
-			public ImageView messageStatus;
-			public ProgressBar messageSendingInProgress;
-			public ImageView contactPictureMask;
-			public LinearLayout imdmLayout;
-			public ImageView imdmIcon;
-			public TextView imdmLabel;
-			public TextView fileExtensionLabel;
-			public TextView fileNameLabel;
-
-			public ViewHolder(View view) {
-				id = view.getId();
-
-				eventLayout = (LinearLayout) view.findViewById(R.id.event);
-				bubbleLayout = (RelativeLayout) view.findViewById(R.id.bubble);
-				delete = (CheckBox) view.findViewById(R.id.delete_message);
-				background = (LinearLayout) view.findViewById(R.id.background);
-				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-				contactName = (TextView) view.findViewById(R.id.contact_header);
-				messageText = (TextView) view.findViewById(R.id.message);
-				messageImage = (ImageView) view.findViewById(R.id.image);
-				fileTransferLayout = (RelativeLayout) view.findViewById(R.id.file_transfer_layout);
-				fileTransferProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-				fileTransferAction = (Button) view.findViewById(R.id.file_transfer_action);
-				messageStatus = (ImageView) view.findViewById(R.id.status);
-				messageSendingInProgress = (ProgressBar) view.findViewById(R.id.inprogress);
-				contactPictureMask = (ImageView) view.findViewById(R.id.mask);
-				imdmLayout = (LinearLayout) view.findViewById(R.id.imdmLayout);
-				imdmIcon = (ImageView) view.findViewById(R.id.imdmIcon);
-				imdmLabel = (TextView) view.findViewById(R.id.imdmText);
-				fileExtensionLabel = (TextView) view.findViewById(R.id.file_extension);
-				fileNameLabel = (TextView) view.findViewById(R.id.file_name);
-			}
-
-			@Override
-			public void onMsgStateChanged(ChatMessage msg, State state) {
-
-			}
-
-			@Override
-			public void onFileTransferRecv(ChatMessage msg, Content content, Buffer buffer) {
-
-			}
-
-			@Override
-			public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
-				return null;
-			}
-
-			@Override
-			public void onFileTransferProgressIndication(ChatMessage msg, Content content, int offset, int total) {
-				if (msg.getStorageId() == id) fileTransferProgressBar.setProgress(offset * 100 / total);
-			}
-		}
+		private
 
 		ArrayList<ChatMessage> history;
 		Context context;
@@ -1382,16 +1317,16 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			final ChatMessage message = history.get(position);
 			View view = null;
-			final ViewHolder holder;
+			final ChatBubbleViewHolder holder;
 			boolean sameMessage = false;
 
 			if (convertView != null) {
 				view = convertView;
-				holder = (ViewHolder) view.getTag();
+				holder = (ChatBubbleViewHolder) view.getTag();
 				//LinphoneManager.removeListener(holder);
 			} else {
 				view = LayoutInflater.from(context).inflate(R.layout.chat_bubble, null);
-				holder = new ViewHolder(view);
+				holder = new ChatBubbleViewHolder(view);
 				view.setTag(holder);
 			}
 

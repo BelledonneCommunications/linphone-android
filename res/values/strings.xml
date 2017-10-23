@@ -170,6 +170,7 @@
     <string name="delete_conversation">Do you want to delete selected conversation?</string>
     <string name="delete_message">Do you want to delete selected message?</string>
     <string name="remote_composing">Remote is writing...</string>
+    <string name="remote_composing_2">%s is writing...</string>
     <string name="share_picture_size_small">Small</string>
     <string name="share_picture_size_medium">Medium</string>
     <string name="share_picture_size_large">Large</string>
