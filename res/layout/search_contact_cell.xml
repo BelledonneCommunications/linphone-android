@@ -7,6 +7,33 @@
 	android:gravity="center_vertical"
 	android:orientation="vertical">
 
+	<RelativeLayout
+		android:id="@+id/avatar_layout"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:gravity="center">
+
+		<ImageView
+			android:id="@+id/contact_picture"
+			android:src="@drawable/avatar"
+			android:contentDescription="@string/content_description_contact_picture"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:adjustViewBounds="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="5dp"/>
+
+		<ImageView
+			android:id="@+id/mask"
+			android:src="@drawable/avatar_mask"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:adjustViewBounds="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="5dp"/>
+
+	</RelativeLayout>
+
 	<LinearLayout
 		android:id="@+id/layout"
 		android:background="@drawable/list_selector"
@@ -15,7 +42,8 @@
 		android:gravity="center_vertical"
 		android:orientation="vertical"
 		android:layout_toLeftOf="@+id/contact_linphone"
-		android:layout_toStartOf="@+id/contact_linphone"
+		android:layout_toRightOf="@id/avatar_layout"
+		android:layout_marginLeft="5dp"
 		android:layout_alignParentTop="true"
 		android:layout_alignParentBottom="true">
 
@@ -34,13 +62,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
+			android:ellipsize="end"
 			android:gravity="bottom|left"
 			android:lines="1"/>
 
 	</LinearLayout>
 
 	<ImageView
-		android:id="@+id/contact_linphone"
+		android:id="@id/contact_linphone"
 		android:layout_width="30dp"
 		android:layout_height="30dp"
 		android:layout_gravity="right"

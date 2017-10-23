@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
+package org.linphone.contacts;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +28,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.linphone.contacts.ContactAddress;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
 
 import java.util.ArrayList;
@@ -46,12 +45,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		public TextView address;
 		public ImageView linphoneContact;
 		public ImageView isSelect;
+		public ImageView avatar;
 
 		public ViewHolder(View view) {
-			name = (TextView) view.findViewById(R.id.contact_name);
-			address = (TextView) view.findViewById(R.id.contact_address);
-			linphoneContact = (ImageView) view.findViewById(R.id.contact_linphone);
-			isSelect = (ImageView) view.findViewById(R.id.contact_is_select);
+			name = view.findViewById(R.id.contact_name);
+			address = view.findViewById(R.id.contact_address);
+			linphoneContact = view.findViewById(R.id.contact_linphone);
+			isSelect = view.findViewById(R.id.contact_is_select);
+			avatar = view.findViewById(R.id.contact_picture);
 		}
 	}
 
@@ -102,7 +103,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 	public void setContactsSelectedList(List<ContactAddress> contactsList) {
 		if (contactsList == null) {
-			contactsSelected = new ArrayList<ContactAddress>();
+			contactsSelected = new ArrayList<>();
 		} else {
 			contactsSelected = contactsList;
 		}
@@ -200,6 +201,12 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 		final String a = contact.getAddress();
 		LinphoneContact c = contact.getContact();
+
+		if (c.hasPhoto()) {
+			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
+		} else {
+			holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+		}
 
 		holder.name.setText(c.getFullName());
 		holder.address.setText(a);

@@ -57,7 +57,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 	private TextView mRoomLabel, mRemoteComposing;
 	private EditText mMessageTextToSend;
 	private LayoutInflater mInflater;
-	private Bitmap defaultContactAvatar;
 	private ListView mChatEventsList;
 
 	private ChatEventsAdapter mMessagesAdapter;
@@ -76,8 +75,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 			mRemoteSipUri = getArguments().getString("SipUri");
 			mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
 		}
-
-		defaultContactAvatar = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.chat_picture_over);
 
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat, container, false);

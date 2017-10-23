@@ -22,9 +22,7 @@ package org.linphone.chat;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.contacts.ContactAddress;
-import org.linphone.mediastream.Log;
+import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.receivers.ContactsUpdatedListener;
 import org.linphone.activities.LinphoneActivity;
