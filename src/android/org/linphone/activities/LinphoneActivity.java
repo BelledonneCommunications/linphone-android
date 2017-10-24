@@ -721,6 +721,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
+	public void goToChatCreator(ArrayList<ContactAddress> selectedContacts) {
+		Bundle extras = new Bundle();
+		extras.putSerializable("selectedContacts", selectedContacts);
+		changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
+	}
+
 	public void goToChat(String sipUri) {
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", sipUri);

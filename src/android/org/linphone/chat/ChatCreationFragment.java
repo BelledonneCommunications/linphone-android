@@ -66,7 +66,12 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat_create, container, false);
-		contactsSelected = new ArrayList<>();
+
+		if (getArguments() != null && getArguments().getSerializable("selectedContacts") != null) {
+			contactsSelected = (ArrayList<ContactAddress>) getArguments().getSerializable("selectedContacts");
+		} else {
+			contactsSelected = new ArrayList<>();
+		}
 
 		contactsList = view.findViewById(R.id.contactsList);
 		contactsSelectedLayout = view.findViewById(R.id.contactsSelected);
@@ -186,6 +191,14 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 		allContacts.setEnabled(onlyDisplayLinphoneContacts);
 		linphoneContacts.setEnabled(!allContacts.isEnabled());
+
+		if (contactsSelected.size() > 0) {
+			searchAdapter.setContactsSelectedList(contactsSelected);
+			for (ContactAddress ca : contactsSelected) {
+				addSelectedContactAddress(ca);
+			}
+			contactsSelectLayout.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void updateList() {
@@ -212,6 +225,22 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		return -1;
 	}
 
+	private void addSelectedContactAddress(ContactAddress ca) {
+		View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
+		if (ca.getContact() != null) {
+			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
+		} else {
+			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddress());
+		}
+		View removeContact = viewContact.findViewById(R.id.contactChatDelete);
+		removeContact.setTag(ca);
+		removeContact.setOnClickListener(this);
+		viewContact.setOnClickListener(this);
+		ca.setView(viewContact);
+		contactsSelectedLayout.addView(viewContact);
+		contactsSelectedLayout.invalidate();
+	}
+
 	private void updateContactsClick(ContactAddress ca, List<ContactAddress> caSelectedList) {
 		ca.setSelect((getIndexOfCa(ca, caSelectedList) == -1));
 		if (ca.isSelect()) {
@@ -219,19 +248,8 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			csv.setListener(this);
 			csv.setContactName(ca);
 			contactsSelected.add(ca);
+			addSelectedContactAddress(ca);
 
-			View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
-			if (ca.getContact() != null) {
-				((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
-			} else {
-				((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddress());
-			}
-			View removeContact = viewContact.findViewById(R.id.contactChatDelete);
-			removeContact.setTag(ca);
-			removeContact.setOnClickListener(this);
-			viewContact.setOnClickListener(this);
-			ca.setView(viewContact);
-			contactsSelectedLayout.addView(viewContact);
 		} else {
 			contactsSelected.remove(getIndexOfCa(ca, contactsSelected));
 			contactsSelectedLayout.removeAllViews();
@@ -283,11 +301,14 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			allContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
 		} else if (id == R.id.back) {
+			contactsSelectedLayout.removeAllViews();
 			LinphoneActivity.instance().popBackStack();
 		} else if (id == R.id.next) {
 			if (contactsSelected.size() == 1) {
+				contactsSelectedLayout.removeAllViews();
 				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 			} else {
+				contactsSelectedLayout.removeAllViews();
 				LinphoneActivity.instance().displayChatGroupInfos(contactsSelected, null, false, true);
 			}
 		} else if (id == R.id.clearSearchField) {

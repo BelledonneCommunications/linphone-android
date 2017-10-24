@@ -84,7 +84,7 @@ public class GroupInfoFragment extends Fragment {
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().popBackStack();
+				LinphoneActivity.instance().goToChatCreator(mParticipants);
 			}
 		});
 
@@ -106,7 +106,7 @@ public class GroupInfoFragment extends Fragment {
 				if (mIsAlreadyCreatedGroup) {
 					//TODO
 				} else {
-					LinphoneActivity.instance().popBackStack();
+					LinphoneActivity.instance().goToChatCreator(mParticipants);
 				}
 			}
 		});
