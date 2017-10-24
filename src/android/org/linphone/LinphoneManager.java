@@ -163,7 +163,7 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
  * Add Service Listener to react to Linphone state changes.
  *
  */
-public class LinphoneManager implements CoreListener, ChatMessageListener, SensorEventListener, AccountCreatorListener, ChatRoomListener {
+public class LinphoneManager implements CoreListener, ChatMessageListener, SensorEventListener, AccountCreatorListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -616,26 +616,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		String[] devices = getLc().getVideoDevicesList();
 		String newDevice = devices[camId];
 		LinphoneManager.getLc().setVideoDevice(newDevice);
-	}
-
-	@Override
-	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage message) {
-
-	}
-
-	@Override
-	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-
-	}
-
-	@Override
-	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
-
-	}
-
-	@Override
-	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-
 	}
 
 	public static interface AddressType {

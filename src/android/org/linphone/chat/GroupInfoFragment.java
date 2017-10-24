@@ -36,9 +36,7 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.core.Address;
-import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.mediastream.Log;
 
