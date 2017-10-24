@@ -46,6 +46,9 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
+import org.linphone.core.ConferenceParticipantDeviceEvent;
+import org.linphone.core.ConferenceParticipantEvent;
+import org.linphone.core.ConferenceSubjectEvent;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Participant;
@@ -486,7 +489,37 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onParticipantAdminStatusChanged(ChatRoom cr, ConferenceParticipantEvent event) {
+
+	}
+
+	@Override
+	public void onParticipantDeviceRemoved(ChatRoom cr, ConferenceParticipantDeviceEvent event) {
+
+	}
+
+	@Override
+	public void onParticipantRemoved(ChatRoom cr, ConferenceParticipantEvent event) {
+
+	}
+
+	@Override
+	public void onParticipantDeviceAdded(ChatRoom cr, ConferenceParticipantDeviceEvent event) {
+
+	}
+
+	@Override
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+
+	}
+
+	@Override
+	public void onParticipantAdded(ChatRoom cr, ConferenceParticipantEvent event) {
+
+	}
+
+	@Override
+	public void onSubjectChanged(ChatRoom cr, ConferenceSubjectEvent event) {
 
 	}
 
