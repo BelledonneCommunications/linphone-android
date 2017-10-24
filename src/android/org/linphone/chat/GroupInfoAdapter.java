@@ -40,12 +40,13 @@ public class GroupInfoAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
-    private boolean mHideAdminFeatures;
+    private boolean mHideAdminFeatures, mIsCreation;
 
-    public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures) {
+    public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mInflater = inflater;
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures;
+	    mIsCreation = isCreation;
     }
 
     @Override
@@ -118,6 +119,8 @@ public class GroupInfoAdapter extends BaseAdapter {
         if (mHideAdminFeatures) {
             delete.setVisibility(View.GONE);
             adminLayout.setVisibility(View.GONE);
+        } else if (mIsCreation) {
+	        adminLayout.setVisibility(View.GONE);
         }
 
         return view;

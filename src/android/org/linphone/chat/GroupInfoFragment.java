@@ -62,7 +62,7 @@ public class GroupInfoFragment extends Fragment {
 		String subject = getArguments().getString("subject");
 
 		mParticipantsList = view.findViewById(R.id.chat_room_participants);
-		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled);
+		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
 		mAdapter.setOnDeleteClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -138,8 +138,6 @@ public class GroupInfoFragment extends Fragment {
 			mConfirmButton.setVisibility(View.INVISIBLE);
 			mAddParticipantsButton.setVisibility(View.GONE);
 		}
-
-		//TODO Handle back button issue
 
 		return view;
 	}
