@@ -114,7 +114,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	}
 
 	public List<ContactAddress> getContactsList() {
-		List<ContactAddress> list = new ArrayList<ContactAddress>();
+		List<ContactAddress> list = new ArrayList<>();
 		if (ContactsManager.getInstance().hasContacts()) {
 			for (Address addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
 				LinphoneContact cont = ContactsManager.getInstance().findContactFromAddress(addr);
@@ -163,11 +163,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		}
 
 		List<ContactAddress> result = new ArrayList<>();
+
 		String searchAddress = "sip:" + search + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
-		result.add(new ContactAddress(null, searchAddress, false));
+
+        boolean searchFound = false;
 		if (search != null) {
 			for (ContactAddress c : (search.length() < oldSize) ? getContactsList() : getContacts()) {
 				String address = c.getAddress();
+                if (address.equals(searchAddress)) searchFound = true;
 				if (address.startsWith("sip:")) address = address.substring(4);
 				if (c.getContact() != null && c.getContact().getFullName() != null
 						&& c.getContact().getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
@@ -176,6 +179,12 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				}
 			}
 		}
+		if (!searchFound) {
+            LinphoneContact searchContact = new LinphoneContact();
+            searchContact.setFullName(search);
+            result.add(new ContactAddress(searchContact, searchAddress, false));
+        }
+
 		oldSize = search.length();
 		contacts = result;
 		resultContactsSearch.setAdapter(this);

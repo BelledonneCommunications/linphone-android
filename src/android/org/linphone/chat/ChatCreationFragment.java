@@ -135,7 +135,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				searchAdapter.searchContacts(searchField.getText().toString(), contactsList);
+                searchAdapter.searchContacts(searchField.getText().toString(), contactsList);
 			}
 		});
 
