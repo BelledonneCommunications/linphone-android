@@ -438,7 +438,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 			holder.displayName.setSelected(true); // For animation
 
-			if (chatRoom.canHandleParticipants()) {
+			if (chatRoom.getNbParticipants() > 1) {
 				holder.displayName.setText(chatRoom.getSubject());
 				holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
 			} else {

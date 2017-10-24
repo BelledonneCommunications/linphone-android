@@ -239,7 +239,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
-		if (mChatRoom.canHandleParticipants()) {
+		if (mChatRoom.getNbParticipants() > 1) {
 			int index = 0;
 			StringBuilder participantsLabel = new StringBuilder();
 			for (Participant p : mChatRoom.getParticipants()) {
@@ -287,16 +287,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mRemoteComposing.setVisibility(View.INVISIBLE);
 
-		if (core.getCallByRemoteAddress(mRemoteSipUri) != null) {
+		if (core.getCallsNb() > 0) {
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			if (mChatRoom.canHandleParticipants()) {
+			if (mChatRoom.getNbParticipants() > 1) {
 				mCallButton.setVisibility(View.GONE);
 				mGroupInfosButton.setVisibility(View.VISIBLE);
 				mRoomLabel.setText(mChatRoom.getSubject());
 				mParticipantsLabel.setVisibility(View.VISIBLE);
-
 			} else {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
@@ -428,7 +427,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-		if (cr.canHandleParticipants() && cr.getNbParticipants() > 2) {
+		if (cr.getNbParticipants() > 1) {
 			ArrayList<String> composing = new ArrayList<>();
 			for (Address a : cr.getComposingAddresses()) {
 				boolean found = false;
