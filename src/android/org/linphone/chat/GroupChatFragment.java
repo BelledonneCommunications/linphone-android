@@ -46,6 +46,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
+import org.linphone.core.ChatRoomState;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Participant;
@@ -468,6 +469,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				mRemoteComposing.setVisibility(View.GONE);
 			}
 		}
+	}
+
+	@Override
+	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+
 	}
 
 	@Override

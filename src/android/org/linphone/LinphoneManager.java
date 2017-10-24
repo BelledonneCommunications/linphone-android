@@ -93,6 +93,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
+import org.linphone.core.ChatRoomState;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Core.AuthMethod;
@@ -619,6 +620,11 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	@Override
 	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage message) {
+
+	}
+
+	@Override
+	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 
 	}
 

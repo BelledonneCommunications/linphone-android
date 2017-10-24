@@ -721,6 +721,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
+	public void goToChat(String sipUri) {
+		Bundle extras = new Bundle();
+		extras.putString("SipUri", sipUri);
+		changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+	}
+
 	public void displayChatGroupInfos(ArrayList<ContactAddress> contacts, String subject, boolean isAlreadyCreatedGroup, boolean isEditionEnabled) {
 		Bundle extras = new Bundle();
 		extras.putBoolean("isAlreadyCreatedGroup", isAlreadyCreatedGroup);

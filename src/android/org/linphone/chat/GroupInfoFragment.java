@@ -31,9 +31,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
+import org.linphone.core.Address;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListener;
+import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 
@@ -128,7 +135,30 @@ public class GroupInfoFragment extends Fragment {
 		mConfirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				if (!mIsAlreadyCreatedGroup) {
+					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString());
+					chatRoom.setListener(new ChatRoomListenerStub() {
+						@Override
+						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+							if (newState == ChatRoom.State.Created) {
+								LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
+							} else if (newState == ChatRoom.State.CreationFailed) {
+								//TODO display error
+								Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
+							}
+						}
+					});
+
+					Address addresses[] = new Address[mParticipants.size()];
+					int index = 0;
+					for (ContactAddress ca : mParticipants) {
+						addresses[index] = LinphoneManager.getLc().createAddress(ca.getAddress());
+						index++;
+					}
+					chatRoom.addParticipants(addresses);
+				} else {
+					//TODO
+				}
 			}
 		});
 		mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
