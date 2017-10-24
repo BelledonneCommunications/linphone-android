@@ -92,8 +92,6 @@ import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomListener;
-import org.linphone.core.ChatRoomState;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Core.AuthMethod;
@@ -109,14 +107,12 @@ import org.linphone.core.Event;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.InfoMessage;
+import org.linphone.core.PresenceActivity;
 import org.linphone.core.ProxyConfig;
-import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.core.tools.OpenH264DownloadHelperListener;
 import org.linphone.core.PayloadType;
 import org.linphone.core.PresenceBasicStatus;
-import org.linphone.core.PresenceActivityType;
 import org.linphone.core.PresenceModel;
-import org.linphone.core.PublishState;
 import org.linphone.core.Reason;
 import org.linphone.core.SubscriptionState;
 //import org.linphone.core.TunnelConfig;
@@ -492,20 +488,20 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	public void changeStatusToOnline() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.TV) {
-			lc.getPresenceModel().getActivity().setType(PresenceActivityType.TV);
+		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.TV) {
+			lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.TV);
 		} else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
-			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivityType.TV, null);
+			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivity.Type.TV, null);
 			lc.setPresenceModel(model);
 		}
 	}
 
 	public void changeStatusToOnThePhone() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
-		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivityType.OnThePhone) {
-			lc.getPresenceModel().getActivity().setType(PresenceActivityType.OnThePhone);
+		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.OnThePhone) {
+			lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
 		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
-			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivityType.OnThePhone, null);
+			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivity.Type.OnThePhone, null);
 			lc.setPresenceModel(model);
 		}
 	}
@@ -1804,8 +1800,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getStringBuffer());
 	}
 	@Override
-	public void onPublishStateChanged(Core lc, Event ev,
-			PublishState state) {
+	public void onPublishStateChanged(Core lc, Event ev, Event.PublishState state) {
 		Log.d("Publish state changed to " + state + " for event name " + ev.getName());
 	}
 
@@ -1845,7 +1840,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	}
 
 	@Override
-	public void onVersionUpdateCheckResultReceived(Core lc, VersionUpdateCheckResult result, String version, String url) {
+	public void onVersionUpdateCheckResultReceived(Core lc, Core.VersionUpdateCheckResult result, String version, String url) {
 
 	}
 

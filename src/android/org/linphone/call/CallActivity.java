@@ -78,7 +78,6 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Player;
 import org.linphone.core.PayloadType;
-import org.linphone.core.StreamType;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -1716,11 +1715,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 							if (LinphoneActivity.isInstanciated()) {
 								CallParams params = call.getCurrentParams();
 								if (params != null) {
-									CallStats audioStats = call.getStats(StreamType.Audio);
+									CallStats audioStats = call.getStats(CallStats.StreamType.Audio);
 									CallStats videoStats = null;
 
 									if (params.videoEnabled())
-										videoStats = call.getStats(StreamType.Video);
+										videoStats = call.getStats(CallStats.StreamType.Video);
 
 									PayloadType payloadAudio = params.getUsedAudioPayloadType();
 									PayloadType payloadVideo = params.getUsedVideoPayloadType();

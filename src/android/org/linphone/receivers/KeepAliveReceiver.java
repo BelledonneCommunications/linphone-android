@@ -26,7 +26,6 @@ import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.app.AlarmManager;
@@ -46,7 +45,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 			return;
 		} else {
 			boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-			Factory.instance().enableLogCollection(isDebugEnabled ? LogCollectionState.Enabled : LogCollectionState.Disabled);
+			Factory.instance().enableLogCollection(isDebugEnabled ? Core.LogCollectionState.Enabled : Core.LogCollectionState.Disabled);
 			Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
 			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc == null) return;
