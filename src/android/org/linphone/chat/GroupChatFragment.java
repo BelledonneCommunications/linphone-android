@@ -49,13 +49,14 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Participant;
+import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
-public class GroupChatFragment extends Fragment implements ChatRoomListener {
+public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener {
 	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton, mEditButton;
 	private ImageView mCancelEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton;
 	private ImageView mAttachImageButton, mSendMessageButton;
@@ -222,24 +223,20 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		if (LinphoneActivity.isInstanciated()) {
 			LinphoneActivity.instance().selectMenu(CHAT);
 		}
+		ContactsManager.addContactsListener(this);
 
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
 	}
 
-	private void initChatRoom() {
-		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (mRemoteSipAddress == null || mRemoteSipUri == null || mRemoteSipUri.length() == 0 || core == null) {
-			LinphoneActivity.instance().goToDialerFragment();
-			return;
-		}
+	@Override
+	public void onPause() {
+		ContactsManager.removeContactsListener(this);
+		super.onPause();
+	}
 
-		mChatRoom = core.getChatRoom(mRemoteSipAddress);
-		mChatRoom.setListener(this);
-		mChatRoom.markAsRead();
-		LinphoneActivity.instance().updateMissedChatCount();
-
+	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
 		if (mChatRoom.canHandleParticipants()) {
 			for (Participant p : mChatRoom.getParticipants()) {
@@ -254,6 +251,21 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 				mParticipants.add(c);
 			}
 		}
+	}
+
+	private void initChatRoom() {
+		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (mRemoteSipAddress == null || mRemoteSipUri == null || mRemoteSipUri.length() == 0 || core == null) {
+			LinphoneActivity.instance().goToDialerFragment();
+			return;
+		}
+
+		mChatRoom = core.getChatRoom(mRemoteSipAddress);
+		mChatRoom.setListener(this);
+		mChatRoom.markAsRead();
+		LinphoneActivity.instance().updateMissedChatCount();
+
+		getContactsForParticipants();
 	}
 
 	private void displayChatRoomHeader() {
@@ -456,5 +468,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 				mRemoteComposing.setVisibility(View.GONE);
 			}
 		}
+	}
+
+	@Override
+	public void onContactsUpdated() {
+		getContactsForParticipants();
 	}
 }
