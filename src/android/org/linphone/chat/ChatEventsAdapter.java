@@ -35,6 +35,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 
     public ChatEventsAdapter(LayoutInflater inflater) {
         mLayoutInflater = inflater;
+        mHistory = new ArrayList<>(); //TODO
     }
 
     @Override

@@ -303,7 +303,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void displayChatRoomHistory() {
 		mMessagesAdapter = new ChatEventsAdapter(mInflater);
-		//TODO
+		mChatEventsList.setAdapter(mMessagesAdapter);
 	}
 
 	private void sendMessage() {

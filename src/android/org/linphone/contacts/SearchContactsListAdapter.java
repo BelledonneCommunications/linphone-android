@@ -162,12 +162,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			return;
 		}
 
-		List<ContactAddress> result = new ArrayList<ContactAddress>();
-		if(search != null) {
+		List<ContactAddress> result = new ArrayList<>();
+		String searchAddress = "sip:" + search + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+		result.add(new ContactAddress(null, searchAddress, false));
+		if (search != null) {
 			for (ContactAddress c : (search.length() < oldSize) ? getContactsList() : getContacts()) {
 				String address = c.getAddress();
 				if (address.startsWith("sip:")) address = address.substring(4);
-				if (c.getContact().getFullName() != null
+				if (c.getContact() != null && c.getContact().getFullName() != null
 						&& c.getContact().getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
 						|| address.toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))) {
 					result.add(c);
@@ -202,13 +204,18 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		final String a = contact.getAddress();
 		LinphoneContact c = contact.getContact();
 
-		if (c.hasPhoto()) {
+		if (c != null && c.hasPhoto()) {
 			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
 		} else {
 			holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		}
 
-		holder.name.setText(c.getFullName());
+		if (c != null) {
+			holder.name.setVisibility(View.VISIBLE);
+			holder.name.setText(c.getFullName());
+		} else {
+			holder.name.setVisibility(View.GONE);
+		}
 		holder.address.setText(a);
 		if (holder.linphoneContact != null) {
 			if (contact.isLinphoneContact()) {

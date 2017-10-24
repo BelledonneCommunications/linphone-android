@@ -219,8 +219,13 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			csv.setListener(this);
 			csv.setContactName(ca);
 			contactsSelected.add(ca);
+
 			View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
-			((TextView)viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
+			if (ca.getContact() != null) {
+				((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
+			} else {
+				((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddress());
+			}
 			View removeContact = viewContact.findViewById(R.id.contactChatDelete);
 			removeContact.setTag(ca);
 			removeContact.setOnClickListener(this);
