@@ -213,10 +213,9 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		final String a = contact.getAddress();
 		LinphoneContact c = contact.getContact();
 
+		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		if (c != null && c.hasPhoto()) {
 			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
-		} else {
-			holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		}
 
 		if (c != null) {
