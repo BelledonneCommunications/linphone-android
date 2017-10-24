@@ -29,13 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.R;
-import org.linphone.core.Buffer;
-import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatMessageListener;
-import org.linphone.core.Content;
 
-public class ChatBubbleViewHolder implements ChatMessageListener {
-    public int id;
+public class ChatBubbleViewHolder {
+    public String messageId;
 
     public LinearLayout eventLayout;
     public TextView eventTime;
@@ -61,8 +57,6 @@ public class ChatBubbleViewHolder implements ChatMessageListener {
     public TextView fileNameLabel;
 
     public ChatBubbleViewHolder(View view) {
-        id = view.getId();
-
         eventLayout = view.findViewById(R.id.event);
         eventTime = view.findViewById(R.id.event_date);
         eventMessage = view.findViewById(R.id.event_text);
@@ -85,25 +79,5 @@ public class ChatBubbleViewHolder implements ChatMessageListener {
         imdmLabel = view.findViewById(R.id.imdmText);
         fileExtensionLabel = view.findViewById(R.id.file_extension);
         fileNameLabel = view.findViewById(R.id.file_name);
-    }
-
-    @Override
-    public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-
-    }
-
-    @Override
-    public void onFileTransferRecv(ChatMessage msg, Content content, Buffer buffer) {
-
-    }
-
-    @Override
-    public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
-        return null;
-    }
-
-    @Override
-    public void onFileTransferProgressIndication(ChatMessage msg, Content content, int offset, int total) {
-        if (msg.getStorageId() == id) fileTransferProgressBar.setProgress(offset * 100 / total);
     }
 }

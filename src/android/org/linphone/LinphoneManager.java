@@ -619,57 +619,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	@Override
 	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage message) {
-		if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
-			return;
-		}
 
-		final Address from = message.getFromAddress();
-		String to = message.getToAddress().asString();
-		try {
-			final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
-			if (LinphoneActivity.instance().isOnBackground()) {
-				if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-					if (contact != null) {
-						LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), contact.getFullName()
-								, getString(R.string.message_cant_be_decrypted_notif));
-					} else {
-						LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), from.getUsername()
-								, getString(R.string.message_cant_be_decrypted_notif));
-					}
-				}
-			} else if (!mAreDisplayAlertMessage){
-				mAreDisplayAlertMessage = true;
-				final Dialog dialog = LinphoneActivity.instance().displayDialog(
-						getString(R.string.message_cant_be_decrypted).replace("%s"
-								, (contact != null) ? contact.getFullName() : from.getUsername()));
-				Button delete = (Button) dialog.findViewById(R.id.delete_button);
-				delete.setText(getString(R.string.call));
-				Button cancel = (Button) dialog.findViewById(R.id.cancel);
-				cancel.setText(getString(R.string.ok));
-
-				delete.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						LinphoneManager.getInstance().newOutgoingCall(from.asStringUriOnly()
-								, (contact != null) ? contact.getFullName() : from.getUsername());
-						dialog.dismiss();
-						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
-					}
-				});
-
-				cancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-						LinphoneManager.getInstance().setAreDisplayAlertMessage(false);
-					}
-				});
-				if(LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory)
-					dialog.show();
-			}
-		} catch (Exception e) {
-			Log.e(e);
-		}
 	}
 
 	@Override
@@ -1839,7 +1789,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 
 	@Override
 	public void onChatRoomInstantiated(Core lc, ChatRoom cr) {
-		cr.setListener(this);
+
 	}
 
 	@Override

@@ -1329,7 +1329,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 				view.setTag(holder);
 			}
 
-			LinphoneManager.addListener(holder);
+			/*LinphoneManager.addListener(holder);
 			if (holder.id == message.getStorageId()) {
 				// Horrible workaround to not reload image on edit chat list
 				if (holder.messageImage.getTag() != null
@@ -1341,7 +1341,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 			} else {
 				holder.id = message.getStorageId();
 			}
-			view.setId(holder.id);
+			view.setId(holder.id);*/
 			registerForContextMenu(view);
 			view.setOnClickListener(new OnClickListener() {
 				@Override

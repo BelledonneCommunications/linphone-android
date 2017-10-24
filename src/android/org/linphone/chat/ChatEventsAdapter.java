@@ -19,40 +19,55 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
-import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import org.linphone.R;
 import org.linphone.core.ChatMessage;
 
 import java.util.ArrayList;
 
 public class ChatEventsAdapter extends BaseAdapter {
     private ArrayList<ChatMessage> mHistory;
-    private Context mContext;
+    private LayoutInflater mLayoutInflater;
 
-    public ChatEventsAdapter() {
-
+    public ChatEventsAdapter(LayoutInflater inflater) {
+        mLayoutInflater = inflater;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mHistory.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return mHistory.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+        ChatBubbleViewHolder holder;
+        if (view != null) {
+            holder = (ChatBubbleViewHolder) view.getTag();
+        } else {
+            view = mLayoutInflater.inflate(R.layout.chat_bubble, null);
+            holder = new ChatBubbleViewHolder(view);
+            view.setTag(holder);
+        }
+
+        ChatMessage msg = (ChatMessage)getItem(i);
+        holder.messageId = msg.getMessageId();
+
+        //TODO
+
+        return view;
     }
 }

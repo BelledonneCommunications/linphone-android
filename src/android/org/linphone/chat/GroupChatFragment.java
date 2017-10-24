@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,19 +27,23 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.Buffer;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
@@ -47,6 +52,8 @@ import org.linphone.core.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
 public class GroupChatFragment extends Fragment implements ChatRoomListener {
 	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton, mEditButton;
@@ -130,7 +137,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				//TODO
 			}
 		});
 
@@ -138,7 +145,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mCancelEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				//TODO
 			}
 		});
 
@@ -146,7 +153,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mSelectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				//TODO
 			}
 		});
 
@@ -154,7 +161,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				//TODO
 			}
 		});
 
@@ -162,7 +169,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				//TODO
 			}
 		});
 
@@ -172,7 +179,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mAttachImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				//TODO
 			}
 		});
 
@@ -180,16 +187,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 		mSendMessageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				sendMessage();
 			}
 		});
 
 		mMessageTextToSend = view.findViewById(R.id.message);
 		mMessageTextToSend.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-			}
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -200,9 +205,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 			}
 
 			@Override
-			public void afterTextChanged(Editable editable) {
-
-			}
+			public void afterTextChanged(Editable editable) { }
 		});
 
 		mRemoteComposing = view.findViewById(R.id.remote_composing);
@@ -215,6 +218,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().selectMenu(CHAT);
+		}
+
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
@@ -282,12 +290,100 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 	}
 
 	private void displayChatRoomHistory() {
-		mMessagesAdapter = new ChatEventsAdapter();
+		mMessagesAdapter = new ChatEventsAdapter(mInflater);
+		//TODO
+	}
+
+	private void sendMessage() {
+		String text = mMessageTextToSend.getText().toString();
+		ChatMessage msg = mChatRoom.createMessage(text);
+		msg.setListener(new ChatMessageListener() {
+			@Override
+			public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
+
+			}
+
+			@Override
+			public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
+				return null;
+			}
+
+			@Override
+			public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
+				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
+				if (holder != null && message.getMessageId().equals(holder.messageId)) {
+					holder.fileTransferProgressBar.setProgress(offset * 100 / total);
+				}
+			}
+
+			@Override
+			public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
+				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
+				if (holder != null && message.getMessageId().equals(holder.messageId)) {
+					if (state == ChatMessage.State.DeliveredToUser && message.isOutgoing()) {
+						holder.imdmLayout.setVisibility(View.VISIBLE);
+						holder.imdmIcon.setImageResource(R.drawable.message_delivered);
+						holder.imdmLabel.setText(R.string.delivered);
+						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorD));
+					} else if (state == ChatMessage.State.Displayed && message.isOutgoing()) {
+						holder.imdmLayout.setVisibility(View.VISIBLE);
+						holder.imdmIcon.setImageResource(R.drawable.message_read);
+						holder.imdmLabel.setText(R.string.displayed);
+						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorK));
+					} else if (state == ChatMessage.State.NotDelivered && message.isOutgoing()) {
+						holder.imdmLayout.setVisibility(View.VISIBLE);
+						holder.imdmIcon.setImageResource(R.drawable.message_undelivered);
+						holder.imdmLabel.setText(R.string.resend);
+						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorI));
+					}
+				}
+			}
+		});
+		msg.send();
+		mMessageTextToSend.setText("");
 	}
 
 	@Override
 	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {
+		final Address from = msg.getFromAddress();
+		final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 
+		if (LinphoneActivity.instance().isOnBackground()) {
+			if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
+				String to = msg.getToAddress().asString();
+				if (contact != null) {
+					LinphoneService.instance().removedNotification(to, from.asStringUriOnly(),
+							contact.getFullName(), getString(R.string.message_cant_be_decrypted_notif));
+				} else {
+					LinphoneService.instance().removedNotification(to, from.asStringUriOnly(),
+							from.getUsername(), getString(R.string.message_cant_be_decrypted_notif));
+				}
+			}
+		} else if (LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory) {
+			final Dialog dialog = LinphoneActivity.instance().displayDialog(
+					getString(R.string.message_cant_be_decrypted)
+							.replace("%s", (contact != null) ? contact.getFullName() : from.getUsername()));
+			Button delete = dialog.findViewById(R.id.delete_button);
+			delete.setText(getString(R.string.call));
+			Button cancel = dialog.findViewById(R.id.cancel);
+			cancel.setText(getString(R.string.ok));
+			delete.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					LinphoneManager.getInstance().newOutgoingCall(from.asStringUriOnly()
+							, (contact != null) ? contact.getFullName() : from.getUsername());
+					dialog.dismiss();
+				}
+			});
+
+			cancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+		}
 	}
 
 	@Override
@@ -304,9 +400,61 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener {
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-		if (isComposing) {
-			mRemoteComposing.setText(getString(R.string.remote_composing_2).replace("%s", remoteAddr.getDisplayName()));
+		if (cr.canHandleParticipants() && cr.getNbParticipants() > 2) {
+			ArrayList<String> composing = new ArrayList<>();
+			for (Address a : cr.getComposingAddresses()) {
+				boolean found = false;
+				for (LinphoneContact c : mParticipants) {
+					if (c.hasAddress(a.asStringUriOnly())) {
+						composing.add(c.getFullName());
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					String displayName = a.getDisplayName();
+					if (displayName != null && !displayName.isEmpty()) {
+						composing.add(displayName);
+					} else {
+						composing.add(a.getUsername());
+					}
+				}
+			}
+
+			if (composing.size() == 1) {
+				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", composing.get(0)));
+				mRemoteComposing.setVisibility(View.VISIBLE);
+			} else if (composing.size() > 2) {
+				StringBuilder remotes = new StringBuilder();
+				int i = 0;
+				for (String remote : composing) {
+					remotes.append(remote);
+					i++;
+					if (i != composing.size()) {
+						remotes.append(", ");
+					}
+				}
+				mRemoteComposing.setText(getString(R.string.remote_composing_multiple).replace("%s", remotes.toString()));
+				mRemoteComposing.setVisibility(View.VISIBLE);
+			} else {
+				mRemoteComposing.setVisibility(View.GONE);
+			}
+		} else {
+			if (isComposing) {
+				String displayName;
+				if (mParticipants.size() > 0) {
+					displayName = mParticipants.get(0).getFullName();
+				} else {
+					displayName = remoteAddr.getDisplayName();
+					if (displayName == null || displayName.isEmpty()) {
+						displayName = remoteAddr.getUsername();
+					}
+				}
+				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", displayName));
+				mRemoteComposing.setVisibility(View.VISIBLE);
+			} else {
+				mRemoteComposing.setVisibility(View.GONE);
+			}
 		}
-		mRemoteComposing.setVisibility(isComposing ? View.VISIBLE : View.GONE);
 	}
 }
