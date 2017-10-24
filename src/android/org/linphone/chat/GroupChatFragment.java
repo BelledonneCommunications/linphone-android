@@ -60,7 +60,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton, mEditButton;
 	private ImageView mCancelEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton;
 	private ImageView mAttachImageButton, mSendMessageButton;
-	private TextView mRoomLabel, mRemoteComposing;
+	private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
 	private EditText mMessageTextToSend;
 	private LayoutInflater mInflater;
 	private ListView mChatEventsList;
@@ -174,7 +174,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		});
 
-		mRoomLabel = view.findViewById(R.id.contact_name);
+		mRoomLabel = view.findViewById(R.id.subject);
+		mParticipantsLabel = view.findViewById(R.id.participants);
 
 		mAttachImageButton = view.findViewById(R.id.send_picture);
 		mAttachImageButton.setOnClickListener(new View.OnClickListener() {
@@ -239,11 +240,23 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
 		if (mChatRoom.canHandleParticipants()) {
+			int index = 0;
+			StringBuilder participantsLabel = new StringBuilder();
 			for (Participant p : mChatRoom.getParticipants()) {
 				LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(p.getAddress());
 				if (c != null) {
 					mParticipants.add(c);
+					participantsLabel.append(c.getFullName());
+				} else {
+					String displayName = p.getAddress().getDisplayName();
+					if (displayName != null && !displayName.isEmpty()) {
+						participantsLabel.append(displayName);
+					} else {
+						participantsLabel.append(p.getAddress().getUsername());
+					}
 				}
+				index++;
+				if (index != mChatRoom.getNbParticipants())	participantsLabel.append(";");
 			}
 		} else {
 			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteSipAddress);
@@ -282,9 +295,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				mCallButton.setVisibility(View.GONE);
 				mGroupInfosButton.setVisibility(View.VISIBLE);
 				mRoomLabel.setText(mChatRoom.getSubject());
+				mParticipantsLabel.setVisibility(View.VISIBLE);
+
 			} else {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
+				mParticipantsLabel.setVisibility(View.GONE);
 
 				if (mParticipants.size() == 0) {
 					// Contact not found
