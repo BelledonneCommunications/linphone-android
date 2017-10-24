@@ -170,7 +170,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		if (search != null) {
 			for (ContactAddress c : (search.length() < oldSize) ? getContactsList() : getContacts()) {
 				String address = c.getAddress();
-                if (address.equals(searchAddress)) searchFound = true;
+				if (address.equals(searchAddress)) searchFound = true;
 				if (address.startsWith("sip:")) address = address.substring(4);
 				if (c.getContact() != null && c.getContact().getFullName() != null
 						&& c.getContact().getFullName().toLowerCase(Locale.getDefault()).startsWith(search.toLowerCase(Locale.getDefault()))
@@ -180,9 +180,9 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			}
 		}
 		if (!searchFound) {
-            LinphoneContact searchContact = new LinphoneContact();
-            searchContact.setFullName(search);
-            result.add(new ContactAddress(searchContact, searchAddress, false));
+			LinphoneContact searchContact = new LinphoneContact();
+			searchContact.setFullName(search);
+			result.add(new ContactAddress(searchContact, searchAddress, false));
         }
 
 		oldSize = search.length();
