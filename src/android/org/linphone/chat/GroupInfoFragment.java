@@ -84,7 +84,7 @@ public class GroupInfoFragment extends Fragment {
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().goToChatCreator(mParticipants);
+				LinphoneActivity.instance().goToChatCreator(mParticipants, true);
 			}
 		});
 
@@ -103,11 +103,7 @@ public class GroupInfoFragment extends Fragment {
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (mIsAlreadyCreatedGroup) {
-					//TODO
-				} else {
-					LinphoneActivity.instance().goToChatCreator(mParticipants);
-				}
+				LinphoneActivity.instance().goToChatCreator(mParticipants, !mIsAlreadyCreatedGroup);
 			}
 		});
 

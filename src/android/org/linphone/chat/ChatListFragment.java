@@ -331,7 +331,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			enabledDeleteButton(false);
 		}
 		else if (id == R.id.new_discussion) {
-			LinphoneActivity.instance().goToChatCreator(null);
+			LinphoneActivity.instance().goToChatCreator(null, false);
 			/*String sipUri = fastNewChat.getText().toString();
 			if (sipUri.equals("")) {
 				LinphoneActivity.instance().displayContacts(true);

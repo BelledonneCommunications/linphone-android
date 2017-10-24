@@ -721,7 +721,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
-	public void goToChatCreator(ArrayList<ContactAddress> selectedContacts) {
+	public void goToChatCreator(ArrayList<ContactAddress> selectedContacts, boolean isGoBack) {
+		if (currentFragment == FragmentsAvailable.INFO_GROUP_CHAT && isGoBack) {
+			getFragmentManager().popBackStackImmediate();
+			getFragmentManager().popBackStackImmediate();
+		}
 		Bundle extras = new Bundle();
 		extras.putSerializable("selectedContacts", selectedContacts);
 		changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
