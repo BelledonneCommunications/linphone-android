@@ -228,6 +228,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 		mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
 		mFriendsDatabaseFile = basePath + "/linphone-friends.db";
+		mLinphoneTestDb = basePath + "/linphone.db";
 		mErrorToneFile = basePath + "/error.wav";
 		mUserCertificatePath = basePath;
 
@@ -258,6 +259,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	private final String mFriendsDatabaseFile;
 	private final String mErrorToneFile;
 	private final String mUserCertificatePath;
+	private final String mLinphoneTestDb;
 	private byte[] mUploadingImage;
 	private Timer mTimer;
 
@@ -939,6 +941,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
 		copyFromPackage(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 		copyFromPackage(R.raw.assistant_create, new File(mDynamicConfigFile).getName());
+		copyFromPackage(R.raw.linphone, new File(mLinphoneTestDb).getName());
 	}
 
 	public void copyIfNotExist(int ressourceId, String target) throws IOException {

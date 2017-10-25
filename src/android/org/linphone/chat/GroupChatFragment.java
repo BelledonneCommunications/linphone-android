@@ -267,6 +267,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				mParticipants.add(c);
 			}
 		}
+
+		if (mMessagesAdapter != null) {
+			mMessagesAdapter.setContacts(mParticipants);
+		}
 	}
 
 	private void initChatRoom() {
@@ -320,7 +324,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	private void displayChatRoomHistory() {
-		mMessagesAdapter = new ChatEventsAdapter(mInflater);
+		mMessagesAdapter = new ChatEventsAdapter(getActivity(), mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
 		mChatEventsList.setAdapter(mMessagesAdapter);
 	}
 
@@ -371,6 +375,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		});
 		msg.send();
 		mMessageTextToSend.setText("");
+	}
+
+	private void scrollToBottom() {
+		mChatEventsList.setSelection(mMessagesAdapter.getCount() - 1);
 	}
 
 	@Override
