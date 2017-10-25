@@ -46,11 +46,9 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
-import org.linphone.core.ConferenceParticipantDeviceEvent;
-import org.linphone.core.ConferenceParticipantEvent;
-import org.linphone.core.ConferenceSubjectEvent;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
+import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
 import org.linphone.receivers.ContactsUpdatedListener;
 
@@ -497,22 +495,22 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
-	public void onParticipantAdminStatusChanged(ChatRoom cr, ConferenceParticipantEvent event) {
+	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
 
 	}
 
 	@Override
-	public void onParticipantDeviceRemoved(ChatRoom cr, ConferenceParticipantDeviceEvent event) {
+	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
 
 	}
 
 	@Override
-	public void onParticipantRemoved(ChatRoom cr, ConferenceParticipantEvent event) {
+	public void onParticipantRemoved(ChatRoom cr, EventLog event) {
 
 	}
 
 	@Override
-	public void onParticipantDeviceAdded(ChatRoom cr, ConferenceParticipantDeviceEvent event) {
+	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
 
 	}
 
@@ -522,12 +520,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
-	public void onParticipantAdded(ChatRoom cr, ConferenceParticipantEvent event) {
+	public void onParticipantAdded(ChatRoom cr, EventLog event) {
 
 	}
 
 	@Override
-	public void onSubjectChanged(ChatRoom cr, ConferenceSubjectEvent event) {
+	public void onSubjectChanged(ChatRoom cr, EventLog event) {
 
 	}
 
