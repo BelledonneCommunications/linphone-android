@@ -191,13 +191,14 @@
     <string name="displayed">Read</string>
     <string name="delivered">Delivered</string>
     <string name="resend">Resend</string>
-    <string name="conversation_information">Conversation Infos</string>
+    <string name="conversation_information">Infos</string>
     <string name="administrator">Admin</string>
     <string name="conversation_subject_hint">Name your group</string>
     <string name="chat_room_infos_title">Infos</string>
     <string name="chat_room_infos_admin">Admin</string>
     <string name="chat_room_participants">Participants</string>
-    <string name="chat_room_leave_group">Quitter le groupe</string>
+    <string name="chat_room_leave_group">Leave the group</string>
+    <string name="chat_room_creation_filter_hint">Contact filter</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

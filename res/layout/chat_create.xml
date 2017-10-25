@@ -93,6 +93,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="40dp"
 			android:background="@drawable/resizable_textfield"
+            android:hint="@string/chat_room_creation_filter_hint"
 			android:contentDescription="@string/content_description_search_contact"
 			android:gravity="center"
 			android:inputType="textPersonName"
