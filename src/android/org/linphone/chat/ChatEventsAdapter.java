@@ -220,7 +220,9 @@ public class ChatEventsAdapter extends BaseAdapter {
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
 	    } else {
 		    holder.eventLayout.setVisibility(View.VISIBLE);
-		    //TODO
+
+		    holder.eventMessage.setText(""); //TODO
+		    holder.eventTime.setText(timestampToHumanDate(mContext, event.getTime()));
 	    }
 
         return view;
