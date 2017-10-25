@@ -19,9 +19,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -30,11 +40,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
@@ -52,12 +64,15 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
 import org.linphone.receivers.ContactsUpdatedListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
 public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener {
+	private static final int ADD_PHOTO = 1337;
+
 	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton, mEditButton;
 	private ImageView mCancelEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton;
 	private ImageView mAttachImageButton, mSendMessageButton;
@@ -65,7 +80,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private EditText mMessageTextToSend;
 	private LayoutInflater mInflater;
 	private ListView mChatEventsList;
+	private LinearLayout mFilesUploadLayout;
 
+	private Uri imageToUploadUri;
 	private ChatEventsAdapter mMessagesAdapter;
 	private String mRemoteSipUri;
 	private Address mRemoteSipAddress;
@@ -178,11 +195,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mRoomLabel = view.findViewById(R.id.subject);
 		mParticipantsLabel = view.findViewById(R.id.participants);
 
+		mFilesUploadLayout = view.findViewById(R.id.file_upload_layout);
+
 		mAttachImageButton = view.findViewById(R.id.send_picture);
 		mAttachImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
+				pickImage();
 			}
 		});
 
@@ -236,6 +256,61 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onPause() {
 		ContactsManager.removeContactsListener(this);
 		super.onPause();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data != null) {
+			if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
+				String fileToUploadPath = null;
+				if (data != null && data.getData() != null) {
+					/*if (data.getData().toString().contains("com.android.contacts/contacts/")) {
+						if (getCVSPathFromLookupUri(data.getData()) != null) {
+							fileToUploadPath = getCVSPathFromLookupUri(data.getData()).toString();
+						} else {
+							LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+							return;
+						}
+					} else {
+						fileToUploadPath = getRealPathFromURI(data.getData());
+					}*/
+					fileToUploadPath = getRealPathFromURI(data.getData());
+					if (fileToUploadPath == null) {
+						fileToUploadPath = data.getData().toString();
+					}
+				} else if (imageToUploadUri != null) {
+					fileToUploadPath = imageToUploadUri.getPath();
+				}
+				if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
+					addImageToPendingList(fileToUploadPath);
+				}
+				else {
+					if (fileToUploadPath.startsWith("content://")) {
+						fileToUploadPath = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
+					}
+					addFileToPendingList(fileToUploadPath);
+				}
+			} else {
+				super.onActivityResult(requestCode, resultCode, data);
+			}
+		} else {
+			if (LinphoneUtils.isExtensionImage(imageToUploadUri.getPath())) {
+				addImageToPendingList(imageToUploadUri.getPath());
+			}
+		}
+	}
+
+	private String getRealPathFromURI(Uri contentUri) {
+		String[] proj = {MediaStore.Images.Media.DATA};
+		CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
+		Cursor cursor = loader.loadInBackground();
+		if (cursor != null && cursor.moveToFirst()) {
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			String result = cursor.getString(column_index);
+			cursor.close();
+			return result;
+		}
+		return null;
 	}
 
 	private void getContactsForParticipants() {
@@ -326,6 +401,70 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mChatEventsList.setAdapter(mMessagesAdapter);
 	}
 
+	private void pickImage() {
+		List<Intent> cameraIntents = new ArrayList<Intent>();
+		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())+".jpeg"));
+		imageToUploadUri = Uri.fromFile(file);
+		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
+		cameraIntents.add(captureIntent);
+
+		Intent galleryIntent = new Intent();
+		galleryIntent.setType("image/*");
+		galleryIntent.setAction(Intent.ACTION_PICK);
+
+		Intent fileIntent = new Intent();
+		fileIntent.setType("*/*");
+		fileIntent.setAction(Intent.ACTION_GET_CONTENT);
+		cameraIntents.add(fileIntent);
+
+		Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
+		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
+
+		startActivityForResult(chooserIntent, ADD_PHOTO);
+	}
+
+	private void addFileToPendingList(String path) {
+		View pendingFile = mInflater.inflate(R.layout.file_upload_cell, mFilesUploadLayout, false);
+
+		TextView text = pendingFile.findViewById(R.id.pendingFileForUpload);
+		String extension = path.substring(path.lastIndexOf('.'));
+		text.setText(extension);
+
+		ImageView remove = pendingFile.findViewById(R.id.remove);
+		remove.setTag(pendingFile);
+		remove.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				View pendingImage = (View)view.getTag();
+				mFilesUploadLayout.removeView(pendingImage);
+			}
+		});
+
+		mFilesUploadLayout.addView(pendingFile);
+	}
+
+	private void addImageToPendingList(String path) {
+		View pendingImage = mInflater.inflate(R.layout.image_upload_cell, mFilesUploadLayout, false);
+
+		ImageView image = pendingImage.findViewById(R.id.pendingImageForUpload);
+		Bitmap bm = BitmapFactory.decodeFile(path);
+		if (bm == null) return;
+		image.setImageBitmap(bm);
+
+		ImageView remove = pendingImage.findViewById(R.id.remove);
+		remove.setTag(pendingImage);
+		remove.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				View pendingImage = (View)view.getTag();
+				mFilesUploadLayout.removeView(pendingImage);
+			}
+		});
+
+		mFilesUploadLayout.addView(pendingImage);
+	}
+
 	private void sendMessage() {
 		String text = mMessageTextToSend.getText().toString();
 		ChatMessage msg = mChatRoom.createMessage(text);
@@ -372,6 +511,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		});
 		msg.send();
+		mFilesUploadLayout.removeAllViews();
 		mMessageTextToSend.setText("");
 	}
 

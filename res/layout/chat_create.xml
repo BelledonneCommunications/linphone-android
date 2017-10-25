@@ -109,7 +109,7 @@
 			android:layout_centerVertical="true"
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp"
-			android:src="@drawable/clean_field_default"/>
+			android:src="@drawable/clean_field"/>
 
 	</RelativeLayout>
 

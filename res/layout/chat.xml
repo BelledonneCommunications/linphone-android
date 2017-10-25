@@ -99,18 +99,33 @@
 		android:orientation="vertical"
 		android:layout_alignParentBottom="true">
 
+        <HorizontalScrollView
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/file_upload_layout"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
 		<LinearLayout
 			android:id="@+id/message_layout"
 			android:orientation="horizontal"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+            android:gravity="center_vertical">
 
 			<ImageView
 				android:id="@+id/send_picture"
 				android:src="@drawable/chat_send_file"
 				android:contentDescription="@string/content_description_send_file"
-				android:padding="5dp"
-				android:layout_weight="0.1"
+                android:padding="5dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
 
@@ -134,12 +149,12 @@
 				android:id="@+id/send_message"
 				android:src="@drawable/chat_send_message"
 				android:contentDescription="@string/content_description_send_message"
-				android:padding="5dp"
-				android:layout_weight="0.1"
+                android:padding="5dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"/>
 
 		</LinearLayout>
+
 	</LinearLayout>
 
 	<TextView

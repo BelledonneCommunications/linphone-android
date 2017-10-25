@@ -130,6 +130,7 @@
 						android:layout_height="wrap_content"
 						android:gravity="center"
 						android:layout_gravity="center">
+
 						<ImageView
 							android:id="@+id/image"
 							android:visibility="gone"
@@ -165,6 +166,7 @@
 						android:text=""/>
 
 				</RelativeLayout>
+
 				<RelativeLayout
 					android:id="@+id/file_transfer_layout"
 					android:visibility="gone"
@@ -187,6 +189,7 @@
 						android:layout_below="@id/progress_bar"/>
 
 				</RelativeLayout>
+
 				<LinearLayout
 					android:id="@+id/imdmLayout"
 					android:layout_width="wrap_content"
@@ -206,15 +209,17 @@
 						android:text="Displayed"
 						android:textSize="12sp"
 						android:paddingRight="3dp"/>
+
 					<ImageView
 						android:id="@+id/imdmIcon"
 						android:layout_width="10dp"
 						android:layout_height="10dp"
 						android:src="@drawable/valid"
 						android:scaleType="fitCenter"
-						android:layout_marginTop="2dp"
-						/>
+						android:layout_marginTop="2dp" />
+
 				</LinearLayout>
+
 			</LinearLayout>
 
 		</LinearLayout>
