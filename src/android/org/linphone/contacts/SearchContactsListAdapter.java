@@ -116,16 +116,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	public List<ContactAddress> getContactsList() {
 		List<ContactAddress> list = new ArrayList<>();
 		if (ContactsManager.getInstance().hasContacts()) {
-			for (Address addr : LinphoneManager.getLc().findContactsByChar("", mOnlySipContact)) {
-				LinphoneContact cont = ContactsManager.getInstance().findContactFromAddress(addr);
-				if (cont == null) {
-					cont = new LinphoneContact();
-					cont.setFullName(addr.getUsername());
+			List<LinphoneContact> contacts = mOnlySipContact ? ContactsManager.getInstance().getContacts() : ContactsManager.getInstance().getSIPContacts();
+			for (LinphoneContact contact : contacts) {
+				for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+					if (noa.isSIPAddress()) {
+						ContactAddress ca = new ContactAddress(contact , noa.getValue(), contact.isFriend());
+						list.add(ca);
+					}
 				}
-				// TODO Rechercher si un contact est associé à cette sip uri
-				// TODO Rechercher si un displayname est associé à cette sip uri
-				ContactAddress ca = new ContactAddress(cont , addr.asString(), cont.isFriend());
-				list.add(ca);
 			}
 		}
 
@@ -142,12 +140,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	}
 
 	public ContactAddress getItem(int position) {
-		if (contacts == null || position >= contacts.size()) {
-			contacts = getContactsList();
-			return contacts.get(position);
-		} else {
-			return contacts.get(position);
-		}
+		return contacts.get(position);
 	}
 
 	public long getItemId(int position) {
@@ -195,11 +188,6 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
 		ViewHolder holder;
-		ContactAddress contact;
-
-		do {
-			contact = getItem(position);
-		} while (contact == null);
 
 		if (convertView != null) {
 			view = convertView;
@@ -210,6 +198,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			view.setTag(holder);
 		}
 
+		ContactAddress contact = getItem(position);
 		final String a = contact.getAddress();
 		LinphoneContact c = contact.getContact();
 
