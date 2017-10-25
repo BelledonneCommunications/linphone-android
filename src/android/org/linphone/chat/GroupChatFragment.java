@@ -82,7 +82,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
 
-	private Uri imageToUploadUri;
+	private Uri mImageToUploadUri;
 	private ChatEventsAdapter mMessagesAdapter;
 	private String mRemoteSipUri;
 	private Address mRemoteSipAddress;
@@ -278,8 +278,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					if (fileToUploadPath == null) {
 						fileToUploadPath = data.getData().toString();
 					}
-				} else if (imageToUploadUri != null) {
-					fileToUploadPath = imageToUploadUri.getPath();
+				} else if (mImageToUploadUri != null) {
+					fileToUploadPath = mImageToUploadUri.getPath();
 				}
 				if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
 					addImageToPendingList(fileToUploadPath);
@@ -294,8 +294,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				super.onActivityResult(requestCode, resultCode, data);
 			}
 		} else {
-			if (LinphoneUtils.isExtensionImage(imageToUploadUri.getPath())) {
-				addImageToPendingList(imageToUploadUri.getPath());
+			if (LinphoneUtils.isExtensionImage(mImageToUploadUri.getPath())) {
+				addImageToPendingList(mImageToUploadUri.getPath());
 			}
 		}
 	}
@@ -405,8 +405,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		List<Intent> cameraIntents = new ArrayList<Intent>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())+".jpeg"));
-		imageToUploadUri = Uri.fromFile(file);
-		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToUploadUri);
+		mImageToUploadUri = Uri.fromFile(file);
+		captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageToUploadUri);
 		cameraIntents.add(captureIntent);
 
 		Intent galleryIntent = new Intent();
@@ -490,18 +490,18 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			@Override
 			public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
 				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
-				if (holder != null && message.getMessageId().equals(holder.messageId)) {
-					if (state == ChatMessage.State.DeliveredToUser && message.isOutgoing()) {
+				if (holder != null && message.getMessageId().equals(holder.messageId) && message.isOutgoing()) {
+					if (state == ChatMessage.State.DeliveredToUser) {
 						holder.imdmLayout.setVisibility(View.VISIBLE);
 						holder.imdmIcon.setImageResource(R.drawable.message_delivered);
 						holder.imdmLabel.setText(R.string.delivered);
 						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorD));
-					} else if (state == ChatMessage.State.Displayed && message.isOutgoing()) {
+					} else if (state == ChatMessage.State.Displayed) {
 						holder.imdmLayout.setVisibility(View.VISIBLE);
 						holder.imdmIcon.setImageResource(R.drawable.message_read);
 						holder.imdmLabel.setText(R.string.displayed);
 						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorK));
-					} else if (state == ChatMessage.State.NotDelivered && message.isOutgoing()) {
+					} else if (state == ChatMessage.State.NotDelivered) {
 						holder.imdmLayout.setVisibility(View.VISIBLE);
 						holder.imdmIcon.setImageResource(R.drawable.message_undelivered);
 						holder.imdmLabel.setText(R.string.resend);

@@ -119,6 +119,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 
 		    ChatMessage message = null;//event.getChatMessage();
 		    holder.messageId = message.getMessageId();
+		    message.setUserData(holder);
 
 		    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
