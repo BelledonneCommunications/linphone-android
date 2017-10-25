@@ -1,5 +1,5 @@
 /*
-GroupChatFragment.java
+ChatEventsAdapter.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -20,12 +20,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
@@ -39,21 +54,31 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
+import org.linphone.mediastream.Log;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class ChatEventsAdapter extends BaseAdapter {
 	private Context mContext;
+	GroupChatFragment mFragment;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
+	private Bitmap mDefaultBitmap;
 
-    public ChatEventsAdapter(Context context, LayoutInflater inflater, EventLog[] history, List<LinphoneContact> participants) {
+    public ChatEventsAdapter(Context context, GroupChatFragment fragment, LayoutInflater inflater, EventLog[] history, List<LinphoneContact> participants) {
 	    mContext = context;
+	    mFragment = fragment;
         mLayoutInflater = inflater;
         mHistory = Arrays.asList(history);
 	    mParticipants = participants;
@@ -287,5 +312,177 @@ public class ChatEventsAdapter extends BaseAdapter {
 		}
 
 		return Compatibility.fromHtml(text);
+	}
+
+	public void loadBitmap(String path, ImageView imageView) {
+		if (cancelPotentialWork(path, imageView)) {
+			if (LinphoneUtils.isExtensionImage(path)) {
+				mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_attachment_over);
+			} else {
+				mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_attachment);
+			}
+
+			BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+			final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), mDefaultBitmap, task);
+			imageView.setImageDrawable(asyncBitmap);
+			task.execute(path);
+		}
+	}
+
+	private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+		private static final int SIZE_SMALL = 500;
+		private final WeakReference<ImageView> imageViewReference;
+		public String path;
+
+		public BitmapWorkerTask(ImageView imageView) {
+			path = null;
+			// Use a WeakReference to ensure the ImageView can be garbage collected
+			imageViewReference = new WeakReference<ImageView>(imageView);
+		}
+
+		// Decode image in background.
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			path = params[0];
+			Bitmap bm = null;
+			Bitmap thumbnail = null;
+			if(LinphoneUtils.isExtensionImage(path)) {
+				if (path.startsWith("content")) {
+					try {
+						bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));
+					} catch (FileNotFoundException e) {
+						Log.e(e);
+					} catch (IOException e) {
+						Log.e(e);
+					}
+				} else {
+					bm = BitmapFactory.decodeFile(path);
+				}
+
+				// Rotate the bitmap if possible/needed, using EXIF data
+				try {
+					Bitmap bm_tmp;
+					ExifInterface exif = new ExifInterface(path);
+					int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+					Matrix matrix = new Matrix();
+					if (pictureOrientation == 6) {
+						matrix.postRotate(90);
+					} else if (pictureOrientation == 3) {
+						matrix.postRotate(180);
+					} else if (pictureOrientation == 8) {
+						matrix.postRotate(270);
+					}
+					bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+					if (bm_tmp != bm) {
+						bm.recycle();
+						bm = bm_tmp;
+					} else {
+						bm_tmp = null;
+					}
+				} catch (Exception e) {
+					Log.e(e);
+				}
+
+				if (bm != null) {
+					thumbnail = ThumbnailUtils.extractThumbnail(bm, SIZE_SMALL, SIZE_SMALL);
+					bm.recycle();
+				}
+				return thumbnail;
+			}else
+				return mDefaultBitmap;
+		}
+
+		// Once complete, see if ImageView is still around and set bitmap.
+		@Override
+		protected void onPostExecute(Bitmap bitmap) {
+			if (isCancelled()) {
+				bitmap = null;
+			}
+			if (imageViewReference != null && bitmap != null) {
+				final ImageView imageView = imageViewReference.get();
+				final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+				if (this == bitmapWorkerTask && imageView != null) {
+					imageView.setImageBitmap(bitmap);
+
+					//Force scroll too bottom with setSelection() after image loaded and last messages
+					mFragment.scrollToBottom();
+
+					imageView.setTag(path);
+					imageView.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							File file = null;
+							Uri contentUri = null;
+							String imageUri = (String)v.getTag();
+							if (imageUri.startsWith("file://")) {
+								imageUri = imageUri.substring("file://".length());
+								file = new File(imageUri);
+								contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+							} else if (imageUri.startsWith("content://")) {
+								contentUri = Uri.parse(imageUri);
+							} else {
+								file = new File(imageUri);
+								contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+							}
+							String type = null;
+							String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+							if (extension != null) {
+								type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+							}
+							if(type != null) {
+								intent.setDataAndType(contentUri, type);
+							}else {
+								intent.setDataAndType(contentUri, "*/*");
+							}
+							intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+							mContext.startActivity(intent);
+						}
+					});
+				}
+			}
+		}
+	}
+
+	class AsyncBitmap extends BitmapDrawable {
+		private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+		public AsyncBitmap(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+			super(res, bitmap);
+			bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+		}
+
+		public BitmapWorkerTask getBitmapWorkerTask() {
+			return bitmapWorkerTaskReference.get();
+		}
+	}
+
+	private boolean cancelPotentialWork(String path, ImageView imageView) {
+		final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+		if (bitmapWorkerTask != null) {
+			final String bitmapData = bitmapWorkerTask.path;
+			// If bitmapData is not yet set or it differs from the new data
+			if (bitmapData == null || bitmapData != path) {
+				// Cancel previous task
+				bitmapWorkerTask.cancel(true);
+			} else {
+				// The same work is already in progress
+				return false;
+			}
+		}
+		// No task associated with the ImageView, or an existing task was cancelled
+		return true;
+	}
+
+	private BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+		if (imageView != null) {
+			final Drawable drawable = imageView.getDrawable();
+			if (drawable instanceof AsyncBitmap) {
+				final AsyncBitmap asyncDrawable = (AsyncBitmap) drawable;
+				return asyncDrawable.getBitmapWorkerTask();
+			}
+		}
+		return null;
 	}
 }

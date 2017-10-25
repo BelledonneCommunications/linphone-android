@@ -456,7 +456,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void displayChatRoomHistory() {
 		if (mChatRoom == null) return;
-		mMessagesAdapter = new ChatEventsAdapter(getActivity(), mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
+		mMessagesAdapter = new ChatEventsAdapter(getActivity(), this, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
 		mChatEventsList.setAdapter(mMessagesAdapter);
 	}
 
@@ -574,8 +574,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mMessageTextToSend.setText("");
 	}
 
-	private void scrollToBottom() {
-		mChatEventsList.setSelection(mMessagesAdapter.getCount() - 1);
+	public void scrollToBottom() {
+		if (((mChatEventsList.getLastVisiblePosition() >= (mMessagesAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mMessagesAdapter.getCount() - 1)))) {
+			mChatEventsList.setSelection(mMessagesAdapter.getCount() - 1);
+		}
 	}
 
 	@Override
