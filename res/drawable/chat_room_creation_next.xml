@@ -3,6 +3,6 @@
     <item android:state_enabled="true" 
         android:drawable="@drawable/next" />
     <item android:state_enabled="false"
-         android:drawable="@drawable/dialer_alt_next" />
+         android:drawable="@drawable/next_disabled" />
 </selector>
 
