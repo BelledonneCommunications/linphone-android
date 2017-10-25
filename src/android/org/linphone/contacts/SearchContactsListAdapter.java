@@ -120,7 +120,8 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			for (LinphoneContact contact : contacts) {
 				for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
 					if (noa.isSIPAddress()) {
-						ContactAddress ca = new ContactAddress(contact , noa.getValue(), contact.isFriend());
+						Address address = LinphoneManager.getLc().interpretUrl(noa.getValue());
+						ContactAddress ca = new ContactAddress(contact , address.asString(), contact.isFriend());
 						list.add(ca);
 					}
 				}
