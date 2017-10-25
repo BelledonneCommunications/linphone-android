@@ -24,9 +24,11 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,6 +39,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,6 +53,7 @@ import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -82,6 +87,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
 
+	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
 	private ChatEventsAdapter mMessagesAdapter;
 	private String mRemoteSipUri;
@@ -247,6 +253,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 		ContactsManager.addContactsListener(this);
 
+		addVirtualKeyboardVisiblityListener();
+		// Force hide keyboard
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
@@ -255,6 +265,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onPause() {
 		ContactsManager.removeContactsListener(this);
+		removeVirtualKeyboardVisiblityListener();
 		super.onPause();
 	}
 
@@ -298,6 +309,36 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				addImageToPendingList(mImageToUploadUri.getPath());
 			}
 		}
+	}
+
+	private void addVirtualKeyboardVisiblityListener() {
+		mKeyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				Rect visibleArea = new Rect();
+				getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(visibleArea);
+
+				int heightDiff = getActivity().getWindow().getDecorView().getRootView().getHeight() - (visibleArea.bottom - visibleArea.top);
+				if (heightDiff > 200) {
+					showKeyboardVisibleMode();
+				} else {
+					hideKeyboardVisibleMode();
+				}
+			}
+		};
+		getActivity().getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(mKeyboardListener);
+	}
+
+	private void removeVirtualKeyboardVisiblityListener() {
+		Compatibility.removeGlobalLayoutListener(getActivity().getWindow().getDecorView().getViewTreeObserver(), mKeyboardListener);
+	}
+
+	public void showKeyboardVisibleMode() {
+		LinphoneActivity.instance().hideTabBar(true);
+	}
+
+	public void hideKeyboardVisibleMode() {
+		LinphoneActivity.instance().hideTabBar(false);
 	}
 
 	private String getRealPathFromURI(Uri contentUri) {
@@ -363,7 +404,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void displayChatRoomHeader() {
 		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (core == null) return;
+		if (core == null || mChatRoom == null) return;
 
 		mRemoteComposing.setVisibility(View.INVISIBLE);
 
@@ -397,6 +438,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	private void displayChatRoomHistory() {
+		if (mChatRoom == null) return;
 		mMessagesAdapter = new ChatEventsAdapter(getActivity(), mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
 		mChatEventsList.setAdapter(mMessagesAdapter);
 	}
