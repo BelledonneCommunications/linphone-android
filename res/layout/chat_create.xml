@@ -80,17 +80,6 @@
 			android:padding="18dp"
 			android:layout_gravity="right"/>
 
-		<ImageView
-			android:id="@+id/confirm"
-			android:src="@drawable/chat_room_creation_confirm"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_valid"
-			android:padding="18dp"
-			android:layout_gravity="right"/>
-
 	</LinearLayout>
 
 	<RelativeLayout
@@ -123,27 +112,6 @@
 
 	</RelativeLayout>
 
-	<RelativeLayout
-		android:id="@+id/layoutSubjectField"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="10dp">
-
-		<EditText
-			android:id="@+id/subjectField"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:background="@drawable/resizable_textfield"
-			android:contentDescription="@string/content_description_conversation_subject"
-			android:hint="@string/conversation_subject_hint"
-			android:gravity="center"
-			android:inputType="textEmailSubject"
-			android:paddingRight="5dp"
-			android:textColor="@android:color/black"
-			android:textCursorDrawable="@null"/>
-
-	</RelativeLayout>
-
 	<HorizontalScrollView
 		android:id="@+id/layoutContactsSelected"
 		android:layout_width="match_parent"
@@ -151,7 +119,6 @@
 		android:layout_marginTop="5dp"
 		android:background="@drawable/resizable_textfield"
 		android:lines="1"
-		android:visibility="gone"
 		android:fadeScrollbars="false">
 
 		<LinearLayout

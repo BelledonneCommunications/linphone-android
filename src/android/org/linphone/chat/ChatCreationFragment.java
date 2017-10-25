@@ -55,12 +55,12 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ImageView allContacts, linphoneContacts;
 	private boolean onlyDisplayLinphoneContacts;
 	private View allContactsSelected, linphoneContactsSelected;
-	private RelativeLayout searchLayout, subjectLayout;
+	private RelativeLayout searchLayout;
 	private ImageView clearSearchField;
-	private EditText searchField, subjectField;
+	private EditText searchField;
 	private ProgressBar contactsFetchInProgress;
 	private SearchContactsListAdapter searchAdapter;
-	private ImageView back, next, confirm;
+	private ImageView back, next;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,31 +92,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		next = view.findViewById(R.id.next);
 		next.setOnClickListener(this);
 		next.setEnabled(false);
-
-		confirm = view.findViewById(R.id.confirm);
-		confirm.setOnClickListener(this);
-		confirm.setEnabled(false);
-
 		searchLayout = view.findViewById(R.id.layoutSearchField);
-
-		subjectLayout = view.findViewById(R.id.layoutSubjectField);
-		subjectField = view.findViewById(R.id.subjectField);
-		subjectField.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				confirm.setEnabled(subjectField.getText().length() > 0);
-			}
-		});
 
 		clearSearchField = view.findViewById(R.id.clearSearchField);
 		clearSearchField.setOnClickListener(this);
@@ -174,9 +150,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private void displayChatCreation() {
 		next.setVisibility(View.VISIBLE);
 		next.setEnabled(contactsSelected.size() > 0);
-		confirm.setVisibility(View.GONE);
 
-		subjectLayout.setVisibility(View.GONE);
 		contactsList.setVisibility(View.VISIBLE);
 		searchLayout.setVisibility(View.VISIBLE);
 		allContacts.setVisibility(View.VISIBLE);
@@ -197,7 +171,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			for (ContactAddress ca : contactsSelected) {
 				addSelectedContactAddress(ca);
 			}
-			contactsSelectLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -208,12 +181,10 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private void updateListSelected() {
 		if (contactsSelected.size() > 0) {
-			contactsSelectLayout.setVisibility(View.VISIBLE);
 			contactsSelectLayout.invalidate();
 			next.setEnabled(true);
 		} else {
 			next.setEnabled(false);
-			contactsSelectLayout.setVisibility(View.GONE);
 		}
 	}
 
