@@ -249,7 +249,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			csv.setContactName(ca);
 			contactsSelected.add(ca);
 			addSelectedContactAddress(ca);
-
 		} else {
 			contactsSelected.remove(getIndexOfCa(ca, contactsSelected));
 			contactsSelectedLayout.removeAllViews();
@@ -260,11 +259,12 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		}
 		searchAdapter.setContactsSelectedList(contactsSelected);
 		contactsSelectedLayout.invalidate();
+
 	}
 
 	private void removeContactFromSelection(ContactAddress ca) {
 		updateContactsClick(ca, searchAdapter.getContactsSelectedList());
-		updateList();
+		searchAdapter.notifyDataSetInvalidated();
 		updateListSelected();
 	}
 
