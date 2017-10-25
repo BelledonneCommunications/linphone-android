@@ -24,7 +24,6 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -66,6 +65,8 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
+import org.linphone.core.Friend;
+import org.linphone.core.FriendList;
 import org.linphone.core.Participant;
 import org.linphone.receivers.ContactsUpdatedListener;
 
@@ -275,16 +276,16 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
 				String fileToUploadPath = null;
 				if (data != null && data.getData() != null) {
-					/*if (data.getData().toString().contains("com.android.contacts/contacts/")) {
-						if (getCVSPathFromLookupUri(data.getData()) != null) {
-							fileToUploadPath = getCVSPathFromLookupUri(data.getData()).toString();
+					if (data.getData().toString().contains("com.android.contacts/contacts/")) {
+						if (getCVSPathFromLookupUri(data.getData().toString()) != null) {
+							fileToUploadPath = getCVSPathFromLookupUri(data.getData().toString()).toString();
 						} else {
-							LinphoneActivity.instance().displayCustomToast("Something wrong happened", Toast.LENGTH_LONG);
+							//TODO Error
 							return;
 						}
 					} else {
 						fileToUploadPath = getRealPathFromURI(data.getData());
-					}*/
+					}
 					fileToUploadPath = getRealPathFromURI(data.getData());
 					if (fileToUploadPath == null) {
 						fileToUploadPath = data.getData().toString();
@@ -294,10 +295,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				}
 				if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
 					addImageToPendingList(fileToUploadPath);
-				}
-				else {
+				} else {
 					if (fileToUploadPath.startsWith("content://")) {
 						fileToUploadPath = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
+					} else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
+						fileToUploadPath = getCVSPathFromLookupUri(fileToUploadPath).toString();
 					}
 					addFileToPendingList(fileToUploadPath);
 				}
@@ -350,6 +352,21 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			String result = cursor.getString(column_index);
 			cursor.close();
 			return result;
+		}
+		return null;
+	}
+
+	public Uri getCVSPathFromLookupUri(String content) {
+		String contactId = LinphoneUtils.getNameFromFilePath(content);
+		FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
+		for (FriendList list : friendList) {
+			for (Friend friend : list.getFriends()) {
+				if (friend.getRefKey().toString().equals(contactId)) {
+					String contactVcard = friend.getVcard().asVcard4String();
+					Uri path = LinphoneUtils.createCvsFromString(contactVcard);
+					return path;
+				}
+			}
 		}
 		return null;
 	}
