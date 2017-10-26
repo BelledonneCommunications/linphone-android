@@ -269,11 +269,9 @@ copy-libs:
 \t\tcp -R liblinphone-sdk/android-arm64/share/linphonej/java/* src/linphone-wrapper && \\
 \t\tmkdir -p libs-debug/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/lib/lib*.so libs-debug/arm64-v8a && \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib64/lib*.so libs-debug/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs-debug/arm64-v8a && \\
 \t\tmkdir -p libs/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/lib/lib*.so libs/arm64-v8a && \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib64/lib*.so libs/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/lib/mediastreamer/plugins/*.so libs/arm64-v8a && \\
 \t\tsh WORK/android-arm64/strip.sh libs/arm64-v8a/*.so; \\
 \tfi
