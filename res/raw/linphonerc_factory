@@ -15,6 +15,7 @@ auto_net_state_mon=0
 auto_answer_replacing_calls=1
 ping_with_options=0
 rls_uri=
+use_cpim=1
 
 [rtp]
 audio_rtp_port=7076
