@@ -123,12 +123,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static org.linphone.activities.LinphoneActivity.ChatRoomContainer.createChatroomContainer;
 
 public class LinphoneActivity extends LinphoneGenericActivity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
 	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
@@ -907,62 +904,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	public StatusFragment getStatusFragment() {
 		return statusFragment;
-	}
-
-	static class ChatRoomContainer{
-		private ChatRoom mCr;
-		long mTime;
-		static public ChatRoomContainer createChatroomContainer(ChatRoom chatRoom) {
-			if (chatRoom.getHistorySize() <= 0) return null;
-			return new ChatRoomContainer(chatRoom);
-		}
-		public ChatRoomContainer(ChatRoom chatroom){
-			mCr = chatroom;
-			ChatMessage[] lastMsg = chatroom.getHistory(1);
-			if (lastMsg != null && lastMsg.length > 0 && lastMsg[0] != null) {
-				mTime = lastMsg[0].getTime();
-			}else mTime = 0;
-		}
-		ChatRoom getChatRoom(){
-			return mCr;
-		}
-		long getTime(){
-			return mTime;
-		}
-	};
-	public List<String> getChatList() {
-		ArrayList<String> chatList = new ArrayList<String>();
-
-		ChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-		List<ChatRoomContainer> rooms = new ArrayList<ChatRoomContainer>();
-
-		for (ChatRoom chatroom : chats) {
-			ChatRoomContainer crc = createChatroomContainer(chatroom);
-			if (crc != null) rooms.add(crc);
-		}
-
-		if (rooms.size() > 1) {
-			Collections.sort(rooms, new Comparator<ChatRoomContainer>() {
-				@Override
-				public int compare(ChatRoomContainer a, ChatRoomContainer b) {
-					long atime = a.getTime();
-					long btime = b.getTime();
-
-					if (atime > btime)
-						return -1;
-					else if (btime > atime)
-						return 1;
-					else
-						return 0;
-				}
-			});
-		}
-
-		for (ChatRoomContainer chatroomContainer : rooms) {
-			chatList.add(chatroomContainer.getChatRoom().getPeerAddress().asStringUriOnly());
-		}
-
-		return chatList;
 	}
 
 	public void removeFromChatList(String sipUri) {
