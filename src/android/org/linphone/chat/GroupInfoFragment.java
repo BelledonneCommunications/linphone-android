@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -48,6 +49,7 @@ public class GroupInfoFragment extends Fragment {
 	private LayoutInflater mInflater;
 	private ListView mParticipantsList;
 	private LinearLayout mLeaveGroupButton;
+	private RelativeLayout mWaitLayout;
 	private GroupInfoAdapter mAdapter;
 	private boolean mIsAlreadyCreatedGroup;
 	private boolean mIsEditionEnabled;
@@ -130,10 +132,12 @@ public class GroupInfoFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				if (!mIsAlreadyCreatedGroup) {
+					mWaitLayout.setVisibility(View.VISIBLE);
 					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString());
 					chatRoom.setListener(new ChatRoomListenerStub() {
 						@Override
 						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+							mWaitLayout.setVisibility(View.GONE);
 							if (newState == ChatRoom.State.Created) {
 								LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
@@ -162,6 +166,9 @@ public class GroupInfoFragment extends Fragment {
 			mConfirmButton.setVisibility(View.INVISIBLE);
 			mAddParticipantsButton.setVisibility(View.GONE);
 		}
+
+		mWaitLayout = view.findViewById(R.id.waitScreen);
+		mWaitLayout.setVisibility(View.GONE);
 
 		return view;
 	}

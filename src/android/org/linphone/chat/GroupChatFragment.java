@@ -68,6 +68,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.Participant;
+import org.linphone.mediastream.Log;
 import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.io.File;
@@ -373,7 +374,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
-		if (mChatRoom.getNbParticipants() > 1) {
+		if (mChatRoom.canHandleParticipants()) {
 			int index = 0;
 			StringBuilder participantsLabel = new StringBuilder();
 			for (Participant p : mChatRoom.getParticipants()) {
@@ -429,7 +430,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			if (mChatRoom.getNbParticipants() > 1) {
+			if (mChatRoom.canHandleParticipants()) {
 				mCallButton.setVisibility(View.GONE);
 				mGroupInfosButton.setVisibility(View.VISIBLE);
 				mRoomLabel.setText(mChatRoom.getSubject());
@@ -637,7 +638,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-		if (cr.getNbParticipants() > 1) {
+		if (cr.canHandleParticipants()) {
 			ArrayList<String> composing = new ArrayList<>();
 			for (Address a : cr.getComposingAddresses()) {
 				boolean found = false;
