@@ -58,6 +58,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Buffer;
+import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
@@ -95,7 +96,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private String mRemoteSipUri;
 	private Address mRemoteSipAddress;
 	private ChatRoom mChatRoom;
-	private List<LinphoneContact> mParticipants;
+	private ArrayList<LinphoneContact> mParticipants;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -571,6 +572,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		});
 		msg.send();
+
 		mFilesUploadLayout.removeAllViews();
 		mMessageTextToSend.setText("");
 	}
@@ -579,6 +581,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		if (((mChatEventsList.getLastVisiblePosition() >= (mMessagesAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mMessagesAdapter.getCount() - 1)))) {
 			mChatEventsList.setSelection(mMessagesAdapter.getCount() - 1);
 		}
+	}
+
+	@Override
+	public void onChatMessageSent(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 	}
 
 	@Override
@@ -625,20 +632,18 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
-	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
+	public void onChatMessageReceived(ChatRoom cr, EventLog event) {
 		cr.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
 
+		ChatMessage msg = event.getChatMessage();
 		String externalBodyUrl = msg.getExternalBodyUrl();
 		Content fileTransferContent = msg.getFileTransferInformation();
 		if (externalBodyUrl != null || fileTransferContent != null) {
 			LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
 		}
-	}
 
-	@Override
-	public void onChatMessageReceived(ChatRoom cr, EventLog event_log) {
-		ChatMessage msg = event_log.getChatMessage();
+		mMessagesAdapter.addToHistory(event);
 	}
 
 	@Override
@@ -702,22 +707,31 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
+
+	}
+
+	@Override
 	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 
 	}
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 
 	}
 
 	@Override
 	public void onParticipantRemoved(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 
 	}
 
 	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 
 	}
 
@@ -728,11 +742,13 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantAdded(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 
 	}
 
 	@Override
 	public void onSubjectChanged(ChatRoom cr, EventLog event) {
+		mMessagesAdapter.addToHistory(event);
 
 	}
 

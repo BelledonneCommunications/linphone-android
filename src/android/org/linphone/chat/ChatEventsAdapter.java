@@ -61,6 +61,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -76,16 +77,16 @@ public class ChatEventsAdapter extends BaseAdapter {
     private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap;
 
-    public ChatEventsAdapter(Context context, GroupChatFragment fragment, LayoutInflater inflater, EventLog[] history, List<LinphoneContact> participants) {
+    public ChatEventsAdapter(Context context, GroupChatFragment fragment, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
 	    mContext = context;
 	    mFragment = fragment;
         mLayoutInflater = inflater;
-        mHistory = Arrays.asList(history);
+        mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
     }
 
     public void updateHistory(EventLog[] history) {
-	    mHistory = Arrays.asList(history);
+	    mHistory = new ArrayList<>(Arrays.asList(history));
 	    notifyDataSetChanged();
     }
 
@@ -94,7 +95,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 	    notifyDataSetChanged();
     }
 
-    public void setContacts(List<LinphoneContact> participants) {
+    public void setContacts(ArrayList<LinphoneContact> participants) {
 	    mParticipants = participants;
     }
 
@@ -142,7 +143,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 	    if (event.getType() == EventLog.Type.ConferenceChatMessage) {
 		    holder.bubbleLayout.setVisibility(View.VISIBLE);
 
-		    ChatMessage message = null;//event.getChatMessage();
+		    ChatMessage message = event.getChatMessage();
 		    holder.messageId = message.getMessageId();
 		    message.setUserData(holder);
 
@@ -154,6 +155,9 @@ public class ChatEventsAdapter extends BaseAdapter {
 
 		    if (message.isOutgoing()) {
 			    displayName = remoteSender.getDisplayName();
+			    if (displayName == null || displayName.isEmpty()) {
+				    displayName = remoteSender.getUsername();
+			    }
 
 			    if (status == ChatMessage.State.InProgress) {
 				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
