@@ -637,6 +637,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onChatMessageReceived(ChatRoom cr, EventLog event_log) {
+		ChatMessage msg = event_log.getChatMessage();
+	}
+
+	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
 		if (cr.canHandleParticipants()) {
 			ArrayList<String> composing = new ArrayList<>();
