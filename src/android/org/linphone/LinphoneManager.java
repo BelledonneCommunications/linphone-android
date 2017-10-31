@@ -199,6 +199,7 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	private Sensor mProximity;
 	private boolean mProximitySensingEnabled;
 	private boolean handsetON = false;
+	private Address mCurrentChatRoomAddress;
 
 	public String wizardLoginViewDomain = null;
 
@@ -1222,6 +1223,11 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 			return;
 		}
 
+		if (mCurrentChatRoomAddress != null && cr.getPeerAddress().asStringUriOnly().equals(mCurrentChatRoomAddress.asStringUriOnly())) {
+			Log.i("Message received for currently displayed chat room, do not make a notification");
+			return;
+		}
+
 		Address from = message.getFromAddress();
 		String to = message.getToAddress().asString();
 
@@ -1231,9 +1237,9 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				if (contact != null) {
-					LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), contact.getFullName(), textMessage);
+					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), contact.getFullName(), textMessage);
 				} else {
-					LinphoneService.instance().removedNotification(to, from.asStringUriOnly(), from.getUsername(), textMessage);
+					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), from.getUsername(), textMessage);
 				}
 			}
 		} catch (Exception e) {
@@ -1241,24 +1247,15 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		}
 	}
 
+	public void setCurrentChatRoomAddress(Address address) {
+		mCurrentChatRoomAddress = address;
+	}
+
 	@Override
 	public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delay_ms) {
 		((AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE)).setMode(AudioManager.MODE_NORMAL);
 		mAudioManager.abandonAudioFocus(null);
 		Log.i("Set audio mode on 'Normal'");
-	}
-
-	public void setAreDisplayAlertMessage(boolean b) {
-		mAreDisplayAlertMessage = b;
-	}
-
-	public String getLastLcStatusMessage() {
-		return lastLcStatusMessage;
-	}
-
-	public void removed(final Core lc, final String message) {
-		Log.i(message);
-		lastLcStatusMessage=message;
 	}
 
 	public void onGlobalStateChanged(final Core lc, final GlobalState state, final String message) {

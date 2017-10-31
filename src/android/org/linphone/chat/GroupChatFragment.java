@@ -261,12 +261,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
+
+		LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
 	}
 
 	@Override
 	public void onPause() {
 		ContactsManager.removeContactsListener(this);
 		removeVirtualKeyboardVisiblityListener();
+		LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
 		super.onPause();
 	}
 
@@ -411,7 +414,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			return;
 		}
 
-		mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
+		mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asString());
 		mChatRoom.setListener(this);
 		mChatRoom.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
@@ -595,10 +598,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				String to = msg.getToAddress().asString();
 				if (contact != null) {
-					LinphoneService.instance().removedNotification(to, from.asStringUriOnly(),
+					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(),
 							contact.getFullName(), getString(R.string.message_cant_be_decrypted_notif));
 				} else {
-					LinphoneService.instance().removedNotification(to, from.asStringUriOnly(),
+					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(),
 							from.getUsername(), getString(R.string.message_cant_be_decrypted_notif));
 				}
 			}
