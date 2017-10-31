@@ -58,7 +58,6 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Buffer;
-import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
@@ -69,7 +68,6 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.Participant;
-import org.linphone.mediastream.Log;
 import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.io.File;
@@ -116,7 +114,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().popBackStack();
+				LinphoneActivity.instance().goToChatList();
 			}
 		});
 
@@ -157,7 +155,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().displayChatGroupInfos(participants, mChatRoom.getSubject(), true, /*TODO*/ false);
+				LinphoneActivity.instance().goToChatGroupInfos(participants, mChatRoom.getSubject(), true, /*TODO*/ false);
 			}
 		});
 
@@ -714,25 +712,21 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
 		mMessagesAdapter.addToHistory(event);
-
 	}
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
 		mMessagesAdapter.addToHistory(event);
-
 	}
 
 	@Override
 	public void onParticipantRemoved(ChatRoom cr, EventLog event) {
 		mMessagesAdapter.addToHistory(event);
-
 	}
 
 	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
 		mMessagesAdapter.addToHistory(event);
-
 	}
 
 	@Override
@@ -743,13 +737,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onParticipantAdded(ChatRoom cr, EventLog event) {
 		mMessagesAdapter.addToHistory(event);
-
 	}
 
 	@Override
 	public void onSubjectChanged(ChatRoom cr, EventLog event) {
 		mMessagesAdapter.addToHistory(event);
-
+		mRoomLabel.setText(event.getSubject());
 	}
 
 	@Override
