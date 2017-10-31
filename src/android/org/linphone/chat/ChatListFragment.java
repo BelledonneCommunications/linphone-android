@@ -79,34 +79,34 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		mInflater = inflater;
 
 		View view = inflater.inflate(R.layout.chatlist, container, false);
-		chatList = (ListView) view.findViewById(R.id.chatList);
+		chatList = view.findViewById(R.id.chatList);
 		chatList.setOnItemClickListener(this);
 		registerForContextMenu(chatList);
 
-		noChatHistory = (TextView) view.findViewById(R.id.noChatHistory);
+		noChatHistory = view.findViewById(R.id.noChatHistory);
 
-		editList = (LinearLayout) view.findViewById(R.id.edit_list);
-		topbar = (LinearLayout) view.findViewById(R.id.top_bar);
+		editList = view.findViewById(R.id.edit_list);
+		topbar = view.findViewById(R.id.top_bar);
 
-		cancel = (ImageView) view.findViewById(R.id.cancel);
+		cancel = view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
-		edit = (ImageView) view.findViewById(R.id.edit);
+		edit = view.findViewById(R.id.edit);
 		edit.setOnClickListener(this);
 
-		newDiscussion = (ImageView) view.findViewById(R.id.new_discussion);
+		newDiscussion = view.findViewById(R.id.new_discussion);
 		newDiscussion.setOnClickListener(this);
 
-		selectAll = (ImageView) view.findViewById(R.id.select_all);
+		selectAll = view.findViewById(R.id.select_all);
 		selectAll.setOnClickListener(this);
 
-		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
+		deselectAll = view.findViewById(R.id.deselect_all);
 		deselectAll.setOnClickListener(this);
 
-		backInCall = (ImageView) view.findViewById(R.id.back_in_call);
+		backInCall = view.findViewById(R.id.back_in_call);
 		backInCall.setOnClickListener(this);
 
-		delete = (ImageView) view.findViewById(R.id.delete);
+		delete = view.findViewById(R.id.delete);
 		delete.setOnClickListener(this);
 
 		mListener = new CoreListenerStub() {
@@ -310,8 +310,8 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 		if (id == R.id.delete) {
 			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-			Button delete = (Button) dialog.findViewById(R.id.delete_button);
-			Button cancel = (Button) dialog.findViewById(R.id.cancel);
+			Button delete = dialog.findViewById(R.id.delete_button);
+			Button cancel = dialog.findViewById(R.id.cancel);
 
 			delete.setOnClickListener(new OnClickListener() {
 				@Override
@@ -341,21 +341,6 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 		else if (id == R.id.new_discussion) {
 			LinphoneActivity.instance().goToChatCreator(null, false);
-			/*String sipUri = fastNewChat.getText().toString();
-			if (sipUri.equals("")) {
-				LinphoneActivity.instance().displayContacts(true);
-			} else {
-				if (!LinphoneUtils.isSipAddress(sipUri)) {
-					if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
-						return;
-					}
-					sipUri = sipUri + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
-				}
-				if (!LinphoneUtils.isStrictSipAddress(sipUri)) {
-					sipUri = "sip:" + sipUri;
-				}
-
-			}*/
 		}
 	}
 
@@ -383,12 +368,12 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			public ImageView contactPicture;
 
 			public ViewHolder(View view) {
-				lastMessageView = (TextView) view.findViewById(R.id.lastMessage);
-				date = (TextView) view.findViewById(R.id.date);
-				displayName = (TextView) view.findViewById(R.id.sipUri);
-				unreadMessages = (TextView) view.findViewById(R.id.unreadMessages);
-				select = (CheckBox) view.findViewById(R.id.delete_chatroom);
-				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+				lastMessageView = view.findViewById(R.id.lastMessage);
+				date = view.findViewById(R.id.date);
+				displayName = view.findViewById(R.id.sipUri);
+				unreadMessages = view.findViewById(R.id.unreadMessages);
+				select = view.findViewById(R.id.delete_chatroom);
+				contactPicture = view.findViewById(R.id.contact_picture);
 			}
 		}
 

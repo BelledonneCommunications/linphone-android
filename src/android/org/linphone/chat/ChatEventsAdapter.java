@@ -251,7 +251,35 @@ public class ChatEventsAdapter extends BaseAdapter {
 	    } else {
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
-		    holder.eventMessage.setText(""); //TODO
+		    Log.e("Conference event type is " + event.getType().toString());
+		    //TODO
+		    switch (event.getType()) {
+			    case ConferenceCreated:
+				    holder.eventMessage.setText("Created");
+			    	break;
+			    case ConferenceDestroyed:
+				    holder.eventMessage.setText("Destroyed");
+			    	break;
+			    case ConferenceParticipantAdded:
+				    holder.eventMessage.setText("Participant added");
+			    	break;
+			    case ConferenceParticipantRemoved:
+				    holder.eventMessage.setText("Participant removed");
+			    	break;
+			    case ConferenceSubjectChanged:
+				    holder.eventMessage.setText("Subject changed");
+			    	break;
+			    case ConferenceParticipantSetAdmin:
+				    holder.eventMessage.setText("Admin set");
+			    	break;
+			    case ConferenceParticipantUnsetAdmin:
+				    holder.eventMessage.setText("Admin unset");
+			    	break;
+			    case None:
+			    default:
+			    	//TODO
+			    	break;
+		    }
 		    holder.eventTime.setText(LinphoneUtils.timestampToHumanDate(mContext, event.getTime(), R.string.messages_date_format));
 	    }
 
