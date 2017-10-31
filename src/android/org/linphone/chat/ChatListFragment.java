@@ -436,13 +436,13 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 				if (msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppdata() != null) {
 					holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 					time = msg.getTime();
-					holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+					holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(), time, R.string.messages_list_date_format));
 					holder.lastMessageView.setText("");
 				} else if (msg.getText() != null && msg.getText().length() > 0 ){
 					message = msg.getText();
 					holder.lastMessageView.setBackgroundResource(0);
 					time = msg.getTime();
-					holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),time,getString(R.string.messages_list_date_format)));
+					holder.date.setText(LinphoneUtils.timestampToHumanDate(getActivity(), time, R.string.messages_list_date_format));
 					holder.lastMessageView.setText(message);
 				}
 			}

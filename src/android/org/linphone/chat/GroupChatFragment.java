@@ -139,7 +139,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			@Override
 			public void onClick(View view) {
 				if (mChatRoom == null) return;
-				ArrayList<ContactAddress> participants = new ArrayList<ContactAddress>();
+				ArrayList<ContactAddress> participants = new ArrayList<>();
 				for (Participant p : mChatRoom.getParticipants()) {
 					Address a = p.getAddress();
 					LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(a);

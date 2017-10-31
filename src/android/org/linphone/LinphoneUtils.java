@@ -164,10 +164,14 @@ public final class LinphoneUtils {
 		return true;
 	}
 
+	public static String timestampToHumanDate(Context context, long timestamp, int resFormat) {
+		return LinphoneUtils.timestampToHumanDate(context, timestamp, context.getString(resFormat));
+	}
+
 	public static String timestampToHumanDate(Context context, long timestamp, String format) {
 		try {
 			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(timestamp);
+			cal.setTimeInMillis(timestamp * 1000); // Core returns timestamps in seconds...
 
 			SimpleDateFormat dateFormat;
 			if (isToday(cal)) {

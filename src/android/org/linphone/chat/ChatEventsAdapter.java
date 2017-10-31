@@ -236,7 +236,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 		    }
-		    holder.contactName.setText(timestampToHumanDate(mContext, message.getTime()) + " - " + displayName);
+		    holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
 
 		    Spanned text = null;
 		    String msg = message.getText();
@@ -252,29 +252,11 @@ public class ChatEventsAdapter extends BaseAdapter {
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
 		    holder.eventMessage.setText(""); //TODO
-		    holder.eventTime.setText(timestampToHumanDate(mContext, event.getTime()));
+		    holder.eventTime.setText(LinphoneUtils.timestampToHumanDate(mContext, event.getTime(), R.string.messages_date_format));
 	    }
 
         return view;
     }
-
-	private String timestampToHumanDate(Context context, long timestamp) {
-		try {
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(timestamp);
-
-			SimpleDateFormat dateFormat;
-			if (isToday(cal)) {
-				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format));
-			} else {
-				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.messages_date_format));
-			}
-
-			return dateFormat.format(cal.getTime());
-		} catch (NumberFormatException nfe) {
-			return String.valueOf(timestamp);
-		}
-	}
 
 	private boolean isToday(Calendar cal) {
 		return isSameDay(cal, Calendar.getInstance());
