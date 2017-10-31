@@ -159,6 +159,9 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		List<ContactAddress> result = new ArrayList<>();
 
 		String searchAddress = "sip:" + search + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
+		if (search.contains("@") || search.startsWith("sip:")) {
+			searchAddress = search;
+		}
 
         boolean searchFound = false;
 		if (search != null) {
