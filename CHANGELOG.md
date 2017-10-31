@@ -12,14 +12,20 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
-## [3.2.8]
+## [3.3.0] - 2017-10-18
 
 ### Added
-- File sharing
+- Integration with Android O
+- New video adaptive bitrate algorithm(More informations [here](https://wiki.linphone.org/xwiki/wiki/public/view/FAQ/How%20does%20adaptive%20bitrate%20algorithm%20work%20%3F/))
+
+### Changed
+- Application is no more managing in-call wakelock, it's now managed by the library
 
 ### Fixed
 - Crashs in new chat view
 - Contacts management
+- Random crash in chatroom
+- Improve chats list loading time
 
 ## [3.2.7] - 2017-05-15
 

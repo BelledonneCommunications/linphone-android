@@ -21,7 +21,7 @@ buildscript {
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
     if (googleFile.exists()) {
-      classpath 'com.google.gms:google-services:3.1.0'
+      classpath 'com.google.gms:google-services:3.+'
     }
   }
 }
@@ -45,7 +45,7 @@ dependencies {
   androidTestCompile 'junit:junit:+'
   compile 'org.apache.commons:commons-compress:+'
   if (firebaseEnable()) {
-    compile 'com.google.firebase:firebase-messaging:11.4.0'
+    compile 'com.google.firebase:firebase-messaging:11.+'
   } else {
     compile fileTree(include: 'gcm.jar', dir: 'libs')
     compile 'com.android.support:support-v4:+'
@@ -84,7 +84,7 @@ excludePackage.add('**/LICENSE.txt')
 android {
   defaultConfig {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "26.0.1"
     applicationId getPackageName()
     multiDexEnabled true
 
@@ -158,8 +158,10 @@ android {
     debug.setRoot('build-types/debug')
     release.setRoot('build-types/release')
   }
-  compileSdkVersion 26
-  buildToolsVersion '26.0.1'
+  packagingOptions {
+    pickFirst 'META-INF/NOTICE'
+    pickFirst 'META-INF/LICENSE'
+  }
 }
 
 // Grant permissions

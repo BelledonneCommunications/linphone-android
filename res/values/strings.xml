@@ -191,6 +191,7 @@
     <string name="displayed">Read</string>
     <string name="delivered">Delivered</string>
     <string name="resend">Resend</string>
+    <string name="error_opening_file">An error occurs when opening this file.</string>
     <string name="conversation_information">Infos</string>
     <string name="administrator">Admin</string>
     <string name="conversation_subject_hint">Name your group</string>
