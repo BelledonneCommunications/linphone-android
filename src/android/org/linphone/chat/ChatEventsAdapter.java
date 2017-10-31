@@ -52,6 +52,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.mediastream.Log;
@@ -240,7 +241,12 @@ public class ChatEventsAdapter extends BaseAdapter {
 
 		    Spanned text = null;
 		    String msg = message.getText();
-		    if (msg != null) {
+
+		    String externalBodyUrl = message.getExternalBodyUrl();
+		    Content fileTransferContent = message.getFileTransferInformation();
+		    if (externalBodyUrl != null || fileTransferContent != null) {
+			    //TODO file transfer
+		    } else if (msg != null) {
 			    text = getTextWithHttpLinks(msg);
 			    holder.messageText.setText(text);
 			    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
