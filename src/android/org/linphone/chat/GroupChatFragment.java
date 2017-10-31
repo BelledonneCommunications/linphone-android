@@ -411,7 +411,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			return;
 		}
 
-		mChatRoom = core.getChatRoom(mRemoteSipAddress);
+		mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
 		mChatRoom.setListener(this);
 		mChatRoom.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
@@ -552,17 +552,17 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				if (holder != null && message.getMessageId().equals(holder.messageId) && message.isOutgoing()) {
 					if (state == ChatMessage.State.DeliveredToUser) {
 						holder.imdmLayout.setVisibility(View.VISIBLE);
-						holder.imdmIcon.setImageResource(R.drawable.message_delivered);
+						holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
 						holder.imdmLabel.setText(R.string.delivered);
 						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorD));
 					} else if (state == ChatMessage.State.Displayed) {
 						holder.imdmLayout.setVisibility(View.VISIBLE);
-						holder.imdmIcon.setImageResource(R.drawable.message_read);
+						holder.imdmIcon.setImageResource(R.drawable.chat_read);
 						holder.imdmLabel.setText(R.string.displayed);
 						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorK));
 					} else if (state == ChatMessage.State.NotDelivered) {
 						holder.imdmLayout.setVisibility(View.VISIBLE);
-						holder.imdmIcon.setImageResource(R.drawable.message_undelivered);
+						holder.imdmIcon.setImageResource(R.drawable.chat_error);
 						holder.imdmLabel.setText(R.string.resend);
 						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorI));
 					}
