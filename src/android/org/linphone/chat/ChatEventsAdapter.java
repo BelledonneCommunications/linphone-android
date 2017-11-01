@@ -19,8 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +33,7 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.Spanned;
@@ -51,7 +54,9 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.Buffer;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessageListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
@@ -70,7 +75,7 @@ import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatEventsAdapter extends BaseAdapter {
+public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListener {
 	private Context mContext;
 	GroupChatFragment mFragment;
     private List<EventLog> mHistory;
@@ -144,7 +149,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 	    if (event.getType() == EventLog.Type.ConferenceChatMessage) {
 		    holder.bubbleLayout.setVisibility(View.VISIBLE);
 
-		    ChatMessage message = event.getChatMessage();
+		    final ChatMessage message = event.getChatMessage();
 		    holder.messageId = message.getMessageId();
 		    message.setUserData(holder);
 
@@ -244,8 +249,47 @@ public class ChatEventsAdapter extends BaseAdapter {
 
 		    String externalBodyUrl = message.getExternalBodyUrl();
 		    Content fileTransferContent = message.getFileTransferInformation();
-		    if (externalBodyUrl != null || fileTransferContent != null) {
-			    //TODO file transfer
+		    String appData = message.getAppdata();
+		    if (externalBodyUrl != null) { // Incoming file transfer
+			    if (appData != null) { // Download already done, just display the result
+				    holder.messageImage.setVisibility(View.VISIBLE);
+				    loadBitmap(appData, holder.messageImage);
+				    holder.messageImage.setTag(appData);
+			    } else { // Attachment not yet downloaded
+				    holder.fileTransferLayout.setVisibility(View.VISIBLE);
+				    holder.fileTransferAction.setText(mContext.getString(R.string.accept));
+				    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+					    @Override
+					    public void onClick(View v) {
+						    if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+							    v.setEnabled(false);
+							    String filename = message.getFileTransferInformation().getName();
+							    File file = new File(Environment.getExternalStorageDirectory(), filename);
+							    message.setAppdata(file.getPath());
+							    message.setListener(ChatEventsAdapter.this);
+							    message.setFileTransferFilepath(file.getPath());
+							    message.downloadFile();
+						    } else {
+							    Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+							    LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+						    }
+					    }
+				    });
+			    }
+		    } else if (fileTransferContent != null) { // Outgoing file transfer
+				if (appData != null) {
+					holder.messageImage.setVisibility(View.VISIBLE);
+					loadBitmap(appData, holder.messageImage);
+					holder.messageImage.setTag(appData);
+
+					if (message.getState() == ChatMessage.State.InProgress) {
+						holder.messageSendingInProgress.setVisibility(View.GONE);
+						holder.fileTransferLayout.setVisibility(View.VISIBLE);
+					}
+				} else {
+					holder.fileTransferLayout.setVisibility(View.VISIBLE);
+
+				}
 		    } else if (msg != null) {
 			    text = getTextWithHttpLinks(msg);
 			    holder.messageText.setText(text);
@@ -366,7 +410,7 @@ public class ChatEventsAdapter extends BaseAdapter {
 			path = params[0];
 			Bitmap bm = null;
 			Bitmap thumbnail = null;
-			if(LinphoneUtils.isExtensionImage(path)) {
+			if (LinphoneUtils.isExtensionImage(path)) {
 				if (path.startsWith("content")) {
 					try {
 						bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));
@@ -408,8 +452,9 @@ public class ChatEventsAdapter extends BaseAdapter {
 					bm.recycle();
 				}
 				return thumbnail;
-			}else
+			} else {
 				return mDefaultBitmap;
+			}
 		}
 
 		// Once complete, see if ImageView is still around and set bitmap.
@@ -504,5 +549,35 @@ public class ChatEventsAdapter extends BaseAdapter {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
+
+	}
+
+	@Override
+	public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
+		return null;
+	}
+
+	@Override
+	public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
+		ChatBubbleViewHolder holder = (ChatBubbleViewHolder)message.getUserData();
+		if (holder == null) return;
+
+		if (offset == total) {
+			holder.fileTransferLayout.setVisibility(View.GONE);
+			holder.messageImage.setVisibility(View.VISIBLE);
+			loadBitmap(message.getAppdata(), holder.messageImage);
+			holder.messageImage.setTag(message.getAppdata());
+		} else {
+			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
+		}
+	}
+
+	@Override
+	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
+
 	}
 }
