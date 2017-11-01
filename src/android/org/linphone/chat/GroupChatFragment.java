@@ -64,9 +64,11 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
+import org.linphone.core.Factory;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.Participant;
+import org.linphone.mediastream.Log;
 import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.io.File;
@@ -208,7 +210,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			@Override
 			public void onClick(View view) {
 				LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
-				pickImage();
+				pickFile();
 			}
 		});
 
@@ -295,6 +297,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				} else if (mImageToUploadUri != null) {
 					fileToUploadPath = mImageToUploadUri.getPath();
 				}
+
 				if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
 					addImageToPendingList(fileToUploadPath);
 				} else {
@@ -303,6 +306,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					} else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
 						fileToUploadPath = getCVSPathFromLookupUri(fileToUploadPath).toString();
 					}
+					Log.e("FILE PATH IS " + fileToUploadPath);
 					addFileToPendingList(fileToUploadPath);
 				}
 			} else {
@@ -462,7 +466,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mChatEventsList.setAdapter(mMessagesAdapter);
 	}
 
-	private void pickImage() {
+	private void pickFile() {
 		List<Intent> cameraIntents = new ArrayList<>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())+".jpeg"));
@@ -487,6 +491,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void addFileToPendingList(String path) {
 		View pendingFile = mInflater.inflate(R.layout.file_upload_cell, mFilesUploadLayout, false);
+		pendingFile.setTag(path);
 
 		TextView text = pendingFile.findViewById(R.id.pendingFileForUpload);
 		String extension = path.substring(path.lastIndexOf('.'));
@@ -499,14 +504,18 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			public void onClick(View view) {
 				View pendingImage = (View)view.getTag();
 				mFilesUploadLayout.removeView(pendingImage);
+				mAttachImageButton.setEnabled(true);
 			}
 		});
 
 		mFilesUploadLayout.addView(pendingFile);
+
+		mAttachImageButton.setEnabled(false); // For now limit file per message to 1
 	}
 
 	private void addImageToPendingList(String path) {
 		View pendingImage = mInflater.inflate(R.layout.image_upload_cell, mFilesUploadLayout, false);
+		pendingImage.setTag(path);
 
 		ImageView image = pendingImage.findViewById(R.id.pendingImageForUpload);
 		Bitmap bm = BitmapFactory.decodeFile(path);
@@ -520,16 +529,44 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			public void onClick(View view) {
 				View pendingImage = (View)view.getTag();
 				mFilesUploadLayout.removeView(pendingImage);
+				mAttachImageButton.setEnabled(true);
 			}
 		});
 
 		mFilesUploadLayout.addView(pendingImage);
+
+		mAttachImageButton.setEnabled(false); // For now limit file per message to 1
 	}
 
 	private void sendMessage() {
 		String text = mMessageTextToSend.getText().toString();
-		ChatMessage msg = mChatRoom.createMessage(text);
+
+		ChatMessage msg;
+		// For now we have to either send the picture or the text but not both
+		if (mFilesUploadLayout.getChildCount() > 0) {
+			String filePath = (String) mFilesUploadLayout.getChildAt(0).getTag();
+			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
+			Content content = Factory.instance().createContent();
+			if (LinphoneUtils.isExtensionImage(fileName)) {
+				content.setType("image");
+			} else {
+				content.setType("file");
+			}
+			content.setSubtype(extension);
+			content.setName(fileName);
+			msg = mChatRoom.createFileTransferMessage(content);
+			msg.setFileTransferFilepath(filePath); // Let the file body handler take care of the upload
+		} else {
+			msg = mChatRoom.createMessage(text);
+		}
+
 		msg.setListener(new ChatMessageListenerStub() {
+			@Override
+			public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
+
+			}
+
 			@Override
 			public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
 				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
@@ -556,6 +593,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		msg.send();
 
 		mFilesUploadLayout.removeAllViews();
+		mAttachImageButton.setEnabled(true);
 		mMessageTextToSend.setText("");
 	}
 

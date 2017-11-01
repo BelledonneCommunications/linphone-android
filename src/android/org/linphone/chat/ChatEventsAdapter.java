@@ -289,7 +289,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 				} else {
 					holder.fileTransferLayout.setVisibility(View.VISIBLE);
 				}
-		    } else if (msg != null) { // Text message
+		    } else if (msg != null) { // This is a else for now, the day we'll be able to send both file and text this won't be anymore
 			    text = LinphoneUtils.getTextWithHttpLinks(msg);
 			    holder.messageText.setText(text);
 			    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
