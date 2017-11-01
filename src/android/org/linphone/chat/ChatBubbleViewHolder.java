@@ -57,7 +57,7 @@ public class ChatBubbleViewHolder {
 	public Button fileTransferAction;
 
 	public TextView fileName;
-	public TextView openFileButton;
+	public Button openFileButton;
 
 	public CheckBox delete;
 

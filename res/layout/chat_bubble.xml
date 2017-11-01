@@ -116,31 +116,26 @@
                     <TextView
                         android:id="@+id/file_name"
                         style="@style/font11"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <ImageView
                         android:id="@+id/image"
-                        android:visibility="gone"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/file_name"
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerInside"/>
 
-                    <TextView
+                    <Button
                         android:id="@+id/open_file"
-                        android:gravity="center"
-                        android:layout_centerVertical="true"
-                        android:layout_below="@id/file_name"
-                        android:layout_centerHorizontal="true"
-                        android:background="@color/colorA"
-                        android:padding="5dp"
-                        style="@style/font25"
-                        android:layout_width="150dp"
+                        android:textAppearance="@style/font8"
+                        android:text="@string/open"
+                        android:background="@drawable/resizable_assistant_button"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/open"/>
+                        android:layout_below="@id/file_name"
+                        android:layout_centerVertical="true"/>
 
 				</RelativeLayout>
 
@@ -149,13 +144,11 @@
                     style="@style/font11"
                     android:autoLink="web"
                     android:linksClickable="true"
-                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
 				<RelativeLayout
 					android:id="@+id/file_transfer_layout"
-					android:visibility="gone"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
 
@@ -170,6 +163,8 @@
 
 					<Button
 						android:id="@+id/file_transfer_action"
+                        android:textAppearance="@style/font8"
+                        android:background="@drawable/resizable_assistant_button"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_below="@id/progress_bar"/>
@@ -231,7 +226,7 @@
 
 			<ProgressBar
 				android:id="@+id/inprogress"
-				android:visibility="gone"
+                android:progressTint="@color/colorA"
 				android:layout_alignParentTop="true"
 				android:layout_alignParentRight="true"
 				android:paddingRight="5dp"
