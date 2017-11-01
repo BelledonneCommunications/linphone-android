@@ -31,6 +31,7 @@
     <string name="retry">Retry</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
+    <string name="open">Open</string>
     <string name="continue_text">Continue</string>
     <string name="about">About</string>
     <string name="deny">Deny</string>

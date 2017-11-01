@@ -136,11 +136,10 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    holder.delete.setVisibility(View.GONE);
 	    holder.messageText.setVisibility(View.GONE);
 	    holder.messageImage.setVisibility(View.GONE);
-	    holder.fileExtensionLabel.setVisibility(View.GONE);
-	    holder.fileNameLabel.setVisibility(View.GONE);
 	    holder.fileTransferLayout.setVisibility(View.GONE);
 	    holder.fileTransferProgressBar.setProgress(0);
 	    holder.fileTransferAction.setEnabled(true);
+	    holder.openFileButton.setVisibility(View.GONE);
 	    holder.messageStatus.setVisibility(View.INVISIBLE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
@@ -252,11 +251,16 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    String appData = message.getAppdata();
 		    if (externalBodyUrl != null) { // Incoming file transfer
 			    if (appData != null) { // Download already done, just display the result
-				    holder.messageImage.setVisibility(View.VISIBLE);
-				    loadBitmap(appData, holder.messageImage);
-				    holder.messageImage.setTag(appData);
+				    holder.messageText.setVisibility(View.VISIBLE);
+				    holder.messageText.setText(fileTransferContent.getName());
+
+				    displayDownloadedFile(message, holder);
 			    } else { // Attachment not yet downloaded
+				    holder.messageText.setVisibility(View.VISIBLE);
+				    holder.messageText.setText(fileTransferContent.getName());
+
 				    holder.fileTransferLayout.setVisibility(View.VISIBLE);
+				    holder.fileTransferProgressBar.setVisibility(View.GONE);
 				    holder.fileTransferAction.setText(mContext.getString(R.string.accept));
 				    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
 					    @Override
@@ -278,9 +282,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			    }
 		    } else if (fileTransferContent != null) { // Outgoing file transfer
 				if (appData != null) {
-					holder.messageImage.setVisibility(View.VISIBLE);
-					loadBitmap(appData, holder.messageImage);
-					holder.messageImage.setTag(appData);
+					displayDownloadedFile(message, holder);
 
 					if (message.getState() == ChatMessage.State.InProgress) {
 						holder.messageSendingInProgress.setVisibility(View.GONE);
@@ -476,32 +478,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 					imageView.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Intent intent = new Intent(Intent.ACTION_VIEW);
-							File file = null;
-							Uri contentUri = null;
-							String imageUri = (String)v.getTag();
-							if (imageUri.startsWith("file://")) {
-								imageUri = imageUri.substring("file://".length());
-								file = new File(imageUri);
-								contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
-							} else if (imageUri.startsWith("content://")) {
-								contentUri = Uri.parse(imageUri);
-							} else {
-								file = new File(imageUri);
-								contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
-							}
-							String type = null;
-							String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
-							if (extension != null) {
-								type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-							}
-							if(type != null) {
-								intent.setDataAndType(contentUri, type);
-							}else {
-								intent.setDataAndType(contentUri, "*/*");
-							}
-							intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-							mContext.startActivity(intent);
+							openFile((String)v.getTag());
 						}
 					});
 				}
@@ -551,6 +528,52 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		return null;
 	}
 
+	private void openFile(String path) {
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		File file = null;
+		Uri contentUri = null;
+		if (path.startsWith("file://")) {
+			path = path.substring("file://".length());
+			file = new File(path);
+			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+		} else if (path.startsWith("content://")) {
+			contentUri = Uri.parse(path);
+		} else {
+			file = new File(path);
+			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+		}
+		String type = null;
+		String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+		if (extension != null) {
+			type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+		}
+		if (type != null) {
+			intent.setDataAndType(contentUri, type);
+		} else {
+			intent.setDataAndType(contentUri, "*/*");
+		}
+		intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+		mContext.startActivity(intent);
+	}
+
+	private void displayDownloadedFile(ChatMessage message, ChatBubbleViewHolder holder) {
+		String appData = message.getAppdata();
+		if (LinphoneUtils.isExtensionImage(appData)) {
+			holder.messageImage.setVisibility(View.VISIBLE);
+			loadBitmap(appData, holder.messageImage);
+			holder.messageImage.setTag(appData);
+		} else {
+			holder.openFileButton.setVisibility(View.VISIBLE);
+			holder.openFileButton.setTag(appData);
+			holder.openFileButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openFile((String)v.getTag());
+				}
+			});
+		}
+	}
+
 	@Override
 	public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
 
@@ -567,11 +590,11 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		if (holder == null) return;
 
 		if (offset == total) {
+			holder.fileTransferProgressBar.setVisibility(View.GONE);
 			holder.fileTransferLayout.setVisibility(View.GONE);
-			holder.messageImage.setVisibility(View.VISIBLE);
-			loadBitmap(message.getAppdata(), holder.messageImage);
-			holder.messageImage.setTag(message.getAppdata());
+			displayDownloadedFile(message, holder);
 		} else {
+			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
 		}
 	}

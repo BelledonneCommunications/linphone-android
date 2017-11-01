@@ -52,7 +52,6 @@ import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -104,13 +103,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
@@ -1365,8 +1361,8 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 			holder.delete.setVisibility(View.GONE);
 			holder.messageText.setVisibility(View.GONE);
 			holder.messageImage.setVisibility(View.GONE);
-			holder.fileExtensionLabel.setVisibility(View.GONE);
-			holder.fileNameLabel.setVisibility(View.GONE);
+			//holder.fileExtensionLabel.setVisibility(View.GONE);
+			holder.openFileButton.setVisibility(View.GONE);
 			holder.fileTransferLayout.setVisibility(View.GONE);
 			holder.fileTransferProgressBar.setProgress(0);
 			holder.fileTransferAction.setEnabled(true);
@@ -1553,8 +1549,8 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 
 			if(message.getAppdata() != null && holder.fileTransferLayout.getVisibility() != View.VISIBLE){
 				if(LinphoneUtils.isExtensionImage(message.getAppdata())){
-					holder.fileExtensionLabel.setVisibility(View.GONE);
-					holder.fileNameLabel.setVisibility(View.GONE);
+					//holder.fileExtensionLabel.setVisibility(View.GONE);
+					holder.openFileButton.setVisibility(View.GONE);
 				}else {
 					String extension = (LinphoneUtils.getExtensionFromFileName(message.getAppdata()));
 					if(extension != null)
@@ -1565,10 +1561,10 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 					if (extension.length() > 4)
 						extension = extension.substring(0, 3);
 
-					holder.fileExtensionLabel.setText(extension);
+					/*holder.fileExtensionLabel.setText(extension);
 					holder.fileExtensionLabel.setVisibility(View.VISIBLE);
-					holder.fileNameLabel.setText(LinphoneUtils.getNameFromFilePath(message.getAppdata()));
-					holder.fileNameLabel.setVisibility(View.VISIBLE);
+					holder.openFileButton.setText(LinphoneUtils.getNameFromFilePath(message.getAppdata()));
+					holder.openFileButton.setVisibility(View.VISIBLE);
 					holder.fileExtensionLabel.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -1600,7 +1596,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 								if (type != null) {
 									intent.setDataAndType(contentUri, type);
 								} else {
-									intent.setDataAndType(contentUri, "*/*");
+									intent.setDataAndType(contentUri, "");
 								}
 								intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
 								context.startActivity(intent);
@@ -1608,7 +1604,7 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 								LinphoneActivity.instance().displayCustomToast(getString(R.string.error_opening_file), Toast.LENGTH_LONG);
 							}
 						}
-					});
+					});*/
 				}
 			}
 

@@ -141,29 +141,20 @@
 							android:layout_marginBottom="12dp"/>
 
 						<TextView
-							android:id="@+id/file_extension"
+							android:id="@+id/open_file"
 							android:gravity="center"
 							android:textAlignment="center"
 							android:layout_centerHorizontal="true"
 							android:layout_centerVertical="true"
+                            android:background="@color/colorA"
+                            android:padding="5dp"
 							android:maxLines="1"
 							style="@style/font25"
 							android:layout_width="150dp"
 							android:layout_height="wrap_content"
-							android:text="FILE"/>
+							android:text="@string/open"/>
 
 					</RelativeLayout>
-
-					<TextView
-						android:id="@+id/file_name"
-						android:layout_below="@+id/relativeLayoutCentered"
-						android:gravity="center_horizontal"
-						android:textAlignment="center"
-						android:maxLines="1"
-						style="@style/font24"
-						android:layout_width="150dp"
-						android:layout_height="wrap_content"
-						android:text=""/>
 
 				</RelativeLayout>
 
