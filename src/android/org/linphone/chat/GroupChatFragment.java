@@ -215,6 +215,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		});
 
 		mSendMessageButton = view.findViewById(R.id.send_message);
+		mSendMessageButton.setEnabled(false);
 		mSendMessageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -229,7 +230,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0);
+				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
 				if (mChatRoom != null) {
 					mChatRoom.compose();
 				}
@@ -505,12 +506,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				View pendingImage = (View)view.getTag();
 				mFilesUploadLayout.removeView(pendingImage);
 				mAttachImageButton.setEnabled(true);
+				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
 			}
 		});
 
 		mFilesUploadLayout.addView(pendingFile);
 
 		mAttachImageButton.setEnabled(false); // For now limit file per message to 1
+		mSendMessageButton.setEnabled(true);
 	}
 
 	private void addImageToPendingList(String path) {
@@ -530,12 +533,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				View pendingImage = (View)view.getTag();
 				mFilesUploadLayout.removeView(pendingImage);
 				mAttachImageButton.setEnabled(true);
+				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
 			}
 		});
 
 		mFilesUploadLayout.addView(pendingImage);
 
 		mAttachImageButton.setEnabled(false); // For now limit file per message to 1
+		mSendMessageButton.setEnabled(true);
 	}
 
 	private void sendMessage() {
