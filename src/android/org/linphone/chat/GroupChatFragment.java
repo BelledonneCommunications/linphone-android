@@ -91,7 +91,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
-	private ChatEventsAdapter mMessagesAdapter;
+	private ChatEventsAdapter mEventsAdapter;
 	private String mRemoteSipUri;
 	private Address mRemoteSipAddress;
 	private ChatRoom mChatRoom;
@@ -405,8 +405,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		}
 
-		if (mMessagesAdapter != null) {
-			mMessagesAdapter.setContacts(mParticipants);
+		if (mEventsAdapter != null) {
+			mEventsAdapter.setContacts(mParticipants);
 		}
 	}
 
@@ -462,8 +462,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void displayChatRoomHistory() {
 		if (mChatRoom == null) return;
-		mMessagesAdapter = new ChatEventsAdapter(getActivity(), this, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
-		mChatEventsList.setAdapter(mMessagesAdapter);
+		mEventsAdapter = new ChatEventsAdapter(getActivity(), this, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
+		mChatEventsList.setAdapter(mEventsAdapter);
 	}
 
 	private void pickFile() {
@@ -557,6 +557,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			content.setName(fileName);
 			msg = mChatRoom.createFileTransferMessage(content);
 			msg.setFileTransferFilepath(filePath); // Let the file body handler take care of the upload
+			msg.setAppdata(filePath);
 		} else {
 			msg = mChatRoom.createMessage(text);
 		}
@@ -564,7 +565,16 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		msg.setListener(new ChatMessageListenerStub() {
 			@Override
 			public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-
+				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
+				if (holder != null && message.getMessageId().equals(holder.messageId) && message.isOutgoing()) {
+					if (offset == total) {
+						holder.fileTransferLayout.setVisibility(View.GONE);
+						mEventsAdapter.notifyDataSetChanged();
+					} else {
+						holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
+						holder.fileTransferProgressBar.setProgress(offset * 100 / total);
+					}
+				}
 			}
 
 			@Override
@@ -598,8 +608,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	public void scrollToBottom() {
-		if (((mChatEventsList.getLastVisiblePosition() >= (mMessagesAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mMessagesAdapter.getCount() - 1)))) {
-			mChatEventsList.setSelection(mMessagesAdapter.getCount() - 1);
+		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
+			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
 		}
 	}
 
@@ -609,7 +619,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onChatMessageSent(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
@@ -667,7 +677,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
 		}
 
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
@@ -737,22 +747,22 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
 	public void onParticipantRemoved(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
@@ -762,12 +772,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantAdded(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
 	public void onSubjectChanged(ChatRoom cr, EventLog event) {
-		mMessagesAdapter.addToHistory(event);
+		mEventsAdapter.addToHistory(event);
 		mRoomLabel.setText(event.getSubject());
 	}
 

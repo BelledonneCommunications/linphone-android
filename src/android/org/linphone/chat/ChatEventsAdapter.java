@@ -249,10 +249,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    String appData = message.getAppdata();
 		    if (externalBodyUrl != null) { // Incoming file transfer
 			    if (appData != null) { // Download already done, just display the result
-				    holder.fileName.setVisibility(View.VISIBLE);
-				    holder.fileName.setText(fileTransferContent.getName());
-
-				    displayDownloadedFile(message, holder);
+				    displayAttachedFile(message, holder);
 			    } else { // Attachment not yet downloaded
 				    holder.fileName.setVisibility(View.VISIBLE);
 				    holder.fileName.setText(fileTransferContent.getName());
@@ -280,14 +277,21 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			    }
 		    } else if (fileTransferContent != null) { // Outgoing file transfer
 				if (appData != null) {
-					displayDownloadedFile(message, holder);
+					displayAttachedFile(message, holder);
+				}
 
-					if (message.getState() == ChatMessage.State.InProgress) {
-						holder.messageSendingInProgress.setVisibility(View.GONE);
-						holder.fileTransferLayout.setVisibility(View.VISIBLE);
-					}
-				} else {
+			    holder.fileTransferLayout.setVisibility(View.GONE);
+				if (message.getState() == ChatMessage.State.InProgress) {
+					holder.messageSendingInProgress.setVisibility(View.GONE);
 					holder.fileTransferLayout.setVisibility(View.VISIBLE);
+					holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
+					holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							message.cancelFileTransfer();
+							notifyDataSetChanged();
+						}
+					});
 				}
 		    } else if (msg != null) { // This is a else for now, the day we'll be able to send both file and text this won't be anymore
 			    text = LinphoneUtils.getTextWithHttpLinks(msg);
@@ -378,7 +382,10 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		mContext.startActivity(intent);
 	}
 
-	private void displayDownloadedFile(ChatMessage message, ChatBubbleViewHolder holder) {
+	private void displayAttachedFile(ChatMessage message, ChatBubbleViewHolder holder) {
+		holder.fileName.setVisibility(View.VISIBLE);
+		holder.fileName.setText(message.getFileTransferInformation().getName());
+
 		String appData = message.getAppdata();
 		if (LinphoneUtils.isExtensionImage(appData)) {
 			holder.messageImage.setVisibility(View.VISIBLE);
@@ -418,7 +425,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		if (offset == total) {
 			holder.fileTransferProgressBar.setVisibility(View.GONE);
 			holder.fileTransferLayout.setVisibility(View.GONE);
-			displayDownloadedFile(message, holder);
+			displayAttachedFile(message, holder);
 		} else {
 			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
