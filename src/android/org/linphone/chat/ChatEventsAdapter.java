@@ -66,7 +66,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -290,17 +289,16 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 					}
 				} else {
 					holder.fileTransferLayout.setVisibility(View.VISIBLE);
-
 				}
-		    } else if (msg != null) {
-			    text = getTextWithHttpLinks(msg);
+		    } else if (msg != null) { // Text message
+			    text = LinphoneUtils.getTextWithHttpLinks(msg);
 			    holder.messageText.setText(text);
 			    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
 			    holder.messageText.setVisibility(View.VISIBLE);
 		    }
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
-	    } else {
+	    } else { // Event is not chat message
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
 		    Log.e("Conference event type is " + event.getType().toString());
@@ -338,49 +336,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
         return view;
     }
 
-	private boolean isToday(Calendar cal) {
-		return isSameDay(cal, Calendar.getInstance());
-	}
-
-	private boolean isSameDay(Calendar cal1, Calendar cal2) {
-		if (cal1 == null || cal2 == null) {
-			return false;
-		}
-
-		return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
-				cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-				cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
-	}
-
-	private Spanned getTextWithHttpLinks(String text) {
-		if (text.contains("<")) {
-			text = text.replace("<", "&lt;");
-		}
-		if (text.contains(">")) {
-			text = text.replace(">", "&gt;");
-		}
-		if (text.contains("\n")) {
-			text = text.replace("\n", "<br>");
-		}
-		if (text.contains("http://")) {
-			int indexHttp = text.indexOf("http://");
-			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
-			String link = text.substring(indexHttp, indexFinHttp);
-			String linkWithoutScheme = link.replace("http://", "");
-			text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
-		}
-		if (text.contains("https://")) {
-			int indexHttp = text.indexOf("https://");
-			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
-			String link = text.substring(indexHttp, indexFinHttp);
-			String linkWithoutScheme = link.replace("https://", "");
-			text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
-		}
-
-		return Compatibility.fromHtml(text);
-	}
-
-	public void loadBitmap(String path, ImageView imageView) {
+	private void loadBitmap(String path, ImageView imageView) {
 		if (cancelPotentialWork(path, imageView)) {
 			if (LinphoneUtils.isExtensionImage(path)) {
 				mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_attachment_over);
@@ -394,6 +350,90 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			task.execute(path);
 		}
 	}
+
+	private void openFile(String path) {
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		File file = null;
+		Uri contentUri = null;
+		if (path.startsWith("file://")) {
+			path = path.substring("file://".length());
+			file = new File(path);
+			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+		} else if (path.startsWith("content://")) {
+			contentUri = Uri.parse(path);
+		} else {
+			file = new File(path);
+			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+		}
+		String type = null;
+		String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+		if (extension != null) {
+			type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+		}
+		if (type != null) {
+			intent.setDataAndType(contentUri, type);
+		} else {
+			intent.setDataAndType(contentUri, "*/*");
+		}
+		intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+		mContext.startActivity(intent);
+	}
+
+	private void displayDownloadedFile(ChatMessage message, ChatBubbleViewHolder holder) {
+		String appData = message.getAppdata();
+		if (LinphoneUtils.isExtensionImage(appData)) {
+			holder.messageImage.setVisibility(View.VISIBLE);
+			loadBitmap(appData, holder.messageImage);
+			holder.messageImage.setTag(appData);
+		} else {
+			holder.openFileButton.setVisibility(View.VISIBLE);
+			holder.openFileButton.setTag(appData);
+			holder.openFileButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openFile((String)v.getTag());
+				}
+			});
+		}
+	}
+
+	/*
+	 * Chat message callbacks
+	 */
+
+	@Override
+	public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
+
+	}
+
+	@Override
+	public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
+		return null;
+	}
+
+	@Override
+	public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
+		ChatBubbleViewHolder holder = (ChatBubbleViewHolder)message.getUserData();
+		if (holder == null) return;
+
+		if (offset == total) {
+			holder.fileTransferProgressBar.setVisibility(View.GONE);
+			holder.fileTransferLayout.setVisibility(View.GONE);
+			displayDownloadedFile(message, holder);
+		} else {
+			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
+			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
+		}
+	}
+
+	@Override
+	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
+
+	}
+
+	/*
+	 * Bitmap related classes and methods
+	 */
 
 	private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 		private static final int SIZE_SMALL = 500;
@@ -526,81 +566,5 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			}
 		}
 		return null;
-	}
-
-	private void openFile(String path) {
-		Intent intent = new Intent(Intent.ACTION_VIEW);
-		File file = null;
-		Uri contentUri = null;
-		if (path.startsWith("file://")) {
-			path = path.substring("file://".length());
-			file = new File(path);
-			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
-		} else if (path.startsWith("content://")) {
-			contentUri = Uri.parse(path);
-		} else {
-			file = new File(path);
-			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
-		}
-		String type = null;
-		String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
-		if (extension != null) {
-			type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-		}
-		if (type != null) {
-			intent.setDataAndType(contentUri, type);
-		} else {
-			intent.setDataAndType(contentUri, "*/*");
-		}
-		intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
-		mContext.startActivity(intent);
-	}
-
-	private void displayDownloadedFile(ChatMessage message, ChatBubbleViewHolder holder) {
-		String appData = message.getAppdata();
-		if (LinphoneUtils.isExtensionImage(appData)) {
-			holder.messageImage.setVisibility(View.VISIBLE);
-			loadBitmap(appData, holder.messageImage);
-			holder.messageImage.setTag(appData);
-		} else {
-			holder.openFileButton.setVisibility(View.VISIBLE);
-			holder.openFileButton.setTag(appData);
-			holder.openFileButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					openFile((String)v.getTag());
-				}
-			});
-		}
-	}
-
-	@Override
-	public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
-
-	}
-
-	@Override
-	public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
-		return null;
-	}
-
-	@Override
-	public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-		ChatBubbleViewHolder holder = (ChatBubbleViewHolder)message.getUserData();
-		if (holder == null) return;
-
-		if (offset == total) {
-			holder.fileTransferProgressBar.setVisibility(View.GONE);
-			holder.fileTransferLayout.setVisibility(View.GONE);
-			displayDownloadedFile(message, holder);
-		} else {
-			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
-			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
-		}
-	}
-
-	@Override
-	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-
 	}
 }

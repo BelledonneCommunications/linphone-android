@@ -41,6 +41,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.telephony.TelephonyManager;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -52,6 +53,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.DialPlan;
 import org.linphone.core.AccountCreator;
@@ -87,6 +89,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -937,6 +940,34 @@ public final class LinphoneUtils {
         }
         return null;
     }
+
+	public static Spanned getTextWithHttpLinks(String text) {
+		if (text.contains("<")) {
+			text = text.replace("<", "&lt;");
+		}
+		if (text.contains(">")) {
+			text = text.replace(">", "&gt;");
+		}
+		if (text.contains("\n")) {
+			text = text.replace("\n", "<br>");
+		}
+		if (text.contains("http://")) {
+			int indexHttp = text.indexOf("http://");
+			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+			String link = text.substring(indexHttp, indexFinHttp);
+			String linkWithoutScheme = link.replace("http://", "");
+			text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+		}
+		if (text.contains("https://")) {
+			int indexHttp = text.indexOf("https://");
+			int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+			String link = text.substring(indexHttp, indexFinHttp);
+			String linkWithoutScheme = link.replace("https://", "");
+			text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+		}
+
+		return Compatibility.fromHtml(text);
+	}
 
 }
 

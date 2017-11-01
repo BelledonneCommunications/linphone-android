@@ -60,6 +60,7 @@ import org.linphone.core.Address;
 import org.linphone.core.Buffer;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
@@ -464,7 +465,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	private void pickImage() {
-		List<Intent> cameraIntents = new ArrayList<Intent>();
+		List<Intent> cameraIntents = new ArrayList<>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis())+".jpeg"));
 		mImageToUploadUri = Uri.fromFile(file);
@@ -530,25 +531,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private void sendMessage() {
 		String text = mMessageTextToSend.getText().toString();
 		ChatMessage msg = mChatRoom.createMessage(text);
-		msg.setListener(new ChatMessageListener() {
-			@Override
-			public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
-
-			}
-
-			@Override
-			public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
-				return null;
-			}
-
-			@Override
-			public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
-				if (holder != null && message.getMessageId().equals(holder.messageId)) {
-					holder.fileTransferProgressBar.setProgress(offset * 100 / total);
-				}
-			}
-
+		msg.setListener(new ChatMessageListenerStub() {
 			@Override
 			public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
 				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
@@ -583,6 +566,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mChatEventsList.setSelection(mMessagesAdapter.getCount() - 1);
 		}
 	}
+
+	/*
+	 * Chat room callbacks
+	 */
 
 	@Override
 	public void onChatMessageSent(ChatRoom cr, EventLog event) {
