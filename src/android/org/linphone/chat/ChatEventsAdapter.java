@@ -68,9 +68,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
@@ -138,6 +136,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    holder.fileTransferLayout.setVisibility(View.GONE);
 	    holder.fileTransferProgressBar.setProgress(0);
 	    holder.fileTransferAction.setEnabled(true);
+	    holder.fileName.setVisibility(View.GONE);
 	    holder.openFileButton.setVisibility(View.GONE);
 	    holder.messageStatus.setVisibility(View.INVISIBLE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
@@ -250,13 +249,13 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    String appData = message.getAppdata();
 		    if (externalBodyUrl != null) { // Incoming file transfer
 			    if (appData != null) { // Download already done, just display the result
-				    holder.messageText.setVisibility(View.VISIBLE);
-				    holder.messageText.setText(fileTransferContent.getName());
+				    holder.fileName.setVisibility(View.VISIBLE);
+				    holder.fileName.setText(fileTransferContent.getName());
 
 				    displayDownloadedFile(message, holder);
 			    } else { // Attachment not yet downloaded
-				    holder.messageText.setVisibility(View.VISIBLE);
-				    holder.messageText.setText(fileTransferContent.getName());
+				    holder.fileName.setVisibility(View.VISIBLE);
+				    holder.fileName.setText(fileTransferContent.getName());
 
 				    holder.fileTransferLayout.setVisibility(View.VISIBLE);
 				    holder.fileTransferProgressBar.setVisibility(View.GONE);

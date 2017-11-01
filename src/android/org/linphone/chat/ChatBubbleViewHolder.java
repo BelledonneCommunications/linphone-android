@@ -55,6 +55,8 @@ public class ChatBubbleViewHolder {
 	public RelativeLayout fileTransferLayout;
 	public ProgressBar fileTransferProgressBar;
 	public Button fileTransferAction;
+
+	public TextView fileName;
 	public TextView openFileButton;
 
 	public CheckBox delete;
@@ -82,6 +84,8 @@ public class ChatBubbleViewHolder {
 	    fileTransferLayout = view.findViewById(R.id.file_transfer_layout);
 	    fileTransferProgressBar = view.findViewById(R.id.progress_bar);
 	    fileTransferAction = view.findViewById(R.id.file_transfer_action);
+
+		fileName = view.findViewById(R.id.file_name);
 	    openFileButton = view.findViewById(R.id.open_file);
 
 	    delete = view.findViewById(R.id.delete_message);
