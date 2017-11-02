@@ -36,8 +36,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.SearchContactsListAdapter;
+import org.linphone.core.Address;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.receivers.ContactsUpdatedListener;
 import org.linphone.activities.LinphoneActivity;
@@ -277,8 +282,26 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		} else if (id == R.id.next) {
 			if (contactsSelected.size() == 1) {
 				contactsSelectedLayout.removeAllViews();
-				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
+				//LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 				//TODO create group chat room with only two participants ?
+				//TODO what subject to set ?
+				ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom("Tata");
+				chatRoom.setListener(new ChatRoomListenerStub() {
+					@Override
+					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+						if (newState == ChatRoom.State.Created) {
+							LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
+						} else if (newState == ChatRoom.State.CreationFailed) {
+							//TODO display error
+							Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
+						}
+					}
+				});
+
+				Address addresses[] = new Address[1];
+				String addr = contactsSelected.get(0).getAddress();
+				addresses[0] = LinphoneManager.getLc().interpretUrl(addr);
+				chatRoom.addParticipants(addresses);
 			} else {
 				contactsSelectedLayout.removeAllViews();
 				LinphoneActivity.instance().goToChatGroupInfos(contactsSelected, null, false, true);
