@@ -622,7 +622,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		if (LinphoneActivity.instance().isOnBackground()) {
 			if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-				String to = msg.getToAddress().asString();
 				if (contact != null) {
 					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(),
 							contact.getFullName(), contact.getThumbnailUri(), getString(R.string.message_cant_be_decrypted_notif));

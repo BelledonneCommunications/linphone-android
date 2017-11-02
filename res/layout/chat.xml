@@ -26,8 +26,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
-            android:layout_gravity="center"
-            android:gravity="center">
+            android:layout_gravity="center_vertical|left"
+            android:gravity="center_vertical|left">
 
             <TextView
                 android:id="@+id/subject"
