@@ -146,12 +146,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(a);
 					if (c == null) {
 						c = new LinphoneContact();
-						String displayName = a.getDisplayName();
-						if (displayName == null || displayName.isEmpty()) {
-							c.setFullName(a.getUsername());
-						} else {
-							c.setFullName(displayName);
-						}
+						String displayName = LinphoneUtils.getAddressDisplayName(a);
+						c.setFullName(displayName);
 					}
 					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
 					participants.add(ca);
@@ -307,7 +303,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					} else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
 						fileToUploadPath = getCVSPathFromLookupUri(fileToUploadPath).toString();
 					}
-					Log.e("FILE PATH IS " + fileToUploadPath);
 					addFileToPendingList(fileToUploadPath);
 				}
 			} else {
@@ -389,16 +384,13 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					mParticipants.add(c);
 					participantsLabel.append(c.getFullName());
 				} else {
-					String displayName = p.getAddress().getDisplayName();
-					if (displayName != null && !displayName.isEmpty()) {
-						participantsLabel.append(displayName);
-					} else {
-						participantsLabel.append(p.getAddress().getUsername());
-					}
+					String displayName = LinphoneUtils.getAddressDisplayName(p.getAddress());
+					participantsLabel.append(displayName);
 				}
 				index++;
-				if (index != mChatRoom.getNbParticipants())	participantsLabel.append(";");
+				if (index != mChatRoom.getNbParticipants())	participantsLabel.append(", ");
 			}
+			mParticipantsLabel.setText(participantsLabel.toString());
 		} else {
 			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteSipAddress);
 			if (c != null) {
@@ -441,6 +433,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				mGroupInfosButton.setVisibility(View.VISIBLE);
 				mRoomLabel.setText(mChatRoom.getSubject());
 				mParticipantsLabel.setVisibility(View.VISIBLE);
+
 			} else {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
@@ -448,12 +441,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 				if (mParticipants.size() == 0) {
 					// Contact not found
-					String displayName = mRemoteSipAddress.getDisplayName();
-					if (displayName == null || displayName.isEmpty()) {
-						mRoomLabel.setText(mRemoteSipAddress.getUsername());
-					} else {
-						mRoomLabel.setText(displayName);
-					}
+					String displayName = LinphoneUtils.getAddressDisplayName(mRemoteSipAddress);
+					mRoomLabel.setText(displayName);
 				} else {
 					mRoomLabel.setText(mParticipants.get(0).getFullName());
 				}
@@ -699,12 +688,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					}
 				}
 				if (!found) {
-					String displayName = a.getDisplayName();
-					if (displayName != null && !displayName.isEmpty()) {
-						composing.add(displayName);
-					} else {
-						composing.add(a.getUsername());
-					}
+					String displayName = LinphoneUtils.getAddressDisplayName(a);
+					composing.add(displayName);
 				}
 			}
 
@@ -732,10 +717,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				if (mParticipants.size() > 0) {
 					displayName = mParticipants.get(0).getFullName();
 				} else {
-					displayName = remoteAddr.getDisplayName();
-					if (displayName == null || displayName.isEmpty()) {
-						displayName = remoteAddr.getUsername();
-					}
+					displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
 				}
 				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", displayName));
 				mRemoteComposing.setVisibility(View.VISIBLE);

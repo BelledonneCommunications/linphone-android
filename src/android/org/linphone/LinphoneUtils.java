@@ -136,16 +136,17 @@ public final class LinphoneUtils {
 		return getAddressDisplayName(lAddress);
 	}
 
-	public static String getAddressDisplayName(Address address){
-		if(address.getDisplayName() != null) {
-			return address.getDisplayName();
-		} else {
-			if(address.getUsername() != null){
-				return address.getUsername();
-			} else {
-				return address.asStringUriOnly();
-			}
+	public static String getAddressDisplayName(Address address) {
+		if (address == null) return null;
+
+		String displayName = address.getDisplayName();
+		if (displayName == null || displayName.isEmpty()) {
+			displayName = address.getUsername();
 		}
+		if (displayName == null || displayName.isEmpty()) {
+			displayName = address.asStringUriOnly();
+		}
+		return displayName;
 	}
 
 	public static String getUsernameFromAddress(String address) {

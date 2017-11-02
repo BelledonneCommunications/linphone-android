@@ -157,10 +157,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			String displayName;
 
 		    if (message.isOutgoing()) {
-			    displayName = remoteSender.getDisplayName();
-			    if (displayName == null || displayName.isEmpty()) {
-				    displayName = remoteSender.getUsername();
-			    }
+			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 
 			    if (status == ChatMessage.State.InProgress) {
 				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
@@ -207,10 +204,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 				    if (contact.getFullName() != null) {
 					    displayName = contact.getFullName();
 				    } else {
-					    displayName = remoteSender.getDisplayName();
-					    if (displayName == null || displayName.isEmpty()) {
-						    displayName = remoteSender.getUsername();
-					    }
+					    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 				    }
 
 				    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
@@ -218,11 +212,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 					    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 				    }
 			    } else {
-				    displayName = remoteSender.getDisplayName();
-				    if (displayName == null || displayName.isEmpty()) {
-					    displayName = remoteSender.getUsername();
-				    }
-
+				    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 				    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			    }
 
@@ -312,14 +302,10 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			    if (contact != null) {
 				    displayName = contact.getFullName();
 			    } else {
-				    displayName = address.getDisplayName();
-				    if (displayName == null || displayName.isEmpty()) {
-					    displayName = address.getUsername();
-				    }
+				    displayName = LinphoneUtils.getAddressDisplayName(address);
 			    }
 		    }
 
-		    //TODO
 		    switch (event.getType()) {
 			    case ConferenceCreated:
 				    holder.eventMessage.setText(mContext.getString(R.string.conference_created));
