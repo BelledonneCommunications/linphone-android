@@ -744,6 +744,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantRemoved(ChatRoom cr, EventLog event) {
+		getContactsForParticipants();
 		mEventsAdapter.addToHistory(event);
 	}
 
@@ -759,13 +760,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantAdded(ChatRoom cr, EventLog event) {
+		getContactsForParticipants();
 		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
 	public void onSubjectChanged(ChatRoom cr, EventLog event) {
-		mEventsAdapter.addToHistory(event);
 		mRoomLabel.setText(event.getSubject());
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
