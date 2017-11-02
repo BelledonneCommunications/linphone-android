@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -36,6 +37,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.telephony.TelephonyManager;
@@ -741,9 +743,51 @@ public final class LinphoneUtils {
 	 ************************************************************************************************/
 
 	public static String getFilePath(final Context context, final Uri uri) {
-		// Google photo uri example
-		// content://com.google.android.apps.photos.contentprovider/0/1/mediakey%3A%2FAF1QipMObgoK_wDY66gu0QkMAi/ORIGINAL/NONE/114919
-		if ("content".equalsIgnoreCase(uri.getScheme())) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
+			// ExternalStorageProvider
+			if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				if ("primary".equalsIgnoreCase(type)) {
+					return Environment.getExternalStorageDirectory() + "/" + split[1];
+				}
+
+				// TODO handle non-primary volumes
+			}
+			// DownloadsProvider
+			else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+
+				final String id = DocumentsContract.getDocumentId(uri);
+				final Uri contentUri = ContentUris.withAppendedId(
+						Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+				return getDataColumn(context, contentUri, null, null);
+			}
+			// MediaProvider
+			else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				Uri contentUri = null;
+				if ("image".equals(type)) {
+					contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+				} else if ("video".equals(type)) {
+					contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+				} else if ("audio".equals(type)) {
+					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+				}
+
+				final String selection = "_id=?";
+				final String[] selectionArgs = new String[] {
+						split[1]
+				};
+
+				return getDataColumn(context, contentUri, selection, selectionArgs);
+			}
+		} else if ("content".equalsIgnoreCase(uri.getScheme())) {
 			String type = getTypeFromUri(uri, context);
 			String result = getDataColumn(context, uri, null, null); //
 			if (TextUtils.isEmpty(result))
