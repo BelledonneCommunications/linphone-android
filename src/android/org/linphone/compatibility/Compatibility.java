@@ -62,7 +62,7 @@ public class Compatibility {
 		}
 	}
 
-	public static Notification createMessageNotification(Context context, int msgCount,String to, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
+	public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
 		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
 			return ApiTwentySixPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
 		} else if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {

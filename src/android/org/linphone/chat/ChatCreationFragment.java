@@ -278,6 +278,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			if (contactsSelected.size() == 1) {
 				contactsSelectedLayout.removeAllViews();
 				LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
+				//TODO create group chat room with only two participants ?
 			} else {
 				contactsSelectedLayout.removeAllViews();
 				LinphoneActivity.instance().goToChatGroupInfos(contactsSelected, null, false, true);

@@ -68,7 +68,6 @@ import org.linphone.core.Factory;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.Participant;
-import org.linphone.mediastream.Log;
 import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.io.File;
@@ -625,11 +624,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 				String to = msg.getToAddress().asString();
 				if (contact != null) {
-					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(),
-							contact.getFullName(), getString(R.string.message_cant_be_decrypted_notif));
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(),
+							contact.getFullName(), contact.getThumbnailUri(), getString(R.string.message_cant_be_decrypted_notif));
 				} else {
-					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(),
-							from.getUsername(), getString(R.string.message_cant_be_decrypted_notif));
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(),
+							from.getUsername(), null, getString(R.string.message_cant_be_decrypted_notif));
 				}
 			}
 		} else if (LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory) {

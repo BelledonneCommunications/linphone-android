@@ -1229,21 +1229,24 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		}
 
 		Address from = message.getFromAddress();
-		String to = message.getToAddress().asString();
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
+		String textMessage = (message.getFileTransferInformation() != null) ? getString(R.string.content_description_incoming_file) : message.getText();
 
-		String textMessage = (message.getFileTransferInformation() != null) ?
-				getString(R.string.content_description_incoming_file) : message.getText();
-		try {
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
-			if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
+		if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
+			if (cr.canHandleParticipants()) {
+				String subject = cr.getSubject();
 				if (contact != null) {
-					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), contact.getFullName(), textMessage);
+					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getConferenceAddress().asString(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
 				} else {
-					LinphoneService.instance().displayMessageNotification(to, from.asStringUriOnly(), from.getUsername(), textMessage);
+					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getConferenceAddress().asString(), from.getUsername(), null, textMessage);
+				}
+			} else {
+				if (contact != null) {
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
+				} else {
+					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUsername(), null, textMessage);
 				}
 			}
-		} catch (Exception e) {
-			Log.e(e);
 		}
 	}
 

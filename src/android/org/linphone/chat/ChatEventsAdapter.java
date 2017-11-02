@@ -195,7 +195,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    } else {
 			    LinphoneContact contact = null;
 			    for (LinphoneContact c : mParticipants) {
-				    if (contact.hasAddress(remoteSender.asStringUriOnly())) {
+				    if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
 					    contact = c;
 					    break;
 				    }

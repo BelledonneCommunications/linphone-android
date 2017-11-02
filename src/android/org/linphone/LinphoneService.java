@@ -595,7 +595,36 @@ public final class LinphoneService extends Service {
 		resetIntentLaunchedOnNotificationClick();
 	}
 
-	public void displayMessageNotification(String to, String fromSipUri, String fromName, String message) {
+	public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message) {
+		Intent notifIntent = new Intent(this, LinphoneActivity.class);
+		notifIntent.putExtra("GoToChat", true);
+		notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
+
+		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		if (mMsgNotif == null) {
+			mMsgNotifCount = 1;
+		} else {
+			mMsgNotifCount++;
+		}
+
+		Bitmap bm = null;
+		if (fromPictureUri != null) {
+			try {
+				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
+			} catch (Exception e) {
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+			}
+		} else {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+		}
+		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, subject,
+				getString(R.string.group_chat_notif).replace("%1", fromName).replace("%2", message), bm, notifContentIntent);
+
+		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+	}
+
+	public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
 		notifIntent.putExtra("ChatContactSipUri", fromSipUri);
@@ -612,22 +641,17 @@ public final class LinphoneService extends Service {
 			mMsgNotifCount++;
 		}
 
-		Uri pictureUri = null;
-		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(Factory.instance().createAddress(fromSipUri));
-		if (contact != null)
-			pictureUri = contact.getThumbnailUri();
-
 		Bitmap bm = null;
-		if (pictureUri != null) {
+		if (fromPictureUri != null) {
 			try {
-				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
+				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
 			} catch (Exception e) {
 				bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 			}
 		} else {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
-		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, to, fromName, message, bm, notifContentIntent);
+		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
 
 		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
 	}
