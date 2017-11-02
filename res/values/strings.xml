@@ -201,6 +201,13 @@
     <string name="chat_room_participants">Participants</string>
     <string name="chat_room_leave_group">Leave the group</string>
     <string name="chat_room_creation_filter_hint">Contact filter</string>
+    <string name="conference_created">group created</string>
+    <string name="conference_destroyed">group destroyed</string>
+    <string name="participant_added">%s added</string>
+    <string name="participant_removed">%s leaved</string>
+    <string name="subject_changed">new subject : %s</string>
+    <string name="admin_set">%s is now admin</string>
+    <string name="admin_unset">%s is no longer admin</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

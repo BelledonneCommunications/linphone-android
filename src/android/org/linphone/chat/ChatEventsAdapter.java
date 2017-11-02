@@ -304,29 +304,43 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    } else { // Event is not chat message
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
-		    Log.e("Conference event type is " + event.getType().toString());
+		    Log.d("Conference event type is " + event.getType().toString());
+		    Address address = event.getParticipantAddress();
+		    String displayName = null;
+		    if (address != null) {
+			    LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+			    if (contact != null) {
+				    displayName = contact.getFullName();
+			    } else {
+				    displayName = address.getDisplayName();
+				    if (displayName == null || displayName.isEmpty()) {
+					    displayName = address.getUsername();
+				    }
+			    }
+		    }
+
 		    //TODO
 		    switch (event.getType()) {
 			    case ConferenceCreated:
-				    holder.eventMessage.setText("Created");
+				    holder.eventMessage.setText(mContext.getString(R.string.conference_created));
 			    	break;
 			    case ConferenceDestroyed:
-				    holder.eventMessage.setText("Destroyed");
+				    holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
 			    	break;
 			    case ConferenceParticipantAdded:
-				    holder.eventMessage.setText("Participant added");
+				    holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
 			    	break;
 			    case ConferenceParticipantRemoved:
-				    holder.eventMessage.setText("Participant removed");
+				    holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
 			    	break;
 			    case ConferenceSubjectChanged:
-				    holder.eventMessage.setText("Subject changed");
+				    holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
 			    	break;
 			    case ConferenceParticipantSetAdmin:
-				    holder.eventMessage.setText("Admin set");
+				    holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
 			    	break;
 			    case ConferenceParticipantUnsetAdmin:
-				    holder.eventMessage.setText("Admin unset");
+				    holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
 			    	break;
 			    case None:
 			    default:
