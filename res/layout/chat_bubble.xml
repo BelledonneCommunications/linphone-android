@@ -3,11 +3,22 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 
+    <CheckBox
+        android:id="@+id/delete_message"
+        android:button="@drawable/checkbox"
+        android:contentDescription="@string/content_description_delete"
+        android:layout_marginLeft="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:adjustViewBounds="true"
+        android:layout_alignParentRight="true"/>
+
 	<LinearLayout
 		android:id="@+id/event"
 		android:orientation="horizontal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/delete_message"
 		android:gravity="center_vertical">
 
 		<ImageView
@@ -47,26 +58,13 @@
 	<RelativeLayout
 		android:id="@+id/bubble"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-
-		<CheckBox
-			android:id="@+id/delete_message"
-			android:button="@drawable/checkbox"
-			android:contentDescription="@string/content_description_delete"
-			android:layout_marginLeft="5dp"
-			android:layout_marginRight="5dp"
-			android:layout_width="30dp"
-			android:layout_height="30dp"
-			android:adjustViewBounds="true"
-			android:layout_alignParentRight="true"
-			android:visibility="gone"/>
-
+		android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/delete_message">
 
 		<LinearLayout
 		    android:id="@+id/background"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_toLeftOf="@id/delete_message"
 			android:orientation="horizontal">
 
 		    <RelativeLayout

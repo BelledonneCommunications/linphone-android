@@ -285,7 +285,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				//LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 				//TODO create group chat room with only two participants ?
 				//TODO what subject to set ?
-				ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom("Tata");
+				ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom("dummy subject");
 				chatRoom.setListener(new ChatRoomListenerStub() {
 					@Override
 					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {

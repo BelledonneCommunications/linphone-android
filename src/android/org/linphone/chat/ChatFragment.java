@@ -185,8 +185,8 @@ public class ChatFragment extends Fragment implements OnClickListener, ChatMessa
 
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		messagesList = (ListView) view.findViewById(R.id.chat_message_list);
-		searchContactField = (EditText) view.findViewById(R.id.search_contact_field);
-		resultContactsSearch = (ListView) view.findViewById(R.id.result_contacts);
+		searchContactField = null;// (EditText) view.findViewById(R.id.search_contact_field);
+		resultContactsSearch = null;//(ListView) view.findViewById(R.id.result_contacts);
 
 		editList = (LinearLayout) view.findViewById(R.id.edit_list);
 		topBar = (LinearLayout) view.findViewById(R.id.top_bar);

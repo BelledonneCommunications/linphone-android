@@ -45,6 +45,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -87,6 +88,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private LayoutInflater mInflater;
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
+	private LinearLayout mTopBar, mEditTopBar;
 
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
@@ -109,6 +111,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat, container, false);
+
+		mTopBar = view.findViewById(R.id.top_bar);
+		mEditTopBar = view.findViewById(R.id.edit_list);
 
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +164,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				mEventsAdapter.enableEdition(true);
+				mTopBar.setVisibility(View.GONE);
+				mEditTopBar.setVisibility(View.VISIBLE);
 			}
 		});
 
@@ -167,7 +174,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mCancelEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				mEventsAdapter.enableEdition(false);
+				mTopBar.setVisibility(View.VISIBLE);
+				mEditTopBar.setVisibility(View.GONE);
 			}
 		});
 

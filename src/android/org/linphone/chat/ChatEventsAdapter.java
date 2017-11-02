@@ -79,6 +79,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap;
+	private boolean mIsEditionEnabled;
 
     public ChatEventsAdapter(Context context, GroupChatFragment fragment, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
 	    mContext = context;
@@ -86,6 +87,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
         mLayoutInflater = inflater;
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
+	    mIsEditionEnabled = false;
     }
 
     public void updateHistory(EventLog[] history) {
@@ -101,6 +103,11 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
     public void setContacts(ArrayList<LinphoneContact> participants) {
 	    mParticipants = participants;
     }
+
+	public void enableEdition(boolean enable) {
+		mIsEditionEnabled = enable;
+		notifyDataSetInvalidated();
+	}
 
     @Override
     public int getCount() {
@@ -130,7 +137,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
-	    holder.delete.setVisibility(View.GONE);
+	    holder.delete.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
 	    holder.messageText.setVisibility(View.GONE);
 	    holder.messageImage.setVisibility(View.GONE);
 	    holder.fileTransferLayout.setVisibility(View.GONE);
@@ -185,8 +192,14 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 			    }
 
-			    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			    layoutParams.setMargins(100, 10, 10, 10);
+			    if (mIsEditionEnabled) {
+				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
+				    layoutParams.setMargins(100, 10, 10, 10);
+			    } else {
+				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				    layoutParams.setMargins(100, 10, 10, 10);
+			    }
+
 			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
 			    Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
@@ -216,12 +229,13 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 				    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			    }
 
-			    /*if (isEditMode) {
-				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			    if (mIsEditionEnabled) {
+				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
 				    layoutParams.setMargins(100, 10, 10, 10);
-			    }*/
-			    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			    layoutParams.setMargins(10, 10, 100, 10);
+			    } else {
+				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				    layoutParams.setMargins(10, 10, 100, 10);
+			    }
 
 			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
 			    Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
