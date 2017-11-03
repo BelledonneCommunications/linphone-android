@@ -60,7 +60,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ImageView allContacts, linphoneContacts;
 	private boolean onlyDisplayLinphoneContacts;
 	private View allContactsSelected, linphoneContactsSelected;
-	private RelativeLayout searchLayout;
+	private RelativeLayout searchLayout, waitLayout;
 	private ImageView clearSearchField;
 	private EditText searchField;
 	private ProgressBar contactsFetchInProgress;
@@ -77,6 +77,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		} else {
 			contactsSelected = new ArrayList<>();
 		}
+
+		waitLayout = view.findViewById(R.id.waitScreen);
+		waitLayout.setVisibility(View.GONE);
 
 		contactsList = view.findViewById(R.id.contactsList);
 		contactsSelectedLayout = view.findViewById(R.id.contactsSelected);
@@ -282,6 +285,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		} else if (id == R.id.next) {
 			if (contactsSelected.size() == 1) {
 				contactsSelectedLayout.removeAllViews();
+				waitLayout.setVisibility(View.VISIBLE);
 				//LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
 				//TODO create group chat room with only two participants ?
 				//TODO what subject to set ?
@@ -290,8 +294,10 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					@Override
 					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 						if (newState == ChatRoom.State.Created) {
+							waitLayout.setVisibility(View.GONE);
 							LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
 						} else if (newState == ChatRoom.State.CreationFailed) {
+							waitLayout.setVisibility(View.GONE);
 							//TODO display error
 							Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
 						}

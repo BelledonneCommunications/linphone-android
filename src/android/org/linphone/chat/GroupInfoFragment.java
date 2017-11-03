@@ -142,10 +142,11 @@ public class GroupInfoFragment extends Fragment {
 					chatRoom.setListener(new ChatRoomListenerStub() {
 						@Override
 						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-							mWaitLayout.setVisibility(View.GONE);
 							if (newState == ChatRoom.State.Created) {
+								mWaitLayout.setVisibility(View.GONE);
 								LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
+								mWaitLayout.setVisibility(View.GONE);
 								//TODO display error
 								Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
 							}
