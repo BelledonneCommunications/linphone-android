@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -88,11 +89,6 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
 	    mIsEditionEnabled = false;
-    }
-
-    public void updateHistory(EventLog[] history) {
-	    mHistory = new ArrayList<>(Arrays.asList(history));
-	    notifyDataSetChanged();
     }
 
     public void addToHistory(EventLog log) {
@@ -148,6 +144,15 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    holder.messageStatus.setVisibility(View.INVISIBLE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
+
+	    if (mIsEditionEnabled) {
+		    holder.delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			    @Override
+			    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				    //TODO
+			    }
+		    });
+	    }
 
 	    EventLog event = (EventLog)getItem(i);
 	    if (event.getType() == EventLog.Type.ConferenceChatMessage) {

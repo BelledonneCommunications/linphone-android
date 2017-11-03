@@ -22,9 +22,7 @@ package org.linphone.chat;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -45,7 +43,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -66,8 +63,6 @@ import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
-import org.linphone.core.Friend;
-import org.linphone.core.FriendList;
 import org.linphone.core.Participant;
 import org.linphone.receivers.ContactsUpdatedListener;
 
@@ -174,9 +169,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mCancelEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mEventsAdapter.enableEdition(false);
-				mTopBar.setVisibility(View.VISIBLE);
-				mEditTopBar.setVisibility(View.GONE);
+				quitEditionMode();
 			}
 		});
 
@@ -184,7 +177,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mSelectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				mSelectAllButton.setVisibility(View.GONE);
+				mDeselectAllButton.setVisibility(View.VISIBLE);
+				mDeleteSelectionButton.setEnabled(true);
 			}
 		});
 
@@ -192,15 +187,38 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				mSelectAllButton.setVisibility(View.VISIBLE);
+				mDeselectAllButton.setVisibility(View.GONE);
+				mDeleteSelectionButton.setEnabled(false);
 			}
 		});
 
 		mDeleteSelectionButton = view.findViewById(R.id.delete);
+		mDeleteSelectionButton.setEnabled(false);
 		mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+				Button delete = dialog.findViewById(R.id.delete_button);
+				Button cancel = dialog.findViewById(R.id.cancel);
+
+				delete.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						deleteSelectedEvents();
+						dialog.dismiss();
+						quitEditionMode();
+					}
+				});
+
+				cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						quitEditionMode();
+					}
+				});
+				dialog.show();
 			}
 		});
 
@@ -286,16 +304,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				String fileToUploadPath = null;
 				if (data != null && data.getData() != null) {
 					if (data.getData().toString().contains("com.android.contacts/contacts/")) {
-						if (getCVSPathFromLookupUri(data.getData().toString()) != null) {
-							fileToUploadPath = getCVSPathFromLookupUri(data.getData().toString()).toString();
+						if (LinphoneUtils.getCVSPathFromLookupUri(data.getData().toString()) != null) {
+							fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(data.getData().toString()).toString();
 						} else {
 							//TODO Error
 							return;
 						}
 					} else {
-						fileToUploadPath = getRealPathFromURI(data.getData());
+						fileToUploadPath = LinphoneUtils.getRealPathFromURI(getActivity(), data.getData());
 					}
-					fileToUploadPath = getRealPathFromURI(data.getData());
 					if (fileToUploadPath == null) {
 						fileToUploadPath = data.getData().toString();
 					}
@@ -309,7 +326,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					if (fileToUploadPath.startsWith("content://")) {
 						fileToUploadPath = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
 					} else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
-						fileToUploadPath = getCVSPathFromLookupUri(fileToUploadPath).toString();
+						fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
 					}
 					addFileToPendingList(fileToUploadPath);
 				}
@@ -322,6 +339,27 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		}
 	}
+
+	/**
+	 * Edition related methods
+	 */
+
+	private void deleteSelectedEvents() {
+		//TODO
+	}
+
+	private void quitEditionMode() {
+		mEventsAdapter.enableEdition(false);
+		mTopBar.setVisibility(View.VISIBLE);
+		mEditTopBar.setVisibility(View.GONE);
+		mDeleteSelectionButton.setEnabled(false);
+		mSelectAllButton.setVisibility(View.VISIBLE);
+		mDeselectAllButton.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Keyboard management
+	 */
 
 	private void addVirtualKeyboardVisiblityListener() {
 		mKeyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -353,33 +391,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		LinphoneActivity.instance().hideTabBar(false);
 	}
 
-	private String getRealPathFromURI(Uri contentUri) {
-		String[] proj = {MediaStore.Images.Media.DATA};
-		CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
-		Cursor cursor = loader.loadInBackground();
-		if (cursor != null && cursor.moveToFirst()) {
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			String result = cursor.getString(column_index);
-			cursor.close();
-			return result;
-		}
-		return null;
-	}
-
-	public Uri getCVSPathFromLookupUri(String content) {
-		String contactId = LinphoneUtils.getNameFromFilePath(content);
-		FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
-		for (FriendList list : friendList) {
-			for (Friend friend : list.getFriends()) {
-				if (friend.getRefKey().toString().equals(contactId)) {
-					String contactVcard = friend.getVcard().asVcard4String();
-					Uri path = LinphoneUtils.createCvsFromString(contactVcard);
-					return path;
-				}
-			}
-		}
-		return null;
-	}
+	/**
+	 * View initialization
+	 */
 
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
@@ -464,6 +478,16 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mChatEventsList.setAdapter(mEventsAdapter);
 	}
 
+	public void scrollToBottom() {
+		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
+			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
+		}
+	}
+
+	/**
+	 * File transfer related
+	 */
+
 	private void pickFile() {
 		List<Intent> cameraIntents = new ArrayList<>();
 		Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -540,6 +564,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mSendMessageButton.setEnabled(true);
 	}
 
+	/**
+	 * Message sending
+	 */
+
 	private void sendMessage() {
 		String text = mMessageTextToSend.getText().toString();
 
@@ -607,12 +635,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mFilesUploadLayout.removeAllViews();
 		mAttachImageButton.setEnabled(true);
 		mMessageTextToSend.setText("");
-	}
-
-	public void scrollToBottom() {
-		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
-			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
-		}
 	}
 
 	/*

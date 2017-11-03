@@ -65,6 +65,8 @@ import org.linphone.core.Call.State;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.Friend;
+import org.linphone.core.FriendList;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -1014,5 +1016,19 @@ public final class LinphoneUtils {
 		return Compatibility.fromHtml(text);
 	}
 
+	public static Uri getCVSPathFromLookupUri(String content) {
+		String contactId = LinphoneUtils.getNameFromFilePath(content);
+		FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
+		for (FriendList list : friendList) {
+			for (Friend friend : list.getFriends()) {
+				if (friend.getRefKey().toString().equals(contactId)) {
+					String contactVcard = friend.getVcard().asVcard4String();
+					Uri path = LinphoneUtils.createCvsFromString(contactVcard);
+					return path;
+				}
+			}
+		}
+		return null;
+	}
 }
 
