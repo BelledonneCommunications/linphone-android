@@ -434,10 +434,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 			holder.displayName.setSelected(true); // For animation
 
-			if (chatRoom.canHandleParticipants()) {
-				holder.displayName.setText(chatRoom.getSubject());
-				holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
-			} else {
+			if (!chatRoom.canHandleParticipants() || (chatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject()))) {
 				if (contact != null) {
 					holder.displayName.setText(contact.getFullName());
 					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
@@ -445,6 +442,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(address));
 					holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 				}
+			} else {
+				holder.displayName.setText(chatRoom.getSubject());
+				holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
 			}
 
 			if (unreadMessagesCount > 0) {

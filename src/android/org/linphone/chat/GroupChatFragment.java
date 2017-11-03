@@ -410,7 +410,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
-		if (mChatRoom.canHandleParticipants()) {
+		if (!mChatRoom.canHandleParticipants() || (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject()))) {
+			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteSipAddress);
+			if (c != null) {
+				mParticipants.add(c);
+			}
+		} else {
 			int index = 0;
 			StringBuilder participantsLabel = new StringBuilder();
 			for (Participant p : mChatRoom.getParticipants()) {
@@ -426,11 +431,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				if (index != mChatRoom.getNbParticipants())	participantsLabel.append(", ");
 			}
 			mParticipantsLabel.setText(participantsLabel.toString());
-		} else {
-			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteSipAddress);
-			if (c != null) {
-				mParticipants.add(c);
-			}
 		}
 
 		if (mEventsAdapter != null) {
@@ -463,13 +463,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			if (mChatRoom.canHandleParticipants()) {
-				mCallButton.setVisibility(View.GONE);
-				mGroupInfosButton.setVisibility(View.VISIBLE);
-				mRoomLabel.setText(mChatRoom.getSubject());
-				mParticipantsLabel.setVisibility(View.VISIBLE);
-
-			} else {
+			if (!mChatRoom.canHandleParticipants() || (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject()))) {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
 				mParticipantsLabel.setVisibility(View.GONE);
@@ -481,6 +475,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				} else {
 					mRoomLabel.setText(mParticipants.get(0).getFullName());
 				}
+			} else {
+				mCallButton.setVisibility(View.GONE);
+				mGroupInfosButton.setVisibility(View.VISIBLE);
+				mRoomLabel.setText(mChatRoom.getSubject());
+				mParticipantsLabel.setVisibility(View.VISIBLE);
+
 			}
 		}
 	}
@@ -718,7 +718,20 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-		if (cr.canHandleParticipants()) {
+		if (!cr.canHandleParticipants() || (cr.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(cr.getSubject()))) {
+			if (isComposing) {
+				String displayName;
+				if (mParticipants.size() > 0) {
+					displayName = mParticipants.get(0).getFullName();
+				} else {
+					displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
+				}
+				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", displayName));
+				mRemoteComposing.setVisibility(View.VISIBLE);
+			} else {
+				mRemoteComposing.setVisibility(View.GONE);
+			}
+		} else {
 			ArrayList<String> composing = new ArrayList<>();
 			for (Address a : cr.getComposingAddresses()) {
 				boolean found = false;
@@ -749,19 +762,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					}
 				}
 				mRemoteComposing.setText(getString(R.string.remote_composing_multiple).replace("%s", remotes.toString()));
-				mRemoteComposing.setVisibility(View.VISIBLE);
-			} else {
-				mRemoteComposing.setVisibility(View.GONE);
-			}
-		} else {
-			if (isComposing) {
-				String displayName;
-				if (mParticipants.size() > 0) {
-					displayName = mParticipants.get(0).getFullName();
-				} else {
-					displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
-				}
-				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", displayName));
 				mRemoteComposing.setVisibility(View.VISIBLE);
 			} else {
 				mRemoteComposing.setVisibility(View.GONE);
