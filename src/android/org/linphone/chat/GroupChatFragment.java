@@ -177,9 +177,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mSelectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mSelectAllButton.setVisibility(View.GONE);
-				mDeselectAllButton.setVisibility(View.VISIBLE);
-				mDeleteSelectionButton.setEnabled(true);
+				mEventsAdapter.selectAll();
 			}
 		});
 
@@ -187,9 +185,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				mSelectAllButton.setVisibility(View.VISIBLE);
-				mDeselectAllButton.setVisibility(View.GONE);
-				mDeleteSelectionButton.setEnabled(false);
+				mEventsAdapter.deselectAll();
 			}
 		});
 
@@ -345,7 +341,24 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	 */
 
 	private void deleteSelectedEvents() {
+		EventLog logs[] = mEventsAdapter.getSelectedItems();
 		//TODO
+	}
+
+	public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
+		if (isSelectionEmpty) {
+			mDeleteSelectionButton.setEnabled(false);
+		} else {
+			mDeleteSelectionButton.setEnabled(true);
+		}
+
+		if (isSelectionFull) {
+			mSelectAllButton.setVisibility(View.GONE);
+			mDeselectAllButton.setVisibility(View.VISIBLE);
+		} else {
+			mSelectAllButton.setVisibility(View.VISIBLE);
+			mDeselectAllButton.setVisibility(View.GONE);
+		}
 	}
 
 	private void quitEditionMode() {

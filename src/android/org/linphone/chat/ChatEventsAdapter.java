@@ -80,7 +80,21 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap;
+
 	private boolean mIsEditionEnabled;
+	private List<Integer> mSelectedItems;
+	private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
+		@Override
+		public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+			Integer position = (Integer)compoundButton.getTag();
+			if (checked) {
+				mSelectedItems.add(position);
+			} else {
+				mSelectedItems.remove(position);
+			}
+			mFragment.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == mHistory.size());
+		}
+	};
 
     public ChatEventsAdapter(Context context, GroupChatFragment fragment, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
 	    mContext = context;
@@ -89,6 +103,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
 	    mIsEditionEnabled = false;
+	    mSelectedItems = new ArrayList<>();
     }
 
     public void addToHistory(EventLog log) {
@@ -100,10 +115,43 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    mParticipants = participants;
     }
 
+	/**
+	 * List edition
+	 */
+
 	public void enableEdition(boolean enable) {
 		mIsEditionEnabled = enable;
 		notifyDataSetInvalidated();
+		mSelectedItems.clear();
 	}
+
+	public EventLog[] getSelectedItems() {
+		EventLog logs[] = new EventLog[mSelectedItems.size()];
+		int index = 0;
+		for (Integer i : mSelectedItems) {
+			logs[index] = (EventLog)getItem(i);
+			index++;
+		}
+		return logs;
+	}
+
+	public void selectAll() {
+		for (Integer i = 0; i < mHistory.size(); i++) {
+			mSelectedItems.add(i);
+		}
+		mFragment.updateSelectionButtons(false, true);
+		notifyDataSetInvalidated();
+	}
+
+	public void deselectAll() {
+		mSelectedItems.clear();
+		mFragment.updateSelectionButtons(true, false);
+		notifyDataSetInvalidated();
+	}
+
+	/**
+	 * Adapter's methods
+	 */
 
     @Override
     public int getCount() {
@@ -146,12 +194,10 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
 
 	    if (mIsEditionEnabled) {
-		    holder.delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			    @Override
-			    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				    //TODO
-			    }
-		    });
+		    holder.delete.setOnCheckedChangeListener(null);
+		    holder.delete.setChecked(mSelectedItems.contains(i));
+		    holder.delete.setTag(i);
+		    holder.delete.setOnCheckedChangeListener(mDeleteCheckboxListener);
 	    }
 
 	    EventLog event = (EventLog)getItem(i);
