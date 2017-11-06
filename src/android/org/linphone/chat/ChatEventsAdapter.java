@@ -357,6 +357,9 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
 	    } else { // Event is not chat message
+		    if (event.isFullState()) { // Do not display full state events
+			    return view;
+		    }
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
 		    Log.d("Conference event type is " + event.getType().toString());
