@@ -296,8 +296,13 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    }
 		    holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
 
-		    Spanned text = null;
-		    String msg = message.getText();
+		    if (message.hasTextContent()) {
+			    String msg = message.getTextContent();
+			    Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
+			    holder.messageText.setText(text);
+			    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+			    holder.messageText.setVisibility(View.VISIBLE);
+		    }
 
 		    String externalBodyUrl = message.getExternalBodyUrl();
 		    Content fileTransferContent = message.getFileTransferInformation();
@@ -348,11 +353,6 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 						}
 					});
 				}
-		    } else if (msg != null) { // This is a else for now, the day we'll be able to send both file and text this won't be anymore
-			    text = LinphoneUtils.getTextWithHttpLinks(msg);
-			    holder.messageText.setText(text);
-			    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
-			    holder.messageText.setVisibility(View.VISIBLE);
 		    }
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);

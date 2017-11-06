@@ -601,6 +601,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			msg = mChatRoom.createFileTransferMessage(content);
 			msg.setFileTransferFilepath(filePath); // Let the file body handler take care of the upload
 			msg.setAppdata(filePath);
+
+			if (text != null && text.length() > 0) {
+				msg.addTextContent(text);
+			}
 		} else {
 			msg = mChatRoom.createMessage(text);
 		}
