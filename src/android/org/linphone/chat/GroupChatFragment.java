@@ -249,7 +249,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
-				if (mChatRoom != null) {
+				if (mChatRoom != null && mMessageTextToSend.getText().length() > 0) {
 					mChatRoom.compose();
 				}
 			}
