@@ -113,7 +113,7 @@
 
                     <TextView
                         android:id="@+id/file_name"
-                        style="@style/font11"
+                        style="@style/font26"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -133,7 +133,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/file_name"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"/>
 
 				</RelativeLayout>
 
@@ -143,12 +144,13 @@
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
 				<RelativeLayout
 					android:id="@+id/file_transfer_layout"
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content">
+					android:layout_height="wrap_content"
+                    android:visibility="gone">
 
 					<ProgressBar
 						android:id="@+id/progress_bar"

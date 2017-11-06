@@ -157,4 +157,9 @@
 		<item name="android:textStyle">bold</item>
 	</style>
 
+    <style name="font26" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorD</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>
