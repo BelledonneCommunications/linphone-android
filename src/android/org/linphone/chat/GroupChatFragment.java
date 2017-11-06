@@ -616,7 +616,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				if (holder != null && message.getMessageId().equals(holder.messageId) && message.isOutgoing()) {
 					if (offset == total) {
 						holder.fileTransferLayout.setVisibility(View.GONE);
-						mEventsAdapter.notifyDataSetChanged();
+						holder.fileTransferProgressBar.setVisibility(View.GONE);
 					} else {
 						holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 						holder.fileTransferProgressBar.setProgress(offset * 100 / total);
