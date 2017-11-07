@@ -91,7 +91,6 @@ import org.linphone.fragments.StatusFragment;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.chat.ChatCreationFragment;
-import org.linphone.chat.ChatFragment;
 import org.linphone.chat.ChatListFragment;
 import org.linphone.chat.GroupChatFragment;
 import org.linphone.compatibility.Compatibility;
@@ -428,9 +427,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			break;
 		case CHAT_LIST:
 			fragment = new ChatListFragment();
-			break;
-		case CHAT:
-			fragment = new ChatFragment();
 			break;
 		case CREATE_CHAT:
 			fragment = new ChatCreationFragment();
@@ -772,8 +768,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.CHAT) {
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
-				ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message, fileUri);
+				/*ChatFragment chatFragment = (ChatFragment) fragment2;
+				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message, fileUri);*/
+				//TODO
 			} else {
 				displayChat(sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);
 			}

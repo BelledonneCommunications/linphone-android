@@ -63,7 +63,7 @@ import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener, ChatUpdatedListener {
+public class ChatListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
 	private List<String> mConversations;
 	private ListView chatList;
@@ -116,8 +116,9 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			}
 		};
 
-		ChatFragment.createIfNotExist();
-		ChatFragment.addChatListener(this);
+		/*ChatFragment.createIfNotExist();
+		ChatFragment.addChatListener(this);*/
+		//TODO
 		return view;
 	}
 
@@ -353,7 +354,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 		}
 	}
 
-	@Override
+	//@Override
 	public void onChatUpdated() {
 		refresh();
 	}
