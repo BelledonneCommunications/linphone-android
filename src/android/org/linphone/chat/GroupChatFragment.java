@@ -64,7 +64,6 @@ import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
-import org.linphone.mediastream.Log;
 import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.io.File;

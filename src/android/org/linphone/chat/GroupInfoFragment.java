@@ -39,7 +39,6 @@ import org.linphone.contacts.ContactAddress;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
-import org.linphone.core.Participant;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
