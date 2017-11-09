@@ -305,7 +305,6 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    }
 
 		    String externalBodyUrl = message.getExternalBodyUrl();
-		    Log.e("External body url is " + externalBodyUrl);
 		    Content fileTransferContent = message.getFileTransferInformation();
 		    String appData = message.getAppdata();
 		    if (externalBodyUrl != null || fileTransferContent != null) { // Incoming file transfer
