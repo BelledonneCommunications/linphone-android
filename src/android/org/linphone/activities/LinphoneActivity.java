@@ -730,9 +730,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 	}
 
-	public void goToChatGroupInfos(ArrayList<ContactAddress> contacts, String subject, boolean isAlreadyCreatedGroup, boolean isEditionEnabled) {
+	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled) {
 		Bundle extras = new Bundle();
-		extras.putBoolean("isAlreadyCreatedGroup", isAlreadyCreatedGroup);
+		extras.putString("groupChatRoomAddress", address);
 		extras.putBoolean("isEditionEnabled", isEditionEnabled);
 		extras.putSerializable("ContactAddress", contacts);
 		extras.putString("subject", subject);

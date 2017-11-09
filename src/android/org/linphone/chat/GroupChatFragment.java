@@ -64,6 +64,7 @@ import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
+import org.linphone.mediastream.Log;
 import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.io.File;
@@ -84,6 +85,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
 	private LinearLayout mTopBar, mEditTopBar;
+	private boolean mIsReadOnly;
 
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
@@ -151,7 +153,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().goToChatGroupInfos(participants, mChatRoom.getSubject(), true, mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false);
+				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false);
 			}
 		});
 
@@ -408,6 +410,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	 * View initialization
 	 */
 
+	private void setReadOnly() {
+		mMessageTextToSend.setEnabled(false);
+		mAttachImageButton.setEnabled(false);
+		mSendMessageButton.setEnabled(false);
+	}
+
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
 		if (!mChatRoom.canHandleParticipants() || (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject()))) {
@@ -455,6 +463,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
 		}
 
+		mIsReadOnly = mChatRoom.getState() == ChatRoom.State.Terminated;
+
 		getContactsForParticipants();
 	}
 
@@ -485,8 +495,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				mGroupInfosButton.setVisibility(View.VISIBLE);
 				mRoomLabel.setText(mChatRoom.getSubject());
 				mParticipantsLabel.setVisibility(View.VISIBLE);
-
 			}
+		}
+
+		if (mIsReadOnly) {
+			setReadOnly();
 		}
 	}
 
@@ -807,7 +820,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-
+		mIsReadOnly = mChatRoom.getState() == ChatRoom.State.Terminated;
+		if (mIsReadOnly) {
+			setReadOnly();
+		}
 	}
 
 	@Override

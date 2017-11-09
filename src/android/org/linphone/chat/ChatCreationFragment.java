@@ -310,7 +310,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				chatRoom.addParticipants(addresses);
 			} else {
 				contactsSelectedLayout.removeAllViews();
-				LinphoneActivity.instance().goToChatGroupInfos(contactsSelected, null, false, true);
+				LinphoneActivity.instance().goToChatGroupInfos(null, contactsSelected, null, true);
 			}
 		} else if (id == R.id.clearSearchField) {
 			searchField.setText("");

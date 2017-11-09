@@ -46,6 +46,7 @@ import java.util.ArrayList;
 
 public class GroupInfoFragment extends Fragment {
 	private ImageView mBackButton, mConfirmButton, mAddParticipantsButton;
+	private Address mGroupChatRoomAddress;
 	private EditText mSubjectField;
 	private LayoutInflater mInflater;
 	private ListView mParticipantsList;
@@ -55,6 +56,8 @@ public class GroupInfoFragment extends Fragment {
 	private boolean mIsAlreadyCreatedGroup;
 	private boolean mIsEditionEnabled;
 	private ArrayList<ContactAddress> mParticipants;
+	private String mSubject;
+	private ChatRoom mChatRoom;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,9 +68,26 @@ public class GroupInfoFragment extends Fragment {
 			return null;
 		}
 		mParticipants =  (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
-		mIsAlreadyCreatedGroup = getArguments().getBoolean("isAlreadyCreatedGroup");
+
+		mGroupChatRoomAddress = null;
+		mChatRoom = null;
+
+		String address = getArguments().getString("groupChatRoomAddress");
+		if (address != null && address.length() > 0) {
+			mGroupChatRoomAddress = LinphoneManager.getLc().createAddress(address);
+		}
+		mIsAlreadyCreatedGroup = mGroupChatRoomAddress != null;
+		if (mIsAlreadyCreatedGroup) {
+			mChatRoom = LinphoneManager.getLc().getChatRoom(mGroupChatRoomAddress);
+		}
+		if (mChatRoom == null) mIsAlreadyCreatedGroup = false;
+
 		mIsEditionEnabled = getArguments().getBoolean("isEditionEnabled");
-		String subject = getArguments().getString("subject");
+		mSubject = getArguments().getString("subject");
+
+		if (mChatRoom != null && mChatRoom.getState() == ChatRoom.State.Terminated) {
+			mIsEditionEnabled = false;
+		}
 
 		mParticipantsList = view.findViewById(R.id.chat_room_participants);
 		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
@@ -101,10 +121,15 @@ public class GroupInfoFragment extends Fragment {
 		mLeaveGroupButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//TODO
+				if (mChatRoom != null) {
+					mChatRoom.leave();
+					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
+				} else {
+					Log.e("Can't leave, chatRoom for address " + mGroupChatRoomAddress.asString() + " is null...");
+				}
 			}
 		});
-		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
+		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.getState() != ChatRoom.State.Terminated ? View.VISIBLE : View.GONE);
 
 		mAddParticipantsButton = view.findViewById(R.id.addParticipants);
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +156,7 @@ public class GroupInfoFragment extends Fragment {
 				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 1);
 			}
 		});
-		mSubjectField.setText(subject);
+		mSubjectField.setText(mSubject);
 
 		mConfirmButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -161,7 +186,11 @@ public class GroupInfoFragment extends Fragment {
 					}
 					chatRoom.addParticipants(addresses);
 				} else {
-					//TODO
+					String newSubject = mSubjectField.getText().toString();
+					if (!newSubject.equals(mSubject)) {
+						mChatRoom.setSubject(newSubject);
+					}
+					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
 				}
 			}
 		});
