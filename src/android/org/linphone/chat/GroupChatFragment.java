@@ -151,7 +151,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().goToChatGroupInfos(participants, mChatRoom.getSubject(), true, /*TODO*/ false);
+				LinphoneActivity.instance().goToChatGroupInfos(participants, mChatRoom.getSubject(), true, mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false);
 			}
 		});
 
