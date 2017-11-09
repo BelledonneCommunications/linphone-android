@@ -409,7 +409,7 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 			Address address;
 			address = Factory.instance().createAddress(sipUri);
 
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+			LinphoneContact contact = null;
 			String message = "";
 			Long time;
 
@@ -435,12 +435,22 @@ public class ChatListFragment extends Fragment implements OnClickListener, OnIte
 
 			holder.displayName.setSelected(true); // For animation
 
-			if (!chatRoom.canHandleParticipants() || (chatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject()))) {
+			if (!chatRoom.canHandleParticipants()) {
+				contact = ContactsManager.getInstance().findContactFromAddress(address);
 				if (contact != null) {
 					holder.displayName.setText(contact.getFullName());
 					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 				} else {
 					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(address));
+					holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+				}
+			} else if (chatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
+				contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
+				if (contact != null) {
+					holder.displayName.setText(contact.getFullName());
+					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+				} else {
+					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
 					holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 				}
 			} else {

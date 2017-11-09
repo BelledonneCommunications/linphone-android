@@ -89,7 +89,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private Uri mImageToUploadUri;
 	private ChatEventsAdapter mEventsAdapter;
 	private String mRemoteSipUri;
-	private Address mRemoteSipAddress;
+	private Address mRemoteSipAddress, mRemoteParticipantAddress;
 	private ChatRoom mChatRoom;
 	private ArrayList<LinphoneContact> mParticipants;
 
@@ -122,7 +122,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mCallButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().setAddresGoToDialerAndCall(mRemoteSipUri, null, null);
+				LinphoneActivity.instance().setAddresGoToDialerAndCall(mRemoteParticipantAddress.asString(), null, null);
 			}
 		});
 
@@ -411,7 +411,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
 		if (!mChatRoom.canHandleParticipants() || (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject()))) {
-			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteSipAddress);
+			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteParticipantAddress);
 			if (c != null) {
 				mParticipants.add(c);
 			}
@@ -450,6 +450,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mChatRoom.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
 
+		mRemoteParticipantAddress = mRemoteSipAddress;
+		if (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject())) {
+			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
+		}
+
 		getContactsForParticipants();
 	}
 
@@ -470,7 +475,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 				if (mParticipants.size() == 0) {
 					// Contact not found
-					String displayName = LinphoneUtils.getAddressDisplayName(mRemoteSipAddress);
+					String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
 					mRoomLabel.setText(displayName);
 				} else {
 					mRoomLabel.setText(mParticipants.get(0).getFullName());
