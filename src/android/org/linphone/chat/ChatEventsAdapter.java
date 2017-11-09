@@ -305,9 +305,10 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    }
 
 		    String externalBodyUrl = message.getExternalBodyUrl();
+		    Log.e("External body url is " + externalBodyUrl);
 		    Content fileTransferContent = message.getFileTransferInformation();
 		    String appData = message.getAppdata();
-		    if (externalBodyUrl != null) { // Incoming file transfer
+		    if (externalBodyUrl != null || fileTransferContent != null) { // Incoming file transfer
 			    if (appData != null) { // Download already done, just display the result
 				    displayAttachedFile(message, holder);
 			    } else { // Attachment not yet downloaded
@@ -357,12 +358,8 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
 	    } else { // Event is not chat message
-		    /*if (event.isFullState()) { // Do not display full state events
-			    return view;
-		    }*/
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
-		    Log.d("Conference event type is " + event.getType().toString());
 		    Address address = event.getParticipantAddress();
 		    String displayName = null;
 		    if (address != null) {
@@ -495,6 +492,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			holder.fileTransferLayout.setVisibility(View.GONE);
 			displayAttachedFile(message, holder);
 		} else {
+			holder.fileTransferAction.setVisibility(View.GONE);
 			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
 		}
