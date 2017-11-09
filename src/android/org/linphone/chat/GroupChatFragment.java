@@ -448,7 +448,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private void initChatRoom() {
 		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (mRemoteSipAddress == null || mRemoteSipUri == null || mRemoteSipUri.length() == 0 || core == null) {
-			LinphoneActivity.instance().goToDialerFragment();
+			//TODO error
 			return;
 		}
 

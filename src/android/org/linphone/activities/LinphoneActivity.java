@@ -453,7 +453,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 					((ContactsListFragment) fragment).displayFirstContact();
 					break;
 				case CHAT_LIST:
-					((ChatListFragment) fragment).displayFirstChat();
+					//TODO((ChatListFragment) fragment).displayFirstChat();
 					break;
 				}
 			} else {
@@ -880,7 +880,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	public void onMessageSent(String to, String message) {
 		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
 		if (fragment.getClass() == ChatListFragment.class) {
-			((ChatListFragment)fragment).refresh();
+			////TODO ((ChatListFragment)fragment).refresh();
 		}
 	}
 
