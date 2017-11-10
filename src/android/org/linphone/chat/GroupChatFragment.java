@@ -149,10 +149,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 						String displayName = LinphoneUtils.getAddressDisplayName(a);
 						c.setFullName(displayName);
 					}
-					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend());
+					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false);
+				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false);
 			}
 		});
 

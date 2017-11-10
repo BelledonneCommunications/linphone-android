@@ -714,13 +714,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
-	public void goToChatCreator(ArrayList<ContactAddress> selectedContacts, boolean isGoBack) {
+	public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack) {
 		if (currentFragment == FragmentsAvailable.INFO_GROUP_CHAT && isGoBack) {
 			getFragmentManager().popBackStackImmediate();
 			getFragmentManager().popBackStackImmediate();
 		}
 		Bundle extras = new Bundle();
 		extras.putSerializable("selectedContacts", selectedContacts);
+		extras.putString("subject", subject);
+		extras.putString("groupChatRoomAddress", address);
 		changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
 	}
 
@@ -730,7 +732,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 	}
 
-	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled) {
+	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled, boolean isGoBack) {
+		if (currentFragment == FragmentsAvailable.CREATE_CHAT && isGoBack) {
+			getFragmentManager().popBackStackImmediate();
+			getFragmentManager().popBackStackImmediate();
+		}
 		Bundle extras = new Bundle();
 		extras.putString("groupChatRoomAddress", address);
 		extras.putBoolean("isEditionEnabled", isEditionEnabled);

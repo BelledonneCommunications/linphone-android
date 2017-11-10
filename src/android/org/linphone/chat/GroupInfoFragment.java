@@ -36,9 +36,11 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.Participant;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
@@ -109,7 +111,7 @@ public class GroupInfoFragment extends Fragment {
 				if (mIsAlreadyCreatedGroup) {
 					getFragmentManager().popBackStack();
 				} else {
-					LinphoneActivity.instance().goToChatCreator(mParticipants, true);
+					LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true);
 				}
 			}
 		});
@@ -134,7 +136,7 @@ public class GroupInfoFragment extends Fragment {
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().goToChatCreator(mParticipants, !mIsAlreadyCreatedGroup);
+				LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress.asString(), mParticipants, mSubject, !mIsAlreadyCreatedGroup);
 			}
 		});
 
@@ -185,10 +187,49 @@ public class GroupInfoFragment extends Fragment {
 					}
 					chatRoom.addParticipants(addresses);
 				} else {
+					// Subject
 					String newSubject = mSubjectField.getText().toString();
 					if (!newSubject.equals(mSubject)) {
 						mChatRoom.setSubject(newSubject);
 					}
+
+					// Participants removed
+					for (Participant p : mChatRoom.getParticipants()) {
+						boolean found = false;
+						for (ContactAddress c : mParticipants) {
+							if (c.getAddress().equals(p.getAddress().asStringUriOnly())) {
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							mChatRoom.removeParticipant(p);
+						}
+					}
+
+					// Participants added
+					for (ContactAddress c : mParticipants) {
+						boolean found = false;
+						for (Participant p : mChatRoom.getParticipants()) {
+							if (p.getAddress().asStringUriOnly().equals(c.getAddress())) {
+								// Admin rights
+								if (c.isAdmin() != p.isAdmin()) {
+									mChatRoom.setParticipantAdminStatus(p, c.isAdmin());
+								}
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							Address addr = LinphoneManager.getLc().createAddress(c.getAddress());
+							if (addr != null) {
+								mChatRoom.addParticipant(addr);
+							} else {
+								//TODO error
+							}
+						}
+					}
+
 					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
 				}
 			}

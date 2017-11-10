@@ -66,16 +66,22 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ProgressBar contactsFetchInProgress;
 	private SearchContactsListAdapter searchAdapter;
 	private ImageView back, next;
+	private String mChatRoomSubject, mChatRoomAddress;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat_create, container, false);
 
-		if (getArguments() != null && getArguments().getSerializable("selectedContacts") != null) {
-			contactsSelected = (ArrayList<ContactAddress>) getArguments().getSerializable("selectedContacts");
-		} else {
-			contactsSelected = new ArrayList<>();
+		contactsSelected = new ArrayList<>();
+		mChatRoomSubject = null;
+		mChatRoomAddress = null;
+		if (getArguments() != null) {
+			if (getArguments().getSerializable("selectedContacts") != null) {
+				contactsSelected = (ArrayList<ContactAddress>) getArguments().getSerializable("selectedContacts");
+			}
+			mChatRoomSubject = getArguments().getString("subject");
+			mChatRoomAddress = getArguments().getString("groupChatRoomAddress");
 		}
 
 		waitLayout = view.findViewById(R.id.waitScreen);
@@ -283,34 +289,38 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			contactsSelectedLayout.removeAllViews();
 			LinphoneActivity.instance().popBackStack();
 		} else if (id == R.id.next) {
-			if (contactsSelected.size() == 1) {
-				contactsSelectedLayout.removeAllViews();
-				waitLayout.setVisibility(View.VISIBLE);
-				//LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
-				//TODO create group chat room with only two participants ?
-				//TODO what subject to set ?
-				ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-				chatRoom.setListener(new ChatRoomListenerStub() {
-					@Override
-					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-						if (newState == ChatRoom.State.Created) {
-							waitLayout.setVisibility(View.GONE);
-							LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
-						} else if (newState == ChatRoom.State.CreationFailed) {
-							waitLayout.setVisibility(View.GONE);
-							//TODO display error
-							Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
+			if (mChatRoomAddress == null && mChatRoomSubject == null) {
+				if (contactsSelected.size() == 1) {
+					contactsSelectedLayout.removeAllViews();
+					waitLayout.setVisibility(View.VISIBLE);
+					//LinphoneActivity.instance().displayChat(contactsSelected.get(0).getAddress(), "", "");
+					//TODO create group chat room with only two participants ?
+					//TODO what subject to set ?
+					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+					chatRoom.setListener(new ChatRoomListenerStub() {
+						@Override
+						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+							if (newState == ChatRoom.State.Created) {
+								waitLayout.setVisibility(View.GONE);
+								LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
+							} else if (newState == ChatRoom.State.CreationFailed) {
+								waitLayout.setVisibility(View.GONE);
+								//TODO display error
+								Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
+							}
 						}
-					}
-				});
+					});
 
-				Address addresses[] = new Address[1];
-				String addr = contactsSelected.get(0).getAddress();
-				addresses[0] = LinphoneManager.getLc().interpretUrl(addr);
-				chatRoom.addParticipants(addresses);
+					Address addresses[] = new Address[1];
+					String addr = contactsSelected.get(0).getAddress();
+					addresses[0] = LinphoneManager.getLc().interpretUrl(addr);
+					chatRoom.addParticipants(addresses);
+				} else {
+					contactsSelectedLayout.removeAllViews();
+					LinphoneActivity.instance().goToChatGroupInfos(null, contactsSelected, null, true, false);
+				}
 			} else {
-				contactsSelectedLayout.removeAllViews();
-				LinphoneActivity.instance().goToChatGroupInfos(null, contactsSelected, null, true);
+				LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, contactsSelected, mChatRoomSubject, true, true);
 			}
 		} else if (id == R.id.clearSearchField) {
 			searchField.setText("");

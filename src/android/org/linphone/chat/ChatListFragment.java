@@ -92,7 +92,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneActivity.instance().goToChatCreator(null, false);
+				LinphoneActivity.instance().goToChatCreator(null, null, null, false);
 			}
 		});
 

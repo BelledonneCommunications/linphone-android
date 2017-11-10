@@ -73,6 +73,13 @@ public class ContactAddress implements Serializable {
 		this.isLinphoneContact = isLC;
 	}
 
+	public ContactAddress(LinphoneContact c, String a, boolean isLC, boolean isAdmin){
+		this.contact = c;
+		this.address = a;
+		this.isLinphoneContact = isLC;
+		this.isAdmin = isAdmin;
+	}
+
 	@Override
 	public boolean equals(Object other){
 		if (other == null) return false;
