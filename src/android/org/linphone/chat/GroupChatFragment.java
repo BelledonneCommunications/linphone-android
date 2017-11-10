@@ -258,6 +258,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			@Override
 			public void afterTextChanged(Editable editable) { }
 		});
+		mMessageTextToSend.clearFocus();
 
 		mRemoteComposing = view.findViewById(R.id.remote_composing);
 
@@ -463,7 +464,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 
 		mIsReadOnly = mChatRoom.getState() == ChatRoom.State.Terminated;
-
 		getContactsForParticipants();
 	}
 

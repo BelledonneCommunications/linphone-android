@@ -274,10 +274,10 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		String sipUri = chatList.getAdapter().getItem(position).toString();
+		ChatRoom chatRoom = (ChatRoom) chatList.getAdapter().getItem(position);
 
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
-			LinphoneActivity.instance().goToChat(sipUri);
+			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asString());
 		}
 	}
 

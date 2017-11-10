@@ -21,6 +21,7 @@ package org.linphone.chat;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,7 @@ public class ChatRoomsAdapter extends BaseAdapter {
 	ChatListFragment mFragment;
 	private List<ChatRoom> mRooms;
 	private LayoutInflater mLayoutInflater;
-	private Bitmap mDefaultBitmap;
+	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
 
     public ChatRoomsAdapter(Context context, ChatListFragment fragment, LayoutInflater inflater) {
 	    mContext = context;
@@ -75,6 +76,7 @@ public class ChatRoomsAdapter extends BaseAdapter {
         mLayoutInflater = inflater;
 	    mRooms = new ArrayList<>();
 	    mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
+	    mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
     }
 
     public void refresh() {
@@ -131,6 +133,7 @@ public class ChatRoomsAdapter extends BaseAdapter {
 	    Long time;
 
 	    int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
+	    //TODO rework
 	    ChatMessage[] history = chatRoom.getHistory(1);
 
 	    if (history.length > 0) {
@@ -140,8 +143,8 @@ public class ChatRoomsAdapter extends BaseAdapter {
 			    time = msg.getTime();
 			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
 			    holder.lastMessageView.setText("");
-		    } else if (msg.getText() != null && msg.getText().length() > 0 ){
-			    message = msg.getText();
+		    } else if (msg.getTextContent() != null && msg.getTextContent().length() > 0) {
+			    message = msg.getTextContent();
 			    holder.lastMessageView.setBackgroundResource(0);
 			    time = msg.getTime();
 			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
@@ -158,7 +161,7 @@ public class ChatRoomsAdapter extends BaseAdapter {
 			    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 		    } else {
 			    holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
-			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			    holder.contactPicture.setImageBitmap(mDefaultBitmap);
 		    }
 	    } else if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
 		    contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
@@ -167,11 +170,11 @@ public class ChatRoomsAdapter extends BaseAdapter {
 			    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 		    } else {
 			    holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
-			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			    holder.contactPicture.setImageBitmap(mDefaultBitmap);
 		    }
 	    } else {
 		    holder.displayName.setText(chatRoom.getSubject());
-		    holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
+		    holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
 	    }
 
 	    if (unreadMessagesCount > 0) {
@@ -180,6 +183,7 @@ public class ChatRoomsAdapter extends BaseAdapter {
 		    if (unreadMessagesCount > 99) {
 			    holder.unreadMessages.setTextSize(12);
 		    }
+		    holder.unreadMessages.setVisibility(View.VISIBLE);
 		    holder.displayName.setTypeface(null, Typeface.BOLD);
 	    } else {
 		    holder.unreadMessages.setVisibility(View.GONE);
@@ -214,10 +218,6 @@ public class ChatRoomsAdapter extends BaseAdapter {
 			    holder.select.setChecked(true);
 		    } else {
 			    holder.select.setChecked(false);
-		    }
-	    } else {
-		    if (unreadMessagesCount > 0) {
-			    holder.unreadMessages.setVisibility(View.VISIBLE);
 		    }
 	    }*/
 	    return view;
