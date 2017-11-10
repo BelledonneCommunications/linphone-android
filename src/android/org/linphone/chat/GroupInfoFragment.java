@@ -194,6 +194,7 @@ public class GroupInfoFragment extends Fragment {
 					}
 
 					// Participants removed
+					ArrayList<Participant> toRemove = new ArrayList<>();
 					for (Participant p : mChatRoom.getParticipants()) {
 						boolean found = false;
 						for (ContactAddress c : mParticipants) {
@@ -203,11 +204,15 @@ public class GroupInfoFragment extends Fragment {
 							}
 						}
 						if (!found) {
-							mChatRoom.removeParticipant(p);
+							toRemove.add(p);
 						}
 					}
+					Participant[] participantsToRemove = new Participant[toRemove.size()];
+					toRemove.toArray(participantsToRemove);
+					mChatRoom.removeParticipants(participantsToRemove);
 
 					// Participants added
+					ArrayList<Address> toAdd = new ArrayList<>();
 					for (ContactAddress c : mParticipants) {
 						boolean found = false;
 						for (Participant p : mChatRoom.getParticipants()) {
@@ -223,12 +228,15 @@ public class GroupInfoFragment extends Fragment {
 						if (!found) {
 							Address addr = LinphoneManager.getLc().createAddress(c.getAddress());
 							if (addr != null) {
-								mChatRoom.addParticipant(addr);
+								toAdd.add(addr);
 							} else {
 								//TODO error
 							}
 						}
 					}
+					Address[] participantsToAdd = new Address[toAdd.size()];
+					toAdd.toArray(participantsToAdd);
+					mChatRoom.addParticipants(participantsToAdd);
 
 					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
 				}
