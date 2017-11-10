@@ -36,7 +36,6 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
-import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
@@ -154,7 +153,7 @@ public class GroupInfoFragment extends Fragment {
 
 			@Override
 			public void afterTextChanged(Editable editable) {
-				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 1);
+				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
 			}
 		});
 		mSubjectField.setText(mSubject);
