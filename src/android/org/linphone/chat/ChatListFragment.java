@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,11 +48,12 @@ import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
 public class ChatListFragment extends Fragment implements OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
-	private ListView chatList;
-	private TextView noChatHistory;
-	private ImageView edit, selectAll, deselectAll, delete, newDiscussion, cancel, backInCall;
-	private LinearLayout editList, topbar;
+	private ListView mChatRoomsList;
+	private TextView mNoChatHistory;
+	private ImageView mEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton, mNewDiscussionButton, mCancelButton, mBackToCallButton;
+	private LinearLayout mEditTopBar, mTopBar;
 	private boolean isEditMode = false;
+	private ChatRoomsAdapter mChatRoomsAdapter;
 	private CoreListenerStub mListener;
 
 	@Override
@@ -58,69 +61,91 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		mInflater = inflater;
 
 		View view = inflater.inflate(R.layout.chatlist, container, false);
-		chatList = view.findViewById(R.id.chatList);
-		chatList.setAdapter(new ChatRoomsAdapter(getActivity(), this, mInflater));
-		chatList.setOnItemClickListener(this);
+		mChatRoomsList = view.findViewById(R.id.chatList);
+		mChatRoomsList.setAdapter(new ChatRoomsAdapter(getActivity(), this, mInflater));
+		mChatRoomsList.setOnItemClickListener(this);
 
-		noChatHistory = view.findViewById(R.id.noChatHistory);
+		mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
-		editList = view.findViewById(R.id.edit_list);
-		topbar = view.findViewById(R.id.top_bar);
+		mEditTopBar = view.findViewById(R.id.edit_list);
+		mTopBar = view.findViewById(R.id.top_bar);
 
-		cancel = view.findViewById(R.id.cancel);
-		cancel.setOnClickListener(new View.OnClickListener() {
+		mCancelButton = view.findViewById(R.id.cancel);
+		mCancelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				quitEditionMode();
 			}
 		});
 
-		edit = view.findViewById(R.id.edit);
-		edit.setOnClickListener(new View.OnClickListener() {
+		mEditButton = view.findViewById(R.id.edit);
+		mEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				mChatRoomsAdapter.enableEdition(true);
+				mTopBar.setVisibility(View.GONE);
+				mEditTopBar.setVisibility(View.VISIBLE);
 			}
 		});
 
-		newDiscussion = view.findViewById(R.id.new_discussion);
-		newDiscussion.setOnClickListener(new View.OnClickListener() {
+		mNewDiscussionButton = view.findViewById(R.id.new_discussion);
+		mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				LinphoneActivity.instance().goToChatCreator(null, false);
 			}
 		});
 
-		selectAll = view.findViewById(R.id.select_all);
-		selectAll.setOnClickListener(new View.OnClickListener() {
+		mSelectAllButton = view.findViewById(R.id.select_all);
+		mSelectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				mChatRoomsAdapter.selectAll();
 			}
 		});
 
-		deselectAll = view.findViewById(R.id.deselect_all);
-		deselectAll.setOnClickListener(new View.OnClickListener() {
+		mDeselectAllButton = view.findViewById(R.id.deselect_all);
+		mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				mChatRoomsAdapter.deselectAll();
 			}
 		});
 
-		backInCall = view.findViewById(R.id.back_in_call);
-		backInCall.setOnClickListener(new View.OnClickListener() {
+		mBackToCallButton = view.findViewById(R.id.back_in_call);
+		mBackToCallButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-				return;
 			}
 		});
 
-		delete = view.findViewById(R.id.delete);
-		delete.setOnClickListener(new View.OnClickListener() {
+		mDeleteSelectionButton = view.findViewById(R.id.delete);
+		mDeleteSelectionButton.setEnabled(false);
+		mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+				Button delete = dialog.findViewById(R.id.delete_button);
+				Button cancel = dialog.findViewById(R.id.cancel);
+
+				delete.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						deleteSelectedRooms();
+						dialog.dismiss();
+						quitEditionMode();
+					}
+				});
+
+				cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+						quitEditionMode();
+					}
+				});
+				dialog.show();
 			}
 		});
 
@@ -136,96 +161,45 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 			}
 		};
 
-		/*ChatFragment.createIfNotExist();
-		ChatFragment.addChatListener(this);*/
+		mChatRoomsAdapter = new ChatRoomsAdapter(getActivity(), this, mInflater);
+		mChatRoomsList.setAdapter(mChatRoomsAdapter);
+
 		return view;
 	}
 
 	private void refreshChatRoomsList() {
-		((ChatRoomsAdapter)chatList.getAdapter()).refresh();
+		mChatRoomsAdapter.refresh();
 	}
 
-	/*private void selectAllList(boolean isSelectAll){
-		int size = chatList.getAdapter().getCount();
-		for(int i=0; i<size; i++) {
-			chatList.setItemChecked(i,isSelectAll);
-		}
-	}*/
+	private void deleteSelectedRooms() {
+		ChatRoom rooms[] = mChatRoomsAdapter.getSelectedItems();
+		//TODO
+	}
 
-	/*private void removeChatsConversation() {
-		int size = chatList.getAdapter().getCount();
-		for (int i = 0; i < size; i++) {
-			if (chatList.isItemChecked(i)) {
-				String sipUri = chatList.getAdapter().getItem(i).toString();
-				if (sipUri != null) {
-					ChatRoom chatroom = LinphoneManager.getLc().getChatRoomFromUri(sipUri);
-					if (chatroom != null) {
-						chatroom.deleteHistory();
-					}
-				}
-			}
-		}
-		quitEditMode();
-		LinphoneActivity.instance().updateMissedChatCount();
-	}*/
-
-	/*public void quitEditMode(){
-		isEditMode = false;
-		editList.setVisibility(View.GONE);
-		topbar.setVisibility(View.VISIBLE);
-		refresh();
-		if(getResources().getBoolean(R.bool.isTablet)){
-			displayFirstChat();
-		}
-	}*/
-
-	/*public int getNbItemsChecked(){
-		int size = chatList.getAdapter().getCount();
-		int nb = 0;
-		for(int i=0; i<size; i++) {
-			if(chatList.isItemChecked(i)) {
-				nb ++;
-			}
-		}
-		return nb;
-	}*/
-
-	/*public void enabledDeleteButton(Boolean enabled){
-		if(enabled){
-			delete.setEnabled(true);
+	public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
+		if (isSelectionEmpty) {
+			mDeleteSelectionButton.setEnabled(false);
 		} else {
-			if (getNbItemsChecked() == 0){
-				delete.setEnabled(false);
-			}
+			mDeleteSelectionButton.setEnabled(true);
 		}
-	}*/
 
-	/*private void hideAndDisplayMessageIfNoChat() {
-		if (mConversations.size() == 0) {
-			noChatHistory.setVisibility(View.VISIBLE);
-			chatList.setVisibility(View.GONE);
-			edit.setEnabled(false);
+		if (isSelectionFull) {
+			mSelectAllButton.setVisibility(View.GONE);
+			mDeselectAllButton.setVisibility(View.VISIBLE);
 		} else {
-			noChatHistory.setVisibility(View.GONE);
-			chatList.setVisibility(View.VISIBLE);
-			chatList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-			chatList.setAdapter(new ChatRoomsAdapter(getActivity(), this, mInflater));
-			edit.setEnabled(true);
+			mSelectAllButton.setVisibility(View.VISIBLE);
+			mDeselectAllButton.setVisibility(View.GONE);
 		}
-	}*/
+	}
 
-	/*public void refresh() {
-		refreshChatRoomsList();
-		hideAndDisplayMessageIfNoChat();
-	}*/
-
-	/*public void displayFirstChat(){
-		if (mConversations != null && mConversations.size() > 0) {
-			LinphoneActivity.instance().displayChat(mConversations.get(0), null, null);
-		} else {
-			LinphoneActivity.instance().displayEmptyFragment();
-		}
-	}*/
+	private void quitEditionMode() {
+		mChatRoomsAdapter.enableEdition(false);
+		mTopBar.setVisibility(View.VISIBLE);
+		mEditTopBar.setVisibility(View.GONE);
+		mDeleteSelectionButton.setEnabled(false);
+		mSelectAllButton.setVisibility(View.VISIBLE);
+		mDeselectAllButton.setVisibility(View.GONE);
+	}
 
 	@Override
 	public void onResume() {
@@ -233,9 +207,9 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		ContactsManager.addContactsListener(this);
 
 		if (LinphoneManager.getLc().getCallsNb() > 0) {
-			backInCall.setVisibility(View.VISIBLE);
+			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
-			backInCall.setVisibility(View.INVISIBLE);
+			mBackToCallButton.setVisibility(View.INVISIBLE);
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -266,7 +240,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST)
 			return;
 
-		ChatRoomsAdapter adapter = (ChatRoomsAdapter)chatList.getAdapter();
+		ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
 		if (adapter != null) {
 			adapter.notifyDataSetInvalidated();
 		}
@@ -274,98 +248,12 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		ChatRoom chatRoom = (ChatRoom) chatList.getAdapter().getItem(position);
+		ChatRoom chatRoom = (ChatRoom) mChatRoomsList.getAdapter().getItem(position);
 
 		if (LinphoneActivity.isInstanciated() && !isEditMode) {
 			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asString());
 		}
 	}
-
-	/*@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, v.getId(), 0, getString(R.string.delete));
-	}*/
-
-	/*@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		if (info == null || info.targetView == null) {
-			return false;
-		}
-		String sipUri = chatList.getAdapter().getItem(info.position).toString();
-
-		LinphoneActivity.instance().removeFromChatList(sipUri);
-		refreshChatRoomsList();
-        if (getResources().getBoolean(R.bool.isTablet)) {
-			quitEditMode();
-        }
-		hideAndDisplayMessageIfNoChat();
-		return true;
-	}*/
-
-	/*@Override
-	public void onClick(View v) {
-		int id = v.getId();
-
-
-		if (id == R.id.select_all) {
-			deselectAll.setVisibility(View.VISIBLE);
-			selectAll.setVisibility(View.GONE);
-			enabledDeleteButton(true);
-			selectAllList(true);
-			return;
-		}
-		if (id == R.id.deselect_all) {
-			deselectAll.setVisibility(View.GONE);
-			selectAll.setVisibility(View.VISIBLE);
-			enabledDeleteButton(false);
-			selectAllList(false);
-			return;
-		}
-
-		if (id == R.id.cancel) {
-			quitEditMode();
-			return;
-		}
-
-		if (id == R.id.delete) {
-			final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-			Button delete = dialog.findViewById(R.id.delete_button);
-			Button cancel = dialog.findViewById(R.id.cancel);
-
-			delete.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					removeChatsConversation();
-					dialog.dismiss();
-					quitEditMode();
-				}
-			});
-
-			cancel.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					dialog.dismiss();
-					quitEditMode();
-				}
-			});
-			dialog.show();
-			return;
-		}
-		else if (id == R.id.edit) {
-			topbar.setVisibility(View.GONE);
-			editList.setVisibility(View.VISIBLE);
-			isEditMode = true;
-			hideAndDisplayMessageIfNoChat();
-			enabledDeleteButton(false);
-		}
-	}*/
-
-	/*@Override
-	public void onChatUpdated() {
-		refreshChatRoomsList();
-	}*/
 }
 
 

@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,12 +47,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ChatRoomsAdapter extends BaseAdapter {
+
 	private class ChatRoomViewHolder {
 		public TextView lastMessageView;
 		public TextView date;
 		public TextView displayName;
 		public TextView unreadMessages;
-		public CheckBox select;
+		public CheckBox delete;
 		public ImageView contactPicture;
 
 		public ChatRoomViewHolder(View view) {
@@ -59,7 +61,7 @@ public class ChatRoomsAdapter extends BaseAdapter {
 			date = view.findViewById(R.id.date);
 			displayName = view.findViewById(R.id.sipUri);
 			unreadMessages = view.findViewById(R.id.unreadMessages);
-			select = view.findViewById(R.id.delete_chatroom);
+			delete = view.findViewById(R.id.delete_chatroom);
 			contactPicture = view.findViewById(R.id.contact_picture);
 		}
 	}
@@ -69,6 +71,20 @@ public class ChatRoomsAdapter extends BaseAdapter {
 	private List<ChatRoom> mRooms;
 	private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
+	private boolean mIsEditionEnabled;
+	private List<Integer> mSelectedItems;
+	private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
+		@Override
+		public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+			Integer position = (Integer)compoundButton.getTag();
+			if (checked) {
+				mSelectedItems.add(position);
+			} else {
+				mSelectedItems.remove(position);
+			}
+			mFragment.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == mRooms.size());
+		}
+	};
 
     public ChatRoomsAdapter(Context context, ChatListFragment fragment, LayoutInflater inflater) {
 	    mContext = context;
@@ -77,6 +93,8 @@ public class ChatRoomsAdapter extends BaseAdapter {
 	    mRooms = new ArrayList<>();
 	    mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
 	    mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
+	    mIsEditionEnabled = false;
+	    mSelectedItems = new ArrayList<>();
     }
 
     public void refresh() {
@@ -87,6 +105,36 @@ public class ChatRoomsAdapter extends BaseAdapter {
 	/**
 	 * List edition
 	 */
+
+	public void enableEdition(boolean enable) {
+		mIsEditionEnabled = enable;
+		notifyDataSetInvalidated();
+		mSelectedItems.clear();
+	}
+
+	public ChatRoom[] getSelectedItems() {
+		ChatRoom rooms[] = new ChatRoom[mSelectedItems.size()];
+		int index = 0;
+		for (Integer i : mSelectedItems) {
+			rooms[index] = (ChatRoom)getItem(i);
+			index++;
+		}
+		return rooms;
+	}
+
+	public void selectAll() {
+		for (Integer i = 0; i < mRooms.size(); i++) {
+			mSelectedItems.add(i);
+		}
+		mFragment.updateSelectionButtons(false, true);
+		notifyDataSetInvalidated();
+	}
+
+	public void deselectAll() {
+		mSelectedItems.clear();
+		mFragment.updateSelectionButtons(true, false);
+		notifyDataSetInvalidated();
+	}
 
 	/**
 	 * Adapter's methods
@@ -190,36 +238,16 @@ public class ChatRoomsAdapter extends BaseAdapter {
 		    holder.displayName.setTypeface(null, Typeface.NORMAL);
 	    }
 
-	    /*if (isEditMode) {
+	    if (mIsEditionEnabled) {
 		    holder.unreadMessages.setVisibility(View.GONE);
-		    holder.select.setVisibility(View.VISIBLE);
-		    holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			    @Override
-			    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				    chatList.setItemChecked(position, b);
-				    if (getNbItemsChecked() == getCount()) {
-					    deselectAll.setVisibility(View.VISIBLE);
-					    selectAll.setVisibility(View.GONE);
-					    enabledDeleteButton(true);
-				    } else {
-					    if (getNbItemsChecked() == 0) {
-						    deselectAll.setVisibility(View.GONE);
-						    selectAll.setVisibility(View.VISIBLE);
-						    enabledDeleteButton(false);
-					    } else {
-						    deselectAll.setVisibility(View.GONE);
-						    selectAll.setVisibility(View.VISIBLE);
-						    enabledDeleteButton(true);
-					    }
-				    }
-			    }
-		    });
-		    if (chatList.isItemChecked(position)) {
-			    holder.select.setChecked(true);
-		    } else {
-			    holder.select.setChecked(false);
-		    }
-	    }*/
+		    holder.delete.setOnCheckedChangeListener(null);
+		    holder.delete.setVisibility(View.VISIBLE);
+		    holder.delete.setChecked(mSelectedItems.contains(position));
+		    holder.delete.setTag(position);
+		    holder.delete.setOnCheckedChangeListener(mDeleteCheckboxListener);
+	    } else {
+		    holder.delete.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
+	    }
 	    return view;
     }
 }
