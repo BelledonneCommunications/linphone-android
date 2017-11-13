@@ -307,7 +307,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 		    String externalBodyUrl = message.getExternalBodyUrl();
 		    Content fileTransferContent = message.getFileTransferInformation();
 		    String appData = message.getAppdata();
-		    if (externalBodyUrl != null || fileTransferContent != null) { // Incoming file transfer
+		    if (externalBodyUrl != null) { // Incoming file transfer
 			    if (appData != null) { // Download already done, just display the result
 				    displayAttachedFile(message, holder);
 			    } else { // Attachment not yet downloaded
@@ -342,6 +342,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 
 			    holder.fileTransferLayout.setVisibility(View.GONE);
 				if (message.getState() == ChatMessage.State.InProgress) {
+					message.setListener(this); // add the listener for file upload progress display
 					holder.messageSendingInProgress.setVisibility(View.GONE);
 					holder.fileTransferLayout.setVisibility(View.VISIBLE);
 					holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
@@ -491,7 +492,6 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			holder.fileTransferLayout.setVisibility(View.GONE);
 			displayAttachedFile(message, holder);
 		} else {
-			holder.fileTransferAction.setVisibility(View.GONE);
 			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
 		}

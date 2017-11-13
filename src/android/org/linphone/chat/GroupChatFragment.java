@@ -625,46 +625,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		} else {
 			msg = mChatRoom.createMessage(text);
 		}
-
-		msg.setListener(new ChatMessageListenerStub() {
-			@Override
-			public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
-				if (holder != null && message.getMessageId().equals(holder.messageId) && message.isOutgoing()) {
-					if (offset == total) {
-						holder.fileTransferLayout.setVisibility(View.GONE);
-						holder.fileTransferProgressBar.setVisibility(View.GONE);
-						holder.fileTransferAction.setVisibility(View.GONE);
-					} else {
-						holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
-						holder.fileTransferProgressBar.setProgress(offset * 100 / total);
-					}
-				}
-			}
-
-			@Override
-			public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
-				ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
-				if (holder != null && message.getMessageId().equals(holder.messageId) && message.isOutgoing()) {
-					if (state == ChatMessage.State.DeliveredToUser) {
-						holder.imdmLayout.setVisibility(View.VISIBLE);
-						holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
-						holder.imdmLabel.setText(R.string.delivered);
-						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorD));
-					} else if (state == ChatMessage.State.Displayed) {
-						holder.imdmLayout.setVisibility(View.VISIBLE);
-						holder.imdmIcon.setImageResource(R.drawable.chat_read);
-						holder.imdmLabel.setText(R.string.displayed);
-						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorK));
-					} else if (state == ChatMessage.State.NotDelivered) {
-						holder.imdmLayout.setVisibility(View.VISIBLE);
-						holder.imdmIcon.setImageResource(R.drawable.chat_error);
-						holder.imdmLabel.setText(R.string.resend);
-						holder.imdmLabel.setTextColor(getResources().getColor(R.color.colorI));
-					}
-				}
-			}
-		});
+		// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
 		msg.send();
 
 		mFilesUploadLayout.removeAllViews();
