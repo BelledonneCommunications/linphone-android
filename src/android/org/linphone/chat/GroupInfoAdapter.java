@@ -76,7 +76,6 @@ public class GroupInfoAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.name);
         ImageView avatar = view.findViewById(R.id.contact_picture);
         ImageView delete = view.findViewById(R.id.delete);
-        LinearLayout adminLayout = view.findViewById(R.id.adminLayout);
         final LinearLayout isAdmin = view.findViewById(R.id.isAdminLayout);
         final LinearLayout isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
 
@@ -88,9 +87,9 @@ public class GroupInfoAdapter extends BaseAdapter {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mDeleteListener != null) {
-                    mDeleteListener.onClick(view);
-                }
+	            if (mDeleteListener != null) {
+	                mDeleteListener.onClick(view);
+	            }
             }
         });
         delete.setTag(ca);
@@ -101,28 +100,26 @@ public class GroupInfoAdapter extends BaseAdapter {
         isAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isNotAdmin.setVisibility(View.VISIBLE);
-                isAdmin.setVisibility(View.GONE);
-                ca.setAdmin(false);
+	            isNotAdmin.setVisibility(View.VISIBLE);
+	            isAdmin.setVisibility(View.GONE);
+	            ca.setAdmin(false);
             }
         });
 
         isNotAdmin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isNotAdmin.setVisibility(View.GONE);
-                isAdmin.setVisibility(View.VISIBLE);
-                ca.setAdmin(true);
+	            isNotAdmin.setVisibility(View.GONE);
+	            isAdmin.setVisibility(View.VISIBLE);
+	            ca.setAdmin(true);
             }
         });
 
 	    delete.setVisibility(View.VISIBLE);
-	    adminLayout.setVisibility(View.VISIBLE);
         if (mHideAdminFeatures) {
-            delete.setVisibility(View.GONE);
-            adminLayout.setVisibility(View.GONE);
-        } else if (mIsCreation) {
-	        adminLayout.setVisibility(View.GONE);
+            delete.setVisibility(View.INVISIBLE);
+            isAdmin.setOnClickListener(null); // Do not allow not admin to remove it's rights but display admins
+            isNotAdmin.setVisibility(View.GONE); // Hide not admin button for not admin participants
         }
 
         return view;

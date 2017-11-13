@@ -331,8 +331,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		if (mChatRoom.getMe().isAdmin() != mIsEditionEnabled) {
 			// Either we weren't admin and we are now or the other way around
 			mIsEditionEnabled = mChatRoom.getMe().isAdmin();
-			refreshAdminRights();
 			displayMeAdminStatusUpdated();
+			refreshAdminRights();
 		}
 		refreshParticipantsList();
 	}
