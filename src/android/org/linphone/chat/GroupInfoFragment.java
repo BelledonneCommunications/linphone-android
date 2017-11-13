@@ -66,6 +66,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private ArrayList<ContactAddress> mParticipants;
 	private String mSubject;
 	private ChatRoom mChatRoom;
+	private Dialog mAdminStateChangedDialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -302,18 +303,21 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     }
 
     private void displayMeAdminStatusUpdated() {
-	    final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(mIsEditionEnabled ? R.string.chat_room_you_are_now_admin : R.string.chat_room_you_are_no_longer_admin));
-	    Button delete = dialog.findViewById(R.id.delete_button);
-	    Button cancel = dialog.findViewById(R.id.cancel);
+	    if (mAdminStateChangedDialog != null) mAdminStateChangedDialog.dismiss();
+
+	    mAdminStateChangedDialog = LinphoneActivity.instance().displayDialog(getString(mIsEditionEnabled ? R.string.chat_room_you_are_now_admin : R.string.chat_room_you_are_no_longer_admin));
+	    Button delete = mAdminStateChangedDialog.findViewById(R.id.delete_button);
+	    Button cancel = mAdminStateChangedDialog.findViewById(R.id.cancel);
 	    delete.setVisibility(View.GONE);
 	    cancel.setText(getString(R.string.ok));
 	    cancel.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View view) {
-			    dialog.dismiss();
+			    mAdminStateChangedDialog.dismiss();
 		    }
 	    });
-	    dialog.show();
+
+	    mAdminStateChangedDialog.show();
     }
 
 	@Override
