@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -251,6 +253,22 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		updateListSelected();
 	}
 
+	private void displayChatRoomError() {
+		final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_creation_failed));
+		Button delete = dialog.findViewById(R.id.delete_button);
+		Button cancel = dialog.findViewById(R.id.cancel);
+		delete.setVisibility(View.GONE);
+		cancel.setText(getString(R.string.ok));
+		cancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (mContactsSelected != null && mContactsSelected.size() > 0) {
@@ -291,9 +309,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				if (mContactsSelected.size() == 1) {
 					mContactsSelectedLayout.removeAllViews();
 					mWaitLayout.setVisibility(View.VISIBLE);
-					//LinphoneActivity.instance().displayChat(mContactsSelected.get(0).getAddress(), "", "");
-					//TODO create group chat room with only two participants ?
-					//TODO what subject to set ?
 					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
 					chatRoom.setListener(new ChatRoomListenerStub() {
 						@Override
@@ -303,7 +318,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 								LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
 								mWaitLayout.setVisibility(View.GONE);
-								//TODO display error
+								displayChatRoomError();
 								Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
 							}
 						}

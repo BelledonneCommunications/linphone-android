@@ -211,6 +211,7 @@
     <string name="group_chat_notif" formatted="false">%1: %2</string>
     <string name="chat_room_you_are_now_admin">You are now admin</string>
     <string name="chat_room_you_are_no_longer_admin">You are no longer admin</string>
+    <string name="chat_room_creation_failed">Chat room creation failed</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>
