@@ -397,7 +397,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 			    	//TODO
 			    	break;
 		    }
-		    holder.eventTime.setText(LinphoneUtils.timestampToHumanDate(mContext, event.getTime(), R.string.messages_date_format));
+		    //holder.eventTime.setText(LinphoneUtils.timestampToHumanDate(mContext, event.getTime(), R.string.messages_date_format));
 	    }
 
         return view;

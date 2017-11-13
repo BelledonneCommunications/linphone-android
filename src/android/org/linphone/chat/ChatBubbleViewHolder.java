@@ -34,7 +34,7 @@ public class ChatBubbleViewHolder {
 	public String messageId;
 
 	public LinearLayout eventLayout;
-	public TextView eventTime;
+	//public TextView eventTime;
 	public TextView eventMessage;
 
 	public RelativeLayout bubbleLayout;
@@ -63,7 +63,7 @@ public class ChatBubbleViewHolder {
 
 	public ChatBubbleViewHolder(View view) {
 	    eventLayout = view.findViewById(R.id.event);
-	    eventTime = view.findViewById(R.id.event_date);
+	    //eventTime = view.findViewById(R.id.event_date);
 	    eventMessage = view.findViewById(R.id.event_text);
 
 	    bubbleLayout = view.findViewById(R.id.bubble);
