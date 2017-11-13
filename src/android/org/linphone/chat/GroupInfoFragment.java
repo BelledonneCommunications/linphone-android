@@ -269,14 +269,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		return view;
 	}
 
-	@Override
-	public void onPause() {
-		if (mChatRoom != null) {
-			mChatRoom.setListener(null);
-		}
-		super.onPause();
- 	}
-
  	private void refreshParticipantsList() {
 	    if (mChatRoom == null) return;
 	    mParticipants = new ArrayList<>();
