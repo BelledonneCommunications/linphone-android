@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,6 +27,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,18 +35,24 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 
-public class GroupInfoFragment extends Fragment {
+public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private ImageView mBackButton, mConfirmButton, mAddParticipantsButton;
 	private Address mGroupChatRoomAddress;
 	private EditText mSubjectField;
@@ -252,6 +260,125 @@ public class GroupInfoFragment extends Fragment {
 		mWaitLayout = view.findViewById(R.id.waitScreen);
 		mWaitLayout.setVisibility(View.GONE);
 
+		if (mChatRoom != null) {
+			//
+			mChatRoom.setListener(this);
+		}
+
 		return view;
+	}
+
+	@Override
+	public void onPause() {
+		if (mChatRoom != null) {
+			mChatRoom.setListener(null);
+		}
+		super.onPause();
+ 	}
+
+ 	private void refreshParticipantsList() {
+	    if (mChatRoom == null) return;
+	    mParticipants = new ArrayList<>();
+	    for (Participant p : mChatRoom.getParticipants()) {
+		    Address a = p.getAddress();
+		    LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(a);
+		    if (c == null) {
+			    c = new LinphoneContact();
+			    String displayName = LinphoneUtils.getAddressDisplayName(a);
+			    c.setFullName(displayName);
+		    }
+		    ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
+		    mParticipants.add(ca);
+	    }
+
+	    mAdapter.updateDataSet(mParticipants);
+    }
+
+    private void refreshAdminRights() {
+	    mAdapter.setAdminFeaturesVisible(mIsEditionEnabled);
+	    mSubjectField.setEnabled(mIsEditionEnabled);
+	    mConfirmButton.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.INVISIBLE);
+	    mAddParticipantsButton.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
+    }
+
+    private void displayMeAdminStatusUpdated() {
+	    final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(mIsEditionEnabled ? R.string.chat_room_you_are_now_admin : R.string.chat_room_you_are_no_longer_admin));
+	    Button delete = dialog.findViewById(R.id.delete_button);
+	    Button cancel = dialog.findViewById(R.id.cancel);
+	    delete.setVisibility(View.GONE);
+	    cancel.setText(getString(R.string.ok));
+	    cancel.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    dialog.dismiss();
+		    }
+	    });
+	    dialog.show();
+    }
+
+	@Override
+	public void onParticipantAdded(ChatRoom cr, EventLog event_log) {
+		refreshParticipantsList();
+	}
+
+	@Override
+	public void onParticipantRemoved(ChatRoom cr, EventLog event_log) {
+		refreshParticipantsList();
+	}
+
+	@Override
+	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event_log) {
+		if (mChatRoom.getMe().isAdmin() != mIsEditionEnabled) {
+			// Either we weren't admin and we are now or the other way around
+			mIsEditionEnabled = mChatRoom.getMe().isAdmin();
+			refreshAdminRights();
+			displayMeAdminStatusUpdated();
+		}
+		refreshParticipantsList();
+	}
+
+	@Override
+	public void onSubjectChanged(ChatRoom cr, EventLog event_log) {
+		mSubjectField.setText(event_log.getSubject());
+	}
+
+	@Override
+	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
+
+	}
+
+	@Override
+	public void onChatMessageSent(ChatRoom cr, EventLog event_log) {
+
+	}
+
+	@Override
+	public void onChatMessageReceived(ChatRoom cr, EventLog event_log) {
+
+	}
+
+	@Override
+	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
+
+	}
+
+	@Override
+	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event_log) {
+
+	}
+
+	@Override
+	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {
+
+	}
+
+	@Override
+	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {
+
+	}
+
+	@Override
+	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+
 	}
 }

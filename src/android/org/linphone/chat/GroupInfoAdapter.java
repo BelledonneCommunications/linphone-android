@@ -116,6 +116,8 @@ public class GroupInfoAdapter extends BaseAdapter {
             }
         });
 
+	    delete.setVisibility(View.VISIBLE);
+	    adminLayout.setVisibility(View.VISIBLE);
         if (mHideAdminFeatures) {
             delete.setVisibility(View.GONE);
             adminLayout.setVisibility(View.GONE);
@@ -133,5 +135,10 @@ public class GroupInfoAdapter extends BaseAdapter {
     public void updateDataSet(ArrayList<ContactAddress> mParticipants) {
         mItems = mParticipants;
         notifyDataSetChanged();
+    }
+
+    public void setAdminFeaturesVisible(boolean visible) {
+	    mHideAdminFeatures = !visible;
+	    notifyDataSetInvalidated();
     }
 }
