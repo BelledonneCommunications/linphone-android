@@ -262,7 +262,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mWaitLayout.setVisibility(View.GONE);
 
 		if (mChatRoom != null) {
-			//
 			mChatRoom.setListener(this);
 		}
 
