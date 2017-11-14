@@ -341,6 +341,9 @@ uninstall:
 release: java-clean build copy-libs
 \t./gradlew assembleRelease
 
+unsigned: java-clean build copy-libs
+\t./gradlew assemblePackaged
+
 generate-sdk: liblinphone-android-sdk
 
 generate-javadoc:

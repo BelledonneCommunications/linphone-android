@@ -113,6 +113,10 @@ android {
     release {
       signingConfig signingConfigs.release
     }
+    packaged {
+      initWith release
+      signingConfig null
+    }
   }
   sourceSets {
     main {
