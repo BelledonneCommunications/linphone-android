@@ -115,7 +115,7 @@
     <string name="use_email_for_validation">Use email address for account validation</string>
     <string name="login_with_username">Use your username and password instead of your phone number</string>
     <string name="phone_number_info_title">What will my phone number be used for?</string>
-    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Linphone and your friends will know that they can rach you on Linphone as well.\n</string>
+    <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
     <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
     <string name="phone_number_link_info_content_already_account">You can only use your phone number with one Linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
 
