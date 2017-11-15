@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import java.util.List;
 
-import org.linphone.mediastream.Log;
-
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothAssignedNumbers;
@@ -65,14 +63,14 @@ public class BluetoothManager extends BroadcastReceiver {
 	public BluetoothManager() {
 		isBluetoothConnected = false;
 		if (!ensureInit()) {
-			Log.w("[Bluetooth] Manager tried to init but LinphoneService not ready yet...");
+			android.util.Log.w("BluetoothManager", "[Bluetooth] Manager tried to init but LinphoneService not ready yet...");
 		}
 		instance = this;
 	}
 
 	public void initBluetooth() {
 		if (!ensureInit()) {
-			Log.w("[Bluetooth] Manager tried to init bluetooth but LinphoneService not ready yet...");
+			android.util.Log.w("BluetoothManager", "[Bluetooth] Manager tried to init bluetooth but LinphoneService not ready yet...");
 			return;
 		}
 
@@ -82,14 +80,14 @@ public class BluetoothManager extends BroadcastReceiver {
 		filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
 		filter.addAction(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT);
 		mContext.registerReceiver(this,  filter);
-		Log.d("[Bluetooth] Receiver started");
+		android.util.Log.d("BluetoothManager", "[Bluetooth] Receiver started");
 
 		startBluetooth();
 	}
 
 	private void startBluetooth() {
 		if (isBluetoothConnected) {
-			Log.e("[Bluetooth] Already started, skipping...");
+			android.util.Log.e("BluetoothManager", "[Bluetooth] Already started, skipping...");
 			return;
 		}
 
@@ -97,14 +95,14 @@ public class BluetoothManager extends BroadcastReceiver {
 
 		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
 			if (mProfileListener != null) {
-				Log.w("[Bluetooth] Headset profile was already opened, let's close it");
+				android.util.Log.w("BluetoothManager", "[Bluetooth] Headset profile was already opened, let's close it");
 				mBluetoothAdapter.closeProfileProxy(BluetoothProfile.HEADSET, mBluetoothHeadset);
 			}
 
 			mProfileListener = new BluetoothProfile.ServiceListener() {
 				public void onServiceConnected(int profile, BluetoothProfile proxy) {
 				    if (profile == BluetoothProfile.HEADSET) {
-				        Log.d("[Bluetooth] Headset connected");
+					    android.util.Log.d("BluetoothManager", "[Bluetooth] Headset connected");
 				        mBluetoothHeadset = (BluetoothHeadset) proxy;
 				        isBluetoothConnected = true;
 				    }
@@ -113,17 +111,17 @@ public class BluetoothManager extends BroadcastReceiver {
 				    if (profile == BluetoothProfile.HEADSET) {
 				        mBluetoothHeadset = null;
 				        isBluetoothConnected = false;
-				        Log.d("[Bluetooth] Headset disconnected");
+					    android.util.Log.d("BluetoothManager", "[Bluetooth] Headset disconnected");
 				        LinphoneManager.getInstance().routeAudioToReceiver();
 				    }
 				}
 			};
 			boolean success = mBluetoothAdapter.getProfileProxy(mContext, mProfileListener, BluetoothProfile.HEADSET);
 			if (!success) {
-				Log.e("[Bluetooth] getProfileProxy failed !");
+				android.util.Log.e("BluetoothManager", "[Bluetooth] getProfileProxy failed !");
 			}
 		} else {
-			Log.w("[Bluetooth] Interface disabled on device");
+			android.util.Log.w("BluetoothManager", "[Bluetooth] Interface disabled on device");
 		}
 	}
 
@@ -156,7 +154,7 @@ public class BluetoothManager extends BroadcastReceiver {
 		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled() && mAudioManager != null && mAudioManager.isBluetoothScoAvailableOffCall()) {
 			if (isBluetoothHeadsetAvailable()) {
 				if (mAudioManager != null && !mAudioManager.isBluetoothScoOn()) {
-					Log.d("[Bluetooth] SCO off, let's start it");
+					android.util.Log.d("BluetoothManager", "[Bluetooth] SCO off, let's start it");
 					mAudioManager.setBluetoothScoOn(true);
 					mAudioManager.startBluetoothSco();
 				}
@@ -183,12 +181,12 @@ public class BluetoothManager extends BroadcastReceiver {
 			}
 			if (ok) {
 				if (retries > 0) {
-					Log.d("[Bluetooth] Audio route ok after " + retries + " retries");
+					android.util.Log.d("BluetoothManager", "[Bluetooth] Audio route ok after " + retries + " retries");
 				} else {
-					Log.d("[Bluetooth] Audio route ok");
+					android.util.Log.d("BluetoothManager", "[Bluetooth] Audio route ok");
 				}
 			} else {
-				Log.d("[Bluetooth] Audio route still not ok...");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] Audio route still not ok...");
 			}
 
 			return ok;
@@ -215,7 +213,7 @@ public class BluetoothManager extends BroadcastReceiver {
 						break;
 					}
 				}
-				Log.d(isHeadsetConnected ? "[Bluetooth] Headset found, bluetooth audio route available" : "[Bluetooth] No headset found, bluetooth audio route unavailable");
+				android.util.Log.d("BluetoothManager", isHeadsetConnected ? "[Bluetooth] Headset found, bluetooth audio route available" : "[Bluetooth] No headset found, bluetooth audio route unavailable");
 			}
 			return isHeadsetConnected;
 		}
@@ -240,12 +238,12 @@ public class BluetoothManager extends BroadcastReceiver {
 				mAudioManager.stopBluetoothSco();
 				mAudioManager.setBluetoothScoOn(false);
 			}
-			Log.w("[Bluetooth] SCO disconnected!");
+			android.util.Log.w("BluetoothManager", "[Bluetooth] SCO disconnected!");
 		}
 	}
 
 	public void stopBluetooth() {
-		Log.w("[Bluetooth] Stopping...");
+		android.util.Log.w("BluetoothManager", "[Bluetooth] Stopping...");
 		isBluetoothConnected = false;
 
 		disableBluetoothSCO();
@@ -256,7 +254,7 @@ public class BluetoothManager extends BroadcastReceiver {
 		}
 		mBluetoothDevice = null;
 
-		Log.w("[Bluetooth] Stopped!");
+		android.util.Log.w("BluetoothManager", "[Bluetooth] Stopped!");
 
 		if (LinphoneManager.isInstanciated()) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
@@ -271,10 +269,10 @@ public class BluetoothManager extends BroadcastReceiver {
 
 			try {
 				mContext.unregisterReceiver(this);
-				Log.d("[Bluetooth] Receiver stopped");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] Receiver stopped");
 			} catch (Exception e) {}
 		} catch (Exception e) {
-			Log.e(e);
+			android.util.Log.e("BluetoothManager", e.getMessage());
 		}
 	}
 
@@ -286,32 +284,32 @@ public class BluetoothManager extends BroadcastReceiver {
         if (AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED.equals(action)) {
         	int state = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, 0);
 			if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
-				Log.d("[Bluetooth] SCO state: connected");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: connected");
 //				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
     			isScoConnected = true;
 			} else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
-				Log.d("[Bluetooth] SCO state: disconnected");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: disconnected");
 //				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
         		isScoConnected = false;
 			} else if (state == AudioManager.SCO_AUDIO_STATE_CONNECTING) {
-				Log.d("[Bluetooth] SCO state: connecting");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: connecting");
 //				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
 				isScoConnected = true;
 			} else {
-        		Log.d("[Bluetooth] SCO state: " + state);
+				android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: " + state);
         	}
 	        refreshCallView();
         }
         else if (BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED.equals(action)) {
         	int state = intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE, BluetoothAdapter.STATE_DISCONNECTED);
         	if (state == 0) {
-        		Log.d("[Bluetooth] State: disconnected");
+		        android.util.Log.d("BluetoothManager", "[Bluetooth] State: disconnected");
         		stopBluetooth();
         	} else if (state == 2) {
-        		Log.d("[Bluetooth] State: connected");
+		        android.util.Log.d("BluetoothManager", "[Bluetooth] State: connected");
         		startBluetooth();
         	} else {
-        		Log.d("[Bluetooth] State: " + state);
+		        android.util.Log.d("BluetoothManager", "[Bluetooth] State: " + state);
         	}
         }
         else if (intent.getAction().equals(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT)) {
@@ -320,16 +318,16 @@ public class BluetoothManager extends BroadcastReceiver {
 
 			Object[] args = (Object[]) intent.getExtras().get(BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_ARGS);
 			if (args.length <= 0) {
-				Log.d("[Bluetooth] Event: " + command + ", no args");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] Event: " + command + ", no args");
 				return;
 			}
 			String eventName = (args[0]).toString();
 			if (eventName.equals("BUTTON") && args.length >= 3) {
 				String buttonID = args[1].toString();
 				String mode = args[2].toString();
-				Log.d("[Bluetooth] Event: " + command + " : " + eventName + ", id = " + buttonID + " (" + mode + ")");
+				android.util.Log.d("BluetoothManager", "[Bluetooth] Event: " + command + " : " + eventName + ", id = " + buttonID + " (" + mode + ")");
 			} else {
-				Log.d("[Bluetooth] Event: " + command + " : " + eventName);
+				android.util.Log.d("BluetoothManager", "[Bluetooth] Event: " + command + " : " + eventName);
 			}
     	}
     }
