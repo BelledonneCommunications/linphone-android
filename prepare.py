@@ -354,6 +354,7 @@ liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
 \t./gradlew -b libLinphoneAndroidSdk.gradle assembleRelease
+\t@mv $(TOPDIR)/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
 \t./gradlew -b libLinphoneAndroidSdk.gradle sdkZip
 
 linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
