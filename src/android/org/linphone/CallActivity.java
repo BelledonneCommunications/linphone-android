@@ -892,7 +892,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	protected void toggleSpeaker() {
 		isSpeakerEnabled = !isSpeakerEnabled;
 		if (LinphoneManager.getLc().getCurrentCall() != null) {
-			LinphoneManager.getInstance().enableProximitySensing(!isSpeakerEnabled);
+			if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall()))
+				LinphoneManager.getInstance().enableProximitySensing(false);
+			else
+				LinphoneManager.getInstance().enableProximitySensing(!isSpeakerEnabled);
 		}
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
