@@ -728,7 +728,7 @@ public final class LinphoneUtils {
 	}
 
 	public static void displayErrorAlert(String msg, Context ctxt) {
-		if (ctxt != null) {
+		if (ctxt != null && msg != null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
 			builder.setMessage(msg)
 					.setCancelable(false)
