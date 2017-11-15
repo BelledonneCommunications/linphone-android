@@ -91,10 +91,14 @@ android_targets = {
     'x86_64': AndroidX86_64Target()
 }
 
+android_virtual_targets= {
+    'all': ['arm', 'armv7', 'arm64', 'x86', 'x86_64']
+}
+
 class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
-        prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64', 'x86'])
+        prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64', 'x86'], virtual_targets=android_virtual_targets)
         self.min_supported_ndk = 11
         self.max_supported_ndk = 15
         self.unsupported_ndk_version = None
