@@ -24,7 +24,7 @@
   <string name="domain">Domän</string>
   <string name="remote_provisioning_url">Webbadress</string>
   <string name="email">E-post</string>
-  <string name="delete_text">Är du säker på att du vill radera ta bort val?</string>
+  <string name="delete_text">Är du säker på att du vill ta bort val?</string>
   <string name="delete">Ta bort</string>
   <string name="retry">Försök igen</string>
   <string name="cancel">Avbryt</string>
@@ -111,7 +111,6 @@
   <string name="use_email_for_validation">Använd e-postadress för kontovalidering</string>
   <string name="login_with_username">Använd ditt användarnamn och lösenord istället för ditt telefonnummer</string>
   <string name="phone_number_info_title">Vad ska mitt telefonnummer användas för?</string>
-  <string name="phone_number_info_content">\nTack vare ditt telefonnummer kommer dina vänner att hitta dig lättare.\n\nDu kommer att se i din adressbok vem som använder Linphone och dina vänner kommer att veta att de även kan nå dig på Linphone.\n</string>
   <string name="phone_number_link_info_content">\nDina vänner hittar dig lättare om du kopplar ditt konto till ditt telefonnummer\n\nDu ser i din adressbok vilka som använder Linphone och dina vänner vet att de når dig på Linphone också.\n</string>
   <string name="phone_number_link_info_content_already_account">Du kan bara använda ditt telefonnummer med ett Linphone-konto.\n\nOm du redan har länkat ditt nummer till ett annat konto, men du föredrar att använda det här, kopplar du bara det nu och ditt nummer flyttas automatiskt till det här kontot.</string>
   <!--Status-->
@@ -454,5 +453,6 @@
   <string name="content_description_call_options">Samtalsalternativ</string>
   <string name="content_description_audio_route">Ljudväg</string>
   <string name="content_description_exit_conference">Avsluta konferens</string>
+  <string name="content_title_notification_service">Linphone-tjänst</string>
   <string name="content_title_notification">Linphone-avisering</string>
 </resources>

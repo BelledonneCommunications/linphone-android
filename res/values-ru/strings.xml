@@ -111,7 +111,6 @@
   <string name="use_email_for_validation">Использовать адрес электронной почты для проверки учетной записи</string>
   <string name="login_with_username">Вместо номера телефона использовать имя пользователя и пароль</string>
   <string name="phone_number_info_title">Для чего будет использоваться мой номер телефона?</string>
-  <string name="phone_number_info_content">\nБлагодаря номеру телефона вашим друзьям будет проще вас найти.\n\n В вашей адресной книге вы увидите, кто использует Linphone, а ваши друзья смогут узнать, что вы также зарегистрированы в Linphone.\n</string>
   <string name="phone_number_link_info_content">\nВашим друзьям будет проще связаться с вами, если вы свяжете свою учетную запись со своим номером телефона.\n\nВ вашей адресной книге вы увидите, кто использует Linphone, а ваши друзья смогут узнать, что вы также зарегистрированы в Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Номер телефона можно использовать только с одной учетной записью Linphone.\n\nЕсли ваш номер уже был связан с другой учетной записью, но вы предпочитаете использовать его, просто свяжите его сейчас, и ваш номер будет автоматически перенесен в эту учетную запись.</string>
   <!--Status-->
@@ -457,5 +456,6 @@
   <string name="content_description_call_options">Параметры вызова</string>
   <string name="content_description_audio_route">Аудио маршрут</string>
   <string name="content_description_exit_conference">Выйти из конференции</string>
+  <string name="content_title_notification_service">Служба Linphone</string>
   <string name="content_title_notification">Уведомление Linphone</string>
 </resources>

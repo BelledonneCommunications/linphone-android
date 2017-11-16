@@ -309,4 +309,5 @@
   <string name="content_description_transfer">轉接</string>
   <string name="content_description_bluetooth">藍牙</string>
   <string name="content_description_call_options">通話選項</string>
+  <string name="content_title_notification_service">Linphone 服務</string>
 </resources>

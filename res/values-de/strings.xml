@@ -444,5 +444,6 @@
   <string name="content_description_call_options">Anrufoptionen</string>
   <string name="content_description_audio_route">Audioroute</string>
   <string name="content_description_exit_conference">Konferenz beenden</string>
+  <string name="content_title_notification_service">Linphone-Dienst</string>
   <string name="content_title_notification">Linphone-Benachrichtigung</string>
 </resources>

@@ -245,4 +245,5 @@
   <string name="content_description_contact_last_name">Презиме</string>
   <string name="content_description_transfer">Пребаци</string>
   <string name="content_description_bluetooth">Блутут</string>
+  <string name="content_title_notification_service">Услуга Линфона</string>
 </resources>

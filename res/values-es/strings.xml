@@ -10,9 +10,12 @@
   <string name="sync_account_name">contactos linphone</string>
   <!--Common-->
   <string name="username">Nombre de usuario</string>
+  <string name="userid">ID de usuario (opcional)</string>
   <string name="phone_number">Número de teléfono</string>
   <string name="display_name">Nombre a mostrar</string>
   <string name="password">Contraseña</string>
+  <string name="confirm_password">Contraseña de confirmación</string>
+  <string name="domain">Dominio</string>
   <string name="delete">Borrar</string>
   <string name="retry">Reintentar</string>
   <string name="cancel">Cancelar</string>
@@ -36,6 +39,7 @@
   <string name="wizard_failed">Ha ocurrido un error, pruebe más tarde.</string>
   <string name="wizard_username_unavailable">Este nombre de usuario está en uso.</string>
   <string name="first_launch_no_login_password">Por favor, introduzca su usuario y contraseña</string>
+  <string name="use_email_for_validation">Use la dirección de correo electrónico para la validación de la cuenta</string>
   <!--Status-->
   <!--In-app-->
   <!--Dailer-->
@@ -203,4 +207,5 @@
   <string name="content_description_contact_last_name">Apellido</string>
   <string name="content_description_transfer">Transferir</string>
   <string name="content_description_bluetooth">Bluetooth</string>
+  <string name="content_title_notification_service">Linphone Service</string>
 </resources>

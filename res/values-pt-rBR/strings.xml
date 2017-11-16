@@ -357,4 +357,5 @@
   <string name="content_description_call_options">Opcões de chamadas</string>
   <string name="content_description_audio_route">Route de áudio</string>
   <string name="content_description_exit_conference">Sair da conferência</string>
+  <string name="content_title_notification_service">Linphone Service</string>
 </resources>

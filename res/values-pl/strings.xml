@@ -105,8 +105,6 @@
   <string name="use_email_for_validation">Użyj adresu e-mail do weryfikacji konta</string>
   <string name="login_with_username">Użyj nazwy użytkownika i hasła, zamiast numeru telefonu</string>
   <string name="phone_number_info_title">Jaki będzie używany mój numer telefonu?</string>
-  <string name="phone_number_info_content">
-\nDzięki twojemu numerowi telefonu twoi znajomi będą mogli znaleźć cię łatwiej.\n\nZobaczysz w książce adresowej, kto używa Linphone i twoi znajomi będą wiedzieli, że mogą dotrzeć do ciebie również na Linphone.\n</string>
   <string name="phone_number_link_info_content">
 \nTwoi znajomi będą mogli znaleźć cię łatwiej, jeśli połączysz swoje konto do swojego numeru telefonu\n\nZobaczysz w książce adresowej, kto używa Linphone i twoi znajomi będą wiedzieli, że mogą dotrzeć do ciebie również na Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Można używać tylko swój numer telefonu z jednego konta Linphone.\n\nIf Jeśli masz już połączony swój numer do innego konta, ale wolisz używać tego jednego, wystarczy połączyć go teraz i numer zostanie automatycznie przeniesiony do tego konta.</string>
@@ -424,4 +422,5 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="content_description_call_options">Opcje połączeń</string>
   <string name="content_description_audio_route">Przesyłanie audio</string>
   <string name="content_description_exit_conference">Wyjście konferencji </string>
+  <string name="content_title_notification_service">Linphone Service</string>
 </resources>
