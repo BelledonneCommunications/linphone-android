@@ -23,6 +23,7 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.PowerManager;
@@ -152,6 +153,14 @@ public class Compatibility {
 			ApiNineteenPlus.scheduleAlarm(alarmManager, type, triggerAtMillis, operation);
 		} else {
 			ApiElevenPlus.scheduleAlarm(alarmManager, type, triggerAtMillis, operation);
+		}
+	}
+
+	public static void startService(Context context, Intent intent) {
+		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+			ApiTwentySixPlus.startService(context, intent);
+		} else {
+			ApiSixteenPlus.startService(context, intent);
 		}
 	}
 }

@@ -19,18 +19,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.core.LinphoneCoreFactory;
-import org.linphone.core.LpConfig;
-import org.linphone.mediastream.Log;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LpConfig;
 
 public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		LinphonePreferences.instance().setContext(context);
 		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
 			android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying LinphoneCore to unregister");
 			LinphoneManager.destroy();
@@ -42,11 +43,7 @@ public class BootReceiver extends BroadcastReceiver {
 			if (autostart) {
 				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-				try {
-					context.startService(lLinphoneServiceIntent);
-				} catch (RuntimeException e) {
-					Log.e(e);
-				}
+				Compatibility.startService(context, lLinphoneServiceIntent);
 			}
 		}
 	}
