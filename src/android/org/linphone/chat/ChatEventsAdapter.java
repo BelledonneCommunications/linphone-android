@@ -62,6 +62,8 @@ import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.ListSelectionAdapter;
+import org.linphone.ui.ListSelectionHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,37 +75,21 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListener {
+public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessageListener {
 	private Context mContext;
-	GroupChatFragment mFragment;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap;
+	private GroupChatFragment mFragment;
 
-	private boolean mIsEditionEnabled;
-	private List<Integer> mSelectedItems;
-	private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-			Integer position = (Integer)compoundButton.getTag();
-			if (checked) {
-				mSelectedItems.add(position);
-			} else {
-				mSelectedItems.remove(position);
-			}
-			mFragment.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == mHistory.size());
-		}
-	};
-
-    public ChatEventsAdapter(Context context, GroupChatFragment fragment, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
-	    mContext = context;
+    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
+	    super(helper);
 	    mFragment = fragment;
+	    mContext = mFragment.getActivity();
         mLayoutInflater = inflater;
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
-	    mIsEditionEnabled = false;
-	    mSelectedItems = new ArrayList<>();
     }
 
     public void addToHistory(EventLog log) {
@@ -114,44 +100,6 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
     public void setContacts(ArrayList<LinphoneContact> participants) {
 	    mParticipants = participants;
     }
-
-	/**
-	 * List edition
-	 */
-
-	public void enableEdition(boolean enable) {
-		mIsEditionEnabled = enable;
-		notifyDataSetInvalidated();
-		mSelectedItems.clear();
-	}
-
-	public EventLog[] getSelectedItems() {
-		EventLog logs[] = new EventLog[mSelectedItems.size()];
-		int index = 0;
-		for (Integer i : mSelectedItems) {
-			logs[index] = (EventLog)getItem(i);
-			index++;
-		}
-		return logs;
-	}
-
-	public void selectAll() {
-		for (Integer i = 0; i < mHistory.size(); i++) {
-			mSelectedItems.add(i);
-		}
-		mFragment.updateSelectionButtons(false, true);
-		notifyDataSetInvalidated();
-	}
-
-	public void deselectAll() {
-		mSelectedItems.clear();
-		mFragment.updateSelectionButtons(true, false);
-		notifyDataSetInvalidated();
-	}
-
-	/**
-	 * Adapter's methods
-	 */
 
     @Override
     public int getCount() {
@@ -181,7 +129,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
-	    holder.delete.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
+	    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
 	    holder.messageText.setVisibility(View.GONE);
 	    holder.messageImage.setVisibility(View.GONE);
 	    holder.fileTransferLayout.setVisibility(View.GONE);
@@ -193,11 +141,11 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
 
-	    if (mIsEditionEnabled) {
+	    if (isEditionEnabled()) {
 		    holder.delete.setOnCheckedChangeListener(null);
-		    holder.delete.setChecked(mSelectedItems.contains(i));
+		    holder.delete.setChecked(getSelectedItemsPosition().contains(i));
 		    holder.delete.setTag(i);
-		    holder.delete.setOnCheckedChangeListener(mDeleteCheckboxListener);
+		    holder.delete.setOnCheckedChangeListener(getDeleteListener());
 	    }
 
 	    EventLog event = (EventLog)getItem(i);
@@ -243,7 +191,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 			    }
 
-			    if (mIsEditionEnabled) {
+			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
 				    layoutParams.setMargins(100, 10, 10, 10);
 			    } else {
@@ -280,7 +228,7 @@ public class ChatEventsAdapter extends BaseAdapter implements ChatMessageListene
 				    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			    }
 
-			    if (mIsEditionEnabled) {
+			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
 				    layoutParams.setMargins(100, 10, 10, 10);
 			    } else {

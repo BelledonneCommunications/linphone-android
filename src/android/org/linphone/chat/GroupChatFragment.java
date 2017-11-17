@@ -56,7 +56,6 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
@@ -65,6 +64,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.ui.ListSelectionHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,19 +72,18 @@ import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
-public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener {
+public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
 	private static final int ADD_PHOTO = 1337;
 
-	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton, mEditButton;
-	private ImageView mCancelEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton;
+	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
 	private ImageView mAttachImageButton, mSendMessageButton;
 	private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
 	private EditText mMessageTextToSend;
 	private LayoutInflater mInflater;
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
-	private LinearLayout mTopBar, mEditTopBar;
 	private boolean mIsReadOnly;
+	private ListSelectionHelper mSelectionHelper;
 
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
@@ -108,8 +107,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat, container, false);
 
-		mTopBar = view.findViewById(R.id.top_bar);
-		mEditTopBar = view.findViewById(R.id.edit_list);
+		mSelectionHelper = new ListSelectionHelper(view, this);
 
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -153,69 +151,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					participants.add(ca);
 				}
 				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false);
-			}
-		});
-
-		mEditButton = view.findViewById(R.id.edit);
-		mEditButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mEventsAdapter.enableEdition(true);
-				mTopBar.setVisibility(View.GONE);
-				mEditTopBar.setVisibility(View.VISIBLE);
-			}
-		});
-
-		mCancelEditButton = view.findViewById(R.id.cancel);
-		mCancelEditButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				quitEditionMode();
-			}
-		});
-
-		mSelectAllButton = view.findViewById(R.id.select_all);
-		mSelectAllButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mEventsAdapter.selectAll();
-			}
-		});
-
-		mDeselectAllButton = view.findViewById(R.id.deselect_all);
-		mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mEventsAdapter.deselectAll();
-			}
-		});
-
-		mDeleteSelectionButton = view.findViewById(R.id.delete);
-		mDeleteSelectionButton.setEnabled(false);
-		mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-				Button delete = dialog.findViewById(R.id.delete_button);
-				Button cancel = dialog.findViewById(R.id.cancel);
-
-				delete.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						deleteSelectedEvents();
-						dialog.dismiss();
-						quitEditionMode();
-					}
-				});
-
-				cancel.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						dialog.dismiss();
-						quitEditionMode();
-					}
-				});
-				dialog.show();
 			}
 		});
 
@@ -338,38 +273,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
-	/**
-	 * Edition related methods
-	 */
-
-	private void deleteSelectedEvents() {
-		EventLog logs[] = mEventsAdapter.getSelectedItems();
+	@Override
+	public void onDeleteSelection(Object[] objectsToDelete) {
 		//TODO
-	}
-
-	public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
-		if (isSelectionEmpty) {
-			mDeleteSelectionButton.setEnabled(false);
-		} else {
-			mDeleteSelectionButton.setEnabled(true);
-		}
-
-		if (isSelectionFull) {
-			mSelectAllButton.setVisibility(View.GONE);
-			mDeselectAllButton.setVisibility(View.VISIBLE);
-		} else {
-			mSelectAllButton.setVisibility(View.VISIBLE);
-			mDeselectAllButton.setVisibility(View.GONE);
-		}
-	}
-
-	private void quitEditionMode() {
-		mEventsAdapter.enableEdition(false);
-		mTopBar.setVisibility(View.VISIBLE);
-		mEditTopBar.setVisibility(View.GONE);
-		mDeleteSelectionButton.setEnabled(false);
-		mSelectAllButton.setVisibility(View.VISIBLE);
-		mDeselectAllButton.setVisibility(View.GONE);
 	}
 
 	/**
@@ -504,7 +410,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void displayChatRoomHistory() {
 		if (mChatRoom == null) return;
-		mEventsAdapter = new ChatEventsAdapter(getActivity(), this, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
+		mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
+		mSelectionHelper.setAdapter(mEventsAdapter);
 		mChatEventsList.setAdapter(mEventsAdapter);
 	}
 

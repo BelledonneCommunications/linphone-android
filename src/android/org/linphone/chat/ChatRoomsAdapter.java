@@ -41,12 +41,14 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.ui.ListSelectionAdapter;
+import org.linphone.ui.ListSelectionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChatRoomsAdapter extends BaseAdapter {
+public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	private class ChatRoomViewHolder {
 		public TextView lastMessageView;
@@ -67,74 +69,23 @@ public class ChatRoomsAdapter extends BaseAdapter {
 	}
 
 	private Context mContext;
-	ChatListFragment mFragment;
 	private List<ChatRoom> mRooms;
 	private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
-	private boolean mIsEditionEnabled;
-	private List<Integer> mSelectedItems;
-	private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-			Integer position = (Integer)compoundButton.getTag();
-			if (checked) {
-				mSelectedItems.add(position);
-			} else {
-				mSelectedItems.remove(position);
-			}
-			mFragment.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == mRooms.size());
-		}
-	};
 
-    public ChatRoomsAdapter(Context context, ChatListFragment fragment, LayoutInflater inflater) {
+    public ChatRoomsAdapter(Context context, ListSelectionHelper helper, LayoutInflater inflater) {
+	    super(helper);
 	    mContext = context;
-	    mFragment = fragment;
         mLayoutInflater = inflater;
 	    mRooms = new ArrayList<>();
 	    mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
 	    mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
-	    mIsEditionEnabled = false;
-	    mSelectedItems = new ArrayList<>();
     }
 
     public void refresh() {
 	    mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
 	    notifyDataSetChanged();
     }
-
-	/**
-	 * List edition
-	 */
-
-	public void enableEdition(boolean enable) {
-		mIsEditionEnabled = enable;
-		notifyDataSetInvalidated();
-		mSelectedItems.clear();
-	}
-
-	public ChatRoom[] getSelectedItems() {
-		ChatRoom rooms[] = new ChatRoom[mSelectedItems.size()];
-		int index = 0;
-		for (Integer i : mSelectedItems) {
-			rooms[index] = (ChatRoom)getItem(i);
-			index++;
-		}
-		return rooms;
-	}
-
-	public void selectAll() {
-		for (Integer i = 0; i < mRooms.size(); i++) {
-			mSelectedItems.add(i);
-		}
-		mFragment.updateSelectionButtons(false, true);
-		notifyDataSetInvalidated();
-	}
-
-	public void deselectAll() {
-		mSelectedItems.clear();
-		mFragment.updateSelectionButtons(true, false);
-		notifyDataSetInvalidated();
-	}
 
 	/**
 	 * Adapter's methods
@@ -238,15 +189,15 @@ public class ChatRoomsAdapter extends BaseAdapter {
 		    holder.displayName.setTypeface(null, Typeface.NORMAL);
 	    }
 
-	    if (mIsEditionEnabled) {
+	    if (isEditionEnabled()) {
 		    holder.unreadMessages.setVisibility(View.GONE);
 		    holder.delete.setOnCheckedChangeListener(null);
 		    holder.delete.setVisibility(View.VISIBLE);
-		    holder.delete.setChecked(mSelectedItems.contains(position));
+		    holder.delete.setChecked(getSelectedItemsPosition().contains(position));
 		    holder.delete.setTag(position);
-		    holder.delete.setOnCheckedChangeListener(mDeleteCheckboxListener);
+		    holder.delete.setOnCheckedChangeListener(getDeleteListener());
 	    } else {
-		    holder.delete.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
+		    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
 	    }
 	    return view;
     }
