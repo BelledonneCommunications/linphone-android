@@ -101,6 +101,11 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 	    mParticipants = participants;
     }
 
+    public void refresh(EventLog[] history) {
+		mHistory = new ArrayList<>(Arrays.asList(history));
+	    notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mHistory.size();

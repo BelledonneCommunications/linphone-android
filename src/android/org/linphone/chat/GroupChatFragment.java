@@ -275,7 +275,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onDeleteSelection(Object[] objectsToDelete) {
-		//TODO
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		for (Object obj : objectsToDelete) {
+			EventLog eventLog = (EventLog)obj;
+			//TODO
+		}
+		mEventsAdapter.refresh(mChatRoom.getHistoryEvents(0));
 	}
 
 	/**
