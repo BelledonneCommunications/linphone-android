@@ -7,6 +7,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioAttributes;
 import android.view.ViewTreeObserver;
@@ -175,5 +176,9 @@ public class ApiTwentySixPlus {
 				.build();
 
 		return notif;
+	}
+
+	public static void startService(Context context, Intent intent) {
+		context.startForegroundService(intent);
 	}
 }

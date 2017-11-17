@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Factory;
 import org.linphone.core.Config;
 import org.linphone.mediastream.Log;
@@ -34,6 +35,7 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		LinphonePreferences.instance().setContext(context);
 		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
 			android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying Core to unregister");
 			LinphoneManager.destroy();
@@ -43,7 +45,7 @@ public class BootReceiver extends BroadcastReceiver {
 			if (autostart) {
 				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-				context.startService(lLinphoneServiceIntent);
+				Compatibility.startService(context, lLinphoneServiceIntent);
 			}
 		}
 	}
