@@ -555,6 +555,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onConferenceAddressGeneration(ChatRoom cr) {
+
+	}
+
+	@Override
 	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {
 		final Address from = msg.getFromAddress();
 		final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);

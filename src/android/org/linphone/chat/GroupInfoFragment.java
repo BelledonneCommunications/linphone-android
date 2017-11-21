@@ -364,6 +364,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
+	public void onConferenceAddressGeneration(ChatRoom cr) {
+
+	}
+
+	@Override
 	public void onChatMessageReceived(ChatRoom cr, EventLog event_log) {
 
 	}
