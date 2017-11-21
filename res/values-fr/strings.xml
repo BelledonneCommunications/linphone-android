@@ -109,8 +109,6 @@
   <string name="use_email_for_validation">Utiliser une adresse mail pour créer un compte</string>
   <string name="login_with_username">Utiliser votre nom d\'utilisateur et votre mot de passe plutôt que votre numéro</string>
   <string name="phone_number_info_title">Comment mon numéro de téléphone sera-t-il utilisé ?</string>
-  <string name="phone_number_info_content">
-Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
   <string name="phone_number_link_info_content">
 Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
   <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
@@ -442,4 +440,5 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="content_description_call_options">Options d\'appel</string>
   <string name="content_description_audio_route">Route audio</string>
   <string name="content_description_exit_conference">Quitter la conférence</string>
+  <string name="content_title_notification_service">Linphone Service</string>
 </resources>

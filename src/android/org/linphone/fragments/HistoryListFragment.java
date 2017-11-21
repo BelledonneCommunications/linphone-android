@@ -473,6 +473,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			}
 
 			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
+			if (c == null) c = ContactsManager.getInstance().findContactFromPhoneNumber(address.getUsername());
 			String displayName = null;
 			final String sipUri = address.asString();
 			if (c != null) {

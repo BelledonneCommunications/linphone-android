@@ -19,17 +19,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.compatibility.Compatibility;
-import org.linphone.core.Factory;
-import org.linphone.core.Config;
-import org.linphone.mediastream.Log;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 
 public class BootReceiver extends BroadcastReceiver {
 

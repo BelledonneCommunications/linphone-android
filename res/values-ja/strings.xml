@@ -105,8 +105,6 @@
   <string name="use_email_for_validation">アカウント認証にメールアドレスを使う</string>
   <string name="login_with_username">電話番号の代わりにユーザー名とパスワードを使う</string>
   <string name="phone_number_info_title">私の電話番号は何のために使われますか？</string>
-  <string name="phone_number_info_content">
-\nあなたの電話番号のおかげで、あなたの友人はあなたをより簡単に見つけるでしょう。 \n\nLinphoneを使用しているあなたのアドレス帳にあなたが表示され、あなたの友人はLinphoneでもあなたを呼び出せる事を知ります。\n</string>
   <string name="phone_number_link_info_content">
 \nLinphoneを使用しているあなたのアドレス帳に\nあなたが表示され、あなたの友人は\nLinphoneでもあなたに連絡できることを把握します。</string>
   <string name="phone_number_link_info_content_already_account">アカウントを自分の電話番号にリンクすると、友人があなたをより簡単に見つけることができます。\n\n電話番号は、1つのLinphoneアカウントでのみ使用できます。\n\n既にあなたの番号を他のアカウントにリンクしていたが、\n\nこの番号を使用したい場合は、今すぐリンクする事で番号が自動的にこのアカウントに移動されます。</string>
@@ -429,4 +427,5 @@
   <string name="content_description_call_options">発信オプション</string>
   <string name="content_description_audio_route">オーディオルート</string>
   <string name="content_description_exit_conference">会議を終了する</string>
+  <string name="content_title_notification_service">サービス</string>
 </resources>

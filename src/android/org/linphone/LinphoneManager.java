@@ -1360,8 +1360,11 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 					if (mLc != null) {
 						if (mLc.getCallsNb() > 0) {
 							mLc.acceptCall(call);
-							LinphoneManager.getInstance().routeAudioToReceiver();
-							LinphoneActivity.instance().startIncallActivity(call);
+							if (LinphoneManager.getInstance() != null) {
+								LinphoneManager.getInstance().routeAudioToReceiver();
+								if (LinphoneActivity.instance() != null)
+									LinphoneActivity.instance().startIncallActivity(call);
+							}
 						}
 					}
 				}

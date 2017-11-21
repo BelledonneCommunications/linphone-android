@@ -738,7 +738,7 @@ public final class LinphoneUtils {
 	}
 
 	public static void displayErrorAlert(String msg, Context ctxt) {
-		if (ctxt != null) {
+		if (ctxt != null && msg != null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
 			builder.setMessage(msg)
 					.setCancelable(false)
@@ -797,9 +797,7 @@ public final class LinphoneUtils {
 
 				return getDataColumn(context, contentUri, selection, selectionArgs);
 			}
-		} else if ("content".equalsIgnoreCase(uri.getScheme())) { // Content
-			// Google photo uri example
-			// content://com.google.android.apps.photos.contentprovider/0/1/mediakey%3A%2FAF1QipMObgoK_wDY66gu0QkMAi/ORIGINAL/NONE/114919
+		} else if ("content".equalsIgnoreCase(uri.getScheme())) {
 			String type = getTypeFromUri(uri, context);
 			String result = getDataColumn(context, uri, null, null); //
 			if (TextUtils.isEmpty(result))

@@ -110,8 +110,6 @@
   <string name="use_email_for_validation">استخدم عنوان البريد الإلكتروني لتأكيد الحساب</string>
   <string name="login_with_username">استعمل اسم المستخدم وكلمة السر عوضا عن رقم هاتفك</string>
   <string name="phone_number_info_title">لأي غرض سيجري استخدام رقم هاتفي ؟</string>
-  <string name="phone_number_info_content">
-\nبفضل رقم هاتفك، سيجدك أصدقاؤك بسهولة.\n\nسوف تجد في دفتر عناوينك من يستخدم لِنْفُونْ وسيتمكن أصدقاؤك من الوصول إليك بواسطة لِنْفُونْ كذلك.لِنْفُونْ.\n</string>
   <string name="phone_number_link_info_content">
 \nسيجدك أصدقاؤك بسهولة إن ربطت حسابك برقم هاتفك\\n\nسوف تجد في دفتر عناوينك من يستخدم لِنْفُونْ وسيتمكن أصدقاؤك من الوصول إليك بواسطة لِنْفُونْ كذلك.لِنْفُونْ.\n</string>
   <string name="phone_number_link_info_content_already_account">يمكنك استخدام رقم هاتفي واحد مع حساب لنفون واحد.\n\nإن ربطت رقم هاتفك مع حساب آخر لكنك تود استخدام هذا الحساب، يمكنك ببساطة ربطه مع رقم هاتفك تلقائيا وسيُنقَل هذا الأخير إلى هذا الحساب.</string>
@@ -454,5 +452,6 @@
   <string name="content_description_call_options">خيارات المكالمة</string>
   <string name="content_description_audio_route">توجيه الصوت</string>
   <string name="content_description_exit_conference">مغادرة الاجتماع</string>
+  <string name="content_title_notification_service">خدمة لِنْفُونْ</string>
   <string name="content_title_notification">إشعارات لِنْفُونْ</string>
 </resources>

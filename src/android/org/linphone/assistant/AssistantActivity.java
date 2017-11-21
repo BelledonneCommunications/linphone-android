@@ -139,8 +139,10 @@ private static AssistantActivity instance;
         mPrefs = LinphonePreferences.instance();
 		status.enableSideMenu(false);
 
-		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-		accountCreator.setListener(this);
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+			accountCreator.setListener(this);
+		}
 
 		countryListAdapter = new CountryListAdapter(getApplicationContext());
         mListener = new CoreListenerStub() {

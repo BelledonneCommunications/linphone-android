@@ -91,10 +91,14 @@ android_targets = {
     'x86_64': AndroidX86_64Target()
 }
 
+android_virtual_targets= {
+    'all': ['arm', 'armv7', 'arm64', 'x86', 'x86_64']
+}
+
 class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
-        prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64', 'x86'])
+        prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64', 'x86'], virtual_targets=android_virtual_targets)
         self.min_supported_ndk = 11
         self.max_supported_ndk = 16
         self.unsupported_ndk_version = None
@@ -219,6 +223,12 @@ clean: java-clean
 
 install: install-apk run-linphone
 
+install-test:
+\t$(MAKE) -C liblinphone_tester copy-libs
+\t$(MAKE) -C liblinphone_tester copy-files
+\t./gradlew -b liblinphone_tester/build.gradle assembleDebug
+\t./gradlew -b liblinphone_tester/build.gradle installDebug
+
 java-clean:
 \t./gradlew clean
 
@@ -340,6 +350,9 @@ uninstall:
 release: java-clean build copy-libs
 \t./gradlew assembleRelease
 
+unsigned: java-clean build copy-libs
+\t./gradlew assemblePackaged
+
 generate-sdk: liblinphone-android-sdk
 
 generate-javadoc:
@@ -350,6 +363,7 @@ liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
 \t./gradlew -b libLinphoneAndroidSdk.gradle assembleRelease
+\t@mv $(TOPDIR)/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
 \t./gradlew -b libLinphoneAndroidSdk.gradle sdkZip
 
 linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem

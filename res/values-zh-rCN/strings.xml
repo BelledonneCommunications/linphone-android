@@ -108,7 +108,6 @@
   <string name="use_email_for_validation">使用邮箱地址来激活帐户</string>
   <string name="login_with_username">用您的用户名和密码来代替电话号码</string>
   <string name="phone_number_info_title">我的电话号码将用于？</string>
-  <string name="phone_number_info_content">如果将您的帐户关联您的电话号码，您的朋友们可以更容易的找到你。您在通讯录里可以查看谁在使用Linphone，他们也同样可以通过Linphone联系您。</string>
   <string name="phone_number_link_info_content">如果将您的帐户关联您的电话号码，您的朋友们可以更容易的找到你。您在通讯录里可以查看谁在使用Linphone，他们也同样可以通过Linphone联系您。</string>
   <string name="phone_number_link_info_content_already_account">您的电话号码只能关联一个Linphone帐户。如果您已经把您的号码关联了其他账户，但是你更想使用这个。只需关联您现在的帐户，你的号码就会自动转移到这个账户。</string>
   <!--Status-->
@@ -435,4 +434,5 @@
   <string name="content_description_call_options">通话选项</string>
   <string name="content_description_audio_route">音频路由</string>
   <string name="content_description_exit_conference">退出会话</string>
+  <string name="content_title_notification_service">Linphone服务</string>
 </resources>

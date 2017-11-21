@@ -111,7 +111,6 @@
   <string name="use_email_for_validation">ელფოსტის მისამართის გამოყენება ანგარიშის დასადატურებლად</string>
   <string name="login_with_username">თქვენი მომხმარებლის სახელის და პაროლის გამოყენება თქვენი ტელეფონის ნომრის მაგივრად</string>
   <string name="phone_number_info_title">რისთვის იქნება გამოყენებული ჩემი ტელეფონის ნომერი?</string>
-  <string name="phone_number_info_content">\nთქვენი ტელეფონის ნომრის დახმარებით, თქვენი მეგობრები შეძლებენ გიპოვონ უფრო მარტივად.\n\nთქვენ დაინახავთ თქვენს მისამართები წიგნში ვინ იყენებს Linphone-ს და თქვენს მეგობრებს ეცოდინებათ, რომ შეუძლიათ ასევე დაგიკავშირდნენ Linphone-ით.\n</string>
   <string name="phone_number_link_info_content">\nთქვენი მეგობრები გიპოვიან უფრო მარტივად, თუ მიაბამთ თქვენს ანგარიშს თქვენს ტელფონის ნომერზე.\n\nთქვენ დაინახავთ თქვენს მისამართები წიგნში ვინ იყენებს Linphone-ს და თქვენს მეგობრებს ეცოდინებათ, რომ შეუძლიათ ასევე დაგიკავშირდნენ Linphone-ით.\n</string>
   <string name="phone_number_link_info_content_already_account">თქვენ შეგიძლიათ გამოიყენოთ თქვენი ტელეფონის ნომერი მხოლოდ ერთ Linphone ანგარიშთან.\n\nთუ უკვე მიბმული გაქვთ თქვენი ნომერი სხვა ანგარიშზე, მაგრამ გსურთ ამის გამოყენება, უბრალოდ მიაბით იგი ახლა და თქვენი ნომერი იქნება ავტომატურად გადმოტანილი ამ ანგარიშზე.</string>
   <!--Status-->
@@ -456,5 +455,6 @@
   <string name="content_description_call_options">ზარის პარამეტრები</string>
   <string name="content_description_audio_route">ხმის მარშრუტი</string>
   <string name="content_description_exit_conference">კონფერენციიდან გამოსვლა</string>
+  <string name="content_title_notification_service">Linphone სერვისი</string>
   <string name="content_title_notification">Linphone-ის შეტყობინება</string>
 </resources>
