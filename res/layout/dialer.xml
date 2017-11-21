@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@color/colorH"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="@color/colorH"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,25 +18,26 @@
 
 	<RelativeLayout
 		android:id="@+id/address_bar"
-		android:background="@color/colorF"
+        android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
 		android:layout_alignParentTop="true">
 
-		<org.linphone.ui.EraseButton
-			android:id="@+id/erase"
-			android:src="@drawable/backspace"
-			android:contentDescription="@string/content_description_backspace"
-			android:layout_width="40dp"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="10dp"
-			android:layout_marginLeft="10dp" />
+        <org.linphone.ui.EraseButton
+            android:id="@+id/erase"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/content_description_backspace"
+            android:src="@drawable/backspace"/>
 
 		<org.linphone.ui.AddressText
 			android:id="@+id/address"
-			android:background="@color/colorF"
+            android:background="@color/transparent"
+            android:backgroundTint="@color/transparent"
 			android:textColorHint="@color/colorE"
 			style="@style/font5"
 			android:ellipsize="start"
