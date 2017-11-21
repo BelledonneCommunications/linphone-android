@@ -40,13 +40,12 @@ public class GroupInfoAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
-    private boolean mHideAdminFeatures, mIsCreation;
+    private boolean mHideAdminFeatures;
 
     public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mInflater = inflater;
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures;
-	    mIsCreation = isCreation;
     }
 
     @Override

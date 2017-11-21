@@ -29,7 +29,7 @@ public class ContactAddress implements Serializable {
 	private boolean isLinphoneContact;
 	private boolean isSelect = false;
 	private boolean isAdmin = false;
-	private View view;
+	private transient View view;
 
 	public boolean isAdmin() {
 		return isAdmin;
