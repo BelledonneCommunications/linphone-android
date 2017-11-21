@@ -26,7 +26,7 @@ import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
+import org.linphone.core.Core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.content.Context;
