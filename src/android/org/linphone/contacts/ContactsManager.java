@@ -233,6 +233,9 @@ public class ContactsManager extends ContentObserver {
 		String normalized = lpc.normalizePhoneNumber(phoneNumber);
 
 		Address addr = lpc.normalizeSipUri(normalized);
+		if (addr == null) {
+			return null;
+		}
 		addr.setMethodParam(";user=phone");
 		Friend lf = lc.findFriend(addr); // Without this, the hashmap inside liblinphone won't find it...
 		if (lf != null) {
