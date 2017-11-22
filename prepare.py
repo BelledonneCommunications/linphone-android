@@ -99,7 +99,7 @@ class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
         prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64', 'x86'], virtual_targets=android_virtual_targets)
-        self.min_supported_ndk = 11
+        self.min_supported_ndk = 16
         self.max_supported_ndk = 16
         self.unsupported_ndk_version = None
         self.min_cmake_version = "3.7"
