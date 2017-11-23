@@ -76,7 +76,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		if (getArguments() == null || getArguments().isEmpty()) {
 			return null;
 		}
-		mParticipants =  (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
+		mParticipants = (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 
 		mGroupChatRoomAddress = null;
 		mChatRoom = null;
