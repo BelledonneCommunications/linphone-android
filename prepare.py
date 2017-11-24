@@ -156,19 +156,19 @@ class AndroidPreparator(prepare.Preparator):
             if len(python_config_files) > 0:
                 version = open(python_config_files[0]).readlines()[0]
                 res = re.match('^.*/(aosp-)?ndk-r(\d+).*$', version)
-		if res is not None: # Will be if NDK < 16
+                if res is not None: # Will be if NDK < 16
                     version = int(res.group(2))
                     retval = False
                 else:
                     release_file = os.path.join(ndk_path, 'source.properties') # Since NDK 16
                     if os.path.isfile(release_file):
                         version = open(release_file).read().strip()
-            		res = re.findall(r'(?:(\d+))', version)
-	                version = int(res[0])
-            		retval = False
+                        res = re.findall(r'(?:(\d+))', version)
+                        version = int(res[0])
+                        retval = False
                     else:
-			error("Could not get Android NDK version!")
-	                sys.exit(-1)
+                        error("Could not get Android NDK version!")
+                        sys.exit(-1)
             else:
                 error("Could not get Android NDK version!")
                 sys.exit(-1)
