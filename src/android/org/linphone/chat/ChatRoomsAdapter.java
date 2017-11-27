@@ -132,20 +132,18 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 	    Long time;
 
 	    int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
-	    //TODO rework
-	    ChatMessage[] history = chatRoom.getHistory(1);
+	    ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 
-	    if (history.length > 0) {
-		    ChatMessage msg = history[0];
-		    if (msg.getFileTransferInformation() != null || msg.getExternalBodyUrl() != null || msg.getAppdata() != null) {
+	    if (lastMessage != null) {
+		    if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
 			    holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
-			    time = msg.getTime();
+			    time = lastMessage.getTime();
 			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
 			    holder.lastMessageView.setText("");
-		    } else if (msg.getTextContent() != null && msg.getTextContent().length() > 0) {
-			    message = msg.getTextContent();
+		    } else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
+			    message = lastMessage.getTextContent();
 			    holder.lastMessageView.setBackgroundResource(0);
-			    time = msg.getTime();
+			    time = lastMessage.getTime();
 			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
 			    holder.lastMessageView.setText(message);
 		    }
@@ -153,6 +151,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	    holder.displayName.setSelected(true); // For animation
 
+	    holder.contactPicture.setImageBitmap(mDefaultBitmap);
 	    if (!chatRoom.canHandleParticipants()) {
 		    contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
 		    if (contact != null) {
@@ -160,7 +159,6 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 		    } else {
 			    holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
-			    holder.contactPicture.setImageBitmap(mDefaultBitmap);
 		    }
 	    } else if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
 		    contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
@@ -169,7 +167,6 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 		    } else {
 			    holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
-			    holder.contactPicture.setImageBitmap(mDefaultBitmap);
 		    }
 	    } else {
 		    holder.displayName.setText(chatRoom.getSubject());
