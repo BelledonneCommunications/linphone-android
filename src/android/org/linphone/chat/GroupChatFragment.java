@@ -618,54 +618,38 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-		if (!cr.canHandleParticipants() || (cr.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(cr.getSubject()))) {
-			if (isComposing) {
-				String displayName;
-				if (mParticipants.size() > 0) {
-					displayName = mParticipants.get(0).getFullName();
-				} else {
-					displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
-				}
-				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", displayName));
-				mRemoteComposing.setVisibility(View.VISIBLE);
-			} else {
-				mRemoteComposing.setVisibility(View.GONE);
-			}
-		} else {
-			ArrayList<String> composing = new ArrayList<>();
-			for (Address a : cr.getComposingAddresses()) {
-				boolean found = false;
-				for (LinphoneContact c : mParticipants) {
-					if (c.hasAddress(a.asStringUriOnly())) {
-						composing.add(c.getFullName());
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					String displayName = LinphoneUtils.getAddressDisplayName(a);
-					composing.add(displayName);
+		ArrayList<String> composing = new ArrayList<>();
+		for (Address a : cr.getComposingAddresses()) {
+			boolean found = false;
+			for (LinphoneContact c : mParticipants) {
+				if (c.hasAddress(a.asStringUriOnly())) {
+					composing.add(c.getFullName());
+					found = true;
+					break;
 				}
 			}
+			if (!found) {
+				String displayName = LinphoneUtils.getAddressDisplayName(a);
+				composing.add(displayName);
+			}
+		}
 
-			if (composing.size() == 1) {
-				mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", composing.get(0)));
-				mRemoteComposing.setVisibility(View.VISIBLE);
-			} else if (composing.size() > 2) {
-				StringBuilder remotes = new StringBuilder();
-				int i = 0;
-				for (String remote : composing) {
-					remotes.append(remote);
-					i++;
-					if (i != composing.size()) {
-						remotes.append(", ");
-					}
+		mRemoteComposing.setVisibility(View.VISIBLE);
+		if (composing.size() == 0) {
+			mRemoteComposing.setVisibility(View.GONE);
+		} else if (composing.size() == 1) {
+			mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", composing.get(0)));
+		} else {
+			StringBuilder remotes = new StringBuilder();
+			int i = 0;
+			for (String remote : composing) {
+				remotes.append(remote);
+				i++;
+				if (i != composing.size()) {
+					remotes.append(", ");
 				}
-				mRemoteComposing.setText(getString(R.string.remote_composing_multiple).replace("%s", remotes.toString()));
-				mRemoteComposing.setVisibility(View.VISIBLE);
-			} else {
-				mRemoteComposing.setVisibility(View.GONE);
 			}
+			mRemoteComposing.setText(getString(R.string.remote_composing_multiple).replace("%s", remotes.toString()));
 		}
 	}
 
