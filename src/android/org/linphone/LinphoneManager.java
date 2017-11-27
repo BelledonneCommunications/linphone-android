@@ -289,10 +289,12 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 						} else {
 							progress.dismiss();
 							progress = null;
-							LinphoneManager.getLc().reloadMsPlugins(LinphoneManager.this.getContext().getApplicationInfo().nativeLibraryDir);
-							if (ohcodec.getUserDataSize() > box && ohcodec.getUserData(box) != null) {
-								((CheckBoxPreference) ohcodec.getUserData(box)).setSummary(mCodecDownloader.getLicenseMessage());
-								((CheckBoxPreference) ohcodec.getUserData(box)).setTitle("OpenH264");
+							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+								LinphoneManager.getLc().reloadMsPlugins(AssistantActivity.instance().getApplicationInfo().nativeLibraryDir);
+								AssistantActivity.instance().endDownloadCodec();
+							} else {
+								// We need to restart due to bad android linker
+								AssistantActivity.instance().restartApplication();
 							}
 						}
 					}
