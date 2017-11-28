@@ -45,7 +45,7 @@ copy-libs:
 		cp -f ../liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \
 	fi
 
-copy-files: ../submodules/linphone/tester/tester_hosts ../submodules/linphone/tester/messages.db
+copy-files: ../submodules/linphone/tester/tester_hosts
 	$(MAKE) copy-libs
 	rm -rf assets/config_files
 	mkdir -p assets/config_files
