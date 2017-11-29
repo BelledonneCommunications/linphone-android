@@ -2,7 +2,7 @@ package org.linphone.tester;
 
 import java.util.List;
 
-import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Version;
 
 import android.util.Log;
@@ -30,6 +30,7 @@ public class Tester {
 		boolean libLoaded=false;
 		Throwable firstException=null;
 
+		System.loadLibrary("c++_shared");
 		loadOptionalLibrary("ffmpeg-linphone");
 		System.loadLibrary("bctoolbox");
 		System.loadLibrary("bctoolbox-tester");
