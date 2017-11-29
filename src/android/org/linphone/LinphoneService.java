@@ -523,11 +523,7 @@ public final class LinphoneService extends Service {
 		}
 
 		Call call = LinphoneManager.getLc().getCalls()[0];
-		String userName = call.getRemoteAddress().getUsername();
-		String domain = call.getRemoteAddress().getDomain();
-		String displayName = call.getRemoteAddress().getDisplayName();
-		Address address = Factory.instance().createAddress(userName + "@" + domain);
-		address.setDisplayName(displayName);
+		Address address = call.getRemoteAddress();
 
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
