@@ -155,21 +155,20 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			String[] devices = LinphoneManager.getLc().getVideoDevicesList();
 			int index = 0;
 			for (String d : devices) {
-				if (d == currentDevice) {
+				if (d.equals(currentDevice)) {
 					break;
 				}
 				index++;
 			}
-			String newDevice = devices[(index + 1) % devices.length];
+
+			String newDevice;
+			if (index == 1)
+				newDevice = devices[0];
+			else
+				newDevice = devices[1];
 			LinphoneManager.getLc().setVideoDevice(newDevice);
 
 			CallManager.getInstance().updateCall();
-
-			// previous call will cause graph reconstruction -> regive preview
-			// window
-			if (mCaptureView != null) {
-				LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
-			}
 		} catch (ArithmeticException ae) {
 			Log.e("Cannot swtich camera : no camera");
 		}
