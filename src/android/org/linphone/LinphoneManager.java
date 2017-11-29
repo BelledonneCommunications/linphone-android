@@ -386,36 +386,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		return instance;
 	}
 
-	public void addDownloadMessagePending(ChatMessage message){
-		synchronized (mPendingChatFileMessage) {
-			mPendingChatFileMessage.add(message);
-		}
-	}
-
-	public boolean isMessagePending(ChatMessage message){
-		boolean messagePending = false;
-		synchronized (mPendingChatFileMessage) {
-			for (ChatMessage chat : mPendingChatFileMessage) {
-				if (chat.getStorageId() == message.getStorageId()) {
-					messagePending = true;
-					break;
-				}
-			}
-		}
-		return messagePending;
-	}
-
-	public void removePendingMessage(ChatMessage message){
-		synchronized (mPendingChatFileMessage) {
-			for (ChatMessage chat : mPendingChatFileMessage) {
-				if (chat.getStorageId() == message.getStorageId()) {
-					mPendingChatFileMessage.remove(chat);
-				}
-				break;
-			}
-		}
-	}
-
 	public void setUploadPendingFileMessage(ChatMessage message){
 		mUploadPendingFileMessage = message;
 	}
@@ -436,7 +406,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 				mUploadingImage = null;
 			} else {
 				LinphoneUtils.storeImage(getContext(), msg);
-				removePendingMessage(msg);
 			}
 		}
 
