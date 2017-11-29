@@ -798,6 +798,26 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		if (chatRoom != null && path != null && path.length() > 0 && isNetworkReachable) {
 			try {
 				Bitmap bm = BitmapFactory.decodeFile(path);
+				
+				if (bm == null && path.contains("NONE")) {
+                    			Uri uri = Uri.parse(path);
+                    			InputStream is = null;
+                    			if (uri.getAuthority() != null) {
+						try {
+					    		is = getActivity().getContentResolver().openInputStream(uri);
+					    		bm = BitmapFactory.decodeStream(is);
+						} catch (FileNotFoundException e) {
+					    		e.printStackTrace();
+						} finally {
+					    		try {
+								is.close();
+					    		} catch (IOException e) {
+								e.printStackTrace();
+					    		}
+						}
+				    	}
+				}
+				
 				if (bm != null) {
 					FileUploadPrepareTask task = new FileUploadPrepareTask(getActivity(), path, imageSize);
 					task.execute(bm);
