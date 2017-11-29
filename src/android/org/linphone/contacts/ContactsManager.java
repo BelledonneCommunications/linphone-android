@@ -231,6 +231,7 @@ public class ContactsManager extends ContentObserver {
 		}
 		if (lpc == null) return null;
 		String normalized = lpc.normalizePhoneNumber(phoneNumber);
+		if (normalized == null) normalized = phoneNumber;
 
 		Address addr = lpc.normalizeSipUri(normalized);
 		if (addr == null) {

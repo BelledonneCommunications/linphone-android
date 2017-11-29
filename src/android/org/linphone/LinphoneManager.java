@@ -566,16 +566,14 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 			}
 		}
 
-		ProxyConfig lpc = getLc().getDefaultProxyConfig();
-		/*if (lpc != null) {
-			to = lpc.normalizePhoneNumber(to);
-		}*/
-
 		Address lAddress;
-		lAddress = mLc.interpretUrl(to);
+		lAddress = mLc.interpretUrl(to); // InterpretUrl does normalizePhoneNumber
 		if (lAddress == null)  {
+			Log.e("Couldn't convert to String to Address : " + to);
 			return;
 		}
+
+		ProxyConfig lpc = mLc.getDefaultProxyConfig();
 		if (mR.getBoolean(R.bool.forbid_self_call) && lpc != null && lAddress.asStringUriOnly().equals(lpc.getIdentityAddress())) {
 			return;
 		}

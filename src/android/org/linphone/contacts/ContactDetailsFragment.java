@@ -144,9 +144,11 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 
 			ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-			if (lpc != null && !noa.isSIPAddress()) {
+			if (lpc != null) {
 				String username = lpc.normalizePhoneNumber(displayednumberOrAddress);
-				value = LinphoneUtils.getFullAddressFromUsername(username);
+				if (username != null) {
+					value = LinphoneUtils.getFullAddressFromUsername(username);
+				}
 			}
 
 			String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
