@@ -30,7 +30,6 @@ public class TestRunner extends JUnitReportTestRunner {
 	@Override
 	public TestSuite getAllTests () {
 		TestSuite suite = new TestSuite("Tests");
-		suite.addTest(new WrapperTester());
 		addSuites(suite, mSuite, mTest);
 		return suite;
 	}

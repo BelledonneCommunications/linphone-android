@@ -79,7 +79,7 @@ android {
 ///////////// Task /////////////
 
 task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
-    source = ['submodules/mediastreamer2/java/src', 'src/linphone-wrapper/org/linphone/core']
+    source = ['submodules/mediastreamer2/java/src', 'src/linphone-wrapper']
     excludes = ['**/mediastream/MediastreamerActivity.java',
                 '**/**.html',
                 '**/**.aidl']
