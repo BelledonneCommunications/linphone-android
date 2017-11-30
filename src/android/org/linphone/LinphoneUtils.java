@@ -300,38 +300,9 @@ public final class LinphoneUtils {
 		}
 	}
 
-	public static final List<Call> getCallsNotInConf(Core lc) {
-		List<Call> l=new ArrayList<Call>();
-		for(Call c : lc.getCalls()){
-			if (!(c.getConference() != null)){
-				l.add(c);
-			}
-		}
-		return l;
-	}
-
-	public static final List<Call> getCallsInConf(Core lc) {
-		List<Call> l=new ArrayList<Call>();
-		for(Call c : lc.getCalls()){
-			if ((c.getConference() != null)){
-				l.add(c);
-			}
-		}
-		return l;
-	}
-
 	public static final List<Call> getCalls(Core lc) {
 		// return a modifiable list
 		return new ArrayList<Call>(Arrays.asList(lc.getCalls()));
-	}
-
-	public static final boolean hasExistingResumeableCall(Core lc) {
-		for (Call c : getCalls(lc)) {
-			if (c.getState() == State.Paused) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public static final List<Call> getCallsInState(Core lc, Collection<State> states) {
@@ -343,40 +314,12 @@ public final class LinphoneUtils {
 		}
 		return foundCalls;
 	}
-	public static final List<Call> getRunningOrPausedCalls(Core lc) {
-		return getCallsInState(lc, Arrays.asList(
-				State.Paused,
-				State.PausedByRemote,
-				State.StreamsRunning));
-	}
-
-	public static final int countConferenceCalls(Core lc) {
-		int count = lc.getConferenceSize();
-		if ((lc.getConference() != null)) count--;
-		return count;
-	}
-
-	public static int countVirtualCalls(Core lc) {
-		return lc.getCallsNb() - countConferenceCalls(lc);
-	}
-	public static int countNonConferenceCalls(Core lc) {
-		return lc.getCallsNb() - countConferenceCalls(lc);
-	}
 
 	public static void setVisibility(View v, int id, boolean visible) {
 		v.findViewById(id).setVisibility(visible ? VISIBLE : GONE);
 	}
 	public static void setVisibility(View v, boolean visible) {
 		v.setVisibility(visible ? VISIBLE : GONE);
-	}
-	public static void enableView(View root, int id, OnClickListener l, boolean enable) {
-		View v = root.findViewById(id);
-		v.setVisibility(enable ? VISIBLE : GONE);
-		v.setOnClickListener(l);
-	}
-
-	public static int pixelsToDpi(Resources res, int pixels) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) pixels, res.getDisplayMetrics());
 	}
 
 	public static boolean isCallRunning(Call call)
@@ -426,14 +369,6 @@ public final class LinphoneUtils {
         return true;
     }
 
-	public static void clearLogs() {
-		try {
-			Runtime.getRuntime().exec(new String[] { "logcat", "-c" });
-		} catch (IOException e) {
-			Log.e(e);
-		}
-	}
-
     public static boolean zipLogs(StringBuilder sb, String toZipFile){
         boolean success = false;
         try {
@@ -454,45 +389,6 @@ public final class LinphoneUtils {
 
         return success;
     }
-
-	public static void collectLogs(Context context, String email) {
-        BufferedReader br = null;
-        Process p = null;
-        StringBuilder sb = new StringBuilder();
-
-    	try {
-			p = Runtime.getRuntime().exec(new String[] { "logcat", "-d", "|", "grep", "`adb shell ps | grep " + context.getPackageName() + " | cut -c10-15`" });
-	    	br = new BufferedReader(new InputStreamReader(p.getInputStream()), 2048);
-
-            String line;
-	    	while ((line = br.readLine()) != null) {
-	    		sb.append(line);
-	    		sb.append("\r\n");
-	    	}
-            String zipFilePath = context.getExternalFilesDir(null).getAbsolutePath() + "/logs.zip";
-            Log.i("Saving logs to " + zipFilePath);
-
-            if( zipLogs(sb, zipFilePath) ) {
-            	final String appName = (context != null) ? context.getString(R.string.app_name) : "Linphone(?)";
-
-                Uri zipURI = Uri.parse("file://" + zipFilePath);
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-                i.putExtra(Intent.EXTRA_TEXT, appName + " logs");
-                i.setType("application/zip");
-                i.putExtra(Intent.EXTRA_STREAM, zipURI);
-                try {
-                    context.startActivity(Intent.createChooser(i, "Send mail..."));
-                } catch (android.content.ActivityNotFoundException ex) {
-
-                }
-            }
-
-		} catch (IOException e) {
-			Log.e(e);
-		}
-	}
 
 	public static String getNameFromFilePath(String filePath) {
 		String name = filePath;
@@ -575,40 +471,6 @@ public final class LinphoneUtils {
 			}
 		}
 		return sipAddress;
-	}
-
-	public static void storeImage(Context context, ChatMessage msg) {
-		if (msg == null || msg.getFileTransferInformation() == null || msg.getAppdata() == null) return;
-		File file = new File(Environment.getExternalStorageDirectory(), msg.getAppdata());
-		Bitmap bm = BitmapFactory.decodeFile(file.getPath());
-		if (bm == null) return;
-
-		ContentValues values = new ContentValues();
-        values.put(Images.Media.TITLE, file.getName());
-        String extension = msg.getFileTransferInformation().getSubtype();
-        values.put(Images.Media.MIME_TYPE, "image/" + extension);
-        ContentResolver cr = context.getContentResolver();
-        Uri path = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-        OutputStream stream;
-		try {
-			stream = cr.openOutputStream(path);
-			if (extension != null && extension.toLowerCase(Locale.getDefault()).equals("png")) {
-				bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-			} else {
-				bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-			}
-
-			stream.close();
-			file.delete();
-	        bm.recycle();
-
-	        msg.setAppdata(path.toString());
-		} catch (FileNotFoundException e) {
-			Log.e(e);
-		} catch (IOException e) {
-			Log.e(e);
-		}
 	}
 
 	private static Context getContext() {
@@ -721,19 +583,6 @@ public final class LinphoneUtils {
 			return code;
 		}
 		return null;
-	}
-
-	public static void setCountry(DialPlan c, EditText dialCode, Button selectCountry, int countryCode) {
-		if( c != null && dialCode != null && selectCountry != null) {
-			dialCode.setText(c.getCountryCallingCode());
-			selectCountry.setText(c.getCountry());
-		} else {
-			if(countryCode != -1){
-				dialCode.setText("+" + countryCode);
-			} else {
-				dialCode.setText("+");
-			}
-		}
 	}
 
 	public static void displayErrorAlert(String msg, Context ctxt) {

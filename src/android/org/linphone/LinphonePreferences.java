@@ -1438,7 +1438,7 @@ public class LinphonePreferences {
 	}
 
 	public boolean getServiceNotificationVisibility() {
-		return getConfig().getBool("app", "show_service_notification", true);
+		return getConfig().getBool("app", "show_service_notification", false);
 	}
 
 	public void setServiceNotificationVisibility(boolean enable) {

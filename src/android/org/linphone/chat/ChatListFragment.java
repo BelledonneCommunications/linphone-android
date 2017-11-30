@@ -145,7 +145,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 			ChatRoom room = (ChatRoom)obj;
 			lc.deleteChatRoom(room);
 		}
-		mChatRoomsAdapter.refresh();
+		refreshChatRoomsList();
 	}
 
 	@Override

@@ -256,10 +256,6 @@ public final class LinphoneService extends Service {
 		getApplication().registerActivityLifecycleCallbacks(activityCallbacks = new ActivityMonitor());
 	}
 
-	public int getMessageNotifCount() {
-		return mMsgNotifCount;
-	}
-
 	public void resetMessageNotifCount() {
 		mMsgNotifCount = 0;
 	}
@@ -685,7 +681,6 @@ public final class LinphoneService extends Service {
 		int.class, Notification.class};
 	private static final Class<?>[] mStopFgSign = new Class[] {boolean.class};
 
-	private Method mSetForeground;
 	private Method mStartForeground;
 	private Method mStopForeground;
 	private Object[] mSetForegroundArgs = new Object[1];
@@ -719,13 +714,6 @@ public final class LinphoneService extends Service {
 			return;
 		}
 
-		// Fall back on the old API.
-		if (mSetForeground != null) {
-			mSetForegroundArgs[0] = Boolean.TRUE;
-			invokeMethod(mSetForeground, mSetForegroundArgs);
-			// continue
-		}
-
 		notifyWrapper(id, notification);
 	}
 
@@ -744,10 +732,6 @@ public final class LinphoneService extends Service {
 		// Fall back on the old API.  Note to cancel BEFORE changing the
 		// foreground state, since we could be killed at that point.
 		mNM.cancel(id);
-		if (mSetForeground != null) {
-			mSetForegroundArgs[0] = Boolean.FALSE;
-			invokeMethod(mSetForeground, mSetForegroundArgs);
-		}
 	}
 
 	private void dumpDeviceInformation() {
@@ -882,20 +866,6 @@ public final class LinphoneService extends Service {
 		startActivity(new Intent()
 				.setClass(this, incomingReceivedActivity)
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-	}
-
-
-	public void tryingNewOutgoingCallButAlreadyInCall() {
-	}
-
-	public void tryingNewOutgoingCallButCannotGetCallParameters() {
-	}
-
-	public void tryingNewOutgoingCallButWrongDestinationAddress() {
-	}
-
-	public void onCallEncryptionChanged(final Call call, final boolean encrypted,
-			final String authenticationToken) {
 	}
 }
 

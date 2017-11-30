@@ -168,7 +168,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private Core mLc;
 	private OpenH264DownloadHelper mCodecDownloader;
 	private OpenH264DownloadHelperListener mCodecListener;
-	private String lastLcStatusMessage;
 	private String basePath;
 	private static boolean sExited;
 	private boolean mAudioFocused;
@@ -190,9 +189,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private Handler mHandler = new Handler();
 	private WakeLock mProximityWakelock;
 	private AccountCreator accountCreator;
-	private static List<ChatMessage> mPendingChatFileMessage;
-	private static ChatMessage mUploadPendingFileMessage;
-	private boolean mAreDisplayAlertMessage = false;
 	private SensorManager mSensorManager;
 	private Sensor mProximity;
 	private boolean mProximitySensingEnabled;
@@ -228,7 +224,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
 		mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 		mR = c.getResources();
-		mPendingChatFileMessage = new ArrayList<ChatMessage>();
 	}
 
 	private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -335,21 +330,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void routeAudioToSpeaker() {
 		routeAudioToSpeakerHelper(true);
-	}
-
-	public String getUserAgent() {
-		try {
-			StringBuilder userAgent = new StringBuilder();
-			userAgent.append("LinphoneAndroid/" + mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(),0).versionCode);
-			userAgent.append(" (");
-			userAgent.append("Linphone/" + LinphoneManager.getLc().getVersion() + "; ");
-			userAgent.append(Build.DEVICE + " " + Build.MODEL + " Android/" + Build.VERSION.SDK_INT);
-			userAgent.append(")");
-			return userAgent.toString();
-		} catch (NameNotFoundException nnfe) {
-			Log.e(nnfe);
-		}
-		return null;
 	}
 
 	public void routeAudioToReceiver() {
@@ -510,7 +490,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		LinphoneManager.getLc().setVideoDevice(newDevice);
 	}
 
-	public static interface AddressType {
+	public interface AddressType {
 		void setText(CharSequence s);
 		CharSequence getText();
 		void setDisplayedName(String s);
@@ -518,19 +498,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 
-	public static interface NewOutgoingCallUiListener {
+	public interface NewOutgoingCallUiListener {
 		public void onWrongDestinationAddress();
 		public void onCannotGetCallParameters();
 		public void onAlreadyInCall();
-	}
-
-	public boolean toggleEnableCamera() {
-		if (mLc.inCall()) {
-			boolean enabled = !mLc.getCurrentCall().cameraEnabled();
-			enableCamera(mLc.getCurrentCall(), enabled);
-			return enabled;
-		}
-		return false;
 	}
 
 	public void enableCamera(Call call, boolean enable) {
@@ -538,12 +509,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			call.enableCamera(enable);
 			if (mServiceContext.getResources().getBoolean(R.bool.enable_call_notification))
 				LinphoneService.instance().refreshIncallIcon(mLc.getCurrentCall());
-		}
-	}
-
-	public void sendStaticImage(boolean send) {
-		if (mLc.inCall()) {
-			enableCamera(mLc.getCurrentCall(), !send);
 		}
 	}
 
@@ -867,21 +832,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	//	getLc().getConfig().setInt("misc","transient_provisioning",1);
 	//}
 
-
-	public boolean detectVideoCodec(String mime) {
-		for (PayloadType videoCodec : mLc.getVideoPayloadTypes()) {
-			if (mime.equals(videoCodec.getMimeType())) return true;
-		}
-		return false;
-	}
-
-	public boolean detectAudioCodec(String mime){
-		for (PayloadType audioCodec : mLc.getAudioPayloadTypes()) {
-			if (mime.equals(audioCodec.getMimeType())) return true;
-		}
-		return false;
-	}
-
 	public void updateNetworkReachability() {
 		if (mConnectivityManager == null) return;
 
@@ -1086,10 +1036,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	*/
 	public void connectivityChanged(ConnectivityManager cm, boolean noConnectivity) {
 		updateNetworkReachability();
-	}
-
-	public interface EcCalibrationListener {
-		void onEcCalibrationStatus(EcCalibratorStatus status, int delayMs);
 	}
 
 	private Call ringingCall;
@@ -1538,18 +1484,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		return false;
 	}
 
-	public boolean acceptCall(Call call) {
-		mLc.acceptCall(call);
-		return true;
-	}
-
 	public boolean acceptCallWithParams(Call call, CallParams params) {
 		mLc.acceptCallWithParams(call, params);
 		return true;
-	}
-
-	public static String extractIncomingRemoteName(Resources r, Address linphoneAddress) {
-		return extractADisplayName(r, linphoneAddress);
 	}
 
 	public void adjustVolume(int i) {
@@ -1578,22 +1515,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public static final boolean isInstanciated() {
 		return instance != null;
-	}
-
-	public synchronized Call getPendingIncomingCall() {
-		Call currentCall = mLc.getCurrentCall();
-		if (currentCall == null) return null;
-
-		Call.State state = currentCall.getState();
-		boolean incomingPending = currentCall.getDir() == Call.Dir.Incoming
-			&& (state == State.IncomingReceived || state == State.IncomingEarlyMedia);
-
-		return incomingPending ? currentCall : null;
-	}
-
-	public void displayLinkPhoneNumber() {
-		accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
-		accountCreator.isAccountLinked();
 	}
 
 	public void isAccountWithAlias(){
