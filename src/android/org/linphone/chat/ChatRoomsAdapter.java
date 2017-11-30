@@ -133,13 +133,14 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	    int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 	    ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
+	    holder.lastMessageView.setText("");
+	    holder.date.setText("");
 
 	    if (lastMessage != null) {
 		    if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
 			    holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 			    time = lastMessage.getTime();
 			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
-			    holder.lastMessageView.setText("");
 		    } else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
 			    message = lastMessage.getTextContent();
 			    holder.lastMessageView.setBackgroundResource(0);

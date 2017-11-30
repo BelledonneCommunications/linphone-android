@@ -290,7 +290,6 @@ public final class LinphoneUtils {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(),tUri);
 			} catch (IOException e) {
-				Log.e("Error in setThumbnailPictureFromUri: " + e);
 				return;
 			}
 			if (bm != null) {
