@@ -222,7 +222,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		for (LinphoneNumberOrAddress noa : getNumbersOrAddresses()) {
 			if (noa.isSIPAddress()) {
 				String value = noa.getValue();
-				if (value.equals(address) || value.equals("sip:" + address)) {
+				if (address.startsWith(value) || value.equals("sip:" + address)) { // Startswith is to workaround the fact the address may have a ;gruu= at the end...
 					return true;
 				}
 			}
