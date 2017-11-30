@@ -39,7 +39,7 @@ public class ApiTwentySixPlus {
 	public static void CreateChannel(Context context) {
 		NotificationManager notificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		// Create service notification channel
+		// Create service/call notification channel
 		String id = context.getString(R.string.notification_service_channel_id);
 		CharSequence name = context.getString(R.string.content_title_notification_service);
 		String description = context.getString(R.string.content_title_notification_service);
@@ -47,8 +47,9 @@ public class ApiTwentySixPlus {
 		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
 		mChannel.setDescription(description);
 		mChannel.enableVibration(false);
+		mChannel.enableLights(false);
 		notificationManager.createNotificationChannel(mChannel);
-		// Create message/call notification channel
+		// Create message notification channel
 		id = context.getString(R.string.notification_channel_id);
 		name = context.getString(R.string.content_title_notification);
 		description = context.getString(R.string.content_title_notification);
@@ -71,8 +72,6 @@ public class ApiTwentySixPlus {
 			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
 		}
 
-		NotificationManager notificationManager =
-				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notif = null;
 		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 					.setContentTitle(title)
@@ -96,7 +95,7 @@ public class ApiTwentySixPlus {
 	                                                    String title, String msg, int iconID, Bitmap contactIcon,
 	                                                    String contactName, PendingIntent intent) {
 
-		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
 				.setContentTitle(contactName)
 				.setContentText(msg)
 				.setSmallIcon(iconID)
