@@ -227,6 +227,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		ContactsManager.removeContactsListener(this);
 		removeVirtualKeyboardVisiblityListener();
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
+		if (mChatRoom != null) mChatRoom.setListener(null);
 		super.onPause();
 	}
 
@@ -275,7 +276,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onDeleteSelection(Object[] objectsToDelete) {
-		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (Object obj : objectsToDelete) {
 			EventLog eventLog = (EventLog)obj;
 			eventLog.deleteFromDatabase();
