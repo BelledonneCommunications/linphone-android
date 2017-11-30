@@ -2,7 +2,7 @@
 <manifest package="org.linphone.core"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="3310"
+          android:versionCode="3311"
           android:versionName="3.3.1">
 
     <uses-sdk
