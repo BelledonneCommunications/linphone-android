@@ -327,7 +327,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    case ConferenceCreated:
 				    holder.eventMessage.setText(mContext.getString(R.string.conference_created));
 			    	break;
-			    case ConferenceDestroyed:
+			    case ConferenceTerminated:
 				    holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
 			    	break;
 			    case ConferenceParticipantAdded:

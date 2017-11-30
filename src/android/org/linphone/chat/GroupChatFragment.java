@@ -82,7 +82,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private LayoutInflater mInflater;
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
-	private boolean mIsReadOnly;
 	private ListSelectionHelper mSelectionHelper;
 
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
@@ -374,7 +373,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
 		}
 
-		mIsReadOnly = mChatRoom.getState() == ChatRoom.State.Terminated;
 		getContactsForParticipants();
 	}
 
@@ -408,7 +406,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		}
 
-		if (mIsReadOnly) {
+		if (mChatRoom.isReadOnly()) {
 			setReadOnly();
 		}
 	}
@@ -681,8 +679,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-		mIsReadOnly = mChatRoom.getState() == ChatRoom.State.Terminated;
-		if (mIsReadOnly) {
+		if (mChatRoom.isReadOnly()) {
 			setReadOnly();
 		}
 	}
