@@ -1130,9 +1130,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 			if (!cr.canHandleParticipants() || (cr.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(cr.getSubject()))) {
 				if (contact != null) {
-					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
+					LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
 				} else {
-					LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(), from.getUsername(), null, textMessage);
+					LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage);
 				}
 			} else {
 				String subject = cr.getSubject();

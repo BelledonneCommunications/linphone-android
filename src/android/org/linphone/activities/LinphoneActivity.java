@@ -913,11 +913,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return statusFragment;
 	}
 
-	public void removeFromChatList(String sipUri) {
-		ChatRoom chatroom = LinphoneManager.getLc().getChatRoomFromUri(sipUri);
-		chatroom.deleteHistory();
-	}
-
 	public void updateMissedChatCount() {
 		displayMissedChats(getUnreadMessageCount());
 	}
