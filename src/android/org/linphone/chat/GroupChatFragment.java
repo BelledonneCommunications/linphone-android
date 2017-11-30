@@ -278,7 +278,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (Object obj : objectsToDelete) {
 			EventLog eventLog = (EventLog)obj;
-			//TODO
+			eventLog.deleteFromDatabase();
 		}
 		mEventsAdapter.refresh(mChatRoom.getHistoryEvents(0));
 	}
