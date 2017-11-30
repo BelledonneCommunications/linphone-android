@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import org.linphone.contacts.ContactsManager;
 import org.linphone.ui.ListSelectionHelper;
-import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.LinphoneManager;
@@ -96,7 +96,6 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 				refreshChatRoomsList();
 			}
 		};
-
 
 		return view;
 	}

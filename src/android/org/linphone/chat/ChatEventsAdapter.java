@@ -451,7 +451,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 
 	@Override
 	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-		notifyDataSetInvalidated();
+		notifyDataSetChanged();
 	}
 
 	/*

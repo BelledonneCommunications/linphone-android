@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.linphone.contacts.ContactsManager;
-import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;

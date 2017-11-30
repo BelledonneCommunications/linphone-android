@@ -45,7 +45,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.receivers.ContactsUpdatedListener;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;

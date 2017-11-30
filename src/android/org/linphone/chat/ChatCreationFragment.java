@@ -46,7 +46,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
-import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.R;
 

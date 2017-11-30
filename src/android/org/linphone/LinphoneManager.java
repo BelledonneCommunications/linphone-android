@@ -83,14 +83,12 @@ import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
-import org.linphone.core.Buffer;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallLog;
 import org.linphone.core.CallParams;
 import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatMessageListener;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
@@ -159,7 +157,7 @@ import static android.media.AudioManager.STREAM_VOICE_CALL;
  * Add Service Listener to react to Linphone state changes.
  *
  */
-public class LinphoneManager implements CoreListener, ChatMessageListener, SensorEventListener, AccountCreatorListener {
+public class LinphoneManager implements CoreListener, SensorEventListener, AccountCreatorListener {
 
 	private static LinphoneManager instance;
 	private Context mServiceContext;
@@ -202,16 +200,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 	private Address mCurrentChatRoomAddress;
 
 	public String wizardLoginViewDomain = null;
-
-	private static List<ChatMessageListener> simpleListeners = new ArrayList<ChatMessageListener>();
-	public static void addListener(ChatMessageListener listener) {
-		if (!simpleListeners.contains(listener)) {
-			simpleListeners.add(listener);
-		}
-	}
-	public static void removeListener(ChatMessageListener listener) {
-		simpleListeners.remove(listener);
-	}
 
 	protected LinphoneManager(final Context c) {
 		sExited = false;
@@ -384,68 +372,6 @@ public class LinphoneManager implements CoreListener, ChatMessageListener, Senso
 		setGsmIdle(gsmIdle);
 
 		return instance;
-	}
-
-	public void setUploadPendingFileMessage(ChatMessage message){
-		mUploadPendingFileMessage = message;
-	}
-
-	public ChatMessage getMessageUploadPending(){
-		return mUploadPendingFileMessage;
-	}
-
-	public void setUploadingImage(byte[] array){
-		this.mUploadingImage = array;
-	}
-
-	@Override
-	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-		if (state == ChatMessage.State.FileTransferDone) {
-			if (msg.isOutgoing() && mUploadingImage != null) {
-				mUploadPendingFileMessage = null;
-				mUploadingImage = null;
-			} else {
-				LinphoneUtils.storeImage(getContext(), msg);
-			}
-		}
-
-		if (state == ChatMessage.State.FileTransferError) {
-			LinphoneUtils.displayErrorAlert(getString(R.string.image_transfert_error), LinphoneActivity.instance());
-		}
-
-		for (ChatMessageListener l: simpleListeners) {
-			l.onMsgStateChanged(msg, state);
-		}
-	}
-
-	@Override
-	public void onFileTransferRecv(ChatMessage msg, Content content, Buffer buffer) {
-	}
-
-	@Override
-	public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
-		if (mUploadingImage != null && size > 0) {
-			Buffer bufferToFill = Factory.instance().createBuffer();
-			byte[] data = new byte[size];
-			if (offset + size <= mUploadingImage.length) {
-				for (int i = 0; i < size; i++) {
-					data[i] = mUploadingImage[i + offset];
-				}
-				bufferToFill.setContent(data, size);
-				bufferToFill.setSize(size);
-				return bufferToFill;
-			} else {
-				Log.e("Error, upload task asking for more bytes( " + (size+offset) + " ) than available (" + mUploadingImage.length + ")");
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void onFileTransferProgressIndication(ChatMessage msg, Content content, int offset, int total) {
-		for (ChatMessageListener l: simpleListeners) {
-			l.onFileTransferProgressIndication(msg, content, offset, total);
-		}
 	}
 
 	private boolean isPresenceModelActivitySet() {

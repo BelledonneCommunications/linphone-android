@@ -63,7 +63,7 @@ import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
-import org.linphone.receivers.ContactsUpdatedListener;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.ui.ListSelectionHelper;
 
 import java.io.File;

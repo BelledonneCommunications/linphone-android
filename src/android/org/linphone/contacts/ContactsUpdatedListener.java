@@ -1,4 +1,4 @@
-package org.linphone.receivers;
+package org.linphone.contacts;
 
 /*
 ContactsUpdatedListener.java

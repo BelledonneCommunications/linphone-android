@@ -46,7 +46,6 @@ import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
-import org.linphone.receivers.ContactsUpdatedListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
