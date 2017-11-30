@@ -166,6 +166,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			String displayName;
 
 		    if (message.isOutgoing()) {
+			    message.setListener(ChatEventsAdapter.this);
 			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 
 			    if (status == ChatMessage.State.InProgress) {
@@ -450,7 +451,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 
 	@Override
 	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-
+		notifyDataSetInvalidated();
 	}
 
 	/*
