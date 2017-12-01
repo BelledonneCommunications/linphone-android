@@ -315,11 +315,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 							if (newState == ChatRoom.State.Created) {
 								mWaitLayout.setVisibility(View.GONE);
-								LinphoneActivity.instance().goToChat(cr.getConferenceAddress().asStringUriOnly());
+								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
 								mWaitLayout.setVisibility(View.GONE);
 								displayChatRoomError();
-								Log.e("Group chat room for address " + cr.getConferenceAddress() + " has failed !");
+								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
 							}
 						}
 					});

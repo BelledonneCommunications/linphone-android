@@ -23,8 +23,14 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.core.Address;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.mediastream.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -62,7 +68,27 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		public void onClick(View v) {
 			if (LinphoneActivity.isInstanciated()) {
 				String tag = (String)v.getTag();
-				LinphoneActivity.instance().displayChat(tag, null, null);
+				Core lc = LinphoneManager.getLc();
+				Address participant = Factory.instance().createAddress(tag);
+				ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+				if (room != null) {
+					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+				} else {
+					//TODO wait layout
+					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+					chatRoom.setListener(new ChatRoomListenerStub() {
+						@Override
+						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+							if (newState == ChatRoom.State.Created) {
+								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+							} else if (newState == ChatRoom.State.CreationFailed) {
+								//TODO error
+								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+							}
+						}
+					});
+					chatRoom.addParticipant(participant);
+				}
 			}
 		}
 	};
