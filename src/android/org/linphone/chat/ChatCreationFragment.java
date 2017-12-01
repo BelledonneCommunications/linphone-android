@@ -253,22 +253,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		updateListSelected();
 	}
 
-	private void displayChatRoomError() {
-		final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_creation_failed));
-		Button delete = dialog.findViewById(R.id.delete_button);
-		Button cancel = dialog.findViewById(R.id.cancel);
-		delete.setVisibility(View.GONE);
-		cancel.setText(getString(R.string.ok));
-		cancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				dialog.dismiss();
-			}
-		});
-
-		dialog.show();
-	}
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (mContactsSelected != null && mContactsSelected.size() > 0) {
@@ -318,7 +302,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
 								mWaitLayout.setVisibility(View.GONE);
-								displayChatRoomError();
+								LinphoneActivity.instance().displayChatRoomError();
 								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
 							}
 						}

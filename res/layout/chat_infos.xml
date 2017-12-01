@@ -134,23 +134,7 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/waitScreen"
-        android:clickable="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#99c4c4c4">
-
-        <ProgressBar
-            android:indeterminate="true"
-            android:indeterminateTint="@color/colorA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-
-        </ProgressBar>
-
-    </RelativeLayout>
+    <include layout="@layout/wait_layout" android:id="@+id/waitScreen"/>
 
 </RelativeLayout>
 

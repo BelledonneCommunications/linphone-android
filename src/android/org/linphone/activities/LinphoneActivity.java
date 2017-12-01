@@ -952,6 +952,22 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		toast.show();
 	}
 
+	public void displayChatRoomError() {
+		final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_creation_failed));
+		Button delete = dialog.findViewById(R.id.delete_button);
+		Button cancel = dialog.findViewById(R.id.cancel);
+		delete.setVisibility(View.GONE);
+		cancel.setText(getString(R.string.ok));
+		cancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
+	}
+
 	public Dialog displayDialog(String text){
 		Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

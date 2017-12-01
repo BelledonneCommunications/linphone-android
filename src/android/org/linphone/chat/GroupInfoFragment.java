@@ -181,7 +181,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
 								mWaitLayout.setVisibility(View.GONE);
-								displayChatRoomError();
+								LinphoneActivity.instance().displayChatRoomError();
 								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
 							}
 						}
@@ -292,22 +292,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	    mConfirmButton.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.INVISIBLE);
 	    mAddParticipantsButton.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
     }
-
-	private void displayChatRoomError() {
-		final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_creation_failed));
-		Button delete = dialog.findViewById(R.id.delete_button);
-		Button cancel = dialog.findViewById(R.id.cancel);
-		delete.setVisibility(View.GONE);
-		cancel.setText(getString(R.string.ok));
-		cancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				dialog.dismiss();
-			}
-		});
-
-		dialog.show();
-	}
 
     private void displayMeAdminStatusUpdated() {
 	    if (mAdminStateChangedDialog != null) mAdminStateChangedDialog.dismiss();

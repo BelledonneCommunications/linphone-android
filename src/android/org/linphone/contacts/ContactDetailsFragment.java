@@ -42,6 +42,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	private LinphoneContact contact;
 	private ImageView editContact, deleteContact, back;
 	private TextView organization;
+	private RelativeLayout mWaitLayout;
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
@@ -74,15 +76,17 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				if (room != null) {
 					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 				} else {
-					//TODO wait layout
+					mWaitLayout.setVisibility(View.VISIBLE);
 					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
 					chatRoom.setListener(new ChatRoomListenerStub() {
 						@Override
 						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 							if (newState == ChatRoom.State.Created) {
+								mWaitLayout.setVisibility(View.GONE);
 								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
-								//TODO error
+								mWaitLayout.setVisibility(View.GONE);
+								LinphoneActivity.instance().displayChatRoomError();
 								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
 							}
 						}
@@ -102,6 +106,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		if (getArguments() != null) {
 			displayChatAddressOnly = getArguments().getBoolean("ChatAddressOnly");
 		}
+
+		mWaitLayout = view.findViewById(R.id.waitScreen);
+		mWaitLayout.setVisibility(View.GONE);
 
 		editContact = view.findViewById(R.id.editContact);
 		editContact.setOnClickListener(this);
