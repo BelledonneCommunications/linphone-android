@@ -27,15 +27,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.mediastream.Log;
 
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts, goToContact, back;
@@ -43,6 +49,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView contactPicture, callDirection;
 	private TextView contactName, contactAddress, time, date;
 	private String sipUri, displayName, pictureUri;
+	private RelativeLayout mWaitLayout;
 	private LinphoneContact contact;
 
 	@Override
@@ -56,6 +63,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		String callDate = getArguments().getString("CallDate");
 
 		view = inflater.inflate(R.layout.history_detail, container, false);
+
+		mWaitLayout = view.findViewById(R.id.waitScreen);
+		mWaitLayout.setVisibility(View.GONE);
 
 		dialBack = (ImageView) view.findViewById(R.id.call);
 		dialBack.setOnClickListener(this);
@@ -159,12 +169,32 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} if (id == R.id.call) {
 			LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, displayName, pictureUri == null ? null : Uri.parse(pictureUri));
 		} else if (id == R.id.chat) {
-			LinphoneActivity.instance().displayChat(sipUri, null, null);
+			Core lc = LinphoneManager.getLc();
+			Address participant = Factory.instance().createAddress(sipUri);
+			ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+			if (room != null) {
+				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+			} else {
+				mWaitLayout.setVisibility(View.VISIBLE);
+				ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+				chatRoom.setListener(new ChatRoomListenerStub() {
+					@Override
+					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+						if (newState == ChatRoom.State.Created) {
+							mWaitLayout.setVisibility(View.GONE);
+							LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+						} else if (newState == ChatRoom.State.CreationFailed) {
+							mWaitLayout.setVisibility(View.GONE);
+							LinphoneActivity.instance().displayChatRoomError();
+							Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+						}
+					}
+				});
+				chatRoom.addParticipant(participant);
+			}
 		} else if (id == R.id.add_contact) {
-			String uri = sipUri;
-			Address addr = null;
-			addr = Factory.instance().createAddress(sipUri);
-			uri = addr.asStringUriOnly();
+			Address addr = Factory.instance().createAddress(sipUri);
+			String uri = addr.asStringUriOnly();
 			if (addr != null && addr.getDisplayName() != null)
 				LinphoneActivity.instance().displayContactsForEdition(addr.asStringUriOnly(), addr.getDisplayName());
 			else
