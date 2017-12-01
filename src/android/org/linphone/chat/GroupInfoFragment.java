@@ -138,7 +138,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 				}
 			}
 		});
-		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft() ? View.GONE : View.VISIBLE);
+		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft() ? View.GONE : mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
 
 		mAddParticipantsButton = view.findViewById(R.id.addParticipants);
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
