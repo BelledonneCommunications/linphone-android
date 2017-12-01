@@ -212,7 +212,6 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized LinphoneContact findContactFromAddress(Address address) {
-		String sipUri = address.asStringUriOnly();
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		Friend lf = lc.findFriend(address);
 		if (lf != null) {
