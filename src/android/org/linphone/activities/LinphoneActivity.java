@@ -730,6 +730,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", sipUri);
 		changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+
+		LinphoneService.instance().resetMessageNotifCount();
+		LinphoneService.instance().removeMessageNotification();
+		displayMissedChats(getUnreadMessageCount());
 	}
 
 	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled, boolean isGoBack) {
