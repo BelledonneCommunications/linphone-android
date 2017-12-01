@@ -434,7 +434,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			if (mLogs == null || mLogs.size() < position) return view;
 
 			final CallLog log = mLogs.get(position);
-			long timestamp = log.getStartDate();
+			long timestamp = log.getStartDate() * 1000;
 			Address address;
 
 			holder.contact.setSelected(true); // For automated horizontal scrolling of long texts
@@ -447,7 +447,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 			if (position > 0) {
 				CallLog previousLog = mLogs.get(position-1);
-				long previousTimestamp = previousLog.getStartDate();
+				long previousTimestamp = previousLog.getStartDate() * 1000;
 				Calendar previousLogTime = Calendar.getInstance();
 				previousLogTime.setTimeInMillis(previousTimestamp);
 
