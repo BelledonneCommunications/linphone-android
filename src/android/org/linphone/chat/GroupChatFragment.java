@@ -406,7 +406,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			}
 		}
 
-		if (mChatRoom.isReadOnly()) {
+		if (mChatRoom.hasBeenLeft()) {
 			setReadOnly();
 		}
 	}
@@ -679,7 +679,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-		if (mChatRoom.isReadOnly()) {
+		if (mChatRoom.hasBeenLeft()) {
 			setReadOnly();
 		}
 	}

@@ -94,7 +94,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mIsEditionEnabled = getArguments().getBoolean("isEditionEnabled");
 		mSubject = getArguments().getString("subject");
 
-		if (mChatRoom != null && mChatRoom.isReadOnly()) {
+		if (mChatRoom != null && mChatRoom.hasBeenLeft()) {
 			mIsEditionEnabled = false;
 		}
 
@@ -138,7 +138,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 				}
 			}
 		});
-		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.isReadOnly() ? View.GONE : View.VISIBLE);
+		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft() ? View.GONE : View.VISIBLE);
 
 		mAddParticipantsButton = view.findViewById(R.id.addParticipants);
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
