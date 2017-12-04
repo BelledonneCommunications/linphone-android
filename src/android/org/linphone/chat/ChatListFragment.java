@@ -92,8 +92,10 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 			}
 
 			@Override
-			public void onChatRoomInstantiated(Core lc, ChatRoom cr) {
-				refreshChatRoomsList();
+			public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
+				if (state == ChatRoom.State.Created) {
+					refreshChatRoomsList();
+				}
 			}
 		};
 

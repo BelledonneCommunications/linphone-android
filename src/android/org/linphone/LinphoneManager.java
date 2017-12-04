@@ -1295,6 +1295,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void onCallStatsUpdated(final Core lc, final Call call, final CallStats stats) {}
 
+	@Override
+	public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
+
+	}
+
 	public void onCallEncryptionChanged(Core lc, Call call,
 			boolean encrypted, String authenticationToken) {
 	}
@@ -1585,11 +1590,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	@Override
 	public void onTransferStateChanged(Core lc, Call call,
 			State new_call_state) {
-
-	}
-
-	@Override
-	public void onChatRoomInstantiated(Core lc, ChatRoom cr) {
 
 	}
 
