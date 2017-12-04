@@ -110,6 +110,9 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public ContentResolver getContentResolver() {
+		if (contentResolver == null) {
+			contentResolver = context.getContentResolver();
+		}
 		return contentResolver;
 	}
 
@@ -169,8 +172,12 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public boolean hasContactsAccess() {
-		if (context == null)
+		if (context == null) {
+			context = LinphoneManager.getInstance().getContext();
+		}
+		if (context == null) {
 			return false;
+		}
 		boolean contactsR = (PackageManager.PERMISSION_GRANTED ==
 				context.getPackageManager().checkPermission(android.Manifest.permission.READ_CONTACTS, context.getPackageName()));
 		context.getPackageManager();
@@ -317,7 +324,7 @@ public class ContactsManager extends ContentObserver {
 
 		if (hasContactsAccess()) {
 			List<String> nativeIds = new ArrayList<String>();
-			Cursor c = getContactsCursor(contentResolver);
+			Cursor c = getContactsCursor();
 			if (c != null) {
 				while (c.moveToNext()) {
 					String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
@@ -344,7 +351,7 @@ public class ContactsManager extends ContentObserver {
 
 			boolean isOrgVisible = LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.display_contact_organization);
 			if (isOrgVisible) {
-				c = getOrganizationCursor(contentResolver);
+				c = getOrganizationCursor();
 				if (c != null) {
 					while (c.moveToNext()) {
 				    	String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
@@ -377,7 +384,7 @@ public class ContactsManager extends ContentObserver {
 				    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
 			Log.i("[ContactsManager] Step 1 for " + contacts.size() + " contacts: " + time + " elapsed since starting");
 
-			c = getPhonesCursor(contentResolver);
+			c = getPhonesCursor();
 			if (c != null) {
 				while (c.moveToNext()) {
 					String id = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
@@ -389,7 +396,7 @@ public class ContactsManager extends ContentObserver {
 				}
 				c.close();
 			}
-			c = getSipCursor(contentResolver);
+			c = getSipCursor();
 			if (c != null) {
 				while (c.moveToNext()) {
 					String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
@@ -487,9 +494,8 @@ public class ContactsManager extends ContentObserver {
 			ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
 		}
 
-		ContentResolver cr = ContactsManager.getInstance().getContentResolver();
 		try {
-			cr.applyBatch(ContactsContract.AUTHORITY, ops);
+			getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
 		} catch (Exception e) {
 			Log.e(e);
 		}
@@ -500,7 +506,7 @@ public class ContactsManager extends ContentObserver {
 		return context.getString(resourceID);
 	}
 
-	private Cursor getContactsCursor(ContentResolver cr) {
+	private Cursor getContactsCursor() {
 		String req = "(" + Data.MIMETYPE + " = '" + CommonDataKinds.Phone.CONTENT_ITEM_TYPE
 				+ "' AND " + CommonDataKinds.Phone.NUMBER + " IS NOT NULL "
 				+ " OR (" + Data.MIMETYPE + " = '" + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
@@ -508,7 +514,7 @@ public class ContactsManager extends ContentObserver {
 		String[] projection = new String[] { Data.CONTACT_ID, Data.DISPLAY_NAME_PRIMARY };
 		String query = Data.DISPLAY_NAME_PRIMARY + " IS NOT NULL AND (" + req + ")";
 
-		Cursor cursor = cr.query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME_PRIMARY + ") COLLATE UNICODE ASC");
+		Cursor cursor = getContentResolver().query(Data.CONTENT_URI, projection, query, null, " lower(" + Data.DISPLAY_NAME_PRIMARY + ") COLLATE UNICODE ASC");
 		if (cursor == null) {
 			return cursor;
 		}
@@ -533,24 +539,24 @@ public class ContactsManager extends ContentObserver {
 		return result;
 	}
 
-	private Cursor getPhonesCursor(ContentResolver cr) {
-		Cursor cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+	private Cursor getPhonesCursor() {
+		Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 			     new String[] { ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.CONTACT_ID },
 			     null, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " ASC");
 		return cursor;
 	}
 
-	private Cursor getSipCursor(ContentResolver cr) {
+	private Cursor getSipCursor() {
 		String select = ContactsContract.Data.MIMETYPE + "=?";
 		String[] projection = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS };
-		Cursor c = cr.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE }, null);
+		Cursor c = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE }, null);
 		return c;
 	}
 
-	private Cursor getOrganizationCursor(ContentResolver cr) {
+	private Cursor getOrganizationCursor() {
 		String select = ContactsContract.Data.MIMETYPE + "=?";
 		String[] projection = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.CommonDataKinds.Organization.COMPANY };
-		Cursor c = cr.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE }, null);
+		Cursor c = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE }, null);
 		return c;
 	}
 }
