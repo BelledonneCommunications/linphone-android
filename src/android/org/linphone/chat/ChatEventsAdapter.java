@@ -143,6 +143,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 	    holder.messageStatus.setVisibility(View.INVISIBLE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
+	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
 		    holder.delete.setOnCheckedChangeListener(null);
@@ -293,7 +294,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				}
 
 			    holder.fileTransferLayout.setVisibility(View.GONE);
-				if (message.getState() == ChatMessage.State.InProgress) {
+				if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Only for file transfer InProgress state
 					message.setListener(this); // add the listener for file upload progress display
 					holder.messageSendingInProgress.setVisibility(View.GONE);
 					holder.fileTransferLayout.setVisibility(View.VISIBLE);
@@ -443,6 +444,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			holder.fileTransferProgressBar.setVisibility(View.GONE);
 			holder.fileTransferLayout.setVisibility(View.GONE);
 			displayAttachedFile(message, holder);
+			message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
 		} else {
 			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
