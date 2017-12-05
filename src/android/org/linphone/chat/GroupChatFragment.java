@@ -512,7 +512,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		String text = mMessageTextToSend.getText().toString();
 
 		ChatMessage msg;
-		// For now we have to either send the picture or the text but not both
+		//TODO: rework when we'll send multiple files at once
 		if (mFilesUploadLayout.getChildCount() > 0) {
 			String filePath = (String) mFilesUploadLayout.getChildAt(0).getTag();
 			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
