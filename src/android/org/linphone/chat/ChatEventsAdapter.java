@@ -259,16 +259,20 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 
 		    String externalBodyUrl = message.getExternalBodyUrl();
 		    Content fileTransferContent = message.getFileTransferInformation();
-		    String appData = message.getAppdata();
-		    if (externalBodyUrl != null) { // Incoming file transfer
-			    if (appData != null) { // Download already done, just display the result
-				    displayAttachedFile(message, holder);
-			    } else { // Attachment not yet downloaded
-				    holder.fileName.setVisibility(View.VISIBLE);
-				    holder.fileName.setText(fileTransferContent.getName());
 
-				    holder.fileTransferLayout.setVisibility(View.VISIBLE);
-				    holder.fileTransferProgressBar.setVisibility(View.GONE);
+		    if (message.getAppdata() != null) { // Something to display
+				displayAttachedFile(message, holder);
+		    }
+
+		    if (externalBodyUrl != null) { // Incoming file transfer not yet downloaded
+			    holder.fileName.setVisibility(View.VISIBLE);
+			    holder.fileName.setText(fileTransferContent.getName());
+
+			    holder.fileTransferLayout.setVisibility(View.VISIBLE);
+			    holder.fileTransferProgressBar.setVisibility(View.GONE);
+			    if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Incoming file transfer in progress
+				    holder.fileTransferAction.setVisibility(View.GONE);
+			    } else {
 				    holder.fileTransferAction.setText(mContext.getString(R.string.accept));
 				    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
 					    @Override
@@ -277,7 +281,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 							    v.setEnabled(false);
 							    String filename = message.getFileTransferInformation().getName();
 							    File file = new File(Environment.getExternalStorageDirectory(), filename);
-							    message.setAppdata(file.getPath());
 							    message.setListener(ChatEventsAdapter.this);
 							    message.setFileTransferFilepath(file.getPath());
 							    message.downloadFile();
@@ -288,26 +291,19 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 					    }
 				    });
 			    }
-		    } else if (fileTransferContent != null) { // Outgoing file transfer
-				if (appData != null) {
-					displayAttachedFile(message, holder);
-				}
-
-			    holder.fileTransferLayout.setVisibility(View.GONE);
-				if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Only for file transfer InProgress state
-					message.setListener(this); // add the listener for file upload progress display
-					holder.messageSendingInProgress.setVisibility(View.GONE);
-					holder.fileTransferLayout.setVisibility(View.VISIBLE);
-					holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
-					holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							message.cancelFileTransfer();
-							notifyDataSetChanged();
-						}
-					});
-				}
-		    }
+		    } else if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Outgoing file transfer in progress
+				message.setListener(this); // add the listener for file upload progress display
+				holder.messageSendingInProgress.setVisibility(View.GONE);
+				holder.fileTransferLayout.setVisibility(View.VISIBLE);
+				holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
+				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						message.cancelFileTransfer();
+						notifyDataSetChanged();
+					}
+				});
+			}
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
 	    } else { // Event is not chat message
@@ -405,19 +401,21 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 		holder.fileName.setText(message.getFileTransferInformation().getName());
 
 		String appData = message.getAppdata();
-		if (LinphoneUtils.isExtensionImage(appData)) {
-			holder.messageImage.setVisibility(View.VISIBLE);
-			loadBitmap(appData, holder.messageImage);
-			holder.messageImage.setTag(appData);
-		} else {
-			holder.openFileButton.setVisibility(View.VISIBLE);
-			holder.openFileButton.setTag(appData);
-			holder.openFileButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					openFile((String)v.getTag());
-				}
-			});
+		if (appData != null) {
+			if (LinphoneUtils.isExtensionImage(appData)) {
+				holder.messageImage.setVisibility(View.VISIBLE);
+				loadBitmap(appData, holder.messageImage);
+				holder.messageImage.setTag(appData);
+			} else {
+				holder.openFileButton.setVisibility(View.VISIBLE);
+				holder.openFileButton.setTag(appData);
+				holder.openFileButton.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						openFile((String) v.getTag());
+					}
+				});
+			}
 		}
 	}
 
@@ -443,8 +441,8 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 		if (offset == total) {
 			holder.fileTransferProgressBar.setVisibility(View.GONE);
 			holder.fileTransferLayout.setVisibility(View.GONE);
+
 			displayAttachedFile(message, holder);
-			message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
 		} else {
 			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
@@ -452,7 +450,11 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 	}
 
 	@Override
-	public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
+	public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
+		if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing()) {
+			message.setAppdata(message.getFileTransferFilepath());
+			message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
+		}
 		notifyDataSetChanged();
 	}
 
