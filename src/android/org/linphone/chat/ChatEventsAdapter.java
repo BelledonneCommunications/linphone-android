@@ -217,6 +217,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 					    break;
 				    }
 			    }
+			    if (contact == null) {
+			    	contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
+			    }
 			    if (contact != null) {
 				    if (contact.getFullName() != null) {
 					    displayName = contact.getFullName();
