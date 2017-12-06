@@ -451,8 +451,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 
 	@Override
 	public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
-		if (state == ChatMessage.State.FileTransferDone && !message.isOutgoing()) {
-			message.setAppdata(message.getFileTransferFilepath());
+		if (state == ChatMessage.State.FileTransferDone) {
+			if (!message.isOutgoing()) {
+				message.setAppdata(message.getFileTransferFilepath());
+			}
 			message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
 		}
 		notifyDataSetChanged();
