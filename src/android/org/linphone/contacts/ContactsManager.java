@@ -225,7 +225,7 @@ public class ContactsManager extends ContentObserver {
 			LinphoneContact contact = (LinphoneContact)lf.getUserData();
 			return contact;
 		}
-		return null;
+		return findContactFromPhoneNumber(address.getUsername());
 	}
 
 	public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
@@ -242,7 +242,7 @@ public class ContactsManager extends ContentObserver {
 		if (addr == null) {
 			return null;
 		}
-		addr.setMethodParam(";user=phone");
+		addr.setUriParam("user", "phone");
 		Friend lf = lc.findFriend(addr); // Without this, the hashmap inside liblinphone won't find it...
 		if (lf != null) {
 			LinphoneContact contact = (LinphoneContact)lf.getUserData();
