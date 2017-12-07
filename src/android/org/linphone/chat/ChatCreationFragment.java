@@ -181,6 +181,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
 		mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
 
+		mContactsSelectedLayout.removeAllViews();
 		if (mContactsSelected.size() > 0) {
 			mSearchAdapter.setContactsSelectedList(mContactsSelected);
 			for (ContactAddress ca : mContactsSelected) {
