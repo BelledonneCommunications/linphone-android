@@ -627,7 +627,17 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				}
 			}
 			if (!found) {
-				String displayName = LinphoneUtils.getAddressDisplayName(a);
+				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteAddr);
+				String displayName;
+				if (contact != null) {
+					if (contact.getFullName() != null) {
+						displayName = contact.getFullName();
+					} else {
+						displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
+					}
+				} else {
+					displayName = LinphoneUtils.getAddressDisplayName(a);
+				}
 				composing.add(displayName);
 			}
 		}
