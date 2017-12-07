@@ -26,9 +26,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,11 +39,14 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.EventLog;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatRoomsAdapter extends ListSelectionAdapter {
@@ -73,130 +74,142 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 	private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
 
-    public ChatRoomsAdapter(Context context, ListSelectionHelper helper, LayoutInflater inflater) {
-	    super(helper);
-	    mContext = context;
-        mLayoutInflater = inflater;
-	    mRooms = new ArrayList<>();
-	    mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
-	    mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
-    }
+	public ChatRoomsAdapter(Context context, ListSelectionHelper helper, LayoutInflater inflater) {
+		super(helper);
+		mContext = context;
+		mLayoutInflater = inflater;
+		mRooms = new ArrayList<>();
+		mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
+		mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
+	}
 
-    public void refresh() {
-	    mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
-	    notifyDataSetChanged();
-    }
+	public void refresh() {
+		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
+		Collections.sort(mRooms, new Comparator<ChatRoom>() {
+			public int compare(ChatRoom cr1, ChatRoom cr2) {
+				EventLog cr1Logs[] = cr1.getHistoryEvents(1);
+				EventLog cr2Logs[] = cr2.getHistoryEvents(1);
+				if (cr1Logs.length <= 0) return -1;
+				if (cr2Logs.length <= 0) return 1;
+				long timeDiff = cr1Logs[0].getCreationTime() - cr2Logs[0].getCreationTime();
+				if (timeDiff > 0) return 1;
+				else if (timeDiff == 0) return 0;
+				return 1;
+			}
+		});
+		notifyDataSetChanged();
+	}
 
 	/**
 	 * Adapter's methods
 	 */
 
-    @Override
-    public int getCount() {
-        return mRooms.size();
-    }
+	@Override
+	public int getCount() {
+		return mRooms.size();
+	}
 
-    @Override
-    public Object getItem(int position) {
-        return mRooms.get(position);
-    }
+	@Override
+	public Object getItem(int position) {
+		return mRooms.get(position);
+	}
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
-	    View view = null;
-	    ChatRoomViewHolder holder = null;
+	@Override
+	public View getView(int position, View convertView, ViewGroup viewGroup) {
+		View view = null;
+		ChatRoomViewHolder holder = null;
 
-	    if (convertView != null) {
-		    view = convertView;
-		    holder = (ChatRoomViewHolder) view.getTag();
-	    } else {
-		    view = mLayoutInflater.inflate(R.layout.chatlist_cell, viewGroup, false);
-		    holder = new ChatRoomViewHolder(view);
-		    view.setTag(holder);
-	    }
+		if (convertView != null) {
+			view = convertView;
+			holder = (ChatRoomViewHolder) view.getTag();
+		} else {
+			view = mLayoutInflater.inflate(R.layout.chatlist_cell, viewGroup, false);
+			holder = new ChatRoomViewHolder(view);
+			view.setTag(holder);
+		}
 
-	    ChatRoom chatRoom = mRooms.get(position);
-	    Address remoteAddress = chatRoom.getPeerAddress();
-	    Address contactAddress = remoteAddress;
-	    if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
-		    contactAddress = chatRoom.getParticipants()[0].getAddress();
-	    }
+		ChatRoom chatRoom = mRooms.get(position);
+		Address remoteAddress = chatRoom.getPeerAddress();
+		Address contactAddress = remoteAddress;
+		if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
+			contactAddress = chatRoom.getParticipants()[0].getAddress();
+		}
 
-	    LinphoneContact contact = null;
-	    String message = "";
-	    Long time;
+		LinphoneContact contact = null;
+		String message = "";
+		Long time;
 
-	    int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
-	    ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
-	    holder.lastMessageView.setText("");
-	    holder.date.setText("");
+		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
+		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
+		holder.lastMessageView.setText("");
+		holder.date.setText("");
 
-	    if (lastMessage != null) {
-		    if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
-			    holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
-			    time = lastMessage.getTime();
-			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
-		    } else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
-			    message = lastMessage.getTextContent();
-			    holder.lastMessageView.setBackgroundResource(0);
-			    time = lastMessage.getTime();
-			    holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
-			    holder.lastMessageView.setText(message);
-		    }
-	    }
+		if (lastMessage != null) {
+			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
+				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
+				time = lastMessage.getTime();
+				holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
+			} else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
+				message = lastMessage.getTextContent();
+				holder.lastMessageView.setBackgroundResource(0);
+				time = lastMessage.getTime();
+				holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
+				holder.lastMessageView.setText(message);
+			}
+		}
 
-	    holder.displayName.setSelected(true); // For animation
+		holder.displayName.setSelected(true); // For animation
 
-	    holder.contactPicture.setImageBitmap(mDefaultBitmap);
-	    if (!chatRoom.canHandleParticipants()) {
-		    contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
-		    if (contact != null) {
-			    holder.displayName.setText(contact.getFullName());
-			    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-		    } else {
-			    holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
-		    }
-	    } else if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
-		    contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
-		    if (contact != null) {
-			    holder.displayName.setText(contact.getFullName());
-			    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-		    } else {
-			    holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
-		    }
-	    } else {
-		    holder.displayName.setText(chatRoom.getSubject());
-		    holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
-	    }
+		holder.contactPicture.setImageBitmap(mDefaultBitmap);
+		if (!chatRoom.canHandleParticipants()) {
+			contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
+			if (contact != null) {
+				holder.displayName.setText(contact.getFullName());
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+			} else {
+				holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
+			}
+		} else if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
+			contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
+			if (contact != null) {
+				holder.displayName.setText(contact.getFullName());
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+			} else {
+				holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
+			}
+		} else {
+			holder.displayName.setText(chatRoom.getSubject());
+			holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
+		}
 
-	    if (unreadMessagesCount > 0) {
-		    holder.unreadMessages.setVisibility(View.VISIBLE);
-		    holder.unreadMessages.setText(String.valueOf(unreadMessagesCount));
-		    if (unreadMessagesCount > 99) {
-			    holder.unreadMessages.setTextSize(12);
-		    }
-		    holder.unreadMessages.setVisibility(View.VISIBLE);
-		    holder.displayName.setTypeface(null, Typeface.BOLD);
-	    } else {
-		    holder.unreadMessages.setVisibility(View.GONE);
-		    holder.displayName.setTypeface(null, Typeface.NORMAL);
-	    }
+		if (unreadMessagesCount > 0) {
+			holder.unreadMessages.setVisibility(View.VISIBLE);
+			holder.unreadMessages.setText(String.valueOf(unreadMessagesCount));
+			if (unreadMessagesCount > 99) {
+				holder.unreadMessages.setTextSize(12);
+			}
+			holder.unreadMessages.setVisibility(View.VISIBLE);
+			holder.displayName.setTypeface(null, Typeface.BOLD);
+		} else {
+			holder.unreadMessages.setVisibility(View.GONE);
+			holder.displayName.setTypeface(null, Typeface.NORMAL);
+		}
 
-	    if (isEditionEnabled()) {
-		    holder.unreadMessages.setVisibility(View.GONE);
-		    holder.delete.setOnCheckedChangeListener(null);
-		    holder.delete.setVisibility(View.VISIBLE);
-		    holder.delete.setChecked(getSelectedItemsPosition().contains(position));
-		    holder.delete.setTag(position);
-		    holder.delete.setOnCheckedChangeListener(getDeleteListener());
-	    } else {
-		    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
-	    }
-	    return view;
-    }
+		if (isEditionEnabled()) {
+			holder.unreadMessages.setVisibility(View.GONE);
+			holder.delete.setOnCheckedChangeListener(null);
+			holder.delete.setVisibility(View.VISIBLE);
+			holder.delete.setChecked(getSelectedItemsPosition().contains(position));
+			holder.delete.setTag(position);
+			holder.delete.setOnCheckedChangeListener(getDeleteListener());
+		} else {
+			holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
+		}
+		return view;
+	}
 }
