@@ -150,11 +150,12 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			updateListSelected();
 		}
 
+		mOnlyDisplayLinphoneContacts = true;
 		if (savedInstanceState != null ) {
-			mOnlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact");
-			updateList();
+			mOnlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact", true);
 		}
 		mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts);
+		updateList();
 
 		displayChatCreation();
 

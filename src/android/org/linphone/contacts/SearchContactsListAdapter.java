@@ -116,12 +116,12 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	public List<ContactAddress> getContactsList() {
 		List<ContactAddress> list = new ArrayList<>();
 		if (ContactsManager.getInstance().hasContacts()) {
-			List<LinphoneContact> contacts = mOnlySipContact ? ContactsManager.getInstance().getContacts() : ContactsManager.getInstance().getSIPContacts();
+			List<LinphoneContact> contacts = mOnlySipContact ? ContactsManager.getInstance().getSIPContacts() : ContactsManager.getInstance().getContacts();
 			for (LinphoneContact contact : contacts) {
 				for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-					if (noa.isSIPAddress()) {
+					if (!mOnlySipContact || (mOnlySipContact && contact.getPresenceModelForUriOrTel(noa.getValue()) != null)) {
 						Address address = LinphoneManager.getLc().interpretUrl(noa.getValue());
-						ContactAddress ca = new ContactAddress(contact , address.asString(), contact.isFriend());
+						ContactAddress ca = new ContactAddress(contact, address.asString(), contact.isFriend());
 						list.add(ca);
 					}
 				}
@@ -211,7 +211,9 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
 		}
 
+		String address = null;
 		if (c != null) {
+			address = c.getPresenceModelForUriOrTel(a);
 			holder.name.setVisibility(View.VISIBLE);
 			holder.name.setText(c.getFullName());
 		} else {
@@ -219,7 +221,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		}
 		holder.address.setText(a);
 		if (holder.linphoneContact != null) {
-			if (contact.isLinphoneContact()) {
+			if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
 				holder.linphoneContact.setVisibility(View.VISIBLE);
 			} else {
 				holder.linphoneContact.setVisibility(View.GONE);
@@ -232,7 +234,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				holder.isSelect.setVisibility(View.INVISIBLE);
 			}
 		}
-		view.setTag(R.id.contact_search_name, a);
+		view.setTag(R.id.contact_search_name, address != null ? address : a);
 		if (listener != null)
 			view.setOnClickListener(listener);
 		return view;
