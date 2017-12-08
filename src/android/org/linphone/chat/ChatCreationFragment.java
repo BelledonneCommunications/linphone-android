@@ -137,11 +137,13 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mContactsList.setAdapter(mSearchAdapter);
 		mContactsList.setOnItemClickListener(this);
 		if (savedInstanceState != null && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
+			mContactsSelectedLayout.removeAllViews();
 			// We need to get all contacts not only sip
 			for (String uri : savedInstanceState.getStringArrayList("mContactsSelected")) {
 				for (ContactAddress ca : mSearchAdapter.getContactsList()) {
 					if (ca.getAddress().compareTo(uri) == 0) {
-						updateContactsClick(ca, mSearchAdapter.getContactsSelectedList());
+						ca.setView(null);
+						addSelectedContactAddress(ca);
 						break;
 					}
 				}
