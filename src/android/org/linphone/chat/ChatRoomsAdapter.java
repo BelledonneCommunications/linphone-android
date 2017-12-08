@@ -40,6 +40,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.EventLog;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
 
@@ -89,10 +90,10 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			public int compare(ChatRoom cr1, ChatRoom cr2) {
 				EventLog cr1Logs[] = cr1.getHistoryEvents(1);
 				EventLog cr2Logs[] = cr2.getHistoryEvents(1);
-				if (cr1Logs.length <= 0) return -1;
-				if (cr2Logs.length <= 0) return 1;
+				if (cr1Logs.length <= 0)  return 1;
+				if (cr2Logs.length <= 0)  return -1;
 				long timeDiff = cr1Logs[0].getCreationTime() - cr2Logs[0].getCreationTime();
-				if (timeDiff > 0) return 1;
+				if (timeDiff > 0) return -1;
 				else if (timeDiff == 0) return 0;
 				return 1;
 			}
