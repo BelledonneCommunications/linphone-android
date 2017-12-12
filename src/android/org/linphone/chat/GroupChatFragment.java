@@ -64,6 +64,8 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.contacts.ContactsUpdatedListener;
+import org.linphone.core.Reason;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
 
 import java.io.File;
@@ -603,6 +605,19 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onChatMessageReceived(ChatRoom cr, EventLog event) {
 		cr.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
+
+		if (event.getType() == EventLog.Type.ConferenceChatMessage) {
+			ChatMessage message = event.getChatMessage();
+			if (message.getErrorInfo() != null && message.getErrorInfo().getReason() == Reason.UnsupportedContent) {
+				Log.w("Message received but content is unsupported, do not display it");
+				return;
+			}
+
+			if (!message.hasTextContent() && message.getFileTransferInformation() == null) {
+				Log.w("Message has no text or file transfer information to display, ignoring it...");
+				return;
+			}
+		}
 
 		ChatMessage msg = event.getChatMessage();
 		String externalBodyUrl = msg.getExternalBodyUrl();

@@ -99,6 +99,7 @@ import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.Core.RegistrationState;
 import org.linphone.core.Core.ConfiguringState;
 import org.linphone.core.CoreException;
+import org.linphone.core.ErrorInfo;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListener;
 import org.linphone.core.Event;
@@ -1066,6 +1067,16 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 		if (mCurrentChatRoomAddress != null && cr.getPeerAddress().asStringUriOnly().equals(mCurrentChatRoomAddress.asStringUriOnly())) {
 			Log.i("Message received for currently displayed chat room, do not make a notification");
+			return;
+		}
+
+		if (message.getErrorInfo() != null && message.getErrorInfo().getReason() == Reason.UnsupportedContent) {
+			Log.w("Message received but content is unsupported, do not notify it");
+			return;
+		}
+
+		if (!message.hasTextContent() && message.getFileTransferInformation() == null) {
+			Log.w("Message has no text or file transfer information to display, ignoring it...");
 			return;
 		}
 
