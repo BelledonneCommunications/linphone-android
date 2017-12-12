@@ -16,6 +16,7 @@ auto_answer_replacing_calls=1
 ping_with_options=0
 rls_uri=
 use_cpim=1
+linphone_specs=groupchat 
 
 [rtp]
 audio_rtp_port=7076
