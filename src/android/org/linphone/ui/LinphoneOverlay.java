@@ -24,11 +24,13 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
+import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -51,10 +53,18 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 	public LinphoneOverlay(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs);
 		wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
+		int LAYOUT_FLAG;
+		if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+			LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+		} else {
+			LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+		}
+
 		params = new WindowManager.LayoutParams(
 			WindowManager.LayoutParams.WRAP_CONTENT,
 			WindowManager.LayoutParams.WRAP_CONTENT,
-			WindowManager.LayoutParams.TYPE_PHONE,
+			LAYOUT_FLAG,
 			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
 			PixelFormat.TRANSLUCENT);
 		params.gravity = Gravity.TOP | Gravity.LEFT;
