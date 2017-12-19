@@ -698,8 +698,18 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onParticipantsCapabilitiesChecked(ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {
+
+	}
+
+	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
 		mEventsAdapter.addToHistory(event);
+	}
+
+	@Override
+	public void onParticipantDeviceFetched(ChatRoom cr, Address participantAddr) {
+
 	}
 
 	@Override

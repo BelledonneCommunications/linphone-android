@@ -322,6 +322,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
+	public void onParticipantsCapabilitiesChecked(ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {
+
+	}
+
+	@Override
 	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event_log) {
 		if (mChatRoom.getMe().isAdmin() != mIsEditionEnabled) {
 			// Either we weren't admin and we are now or the other way around
@@ -369,6 +374,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 
 	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {
+
+	}
+
+	@Override
+	public void onParticipantDeviceFetched(ChatRoom cr, Address participantAddr) {
 
 	}
 
