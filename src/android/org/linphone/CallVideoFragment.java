@@ -23,12 +23,16 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.compatibility.CompatibilityScaleGestureDetector;
 import org.linphone.compatibility.CompatibilityScaleGestureListener;
 import org.linphone.core.LinphoneCall;
+import org.linphone.core.LinphoneCore;
+import org.linphone.core.VideoSize;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -82,6 +86,7 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				mCaptureView = surface;
 				LinphoneManager.getLc().setPreviewWindow(mCaptureView);
+				resizePreview();
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -139,6 +144,33 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 		}
 	}
 
+	private void resizePreview() {
+		LinphoneCore lc = LinphoneManager.getLc();
+		if (lc.getCallsNb() > 0) {
+			LinphoneCall call = lc.getCurrentCall();
+			if (call == null) {
+				call = lc.getCalls()[0];
+			}
+			if (call == null) return;
+
+			DisplayMetrics metrics = new DisplayMetrics();
+			getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			int screenHeight = metrics.heightPixels;
+			int maxHeight = screenHeight / 4; // Let's take at most 1/4 of the screen for the camera preview
+
+			VideoSize videoSize = call.getCurrentParams().getSentVideoSize(); // It already takes care of rotation
+			int width = videoSize.width;
+			int height = videoSize.height;
+
+			Log.d("Video height is " + height + ", width is " + width);
+			width = width * maxHeight / height;
+			height = maxHeight;
+
+			mCaptureView.getHolder().setFixedSize(width, height);
+			Log.d("Video preview size set to " + width + "x" + height);
+		}
+	}
+
 	private void fixZOrder(SurfaceView video, SurfaceView preview) {
 		video.setZOrderOnTop(false);
 		preview.setZOrderOnTop(true);
@@ -177,6 +209,8 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
 		mGestureDetector = new GestureDetector(inCallActivity, this);
 		mScaleDetector = Compatibility.getScaleGestureDetector(inCallActivity, this);
+
+		resizePreview();
 	}
 
 	@Override
