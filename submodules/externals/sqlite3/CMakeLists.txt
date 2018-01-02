@@ -23,6 +23,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(SQLITE3 C)
 
+
 option(ENABLE_STATIC "Build static library (default is shared library)." OFF)
 
 
