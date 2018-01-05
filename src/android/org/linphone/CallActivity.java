@@ -132,6 +132,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private HashMap<String, String> mEncoderTexts;
 	private HashMap<String, String> mDecoderTexts;
 
+	private boolean oldIsSpeakerEnabled = false;
+
 	public static CallActivity instance() {
 		return instance;
 	}
@@ -1255,6 +1257,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		LinphoneManager.getInstance().changeStatusToOnline();
 		LinphoneManager.getInstance().enableProximitySensing(false);
 
+		unregisterReceiver(headsetReceiver);
+
 		if (mControlsHandler != null && mControls != null) {
 			mControlsHandler.removeCallbacks(mControls);
 		}
@@ -1766,13 +1770,15 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				if (intent.hasExtra("state")) {
 					switch (intent.getIntExtra("state", 0)) {
 						case 0:
-							LinphoneManager.getInstance().routeAudioToSpeaker();
-							isSpeakerEnabled = true;
-							speaker.setEnabled(true);
-							refreshInCallActions();
+							if (oldIsSpeakerEnabled) {
+								LinphoneManager.getInstance().routeAudioToSpeaker();
+								isSpeakerEnabled = true;
+								speaker.setEnabled(true);
+							}
 							break;
 						case 1:
 							LinphoneManager.getInstance().routeAudioToReceiver();
+							oldIsSpeakerEnabled = isSpeakerEnabled;
 							isSpeakerEnabled = false;
 							speaker.setEnabled(false);
 							break;
