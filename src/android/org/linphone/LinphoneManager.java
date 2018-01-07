@@ -361,9 +361,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		// H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
 		H264Helper.setH264Mode(H264Helper.MODE_AUTO, getLc());
 
-		TelephonyManager tm = (TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE);
-		boolean gsmIdle = tm.getCallState() == TelephonyManager.CALL_STATE_IDLE;
-		setGsmIdle(gsmIdle);
 
 		return instance;
 	}
@@ -1322,33 +1319,6 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		Log.i("New registration state ["+state+"]");
 		if(LinphoneManager.getLc().getDefaultProxyConfig() == null){
 			subscribeFriendList(false);
-		}
-	}
-
-	private int savedMaxCallWhileGsmIncall;
-	private synchronized void preventSIPCalls() {
-		if (savedMaxCallWhileGsmIncall != 0) {
-			Log.w("SIP calls are already blocked due to GSM call running");
-			return;
-		}
-		savedMaxCallWhileGsmIncall = mLc.getMaxCalls();
-		mLc.setMaxCalls(0);
-	}
-	private synchronized void allowSIPCalls() {
-		if (savedMaxCallWhileGsmIncall == 0) {
-			Log.w("SIP calls are already allowed as no GSM call known to be running");
-			return;
-		}
-		mLc.setMaxCalls(savedMaxCallWhileGsmIncall);
-		savedMaxCallWhileGsmIncall = 0;
-	}
-	public static void setGsmIdle(boolean gsmIdle) {
-		LinphoneManager mThis = instance;
-		if (mThis == null) return;
-		if (gsmIdle) {
-			mThis.allowSIPCalls();
-		} else {
-			mThis.preventSIPCalls();
 		}
 	}
 
