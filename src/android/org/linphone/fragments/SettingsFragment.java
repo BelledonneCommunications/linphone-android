@@ -680,6 +680,31 @@ public class SettingsFragment extends PreferencesListFragment {
 		echoCancellerCalibration.setSummary(R.string.failed);
 	}
 
+	private void initOpenH264AlertDialog(final OpenH264DownloadHelper mCodecDownloader, final CheckBoxPreference codec) {
+		mCodecDownloader.setOpenH264HelperListener(LinphoneManager.getInstance().getOpenH264HelperListener());
+		mCodecDownloader.setUserData(0, LinphoneManager.getInstance().getContext());
+		mCodecDownloader.setUserData(1, codec);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(LinphoneManager.getInstance().getContext());
+		builder.setCancelable(false);
+		builder.setMessage("Do you agree to download " + mCodecDownloader.getLicenseMessage()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (which == DialogInterface.BUTTON_POSITIVE)
+					mCodecDownloader.downloadCodec();
+			}
+		});
+		builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (which == DialogInterface.BUTTON_NEGATIVE) {
+					// Disable H264
+					codec.setChecked(false);
+				}
+			}
+		}).show();
+	}
+
 	private void initVideoSettings() {
 		initializePreferredVideoSizePreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_size_key)));
 		initializePreferredVideoFpsPreferences((ListPreference) findPreference(getString(R.string.pref_preferred_video_fps_key)));
@@ -699,6 +724,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		final OpenH264DownloadHelper mCodecDownloader = LinphoneManager.getInstance().getOpenH264DownloadHelper();
 
+		boolean h264IsHere = false;
 		for (final PayloadType pt : lc.getVideoPayloadTypes()) {
 			final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
 			codec.setTitle(pt.getMimeType());
@@ -707,20 +733,20 @@ public class SettingsFragment extends PreferencesListFragment {
 				if (getResources().getBoolean(R.bool.disable_all_patented_codecs_for_markets)) {
 					continue;
 				} else {
-					if (!Version.hasFastCpuWithAsmOptim() && pt.getMimeType().equals("H264"))
-					{
+					if (!Version.hasFastCpuWithAsmOptim() && pt.getMimeType().equals("H264")) {
 						// Android without neon doesn't support H264
 						Log.w("CPU does not have asm optimisations available, disabling H264");
 						continue;
 					}
 				}
-			}
-			if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
-				if (pt.getMimeType().equals("H264") && mCodecDownloader.isCodecFound()) {
+			} else if (pt.getMimeType().equals("H264")) {
+				h264IsHere = true;
+				if (OpenH264DownloadHelper.isOpenH264DownloadEnabled() && mCodecDownloader.isCodecFound()) {
 					codec.setSummary(mCodecDownloader.getLicenseMessage());
 					codec.setTitle("OpenH264");
 				}
 			}
+
 			codec.setDefaultValue(pt.enabled());
 
 			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -758,6 +784,27 @@ public class SettingsFragment extends PreferencesListFragment {
 				}
 			});
 
+			codecs.addPreference(codec);
+		}
+		// Adding OpenH264 button on device < 5.1
+		if (mCodecDownloader.isOpenH264DownloadEnabled() && !h264IsHere) {
+			final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
+			codec.setTitle("OpenH264");
+			codec.setSummary(mCodecDownloader.getLicenseMessage());
+			//codec.setEnabled(false);
+			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					boolean enable = (Boolean) newValue;
+					if (mCodecDownloader.isOpenH264DownloadEnabled()) {
+						if (enable && Version.getCpuAbis().contains("armeabi-v7a") && !Version.getCpuAbis().contains("x86")
+								&& !mCodecDownloader.isCodecFound()) {
+							initOpenH264AlertDialog(mCodecDownloader, codec);
+						}
+					}
+					return true;
+				}
+			});
 			codecs.addPreference(codec);
 		}
 		((CheckBoxPreference) findPreference(getString(R.string.pref_video_enable_key))).setChecked(mPrefs.isVideoEnabled());

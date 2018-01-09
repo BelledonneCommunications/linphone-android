@@ -24,7 +24,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -119,6 +122,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private boolean isVideoCallPaused = false;
 	private Dialog dialog = null;
 	private static long TimeRemind = 0;
+	private HeadsetReceiver headsetReceiver;
 
 	private LinearLayout callsList, conferenceList;
 	private LayoutInflater inflater;
@@ -132,6 +136,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private TimerTask mTask;
 	private HashMap<String, String> mEncoderTexts;
 	private HashMap<String, String> mDecoderTexts;
+
+	private boolean oldIsSpeakerEnabled = false;
 
 	public static CallActivity instance() {
 		return instance;
@@ -152,6 +158,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 		setContentView(R.layout.call);
+
+		//Earset Connectivity Broadcast Processing
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("android.intent.action.HEADSET_PLUG");
+		headsetReceiver = new HeadsetReceiver();
+		registerReceiver(headsetReceiver, intentFilter);
 
 		isTransferAllowed = getApplicationContext().getResources().getBoolean(R.bool.allow_transfers);
 
@@ -1247,6 +1259,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		LinphoneManager.getInstance().changeStatusToOnline();
 		LinphoneManager.getInstance().enableProximitySensing(false);
 
+		unregisterReceiver(headsetReceiver);
+
 		if (mControlsHandler != null && mControls != null) {
 			mControlsHandler.removeCallbacks(mControls);
 		}
@@ -1748,5 +1762,32 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 		};
 		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
+	}
+
+	////Earset Connectivity Broadcast innerClass
+	public class HeadsetReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
+				if (intent.hasExtra("state")) {
+					switch (intent.getIntExtra("state", 0)) {
+						case 0:
+							if (oldIsSpeakerEnabled) {
+								LinphoneManager.getInstance().routeAudioToSpeaker();
+								isSpeakerEnabled = true;
+								speaker.setEnabled(true);
+							}
+							break;
+						case 1:
+							LinphoneManager.getInstance().routeAudioToReceiver();
+							oldIsSpeakerEnabled = isSpeakerEnabled;
+							isSpeakerEnabled = false;
+							speaker.setEnabled(false);
+							break;
+					}
+					refreshInCallActions();
+				}
+			}
+		}
 	}
 }

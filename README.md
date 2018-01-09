@@ -8,7 +8,7 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 2. Download the Android ndk (version r11c or 15) from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
 
-3. Install _yasm_, _nasm_, _ant_, _python_, _intltoolize_, _cmake(3.7)_ and _vim-common_.
+3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_ and _cmake(>=3.7)_.
   * On 64 bits linux systems you'll need the _ia32-libs_ package.
   * With the latest Debian (multiarch), you need this:
     * `dpkg --add-architecture i386`
