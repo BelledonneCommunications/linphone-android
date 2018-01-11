@@ -316,17 +316,17 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdbserver libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
-\tif test -d "liblinphone-sdk/android-arm/share/linphonej"; then \
-\t\tcp -R liblinphone-sdk/android-arm/share/linphonej/java/* src/linphone-wrapper; \
+\tif test -d "liblinphone-sdk/android-arm/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-arm/share/linphonej/java/* src/linphone-wrapper; \\
 \tfi
-\tif test -d "liblinphone-sdk/android-armv7/share/linphonej"; then \
-\t\tcp -R iblinphone-sdk/android-armv7/share/linphonej/java/* src/linphone-wrapper; \
+\tif test -d "liblinphone-sdk/android-armv7/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-armv7/share/linphonej/java/* src/linphone-wrapper; \\
 \tfi
-\tif test -d "liblinphone-sdk/android-arm64/share/linphonej"; then \
-\t\tcp -R liblinphone-sdk/android-arm64/share/linphonej/java/* src/linphone-wrapper; \
+\tif test -d "liblinphone-sdk/android-arm64/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-arm64/share/linphonej/java/* src/linphone-wrapper; \\
 \tfi
-\tif test -d "liblinphone-sdk/android-x86/share/linphonej"; then \
-\t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \
+\tif test -d "liblinphone-sdk/android-x86/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \\
 \tfi
 
 copy-libs-mediastreamer:
