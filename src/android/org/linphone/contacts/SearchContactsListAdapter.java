@@ -149,13 +149,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	}
 
 	public void searchContacts(String search, ListView resultContactsSearch) {
-		if (search == null || search.length() == 0) {
+		if (search == null || search.length() == 0 || search.trim().length() == 0) {
 			contacts = getContactsList();
 			resultContactsSearch.setAdapter(this);
 			oldSize = 0;
 			return;
 		}
 
+		search = search.trim();
 		List<ContactAddress> result = new ArrayList<>();
 
 		String searchAddress = "sip:" + search + "@" + LinphoneManager.getLc().getDefaultProxyConfig().getDomain();
