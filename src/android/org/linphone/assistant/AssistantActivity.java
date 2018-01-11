@@ -99,7 +99,7 @@ private static AssistantActivity instance;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
-	private AccountCreator accountCreator;
+	private AccountCreator mAccountCreator;
 	private CountryListAdapter countryListAdapter;
 
 	public DialPlan country;
@@ -140,8 +140,8 @@ private static AssistantActivity instance;
 		status.enableSideMenu(false);
 
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-			accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-			accountCreator.setListener(this);
+			mAccountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+			mAccountCreator.setListener(this);
 		}
 
 		countryListAdapter = new CountryListAdapter(getApplicationContext());
@@ -229,9 +229,7 @@ private static AssistantActivity instance;
 	}
 
 	private AccountCreator loadAccountCreator(ProxyConfig cfg) {
-		AccountCreator accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		ProxyConfig cfgTab[] = LinphoneManager.getLc().getProxyConfigList();
-		accountCreator.setListener(this);
 		int n = -1;
 		for (int i = 0 ; i < cfgTab.length ; i++) {
 			if (cfgTab[i].equals(cfg)) {
@@ -240,10 +238,10 @@ private static AssistantActivity instance;
 			}
 		}
 		if (n >= 0) {
-			accountCreator.setDomain(mPrefs.getAccountDomain(n));
-			accountCreator.setUsername(mPrefs.getAccountUsername(n));
+			mAccountCreator.setDomain(mPrefs.getAccountDomain(n));
+			mAccountCreator.setUsername(mPrefs.getAccountUsername(n));
 		}
-		return accountCreator;
+		return mAccountCreator;
 	}
 
 	private void initUI() {
@@ -713,7 +711,7 @@ private static AssistantActivity instance;
 			isLink = true;
 			displayCreateAccount();
 		}
-
+		if (mAccountCreator != null) mAccountCreator.setListener(null);
 	}
 
 	@Override
