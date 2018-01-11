@@ -624,7 +624,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		try {
 			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			mLc = Factory.instance().createCore(this, mConfigFile, mLinphoneFactoryConfigFile, c);
+			mLc = Factory.instance().createCore(mConfigFile, mLinphoneFactoryConfigFile, c);
+			mLc.addListener(this);
+			mLc.start();
 			TimerTask lTask = new TimerTask() {
 				@Override
 				public void run() {
