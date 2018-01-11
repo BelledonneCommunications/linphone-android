@@ -135,9 +135,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -206,16 +204,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		mLPConfigXsd = basePath + "/lpconfig.xsd";
 		mLinphoneFactoryConfigFile = basePath + "/linphonerc";
 		mConfigFile = basePath + "/.linphonerc";
-		mLinphoneRootCaFile = basePath + "/rootca.pem";
 		mDynamicConfigFile = basePath + "/assistant_create.rc";
-		mRingSoundFile = basePath + "/ringtone.mkv";
-		mRingbackSoundFile = basePath + "/ringback.wav";
-		mPauseSoundFile = basePath + "/hold.mkv";
 		mChatDatabaseFile = basePath + "/linphone-history.db";
 		mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
 		mFriendsDatabaseFile = basePath + "/linphone-friends.db";
-		mErrorToneFile = basePath + "/error.wav";
-		mUserCertificatePath = basePath;
+		mRingSoundFile = basePath + "/ringtone.mkv";
 
 		mPrefs = LinphonePreferences.instance();
 		mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -232,17 +225,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	/** Called when the activity is first created. */
 	private final String mLPConfigXsd;
 	private final String mLinphoneFactoryConfigFile;
-	private final String mLinphoneRootCaFile;
 	private final String mDynamicConfigFile;
 	public final String mConfigFile;
-	private final String mRingSoundFile;
-	private final String mRingbackSoundFile;
-	private final String mPauseSoundFile;
 	private final String mChatDatabaseFile;
+	private final String mRingSoundFile;
 	private final String mCallLogDatabaseFile;
 	private final String mFriendsDatabaseFile;
-	private final String mErrorToneFile;
-	private final String mUserCertificatePath;
 	private byte[] mUploadingImage;
 	private Timer mTimer;
 
@@ -701,13 +689,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			Log.e(e, "cannot get version name");
 		}
 
-		mLc.setRingback(mRingbackSoundFile);
-		mLc.setRootCa(mLinphoneRootCaFile);
-		mLc.setPlayFile(mPauseSoundFile);
+
 		mLc.setChatDatabasePath(mChatDatabaseFile);
 		mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
 		mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
-		mLc.setUserCertificatesPath(mUserCertificatePath);
 		//mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
 		enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 
@@ -791,14 +776,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	private void copyAssetsFromPackage() throws IOException {
-		copyIfNotExist(R.raw.notes_of_the_optimistic, mRingSoundFile);
-		copyIfNotExist(R.raw.ringback, mRingbackSoundFile);
-		copyIfNotExist(R.raw.hold, mPauseSoundFile);
-		copyIfNotExist(R.raw.incoming_chat, mErrorToneFile);
 		copyIfNotExist(R.raw.linphonerc_default, mConfigFile);
 		copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
 		copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
-		copyFromPackage(R.raw.rootca, new File(mLinphoneRootCaFile).getName());
 		copyFromPackage(R.raw.assistant_create, new File(mDynamicConfigFile).getName());
 	}
 
