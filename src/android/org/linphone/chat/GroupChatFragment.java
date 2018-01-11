@@ -454,6 +454,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	private void addFileToPendingList(String path) {
+		if (path == null) {
+			Log.e("Can't add file to pending list because it's path is null...");
+			return;
+		}
+
 		View pendingFile = mInflater.inflate(R.layout.file_upload_cell, mFilesUploadLayout, false);
 		pendingFile.setTag(path);
 
@@ -480,6 +485,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	private void addImageToPendingList(String path) {
+		if (path == null) {
+			Log.e("Can't add image to pending list because it's path is null...");
+			return;
+		}
+
 		View pendingImage = mInflater.inflate(R.layout.image_upload_cell, mFilesUploadLayout, false);
 		pendingImage.setTag(path);
 

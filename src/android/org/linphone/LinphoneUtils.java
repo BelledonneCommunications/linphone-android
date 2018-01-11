@@ -613,6 +613,9 @@ public final class LinphoneUtils {
 				}
 
 				// TODO handle non-primary volumes
+			}// Docs storage
+			else if ("com.google.android.apps.docs.storage".equals(uri.getAuthority())) {
+				//Google doc not supported right now
 			}
 			// DownloadsProvider
 			else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
