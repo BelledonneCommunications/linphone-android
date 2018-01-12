@@ -1490,7 +1490,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	public void isAccountWithAlias(){
 		if(LinphoneManager.getLc().getDefaultProxyConfig() != null) {
 			long now = new Timestamp(new Date().getTime()).getTime();
-			if (LinphonePreferences.instance().getLinkPopupTime() == null
+			if (accountCreator != null && LinphonePreferences.instance().getLinkPopupTime() == null
 					|| Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
 				accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
 				accountCreator.isAccountExist();
