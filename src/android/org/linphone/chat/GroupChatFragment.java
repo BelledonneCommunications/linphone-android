@@ -364,8 +364,13 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			//TODO error
 			return;
 		}
-
-		mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asString());
+		Address proxyConfigContact = lc.getDefaultProxyConfig().getContact();
+		if (proxyConfigContact != null) {
+			mChatRoom = lc.findOneToOneChatRoom(proxyConfigContact, mRemoteSipAddress);
+		}
+		if (mChatRoom == null) {
+			mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
+		}
 		mChatRoom.setListener(this);
 		mChatRoom.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
