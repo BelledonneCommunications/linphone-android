@@ -143,6 +143,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 	    holder.messageStatus.setVisibility(View.INVISIBLE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
+	    holder.imdmLabel.setOnClickListener(null);
 	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
@@ -179,7 +180,11 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				    holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
 			    }
 
-			    if (status == ChatMessage.State.DeliveredToUser) {
+			    if (status == ChatMessage.State.Delivered) {
+				    holder.imdmLayout.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setText(R.string.sent);
+				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
+			    } else if (status == ChatMessage.State.DeliveredToUser) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
 				    holder.imdmLabel.setText(R.string.delivered);
@@ -194,7 +199,12 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
 				    holder.imdmLabel.setText(R.string.error);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
-				    // TODO resend
+				    holder.imdmLabel.setOnClickListener(new View.OnClickListener() {
+					    @Override
+					    public void onClick(View v) {
+							//TODO resend message
+					    }
+				    });
 			    } else if (status == ChatMessage.State.FileTransferError) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
