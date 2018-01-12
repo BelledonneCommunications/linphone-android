@@ -192,7 +192,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    } else if (status == ChatMessage.State.NotDelivered) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
-				    holder.imdmLabel.setText(R.string.resend);
+				    holder.imdmLabel.setText(R.string.error);
+				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
+				    // TODO resend
+			    } else if (status == ChatMessage.State.FileTransferError) {
+				    holder.imdmLayout.setVisibility(View.VISIBLE);
+				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
+				    holder.imdmLabel.setText(R.string.file_transfer_error);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 			    }
 

@@ -191,6 +191,7 @@
     <string name="processing_image">Processing image, can take up to a few seconds depending on the size of the file</string>
     <string name="displayed">Read</string>
     <string name="delivered">Delivered</string>
+    <string name="sent">Sent</string>
     <string name="resend">Resend</string>
     <string name="error_opening_file">An error occurs when opening this file.</string>
     <string name="conversation_information">Infos</string>
@@ -273,6 +274,7 @@
     <!-- Errors -->
     <string name="skipable_error_service_not_ready">Warning: service is not ready</string>
     <string name="error">Error</string>
+    <string name="file_transfer_error">File transfer error</string>
     <string name="warning_wrong_destination_address">Cannot build destination address from %s</string>
     <string name="error_unknown">Unknown error</string>
     <string name="error_call_declined">Call declined</string>
