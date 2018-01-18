@@ -163,6 +163,10 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			int maxHeight = screenHeight / 4; // Let's take at most 1/4 of the screen for the camera preview
 
 			VideoDefinition videoSize = call.getCurrentParams().getSentVideoDefinition(); // It already takes care of rotation
+			if (videoSize.getWidth() == 0 || videoSize.getHeight() == 0) {
+				Log.w("Couldn't get sent video definition, using default video definition");
+				videoSize = lc.getPreferredVideoDefinition();
+			}
 			int width = videoSize.getWidth();
 			int height = videoSize.getHeight();
 
@@ -170,6 +174,10 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			width = width * maxHeight / height;
 			height = maxHeight;
 
+			if (mCaptureView == null) {
+				Log.e("mCaptureView is null !");
+				return;
+			}
 			mCaptureView.getHolder().setFixedSize(width, height);
 			Log.d("Video preview size set to " + width + "x" + height);
 		}
@@ -196,8 +204,10 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 			String newDevice;
 			if (index == 1)
 				newDevice = devices[0];
-			else
+			else if (devices.length > 1)
 				newDevice = devices[1];
+			else
+				newDevice = devices[index];
 			LinphoneManager.getLc().setVideoDevice(newDevice);
 
 			CallManager.getInstance().updateCall();

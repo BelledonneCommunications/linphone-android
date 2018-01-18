@@ -183,6 +183,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    if (status == ChatMessage.State.Delivered) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setText(R.string.sent);
+				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
 			    } else if (status == ChatMessage.State.DeliveredToUser) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
