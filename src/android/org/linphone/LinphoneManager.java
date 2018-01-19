@@ -1603,12 +1603,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			ConfiguringState state, String message) {
 		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
 
+		LinphonePreferences prefs = LinphonePreferences.instance();
 		if (state == ConfiguringState.Successful) {
-			if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
+			if (prefs.isProvisioningLoginViewEnabled()) {
 				ProxyConfig proxyConfig = lc.createProxyConfig();
 				Address addr = proxyConfig.getIdentityAddress();
 				wizardLoginViewDomain = addr.getDomain();
 			}
+			prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
 		}
 	}
 
