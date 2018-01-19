@@ -50,6 +50,10 @@ class AndroidTarget(prepare.Target):
         self.toolchain_file = 'toolchains/toolchain-android-' + arch + '.cmake'
         self.output = 'liblinphone-sdk/android-' + arch
         self.external_source_path = os.path.join(current_path, 'submodules')
+        external_builders_path = os.path.join(current_path, 'cmake_builder')
+        self.additional_args = [
+            "-DLINPHONE_BUILDER_EXTERNAL_BUILDERS_PATH=" + external_builders_path
+        ]
 
 
 class AndroidArmTarget(AndroidTarget):
@@ -140,7 +144,7 @@ class AndroidPreparator(prepare.Preparator):
         retval = True
         ndk_build = find_executable('ndk-build')
         ndk_path = os.path.dirname(ndk_build)
-        # NDK prior to r11 had a RELEASE.TXT file holding the version number
+	# NDK prior to r11 had a RELEASE.TXT file holding the version number
         release_file = os.path.join(ndk_path, 'RELEASE.TXT')
         if os.path.isfile(release_file):
             version = open(release_file).read().strip()
@@ -156,8 +160,19 @@ class AndroidPreparator(prepare.Preparator):
             if len(python_config_files) > 0:
                 version = open(python_config_files[0]).readlines()[0]
                 res = re.match('^.*/(aosp-)?ndk-r(\d+).*$', version)
-                version = int(res.group(2))
-                retval = False
+                if res is not None: # Will be if NDK < 16
+                    version = int(res.group(2))
+                    retval = False
+                else:
+                    release_file = os.path.join(ndk_path, 'source.properties') # Since NDK 16
+                    if os.path.isfile(release_file):
+                        version = open(release_file).read().strip()
+                        res = re.findall(r'(?:(\d+))', version)
+                        version = int(res[0])
+                        retval = False
+                    else:
+                        error("Could not get Android NDK version!")
+                        sys.exit(-1)
             else:
                 error("Could not get Android NDK version!")
                 sys.exit(-1)
@@ -238,6 +253,7 @@ $(TOPDIR)/res/raw/rootca.pem:
 copy-libs:
 \trm -rf libs-debug/armeabi
 \trm -rf libs/armeabi
+\trm -rf src/linphone-wrapper && mkdir -p src/linphone-wrapper/
 \tif test -d "liblinphone-sdk/android-arm"; then \\
 \t\tmkdir -p libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*.so libs-debug/armeabi && \\
@@ -303,6 +319,18 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdbserver libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-arm/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-arm/share/linphonej/java/* src/linphone-wrapper; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-armv7/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-armv7/share/linphonej/java/* src/linphone-wrapper; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-arm64/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-arm64/share/linphonej/java/* src/linphone-wrapper; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-x86/share/linphonej"; then \\
+\t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \\
 \tfi
 
 copy-libs-mediastreamer:
