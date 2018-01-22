@@ -21,5 +21,5 @@
 ############################################################################
 
 # Blacklist these dependencies because they are useless for now
-lcb_blacklist_dependencies("libxsd" "xerces-c" "soci")
+#lcb_blacklist_dependencies("libxsd" "xerces-c" "soci")
 
