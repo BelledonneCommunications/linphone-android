@@ -50,6 +50,10 @@ class AndroidTarget(prepare.Target):
         self.toolchain_file = 'toolchains/toolchain-android-' + arch + '.cmake'
         self.output = 'liblinphone-sdk/android-' + arch
         self.external_source_path = os.path.join(current_path, 'submodules')
+        external_builders_path = os.path.join(current_path, 'cmake_builder')
+        self.additional_args = [
+            "-DLINPHONE_BUILDER_EXTERNAL_BUILDERS_PATH=" + external_builders_path
+        ]
 
 
 class AndroidArmTarget(AndroidTarget):
