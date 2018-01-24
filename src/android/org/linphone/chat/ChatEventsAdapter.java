@@ -362,6 +362,12 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    case ConferenceParticipantUnsetAdmin:
 				    holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
 			    	break;
+			    case ConferenceParticipantDeviceAdded:
+				    holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
+				    break;
+			    case ConferenceParticipantDeviceRemoved:
+				    holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
+				    break;
 			    case None:
 			    default:
 			    	//TODO

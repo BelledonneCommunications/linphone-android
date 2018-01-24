@@ -206,6 +206,8 @@
     <string name="conference_destroyed">group destroyed</string>
     <string name="participant_added">%s added</string>
     <string name="participant_removed">%s leaved</string>
+    <string name="device_added">new device for %s</string>
+    <string name="device_removed">device for %s removed</string>
     <string name="subject_changed">new subject : %s</string>
     <string name="admin_set">%s is admin</string>
     <string name="admin_unset">%s is no longer admin</string>
