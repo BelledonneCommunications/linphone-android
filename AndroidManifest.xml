@@ -2,8 +2,8 @@
 <manifest package="org.linphone"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="3320"
-          android:versionName="3.3.2">
+          android:versionCode="3321"
+          android:versionName="3.3.2-gc">
 
     <uses-sdk
         android:minSdkVersion="16"
