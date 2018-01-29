@@ -36,7 +36,7 @@ dtmf_player_amp=0.1
 ec_calibrator_cool_tones=1
 
 [misc]
-conference_factory_uri=sip:conference-factory@conf.linphone.org
+conference_factory_uri=sip:conference-factory@sip.linphone.org
 max_calls=10
 history_max_size=100
 
