@@ -91,6 +91,7 @@ task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += files(android.libraryVariants.release.javaCompile.classpath.files)
     classpath += configurations.javadocDeps
+    options.encoding = 'UTF-8'
 }
 
 task sourcesJar(type: Jar) {
