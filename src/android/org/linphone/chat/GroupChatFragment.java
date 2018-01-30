@@ -57,6 +57,7 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
@@ -330,7 +331,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void getContactsForParticipants() {
 		mParticipants = new ArrayList<>();
-		if (!mChatRoom.canHandleParticipants() || (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject()))) {
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
 			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mRemoteParticipantAddress);
 			if (c != null) {
 				mParticipants.add(c);
@@ -376,7 +377,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		LinphoneActivity.instance().updateMissedChatCount();
 
 		mRemoteParticipantAddress = mRemoteSipAddress;
-		if (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject())) {
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
 			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
 		}
 
@@ -393,7 +394,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			if (!mChatRoom.canHandleParticipants() || (mChatRoom.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(mChatRoom.getSubject()))) {
+			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
 				mParticipantsLabel.setVisibility(View.GONE);

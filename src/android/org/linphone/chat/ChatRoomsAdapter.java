@@ -39,6 +39,7 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.EventLog;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
@@ -137,7 +138,8 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		ChatRoom chatRoom = mRooms.get(position);
 		Address remoteAddress = chatRoom.getPeerAddress();
 		Address contactAddress = remoteAddress;
-		if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
+
+		if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.getParticipants().length > 0) {
 			contactAddress = chatRoom.getParticipants()[0].getAddress();
 		}
 
@@ -165,23 +167,25 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		}
 
 		holder.displayName.setSelected(true); // For animation
-
 		holder.contactPicture.setImageBitmap(mDefaultBitmap);
-		if (!chatRoom.canHandleParticipants()) {
-			contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
-			if (contact != null) {
-				holder.displayName.setText(contact.getFullName());
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+
+		if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			if (chatRoom.getParticipants().length > 0) {
+				contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
+				if (contact != null) {
+					holder.displayName.setText(contact.getFullName());
+					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+				} else {
+					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
+				}
 			} else {
-				holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
-			}
-		} else if (chatRoom.getNbParticipants() == 1 && mContext.getString(R.string.dummy_group_chat_subject).equals(chatRoom.getSubject())) {
-			contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
-			if (contact != null) {
-				holder.displayName.setText(contact.getFullName());
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-			} else {
-				holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
+				contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
+				if (contact != null) {
+					holder.displayName.setText(contact.getFullName());
+					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+				} else {
+					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
+				}
 			}
 		} else {
 			holder.displayName.setText(chatRoom.getSubject());
