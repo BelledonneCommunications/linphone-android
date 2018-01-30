@@ -28,9 +28,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.contacts.ContactsManager;
+import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.fragments.FragmentsAvailable;
@@ -53,6 +56,8 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 	private ChatRoomsAdapter mChatRoomsAdapter;
 	private CoreListenerStub mListener;
 	private ListSelectionHelper mSelectionHelper;
+	private RelativeLayout mWaitLayout;
+	private int mChatRoomDeletionPendingCount;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +67,9 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		mSelectionHelper = new ListSelectionHelper(view, this);
 		mChatRoomsAdapter = new ChatRoomsAdapter(getActivity(), mSelectionHelper, mInflater);
 		mSelectionHelper.setAdapter(mChatRoomsAdapter);
+
+		mWaitLayout = view.findViewById(R.id.waitScreen);
+		mWaitLayout.setVisibility(View.GONE);
 
 		mChatRoomsList = view.findViewById(R.id.chatList);
 		mChatRoomsList.setAdapter(mChatRoomsAdapter);
@@ -145,9 +153,27 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		for (Object obj : objectsToDelete) {
 			ChatRoom room = (ChatRoom)obj;
+			mChatRoomDeletionPendingCount = objectsToDelete.length;
+			room.setListener(new ChatRoomListenerStub() {
+				@Override
+				public void onStateChanged(ChatRoom room, ChatRoom.State state) {
+					super.onStateChanged(room, state);
+					Log.e("Chat Room State changed " + state.toString());
+					if (state == ChatRoom.State.Deleted || state == ChatRoom.State.TerminationFailed) {
+						mChatRoomDeletionPendingCount -= 1;
+
+						if (mChatRoomDeletionPendingCount == 0) {
+							mWaitLayout.setVisibility(View.GONE);
+							refreshChatRoomsList();
+						}
+					}
+				}
+			});
 			lc.deleteChatRoom(room);
 		}
-		refreshChatRoomsList();
+		if (mChatRoomDeletionPendingCount > 0) {
+			mWaitLayout.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
