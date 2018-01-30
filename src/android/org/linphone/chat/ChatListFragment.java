@@ -161,6 +161,10 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 					if (state == ChatRoom.State.Deleted || state == ChatRoom.State.TerminationFailed) {
 						mChatRoomDeletionPendingCount -= 1;
 
+						if (state == ChatRoom.State.TerminationFailed) {
+							//TODO error message
+						}
+
 						if (mChatRoomDeletionPendingCount == 0) {
 							mWaitLayout.setVisibility(View.GONE);
 							refreshChatRoomsList();
