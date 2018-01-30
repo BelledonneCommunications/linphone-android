@@ -151,14 +151,13 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 	@Override
 	public void onDeleteSelection(Object[] objectsToDelete) {
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		mChatRoomDeletionPendingCount = objectsToDelete.length;
 		for (Object obj : objectsToDelete) {
 			ChatRoom room = (ChatRoom)obj;
-			mChatRoomDeletionPendingCount = objectsToDelete.length;
 			room.setListener(new ChatRoomListenerStub() {
 				@Override
 				public void onStateChanged(ChatRoom room, ChatRoom.State state) {
 					super.onStateChanged(room, state);
-					Log.e("Chat Room State changed " + state.toString());
 					if (state == ChatRoom.State.Deleted || state == ChatRoom.State.TerminationFailed) {
 						mChatRoomDeletionPendingCount -= 1;
 
