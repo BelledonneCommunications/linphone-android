@@ -90,6 +90,7 @@ import org.linphone.core.CallParams;
 import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Core.AuthMethod;
@@ -1066,7 +1067,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		String textMessage = (message.getFileTransferInformation() != null) ? getString(R.string.content_description_incoming_file) : message.getText();
 
 		if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-			if (!cr.canHandleParticipants() || (cr.getNbParticipants() == 1 && getString(R.string.dummy_group_chat_subject).equals(cr.getSubject()))) {
+			if ((cr.getCapabilities() & ChatRoomCapabilities.OneToOne.toInt()) == ChatRoomCapabilities.OneToOne.toInt()) {
 				if (contact != null) {
 					LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
 				} else {
