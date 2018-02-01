@@ -622,20 +622,17 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		cr.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
 
-		if (event.getType() == EventLog.Type.ConferenceChatMessage) {
-			ChatMessage message = event.getChatMessage();
-			if (message.getErrorInfo() != null && message.getErrorInfo().getReason() == Reason.UnsupportedContent) {
-				Log.w("Message received but content is unsupported, do not display it");
-				return;
-			}
-
-			if (!message.hasTextContent() && message.getFileTransferInformation() == null) {
-				Log.w("Message has no text or file transfer information to display, ignoring it...");
-				return;
-			}
+		ChatMessage msg = event.getChatMessage();
+		if (msg.getErrorInfo() != null && msg.getErrorInfo().getReason() == Reason.UnsupportedContent) {
+			Log.w("Message received but content is unsupported, do not display it");
+			return;
 		}
 
-		ChatMessage msg = event.getChatMessage();
+		if (!msg.hasTextContent() && msg.getFileTransferInformation() == null) {
+			Log.w("Message has no text or file transfer information to display, ignoring it...");
+			return;
+		}
+
 		String externalBodyUrl = msg.getExternalBodyUrl();
 		Content fileTransferContent = msg.getFileTransferInformation();
 		if (externalBodyUrl != null || fileTransferContent != null) {
