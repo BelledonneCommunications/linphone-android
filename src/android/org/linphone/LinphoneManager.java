@@ -1064,7 +1064,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 		Address from = message.getFromAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
-		String textMessage = (message.getFileTransferInformation() != null) ? getString(R.string.content_description_incoming_file) : message.getText();
+		String textMessage = (message.getFileTransferInformation() != null) ? getString(R.string.content_description_incoming_file) : message.getTextContent();
 
 		if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification)) {
 			if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
