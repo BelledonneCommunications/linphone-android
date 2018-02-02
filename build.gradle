@@ -2,58 +2,59 @@
 buildDir = 'bin'
 
 def getPackageName() {
-  return "org.linphone"
+    return "org.linphone"
 }
 
 def firebaseEnable() {
-  File googleFile = new File('google-services.json')
-  return googleFile.exists()
+    File googleFile = new File('google-services.json')
+    return googleFile.exists()
 }
 
 buildscript {
-  File googleFile = new File('google-services.json')
-  repositories {
-    jcenter()
-    mavenCentral()
-    mavenLocal()
-    google()
-  }
-  dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.3'
-    if (googleFile.exists()) {
-      classpath 'com.google.gms:google-services:3.+'
+    File googleFile = new File('google-services.json')
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        google()
     }
-  }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        if (googleFile.exists()) {
+            classpath 'com.google.gms:google-services:3.+'
+        }
+        classpath 'com.google.gms:google-services:3.1.0'
+    }
 }
 
 allprojects {
-  repositories {
-    jcenter()
-    mavenCentral()
-    mavenLocal()
-    google()
-  }
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        google()
+    }
 }
 
 apply plugin: 'com.android.application'
 
 dependencies {
-  androidTestCompile('com.android.support.test.espresso:espresso-core:+') {
-    exclude module: 'support-annotations'
-  }
-  androidTestCompile 'com.jayway.android.robotium:robotium-solo:+'
-  androidTestCompile 'junit:junit:+'
-  compile 'org.apache.commons:commons-compress:+'
-  if (firebaseEnable()) {
-    compile 'com.google.firebase:firebase-messaging:11.+'
-  } else {
-    compile fileTree(include: 'gcm.jar', dir: 'libs')
-    compile 'com.android.support:support-v4:+'
-  }
+    androidTestCompile('com.android.support.test.espresso:espresso-core:+') {
+        exclude module: 'support-annotations'
+    }
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:+'
+    androidTestCompile 'junit:junit:+'
+    compile 'org.apache.commons:commons-compress:+'
+    if (firebaseEnable()) {
+        compile 'com.google.firebase:firebase-messaging:11.+'
+    } else {
+        compile fileTree(include: 'gcm.jar', dir: 'libs')
+        compile 'com.android.support:support-v4:+'
+    }
 }
 
 if (firebaseEnable()) {
-  apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.gms.google-services'
 }
 
 //// Submodule Dir /////
@@ -64,11 +65,11 @@ def submoduleDir = ['submodules/mediastreamer2/java/src']
 def excludeFiles = []
 // Exclude firebase file if not enable
 if (!firebaseEnable()) {
-  excludeFiles.add('**/Firebase*')
-  println '[Push Notification] Firebase disabled'
+    excludeFiles.add('**/Firebase*')
+    println '[Push Notification] Firebase disabled'
 } else {
-  excludeFiles.add('**/gcm*')
-  println '[Push Notification] Firebase enabled'
+    excludeFiles.add('**/gcm*')
+    println '[Push Notification] Firebase enabled'
 }
 excludeFiles.add('**/mediastream/MediastreamerActivity.java')
 excludeFiles.add('src/android/org/linphone/tutorials/*.java')
@@ -82,115 +83,117 @@ excludePackage.add('**/LICENSE.txt')
 /////////////////////////
 
 android {
-  defaultConfig {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
-    applicationId getPackageName()
-    multiDexEnabled true
+    defaultConfig {
+        compileSdkVersion 26
+        buildToolsVersion "26.0.1"
+        applicationId getPackageName()
+        multiDexEnabled true
 
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-  lintOptions {
-    checkReleaseBuilds false
-    // Or, if you prefer, you can continue to check for errors in release builds,
-    // but continue the build even when errors are found:
-    abortOnError false
-    disable 'MissingTranslation', 'UnusedResources'
-  }
-  // Signing
-  signingConfigs {
-    release {
-      storeFile file(RELEASE_STORE_FILE)
-      storePassword RELEASE_STORE_PASSWORD
-      keyAlias RELEASE_KEY_ALIAS
-      keyPassword RELEASE_KEY_PASSWORD
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-  }
-  buildTypes {
-    release {
-      signingConfig signingConfigs.release
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+        disable 'MissingTranslation', 'UnusedResources'
     }
-    packaged {
-      initWith release
-      signingConfig null
+    // Signing
+    signingConfigs {
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
     }
-  }
-  sourceSets {
-    main {
-      manifest.srcFile 'AndroidManifest.xml'
-      def srcDirs = submoduleDir
-      srcDirs.addAll(['src/linphone-wrapper', 'src/android'])
-      java.srcDirs = srcDirs
-      resources.srcDirs = srcDirs
-      aidl.srcDirs = srcDirs
-      renderscript.srcDirs = srcDirs
-      res.srcDirs = ['res']
-      assets.srcDirs = ['assets']
-      jniLibs.srcDirs = ['libs']
-      java.excludes = excludeFiles
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+        packaged {
+            initWith release
+            signingConfig null
+        }
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            def srcDirs = submoduleDir
+            srcDirs.addAll(['src/linphone-wrapper', 'src/android'])
+            java.srcDirs = srcDirs
+            resources.srcDirs = srcDirs
+            aidl.srcDirs = srcDirs
+            renderscript.srcDirs = srcDirs
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+            java.excludes = excludeFiles
 
-      // Exclude some useless files
-      packagingOptions {
-        excludes = excludePackage
-      }
+            // Exclude some useless files
+            packagingOptions {
+                excludes = excludePackage
+            }
+        }
+
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
     }
+    sourceSets {
+        androidTest {
+            manifest.srcFile 'AndroidManifest.xml'
+            def srcDirs = submoduleDir
+            srcDirs.addAll(['src/android',
+                            'src/androidTest'])
+            java.srcDirs = srcDirs
+            resources.srcDirs = srcDirs
+            aidl.srcDirs = srcDirs
+            renderscript.srcDirs = srcDirs
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+            java.excludes = excludeFiles
 
-    debug.setRoot('build-types/debug')
-    release.setRoot('build-types/release')
-  }
-  sourceSets {
-    androidTest {
-      manifest.srcFile 'AndroidManifest.xml'
-      def srcDirs = submoduleDir
-      srcDirs.addAll(['src/android',
-                      'src/androidTest'])
-      java.srcDirs = srcDirs
-      resources.srcDirs = srcDirs
-      aidl.srcDirs = srcDirs
-      renderscript.srcDirs = srcDirs
-      res.srcDirs = ['res']
-      assets.srcDirs = ['assets']
-      jniLibs.srcDirs = ['libs']
-      java.excludes = excludeFiles
+            // Exclude some useless files
+            packagingOptions {
+                excludes = excludePackage
+            }
+        }
 
-      // Exclude some useless files
-      packagingOptions {
-        excludes = excludePackage
-      }
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
     }
-
-    debug.setRoot('build-types/debug')
-    release.setRoot('build-types/release')
-  }
-  packagingOptions {
-    pickFirst 'META-INF/NOTICE'
-    pickFirst 'META-INF/LICENSE'
-  }
+    packagingOptions {
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/LICENSE'
+    }
 }
 
 // Grant permissions
 android.applicationVariants.all { variant ->
-  def applicationId = getPackageName()
-  def adb = android.getAdbExecutable().toString()
-  def variantName = variant.name.capitalize()
-  def grantPermissionTask = tasks.create("grant${variantName}Permissions").doLast({
-    "${adb} devices".execute().text.eachLine {
-      "${adb} shell pm grant ${applicationId} android.permission.RECORD_AUDIO".execute()
-      "${adb} shell pm grant ${applicationId} android.permission.WRITE_EXTERNAL_STORAGE".execute()
-      "${adb} shell pm grant ${applicationId} android.permission.CAMERA".execute()
-      "${adb} shell pm grant ${applicationId} android.permission.READ_PHONE_STATE".execute()
-      "${adb} shell pm grant ${applicationId} android.permission.READ_CONTACTS".execute()
-      "${adb} shell pm grant ${applicationId} android.permission.WRITE_CONTACTS".execute()
-    }
-  })
+    def applicationId = getPackageName()
+    def adb = android.getAdbExecutable().toString()
+    def variantName = variant.name.capitalize()
+    def grantPermissionTask = tasks.create("grant${variantName}Permissions").doLast({
+        "${adb} devices".execute().text.eachLine {
+            "${adb} shell pm grant ${applicationId} android.permission.RECORD_AUDIO".execute()
+            "${adb} shell pm grant ${applicationId} android.permission.WRITE_EXTERNAL_STORAGE".execute()
+            "${adb} shell pm grant ${applicationId} android.permission.CAMERA".execute()
+            "${adb} shell pm grant ${applicationId} android.permission.READ_PHONE_STATE".execute()
+            "${adb} shell pm grant ${applicationId} android.permission.READ_CONTACTS".execute()
+            "${adb} shell pm grant ${applicationId} android.permission.WRITE_CONTACTS".execute()
+        }
+    })
 }
 
 task runApplication {
-  doLast {
-    def result = exec {
-      executable = android.getAdbExecutable().toString()
-      ignoreExitValue true
-      args = ['shell', 'monkey', '-p', getPackageName(), '-c', 'android.intent.category.LAUNCHER', '1']
+    doLast {
+        def result = exec {
+            executable = android.getAdbExecutable().toString()
+            ignoreExitValue true
+            args = ['shell', 'monkey', '-p', getPackageName(), '-c', 'android.intent.category.LAUNCHER', '1']
+        }
     }
-  }
 }
+
+apply plugin: 'com.google.gms.google-services'
