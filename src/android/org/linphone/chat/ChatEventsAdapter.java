@@ -59,6 +59,7 @@ import org.linphone.core.ChatMessageListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
+import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
@@ -175,7 +176,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
 			    }
 
-			    if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory && status != ChatMessage.State.InProgress) {
+			    if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory && status != ChatMessage.State.InProgress) {
 				    holder.messageStatus.setVisibility(View.VISIBLE);
 				    holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
 			    }

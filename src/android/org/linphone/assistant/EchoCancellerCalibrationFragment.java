@@ -23,9 +23,10 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.Core;
-import org.linphone.core.Core.EcCalibratorStatus;
+import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.CoreException;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.XmlRpcArgType;
 import org.linphone.core.XmlRpcRequest;
 import org.linphone.core.XmlRpcRequestListener;
 //import org.linphone.core.XmlRpcRequestImpl;
@@ -56,7 +57,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 
 		mListener = new CoreListenerStub(){
 			@Override
-			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delay_ms) {
+			public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delay_ms) {
 				lc.removeListener(mListener);
 				LinphoneManager.getInstance().routeAudioToReceiver();
 				if (mSendEcCalibrationResult) {
@@ -73,7 +74,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 		};
 
 		xmlRpcSession = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createXmlRpcSession(LinphonePreferences.instance().getXmlrpcUrl());
-		xmlRpcRequest = xmlRpcSession.createRequest(XmlRpcRequest.ArgType.None, "add_ec_calibration_result");
+		xmlRpcRequest = xmlRpcSession.createRequest(XmlRpcArgType.None, "add_ec_calibration_result");
 		xmlRpcRequest.setListener(this);
 
 		try {

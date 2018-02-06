@@ -36,10 +36,11 @@ import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.DialPlan;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
-import org.linphone.core.Address.TransportType;
+import org.linphone.core.TransportType;
 import org.linphone.core.AuthInfo;
+import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
-import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.RegistrationState;
 import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListenerStub;
@@ -148,11 +149,11 @@ private static AssistantActivity instance;
         mListener = new CoreListenerStub() {
 
 			@Override
-			public void onConfiguringStatus(Core lc, final Core.ConfiguringState state, String message) {
+			public void onConfiguringStatus(Core lc, final ConfiguringState state, String message) {
 				if (progress != null) progress.dismiss();
-				if (state == Core.ConfiguringState.Successful) {
+				if (state == ConfiguringState.Successful) {
 					goToLinphoneActivity();
-				} else if (state == Core.ConfiguringState.Failed) {
+				} else if (state == ConfiguringState.Failed) {
 					Toast.makeText(AssistantActivity.instance(), getString(R.string.remote_provisioning_failure), Toast.LENGTH_LONG).show();
 				}
 			}

@@ -31,14 +31,15 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
-import org.linphone.core.Core.EcCalibratorStatus;
-import org.linphone.core.Core.LimeState;
-import org.linphone.core.Core.MediaEncryption;
+import org.linphone.core.EcCalibratorStatus;
+import org.linphone.core.LimeState;
+import org.linphone.core.MediaEncryption;
 import org.linphone.core.CoreException;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.PayloadType;
+import org.linphone.core.RegistrationState;
 import org.linphone.core.VideoDefinition;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -101,7 +102,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		mListener = new CoreListenerStub() {
 			@Override
-			public void onEcCalibrationResult(Core lc, Core.EcCalibratorStatus status, int delayMs) {
+			public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delayMs) {
 				lc.removeListener(mListener);
 				LinphoneManager.getInstance().routeAudioToReceiver();
 
@@ -377,11 +378,11 @@ public class SettingsFragment extends PreferencesListFragment {
 			for (ProxyConfig lpc : LinphoneManager.getLc().getProxyConfigList()) {
 				Address addr = lpc.getIdentityAddress();
 				if (addr.getUsername().equals(username) && addr.getDomain().equals(domain)) {
-					if (lpc.getState() == Core.RegistrationState.Ok) {
+					if (lpc.getState() == RegistrationState.Ok) {
 						me.setLed(R.drawable.led_connected);
-					} else if (lpc.getState() == Core.RegistrationState.Failed) {
+					} else if (lpc.getState() == RegistrationState.Failed) {
 						me.setLed(R.drawable.led_error);
-					} else if (lpc.getState() == Core.RegistrationState.Progress) {
+					} else if (lpc.getState() == RegistrationState.Progress) {
 						me.setLed(R.drawable.led_inprogress);
 						mHandler.postDelayed(new Runnable() {
 							@Override

@@ -93,12 +93,12 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
-import org.linphone.core.Core.AuthMethod;
-import org.linphone.core.Core.EcCalibratorStatus;
-import org.linphone.core.Core.GlobalState;
+import org.linphone.core.AuthMethod;
+import org.linphone.core.EcCalibratorStatus;
+import org.linphone.core.GlobalState;
 import org.linphone.core.Core.LogCollectionUploadState;
-import org.linphone.core.Core.RegistrationState;
-import org.linphone.core.Core.ConfiguringState;
+import org.linphone.core.RegistrationState;
+import org.linphone.core.ConfiguringState;
 import org.linphone.core.CoreException;
 import org.linphone.core.ErrorInfo;
 import org.linphone.core.Factory;
@@ -109,6 +109,7 @@ import org.linphone.core.FriendList;
 import org.linphone.core.InfoMessage;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.PublishState;
 import org.linphone.core.tools.OpenH264DownloadHelperListener;
 import org.linphone.core.PayloadType;
 import org.linphone.core.PresenceBasicStatus;
@@ -116,6 +117,7 @@ import org.linphone.core.PresenceModel;
 import org.linphone.core.Reason;
 import org.linphone.core.SubscriptionState;
 //import org.linphone.core.TunnelConfig;
+import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -1097,7 +1099,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void onGlobalStateChanged(final Core lc, final GlobalState state, final String message) {
 		Log.i("New global state [",state,"]");
-		if (state == Core.GlobalState.On){
+		if (state == GlobalState.On){
 			try {
 				Log.e("LinphoneManager"," onGlobalStateChanged ON");
 				initLiblinphone(lc);
@@ -1585,7 +1587,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getStringBuffer());
 	}
 	@Override
-	public void onPublishStateChanged(Core lc, Event ev, Event.PublishState state) {
+	public void onPublishStateChanged(Core lc, Event ev, PublishState state) {
 		Log.d("Publish state changed to " + state + " for event name " + ev.getName());
 	}
 
@@ -1627,7 +1629,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	@Override
-	public void onVersionUpdateCheckResultReceived(Core lc, Core.VersionUpdateCheckResult result, String version, String url) {
+	public void onVersionUpdateCheckResultReceived(Core lc, VersionUpdateCheckResult result, String version, String url) {
 
 	}
 

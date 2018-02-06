@@ -28,7 +28,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
-import org.linphone.core.Core.ConfiguringState;
+import org.linphone.core.ConfiguringState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
 

@@ -74,13 +74,15 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallParams;
 import org.linphone.core.CallStats;
-import org.linphone.core.CallStats.AddressFamily;
+import org.linphone.core.AddressFamily;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.MediaEncryption;
 import org.linphone.core.Player;
 import org.linphone.core.PayloadType;
+import org.linphone.core.StreamType;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
@@ -248,7 +250,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			@Override
 			public void onCallEncryptionChanged(Core lc, final Call call, boolean encrypted, String authenticationToken) {
 				if (status != null) {
-					if(call.getCurrentParams().getMediaEncryption().equals(Core.MediaEncryption.ZRTP) && !call.getAuthenticationTokenVerified()){
+					if(call.getCurrentParams().getMediaEncryption().equals(MediaEncryption.ZRTP) && !call.getAuthenticationTokenVerified()){
 						status.showZRTPDialog(call);
 					}
 					status.refreshStatusItems(call, call.getCurrentParams().videoEnabled());
@@ -1732,11 +1734,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 							if (LinphoneActivity.isInstanciated()) {
 								CallParams params = call.getCurrentParams();
 								if (params != null) {
-									CallStats audioStats = call.getStats(CallStats.StreamType.Audio);
+									CallStats audioStats = call.getStats(StreamType.Audio);
 									CallStats videoStats = null;
 
 									if (params.videoEnabled())
-										videoStats = call.getStats(CallStats.StreamType.Video);
+										videoStats = call.getStats(StreamType.Video);
 
 									PayloadType payloadAudio = params.getUsedAudioPayloadType();
 									PayloadType payloadVideo = params.getUsedVideoPayloadType();

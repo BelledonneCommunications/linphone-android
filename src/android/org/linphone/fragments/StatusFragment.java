@@ -26,8 +26,8 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.Call;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
-import org.linphone.core.Core.MediaEncryption;
-import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.MediaEncryption;
+import org.linphone.core.RegistrationState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Event;
 import org.linphone.core.ProxyConfig;
@@ -81,7 +81,7 @@ public class StatusFragment extends Fragment {
 
 		mListener = new CoreListenerStub(){
 			@Override
-			public void onRegistrationStateChanged(final Core lc, final ProxyConfig proxy, final Core.RegistrationState state, String smessage) {
+			public void onRegistrationStateChanged(final Core lc, final ProxyConfig proxy, final RegistrationState state, String smessage) {
 				if (!isAttached || !LinphoneService.isReady()) {
 					return;
 				}
@@ -203,7 +203,7 @@ public class StatusFragment extends Fragment {
 		menu.setEnabled(enabled);
 	}
 
-	private int getStatusIconResource(Core.RegistrationState state, boolean isDefaultAccount) {
+	private int getStatusIconResource(RegistrationState state, boolean isDefaultAccount) {
 		try {
 			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			boolean defaultAccountConnected = (isDefaultAccount && lc != null && lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().getState() == RegistrationState.Ok) || !isDefaultAccount;
@@ -223,7 +223,7 @@ public class StatusFragment extends Fragment {
 		return R.drawable.led_disconnected;
 	}
 
-	private String getStatusIconText(Core.RegistrationState state) {
+	private String getStatusIconText(RegistrationState state) {
 		Context context = getActivity();
 		if (!isAttached && LinphoneActivity.isInstanciated())
 			context = LinphoneActivity.instance();

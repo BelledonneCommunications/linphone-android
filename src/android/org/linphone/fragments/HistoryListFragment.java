@@ -35,7 +35,7 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Call;
 import org.linphone.core.Address;
 import org.linphone.core.CallLog;
-import org.linphone.core.CallLog.CallStatus;
+import org.linphone.core.Call.Status;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -174,7 +174,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		if (onlyDisplayMissedCalls) {
 			List<CallLog> missedCalls = new ArrayList<CallLog>();
 			for (CallLog log : mLogs) {
-				if (log.getStatus() == CallStatus.Missed) {
+				if (log.getStatus() == Call.Status.Missed) {
 					missedCalls.add(log);
 				}
 			}
@@ -462,7 +462,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 			if (log.getDir() == Call.Dir.Incoming) {
 				address = log.getFromAddress();
-				if (log.getStatus() == CallStatus.Missed) {
+				if (log.getStatus() == Call.Status.Missed) {
 					holder.callDirection.setImageResource(R.drawable.call_status_missed);
 				} else {
 					holder.callDirection.setImageResource(R.drawable.call_status_incoming);

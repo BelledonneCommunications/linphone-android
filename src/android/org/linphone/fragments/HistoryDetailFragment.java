@@ -58,7 +58,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		sipUri = getArguments().getString("SipUri");
 		displayName = getArguments().getString("DisplayName");
 		pictureUri = getArguments().getString("PictureUri");
-		String status = getArguments().getString("CallStatus");
+		String status = getArguments().getString("Call.Status");
 		String callTime = getArguments().getString("CallTime");
 		String callDate = getArguments().getString("CallDate");
 

@@ -63,6 +63,7 @@ import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
+import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Reason;
@@ -590,7 +591,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 							from.getUsername(), null, getString(R.string.message_cant_be_decrypted_notif));
 				}
 			}
-		} else if (LinphoneManager.getLc().limeEnabled() == Core.LimeState.Mandatory) {
+		} else if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {
 			final Dialog dialog = LinphoneActivity.instance().displayDialog(
 					getString(R.string.message_cant_be_decrypted)
 							.replace("%s", (contact != null) ? contact.getFullName() : from.getUsername()));

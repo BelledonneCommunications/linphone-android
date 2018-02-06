@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
+import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.xmlrpc.XmlRpcHelper;
@@ -59,10 +60,10 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 		mListener = new CoreListenerStub(){
 			@Override
-			public void onConfiguringStatus(Core lc, final Core.ConfiguringState state, String message) {
-				if (state == Core.ConfiguringState.Successful) {
+			public void onConfiguringStatus(Core lc, final ConfiguringState state, String message) {
+				if (state == ConfiguringState.Successful) {
 					//TODO
-				} else if (state == Core.ConfiguringState.Failed) {
+				} else if (state == ConfiguringState.Failed) {
 					Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
 				}
 			}

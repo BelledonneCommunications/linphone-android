@@ -30,7 +30,7 @@ import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
-import org.linphone.core.Friend.SubscribePolicy;
+import org.linphone.core.SubscribePolicy;
 import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;

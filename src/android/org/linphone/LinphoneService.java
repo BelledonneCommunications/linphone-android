@@ -30,11 +30,12 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.CallLog.CallStatus;
+import org.linphone.core.Call.Status;
 import org.linphone.core.Core;
-import org.linphone.core.Core.GlobalState;
-import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.GlobalState;
+import org.linphone.core.RegistrationState;
 import org.linphone.core.Factory;
+import org.linphone.core.LogCollectionState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
@@ -298,7 +299,7 @@ public final class LinphoneService extends Service {
 		LinphonePreferences.instance().setContext(getBaseContext());
 		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		Factory.instance().enableLogCollection(Core.LogCollectionState.Enabled);
+		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
 		Factory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
 
 		// Dump some debugging information to the logs
@@ -360,7 +361,7 @@ public final class LinphoneService extends Service {
 					destroyOverlay();
 				}
 
-				if (state == State.End && call.getCallLog().getStatus() == CallStatus.Missed) {
+				if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
 					int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
 					String body;
 					if (missedCallCount > 1) {
@@ -397,14 +398,14 @@ public final class LinphoneService extends Service {
 			}
 
 			@Override
-			public void onGlobalStateChanged(Core lc,Core.GlobalState state, String message) {
+			public void onGlobalStateChanged(Core lc,GlobalState state, String message) {
 				if (!mDisableRegistrationStatus && state == GlobalState.On && displayServiceNotification()) {
 					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
 				}
 			}
 
 			@Override
-			public void onRegistrationStateChanged(Core lc, ProxyConfig cfg, Core.RegistrationState state, String smessage) {
+			public void onRegistrationStateChanged(Core lc, ProxyConfig cfg, RegistrationState state, String smessage) {
 //				if (instance == null) {
 //					Log.i("Service not ready, discarding registration state change to ",state.toString());
 //					return;

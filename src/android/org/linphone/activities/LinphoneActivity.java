@@ -99,11 +99,11 @@ import org.linphone.core.AuthInfo;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallLog;
-import org.linphone.core.CallLog.CallStatus;
+import org.linphone.core.Call.Status;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
-import org.linphone.core.Core.RegistrationState;
+import org.linphone.core.RegistrationState;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
@@ -242,7 +242,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 
 			@Override
-			public void onRegistrationStateChanged(Core lc, ProxyConfig proxy, Core.RegistrationState state, String smessage) {
+			public void onRegistrationStateChanged(Core lc, ProxyConfig proxy, RegistrationState state, String smessage) {
 				AuthInfo authInfo = lc.findAuthInfo(proxy.getRealm(), proxy.getIdentityAddress().getUsername(), proxy.getDomain());
 				if (state.equals(RegistrationState.Cleared)) {
 					if (lc != null) {
@@ -582,7 +582,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if (log.getDir() == Call.Dir.Outgoing) {
 			status = getString(R.string.outgoing);
 		} else {
-			if (log.getStatus() == CallStatus.Missed) {
+			if (log.getStatus() == Call.Status.Missed) {
 				status = getString(R.string.missed);
 			} else {
 				status = getString(R.string.incoming);
@@ -603,7 +603,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				extras.putString("DisplayName", displayName);
 				extras.putString("PictureUri", pictureUri);
 			}
-			extras.putString("CallStatus", status);
+			extras.putString("Call.Status", status);
 			extras.putString("CallTime", callTime);
 			extras.putString("CallDate", callDate);
 
@@ -1660,7 +1660,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		});
 	}
 
-	private int getStatusIconResource(Core.RegistrationState state) {
+	private int getStatusIconResource(RegistrationState state) {
 		try {
 			if (state == RegistrationState.Ok) {
 				return R.drawable.led_connected;
