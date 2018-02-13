@@ -151,6 +151,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 		holder.lastMessageView.setText("");
+		holder.date.setText("");
 
 		EventLog[] lastEvent = chatRoom.getHistoryEvents(1);
 		if (lastEvent.length > 0) {
