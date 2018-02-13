@@ -40,6 +40,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
+import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
@@ -150,18 +151,19 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 		holder.lastMessageView.setText("");
-		holder.date.setText("");
+
+		EventLog[] lastEvent = chatRoom.getHistoryEvents(1);
+		if (lastEvent.length > 0) {
+			time = lastEvent[0].getCreationTime();
+			holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
+		}
 
 		if (lastMessage != null) {
 			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
 				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
-				time = lastMessage.getTime();
-				holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
 			} else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
 				message = lastMessage.getTextContent();
 				holder.lastMessageView.setBackgroundResource(0);
-				time = lastMessage.getTime();
-				holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
 				holder.lastMessageView.setText(message);
 			}
 		}
