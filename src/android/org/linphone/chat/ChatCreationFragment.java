@@ -44,6 +44,8 @@ import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -297,25 +299,29 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				if (mContactsSelected.size() == 1) {
 					mContactsSelectedLayout.removeAllViews();
 					mWaitLayout.setVisibility(View.VISIBLE);
-					ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-					chatRoom.setListener(new ChatRoomListenerStub() {
-						@Override
-						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-							if (newState == ChatRoom.State.Created) {
-								mWaitLayout.setVisibility(View.GONE);
-								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
-							} else if (newState == ChatRoom.State.CreationFailed) {
-								mWaitLayout.setVisibility(View.GONE);
-								LinphoneActivity.instance().displayChatRoomError();
-								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+					Core lc = LinphoneManager.getLc();
+					Address participant = Factory.instance().createAddress(mContactsSelected.get(0).getAddress());
+					ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+					if (chatRoom == null) {
+						chatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+						chatRoom.setListener(new ChatRoomListenerStub() {
+							@Override
+							public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+								if (newState == ChatRoom.State.Created) {
+									mWaitLayout.setVisibility(View.GONE);
+									LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+								} else if (newState == ChatRoom.State.CreationFailed) {
+									mWaitLayout.setVisibility(View.GONE);
+									LinphoneActivity.instance().displayChatRoomError();
+									Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+								}
 							}
-						}
-					});
+						});
 
-					Address addresses[] = new Address[1];
-					String addr = mContactsSelected.get(0).getAddress();
-					addresses[0] = LinphoneManager.getLc().interpretUrl(addr);
-					chatRoom.addParticipants(addresses);
+						chatRoom.addParticipant(participant);
+					} else {
+						LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
+					}
 				} else {
 					mContactsSelectedLayout.removeAllViews();
 					LinphoneActivity.instance().goToChatGroupInfos(null, mContactsSelected, null, true, false);

@@ -176,21 +176,26 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 			} else {
 				mWaitLayout.setVisibility(View.VISIBLE);
-				ChatRoom chatRoom = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-				chatRoom.setListener(new ChatRoomListenerStub() {
-					@Override
-					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-						if (newState == ChatRoom.State.Created) {
-							mWaitLayout.setVisibility(View.GONE);
-							LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
-						} else if (newState == ChatRoom.State.CreationFailed) {
-							mWaitLayout.setVisibility(View.GONE);
-							LinphoneActivity.instance().displayChatRoomError();
-							Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+				room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+				if (room == null) {
+					room = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+					room.setListener(new ChatRoomListenerStub() {
+						@Override
+						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+							if (newState == ChatRoom.State.Created) {
+								mWaitLayout.setVisibility(View.GONE);
+								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+							} else if (newState == ChatRoom.State.CreationFailed) {
+								mWaitLayout.setVisibility(View.GONE);
+								LinphoneActivity.instance().displayChatRoomError();
+								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+							}
 						}
-					}
-				});
-				chatRoom.addParticipant(participant);
+					});
+					room.addParticipant(participant);
+				} else {
+					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+				}
 			}
 		} else if (id == R.id.add_contact) {
 			Address addr = Factory.instance().createAddress(sipUri);
