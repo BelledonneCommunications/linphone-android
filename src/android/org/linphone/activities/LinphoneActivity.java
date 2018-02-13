@@ -99,7 +99,6 @@ import org.linphone.core.AuthInfo;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallLog;
-import org.linphone.core.Call.Status;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
@@ -689,7 +688,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			listUri.add(LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress().asStringUriOnly());
 		}
 		for (ContactAddress ca : list) {
-			listUri.add(ca.getAddress());
+			listUri.add(ca.getAddressAsDisplayableString());
 		}
 		extras.putStringArrayList("contactsSelected", listUri);
 		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);

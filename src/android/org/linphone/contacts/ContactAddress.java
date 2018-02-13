@@ -21,6 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.view.View;
 
+import org.linphone.core.Address;
+import org.linphone.core.Factory;
+
 import java.io.Serializable;
 
 public class ContactAddress implements Serializable {
@@ -55,8 +58,13 @@ public class ContactAddress implements Serializable {
 		return contact;
 	}
 
-	public String getAddress() {
+	public String getAddressAsDisplayableString() {
 		return address;
+	}
+
+	public Address getAddress() {
+		String presence = contact.getPresenceModelForUriOrTel(address);
+		return Factory.instance().createAddress(presence != null ? presence : address);
 	}
 
 	public void setSelect(boolean select) {
@@ -85,7 +93,7 @@ public class ContactAddress implements Serializable {
 		if (other == null) return false;
 		if (other == this) return true;
 		if (!(other instanceof ContactAddress))return false;
-		if (((ContactAddress)other).getAddress() == this.getAddress()) return true;
+		if (((ContactAddress)other).getAddressAsDisplayableString() == this.getAddressAsDisplayableString()) return true;
 		return false;
 	}
 }

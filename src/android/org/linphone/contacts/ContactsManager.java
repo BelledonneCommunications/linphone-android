@@ -104,6 +104,7 @@ public class ContactsManager extends ContentObserver {
 		 onChange(selfChange, null);
 	}
 
+
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
 		fetchContactsSync();

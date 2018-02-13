@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
-import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -28,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -45,7 +43,6 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -143,7 +140,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			// We need to get all contacts not only sip
 			for (String uri : savedInstanceState.getStringArrayList("mContactsSelected")) {
 				for (ContactAddress ca : mSearchAdapter.getContactsList()) {
-					if (ca.getAddress().compareTo(uri) == 0) {
+					if (ca.getAddressAsDisplayableString().compareTo(uri) == 0) {
 						ca.setView(null);
 						addSelectedContactAddress(ca);
 						break;
@@ -210,7 +207,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private int getIndexOfCa(ContactAddress ca, List<ContactAddress> caList) {
 		for (int i = 0 ; i < caList.size() ; i++) {
-			if (caList.get(i).getAddress().compareTo(ca.getAddress()) == 0)
+			if (caList.get(i).getAddressAsDisplayableString().compareTo(ca.getAddressAsDisplayableString()) == 0)
 				return i;
 		}
 		return -1;
@@ -221,7 +218,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		if (ca.getContact() != null) {
 			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
 		} else {
-			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddress());
+			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddressAsDisplayableString());
 		}
 		View removeContact = viewContact.findViewById(R.id.contactChatDelete);
 		removeContact.setTag(ca);
@@ -264,7 +261,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		if (mContactsSelected != null && mContactsSelected.size() > 0) {
 			ArrayList<String> listUri = new ArrayList<String>();
 			for (ContactAddress ca : mContactsSelected) {
-				listUri.add(ca.getAddress());
+				listUri.add(ca.getAddressAsDisplayableString());
 			}
 			outState.putStringArrayList("mContactsSelected", listUri);
 		}
@@ -300,7 +297,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					mContactsSelectedLayout.removeAllViews();
 					mWaitLayout.setVisibility(View.VISIBLE);
 					Core lc = LinphoneManager.getLc();
-					Address participant = Factory.instance().createAddress(mContactsSelected.get(0).getAddress());
+					Address participant = mContactsSelected.get(0).getAddress();
 					ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
 					if (chatRoom == null) {
 						chatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));

@@ -86,7 +86,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 	private boolean contactIsSelected(ContactAddress ca) {
 		for (ContactAddress c : contactsSelected) {
-			if (c.getAddress().compareTo(ca.getAddress()) == 0) return true;
+			if (c.getAddressAsDisplayableString().compareTo(ca.getAddressAsDisplayableString()) == 0) return true;
 		}
 		return false;
 	}
@@ -167,7 +167,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
         boolean searchFound = false;
 		if (search != null) {
 			for (ContactAddress c : (search.length() < oldSize) ? getContactsList() : getContacts()) {
-				String address = c.getAddress();
+				String address = c.getAddressAsDisplayableString();
 				if (address.equals(searchAddress)) searchFound = true;
 				if (address.startsWith("sip:")) address = address.substring(4);
 				if (c.getContact() != null && c.getContact().getFullName() != null
@@ -204,7 +204,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		}
 
 		ContactAddress contact = getItem(position);
-		final String a = contact.getAddress();
+		final String a = contact.getAddressAsDisplayableString();
 		LinphoneContact c = contact.getContact();
 
 		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());

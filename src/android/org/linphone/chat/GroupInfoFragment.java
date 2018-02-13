@@ -190,7 +190,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					Address addresses[] = new Address[mParticipants.size()];
 					int index = 0;
 					for (ContactAddress ca : mParticipants) {
-						addresses[index] = LinphoneManager.getLc().createAddress(ca.getAddress());
+						addresses[index] = LinphoneManager.getLc().createAddress(ca.getAddressAsDisplayableString());
 						index++;
 					}
 					chatRoom.addParticipants(addresses);
@@ -206,7 +206,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					for (Participant p : mChatRoom.getParticipants()) {
 						boolean found = false;
 						for (ContactAddress c : mParticipants) {
-							if (c.getAddress().equals(p.getAddress().asStringUriOnly())) {
+							if (c.getAddressAsDisplayableString().equals(p.getAddress().asStringUriOnly())) {
 								found = true;
 								break;
 							}
@@ -224,7 +224,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					for (ContactAddress c : mParticipants) {
 						boolean found = false;
 						for (Participant p : mChatRoom.getParticipants()) {
-							if (p.getAddress().asStringUriOnly().equals(c.getAddress())) {
+							if (p.getAddress().asStringUriOnly().equals(c.getAddressAsDisplayableString())) {
 								// Admin rights
 								if (c.isAdmin() != p.isAdmin()) {
 									mChatRoom.setParticipantAdminStatus(p, c.isAdmin());
@@ -234,7 +234,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 							}
 						}
 						if (!found) {
-							Address addr = LinphoneManager.getLc().createAddress(c.getAddress());
+							Address addr = LinphoneManager.getLc().createAddress(c.getAddressAsDisplayableString());
 							if (addr != null) {
 								toAdd.add(addr);
 							} else {
