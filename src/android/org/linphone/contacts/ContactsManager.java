@@ -257,7 +257,15 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized void setSipContacts(List<LinphoneContact> c) {
-		sipContacts = c;
+		if (sipContacts.isEmpty()) {
+			sipContacts = c;
+		} else {
+			for (LinphoneContact contact : c) {
+				if (!sipContacts.contains(contact)) {
+					sipContacts.add(contact);
+				}
+			}
+		}
 	}
 
 	public synchronized void refreshSipContact(Friend lf) {
