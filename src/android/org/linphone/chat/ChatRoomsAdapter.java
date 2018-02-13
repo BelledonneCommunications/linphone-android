@@ -90,11 +90,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
 		Collections.sort(mRooms, new Comparator<ChatRoom>() {
 			public int compare(ChatRoom cr1, ChatRoom cr2) {
-				EventLog cr1Logs[] = cr1.getHistoryEvents(1);
-				EventLog cr2Logs[] = cr2.getHistoryEvents(1);
-				if (cr1Logs.length <= 0)  return 1;
-				if (cr2Logs.length <= 0)  return -1;
-				long timeDiff = cr1Logs[0].getCreationTime() - cr2Logs[0].getCreationTime();
+				long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
 				if (timeDiff > 0) return -1;
 				else if (timeDiff == 0) return 0;
 				return 1;
@@ -151,13 +147,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 		holder.lastMessageView.setText("");
-		holder.date.setText("");
-
-		EventLog[] lastEvent = chatRoom.getHistoryEvents(1);
-		if (lastEvent.length > 0) {
-			time = lastEvent[0].getCreationTime();
-			holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, time, R.string.messages_list_date_format));
-		}
+		holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, chatRoom.getLastUpdateTime(), R.string.messages_list_date_format));
 
 		if (lastMessage != null) {
 			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
