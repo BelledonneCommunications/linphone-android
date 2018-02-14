@@ -322,6 +322,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
+	public void onChatMessageShouldBeStored(ChatRoom cr, ChatMessage msg) {
+
+	}
+
+	@Override
 	public void onParticipantsCapabilitiesChecked(ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {
 
 	}

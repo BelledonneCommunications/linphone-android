@@ -720,6 +720,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onChatMessageShouldBeStored(ChatRoom cr, ChatMessage msg) {
+
+	}
+
+	@Override
 	public void onParticipantsCapabilitiesChecked(ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {
 
 	}
