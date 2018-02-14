@@ -78,6 +78,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		mChatRoomsList.setOnItemClickListener(this);
 
 		mNoChatHistory = view.findViewById(R.id.noChatHistory);
+		mNoChatHistory.setVisibility(View.GONE);
 
 		mNewDiscussionButton = view.findViewById(R.id.new_discussion);
 		mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +115,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 
 	private void refreshChatRoomsList() {
 		mChatRoomsAdapter.refresh();
+		mNoChatHistory.setVisibility(mChatRoomsAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

@@ -63,16 +63,16 @@
             android:cacheColorHint="@color/transparent"
             android:dividerHeight="1dp" />
 
-        <TextView
-            android:id="@+id/noChatHistory"
-            android:text="@string/no_chat_history"
-            style="@style/font6"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"/>
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/noChatHistory"
+        android:text="@string/no_chat_history"
+        style="@style/font6"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
 
     <include layout="@layout/wait_layout" android:id="@+id/waitScreen"/>
 
