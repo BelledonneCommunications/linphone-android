@@ -570,10 +570,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 				if (this == bitmapWorkerTask && imageView != null) {
 					imageView.setImageBitmap(bitmap);
-
-					//Force scroll too bottom with setSelection() after image loaded and last messages
-					mFragment.scrollToBottom();
-
 					imageView.setTag(path);
 					imageView.setOnClickListener(new View.OnClickListener() {
 						@Override
