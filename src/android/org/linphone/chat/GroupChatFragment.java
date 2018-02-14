@@ -284,6 +284,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onDeleteSelection(Object[] objectsToDelete) {
 		for (Object obj : objectsToDelete) {
 			EventLog eventLog = (EventLog)obj;
+			if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
+				ChatMessage message = eventLog.getChatMessage();
+				if (message.getAppdata() != null) {
+					File file = new File(message.getAppdata());
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+			}
 			eventLog.deleteFromDatabase();
 		}
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {

@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,6 +46,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
@@ -72,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessageListener {
@@ -302,6 +306,12 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 							    v.setEnabled(false);
 							    String filename = message.getFileTransferInformation().getName();
 							    File file = new File(Environment.getExternalStorageDirectory(), filename);
+							    int prefix = 1;
+							    while (file.exists()) {
+								    file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
+								    Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
+								    prefix += 1;
+							    }
 							    message.setListener(ChatEventsAdapter.this);
 							    message.setFileTransferFilepath(file.getPath());
 							    message.downloadFile();
@@ -374,7 +384,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    	//TODO
 			    	break;
 		    }
-		    //holder.eventTime.setText(LinphoneUtils.timestampToHumanDate(mContext, event.getTime(), R.string.messages_date_format));
 	    }
 
         return view;

@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.EventLog;
 import org.linphone.ui.ListSelectionHelper;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.fragments.FragmentsAvailable;
@@ -43,6 +44,8 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+
+import java.io.File;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
@@ -153,6 +156,19 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		mChatRoomDeletionPendingCount = objectsToDelete.length;
 		for (Object obj : objectsToDelete) {
 			ChatRoom room = (ChatRoom)obj;
+
+			for (EventLog eventLog : room.getHistoryEvents(0)) {
+				if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
+					ChatMessage message = eventLog.getChatMessage();
+					if (message.getAppdata() != null) {
+						File file = new File(message.getAppdata());
+						if (file.exists()) {
+							file.delete();
+						}
+					}
+				}
+			}
+
 			room.setListener(new ChatRoomListenerStub() {
 				@Override
 				public void onStateChanged(ChatRoom room, ChatRoom.State state) {
