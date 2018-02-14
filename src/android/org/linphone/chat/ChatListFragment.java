@@ -160,10 +160,10 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 			for (EventLog eventLog : room.getHistoryEvents(0)) {
 				if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
 					ChatMessage message = eventLog.getChatMessage();
-					if (message.getAppdata() != null) {
+					if (message.getAppdata() != null && !message.isOutgoing()) {
 						File file = new File(message.getAppdata());
 						if (file.exists()) {
-							file.delete();
+							file.delete(); // Delete downloaded file from incoming message that will be deleted
 						}
 					}
 				}
