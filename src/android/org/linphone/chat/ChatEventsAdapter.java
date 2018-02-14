@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.Manifest;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,7 +44,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
@@ -60,7 +57,6 @@ import org.linphone.core.Buffer;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListener;
 import org.linphone.core.Content;
-import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
@@ -75,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessageListener {
