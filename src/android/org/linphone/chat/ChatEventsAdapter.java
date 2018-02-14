@@ -407,7 +407,11 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			contentUri = Uri.parse(path);
 		} else {
 			file = new File(path);
-			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+			try {
+				contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+			} catch (Exception e) {
+				contentUri = Uri.parse(path);
+			}
 		}
 		String type = null;
 		String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
