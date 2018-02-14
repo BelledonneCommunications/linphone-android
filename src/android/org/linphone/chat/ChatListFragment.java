@@ -33,7 +33,6 @@ import android.widget.TextView;
 
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.ChatRoomListenerStub;
-import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.fragments.FragmentsAvailable;

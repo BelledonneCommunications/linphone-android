@@ -40,9 +40,6 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
-import org.linphone.core.Event;
-import org.linphone.core.EventLog;
-import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
 
@@ -140,9 +137,6 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			contactAddress = chatRoom.getParticipants()[0].getAddress();
 		}
 
-		LinphoneContact contact = null;
-		String message = "";
-		Long time;
 
 		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
@@ -153,9 +147,8 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
 				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 			} else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
-				message = lastMessage.getTextContent();
 				holder.lastMessageView.setBackgroundResource(0);
-				holder.lastMessageView.setText(message);
+				holder.lastMessageView.setText(lastMessage.getTextContent());
 			}
 		}
 
@@ -163,6 +156,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		holder.contactPicture.setImageBitmap(mDefaultBitmap);
 
 		if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			LinphoneContact contact;
 			if (chatRoom.getParticipants().length > 0) {
 				contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
 				if (contact != null) {
