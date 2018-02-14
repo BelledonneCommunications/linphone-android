@@ -142,6 +142,7 @@
                     android:id="@+id/message"
                     style="@style/font11"
                     android:autoLink="web"
+                    android:textIsSelectable="true"
                     android:linksClickable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
