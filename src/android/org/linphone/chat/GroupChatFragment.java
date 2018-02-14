@@ -189,7 +189,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
 				if (mChatRoom != null && mMessageTextToSend.getText().length() > 0) {
+					mAttachImageButton.setEnabled(false);
 					mChatRoom.compose();
+				} else {
+					mAttachImageButton.setEnabled(true);
 				}
 			}
 
@@ -489,6 +492,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				View pendingImage = (View)view.getTag();
 				mFilesUploadLayout.removeView(pendingImage);
 				mAttachImageButton.setEnabled(true);
+				mMessageTextToSend.setEnabled(true);
 				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
 			}
 		});
@@ -496,6 +500,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mFilesUploadLayout.addView(pendingFile);
 
 		mAttachImageButton.setEnabled(false); // For now limit file per message to 1
+		mMessageTextToSend.setEnabled(false); // For now forbid to send both text and picture at the same time
 		mSendMessageButton.setEnabled(true);
 	}
 
@@ -521,6 +526,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				View pendingImage = (View)view.getTag();
 				mFilesUploadLayout.removeView(pendingImage);
 				mAttachImageButton.setEnabled(true);
+				mMessageTextToSend.setEnabled(true);
 				mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
 			}
 		});
@@ -528,6 +534,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mFilesUploadLayout.addView(pendingImage);
 
 		mAttachImageButton.setEnabled(false); // For now limit file per message to 1
+		mMessageTextToSend.setEnabled(false); // For now forbid to send both text and picture at the same time
 		mSendMessageButton.setEnabled(true);
 	}
 
@@ -567,6 +574,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mFilesUploadLayout.removeAllViews();
 		mAttachImageButton.setEnabled(true);
+		mMessageTextToSend.setEnabled(true);
 		mMessageTextToSend.setText("");
 	}
 
@@ -710,7 +718,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
-		//mEventsAdapter.addToHistory(event);
+
 	}
 
 	@Override
@@ -731,7 +739,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
-		//mEventsAdapter.addToHistory(event);
+
 	}
 
 	@Override
