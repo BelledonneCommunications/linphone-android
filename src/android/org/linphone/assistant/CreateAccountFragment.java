@@ -296,7 +296,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		}
 		else if (id == R.id.assistant_skip){
 			if (getArguments().getBoolean("LinkFromPref")) {
-				startActivity(new Intent().setClass(AssistantActivity.instance(), LinphoneActivity.class));
 				AssistantActivity.instance().finish();
 			} else {
 				AssistantActivity.instance().success();

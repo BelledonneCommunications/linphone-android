@@ -203,10 +203,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		}
 
-		if (getIntent() != null && getIntent().getExtras() != null) {
-			newProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
-		}
-
 		if (getResources().getBoolean(R.bool.use_linphone_tag)) {
 			if (getPackageManager().checkPermission(Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
 				checkSyncPermission();
@@ -1165,6 +1161,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (getIntent() != null && getIntent().getExtras() != null) {
+			newProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
+		}
+
 		if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
 			if (data.getExtras().getBoolean("Exit", false)) {
 				quit();

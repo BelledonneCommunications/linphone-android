@@ -262,6 +262,7 @@ private static AssistantActivity instance;
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
+		boolean firstLaunch = LinphonePreferences.instance().isFirstLaunch();
 
 		if (id == R.id.assistant_cancel) {
 			hideKeyboard();
@@ -269,8 +270,7 @@ private static AssistantActivity instance;
 			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
-				LinphonePreferences.instance().firstLaunchSuccessful();
-				startActivity(new Intent().setClass(this, LinphoneActivity.class));
+				if (firstLaunch) startActivity(new Intent().setClass(this, LinphoneActivity.class));
 				finish();
 			}
 		} else if (id == R.id.back) {
@@ -281,16 +281,17 @@ private static AssistantActivity instance;
 
 	@Override
 	public void onBackPressed() {
-		if(isLink){
+		if (isLink) {
 			return;
 		}
+		boolean firstLaunch = LinphonePreferences.instance().isFirstLaunch();
 		if (currentFragment == firstFragment) {
 			LinphonePreferences.instance().firstLaunchSuccessful();
 			if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
 				moveTaskToBack(true);
 			} else {
 				LinphonePreferences.instance().firstLaunchSuccessful();
-				startActivity(new Intent().setClass(this, LinphoneActivity.class));
+				if (firstLaunch) startActivity(new Intent().setClass(this, LinphoneActivity.class));
 				finish();
 			}
 		} else if (currentFragment == AssistantFragmentsEnum.LOGIN
@@ -299,6 +300,7 @@ private static AssistantActivity instance;
 				|| currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
 			displayMenu();
 		} else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
+			if (firstLaunch) startActivity(new Intent().setClass(this, LinphoneActivity.class));
 			finish();
 		} else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER){
 			if(lastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)){
@@ -675,7 +677,7 @@ private static AssistantActivity instance;
 
 	private void goToLinphoneActivity() {
 		mPrefs.firstLaunchSuccessful();
-		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
+		setResult(Activity.RESULT_OK, new Intent().putExtra("isNewProxyConfig", true));
 		finish();
 	}
 
