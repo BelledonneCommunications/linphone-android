@@ -2,6 +2,7 @@ package org.linphone.compatibility;
 
 
 import android.annotation.TargetApi;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -179,5 +180,9 @@ public class ApiTwentySixPlus {
 
 	public static void startService(Context context, Intent intent) {
 		context.startForegroundService(intent);
+	}
+
+	public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
+		transaction.setReorderingAllowed(allowed);
 	}
 }

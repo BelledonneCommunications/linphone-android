@@ -486,6 +486,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		}
 
+		Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
 		transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
 		transaction.commitAllowingStateLoss();
 		fm.executePendingTransactions();

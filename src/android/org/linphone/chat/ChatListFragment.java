@@ -141,7 +141,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 
 		refreshChatRoomsList();
 	}
-	
+
 	@Override
 	public void onPause() {
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();

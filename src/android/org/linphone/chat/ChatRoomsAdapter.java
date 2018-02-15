@@ -110,6 +110,9 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 	}
 
 	public void clear() {
+		for (ChatRoom room : mRooms) {
+			room.setListener(null);
+		}
 		mRooms.clear();
 	}
 

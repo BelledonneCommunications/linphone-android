@@ -3,6 +3,7 @@ package org.linphone.compatibility;
 import org.linphone.R;
 
 import android.annotation.TargetApi;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -141,5 +142,9 @@ public class ApiSixteenPlus {
 
 	public static void startService(Context context, Intent intent) {
 		context.startService(intent);
+	}
+
+	public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
+
 	}
 }

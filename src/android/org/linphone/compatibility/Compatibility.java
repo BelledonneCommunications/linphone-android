@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.mediastream.Version;
 
 import android.app.AlarmManager;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -161,6 +162,12 @@ public class Compatibility {
 			ApiTwentySixPlus.startService(context, intent);
 		} else {
 			ApiSixteenPlus.startService(context, intent);
+		}
+	}
+
+	public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
+		if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+			ApiTwentySixPlus.setFragmentTransactionReorderingAllowed(transaction, allowed);
 		}
 	}
 }
