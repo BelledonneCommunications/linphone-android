@@ -803,11 +803,15 @@ public final class LinphoneService extends Service {
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
 		if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				lc.terminateAllCalls();
+			}
+
 			Log.d("Task removed, stop service");
 
 			// If push is enabled, don't unregister account, otherwise do unregister
 			if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-				Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 				if (lc != null) lc.setNetworkReachable(false);
 			}
 			stopSelf();
