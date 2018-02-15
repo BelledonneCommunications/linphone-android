@@ -305,9 +305,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 							@Override
 							public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 								if (newState == ChatRoom.State.Created) {
+									cr.setListener(null);
 									mWaitLayout.setVisibility(View.GONE);
 									LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 								} else if (newState == ChatRoom.State.CreationFailed) {
+									cr.setListener(null);
 									mWaitLayout.setVisibility(View.GONE);
 									LinphoneActivity.instance().displayChatRoomError();
 									Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");

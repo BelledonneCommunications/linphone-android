@@ -177,9 +177,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 						@Override
 						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 							if (newState == ChatRoom.State.Created) {
+								cr.setListener(null);
 								mWaitLayout.setVisibility(View.GONE);
 								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 							} else if (newState == ChatRoom.State.CreationFailed) {
+								cr.setListener(null);
 								mWaitLayout.setVisibility(View.GONE);
 								LinphoneActivity.instance().displayChatRoomError();
 								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
@@ -268,7 +270,15 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		return view;
 	}
 
- 	private void refreshParticipantsList() {
+	@Override
+	public void onDestroy() {
+		if (mChatRoom != null) {
+			mChatRoom.setListener(null);
+		}
+		super.onDestroy();
+	}
+
+	private void refreshParticipantsList() {
 	    if (mChatRoom == null) return;
 	    mParticipants = new ArrayList<>();
 	    for (Participant p : mChatRoom.getParticipants()) {

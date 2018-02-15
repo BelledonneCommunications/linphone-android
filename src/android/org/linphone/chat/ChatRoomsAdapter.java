@@ -157,7 +157,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			contactAddress = chatRoom.getParticipants()[0].getAddress();
 		}
 
-		if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+		if (chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) && chatRoom.getState() == ChatRoom.State.Created) { // Only set for state Created otherwise it will conflict with removal listener
 			chatRoom.setListener(mListener);
 			chatRoom.setUserData(holder);
 		}
