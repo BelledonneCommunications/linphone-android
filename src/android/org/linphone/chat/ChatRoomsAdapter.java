@@ -52,6 +52,7 @@ import java.util.List;
 public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	private class ChatRoomViewHolder {
+		public TextView lastMessageSenderView;
 		public TextView lastMessageView;
 		public TextView date;
 		public TextView displayName;
@@ -60,6 +61,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		public ImageView contactPicture;
 
 		public ChatRoomViewHolder(View view) {
+			lastMessageSenderView = view.findViewById(R.id.lastMessageSender);
 			lastMessageView = view.findViewById(R.id.lastMessage);
 			date = view.findViewById(R.id.date);
 			displayName = view.findViewById(R.id.sipUri);
@@ -141,6 +143,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 		holder.lastMessageView.setText("");
+		holder.lastMessageSenderView.setText("");
 		holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, chatRoom.getLastUpdateTime(), R.string.messages_list_date_format));
 
 		if (lastMessage != null) {
@@ -149,6 +152,14 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			} else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
 				holder.lastMessageView.setBackgroundResource(0);
 				holder.lastMessageView.setText(lastMessage.getTextContent());
+			}
+
+			Address lastMessageSenderAddress = lastMessage.getFromAddress();
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lastMessageSenderAddress);
+			if (contact != null) {
+				holder.lastMessageSenderView.setText(contact.getFullName() + ": ");
+			} else {
+				holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) + ": ");
 			}
 		}
 
