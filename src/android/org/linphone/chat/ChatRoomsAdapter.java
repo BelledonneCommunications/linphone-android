@@ -40,6 +40,8 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
+import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.EventLog;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
 
@@ -75,6 +77,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 	private List<ChatRoom> mRooms;
 	private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
+	private ChatRoomListenerStub mListener;
 
 	public ChatRoomsAdapter(Context context, ListSelectionHelper helper, LayoutInflater inflater) {
 		super(helper);
@@ -83,6 +86,14 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		mRooms = new ArrayList<>();
 		mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
 		mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
+
+		mListener = new ChatRoomListenerStub() {
+			@Override
+			public void onSubjectChanged(ChatRoom cr, EventLog eventLog) {
+				ChatRoomViewHolder holder = (ChatRoomViewHolder) cr.getUserData();
+				holder.displayName.setText(cr.getSubject());
+			}
+		};
 	}
 
 	public void refresh() {
@@ -96,6 +107,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			}
 		});
 		notifyDataSetChanged();
+	}
+
+	public void clear() {
+		for (ChatRoom room : mRooms) {
+			room.setListener(null);
+		}
+		mRooms.clear();
 	}
 
 	/**
@@ -119,8 +137,8 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		View view = null;
-		ChatRoomViewHolder holder = null;
+		View view;
+		ChatRoomViewHolder holder;
 
 		if (convertView != null) {
 			view = convertView;
@@ -139,6 +157,10 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			contactAddress = chatRoom.getParticipants()[0].getAddress();
 		}
 
+		if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			chatRoom.setListener(mListener);
+			chatRoom.setUserData(holder);
+		}
 
 		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();

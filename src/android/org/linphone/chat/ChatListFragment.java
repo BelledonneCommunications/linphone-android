@@ -149,6 +149,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 			lc.removeListener(mListener);
 		}
 		ContactsManager.removeContactsListener(this);
+		mChatRoomsAdapter.clear();
 		super.onPause();
 	}
 

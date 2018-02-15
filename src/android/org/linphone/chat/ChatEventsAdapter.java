@@ -53,9 +53,8 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
-import org.linphone.core.Buffer;
 import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatMessageListener;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.Content;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
@@ -73,13 +72,14 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessageListener {
+public class ChatEventsAdapter extends ListSelectionAdapter {
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
+	private ChatMessageListenerStub mListener;
 
     public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
 	    super(helper);
@@ -88,6 +88,35 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
         mLayoutInflater = inflater;
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
+
+	    mListener = new ChatMessageListenerStub() {
+		    @Override
+		    public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
+			    ChatBubbleViewHolder holder = (ChatBubbleViewHolder)message.getUserData();
+			    if (holder == null) return;
+
+			    if (offset == total) {
+				    holder.fileTransferProgressBar.setVisibility(View.GONE);
+				    holder.fileTransferLayout.setVisibility(View.GONE);
+
+				    displayAttachedFile(message, holder);
+			    } else {
+				    holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
+				    holder.fileTransferProgressBar.setProgress(offset * 100 / total);
+			    }
+		    }
+
+		    @Override
+		    public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
+			    if (state == ChatMessage.State.FileTransferDone) {
+				    if (!message.isOutgoing()) {
+					    message.setAppdata(message.getFileTransferFilepath());
+				    }
+				    message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
+			    }
+			    notifyDataSetChanged();
+		    }
+	    };
     }
 
     public void addToHistory(EventLog log) {
@@ -102,6 +131,16 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
     public void refresh(EventLog[] history) {
 		mHistory = new ArrayList<>(Arrays.asList(history));
 	    notifyDataSetChanged();
+    }
+
+    public void clear() {
+    	for (EventLog event : mHistory) {
+		    if (event.getType() == EventLog.Type.ConferenceChatMessage) {
+			    ChatMessage message = event.getChatMessage();
+			    message.setListener(null);
+		    }
+	    }
+	    mHistory.clear();
     }
 
     @Override
@@ -169,7 +208,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 
 		    LinphoneContact contact = null;
 		    if (message.isOutgoing()) {
-			    message.setListener(ChatEventsAdapter.this);
+			    message.setListener(mListener);
 
 			    if (status == ChatMessage.State.InProgress) {
 				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
@@ -307,7 +346,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 								    Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
 								    prefix += 1;
 							    }
-							    message.setListener(ChatEventsAdapter.this);
+							    message.setListener(mListener);
 							    message.setFileTransferFilepath(file.getPath());
 							    message.downloadFile();
 						    } else {
@@ -318,7 +357,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				    });
 			    }
 		    } else if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Outgoing file transfer in progress
-				message.setListener(this); // add the listener for file upload progress display
+				message.setListener(mListener); // add the listener for file upload progress display
 				holder.messageSendingInProgress.setVisibility(View.GONE);
 				holder.fileTransferLayout.setVisibility(View.VISIBLE);
 				holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
@@ -452,47 +491,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 				});
 			}
 		}
-	}
-
-	/*
-	 * Chat message callbacks
-	 */
-
-	@Override
-	public void onFileTransferRecv(ChatMessage message, Content content, Buffer buffer) {
-
-	}
-
-	@Override
-	public Buffer onFileTransferSend(ChatMessage message, Content content, int offset, int size) {
-		return null;
-	}
-
-	@Override
-	public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-		ChatBubbleViewHolder holder = (ChatBubbleViewHolder)message.getUserData();
-		if (holder == null) return;
-
-		if (offset == total) {
-			holder.fileTransferProgressBar.setVisibility(View.GONE);
-			holder.fileTransferLayout.setVisibility(View.GONE);
-
-			displayAttachedFile(message, holder);
-		} else {
-			holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
-			holder.fileTransferProgressBar.setProgress(offset * 100 / total);
-		}
-	}
-
-	@Override
-	public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
-		if (state == ChatMessage.State.FileTransferDone) {
-			if (!message.isOutgoing()) {
-				message.setAppdata(message.getFileTransferFilepath());
-			}
-			message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
-		}
-		notifyDataSetChanged();
 	}
 
 	/*
