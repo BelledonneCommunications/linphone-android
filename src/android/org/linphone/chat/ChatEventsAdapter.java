@@ -167,9 +167,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 		    Address remoteSender = message.getFromAddress();
 			String displayName;
 
+		    LinphoneContact contact = null;
 		    if (message.isOutgoing()) {
 			    message.setListener(ChatEventsAdapter.this);
-			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 
 			    if (status == ChatMessage.State.InProgress) {
 				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
@@ -227,30 +227,11 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 		    } else {
-			    LinphoneContact contact = null;
 			    for (LinphoneContact c : mParticipants) {
 				    if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
 					    contact = c;
 					    break;
 				    }
-			    }
-			    if (contact == null) {
-			    	contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
-			    }
-			    if (contact != null) {
-				    if (contact.getFullName() != null) {
-					    displayName = contact.getFullName();
-				    } else {
-					    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-				    }
-
-				    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-				    if (contact.hasPhoto()) {
-					    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-				    }
-			    } else {
-				    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-				    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			    }
 
 			    if (isEditionEnabled()) {
@@ -266,6 +247,25 @@ public class ChatEventsAdapter extends ListSelectionAdapter implements ChatMessa
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
 			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
+		    }
+
+		    if (contact == null) {
+			    contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
+		    }
+		    if (contact != null) {
+			    if (contact.getFullName() != null) {
+				    displayName = contact.getFullName();
+			    } else {
+				    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+			    }
+
+			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			    if (contact.hasPhoto()) {
+				    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+			    }
+		    } else {
+			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		    }
 		    holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
 
