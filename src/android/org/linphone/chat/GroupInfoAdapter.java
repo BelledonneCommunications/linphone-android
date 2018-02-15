@@ -45,7 +45,7 @@ public class GroupInfoAdapter extends BaseAdapter {
     public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mInflater = inflater;
         mItems = items;
-        mHideAdminFeatures = hideAdminFeatures;
+        mHideAdminFeatures = hideAdminFeatures || isCreation;
     }
 
     @Override
