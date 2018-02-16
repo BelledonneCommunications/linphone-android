@@ -132,12 +132,31 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mLeaveGroupButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (mChatRoom != null) {
-					mChatRoom.leave();
-					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
-				} else {
-					Log.e("Can't leave, chatRoom for address " + mGroupChatRoomAddress.asString() + " is null...");
-				}
+				final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_leave_dialog));
+				Button delete = dialog.findViewById(R.id.delete_button);
+				delete.setText(getString(R.string.chat_room_leave_button));
+				Button cancel = dialog.findViewById(R.id.cancel);
+
+				delete.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						if (mChatRoom != null) {
+							mChatRoom.leave();
+							LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
+						} else {
+							Log.e("Can't leave, chatRoom for address " + mGroupChatRoomAddress.asString() + " is null...");
+						}
+						dialog.dismiss();
+					}
+				});
+
+				cancel.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
 			}
 		});
 		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft() ? View.GONE : mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
