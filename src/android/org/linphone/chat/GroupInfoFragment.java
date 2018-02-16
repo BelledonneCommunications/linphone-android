@@ -54,6 +54,7 @@ import java.util.ArrayList;
 
 public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private ImageView mBackButton, mConfirmButton, mAddParticipantsButton;
+	private RelativeLayout mAddParticipantsLayout;
 	private Address mGroupChatRoomAddress;
 	private EditText mSubjectField;
 	private LayoutInflater mInflater;
@@ -140,6 +141,13 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		});
 		mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft() ? View.GONE : mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
 
+		mAddParticipantsLayout = view.findViewById(R.id.addParticipantsLayout);
+		mAddParticipantsLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup);
+			}
+		});
 		mAddParticipantsButton = view.findViewById(R.id.addParticipants);
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
