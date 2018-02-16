@@ -178,9 +178,27 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="delivered">Reçu</string>
   <string name="sent">Envoyé</string>
   <string name="resend">Renvoyer</string>
+  <string name="error_opening_file">Une erreur est survenue en tentant d\'ouvrir ce fichier.</string>
+  <string name="conversation_information">Infos</string>
+  <string name="administrator">Admin</string>
+  <string name="conversation_subject_hint">Nommez ce groupe</string>
+  <string name="chat_room_infos_title">Infos</string>
+  <string name="chat_room_infos_admin">Admin</string>
+  <string name="chat_room_participants">Participants</string>
   <string name="chat_room_leave_group">Quitter le groupe</string>
+  <string name="chat_room_creation_filter_hint">Filtrer les contacts</string>
+  <string name="conference_created">groupe créé</string>
+  <string name="conference_destroyed">groupe détruit</string>
+  <string name="participant_added">%s a été ajouté</string>
+  <string name="participant_removed">%s a quitté</string>
+  <string name="device_added">nouvel appareil pour %s</string>
+  <string name="device_removed">appareil de %s retiré</string>
+  <string name="subject_changed">nouveau sujet : %s</string>
+  <string name="admin_set">%s est admin</string>
+  <string name="admin_unset">%s n\'est plus admin</string>
   <string name="chat_room_leave_dialog">Souhaitez-vous vraiment quitter ce groupe ?</string>
   <string name="chat_room_leave_button">Quitter</string>
+  <string name="separator">&#160;:&#160;</string>
   <!--Status Bar-->
   <string name="status_connected">Enregistré</string>
   <string name="status_not_connected">Non enregistré</string>

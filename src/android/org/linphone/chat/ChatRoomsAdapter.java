@@ -179,9 +179,9 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			Address lastMessageSenderAddress = lastMessage.getFromAddress();
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lastMessageSenderAddress);
 			if (contact != null) {
-				holder.lastMessageSenderView.setText(contact.getFullName() + ": ");
+				holder.lastMessageSenderView.setText(contact.getFullName() + mContext.getString(R.string.separator));
 			} else {
-				holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) + ": ");
+				holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) +  mContext.getString(R.string.separator));
 			}
 		}
 
