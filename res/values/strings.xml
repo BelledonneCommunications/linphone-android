@@ -217,6 +217,7 @@
     <string name="chat_room_creation_failed">Chat room creation failed</string>
     <string name="chat_room_leave_dialog">Do you really want to leave this group?</string>
     <string name="chat_room_leave_button">Leave</string>
+    <string name="chat_room_delete_dialog">Do you want to delete and leave the selected conversations?</string>
     <string name="separator">:&#160;</string>
 
     <!-- Status Bar -->

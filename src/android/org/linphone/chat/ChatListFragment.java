@@ -69,6 +69,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		mSelectionHelper = new ListSelectionHelper(view, this);
 		mChatRoomsAdapter = new ChatRoomsAdapter(getActivity(), mSelectionHelper, mInflater);
 		mSelectionHelper.setAdapter(mChatRoomsAdapter);
+		mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
 		mWaitLayout = view.findViewById(R.id.waitScreen);
 		mWaitLayout.setVisibility(View.GONE);

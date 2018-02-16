@@ -35,6 +35,11 @@ public class ListSelectionHelper {
 	private ListSelectionAdapter mAdapter;
 	private DeleteListener mDeleteListener;
 	private Context mContext;
+	private int mDialogDeleteMessageResourceId;
+
+	public void setDialogMessage(int id) {
+		mDialogDeleteMessageResourceId = id;
+	}
 
 	public interface DeleteListener {
 		void onDeleteSelection(Object[] objectsToDelete);
@@ -86,7 +91,7 @@ public class ListSelectionHelper {
 		mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final Dialog dialog = LinphoneActivity.instance().displayDialog(mContext.getString(R.string.delete_text));
+				final Dialog dialog = LinphoneActivity.instance().displayDialog(mContext.getString(mDialogDeleteMessageResourceId));
 				Button delete = dialog.findViewById(R.id.delete_button);
 				Button cancel = dialog.findViewById(R.id.cancel);
 
@@ -109,6 +114,8 @@ public class ListSelectionHelper {
 				dialog.show();
 			}
 		});
+
+		mDialogDeleteMessageResourceId = R.string.delete_text;
 	}
 
 	public void setAdapter(ListSelectionAdapter adapter) {

@@ -198,6 +198,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="admin_unset">%s n\'est plus admin</string>
   <string name="chat_room_leave_dialog">Souhaitez-vous vraiment quitter ce groupe ?</string>
   <string name="chat_room_leave_button">Quitter</string>
+  <string name="chat_room_delete_dialog">Voulez-vous supprimer et quitter les discussions sélectionnées ?</string>
   <string name="separator">&#160;:&#160;</string>
   <!--Status Bar-->
   <string name="status_connected">Enregistré</string>
