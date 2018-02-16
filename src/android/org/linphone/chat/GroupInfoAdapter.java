@@ -32,6 +32,8 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +43,16 @@ public class GroupInfoAdapter extends BaseAdapter {
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
+    private ChatRoom mChatRoom;
 
     public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mInflater = inflater;
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures || isCreation;
+    }
+
+    public void setChatRoom(ChatRoom room) {
+    	mChatRoom = room;
     }
 
     @Override
@@ -119,6 +126,17 @@ public class GroupInfoAdapter extends BaseAdapter {
             delete.setVisibility(View.INVISIBLE);
             isAdmin.setOnClickListener(null); // Do not allow not admin to remove it's rights but display admins
             isNotAdmin.setVisibility(View.GONE); // Hide not admin button for not admin participants
+        } else if (mChatRoom != null) {
+	        boolean found = false;
+	        for (Participant p : mChatRoom.getParticipants()) {
+		        if (p.getAddress().asStringUriOnly().equals(ca.getAddress().asStringUriOnly())) {
+			        found = true;
+			        break;
+		        }
+	        }
+	        if (!found) {
+		        isNotAdmin.setVisibility(View.GONE); // Hide not admin button for participant not yet added so even if user click it it won't have any effect
+	        }
         }
 
         return view;

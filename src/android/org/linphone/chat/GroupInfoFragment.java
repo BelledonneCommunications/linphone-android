@@ -112,6 +112,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			}
 		});
 		mParticipantsList.setAdapter(mAdapter);
+		mAdapter.setChatRoom(mChatRoom);
 
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -302,10 +303,12 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	    }
 
 	    mAdapter.updateDataSet(mParticipants);
+	    mAdapter.setChatRoom(mChatRoom);
     }
 
     private void refreshAdminRights() {
 	    mAdapter.setAdminFeaturesVisible(mIsEditionEnabled);
+	    mAdapter.setChatRoom(mChatRoom);
 	    mSubjectField.setEnabled(mIsEditionEnabled);
 	    mConfirmButton.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.INVISIBLE);
 	    mAddParticipantsButton.setVisibility(mIsEditionEnabled ? View.VISIBLE : View.GONE);
