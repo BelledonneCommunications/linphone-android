@@ -38,6 +38,7 @@ import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.contacts.ContactAddress;
+import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
@@ -151,7 +152,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			updateListSelected();
 		}
 
-		mOnlyDisplayLinphoneContacts = true;
+		mOnlyDisplayLinphoneContacts = ContactsManager.getInstance().getSIPContacts().size() > 0 ? true : false;
 		if (savedInstanceState != null ) {
 			mOnlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact", true);
 		}

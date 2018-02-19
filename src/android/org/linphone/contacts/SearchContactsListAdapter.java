@@ -119,10 +119,12 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			List<LinphoneContact> contacts = mOnlySipContact ? ContactsManager.getInstance().getSIPContacts() : ContactsManager.getInstance().getContacts();
 			for (LinphoneContact contact : contacts) {
 				for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-					if (!mOnlySipContact || (mOnlySipContact && contact.getPresenceModelForUriOrTel(noa.getValue()) != null)) {
+					if (!mOnlySipContact || (mOnlySipContact && (noa.isSIPAddress() || contact.getPresenceModelForUriOrTel(noa.getValue()) != null))) {
 						Address address = LinphoneManager.getLc().interpretUrl(noa.getValue());
-						ContactAddress ca = new ContactAddress(contact, address.asString(), contact.isFriend());
-						list.add(ca);
+						if (address != null) {
+							ContactAddress ca = new ContactAddress(contact, address.asString(), contact.isFriend());
+							list.add(ca);
+						}
 					}
 				}
 			}
