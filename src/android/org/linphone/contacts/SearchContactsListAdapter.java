@@ -86,7 +86,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 	private boolean contactIsSelected(ContactAddress ca) {
 		for (ContactAddress c : contactsSelected) {
-			if (c.getAddressAsDisplayableString().compareTo(ca.getAddressAsDisplayableString()) == 0) return true;
+			if (c.getAddress().asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0) return true;
 		}
 		return false;
 	}
