@@ -1164,7 +1164,7 @@ public class LinphonePreferences {
 	}
 
 	public boolean isPushNotificationEnabled() {
-		return getConfig().getBool("app", "push_notification", false);
+		return getConfig().getBool("app", "push_notification", true);
 	}
 
 	public void setPushNotificationRegistrationID(String regId) {
