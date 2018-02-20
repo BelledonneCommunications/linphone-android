@@ -23,6 +23,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.linphone.core.AVPFMode;
 import org.linphone.core.Address;
 import org.linphone.core.TransportType;
@@ -1174,7 +1176,12 @@ public class LinphonePreferences {
 	}
 
 	public String getPushNotificationRegistrationID() {
-		return getConfig().getString("app", "push_notification_regid", null);
+		String pushId = getConfig().getString("app", "push_notification_regid", null);
+		if (pushId == null) {
+			pushId = FirebaseInstanceId.getInstance().getToken();
+			setPushNotificationRegistrationID(pushId);
+		}
+		return pushId;
 	}
 
 	public void useIpv6(Boolean enable) {
