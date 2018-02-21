@@ -1166,10 +1166,14 @@ public class LinphonePreferences {
 			 if (regId != null && lc.getProxyConfigList().length > 0) {
 				 for (LinphoneProxyConfig lpc : lc.getProxyConfigList()) {
 					 String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
-					 lpc.edit();
-					 lpc.setContactUriParameters(contactInfos);
-					 lpc.done();
-					 Log.d("Push notif infos added to proxy config " + lpc.getAddress().asStringUriOnly());
+
+					 String prevContactParams = lpc.getContactParameters();
+					 if (prevContactParams == null || prevContactParams.compareTo(contactInfos)!=0) {
+						 lpc.edit();
+						 lpc.setContactUriParameters(contactInfos);
+						 lpc.done();
+						 Log.d("Push notif infos added to proxy config " + lpc.getIdentity());
+					 }
 				 }
 				 lc.refreshRegisters();
 			 }

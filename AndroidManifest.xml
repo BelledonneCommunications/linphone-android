@@ -293,7 +293,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".firebase.FirebaseIdService">
+        <service android:name=".firebase.FirebaseIdService" android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
