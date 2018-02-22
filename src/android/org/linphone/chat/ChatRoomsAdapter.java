@@ -111,7 +111,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	public void clear() {
 		for (ChatRoom room : mRooms) {
-			room.setListener(null);
+			room.removeListener(mListener);
 		}
 		mRooms.clear();
 	}
@@ -158,7 +158,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		}
 
 		if (chatRoom.hasCapability(ChatRoomCapabilities.Conference.toInt()) && chatRoom.getState() == ChatRoom.State.Created) { // Only set for state Created otherwise it will conflict with removal listener
-			chatRoom.setListener(mListener);
+			chatRoom.addListener(mListener);
 			chatRoom.setUserData(holder);
 		}
 

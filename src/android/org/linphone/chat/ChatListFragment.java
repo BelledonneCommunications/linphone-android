@@ -60,6 +60,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 	private ListSelectionHelper mSelectionHelper;
 	private RelativeLayout mWaitLayout;
 	private int mChatRoomDeletionPendingCount;
+	private ChatRoomListenerStub mChatRoomListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,6 +108,25 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 			public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
 				if (state == ChatRoom.State.Created) {
 					refreshChatRoomsList();
+				}
+			}
+		};
+
+		mChatRoomListener = new ChatRoomListenerStub() {
+			@Override
+			public void onStateChanged(ChatRoom room, ChatRoom.State state) {
+				super.onStateChanged(room, state);
+				if (state == ChatRoom.State.Deleted || state == ChatRoom.State.TerminationFailed) {
+					mChatRoomDeletionPendingCount -= 1;
+
+					if (state == ChatRoom.State.TerminationFailed) {
+						//TODO error message
+					}
+
+					if (mChatRoomDeletionPendingCount == 0) {
+						mWaitLayout.setVisibility(View.GONE);
+						refreshChatRoomsList();
+					}
 				}
 			}
 		};
@@ -173,24 +193,7 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 				}
 			}
 
-			room.setListener(new ChatRoomListenerStub() {
-				@Override
-				public void onStateChanged(ChatRoom room, ChatRoom.State state) {
-					super.onStateChanged(room, state);
-					if (state == ChatRoom.State.Deleted || state == ChatRoom.State.TerminationFailed) {
-						mChatRoomDeletionPendingCount -= 1;
-
-						if (state == ChatRoom.State.TerminationFailed) {
-							//TODO error message
-						}
-
-						if (mChatRoomDeletionPendingCount == 0) {
-							mWaitLayout.setVisibility(View.GONE);
-							refreshChatRoomsList();
-						}
-					}
-				}
-			});
+			room.addListener(mChatRoomListener);
 			lc.deleteChatRoom(room);
 		}
 		if (mChatRoomDeletionPendingCount > 0) {
