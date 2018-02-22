@@ -355,16 +355,24 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void changeStatusToOnline() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) return;
+		PresenceModel model = lc.createPresenceModel();
+		model.setBasicStatus(PresenceBasicStatus.Open);
+		lc.setPresenceModel(model);
+		/*
 		if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.TV) {
 			lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.TV);
 		} else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
 			PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivity.Type.TV, null);
 			lc.setPresenceModel(model);
 		}
+		*/
 	}
 
 	public void changeStatusToOnThePhone() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) return;
+		
 		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.OnThePhone) {
 			lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
 		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
@@ -376,7 +384,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	public void changeStatusToOffline() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
 		if (isInstanciated() && lc != null) {
-			lc.getPresenceModel().setBasicStatus(PresenceBasicStatus.Closed);
+			PresenceModel model = lc.getPresenceModel();
+			model.setBasicStatus(PresenceBasicStatus.Closed);
+			lc.setPresenceModel(model);
 		}
 	}
 
