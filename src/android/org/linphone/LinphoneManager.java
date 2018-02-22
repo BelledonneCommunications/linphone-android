@@ -72,8 +72,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.activities.LinphoneActivity;
@@ -679,7 +677,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				Log.i("[Push Notification] Assuming GCM jar is not provided.");
 			}
 		}else if (getString(R.string.push_type).equals("firebase")){
-			final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+			final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
 			if (refreshedToken != null) {
 				Log.i("[Push Notification] current token is: " + refreshedToken);
 				LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
