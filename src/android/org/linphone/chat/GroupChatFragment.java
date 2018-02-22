@@ -233,7 +233,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		ContactsManager.removeContactsListener(this);
 		removeVirtualKeyboardVisiblityListener();
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
-		if (mChatRoom != null) mChatRoom.setListener(null);
+		if (mChatRoom != null) mChatRoom.removeListener(this);
 		mEventsAdapter.clear();
 		super.onPause();
 	}
@@ -390,7 +390,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		if (mChatRoom == null) {
 			mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
 		}
-		mChatRoom.setListener(this);
+		mChatRoom.addListener(this);
 		mChatRoom.markAsRead();
 		LinphoneActivity.instance().updateMissedChatCount();
 

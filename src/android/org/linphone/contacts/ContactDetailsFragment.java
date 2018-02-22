@@ -54,6 +54,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
+	private ChatRoom mChatRoom;
+	private ChatRoomListenerStub mChatRoomCreationListener;
 
 	private OnClickListener dialListener = new OnClickListener() {
 		@Override
@@ -77,21 +79,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 				} else {
 					mWaitLayout.setVisibility(View.VISIBLE);
-					room = LinphoneManager.getLc().createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-					room.setListener(new ChatRoomListenerStub() {
-						@Override
-						public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-							if (newState == ChatRoom.State.Created) {
-								mWaitLayout.setVisibility(View.GONE);
-								LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
-							} else if (newState == ChatRoom.State.CreationFailed) {
-								mWaitLayout.setVisibility(View.GONE);
-								LinphoneActivity.instance().displayChatRoomError();
-								Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
-							}
-						}
-					});
-					room.addParticipant(participant);
+					mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+					mChatRoom.addListener(mChatRoomCreationListener);
+					mChatRoom.addParticipant(participant);
 				}
 			}
 		}
@@ -132,7 +122,29 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			back.setOnClickListener(this);
 		}
 
+		mChatRoomCreationListener = new ChatRoomListenerStub() {
+			@Override
+			public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+				if (newState == ChatRoom.State.Created) {
+					mWaitLayout.setVisibility(View.GONE);
+					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+				} else if (newState == ChatRoom.State.CreationFailed) {
+					mWaitLayout.setVisibility(View.GONE);
+					LinphoneActivity.instance().displayChatRoomError();
+					Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+				}
+			}
+		};
+
 		return view;
+	}
+
+	@Override
+	public void onPause() {
+		if (mChatRoom != null) {
+			mChatRoom.removeListener(mChatRoomCreationListener);
+		}
+		super.onPause();
 	}
 
 	public void changeDisplayedContact(LinphoneContact newContact) {

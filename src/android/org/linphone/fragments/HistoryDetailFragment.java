@@ -51,6 +51,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private String sipUri, displayName, pictureUri;
 	private RelativeLayout mWaitLayout;
 	private LinphoneContact contact;
+	private ChatRoom mChatRoom;
+	private ChatRoomListenerStub mChatRoomCreationListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,7 +102,29 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
 		displayHistory(status, callTime, callDate);
 
+		mChatRoomCreationListener = new ChatRoomListenerStub() {
+			@Override
+			public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+				if (newState == ChatRoom.State.Created) {
+					mWaitLayout.setVisibility(View.GONE);
+					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+				} else if (newState == ChatRoom.State.CreationFailed) {
+					mWaitLayout.setVisibility(View.GONE);
+					LinphoneActivity.instance().displayChatRoomError();
+					Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
+				}
+			}
+		};
+
 		return view;
+	}
+
+	@Override
+	public void onPause() {
+		if (mChatRoom != null) {
+			mChatRoom.removeListener(mChatRoomCreationListener);
+		}
+		super.onPause();
 	}
 
 	private void displayHistory(String status, String callTime, String callDate) {
@@ -176,21 +200,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 			} else {
 				mWaitLayout.setVisibility(View.VISIBLE);
-				room = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-				room.setListener(new ChatRoomListenerStub() {
-					@Override
-					public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-						if (newState == ChatRoom.State.Created) {
-							mWaitLayout.setVisibility(View.GONE);
-							LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
-						} else if (newState == ChatRoom.State.CreationFailed) {
-							mWaitLayout.setVisibility(View.GONE);
-							LinphoneActivity.instance().displayChatRoomError();
-							Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
-						}
-					}
-				});
-				room.addParticipant(participant);
+				mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+				mChatRoom.addListener(mChatRoomCreationListener);
+				mChatRoom.addParticipant(participant);
 			}
 		} else if (id == R.id.add_contact) {
 			Address addr = Factory.instance().createAddress(sipUri);
