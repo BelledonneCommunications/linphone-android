@@ -51,7 +51,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private String sipUri, displayName, pictureUri;
 	private RelativeLayout mWaitLayout;
 	private LinphoneContact contact;
-	private ChatRoom mChatRoom;
 	private ChatRoomListenerStub mChatRoomCreationListener;
 
 	@Override
@@ -117,14 +116,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		};
 
 		return view;
-	}
-
-	@Override
-	public void onPause() {
-		if (mChatRoom != null) {
-			mChatRoom.removeListener(mChatRoomCreationListener);
-		}
-		super.onPause();
 	}
 
 	private void displayHistory(String status, String callTime, String callDate) {
@@ -200,9 +191,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 			} else {
 				mWaitLayout.setVisibility(View.VISIBLE);
-				mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-				mChatRoom.addListener(mChatRoomCreationListener);
-				mChatRoom.addParticipant(participant);
+				room = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+				room.addListener(mChatRoomCreationListener);
+				room.addParticipant(participant);
 			}
 		} else if (id == R.id.add_contact) {
 			Address addr = Factory.instance().createAddress(sipUri);
