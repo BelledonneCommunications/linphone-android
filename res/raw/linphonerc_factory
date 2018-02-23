@@ -56,7 +56,3 @@ username_max_length=64
 username_min_length=1
 username_regex=^[a-z0-9_.\-]*$
 xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
-
-[server]
-db_uri=/data/user/0/org.linphone/files/linphone.db
-db_backend=sqlite3
