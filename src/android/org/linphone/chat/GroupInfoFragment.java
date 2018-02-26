@@ -66,7 +66,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private boolean mIsEditionEnabled;
 	private ArrayList<ContactAddress> mParticipants;
 	private String mSubject;
-	private ChatRoom mChatRoom;
+	private ChatRoom mChatRoom, mTempChatRoom;
 	private Dialog mAdminStateChangedDialog;
 	private ChatRoomListenerStub mChatRoomCreationListener;
 
@@ -215,8 +215,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			public void onClick(View view) {
 				if (!mIsAlreadyCreatedGroup) {
 					mWaitLayout.setVisibility(View.VISIBLE);
-					ChatRoom room = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString());
-					room.addListener(mChatRoomCreationListener);
+					mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString());
+					mTempChatRoom.addListener(mChatRoomCreationListener);
 
 					Address addresses[] = new Address[mParticipants.size()];
 					int index = 0;
@@ -224,7 +224,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 						addresses[index] = ca.getAddress();
 						index++;
 					}
-					room.addParticipants(addresses);
+					mTempChatRoom.addParticipants(addresses);
 				} else {
 					// Subject
 					String newSubject = mSubjectField.getText().toString();
@@ -297,6 +297,14 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		}
 
 		return view;
+	}
+
+	@Override
+	public void onPause() {
+		if (mTempChatRoom != null) {
+			mTempChatRoom.removeListener(mChatRoomCreationListener);
+		}
+		super.onPause();
 	}
 
 	@Override

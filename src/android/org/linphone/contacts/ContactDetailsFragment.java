@@ -54,6 +54,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	private LayoutInflater inflater;
 	private View view;
 	private boolean displayChatAddressOnly = false;
+	private ChatRoom mChatRoom;
 	private ChatRoomListenerStub mChatRoomCreationListener;
 
 	private OnClickListener dialListener = new OnClickListener() {
@@ -78,9 +79,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 				} else {
 					mWaitLayout.setVisibility(View.VISIBLE);
-					room = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-					room.addListener(mChatRoomCreationListener);
-					room.addParticipant(participant);
+					mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+					mChatRoom.addListener(mChatRoomCreationListener);
+					mChatRoom.addParticipant(participant);
 				}
 			}
 		}
@@ -136,6 +137,14 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		};
 
 		return view;
+	}
+
+	@Override
+	public void onPause() {
+		if (mChatRoom != null) {
+			mChatRoom.removeListener(mChatRoomCreationListener);
+		}
+		super.onPause();
 	}
 
 	public void changeDisplayedContact(LinphoneContact newContact) {

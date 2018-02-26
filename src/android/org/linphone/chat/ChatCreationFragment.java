@@ -67,6 +67,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private ProgressBar mContactsFetchInProgress;
 	private SearchContactsListAdapter mSearchAdapter;
 	private String mChatRoomSubject, mChatRoomAddress;
+	private ChatRoom mChatRoom;
 	private ChatRoomListenerStub mChatRoomCreationListener;
 
 	@Override
@@ -177,6 +178,14 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		};
 
 		return view;
+	}
+
+	@Override
+	public void onPause() {
+		if (mChatRoom != null) {
+			mChatRoom.removeListener(mChatRoomCreationListener);
+		}
+		super.onPause();
 	}
 
 	private void displayChatCreation() {
@@ -316,9 +325,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					Address participant = mContactsSelected.get(0).getAddress();
 					ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
 					if (chatRoom == null) {
-						chatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-						chatRoom.addListener(mChatRoomCreationListener);
-						chatRoom.addParticipant(participant);
+						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+						mChatRoom.addListener(mChatRoomCreationListener);
+						mChatRoom.addParticipant(participant);
 					} else {
 						LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
 					}
