@@ -784,8 +784,10 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 	private void sendImageMessage(String path, int imageSize) {
 		if(path.contains("file://")) {
 			path = path.split("file:///", 2)[1];
+		} else if (path.contains("content://")){
+			path = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(path));
 		}
-		if(path.contains("%20")) {
+		if(path != null && path.contains("%20")) {
 			path = path.replace("%20", "-");
 		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -844,7 +846,7 @@ public class ChatFragment extends Fragment implements OnClickListener, LinphoneC
 		} else if (path.contains("content://")){
 			path = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(path));
 		}
-		if(path.contains("%20")) {
+		if(path != null && path.contains("%20")) {
 			path = path.replace("%20", "-");
 		}
 		LinphoneCore lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
