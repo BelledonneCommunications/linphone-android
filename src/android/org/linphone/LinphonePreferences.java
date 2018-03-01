@@ -560,6 +560,7 @@ public class LinphonePreferences {
 			ProxyConfig prxCfg = getProxyConfig(n);
 			prxCfg.edit();
 			prxCfg.getNatPolicy().enableIce(ice);
+			prxCfg.getNatPolicy().enableStun(ice);
 			prxCfg.done();
 		} catch (Exception e) {
 			Log.e(e);
@@ -577,7 +578,6 @@ public class LinphonePreferences {
 			prxCfg.edit();
 			NatPolicy np = prxCfg.getNatPolicy();
 			np.setStunServer(stun);
-			np.enableStun(stun!=null);
 			prxCfg.done();
 		} catch (Exception e) {
 			Log.e(e);
@@ -1041,7 +1041,6 @@ public class LinphonePreferences {
 		nat.setStunServer(stun);
 
 		if (stun != null && !stun.isEmpty()) {
-			nat.enableStun(true);
 		}
 		getLc().setNatPolicy(nat);
 	}
@@ -1049,6 +1048,7 @@ public class LinphonePreferences {
 	public void setIceEnabled(boolean enabled) {
 		NatPolicy nat = getOrCreateNatPolicy();
 		nat.enableIce(enabled);
+		nat.enableStun(enabled);
 		getLc().setNatPolicy(nat);
 	}
 
