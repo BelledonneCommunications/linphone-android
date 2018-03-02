@@ -27,6 +27,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,6 +52,8 @@ import org.linphone.core.Participant;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private ImageView mBackButton, mConfirmButton, mAddParticipantsButton;
@@ -297,6 +300,14 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		}
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 	}
 
 	@Override
