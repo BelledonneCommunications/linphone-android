@@ -39,7 +39,7 @@ ec_calibrator_cool_tones=1
 conference_factory_uri=sip:conference-factory@sip.linphone.org
 max_calls=10
 history_max_size=100
-enable_basic_to_client_group_chat_room_migration=1
+enable_basic_to_client_group_chat_room_migration=0
 
 [app]
 activation_code_length=4
