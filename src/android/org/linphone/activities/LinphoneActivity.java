@@ -301,6 +301,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			LinphoneManager.getLc().setDeviceRotation(rotation);
 		}
 		mAlwaysChangingPhoneAngle = rotation;
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null && extras.getBoolean("GoToChat", false)) {
+			onNewIntent(getIntent());
+		}
 	}
 
 	private void initButtons() {
