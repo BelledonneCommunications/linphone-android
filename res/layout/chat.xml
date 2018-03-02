@@ -142,7 +142,7 @@
 				android:textColor="@color/colorB"
 				android:imeOptions="flagNoExtractUi"
 				android:textCursorDrawable="@null"
-				android:inputType="textShortMessage|textMultiLine"
+				android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
 				android:contentDescription="@string/content_description_message"
 				android:maxLines="6"
 				android:padding="5dp"
