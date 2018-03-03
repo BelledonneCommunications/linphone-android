@@ -86,7 +86,9 @@ public class SearchContactsListAdapter extends BaseAdapter {
 
 	private boolean contactIsSelected(ContactAddress ca) {
 		for (ContactAddress c : contactsSelected) {
-			if (c.getAddress().asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0) return true;
+			Address addr = c.getAddress();
+			if (addr == null) continue;
+			if (addr.asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0) return true;
 		}
 		return false;
 	}
@@ -166,7 +168,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			searchAddress = search;
 		}
 
-        boolean searchFound = false;
+		boolean searchFound = false;
 		if (search != null) {
 			for (ContactAddress c : (search.length() < oldSize) ? getContactsList() : getContacts()) {
 				String address = c.getAddressAsDisplayableString();
