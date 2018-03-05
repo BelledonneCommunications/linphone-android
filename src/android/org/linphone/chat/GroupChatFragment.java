@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -74,6 +75,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
 public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
@@ -220,6 +222,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		addVirtualKeyboardVisiblityListener();
 		// Force hide keyboard
 		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
 		initChatRoom();
 		displayChatRoomHeader();
