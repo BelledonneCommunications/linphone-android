@@ -78,10 +78,16 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				if (room != null) {
 					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 				} else {
-					mWaitLayout.setVisibility(View.VISIBLE);
-					mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-					mChatRoom.addListener(mChatRoomCreationListener);
-					mChatRoom.addParticipant(participant);
+					ProxyConfig lpc = lc.getDefaultProxyConfig();
+					if (lpc != null && lpc.getConferenceFactoryUri() != null) {
+						room = lc.getChatRoom(participant);
+						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+					} else {
+						mWaitLayout.setVisibility(View.VISIBLE);
+						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+						mChatRoom.addListener(mChatRoomCreationListener);
+						mChatRoom.addParticipant(participant);
+					}
 				}
 			}
 		}

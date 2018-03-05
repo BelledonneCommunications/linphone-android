@@ -45,6 +45,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -336,9 +337,15 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					Address participant = mContactsSelected.get(0).getAddress();
 					ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
 					if (chatRoom == null) {
-						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-						mChatRoom.addListener(mChatRoomCreationListener);
-						mChatRoom.addParticipant(participant);
+						ProxyConfig lpc = lc.getDefaultProxyConfig();
+						if (lpc != null && lpc.getConferenceFactoryUri() != null) {
+							chatRoom = lc.getChatRoom(participant);
+							LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
+						} else {
+							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+							mChatRoom.addListener(mChatRoomCreationListener);
+							mChatRoom.addParticipant(participant);
+						}
 					} else {
 						LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
 					}
@@ -361,7 +368,14 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 		ContactAddress ca = mSearchAdapter.getContacts().get(i);
-		removeContactFromSelection(ca);
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		ProxyConfig lpc = lc.getDefaultProxyConfig();
+		if (lpc == null || lpc.getConferenceFactoryUri() == null) {
+			ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
+			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
+		} else {
+			removeContactFromSelection(ca);
+		}
 	}
 
 	@Override

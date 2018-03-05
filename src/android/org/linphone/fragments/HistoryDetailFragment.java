@@ -41,6 +41,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
@@ -199,10 +200,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			if (room != null) {
 				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 			} else {
-				mWaitLayout.setVisibility(View.VISIBLE);
-				mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
-				mChatRoom.addListener(mChatRoomCreationListener);
-				mChatRoom.addParticipant(participant);
+				ProxyConfig lpc = lc.getDefaultProxyConfig();
+				if (lpc != null && lpc.getConferenceFactoryUri() != null) {
+					room = lc.getChatRoom(participant);
+					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+				} else {
+					mWaitLayout.setVisibility(View.VISIBLE);
+					mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
+					mChatRoom.addListener(mChatRoomCreationListener);
+					mChatRoom.addParticipant(participant);
+				}
 			}
 		} else if (id == R.id.add_contact) {
 			Address addr = Factory.instance().createAddress(sipUri);

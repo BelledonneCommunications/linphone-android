@@ -723,6 +723,15 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 		mLc.migrateLogsFromRcToDb();
 
+		// Migrate existing linphone accounts to have conference factory uri set
+		for (ProxyConfig lpc : mLc.getProxyConfigList()) {
+			if (lpc.getConferenceFactoryUri() == null && lpc.getIdentityAddress().getDomain().equals(getString(R.string.default_domain))) {
+				lpc.edit();
+				lpc.setConferenceFactoryUri(getString(R.string.default_conference_factory_uri));
+				lpc.done();
+			}
+		}
+
 		if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
 			initPushNotificationsService();
 		}
