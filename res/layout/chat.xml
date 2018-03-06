@@ -181,6 +181,7 @@
 		android:transcriptMode="normal"
 		android:dividerHeight="10dp"
 		android:cacheColorHint="@color/transparent"
+        android:listSelector="@color/transparent"
 		android:layout_above="@id/remote_composing"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
