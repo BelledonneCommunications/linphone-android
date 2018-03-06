@@ -97,6 +97,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (offset == total) {
 				    holder.fileTransferProgressBar.setVisibility(View.GONE);
+				    holder.fileTransferAction.setVisibility(View.GONE);
 				    holder.fileTransferLayout.setVisibility(View.GONE);
 
 				    displayAttachedFile(message, holder);
@@ -329,7 +330,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    holder.fileTransferLayout.setVisibility(View.VISIBLE);
 			    holder.fileTransferProgressBar.setVisibility(View.GONE);
-			    if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Incoming file transfer in progress
+			    if (message.isFileTransferInProgress()) { // Incoming file transfer in progress
 				    holder.fileTransferAction.setVisibility(View.GONE);
 			    } else {
 				    holder.fileTransferAction.setText(mContext.getString(R.string.accept));
@@ -349,6 +350,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 							    message.setListener(mListener);
 							    message.setFileTransferFilepath(file.getPath());
 							    message.downloadFile();
+
 						    } else {
 							    Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
 							    LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
@@ -356,7 +358,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 					    }
 				    });
 			    }
-		    } else if (message.getState() == ChatMessage.State.InProgress && message.getFileTransferFilepath() != null) { // Outgoing file transfer in progress
+		    } else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
 				message.setListener(mListener); // add the listener for file upload progress display
 				holder.messageSendingInProgress.setVisibility(View.GONE);
 				holder.fileTransferLayout.setVisibility(View.VISIBLE);
