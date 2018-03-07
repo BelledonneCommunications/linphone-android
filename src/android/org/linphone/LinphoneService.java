@@ -452,11 +452,13 @@ public final class LinphoneService extends Service {
 			}, 5000);
 		}
 
-		//make sure the application will at least wakes up every 10 mn
-		Intent intent = new Intent(this, KeepAliveReceiver.class);
-		PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-		AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
-		Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+		//make sure the application will at least wakes up every 10 mn when background mode is enabled.
+		if (LinphonePreferences.instance().isBackgroundModeEnabled()) {
+			Intent intent = new Intent(this, KeepAliveReceiver.class);
+			PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+			AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
+			Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+		}
 
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 	}
