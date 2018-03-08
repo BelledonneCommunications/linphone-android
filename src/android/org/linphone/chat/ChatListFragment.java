@@ -34,6 +34,7 @@ import android.widget.TextView;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.EventLog;
+import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.fragments.FragmentsAvailable;
@@ -49,12 +50,11 @@ import java.io.File;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-public class ChatListFragment extends Fragment implements OnItemClickListener, ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
+public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
 	private LayoutInflater mInflater;
 	private ListView mChatRoomsList;
 	private TextView mNoChatHistory;
 	private ImageView mNewDiscussionButton, mBackToCallButton;
-	private boolean isEditMode = false;
 	private ChatRoomsAdapter mChatRoomsAdapter;
 	private CoreListenerStub mListener;
 	private ListSelectionHelper mSelectionHelper;
@@ -77,7 +77,6 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 
 		mChatRoomsList = view.findViewById(R.id.chatList);
 		mChatRoomsList.setAdapter(mChatRoomsAdapter);
-		mChatRoomsList.setOnItemClickListener(this);
 
 		mNoChatHistory = view.findViewById(R.id.noChatHistory);
 		mNoChatHistory.setVisibility(View.GONE);
@@ -209,15 +208,6 @@ public class ChatListFragment extends Fragment implements OnItemClickListener, C
 		ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
 		if (adapter != null) {
 			adapter.notifyDataSetInvalidated();
-		}
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		ChatRoom chatRoom = (ChatRoom) mChatRoomsList.getAdapter().getItem(position);
-
-		if (LinphoneActivity.isInstanciated() && !isEditMode) {
-			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asString());
 		}
 	}
 }

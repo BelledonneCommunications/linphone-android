@@ -136,7 +136,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup viewGroup) {
+	public View getView(final int position, View convertView, ViewGroup viewGroup) {
 		View view;
 		ChatRoomViewHolder holder;
 
@@ -226,6 +226,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		}
 
 		if (isEditionEnabled()) {
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ChatRoomViewHolder holder = (ChatRoomViewHolder)v.getTag();
+					holder.delete.setChecked(!holder.delete.isChecked());
+				}
+			});
 			holder.unreadMessages.setVisibility(View.GONE);
 			holder.delete.setOnCheckedChangeListener(null);
 			holder.delete.setVisibility(View.VISIBLE);
@@ -233,6 +240,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			holder.delete.setTag(position);
 			holder.delete.setOnCheckedChangeListener(getDeleteListener());
 		} else {
+			view.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ChatRoom chatRoom = mRooms.get(position);
+					LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asString());
+				}
+			});
 			holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
 		}
 		return view;
