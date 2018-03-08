@@ -204,6 +204,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 				if (newState == ChatRoom.State.Created) {
 					mWaitLayout.setVisibility(View.GONE);
+					// This will remove both the creation fragment and the group info fragment from the back stack
+					getFragmentManager().popBackStack();
+					getFragmentManager().popBackStack();
 					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
 				} else if (newState == ChatRoom.State.CreationFailed) {
 					mWaitLayout.setVisibility(View.GONE);
