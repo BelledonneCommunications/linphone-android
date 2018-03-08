@@ -821,7 +821,6 @@ public final class LinphoneService extends Service {
 
 	@Override
 	public synchronized void onDestroy() {
-
 		if (activityCallbacks != null){
 			getApplication().unregisterActivityLifecycleCallbacks(activityCallbacks);
 			activityCallbacks = null;
@@ -840,6 +839,12 @@ public final class LinphoneService extends Service {
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
 	    mNM.cancel(MESSAGE_NOTIF_ID);
+
+	    // This will prevent the app from crashing if the service gets killed in background mode
+	    if (LinphoneActivity.isInstanciated()) {
+	    	Log.w("Service is getting destroyed, finish LinphoneActivity");
+	    	LinphoneActivity.instance().finish();
+	    }
 
 		super.onDestroy();
 	}
