@@ -169,7 +169,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mAddParticipantsLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup);
+				if (mIsEditionEnabled) {
+					LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup);
+				}
 			}
 		});
 		mAddParticipantsButton = view.findViewById(R.id.addParticipants);
