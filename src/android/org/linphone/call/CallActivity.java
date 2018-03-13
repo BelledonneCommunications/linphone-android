@@ -1573,11 +1573,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void displayMissedChats() {
-		int count = 0;
-		ChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-		for (ChatRoom chatroom : chats) {
-			count += chatroom.getUnreadMessagesCount();
-		}
+		int count = LinphoneManager.getInstance().getUnreadMessageCount();
 
 		if (count > 0) {
 			missedChats.setText(count + "");

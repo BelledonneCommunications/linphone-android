@@ -162,7 +162,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			chatRoom.setUserData(holder);
 		}
 
-		int unreadMessagesCount = chatRoom.getUnreadMessagesCount();
+		int unreadMessagesCount = LinphoneManager.getInstance().getUnreadCountForChatRoom(chatRoom);
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 		holder.lastMessageView.setText("");
 		holder.lastMessageSenderView.setText("");

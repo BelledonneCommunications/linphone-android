@@ -233,7 +233,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		mListener = new CoreListenerStub(){
 			@Override
 			public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
-		        displayMissedChats(getUnreadMessageCount());
+		        displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 			}
 
 			@Override
@@ -666,30 +666,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		startActivity(new Intent(LinphoneActivity.this, InAppPurchaseActivity.class));
 	}
 
-	public int getUnreadMessageCount() {
-		int count = 0;
-		ChatRoom[] chats = LinphoneManager.getLc().getChatRooms();
-		for (ChatRoom chatroom : chats) {
-			count += chatroom.getUnreadMessagesCount();
-		}
-		return count;
-	}
-
-	public void displayInfoChat(List<ContactAddress> list) {
-		Bundle extras = new Bundle();
-		ArrayList<String> listUri = new ArrayList<String>();
-		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null
-				&& LinphoneManager.getLc().getDefaultProxyConfig() != null
-				&& LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress() != null) {
-			listUri.add(LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress().asStringUriOnly());
-		}
-		for (ContactAddress ca : list) {
-			listUri.add(ca.getAddressAsDisplayableString());
-		}
-		extras.putStringArrayList("contactsSelected", listUri);
-		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
-	}
-
 	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, Address lAddress) {
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", sipUri);
@@ -728,7 +704,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
-		displayMissedChats(getUnreadMessageCount());
+		LinphoneManager.getInstance().updateUnreadCountForChatRoom(sipUri, 0);
+		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 	}
 
 	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled, boolean isGoBack) {
@@ -789,7 +766,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
-		displayMissedChats(getUnreadMessageCount());
+		LinphoneManager.getInstance().updateUnreadCountForChatRoom(sipUri, 0);
+		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 	}
 
 	@Override
@@ -912,8 +890,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return statusFragment;
 	}
 
-	public void updateMissedChatCount() {
-		displayMissedChats(getUnreadMessageCount());
+	public void refreshMissedChatCountDisplay() {
+		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 	}
 
 	public void displayMissedCalls(final int missedCallsCount) {
@@ -1433,8 +1411,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			isTrialAccount();
 		}
 
-		updateMissedChatCount();
-
+		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
 		LinphoneManager.getInstance().changeStatusToOnline();

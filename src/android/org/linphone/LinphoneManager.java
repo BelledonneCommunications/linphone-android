@@ -139,6 +139,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -200,6 +202,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	public String wizardLoginViewDomain = null;
 
 	protected LinphoneManager(final Context c) {
+		mUnreadChatsPerRoom = new HashMap();
 		sExited = false;
 		echoTesterIsRunning = false;
 		mServiceContext = c;
@@ -236,6 +239,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private final String mFriendsDatabaseFile;
 	private byte[] mUploadingImage;
 	private Timer mTimer;
+	private Map<String, Integer> mUnreadChatsPerRoom;
 
 	private void routeAudioToSpeakerHelper(boolean speakerOn) {
 		Log.w("Routing audio to " + (speakerOn ? "speaker" : "earpiece") + ", disabling bluetooth audio route");
@@ -784,6 +788,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 		callGsmON = false;
+
+		updateMissedChatCount();
 	}
 
 	public void setHandsetMode(Boolean on){
@@ -1088,6 +1094,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			Log.w("Message has no text or file transfer information to display, ignoring it...");
 			return;
 		}
+
+		increaseUnreadCountForChatRoom(cr);
 
 		Address from = message.getFromAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
@@ -1747,5 +1755,46 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	@Override
 	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
+	}
+
+	private void updateMissedChatCount() {
+		for (ChatRoom cr : LinphoneManager.getLc().getChatRooms()) {
+			updateUnreadCountForChatRoom(cr, cr.getUnreadMessagesCount());
+		}
+	}
+
+	public int getUnreadMessageCount() {
+		int count = 0;
+		for (Integer unread : mUnreadChatsPerRoom.values()) {
+			count += unread;
+		}
+		return count;
+	}
+
+	public void updateUnreadCountForChatRoom(String key, Integer value) {
+		mUnreadChatsPerRoom.put(key, value);
+	}
+
+
+	public void updateUnreadCountForChatRoom(ChatRoom cr, Integer value) {
+		String key = cr.getPeerAddress().asStringUriOnly();
+		updateUnreadCountForChatRoom(key, value);
+	}
+
+	public int getUnreadCountForChatRoom(ChatRoom cr) {
+		String key = cr.getPeerAddress().asStringUriOnly();
+		if (mUnreadChatsPerRoom.containsKey(key)) {
+			return mUnreadChatsPerRoom.get(key);
+		}
+		return 0;
+	}
+
+	private void increaseUnreadCountForChatRoom(ChatRoom cr) {
+		String key = cr.getPeerAddress().asStringUriOnly();
+		if (mUnreadChatsPerRoom.containsKey(key)) {
+			mUnreadChatsPerRoom.put(key, mUnreadChatsPerRoom.get(key) + 1);
+		} else {
+			mUnreadChatsPerRoom.put(key, 1);
+		}
 	}
 }

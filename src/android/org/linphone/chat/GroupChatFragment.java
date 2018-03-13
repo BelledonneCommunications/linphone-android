@@ -398,7 +398,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 		mChatRoom.addListener(this);
 		mChatRoom.markAsRead();
-		LinphoneActivity.instance().updateMissedChatCount();
+		LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
+		LinphoneActivity.instance().refreshMissedChatCountDisplay();
 
 		mRemoteParticipantAddress = mRemoteSipAddress;
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
@@ -653,7 +654,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onChatMessageReceived(ChatRoom cr, EventLog event) {
 		cr.markAsRead();
-		LinphoneActivity.instance().updateMissedChatCount();
+		LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
+		LinphoneActivity.instance().refreshMissedChatCountDisplay();
 
 		ChatMessage msg = event.getChatMessage();
 		if (msg.getErrorInfo() != null && msg.getErrorInfo().getReason() == Reason.UnsupportedContent) {

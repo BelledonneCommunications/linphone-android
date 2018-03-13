@@ -30,7 +30,6 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.Call.Status;
 import org.linphone.core.Core;
 import org.linphone.core.GlobalState;
 import org.linphone.core.RegistrationState;
