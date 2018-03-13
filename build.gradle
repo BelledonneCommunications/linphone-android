@@ -48,7 +48,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.+'
   } else {
     compile fileTree(include: 'gcm.jar', dir: 'libs')
-    compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:support-v4:27.1.0'
   }
 }
 
