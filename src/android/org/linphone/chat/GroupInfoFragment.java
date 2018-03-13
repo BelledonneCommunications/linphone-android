@@ -312,7 +312,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		super.onResume();
 
 		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+		if (getActivity().getCurrentFocus() != null) {
+			inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+		}
 	}
 
 	@Override
