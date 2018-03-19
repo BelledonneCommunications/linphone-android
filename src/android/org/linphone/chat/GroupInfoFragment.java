@@ -450,11 +450,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
-	public void onParticipantDeviceFetched(ChatRoom cr, Address participantAddr) {
-
-	}
-
-	@Override
 	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {
 
 	}
@@ -462,5 +457,17 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	@Override
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 
+	}
+	
+	@Override
+	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
+
+	}
+	@Override
+	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
+	}
+	
+	@Override
+	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
 }

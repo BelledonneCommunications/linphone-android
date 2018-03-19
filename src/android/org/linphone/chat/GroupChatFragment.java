@@ -608,6 +608,18 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onConferenceAddressGeneration(ChatRoom cr) {
 
 	}
+	
+	@Override
+	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
+
+	}
+	@Override
+	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
+	}
+	
+	@Override
+	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
+	}
 
 	@Override
 	public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {
@@ -757,11 +769,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
-
-	}
-
-	@Override
-	public void onParticipantDeviceFetched(ChatRoom cr, Address participantAddr) {
 
 	}
 
