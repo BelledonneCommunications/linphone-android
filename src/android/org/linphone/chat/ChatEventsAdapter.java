@@ -474,10 +474,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 	private void displayAttachedFile(ChatMessage message, ChatBubbleViewHolder holder) {
 		holder.fileName.setVisibility(View.VISIBLE);
-		holder.fileName.setText(message.getFileTransferInformation().getName());
 
 		String appData = message.getAppdata();
 		if (appData != null) {
+			holder.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
 			if (LinphoneUtils.isExtensionImage(appData)) {
 				holder.messageImage.setVisibility(View.VISIBLE);
 				loadBitmap(appData, holder.messageImage);
