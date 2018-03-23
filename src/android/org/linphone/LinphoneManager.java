@@ -803,10 +803,18 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				Log.i("[Push Notification] Assuming GCM jar is not provided.");
 			}
 		}else if (getString(R.string.push_type).equals("firebase")){
-			final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-			if (refreshedToken != null) {
-				Log.i("[Push Notification] current token is: " + refreshedToken);
-				LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
+			try{
+				Class<?> firebaseClass = Class.forName("com.google.firebase.iid.FirebaseInstanceId");
+				Object firebaseInstance = firebaseClass.getMethod("getInstance").invoke(null);
+				final String refreshedToken = (String)firebaseClass.getMethod("getToken").invoke(firebaseInstance);
+			
+				//final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
+				if (refreshedToken != null) {
+					Log.i("[Push Notification] current token is: " + refreshedToken);
+					LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
+				}
+			}catch(Exception e){
+				Log.i("[Push Notification] firebase not available.");
 			}
 		}
 	}
