@@ -373,7 +373,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		ContactAddress ca = mSearchAdapter.getContacts().get(i);
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		ProxyConfig lpc = lc.getDefaultProxyConfig();
-		if (lpc == null || lpc.getConferenceFactoryUri() == null || LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+		if (lpc == null || lpc.getConferenceFactoryUri() == null) {
 			ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
 			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
 		} else {
