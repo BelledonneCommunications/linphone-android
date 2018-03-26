@@ -38,6 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.SearchContactsListAdapter;
@@ -340,7 +341,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
 					if (chatRoom == null) {
 						ProxyConfig lpc = lc.getDefaultProxyConfig();
-						if (lpc != null && lpc.getConferenceFactoryUri() != null) {
+						if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
 							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
 							mChatRoom.addListener(mChatRoomCreationListener);
 							mChatRoom.addParticipant(participant);
@@ -372,7 +373,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		ContactAddress ca = mSearchAdapter.getContacts().get(i);
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		ProxyConfig lpc = lc.getDefaultProxyConfig();
-		if (lpc == null || lpc.getConferenceFactoryUri() == null) {
+		if (lpc == null || lpc.getConferenceFactoryUri() == null || LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
 			ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
 			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
 		} else {

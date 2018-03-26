@@ -43,6 +43,7 @@ enable_basic_to_client_group_chat_room_migration=0
 
 [app]
 activation_code_length=4
+prefer_basic_chat_room=0
 
 [in-app-purchase]
 server_url=https://subscribe.linphone.org:444/inapp.php

@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.LinphoneUtils;
@@ -201,7 +202,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 			} else {
 				ProxyConfig lpc = lc.getDefaultProxyConfig();
-				if (lpc != null && lpc.getConferenceFactoryUri() != null) {
+				if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
 					mWaitLayout.setVisibility(View.VISIBLE);
 					mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
 					mChatRoom.addListener(mChatRoomCreationListener);

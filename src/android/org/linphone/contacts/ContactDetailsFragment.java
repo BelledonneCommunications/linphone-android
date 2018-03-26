@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
@@ -79,7 +80,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 				} else {
 					ProxyConfig lpc = lc.getDefaultProxyConfig();
-					if (lpc != null && lpc.getConferenceFactoryUri() != null) {
+					if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
 						mWaitLayout.setVisibility(View.VISIBLE);
 						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject));
 						mChatRoom.addListener(mChatRoomCreationListener);

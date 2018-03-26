@@ -1529,4 +1529,8 @@ public class LinphonePreferences {
 	public boolean isFriendsStorageEnabled() {
 		return getConfig().getBool("misc", "store_friends", true);
 	}
+
+	public boolean useBasicChatRoomFor1To1() {
+		return getConfig().getBool("app", "prefer_basic_chat_room", false);
+	}
 }
