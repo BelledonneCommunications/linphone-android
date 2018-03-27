@@ -621,10 +621,16 @@ public final class LinphoneUtils {
 			else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
 
 				final String id = DocumentsContract.getDocumentId(uri);
-				final Uri contentUri = ContentUris.withAppendedId(
-						Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+				try {
+					final Uri contentUri = ContentUris.withAppendedId(
+							Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-				return getDataColumn(context, contentUri, null, null);
+					return getDataColumn(context, contentUri, null, null);
+				} catch (NumberFormatException nfe) {
+					if (id.startsWith("raw:")) {
+						return id.substring(4);
+					}
+				}
 			}
 			// MediaProvider
 			else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
