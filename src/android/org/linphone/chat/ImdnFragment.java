@@ -39,12 +39,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
 
 import java.io.FileNotFoundException;
@@ -56,10 +61,30 @@ public class ImdnFragment extends Fragment {
 	private ImageView mBackButton;
 	private ChatBubbleViewHolder mBubble;
 
+	private String mMessageId;
+	private Address mRoomAddr;
+	private ChatRoom mRoom;
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		String roomUri;
+		if (getArguments() != null) {
+			roomUri = getArguments().getString("SipUri");
+			mRoomAddr = LinphoneManager.getLc().createAddress(roomUri);
+			mMessageId = getArguments().getString("MessageId");
+		}
+		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		Address proxyConfigContact = core.getDefaultProxyConfig().getContact();
+		if (proxyConfigContact != null) {
+			mRoom = core.findOneToOneChatRoom(proxyConfigContact, mRoomAddr);
+		}
+		if (mRoom == null) {
+			mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
+		}
+
 		mInflater = inflater;
 		View view = mInflater.inflate(R.layout.chat_imdn, container, false);
 
@@ -98,7 +123,28 @@ public class ImdnFragment extends Fragment {
 		mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 		mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 
-		ChatMessage message = null; //TODO
+		ChatMessage message = mRoom.findMessage(mMessageId);
+		Address remoteSender = message.getFromAddress();
+		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
+		String displayName;
+
+		if (contact != null) {
+			if (contact.getFullName() != null) {
+				displayName = contact.getFullName();
+			} else {
+				displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+			}
+
+			mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			if (contact.hasPhoto()) {
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), mBubble.contactPicture, contact.getThumbnailUri());
+			}
+		} else {
+			displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+			mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+		}
+		mBubble.contactName.setText(LinphoneUtils.timestampToHumanDate(getActivity(), message.getTime(), R.string.messages_date_format) + " - " + displayName);
+
 		if (message.hasTextContent()) {
 			String msg = message.getTextContent();
 			Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
@@ -140,11 +186,6 @@ public class ImdnFragment extends Fragment {
 		v.findViewById(R.id.separator).setVisibility(View.GONE);
 		((TextView)v.findViewById(R.id.name)).setText("Heloïse");
 		mUndelivered.addView(v);
-
-		mBubble.contactName.setText("10/07/2017 - 17h35 - Violaine");
-		mBubble.messageText.setText("Lorem ipsum dolor sit aet patetris");
-		mBubble.messageText.setMovementMethod(LinkMovementMethod.getInstance());
-		mBubble.messageText.setVisibility(View.VISIBLE);
 		// End of todo
 
 		return view;

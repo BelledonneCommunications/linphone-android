@@ -255,7 +255,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    holder.imdmLayout.setOnClickListener(new View.OnClickListener() {
 				    @Override
 				    public void onClick(View v) {
-					    LinphoneActivity.instance().goToChatMessageImdnInfos();
+					    LinphoneActivity.instance().goToChatMessageImdnInfos(mFragment.getRemoteSipUri(), message.getMessageId());
 				    }
 			    });
 

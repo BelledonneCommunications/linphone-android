@@ -461,6 +461,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
+	public String getRemoteSipUri() {
+		return mRemoteSipUri;
+	}
+
 	/**
 	 * File transfer related
 	 */

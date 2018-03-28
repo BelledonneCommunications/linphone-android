@@ -725,8 +725,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
 	}
 
-	public void goToChatMessageImdnInfos() {
+	public void goToChatMessageImdnInfos(String sipUri, String messageId) {
 		Bundle extras = new Bundle();
+		extras.putSerializable("SipUri", sipUri);
+		extras.putString("MessageId", messageId);
 		changeCurrentFragment(FragmentsAvailable.MESSAGE_IMDN, extras);
 	}
 
