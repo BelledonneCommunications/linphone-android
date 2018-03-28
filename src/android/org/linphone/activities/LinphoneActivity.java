@@ -1379,6 +1379,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
+	public void disableGoToCall() {
+		doNotGoToCallActivity = true;
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();

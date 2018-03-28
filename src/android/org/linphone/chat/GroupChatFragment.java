@@ -485,6 +485,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
 		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
 
+		LinphoneActivity.instance().disableGoToCall();
 		startActivityForResult(chooserIntent, ADD_PHOTO);
 	}
 
