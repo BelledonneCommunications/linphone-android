@@ -65,6 +65,7 @@ import android.widget.Toast;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.chat.ImdnFragment;
 import org.linphone.contacts.ContactPicked;
 import org.linphone.fragments.AboutFragment;
 import org.linphone.fragments.AccountPreferencesFragment;
@@ -431,6 +432,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		case GROUP_CHAT:
 			fragment = new GroupChatFragment();
 			break;
+		case MESSAGE_IMDN:
+			fragment = new ImdnFragment();
+			break;
 		default:
 			break;
 		}
@@ -719,6 +723,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		extras.putSerializable("ContactAddress", contacts);
 		extras.putString("subject", subject);
 		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
+	}
+
+	public void goToChatMessageImdnInfos() {
+		Bundle extras = new Bundle();
+		changeCurrentFragment(FragmentsAvailable.MESSAGE_IMDN, extras);
 	}
 
 	public void goToChatList() {

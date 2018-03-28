@@ -35,7 +35,8 @@ public enum FragmentsAvailable {
 	CHAT,
 	CREATE_CHAT,
 	INFO_GROUP_CHAT,
-	GROUP_CHAT;
+	GROUP_CHAT,
+	MESSAGE_IMDN;
 
 	public boolean shouldAnimate() {
 		return true;

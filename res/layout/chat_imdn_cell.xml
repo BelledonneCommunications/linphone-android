@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:background="@color/colorH"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:background="@color/colorE"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:id="@+id/avatar_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/contact_picture"
+                android:src="@drawable/avatar"
+                android:contentDescription="@string/content_description_contact_picture"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:adjustViewBounds="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"/>
+
+            <ImageView
+                android:id="@+id/mask"
+                android:src="@drawable/avatar_mask"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:adjustViewBounds="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/font6"
+            android:lines="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/avatar_layout"
+            android:layout_toLeftOf="@id/time"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

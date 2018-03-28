@@ -162,4 +162,22 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="font27" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorK</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="font28" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorD</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="font29" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorI</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
