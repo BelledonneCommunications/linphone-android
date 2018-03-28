@@ -855,6 +855,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		case CREATE_CHAT:
 		case GROUP_CHAT:
 		case INFO_GROUP_CHAT:
+		case MESSAGE_IMDN:
 		case CHAT:
 			chat_selected.setVisibility(View.VISIBLE);
 			break;

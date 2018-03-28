@@ -20,14 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -50,10 +43,6 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
-import org.linphone.mediastream.Log;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class ImdnFragment extends Fragment {
 	private LayoutInflater mInflater;
@@ -157,14 +146,7 @@ public class ImdnFragment extends Fragment {
 		if (appData != null) { // Something to display
 			mBubble.fileName.setVisibility(View.VISIBLE);
 			mBubble.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
-			if (LinphoneUtils.isExtensionImage(appData)) {
-				mBubble.messageImage.setVisibility(View.VISIBLE);
-				mBubble.messageImage.setImageBitmap(loadBitmap(appData));
-				mBubble.messageImage.setTag(appData);
-			} else {
-				mBubble.openFileButton.setVisibility(View.VISIBLE);
-				mBubble.openFileButton.setTag(appData);
-			}
+			// We purposely chose not to display the image
 		}
 
 		// TODO: real values
@@ -189,53 +171,5 @@ public class ImdnFragment extends Fragment {
 		// End of todo
 
 		return view;
-	}
-
-	private Bitmap loadBitmap(String path) {
-		Bitmap bm = null;
-		Bitmap thumbnail = null;
-		if (LinphoneUtils.isExtensionImage(path)) {
-			if (path.startsWith("content")) {
-				try {
-					bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), Uri.parse(path));
-				} catch (FileNotFoundException e) {
-					Log.e(e);
-				} catch (IOException e) {
-					Log.e(e);
-				}
-			} else {
-				bm = BitmapFactory.decodeFile(path);
-			}
-
-			// Rotate the bitmap if possible/needed, using EXIF data
-			try {
-				android.graphics.Bitmap bm_tmp;
-				ExifInterface exif = new ExifInterface(path);
-				int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-				Matrix matrix = new Matrix();
-				if (pictureOrientation == 6) {
-					matrix.postRotate(90);
-				} else if (pictureOrientation == 3) {
-					matrix.postRotate(180);
-				} else if (pictureOrientation == 8) {
-					matrix.postRotate(270);
-				}
-				bm_tmp = android.graphics.Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-				if (bm_tmp != bm) {
-					bm.recycle();
-					bm = bm_tmp;
-				}
-			} catch (Exception e) {
-				Log.e(e);
-			}
-
-			if (bm != null) {
-				thumbnail = ThumbnailUtils.extractThumbnail(bm, 500, 500);
-				bm.recycle();
-			}
-			return thumbnail;
-		} else {
-			return BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.avatar);
-		}
 	}
 }
