@@ -129,11 +129,13 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	public void displayFirstLog(){
 		if (mLogs != null && mLogs.size() > 0) {
 			CallLog log = mLogs.get(0);
+			String addr;
 			if (log.getDir() == Call.Dir.Incoming) {
-				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getFromAddress().toString(), mLogs.get(0));
+				addr = log.getFromAddress().asString();
 			} else {
-				LinphoneActivity.instance().displayHistoryDetail(mLogs.get(0).getToAddress().toString(), mLogs.get(0));
+				addr = log.getToAddress().asString();
 			}
+			LinphoneActivity.instance().displayHistoryDetail(addr, log);
 		} else {
 			LinphoneActivity.instance().displayEmptyFragment();
 		}

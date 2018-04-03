@@ -578,9 +578,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void displayHistoryDetail(String sipUri, CallLog log) {
-		Address lAddress;
+		Address lAddress = null;
+		LinphoneContact c = null;
+
 		lAddress = Factory.instance().createAddress(sipUri);
-		LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(lAddress);
+		if (lAddress != null) {
+			c = ContactsManager.getInstance().findContactFromAddress(lAddress);
+		}
 
 		String displayName = c != null ? c.getFullName() : LinphoneUtils.getAddressDisplayName(sipUri);
 		String pictureUri = c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
@@ -602,10 +606,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 		if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.HISTORY_DETAIL) {
 			HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
-			historyDetailFragment.changeDisplayedHistory(lAddress.asStringUriOnly(), displayName, pictureUri, status, callTime, callDate);
+			historyDetailFragment.changeDisplayedHistory(sipUri, displayName, pictureUri, status, callTime, callDate);
 		} else {
 			Bundle extras = new Bundle();
-			extras.putString("SipUri", lAddress.asString());
+			extras.putString("SipUri", sipUri);
 			if (displayName != null) {
 				extras.putString("DisplayName", displayName);
 				extras.putString("PictureUri", pictureUri);
