@@ -234,6 +234,17 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
 	}
 
+	public void changeDisplayedChat(String sipUri) {
+		mRemoteSipUri = sipUri;
+		mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
+
+		initChatRoom();
+		displayChatRoomHeader();
+		displayChatRoomHistory();
+
+		LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
+	}
+
 	@Override
 	public void onPause() {
 		ContactsManager.removeContactsListener(this);

@@ -369,27 +369,6 @@ public final class LinphoneUtils {
         return true;
     }
 
-    public static boolean zipLogs(StringBuilder sb, String toZipFile){
-        boolean success = false;
-        try {
-            FileOutputStream zip = new FileOutputStream(toZipFile);
-
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(zip));
-            ZipEntry entry = new ZipEntry("logs.txt");
-            out.putNextEntry(entry);
-
-            out.write(sb.toString().getBytes());
-
-            out.close();
-            success = true;
-
-        } catch (Exception e){
-            Log.e("Exception when trying to zip the logs: " + e.getMessage());
-        }
-
-        return success;
-    }
-
 	public static String getNameFromFilePath(String filePath) {
 		String name = filePath;
 		int i = filePath.lastIndexOf('/');

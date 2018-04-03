@@ -138,6 +138,16 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		mNoChatHistory.setVisibility(mChatRoomsAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
 	}
 
+	public void displayFirstChat() {
+		ChatRoomsAdapter adapter = (ChatRoomsAdapter)mChatRoomsList.getAdapter();
+		if (adapter != null && adapter.getCount() > 0) {
+			ChatRoom room = (ChatRoom) adapter.getItem(0);
+			LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+		} else {
+			LinphoneActivity.instance().displayEmptyFragment();
+		}
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();

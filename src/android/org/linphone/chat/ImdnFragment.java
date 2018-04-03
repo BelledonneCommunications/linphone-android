@@ -50,7 +50,7 @@ public class ImdnFragment extends Fragment {
 	private ImageView mBackButton;
 	private ChatBubbleViewHolder mBubble;
 
-	private String mMessageId;
+	private String mRoomUri, mMessageId;
 	private Address mRoomAddr;
 	private ChatRoom mRoom;
 
@@ -61,8 +61,8 @@ public class ImdnFragment extends Fragment {
 
 		String roomUri;
 		if (getArguments() != null) {
-			roomUri = getArguments().getString("SipUri");
-			mRoomAddr = LinphoneManager.getLc().createAddress(roomUri);
+			mRoomUri = getArguments().getString("SipUri");
+			mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
 			mMessageId = getArguments().getString("MessageId");
 		}
 		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -81,7 +81,11 @@ public class ImdnFragment extends Fragment {
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().onBackPressed();
+				if (LinphoneActivity.instance().isTablet()) {
+					LinphoneActivity.instance().goToChat(mRoomUri);
+				} else {
+					LinphoneActivity.instance().onBackPressed();
+				}
 			}
 		});
 

@@ -145,7 +145,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private View contacts_selected, history_selected, dialer_selected, chat_selected;
 	private RelativeLayout mTopBar;
 	private ImageView cancel;
-	private FragmentsAvailable pendingFragmentTransaction, currentFragment;
+	private FragmentsAvailable pendingFragmentTransaction, currentFragment, leftFragment;
 	private Fragment fragment;
 	private List<FragmentsAvailable> fragmentsHistory;
 	private Fragment.SavedState dialerSavedState;
@@ -334,7 +334,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		missedChats = (TextView) findViewById(R.id.missed_chats);
 	}
 
-	private boolean isTablet() {
+	public boolean isTablet() {
 		return getResources().getBoolean(R.bool.isTablet);
 	}
 
@@ -451,7 +451,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 					((ContactsListFragment) fragment).displayFirstContact();
 					break;
 				case CHAT_LIST:
-					//TODO((ChatListFragment) fragment).displayFirstChat();
+					((ChatListFragment) fragment).displayFirstChat();
 					break;
 				}
 			} else {
@@ -517,13 +517,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			transaction.commitAllowingStateLoss();
 			getFragmentManager().executePendingTransactions();
 		} else {
-			if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment)) {
+			if (newFragmentType.shouldAddItselfToTheRightOf(currentFragment) || newFragmentType.shouldAddItselfToTheRightOf(leftFragment)) {
 				ll.setVisibility(View.VISIBLE);
 
 				if (newFragmentType == FragmentsAvailable.CONTACT_EDITOR) {
 					transaction.addToBackStack(newFragmentType.toString());
 				}
 				transaction.replace(R.id.fragmentContainer2, newFragment);
+				leftFragment = currentFragment;
+
+				if (newFragmentType == FragmentsAvailable.GROUP_CHAT && leftFragment != FragmentsAvailable.CHAT_LIST) {
+					leftFragment = FragmentsAvailable.CHAT_LIST;
+					transaction.replace(R.id.fragmentContainer, new ChatListFragment());
+				}
 			} else {
 				if (newFragmentType == FragmentsAvailable.EMPTY) {
 					ll.setVisibility(View.VISIBLE);
@@ -534,7 +540,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				if (newFragmentType == FragmentsAvailable.DIALER
 						|| newFragmentType == FragmentsAvailable.ABOUT
 						|| newFragmentType == FragmentsAvailable.SETTINGS
-						|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS) {
+						|| newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS
+						|| newFragmentType == FragmentsAvailable.CREATE_CHAT
+						|| newFragmentType == FragmentsAvailable.INFO_GROUP_CHAT) {
 					ll.setVisibility(View.GONE);
 				} else {
 					ll.setVisibility(View.VISIBLE);
@@ -702,9 +710,21 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void goToChat(String sipUri) {
-		Bundle extras = new Bundle();
-		extras.putString("SipUri", sipUri);
-		changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+		if (isTablet()) {
+			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.GROUP_CHAT && !emptyFragment) {
+				GroupChatFragment chatFragment = (GroupChatFragment) fragment2;
+				chatFragment.changeDisplayedChat(sipUri);
+			} else {
+				Bundle extras = new Bundle();
+				extras.putString("SipUri", sipUri);
+				changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+			}
+		} else {
+			Bundle extras = new Bundle();
+			extras.putString("SipUri", sipUri);
+			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+		}
 
 		LinphoneService.instance().resetMessageNotifCount();
 		LinphoneService.instance().removeMessageNotification();
@@ -758,12 +778,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		}
 
-		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.CHAT) {
+		if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.GROUP_CHAT) {
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
-			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.CHAT && !emptyFragment) {
-				/*ChatFragment chatFragment = (ChatFragment) fragment2;
-				chatFragment.changeDisplayedChat(sipUri, displayName, pictureUri, message, fileUri);*/
-				//TODO
+			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.GROUP_CHAT && !emptyFragment) {
+				GroupChatFragment chatFragment = (GroupChatFragment) fragment2;
+				chatFragment.changeDisplayedChat(sipUri);
 			} else {
 				displayChat(sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);
 			}
@@ -872,13 +891,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		dialer_selected.setVisibility(View.VISIBLE);
 	}
 
-	public void onMessageSent(String to, String message) {
-		Fragment fragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
-		if (fragment.getClass() == ChatListFragment.class) {
-			////TODO ((ChatListFragment)fragment).refresh();
-		}
-	}
-
 	public void updateStatusFragment(StatusFragment fragment) {
 		statusFragment = fragment;
 	}
@@ -968,42 +980,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		TextView customText = (TextView) dialog.findViewById(R.id.customText);
 		customText.setText(text);
-		return dialog;
-	}
-
-	public Dialog displayWrongPasswordDialog(final String username, final String realm, final String domain){
-		final Dialog dialog = new Dialog(this);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
-		d.setAlpha(200);
-		dialog.setContentView(R.layout.input_dialog);
-		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-		dialog.getWindow().setBackgroundDrawable(d);
-
-		TextView customText = (TextView) dialog.findViewById(R.id.customText);
-		customText.setText(getString(R.string.error_bad_credentials));
-
-		Button retry = (Button) dialog.findViewById(R.id.retry);
-		Button cancel = (Button) dialog.findViewById(R.id.cancel);
-
-		retry.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String newPassword = ((EditText) dialog.findViewById(R.id.password)).getText().toString();
-				AuthInfo authInfo = Factory.instance().createAuthInfo(username, null, newPassword, null, realm, domain);
-				LinphoneManager.getLc().addAuthInfo(authInfo);
-				LinphoneManager.getLc().refreshRegisters();
-				dialog.dismiss();
-			}
-		});
-
-		cancel.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				dialog.dismiss();
-			}
-		});
-
 		return dialog;
 	}
 
@@ -1207,28 +1183,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		return true;
 	}
 
-	public void checkAndRequestReadPhoneStatePermission() {
-		checkAndRequestPermission(Manifest.permission.READ_PHONE_STATE, 0);
-	}
-
-	public void checkAndRequestReadExternalStoragePermission() {
-		checkAndRequestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 0);
-	}
-
 	public void checkAndRequestExternalStoragePermission() {
 		checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 0);
 	}
 
 	public void checkAndRequestCameraPermission() {
 		checkAndRequestPermission(Manifest.permission.CAMERA, 0);
-	}
-
-	public void checkAndRequestReadContactsPermission() {
-		checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_CONTACTS);
-	}
-
-	public void checkAndRequestInappPermission() {
-		checkAndRequestPermission(Manifest.permission.GET_ACCOUNTS, PERMISSIONS_REQUEST_CONTACTS);
 	}
 
 	public void checkAndRequestWriteContactsPermission() {
@@ -1869,29 +1829,4 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		return -1;
 	}
-
-	public String getCVSPathFromOtherUri(String path) {
-		Uri contactUri = Uri.parse(path);
-
-		ContentResolver cr = getContentResolver();
-		InputStream stream = null;
-		try {
-			stream = cr.openInputStream(contactUri);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		StringBuffer fileContent = new StringBuffer("");
-		int ch;
-		try {
-			while( (ch = stream.read()) != -1)
-				fileContent.append((char)ch);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String data = new String(fileContent);
-		return data;
-	}
-
 }

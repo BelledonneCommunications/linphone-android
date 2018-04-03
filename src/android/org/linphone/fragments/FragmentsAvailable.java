@@ -38,51 +38,6 @@ public enum FragmentsAvailable {
 	GROUP_CHAT,
 	MESSAGE_IMDN;
 
-	public boolean shouldAnimate() {
-		return true;
-	}
-
-	public boolean isRightOf(FragmentsAvailable fragment) {
-		switch (this) {
-		case HISTORY_LIST:
-			return fragment == UNKNOW;
-
-		case HISTORY_DETAIL:
-			return HISTORY_LIST.isRightOf(fragment) || fragment == HISTORY_LIST;
-
-		case CONTACTS_LIST:
-			return HISTORY_DETAIL.isRightOf(fragment) || fragment == HISTORY_DETAIL;
-
-		case CONTACT_DETAIL:
-			return CONTACTS_LIST.isRightOf(fragment) || fragment == CONTACTS_LIST;
-
-		case CONTACT_EDITOR:
-			return CONTACT_DETAIL.isRightOf(fragment) || fragment == CONTACT_DETAIL;
-
-		case DIALER:
-			return CONTACT_EDITOR.isRightOf(fragment) || fragment == CONTACT_EDITOR;
-
-		case CHAT_LIST:
-			return DIALER.isRightOf(fragment) || fragment == DIALER;
-
-		case SETTINGS:
-			return CHAT_LIST.isRightOf(fragment) || fragment == CHAT_LIST;
-
-		case ABOUT:
-		case ACCOUNT_SETTINGS:
-			return SETTINGS.isRightOf(fragment) || fragment == SETTINGS;
-
-		case CHAT:
-		case CREATE_CHAT:
-		case GROUP_CHAT:
-		case INFO_GROUP_CHAT:
-			return CHAT_LIST.isRightOf(fragment) || fragment == CHAT_LIST;
-
-		default:
-			return false;
-		}
-	}
-
 	public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
 		switch (this) {
 		case HISTORY_DETAIL:
@@ -97,10 +52,13 @@ public enum FragmentsAvailable {
 		case CHAT:
 			return fragment == CHAT_LIST || fragment == CHAT;
 
-		case CREATE_CHAT:
-			return fragment == CHAT_LIST || fragment == CREATE_CHAT;
+		case GROUP_CHAT:
+			return fragment == CHAT_LIST || fragment == GROUP_CHAT;
 
-		default:
+		case MESSAGE_IMDN:
+			return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;
+
+			default:
 			return false;
 		}
 	}

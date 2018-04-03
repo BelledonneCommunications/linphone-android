@@ -329,8 +329,12 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			mAllContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
 		} else if (id == R.id.back) {
-			mContactsSelectedLayout.removeAllViews();
-			LinphoneActivity.instance().popBackStack();
+			if (LinphoneActivity.instance().isTablet()) {
+				LinphoneActivity.instance().goToChatList();
+			} else {
+				mContactsSelectedLayout.removeAllViews();
+				LinphoneActivity.instance().popBackStack();
+			}
 		} else if (id == R.id.next) {
 			if (mChatRoomAddress == null && mChatRoomSubject == null) {
 				if (mContactsSelected.size() == 1) {
