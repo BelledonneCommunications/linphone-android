@@ -16,7 +16,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         if (googleFile.exists()) {
-            classpath 'com.google.gms:google-services:3.1.0'
+            classpath 'com.google.gms:google-services:3+'
         }
     }
 }
@@ -35,7 +35,7 @@ apply plugin: 'com.android.library'
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
     if (firebaseEnable()) {
-        compile 'com.google.firebase:firebase-messaging:11.2.0'
+        compile 'com.google.firebase:firebase-messaging:11.+'
     } else {
         compile fileTree(include: 'gcm.jar', dir: 'libs')
         compile 'com.android.support:support-v4:+'
@@ -86,7 +86,7 @@ android {
 
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifestLibrary.xml'
+            manifest.srcFile 'AndroidManifestSdk.xml'
             java.srcDirs = srcDirs
             resources.srcDirs = srcDirs
             aidl.srcDirs = srcDirs
