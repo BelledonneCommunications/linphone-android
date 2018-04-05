@@ -376,7 +376,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	public void changeStatusToOnThePhone() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return;
-		
+
 		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.OnThePhone) {
 			lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
 		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
@@ -1299,6 +1299,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	@Override
 	public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
 
+	}
+
+	@Override
+	public void onQrcodeFounded(Core lc, String result) {
+		
 	}
 
 	public void onCallEncryptionChanged(Core lc, Call call,

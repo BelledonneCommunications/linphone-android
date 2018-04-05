@@ -117,3 +117,6 @@
 [submodule "submodules/externals/soci"]
 	path = submodules/externals/soci
 	url = git://git.linphone.org/soci
+[submodule "submodules/externals/zxing-cpp"]
+	path = submodules/externals/zxing-cpp
+	url = git://git.linphone.org/zxing-cpp.git
