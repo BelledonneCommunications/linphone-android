@@ -1199,6 +1199,15 @@ public class LinphonePreferences {
 		return getConfig().getBool("app", "debug", false);
 	}
 
+	public void setJavaLogger(boolean enabled) {
+		getConfig().setBool("app", "java_logger", enabled);
+		LinphoneUtils.initLoggingService(isDebugEnabled(), mContext.getString(R.string.app_name));
+	}
+
+	public boolean useJavaLogger() {
+		return getConfig().getBool("app", "java_logger", false);
+	}
+
 	public void setBackgroundModeEnabled(boolean enabled) {
 		getConfig().setBool("app", "background_mode", enabled);
 	}

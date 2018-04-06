@@ -426,6 +426,7 @@
     <string name="pref_advanced_title">Advanced</string>
     <string name="pref_debug_title">Debug</string>
     <string name="pref_debug">Debug</string>
+    <string name="pref_java_debug">Use Java logger</string>
     <string name="pref_friendlist_subscribe">Friendlist subscribe</string>
     <string name="pref_background_mode">Background mode</string>
     <string name="pref_animation_enable_title">Enable Animations</string>

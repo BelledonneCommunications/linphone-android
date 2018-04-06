@@ -103,7 +103,7 @@ public final class LinphoneUtils {
 	}
 
 	public static void initLoggingService(boolean isDebugEnabled, String appName) {
-		if (true) {
+		if (!LinphonePreferences.instance().useJavaLogger()) {
 			Factory.instance().enableLogCollection(LogCollectionState.Enabled);
 			Factory.instance().setDebugMode(isDebugEnabled, appName);
 		} else {

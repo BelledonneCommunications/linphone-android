@@ -58,6 +58,7 @@
     <string name="pref_wizard_key">pref_wizard_key</string>
     <string name="pref_activated_key">pref_activated_key</string>
     <string name="pref_debug_key">pref_debug_key</string>
+    <string name="pref_java_debug_key">pref_java_debug_key</string>
     <string name="first_launch_succeeded_once_key">first_launch_succeeded_once_key</string>
 
     <string name="pref_wifi_only_key">pref_wifi_only_key</string>

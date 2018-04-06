@@ -221,6 +221,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		if (getResources().getBoolean(R.bool.disable_every_log)) {
 			uncheckAndHidePreference(R.string.pref_debug_key);
+			uncheckAndHidePreference(R.string.pref_java_debug_key);
 		}
 
 		if (!LinphoneManager.getLc().upnpAvailable()) {
@@ -1267,6 +1268,7 @@ public class SettingsFragment extends PreferencesListFragment {
 	private void initAdvancedSettings() {
 		((CheckBoxPreference)findPreference(getString(R.string.pref_friendlist_subscribe_key))).setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_debug_key))).setChecked(mPrefs.isDebugEnabled());
+		((CheckBoxPreference)findPreference(getString(R.string.pref_java_debug_key))).setChecked(mPrefs.useJavaLogger());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_background_mode_key))).setChecked(mPrefs.isBackgroundModeEnabled());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_service_notification_key))).setChecked(mPrefs.getServiceNotificationVisibility());
 		((CheckBoxPreference)findPreference(getString(R.string.pref_autostart_key))).setChecked(mPrefs.isAutoStartEnabled());
@@ -1292,6 +1294,15 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean value = (Boolean) newValue;
 				mPrefs.setDebugEnabled(value);
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_java_debug_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean value = (Boolean) newValue;
+				mPrefs.setJavaLogger(value);
 				return true;
 			}
 		});
