@@ -1192,8 +1192,7 @@ public class LinphonePreferences {
 	// Advanced settings
 	public void setDebugEnabled(boolean enabled) {
 		getConfig().setBool("app", "debug", enabled);
-		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
-		Factory.instance().setDebugMode(enabled, getString(R.string.app_name));
+		LinphoneUtils.initLoggingService(enabled);
 	}
 
 	public boolean isDebugEnabled() {

@@ -32,6 +32,9 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.Core;
 import org.linphone.core.GlobalState;
+import org.linphone.core.LogLevel;
+import org.linphone.core.LoggingService;
+import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
@@ -298,8 +301,7 @@ public final class LinphoneService extends Service {
 		LinphonePreferences.instance().setContext(getBaseContext());
 		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
-		Factory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
+		LinphoneUtils.initLoggingService(isDebugEnabled);
 
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);

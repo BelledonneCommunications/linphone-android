@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Core;
@@ -46,8 +47,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 			return;
 		} else {
 			boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-			Factory.instance().enableLogCollection(isDebugEnabled ? LogCollectionState.Enabled : LogCollectionState.Disabled);
-			Factory.instance().setDebugMode(isDebugEnabled, context.getString(R.string.app_name));
+			LinphoneUtils.initLoggingService(isDebugEnabled);
 			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (lc == null) return;
 

@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import org.linphone.LinphoneUtils;
 import org.linphone.call.CallActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -139,7 +140,6 @@ public class Digit extends Button implements AddressAware {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0){
 							LinphonePreferences.instance().setDebugEnabled(false);
-							Factory.instance().enableLogCollection(LogCollectionState.Disabled);
 						}
 						if(which == 1) {
 							Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -155,7 +155,6 @@ public class Digit extends Button implements AddressAware {
 					public void onClick(DialogInterface dialog, int which) {
 						if(which == 0) {
 							LinphonePreferences.instance().setDebugEnabled(true);
-							Factory.instance().enableLogCollection(LogCollectionState.Enabled);
 						}
 					}
 				});

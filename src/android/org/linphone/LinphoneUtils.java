@@ -67,6 +67,10 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
+import org.linphone.core.LogCollectionState;
+import org.linphone.core.LogLevel;
+import org.linphone.core.LoggingService;
+import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
@@ -109,6 +113,34 @@ public final class LinphoneUtils {
 
 	private LinphoneUtils() {
 
+	}
+
+	public static void initLoggingService(boolean isDebugEnabled) {
+		Factory.instance().setDebugMode(isDebugEnabled, "");
+		Factory.instance().enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
+		Factory.instance().getLoggingService().setListener(new LoggingServiceListener() {
+			@Override
+			public void onLogMessageWritten(LoggingService logService, String domain, LogLevel lev, String message) {
+				switch (lev) {
+					case Debug:
+						android.util.Log.d(domain, message);
+						break;
+					case Message:
+						android.util.Log.i(domain, message);
+						break;
+					case Warning:
+						android.util.Log.w(domain, message);
+						break;
+					case Error:
+						android.util.Log.e(domain, message);
+						break;
+					case Fatal:
+					default:
+						android.util.Log.wtf(domain, message);
+						break;
+				}
+			}
+		});
 	}
 
 	public static void dispatchOnUIThread(Runnable r) {
