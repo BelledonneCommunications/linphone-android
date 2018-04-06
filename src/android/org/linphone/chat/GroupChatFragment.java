@@ -418,13 +418,13 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 
 		getContactsForParticipants();
+
+		mRemoteComposing.setVisibility(View.INVISIBLE);
 	}
 
 	private void displayChatRoomHeader() {
 		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (core == null || mChatRoom == null) return;
-
-		mRemoteComposing.setVisibility(View.INVISIBLE);
 
 		if (core.getCallsNb() > 0) {
 			mBackToCallButton.setVisibility(View.VISIBLE);
@@ -677,6 +677,19 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			});
 			dialog.show();
 		}
+	}
+
+	@Override
+	public void onAllInformationReceived(ChatRoom cr) {
+		// Currently flexisip doesn't send the participants list in the INVITE
+		// So we have to refresh the display when information is available
+		// In the meantime header will be chatroom-xxxxxxx
+		if (mChatRoom == null) mChatRoom = cr;
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
+			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
+		}
+		getContactsForParticipants();
+		displayChatRoomHeader();
 	}
 
 	@Override
