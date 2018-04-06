@@ -1192,7 +1192,7 @@ public class LinphonePreferences {
 	// Advanced settings
 	public void setDebugEnabled(boolean enabled) {
 		getConfig().setBool("app", "debug", enabled);
-		LinphoneUtils.initLoggingService(enabled);
+		LinphoneUtils.initLoggingService(enabled, mContext.getString(R.string.app_name));
 	}
 
 	public boolean isDebugEnabled() {

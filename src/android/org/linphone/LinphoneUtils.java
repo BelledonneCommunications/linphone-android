@@ -23,11 +23,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,28 +39,22 @@ import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.telephony.TelephonyManager;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
-import org.linphone.core.DialPlan;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.ChatMessage;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Friend;
@@ -75,8 +67,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -85,7 +75,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -98,8 +87,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -115,32 +102,37 @@ public final class LinphoneUtils {
 
 	}
 
-	public static void initLoggingService(boolean isDebugEnabled) {
-		Factory.instance().setDebugMode(isDebugEnabled, "");
-		Factory.instance().enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
-		Factory.instance().getLoggingService().setListener(new LoggingServiceListener() {
-			@Override
-			public void onLogMessageWritten(LoggingService logService, String domain, LogLevel lev, String message) {
-				switch (lev) {
-					case Debug:
-						android.util.Log.d(domain, message);
-						break;
-					case Message:
-						android.util.Log.i(domain, message);
-						break;
-					case Warning:
-						android.util.Log.w(domain, message);
-						break;
-					case Error:
-						android.util.Log.e(domain, message);
-						break;
-					case Fatal:
-					default:
-						android.util.Log.wtf(domain, message);
-						break;
+	public static void initLoggingService(boolean isDebugEnabled, String appName) {
+		if (true) {
+			Factory.instance().enableLogCollection(LogCollectionState.Enabled);
+			Factory.instance().setDebugMode(isDebugEnabled, appName);
+		} else {
+			Factory.instance().setDebugMode(isDebugEnabled, appName);
+			Factory.instance().enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
+			Factory.instance().getLoggingService().setListener(new LoggingServiceListener() {
+				@Override
+				public void onLogMessageWritten(LoggingService logService, String domain, LogLevel lev, String message) {
+					switch (lev) {
+						case Debug:
+							android.util.Log.d(domain, message);
+							break;
+						case Message:
+							android.util.Log.i(domain, message);
+							break;
+						case Warning:
+							android.util.Log.w(domain, message);
+							break;
+						case Error:
+							android.util.Log.e(domain, message);
+							break;
+						case Fatal:
+						default:
+							android.util.Log.wtf(domain, message);
+							break;
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	public static void dispatchOnUIThread(Runnable r) {
