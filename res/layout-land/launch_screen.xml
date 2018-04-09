@@ -20,6 +20,7 @@
 		<TextView
 			android:text="@string/app_name"
 			style="@style/font21"
+            android:visibility="gone"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="5dp"
@@ -28,6 +29,7 @@
 		<TextView
 			android:text="@string/app_description"
 			android:textSize="28sp"
+            android:visibility="gone"
 			android:textColor="@color/colorA"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
