@@ -127,7 +127,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mSearchField.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+				if (before > count) {
+					ContactsManager.getInstance().getMagicSearch().resetSearchCache();
+				}
 			}
 
 			@Override

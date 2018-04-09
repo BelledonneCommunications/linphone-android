@@ -42,8 +42,10 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
+import org.linphone.core.MagicSearch;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 
@@ -61,6 +63,7 @@ public class ContactsManager extends ContentObserver {
 	private static ContactsManager instance;
 
 	private List<LinphoneContact> contacts, sipContacts;
+	private MagicSearch magicSearch;
 	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
 	private ContentResolver contentResolver;
 	private Context context;
@@ -84,11 +87,18 @@ public class ContactsManager extends ContentObserver {
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
 		contacts = new ArrayList<LinphoneContact>();
 		sipContacts = new ArrayList<LinphoneContact>();
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			magicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
+		}
 	}
 
 	public void destroy() {
 		defaultAvatar.recycle();
 		instance = null;
+	}
+
+	public MagicSearch getMagicSearch() {
+		return magicSearch;
 	}
 
 	public boolean contactsFetchedOnce() {
@@ -220,6 +230,7 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized LinphoneContact findContactFromAddress(Address address) {
+		if (address == null) return null;
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		Friend lf = lc.findFriend(address);
 		if (lf != null) {
@@ -301,6 +312,9 @@ public class ContactsManager extends ContentObserver {
 					LinphoneContact contact = (LinphoneContact) friend.getUserData();
 					if (contact != null) {
 						contact.clearAddresses();
+						if (contact.hasAddress()) {
+							sipContacts.add(contact);
+						}
 						contacts.add(contact);
 						if (contact.getAndroidId() != null) {
 							androidContactsCache.put(contact.getAndroidId(), contact);
