@@ -36,7 +36,7 @@ import android.widget.EditText;
 
 public class RemoteProvisioningFragment extends Fragment implements OnClickListener, TextWatcher{
 	private EditText remoteProvisioningUrl;
-	private Button apply;
+	private Button apply, qrcode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +45,8 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 
 		remoteProvisioningUrl = (EditText) view.findViewById(R.id.assistant_remote_provisioning_url);
 		remoteProvisioningUrl.addTextChangedListener(this);
+		qrcode = (Button) view.findViewById(R.id.assistant_qrcode);
+		qrcode.setOnClickListener(this);
 		apply = (Button) view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
@@ -62,6 +64,8 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 			LinphonePreferences.instance().setRemoteProvisioningUrl(url);
 			LinphoneManager.getInstance().restartCore();
 			AssistantActivity.instance().setCoreListener();
+		} else if (id == R.id.assistant_qrcode) {
+			AssistantActivity.instance().displayQRCodeReader();
 		}
 	}
 

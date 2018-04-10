@@ -1302,8 +1302,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	@Override
-	public void onQrcodeFounded(Core lc, String result) {
-		
+	public void onQrcodeFound(Core lc, String result) {
+
 	}
 
 	public void onCallEncryptionChanged(Core lc, Call call,

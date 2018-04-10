@@ -100,6 +100,8 @@ private static AssistantActivity instance;
 	private boolean remoteProvisioningInProgress;
 	private boolean echoCancellerAlreadyDone;
 	private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
+	private static final int PERMISSIONS_REQUEST_CAMERA = 202;
+	private static final int PERMISSIONS_ENABLED_CAMERA = 203;
 	private AccountCreator mAccountCreator;
 	private CountryListAdapter countryListAdapter;
 
@@ -190,6 +192,16 @@ private static AssistantActivity instance;
 					}
 				}
         	}
+
+	        @Override
+	        public void onQrcodeFound(Core lc, String result) {
+		        AlertDialog.Builder builder = new AlertDialog.Builder(AssistantActivity.instance());
+		        builder.setMessage("QRCODE found: " + result);
+		        builder.setCancelable(false);
+		        builder.setNeutralButton(getString(R.string.ok), null);
+		        builder.show();
+	        }
+
         };
         instance = this;
 	}
@@ -308,6 +320,8 @@ private static AssistantActivity instance;
 			} else {
 				displayCreateAccount();
 			}
+		} else if (currentFragment == AssistantFragmentsEnum.QRCODE_READER) {
+			displayRemoteProvisioning();
 		}
 	}
 
@@ -323,6 +337,10 @@ private static AssistantActivity instance;
 		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, 0);
 	}
 
+	public void checkAndRequestVideoPermission() {
+		checkAndRequestPermission(Manifest.permission.CAMERA, 0);
+	}
+
 	public void checkAndRequestPermission(String permission, int result) {
 		int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
 		Log.i("[Permission] " + permission + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
@@ -336,17 +354,30 @@ private static AssistantActivity instance;
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, final int[] grantResults) {
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 		}
 
-		if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
-			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				launchEchoCancellerCalibration(true);
-			} else {
-				isEchoCalibrationFinished();
-			}
+		switch (requestCode) {
+			case PERMISSIONS_REQUEST_CAMERA:
+
+				break;
+			case PERMISSIONS_ENABLED_CAMERA:
+
+				break;
+			case PERMISSIONS_REQUEST_RECORD_AUDIO:
+				LinphoneUtils.dispatchOnUIThread(new Runnable() {
+					@Override
+					public void run() {
+						if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+							launchEchoCancellerCalibration(true);
+						} else {
+							isEchoCalibrationFinished();
+						}
+					}
+				});
+				break;
 		}
 	}
 
@@ -488,6 +519,13 @@ private static AssistantActivity instance;
 		fragment = new RemoteProvisioningFragment();
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
+		back.setVisibility(View.VISIBLE);
+	}
+
+	public void displayQRCodeReader() {
+		fragment = new QrcodeFragment();
+		changeFragment(fragment);
+		currentFragment = AssistantFragmentsEnum.QRCODE_READER;
 		back.setVisibility(View.VISIBLE);
 	}
 

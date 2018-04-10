@@ -59,5 +59,18 @@
 			android:paddingRight="10dp"
 			android:layout_marginTop="20dp"/>
 
+		<Button
+			android:id="@+id/assistant_qrcode"
+			android:text="@string/assistant_launch_qrcode"
+			android:background="@drawable/assistant_button"
+			android:textColor="@drawable/assistant_button_text_color"
+			style="@style/font8"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:layout_marginTop="20dp"/>
+
 	</LinearLayout>
+
 </LinearLayout>
