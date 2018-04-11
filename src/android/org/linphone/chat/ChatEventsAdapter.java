@@ -188,7 +188,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    holder.messageStatus.setVisibility(View.INVISIBLE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
-	    holder.imdmLabel.setOnClickListener(null);
 	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
@@ -245,12 +244,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
 				    holder.imdmLabel.setText(R.string.error);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
-				    holder.imdmLabel.setOnClickListener(new View.OnClickListener() {
-					    @Override
-					    public void onClick(View v) {
-							//TODO resend message
-					    }
-				    });
 			    } else if (status == ChatMessage.State.FileTransferError) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);

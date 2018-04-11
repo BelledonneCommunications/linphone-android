@@ -332,8 +332,20 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
+			return;
+		}
+
 		MenuInflater inflater = getActivity().getMenuInflater();
-		inflater.inflate(R.menu.chat_bubble_menu, menu);
+		ChatMessage message = event.getChatMessage();
+		if (message.getState() == ChatMessage.State.NotDelivered) {
+			inflater.inflate(R.menu.chat_bubble_menu_with_resend, menu);
+		} else {
+			inflater.inflate(R.menu.chat_bubble_menu, menu);
+		}
 	}
 
 	@Override
@@ -349,6 +361,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		String messageId = message.getMessageId();
 
 		switch(item.getItemId()) {
+			case R.id.resend:
+				mEventsAdapter.removeItem(info.position);
+				message.resend();
+				return true;
 			case R.id.imdn_infos:
 				LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
 				return true;

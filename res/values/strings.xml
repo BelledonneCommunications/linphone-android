@@ -195,10 +195,10 @@
     <string name="sent">Sent</string>
     <string name="resend">Resend</string>
     <string name="error_opening_file">An error occurs when opening this file.</string>
-    <string name="conversation_information">Infos</string>
+    <string name="conversation_information">Info</string>
     <string name="administrator">Admin</string>
     <string name="conversation_subject_hint">Name your group</string>
-    <string name="chat_room_infos_title">Infos</string>
+    <string name="chat_room_infos_title">Info</string>
     <string name="chat_room_infos_admin">Admin</string>
     <string name="chat_room_participants">Participants</string>
     <string name="chat_room_leave_group">Leave the group</string>
@@ -220,7 +220,7 @@
     <string name="chat_room_leave_button">Leave</string>
     <string name="chat_room_delete_dialog">Do you want to delete and leave the selected conversations?</string>
     <string name="separator">:&#160;</string>
-    <string name="imdn_info">Infos</string>
+    <string name="imdn_info">Info</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>
@@ -522,5 +522,5 @@
     <string name="content_title_notification_service">Linphone Service</string>
     <string name="content_title_notification">Linphone Notification</string>
     <string name="content_description_conversation_subject">Group chat room subject</string>
-    <string name="content_description_conversation_infos">Group chat room infos</string>
+    <string name="content_description_conversation_infos">Group chat room info</string>
 </resources>
