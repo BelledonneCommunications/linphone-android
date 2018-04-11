@@ -178,7 +178,7 @@ public class ImdnFragment extends Fragment {
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
-			if (participantContact.hasPhoto()) {
+			if (participantContact != null && participantContact.hasPhoto()) {
 				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
@@ -200,7 +200,7 @@ public class ImdnFragment extends Fragment {
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
-			if (participantContact.hasPhoto()) {
+			if (participantContact != null && participantContact.hasPhoto()) {
 				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
@@ -221,7 +221,7 @@ public class ImdnFragment extends Fragment {
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
-			if (participantContact.hasPhoto()) {
+			if (participantContact != null && participantContact.hasPhoto()) {
 				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
