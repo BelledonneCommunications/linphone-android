@@ -22,6 +22,9 @@ package org.linphone.chat;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -350,8 +353,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
 				return true;
 			case R.id.copy_text:
+				if (message.hasTextContent()) {
+					ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					ClipData clip = ClipData.newPlainText("Message", message.getTextContent());
+					clipboard.setPrimaryClip(clip);
+				}
 				return true;
 			case R.id.delete_message:
+				mChatRoom.deleteMessage(message);
+				mEventsAdapter.removeItem(info.position);
 				return true;
 			default:
 				return super.onContextItemSelected(item);

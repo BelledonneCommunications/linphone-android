@@ -159,6 +159,11 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
         return i;
     }
 
+    public void removeItem(int i) {
+    	mHistory.remove(i);
+    	notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ChatBubbleViewHolder holder;
