@@ -42,6 +42,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
@@ -51,10 +52,13 @@ public class ImdnFragment extends Fragment {
 	private LinearLayout mRead, mReadHeader, mDelivered, mDeliveredHeader, mUndelivered, mUndeliveredHeader;
 	private ImageView mBackButton;
 	private ChatBubbleViewHolder mBubble;
+	private ViewGroup mContainer;
 
 	private String mRoomUri, mMessageId;
 	private Address mRoomAddr;
 	private ChatRoom mRoom;
+	private ChatMessage mMessage;
+	private ChatMessageListenerStub mListener;
 
 	@Nullable
 	@Override
@@ -76,6 +80,7 @@ public class ImdnFragment extends Fragment {
 		}
 
 		mInflater = inflater;
+		mContainer = container;
 		View view = mInflater.inflate(R.layout.chat_imdn, container, false);
 
 		mBackButton = view.findViewById(R.id.back);
@@ -111,12 +116,19 @@ public class ImdnFragment extends Fragment {
 		mBubble.imdmLayout.setVisibility(View.INVISIBLE);
 		mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
-		ChatMessage message = mRoom.findMessage(mMessageId);
+		mMessage = mRoom.findMessage(mMessageId);
+		mListener = new ChatMessageListenerStub() {
+			@Override
+			public void onParticipantImdnStateChanged(ChatMessage msg, ParticipantImdnState state) {
+				refreshInfo();
+			}
+		};
+		mMessage.setListener(mListener);
 
 		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		layoutParams.setMargins(100, 10, 10, 10);
-		if (message.isOutgoing()) {
+		if (mMessage.isOutgoing()) {
 			mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
 			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
 			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
@@ -130,7 +142,18 @@ public class ImdnFragment extends Fragment {
 			mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 		}
 
-		Address remoteSender = message.getFromAddress();
+		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		refreshInfo();
+	}
+
+	private void refreshInfo() {
+		Address remoteSender = mMessage.getFromAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
 		String displayName;
 
@@ -149,24 +172,28 @@ public class ImdnFragment extends Fragment {
 			displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 			mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		}
-		mBubble.contactName.setText(LinphoneUtils.timestampToHumanDate(getActivity(), message.getTime(), R.string.messages_date_format) + " - " + displayName);
+		mBubble.contactName.setText(LinphoneUtils.timestampToHumanDate(getActivity(), mMessage.getTime(), R.string.messages_date_format) + " - " + displayName);
 
-		if (message.hasTextContent()) {
-			String msg = message.getTextContent();
+		if (mMessage.hasTextContent()) {
+			String msg = mMessage.getTextContent();
 			Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
 			mBubble.messageText.setText(text);
 			mBubble.messageText.setMovementMethod(LinkMovementMethod.getInstance());
 			mBubble.messageText.setVisibility(View.VISIBLE);
 		}
 
-		String appData = message.getAppdata();
+		String appData = mMessage.getAppdata();
 		if (appData != null) { // Something to display
 			mBubble.fileName.setVisibility(View.VISIBLE);
 			mBubble.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
 			// We purposely chose not to display the image
 		}
 
-		ParticipantImdnState[] participants = message.getParticipantsThatHaveDisplayed();
+		mRead.removeAllViews();
+		mDelivered.removeAllViews();
+		mUndelivered.removeAllViews();
+
+		ParticipantImdnState[] participants = mMessage.getParticipantsThatHaveDisplayed();
 		mReadHeader.setVisibility(participants.length == 0 ? View.GONE : View.VISIBLE);
 		boolean first = true;
 		for (ParticipantImdnState participant : participants) {
@@ -174,7 +201,7 @@ public class ImdnFragment extends Fragment {
 			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
-			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
+			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
@@ -188,7 +215,7 @@ public class ImdnFragment extends Fragment {
 			first = false;
 		}
 
-		participants = message.getParticipantsThatHaveReceived();
+		participants = mMessage.getParticipantsThatHaveReceived();
 		mDeliveredHeader.setVisibility(participants.length == 0 ? View.GONE : View.VISIBLE);
 		first = true;
 		for (ParticipantImdnState participant : participants) {
@@ -196,7 +223,7 @@ public class ImdnFragment extends Fragment {
 			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
-			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
+			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
@@ -210,7 +237,7 @@ public class ImdnFragment extends Fragment {
 			first = false;
 		}
 
-		participants = message.getParticipantsThatHaveNotReceived();
+		participants = mMessage.getParticipantsThatHaveNotReceived();
 		mUndeliveredHeader.setVisibility(participants.length == 0 ? View.GONE : View.VISIBLE);
 		first = true;
 		for (ParticipantImdnState participant : participants) {
@@ -218,7 +245,7 @@ public class ImdnFragment extends Fragment {
 			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
-			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
+			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			if (participantContact != null && participantContact.hasPhoto()) {
@@ -230,7 +257,5 @@ public class ImdnFragment extends Fragment {
 			mUndelivered.addView(v);
 			first = false;
 		}
-
-		return view;
 	}
 }
