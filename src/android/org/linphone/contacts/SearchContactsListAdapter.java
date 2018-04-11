@@ -37,7 +37,6 @@ import org.linphone.core.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchContactsListAdapter extends BaseAdapter {
 
@@ -178,6 +177,10 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				}
 			}
 			if (sr.getAddress() != null) {
+				if (contact.getFullName() == null) {
+					contact.setFullName(search);
+				}
+
 				boolean found = false;
 				for (ContactAddress ca : result) {
 					if (ca.getAddress().asStringUriOnly().equals(sr.getAddress().asStringUriOnly())) {
