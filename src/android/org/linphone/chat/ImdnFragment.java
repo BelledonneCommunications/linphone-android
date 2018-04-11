@@ -111,16 +111,25 @@ public class ImdnFragment extends Fragment {
 		mBubble.imdmLayout.setVisibility(View.INVISIBLE);
 		mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
+		ChatMessage message = mRoom.findMessage(mMessageId);
+
 		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		layoutParams.setMargins(100, 10, 10, 10);
-		mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
-		Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
-		Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
-		mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
-		mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
+		if (message.isOutgoing()) {
+			mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
+			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
+			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
+			mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
+			mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
+		} else {
+			mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
+			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font9);
+			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font8);
+			mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+			mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
+		}
 
-		ChatMessage message = mRoom.findMessage(mMessageId);
 		Address remoteSender = message.getFromAddress();
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
 		String displayName;
@@ -134,7 +143,7 @@ public class ImdnFragment extends Fragment {
 
 			mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			if (contact.hasPhoto()) {
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), mBubble.contactPicture, contact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), mBubble.contactPicture, contact.getThumbnailUri());
 			}
 		} else {
 			displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
@@ -167,10 +176,10 @@ public class ImdnFragment extends Fragment {
 
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
-			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(LinphoneActivity.instance(), participant.getStateChangeTime(), R.string.messages_date_format));
+			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			if (participantContact.hasPhoto()) {
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
@@ -189,10 +198,10 @@ public class ImdnFragment extends Fragment {
 
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
-			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(LinphoneActivity.instance(), participant.getStateChangeTime(), R.string.messages_date_format));
+			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			if (participantContact.hasPhoto()) {
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}
@@ -213,7 +222,7 @@ public class ImdnFragment extends Fragment {
 			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			if (participantContact.hasPhoto()) {
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}

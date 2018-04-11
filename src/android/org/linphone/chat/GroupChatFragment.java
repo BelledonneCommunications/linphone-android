@@ -33,12 +33,16 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,6 +66,7 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
+import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
@@ -206,6 +211,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mRemoteComposing = view.findViewById(R.id.remote_composing);
 
 		mChatEventsList = view.findViewById(R.id.chat_message_list);
+		registerForContextMenu(mChatEventsList);
 
 		return view;
 	}
@@ -317,6 +323,38 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mEventsAdapter.refresh(mChatRoom.getHistoryMessageEvents(0));
 		} else {
 			mEventsAdapter.refresh(mChatRoom.getHistoryEvents(0));
+		}
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getActivity().getMenuInflater();
+		inflater.inflate(R.menu.chat_bubble_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
+			return super.onContextItemSelected(item);
+		}
+
+		ChatMessage message = event.getChatMessage();
+		String messageId = message.getMessageId();
+
+		switch(item.getItemId()) {
+			case R.id.imdn_infos:
+				LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
+				return true;
+			case R.id.copy_text:
+				return true;
+			case R.id.delete_message:
+				return true;
+			default:
+				return super.onContextItemSelected(item);
 		}
 	}
 

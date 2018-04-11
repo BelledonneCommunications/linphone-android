@@ -220,6 +220,7 @@
     <string name="chat_room_leave_button">Leave</string>
     <string name="chat_room_delete_dialog">Do you want to delete and leave the selected conversations?</string>
     <string name="separator">:&#160;</string>
+    <string name="imdn_info">Infos</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

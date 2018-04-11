@@ -252,12 +252,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    holder.imdmLabel.setText(R.string.file_transfer_error);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 			    }
-			    holder.imdmLayout.setOnClickListener(new View.OnClickListener() {
-				    @Override
-				    public void onClick(View v) {
-					    LinphoneActivity.instance().goToChatMessageImdnInfos(mFragment.getRemoteSipUri(), message.getMessageId());
-				    }
-			    });
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
