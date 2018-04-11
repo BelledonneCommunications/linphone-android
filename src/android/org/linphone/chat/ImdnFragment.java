@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.app.Fragment;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spanned;
@@ -43,10 +44,11 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
+import org.linphone.core.ParticipantImdnState;
 
 public class ImdnFragment extends Fragment {
 	private LayoutInflater mInflater;
-	private LinearLayout mRead, mDelivered, mUndelivered;
+	private LinearLayout mRead, mReadHeader, mDelivered, mDeliveredHeader, mUndelivered, mUndeliveredHeader;
 	private ImageView mBackButton;
 	private ChatBubbleViewHolder mBubble;
 
@@ -59,7 +61,6 @@ public class ImdnFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		String roomUri;
 		if (getArguments() != null) {
 			mRoomUri = getArguments().getString("SipUri");
 			mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
@@ -92,6 +93,9 @@ public class ImdnFragment extends Fragment {
 		mRead = view.findViewById(R.id.read_layout);
 		mDelivered = view.findViewById(R.id.delivered_layout);
 		mUndelivered = view.findViewById(R.id.undelivered_layout);
+		mReadHeader = view.findViewById(R.id.read_layout_header);
+		mDeliveredHeader = view.findViewById(R.id.delivered_layout_header);
+		mUndeliveredHeader = view.findViewById(R.id.undelivered_layout_header);
 
 		mBubble = new ChatBubbleViewHolder(view.findViewById(R.id.bubble));
 		mBubble.eventLayout.setVisibility(View.GONE);
@@ -153,26 +157,70 @@ public class ImdnFragment extends Fragment {
 			// We purposely chose not to display the image
 		}
 
-		// TODO: real values
-		View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
-		v.findViewById(R.id.separator).setVisibility(View.GONE);
-		((TextView)v.findViewById(R.id.time)).setText("Aujourd'hui - 17h58");
-		((TextView)v.findViewById(R.id.name)).setText("Albert");
-		mRead.addView(v);
-		v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
-		((TextView)v.findViewById(R.id.time)).setText("Aujourd'hui - 17h52");
-		((TextView)v.findViewById(R.id.name)).setText("Charlotte");
-		mRead.addView(v);
-		v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
-		v.findViewById(R.id.separator).setVisibility(View.GONE);
-		((TextView)v.findViewById(R.id.time)).setText("Aujourd'hui - 17h36");
-		((TextView)v.findViewById(R.id.name)).setText("Fabrice");
-		mDelivered.addView(v);
-		v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
-		v.findViewById(R.id.separator).setVisibility(View.GONE);
-		((TextView)v.findViewById(R.id.name)).setText("Heloïse");
-		mUndelivered.addView(v);
-		// End of todo
+		ParticipantImdnState[] participants = message.getParticipantsThatHaveDisplayed();
+		mReadHeader.setVisibility(participants.length == 0 ? View.GONE : View.VISIBLE);
+		boolean first = true;
+		for (ParticipantImdnState participant : participants) {
+			Address address = participant.getParticipant().getAddress();
+			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
+			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
+
+			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
+			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(LinphoneActivity.instance(), participant.getStateChangeTime(), R.string.messages_date_format));
+			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
+			if (participantContact.hasPhoto()) {
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
+			} else {
+				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			}
+
+			mRead.addView(v);
+			first = false;
+		}
+
+		participants = message.getParticipantsThatHaveReceived();
+		mDeliveredHeader.setVisibility(participants.length == 0 ? View.GONE : View.VISIBLE);
+		first = true;
+		for (ParticipantImdnState participant : participants) {
+			Address address = participant.getParticipant().getAddress();
+			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
+			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
+
+			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
+			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(LinphoneActivity.instance(), participant.getStateChangeTime(), R.string.messages_date_format));
+			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
+			if (participantContact.hasPhoto()) {
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
+			} else {
+				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			}
+
+			mDelivered.addView(v);
+			first = false;
+		}
+
+		participants = message.getParticipantsThatHaveNotReceived();
+		mUndeliveredHeader.setVisibility(participants.length == 0 ? View.GONE : View.VISIBLE);
+		first = true;
+		for (ParticipantImdnState participant : participants) {
+			Address address = participant.getParticipant().getAddress();
+			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
+			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
+
+			View v = mInflater.inflate(R.layout.chat_imdn_cell, container, false);
+			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
+			if (participantContact.hasPhoto()) {
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
+			} else {
+				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			}
+
+			mUndelivered.addView(v);
+			first = false;
+		}
 
 		return view;
 	}
