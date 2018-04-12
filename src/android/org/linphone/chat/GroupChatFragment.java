@@ -351,6 +351,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			// Do not show incoming messages IDMN state in 1 to 1 chat room as we don't receive IMDN for them
 			menu.removeItem(R.id.imdn_infos);
 		}
+		if (!message.hasTextContent()) {
+			// Do not show copy text option if message doesn't have any text
+			menu.removeItem(R.id.copy_text);
+		}
 	}
 
 	@Override
