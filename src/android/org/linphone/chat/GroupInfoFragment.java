@@ -249,7 +249,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					for (Participant p : mChatRoom.getParticipants()) {
 						boolean found = false;
 						for (ContactAddress c : mParticipants) {
-							if (c.getAddress().asStringUriOnly().equals(p.getAddress().asStringUriOnly())) {
+							if (c.getAddress().weakEqual(p.getAddress())) {
 								found = true;
 								break;
 							}
@@ -267,7 +267,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					for (ContactAddress c : mParticipants) {
 						boolean found = false;
 						for (Participant p : mChatRoom.getParticipants()) {
-							if (p.getAddress().asStringUriOnly().equals(c.getAddress().asStringUriOnly())) {
+							if (p.getAddress().weakEqual(c.getAddress())) {
 								// Admin rights
 								if (c.isAdmin() != p.isAdmin()) {
 									mChatRoom.setParticipantAdminStatus(p, c.isAdmin());
