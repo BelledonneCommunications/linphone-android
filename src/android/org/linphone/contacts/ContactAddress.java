@@ -74,7 +74,12 @@ public class ContactAddress implements Serializable {
 
 	public Address getAddress() {
 		String presence = contact.getPresenceModelForUriOrTel(address);
-		return Factory.instance().createAddress(presence != null ? presence : address);
+		Address addr = Factory.instance().createAddress(presence != null ? presence : address);
+		// Remove the user=phone URI param if existing, it will break everything otherwise
+		if (addr.hasUriParam("user")) {
+			addr.removeUriParam("user");
+		}
+		return addr;
 	}
 
 	public void setSelect(boolean select) {
