@@ -237,7 +237,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private final String mRingSoundFile;
 	private final String mCallLogDatabaseFile;
 	private final String mFriendsDatabaseFile;
-	private byte[] mUploadingImage;
 	private Timer mTimer;
 	private Map<String, Integer> mUnreadChatsPerRoom;
 
@@ -500,13 +499,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		CharSequence getText();
 		void setDisplayedName(String s);
 		String getDisplayedName();
-	}
-
-
-	public interface NewOutgoingCallUiListener {
-		public void onWrongDestinationAddress();
-		public void onCannotGetCallParameters();
-		public void onAlreadyInCall();
 	}
 
 	public void enableCamera(Call call, boolean enable) {
