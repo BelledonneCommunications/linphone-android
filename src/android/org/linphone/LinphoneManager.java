@@ -1121,7 +1121,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void setCurrentChatRoomAddress(Address address) {
 		mCurrentChatRoomAddress = address;
-		LinphoneService.instance().setCurrentlyDisplayedChatRoom(address.asStringUriOnly());
+		LinphoneService.instance().setCurrentlyDisplayedChatRoom(address != null ? address.asStringUriOnly() : null);
 	}
 
 	@Override
