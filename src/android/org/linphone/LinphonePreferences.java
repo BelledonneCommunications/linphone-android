@@ -395,6 +395,7 @@ public class LinphonePreferences {
 			int port = 0;
 			if (transport.equals(getString(R.string.pref_transport_udp_key))) {
 				proxyAddr.setTransport(TransportType.Udp);
+
 			} else if (transport.equals(getString(R.string.pref_transport_tcp_key))) {
 				proxyAddr.setTransport(TransportType.Tcp);
 			} else if (transport.equals(getString(R.string.pref_transport_tls_key))) {
@@ -722,6 +723,20 @@ public class LinphonePreferences {
 		prxCfg.edit();
 		prxCfg.setDialEscapePlus(replace);
 		prxCfg.done();
+	}
+
+	public void enablePushNotifForProxy(int n, boolean enable) {
+		ProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
+		prxCfg.setPushNotificationAllowed(enable);
+		prxCfg.done();
+
+		setPushNotificationEnabled(isPushNotificationEnabled());
+	}
+
+	public boolean isPushNotifEnabledForProxy(int n) {
+		ProxyConfig prxCfg = getProxyConfig(n);
+		return prxCfg.isPushNotificationAllowed();
 	}
 
 	public boolean isFriendlistsubscriptionEnabled() {
@@ -1142,14 +1157,22 @@ public class LinphonePreferences {
 			 String appId = getString(R.string.push_sender_id);
 			 if (regId != null && lc.getProxyConfigList().length > 0) {
 				 for (ProxyConfig lpc : lc.getProxyConfigList()) {
-					 String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
-					 String prevContactParams = lpc.getContactParameters();
-					 if (prevContactParams == null || prevContactParams.compareTo(contactInfos)!=0) {
+					 if (!lpc.isPushNotificationAllowed()) {
 						 lpc.edit();
-						 lpc.setContactUriParameters(contactInfos);
+						 lpc.setContactUriParameters(null);
 						 lpc.done();
 						 if (lpc.getIdentityAddress() != null)
-						    Log.d("Push notif infos added to proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+							 Log.d("Push notif infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+					 } else {
+						 String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
+						 String prevContactParams = lpc.getContactParameters();
+						 if (prevContactParams == null || prevContactParams.compareTo(contactInfos) != 0) {
+							 lpc.edit();
+							 lpc.setContactUriParameters(contactInfos);
+							 lpc.done();
+							 if (lpc.getIdentityAddress() != null)
+								 Log.d("Push notif infos added to proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+						 }
 					 }
 				 }
 				 lc.refreshRegisters();

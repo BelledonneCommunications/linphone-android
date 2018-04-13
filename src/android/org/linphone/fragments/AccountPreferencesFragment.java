@@ -260,6 +260,18 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			return true;
 		}
 	};
+	OnPreferenceChangeListener pushNotificationListener = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			boolean value = (Boolean) newValue;
+			if (isNewAccount) {
+				//TODO
+			} else {
+				mPrefs.enablePushNotifForProxy(n, value);
+			}
+			return true;
+		}
+	};
 	OnPreferenceChangeListener disableChangedListener = new OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -442,6 +454,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 		Preference linkAccount = advanced.getPreference(10);
 		linkAccount.setOnPreferenceClickListener(linkAccountListener);
+
+		CheckBoxPreference pushNotif = (CheckBoxPreference) advanced.getPreference(11);
+		pushNotif.setOnPreferenceChangeListener(pushNotificationListener);
+		if(!isNewAccount){
+			pushNotif.setChecked(mPrefs.isPushNotifEnabledForProxy(n));
+		}
 
 		PreferenceCategory manage = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_manage_key));
 		final CheckBoxPreference disable = (CheckBoxPreference) manage.getPreference(0);
