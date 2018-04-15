@@ -64,6 +64,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -334,11 +335,11 @@ private static AssistantActivity instance;
 	}
 
 	public void checkAndRequestAudioPermission() {
-		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, 0);
+		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO);
 	}
 
 	public void checkAndRequestVideoPermission() {
-		checkAndRequestPermission(Manifest.permission.CAMERA, 0);
+		checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
 	}
 
 	public void checkAndRequestPermission(String permission, int result) {
@@ -361,10 +362,9 @@ private static AssistantActivity instance;
 
 		switch (requestCode) {
 			case PERMISSIONS_REQUEST_CAMERA:
-
-				break;
-			case PERMISSIONS_ENABLED_CAMERA:
-
+				if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					displayQRCodeReader();
+				}
 				break;
 			case PERMISSIONS_REQUEST_RECORD_AUDIO:
 				LinphoneUtils.dispatchOnUIThread(new Runnable() {
@@ -523,10 +523,15 @@ private static AssistantActivity instance;
 	}
 
 	public void displayQRCodeReader() {
-		fragment = new QrcodeFragment();
-		changeFragment(fragment);
-		currentFragment = AssistantFragmentsEnum.QRCODE_READER;
-		back.setVisibility(View.VISIBLE);
+		if (getPackageManager().checkPermission(Manifest.permission.CAMERA,
+				getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			checkAndRequestVideoPermission();
+		} else {
+			fragment = new QrcodeFragment();
+			changeFragment(fragment);
+			currentFragment = AssistantFragmentsEnum.QRCODE_READER;
+			back.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public void displayCountryChooser() {
@@ -802,6 +807,15 @@ private static AssistantActivity instance;
 
 	public CountryListAdapter getCountryListAdapter() {
 		return countryListAdapter;
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if (currentFragment == AssistantFragmentsEnum.QRCODE_READER) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+
 	}
 
 	/**

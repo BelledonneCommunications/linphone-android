@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
@@ -45,7 +46,7 @@ public class QrcodeFragment extends Fragment {
 	}
 
 	private void enableQrcodeReader(boolean enable) {
-		//LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
+		LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
 		LinphoneManager.getLc().enableVideoPreview(enable);
 	}
 
@@ -74,8 +75,7 @@ public class QrcodeFragment extends Fragment {
 			}
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				mQrcodeView = surface;
-				LinphoneManager.getLc().setNativePreviewWindowId(vw);
+				LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
@@ -84,27 +84,43 @@ public class QrcodeFragment extends Fragment {
 		});
 
 		enableQrcodeReader(true);
-		LinphoneManager.getLc().setQrcodeDecodeRect(500,220,280,280);
+		//LinphoneManager.getLc().setQrcodeDecodeRect(500,220,280,280);
 	}
 
 	@Override
 	public void onStart() {
-		AssistantActivity.instance().checkAndRequestVideoPermission();
 		super.onStart();
 	}
 
 	@Override
 	public void onResume() {
 		launchQrcodeReader();
+		if (androidVideoWindowImpl != null) {
+			synchronized (androidVideoWindowImpl) {
+				LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
+			}
+		}
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
-		LinphoneManager.getLc().setNativePreviewWindowId(null);
-		androidVideoWindowImpl.release();
+		if (androidVideoWindowImpl != null) {
+			synchronized (androidVideoWindowImpl) {
+				LinphoneManager.getLc().setNativePreviewWindowId(null);
+			}
+		}
 		enableQrcodeReader(false);
 		setBackCamera(false);
 		super.onPause();
+	}
+
+	@Override
+	public void onDestroy() {
+		if (androidVideoWindowImpl != null) {
+			androidVideoWindowImpl.release();
+			androidVideoWindowImpl = null;
+		}
+		super.onDestroy();
 	}
 }
