@@ -6,6 +6,7 @@ import org.linphone.core.Factory;
 import org.linphone.mediastream.Version;
 
 import android.util.Log;
+import android.content.Context;
 
 public class Tester {
 	public static String TAG = "liblinphone-tester";
@@ -49,6 +50,8 @@ public class Tester {
 		}
 	}
 
+	public static native void setApplicationContext(Context ct);
+	public static native void removeApplicationContext();
 	public native int run(String args[]);
 	public static native void keepAccounts(boolean keep);
 	public static native void clearAccounts();

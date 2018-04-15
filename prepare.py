@@ -241,6 +241,7 @@ install: install-apk run-linphone
 install-test:
 \t$(MAKE) -C liblinphone_tester copy-libs
 \t$(MAKE) -C liblinphone_tester copy-files
+\t./gradlew -b liblinphone_tester/build.gradle clean
 \t./gradlew -b liblinphone_tester/build.gradle assembleDebug
 \t./gradlew -b liblinphone_tester/build.gradle installDebug
 
