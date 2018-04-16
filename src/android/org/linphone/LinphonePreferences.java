@@ -373,6 +373,13 @@ public class LinphonePreferences {
 			prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
 			prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
 
+			String regId = LinphonePreferences.instance().getPushNotificationRegistrationID();
+			String appId = LinphonePreferences.instance().getString(R.string.push_sender_id);
+			if (regId != null && LinphonePreferences.instance().isPushNotificationEnabled()) {
+				String contactInfos = "app-id=" + appId + ";pn-type=" + LinphonePreferences.instance().getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
+				prxCfg.setContactUriParameters(contactInfos);
+			}
+
 			if(tempPrefix != null){
 				prxCfg.setDialPrefix(tempPrefix);
 			}
