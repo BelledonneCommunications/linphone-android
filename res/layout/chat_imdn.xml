@@ -26,12 +26,22 @@
                 android:layout_weight="0.2"
                 android:padding="18dp"/>
 
+            <TextView
+                android:text="@string/imdn_info"
+                style="@style/font6"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:padding="15dp"/>
+
             <ImageView
                 android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
+                android:layout_weight="0.2"
                 android:padding="15dp"/>
+
         </LinearLayout>
 
     </RelativeLayout>
