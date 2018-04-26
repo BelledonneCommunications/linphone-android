@@ -347,8 +347,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			inflater.inflate(R.menu.chat_bubble_menu, menu);
 		}
 
-		if (!message.isOutgoing() && mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-			// Do not show incoming messages IDMN state in 1 to 1 chat room as we don't receive IMDN for them
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			// Do not show messages' IDMN state in 1 to 1 chat room as it is already visible in the lower corner of the bubble
 			menu.removeItem(R.id.imdn_infos);
 		}
 		if (!message.hasTextContent()) {
