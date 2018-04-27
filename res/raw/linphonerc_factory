@@ -41,6 +41,7 @@ max_calls=10
 history_max_size=100
 enable_basic_to_client_group_chat_room_migration=0
 enable_simple_group_chat_message_state=0
+aggregate_imdn=0
 
 [app]
 activation_code_length=4
