@@ -198,7 +198,6 @@ public class ImdnFragment extends Fragment {
 		boolean first = true;
 		for (ParticipantImdnState participant : participants) {
 			Address address = participant.getParticipant().getAddress();
-			if (!mMessage.isOutgoing() && address.weakEqual(remoteSender)) continue;
 
 			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
@@ -222,7 +221,6 @@ public class ImdnFragment extends Fragment {
 		first = true;
 		for (ParticipantImdnState participant : participants) {
 			Address address = participant.getParticipant().getAddress();
-			if (!mMessage.isOutgoing() && address.weakEqual(remoteSender)) continue;
 
 			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
@@ -246,7 +244,6 @@ public class ImdnFragment extends Fragment {
 		first = true;
 		for (ParticipantImdnState participant : participants) {
 			Address address = participant.getParticipant().getAddress();
-			if (!mMessage.isOutgoing() && address.weakEqual(remoteSender)) continue;
 
 			LinphoneContact participantContact = ContactsManager.getInstance().findContactFromAddress(address);
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
