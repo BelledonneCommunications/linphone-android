@@ -126,6 +126,34 @@
                     android:orientation="vertical"/>
 
                 <LinearLayout
+                    android:id="@+id/sent_layout_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@color/colorG">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/font28"
+                        android:text="@string/sent"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/message_delivered"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sent_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+                <LinearLayout
                     android:id="@+id/undelivered_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -137,7 +165,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/font29"
-                        android:text="@string/undelivered"/>
+                        android:text="@string/error"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
