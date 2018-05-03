@@ -67,7 +67,6 @@
         <TextView
             android:text="@string/app_description"
             style="@style/font2"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
