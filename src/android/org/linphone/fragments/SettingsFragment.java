@@ -290,16 +290,16 @@ public class SettingsFragment extends PreferencesListFragment {
 			return;
 		}
 
-		/*setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
+		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_host_key, mPrefs.getTunnelHost());
 		setPreferenceDefaultValueAndSummary(R.string.pref_tunnel_port_key, String.valueOf(mPrefs.getTunnelPort()));
 		ListPreference tunnelModePref = (ListPreference) findPreference(getString(R.string.pref_tunnel_mode_key));
 		String tunnelMode = mPrefs.getTunnelMode();
 		tunnelModePref.setSummary(tunnelMode);
-		tunnelModePref.setValue(tunnelMode);*/
+		tunnelModePref.setValue(tunnelMode);
 	}
 
 	private void setTunnelPreferencesListener() {
-		/*findPreference(getString(R.string.pref_tunnel_host_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		findPreference(getString(R.string.pref_tunnel_host_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String host = newValue.toString();
@@ -329,7 +329,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				preference.setSummary(mode);
 				return true;
 			}
-		});*/
+		});
 	}
 
 	private void initAccounts() {

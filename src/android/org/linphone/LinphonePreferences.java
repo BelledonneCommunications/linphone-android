@@ -38,6 +38,8 @@ import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.Config;
 //import org.linphone.core.TunnelConfig;
+import org.linphone.core.Tunnel;
+import org.linphone.core.TunnelConfig;
 import org.linphone.core.VideoActivationPolicy;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.Purchasable;
@@ -1290,12 +1292,13 @@ public class LinphonePreferences {
 	// End of advanced settings
 
 	// Tunnel settings
-	/*private TunnelConfig tunnelConfig = null;
+	private TunnelConfig tunnelConfig = null;
 
 	public TunnelConfig getTunnelConfig() {
 		if(getLc().tunnelAvailable()) {
-			if(tunnelConfig == null) {
-				TunnelConfig servers[] = getLc().tunnelGetServers();
+			Tunnel tunnel = getLc().getTunnel();
+			if (tunnelConfig == null) {
+				TunnelConfig servers[] = tunnel.getServers();
 				if(servers.length > 0) {
 					tunnelConfig = servers[0];
 				} else {
@@ -1349,7 +1352,7 @@ public class LinphonePreferences {
 	public void setTunnelMode(String mode) {
 		getConfig().setString("app", "tunnel", mode);
 		LinphoneManager.getInstance().initTunnelFromConf();
-	}*/
+	}
 	// End of tunnel settings
 
 	public boolean isProvisioningLoginViewEnabled() {
