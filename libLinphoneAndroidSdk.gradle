@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.0'
     }
 }
 
@@ -28,8 +28,8 @@ configurations {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
-    javadocDeps group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
+    javadocDeps group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
 }
 
 def srcDir = ['submodules/mediastreamer2/java/src', 'src/linphone-wrapper']
@@ -44,7 +44,6 @@ excludePackage.add('**/LICENSE.txt')
 android {
     defaultConfig {
         compileSdkVersion 26
-        buildToolsVersion "26.0.0"
         multiDexEnabled true
     }
 
