@@ -1111,9 +1111,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			} else {
 				String subject = cr.getSubject();
 				if (contact != null) {
-					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asString(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
+					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
 				} else {
-					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asString(), from.getUsername(), null, textMessage);
+					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage);
 				}
 			}
 		}
