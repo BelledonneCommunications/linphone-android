@@ -45,7 +45,7 @@ dependencies {
     androidTestImplementation 'junit:junit:4.12'
     implementation 'org.apache.commons:commons-compress:1.16.1'
     if (firebaseEnable()) {
-        implementation 'com.google.firebase:firebase-messaging:15.0.2'
+        implementation 'com.google.firebase:firebase-messaging:12.0.1'
     }
     implementation 'com.android.support:support-v4:26.0.1'
 }
