@@ -39,6 +39,7 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         android.util.Log.i("FirebaseMessaging","[Push Notification] Received");
 
         if (!LinphoneService.isReady()) {
+            android.util.Log.i("FirebaseMessaging","[Push Notification] Starting Service");
             startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
         } else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
             UIThreadDispatcher.dispatch(new Runnable(){
