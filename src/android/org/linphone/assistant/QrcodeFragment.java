@@ -20,19 +20,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 public class QrcodeFragment extends Fragment {
 	private SurfaceView mQrcodeView;
+	private CoreListenerStub mListener;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 
 	@Override
@@ -42,12 +45,26 @@ public class QrcodeFragment extends Fragment {
 
 		mQrcodeView = (SurfaceView) view.findViewById(R.id.qrcodeCaptureSurface);
 
+		mListener = new CoreListenerStub() {
+			@Override
+			public void onQrcodeFound(Core lc, String result) {
+				enableQrcodeReader(false);
+				AssistantActivity.instance().displayRemoteProvisioning(result);
+			}
+
+		};
+
 		return view;
 	}
 
 	private void enableQrcodeReader(boolean enable) {
 		LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
 		LinphoneManager.getLc().enableVideoPreview(enable);
+		if (enable) {
+			LinphoneManager.getLc().addListener(mListener);
+		} else {
+			LinphoneManager.getLc().removeListener(mListener);
+		}
 	}
 
 	private void setBackCamera(boolean useBackCamera) {
@@ -84,7 +101,6 @@ public class QrcodeFragment extends Fragment {
 		});
 
 		enableQrcodeReader(true);
-		//LinphoneManager.getLc().setQrcodeDecodeRect(500,220,280,280);
 	}
 
 	@Override

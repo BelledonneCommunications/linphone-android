@@ -53,6 +53,10 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
 
+		if (!getArguments().getString("RemoteUrl").isEmpty()) {
+			remoteProvisioningUrl.setText(getArguments().getString("RemoteUrl"));
+		}
+
 		return view;
 	}
 

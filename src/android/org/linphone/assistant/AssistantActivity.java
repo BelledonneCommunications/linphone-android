@@ -193,16 +193,6 @@ private static AssistantActivity instance;
 					}
 				}
         	}
-
-	        @Override
-	        public void onQrcodeFound(Core lc, String result) {
-		        AlertDialog.Builder builder = new AlertDialog.Builder(AssistantActivity.instance());
-		        builder.setMessage("QRCODE found: " + result);
-		        builder.setCancelable(false);
-		        builder.setNeutralButton(getString(R.string.ok), null);
-		        builder.show();
-	        }
-
         };
         instance = this;
 	}
@@ -322,7 +312,7 @@ private static AssistantActivity instance;
 				displayCreateAccount();
 			}
 		} else if (currentFragment == AssistantFragmentsEnum.QRCODE_READER) {
-			displayRemoteProvisioning();
+			displayRemoteProvisioning("");
 		}
 	}
 
@@ -515,8 +505,11 @@ private static AssistantActivity instance;
 		back.setVisibility(View.VISIBLE);
 	}
 
-	public void displayRemoteProvisioning() {
+	public void displayRemoteProvisioning(String url) {
 		fragment = new RemoteProvisioningFragment();
+		Bundle extra = new Bundle();
+		extra.putString("RemoteUrl", url);
+		fragment.setArguments(extra);
 		changeFragment(fragment);
 		currentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
 		back.setVisibility(View.VISIBLE);
