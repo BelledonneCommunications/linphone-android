@@ -69,7 +69,6 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
-import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
@@ -160,7 +159,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 						String displayName = LinphoneUtils.getAddressDisplayName(a);
 						c.setFullName(displayName);
 					}
-					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
+					ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
 					participants.add(ca);
 				}
 				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false);
@@ -697,7 +696,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onConferenceAddressGeneration(ChatRoom cr) {
 
 	}
-	
+
 	@Override
 	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
 
@@ -705,7 +704,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
-	
+
 	@Override
 	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
@@ -752,7 +751,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
-	@Override
+	/*@Override
 	public void onAllInformationReceived(ChatRoom cr) {
 		// Currently flexisip doesn't send the participants list in the INVITE
 		// So we have to refresh the display when information is available
@@ -763,7 +762,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 		getContactsForParticipants();
 		displayChatRoomHeader();
-	}
+	}*/
 
 	@Override
 	public void onChatMessageReceived(ChatRoom cr, EventLog event) {
@@ -850,6 +849,16 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
+
+	}
+
+	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog eventLog) {
 
 	}
 

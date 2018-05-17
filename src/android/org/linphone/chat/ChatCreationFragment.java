@@ -41,11 +41,13 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneNumberOrAddress;
 import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
@@ -249,10 +251,20 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private int getIndexOfCa(ContactAddress ca, List<ContactAddress> caList) {
 		for (int i = 0 ; i < caList.size() ; i++) {
-			if (caList.get(i).getAddressAsDisplayableString().compareTo(ca.getAddressAsDisplayableString()) == 0)
-				return i;
+			if (ca.getAddress() != null && ca.getAddress().getUsername() != null) {
+				if (caList.get(i).getAddressAsDisplayableString().compareTo(ca.getAddressAsDisplayableString()) == 0)
+					return i;
+			} else if (ca.getPhoneNumber() != null && caList.get(i).getPhoneNumber() !=null) {
+				if (ca.getPhoneNumber().compareTo(caList.get(i).getPhoneNumber()) == 0)
+					return i;
+			}
 		}
 		return -1;
+	}
+
+	private void resetAndResearch() {
+		ContactsManager.getInstance().getMagicSearch().resetSearchCache();
+		mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
 	}
 
 	private void addSelectedContactAddress(ContactAddress ca) {
@@ -323,6 +335,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			mLinphoneContactsButton.setEnabled(true);
 			mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
+			resetAndResearch();
 		} else if (id == R.id.linphone_contacts) {
 			mSearchAdapter.setOnlySipContact(true);
 			mLinphoneContactsSelected.setVisibility(View.VISIBLE);
@@ -330,6 +343,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts = true);
 			mAllContactsSelected.setVisibility(View.INVISIBLE);
 			updateList();
+			resetAndResearch();
 		} else if (id == R.id.back) {
 			if (LinphoneActivity.instance().isTablet()) {
 				LinphoneActivity.instance().goToChatList();

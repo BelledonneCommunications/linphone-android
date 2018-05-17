@@ -348,7 +348,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			    String displayName = LinphoneUtils.getAddressDisplayName(a);
 			    c.setFullName(displayName);
 		    }
-		    ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
+		    ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
 		    mParticipants.add(ca);
 	    }
 
@@ -449,6 +449,16 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {
 
 	}
@@ -459,15 +469,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
-	public void onAllInformationReceived(ChatRoom cr) {
-
-	}
-
-	@Override
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 
 	}
-	
+
 	@Override
 	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
 
@@ -475,7 +480,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	@Override
 	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
-	
+
 	@Override
 	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}

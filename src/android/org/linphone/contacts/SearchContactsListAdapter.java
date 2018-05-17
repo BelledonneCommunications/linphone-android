@@ -33,6 +33,7 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 
 import java.util.ArrayList;
@@ -87,8 +88,13 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	private boolean contactIsSelected(ContactAddress ca) {
 		for (ContactAddress c : contactsSelected) {
 			Address addr = c.getAddress();
-			if (addr == null) continue;
-			if (addr.asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0) return true;
+			if (addr.getUsername() != null && ca.getAddress() != null) {
+				if (addr.asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0) return true;
+			} else {
+				if (c.getPhoneNumber() != null && ca.getPhoneNumber() != null) {
+					if (c.getPhoneNumber().compareTo(ca.getPhoneNumber()) == 0) return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -122,11 +128,18 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			for (LinphoneContact contact : contacts) {
 				for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
 					if (!mOnlySipContact || (mOnlySipContact && (noa.isSIPAddress() || contact.getPresenceModelForUriOrTel(noa.getValue()) != null))) {
-						Address address = LinphoneManager.getLc().interpretUrl(noa.getValue());
-						if (address != null) {
-							ContactAddress ca = new ContactAddress(contact, address.asString(), contact.isFriend());
-							list.add(ca);
+						ContactAddress ca = null;
+						if (noa.isSIPAddress()) {
+							Address address = LinphoneManager.getLc().interpretUrl(noa.getValue());
+							if (address != null) {
+								ca = new ContactAddress(contact, address.asString(), "", contact.isFriend());
+							}
+						} else {
+							ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+							String number = (prx != null) ? prx.normalizePhoneNumber(noa.getValue()) : noa.getValue();
+							ca = new ContactAddress(contact, "", number, contact.isFriend());
 						}
+						if (ca != null) list.add(ca);
 					}
 				}
 			}
@@ -166,8 +179,12 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		search = search.trim();
 		List<ContactAddress> result = new ArrayList<>();
 
-		SearchResult[] results = ContactsManager.getInstance().getMagicSearch().getContactListFromFilter(search, "");
+		String domain = "";
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		if (prx != null) domain = prx.getDomain();
+		SearchResult[] results = ContactsManager.getInstance().getMagicSearch().getContactListFromFilter(search, mOnlySipContact ? domain  :"");
 		for (SearchResult sr : results) {
+			boolean found = false;
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(sr.getAddress());
 			if (contact == null) {
 				contact = new LinphoneContact();
@@ -176,21 +193,23 @@ public class SearchContactsListAdapter extends BaseAdapter {
 					contact.refresh();
 				}
 			}
-			if (sr.getAddress() != null) {
-				if (contact.getFullName() == null) {
-					contact.setFullName(search);
-				}
-
-				boolean found = false;
+			if (sr.getAddress() != null || sr.getPhoneNumber() != null) {
 				for (ContactAddress ca : result) {
-					if (ca.getAddress().asStringUriOnly().equals(sr.getAddress().asStringUriOnly())) {
+					String normalizedPhoneNumber = (ca.getPhoneNumber() != null) ? prx.normalizePhoneNumber(ca.getPhoneNumber()) : null;
+					if ((sr.getAddress() != null && ca.getAddress() != null
+							&& ca.getAddress().asStringUriOnly().equals(sr.getAddress().asStringUriOnly()))
+						|| (sr.getPhoneNumber() != null && normalizedPhoneNumber != null
+							&& sr.getPhoneNumber().equals(normalizedPhoneNumber))) {
 						found = true;
 						break;
 					}
 				}
-				if (!found) {
-					result.add(new ContactAddress(contact, sr.getAddress().asStringUriOnly(), contact.isFriend()));
-				}
+			}
+			if (!found) {
+				result.add(new ContactAddress(contact,
+						(sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
+						sr.getPhoneNumber(),
+						contact.isFriend()));
 			}
 		}
 
@@ -215,7 +234,7 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		}
 
 		ContactAddress contact = getItem(position);
-		final String a = contact.getAddressAsDisplayableString();
+		final String a = (contact.getAddressAsDisplayableString().isEmpty()) ? contact.getPhoneNumber() : contact.getAddressAsDisplayableString();
 		LinphoneContact c = contact.getContact();
 
 		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
@@ -223,11 +242,20 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
 		}
 
-		String address = null;
+		String address = contact.getAddressAsDisplayableString();
 		if (c != null && c.getFullName() != null) {
-			address = c.getPresenceModelForUriOrTel(a);
+			if (address == null)
+				address = c.getPresenceModelForUriOrTel(a);
 			holder.name.setVisibility(View.VISIBLE);
 			holder.name.setText(c.getFullName());
+		} else if (contact.getAddress() != null) {
+			if (contact.getAddress().getUsername() != null) {
+				holder.name.setVisibility(View.VISIBLE);
+				holder.name.setText(contact.getAddress().getUsername());
+			} else if (contact.getAddress().getDisplayName() != null) {
+				holder.name.setVisibility(View.VISIBLE);
+				holder.name.setText(contact.getAddress().getDisplayName());
+			}
 		} else {
 			holder.name.setVisibility(View.GONE);
 		}

@@ -31,6 +31,7 @@ public class ContactAddress implements Serializable {
 	private LinphoneContact contact;
 	private SearchResult result;
 	private String address;
+	private String phoneNumber;
 	private boolean isLinphoneContact;
 	private boolean isSelect = false;
 	private boolean isAdmin = false;
@@ -69,17 +70,23 @@ public class ContactAddress implements Serializable {
 	}
 
 	public String getAddressAsDisplayableString() {
+		Address addr = getAddress();
+		if (addr != null && addr.getUsername() != null) return addr.asStringUriOnly();
 		return address;
 	}
 
 	public Address getAddress() {
-		String presence = contact.getPresenceModelForUriOrTel(address);
+		String presence = contact.getPresenceModelForUriOrTel((phoneNumber != null && !phoneNumber.isEmpty()) ? phoneNumber: address);
 		Address addr = Factory.instance().createAddress(presence != null ? presence : address);
 		// Remove the user=phone URI param if existing, it will break everything otherwise
 		if (addr.hasUriParam("user")) {
 			addr.removeUriParam("user");
 		}
 		return addr;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
 	public void setSelect(boolean select) {
@@ -90,16 +97,19 @@ public class ContactAddress implements Serializable {
 		return isLinphoneContact;
 	}
 
-	public ContactAddress(LinphoneContact c, String a, boolean isLC){
+	private void init(LinphoneContact c, String a, String pn, boolean isLC) {
 		this.contact = c;
 		this.address = a;
+		this.phoneNumber = pn;
 		this.isLinphoneContact = isLC;
 	}
 
-	public ContactAddress(LinphoneContact c, String a, boolean isLC, boolean isAdmin){
-		this.contact = c;
-		this.address = a;
-		this.isLinphoneContact = isLC;
+	public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
+		init(c, a, pn, isLC);
+	}
+
+	public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
+		init(c, a, pn, isLC);
 		this.isAdmin = isAdmin;
 	}
 
