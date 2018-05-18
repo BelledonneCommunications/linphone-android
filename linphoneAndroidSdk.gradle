@@ -14,7 +14,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         if (googleFile.exists()) {
             classpath 'com.google.gms:google-services:3.1.0'
         }
@@ -33,12 +33,11 @@ allprojects {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
     if (firebaseEnable()) {
-        compile 'com.google.firebase:firebase-messaging:11.2.0'
+        implementation 'com.google.firebase:firebase-messaging:15.0.2'
     } else {
-        compile fileTree(include: 'gcm.jar', dir: 'libs')
-        compile 'com.android.support:support-v4:+'
+        implementation 'com.android.support:support-v4:26.0.1'
     }
 }
 
@@ -68,7 +67,6 @@ excludePackage.add('**/LICENSE.txt')
 android {
     defaultConfig {
         compileSdkVersion 26
-        buildToolsVersion "26.0.0"
         multiDexEnabled true
     }
 

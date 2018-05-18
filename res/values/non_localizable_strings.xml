@@ -58,6 +58,7 @@
     <string name="pref_wizard_key">pref_wizard_key</string>
     <string name="pref_activated_key">pref_activated_key</string>
     <string name="pref_debug_key">pref_debug_key</string>
+    <string name="pref_java_debug_key">pref_java_debug_key</string>
     <string name="first_launch_succeeded_once_key">first_launch_succeeded_once_key</string>
 
     <string name="pref_wifi_only_key">pref_wifi_only_key</string>
@@ -80,6 +81,7 @@
     <string name="pref_escape_plus_key">pref_escape_plus_key</string>
     <string name="pref_friendlist_subscribe_key">pref_friendlist_subscribe_key</string>
     <string name="pref_link_account_key">pref_link_account_key</string>
+    <string name="pref_proxy_push_notif_key">pref_proxy_push_notif_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_autostart_key">pref_autostart_key</string>
     <string name="pref_enable_outbound_proxy_key">Outbound proxy</string>

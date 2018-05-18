@@ -354,6 +354,11 @@
 					android:key="@string/pref_debug_key"
 					android:persistent="false"/>
 
+                <CheckBoxPreference
+                    android:title="@string/pref_java_debug"
+                    android:key="@string/pref_java_debug_key"
+                    android:persistent="false"/>
+
 			</PreferenceCategory>
 
 		    <PreferenceCategory

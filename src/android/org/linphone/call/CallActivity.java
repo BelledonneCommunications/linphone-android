@@ -1634,7 +1634,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					String.valueOf((int) stats.getUploadBandwidth()) + " kbits/s");
 			if (isVideo) {
 				formatText(edl, getString(R.string.call_stats_estimated_download),
-						String.valueOf(0/*(int) stats.getEstimatedDownloadBandwidth()*/) + " kbits/s");
+						String.valueOf(stats.getEstimatedDownloadBandwidth()) + " kbits/s");
 			}
 			formatText(ice, getString(R.string.call_stats_ice),
 					stats.getIceState().toString());

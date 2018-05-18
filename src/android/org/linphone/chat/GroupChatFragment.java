@@ -22,6 +22,9 @@ package org.linphone.chat;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,12 +36,16 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -152,7 +159,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 						String displayName = LinphoneUtils.getAddressDisplayName(a);
 						c.setFullName(displayName);
 					}
-					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
+					ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
 					participants.add(ca);
 				}
 				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false);
@@ -206,6 +213,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mRemoteComposing = view.findViewById(R.id.remote_composing);
 
 		mChatEventsList = view.findViewById(R.id.chat_message_list);
+		registerForContextMenu(mChatEventsList);
 
 		return view;
 	}
@@ -320,6 +328,70 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
+			return;
+		}
+
+		MenuInflater inflater = getActivity().getMenuInflater();
+		ChatMessage message = event.getChatMessage();
+		if (message.getState() == ChatMessage.State.NotDelivered) {
+			inflater.inflate(R.menu.chat_bubble_menu_with_resend, menu);
+		} else {
+			inflater.inflate(R.menu.chat_bubble_menu, menu);
+		}
+
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			// Do not show messages' IDMN state in 1 to 1 chat room as it is already visible in the lower corner of the bubble
+			menu.removeItem(R.id.imdn_infos);
+		}
+		if (!message.hasTextContent()) {
+			// Do not show copy text option if message doesn't have any text
+			menu.removeItem(R.id.copy_text);
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
+			return super.onContextItemSelected(item);
+		}
+
+		ChatMessage message = event.getChatMessage();
+		String messageId = message.getMessageId();
+
+		switch(item.getItemId()) {
+			case R.id.resend:
+				mEventsAdapter.removeItem(info.position);
+				message.resend();
+				return true;
+			case R.id.imdn_infos:
+				LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
+				return true;
+			case R.id.copy_text:
+				if (message.hasTextContent()) {
+					ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+					ClipData clip = ClipData.newPlainText("Message", message.getTextContent());
+					clipboard.setPrimaryClip(clip);
+				}
+				return true;
+			case R.id.delete_message:
+				mChatRoom.deleteMessage(message);
+				mEventsAdapter.removeItem(info.position);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
+		}
+	}
+
 	/**
 	 * Keyboard management
 	 */
@@ -418,13 +490,13 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 
 		getContactsForParticipants();
+
+		mRemoteComposing.setVisibility(View.INVISIBLE);
 	}
 
 	private void displayChatRoomHeader() {
 		Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (core == null || mChatRoom == null) return;
-
-		mRemoteComposing.setVisibility(View.INVISIBLE);
 
 		if (core.getCallsNb() > 0) {
 			mBackToCallButton.setVisibility(View.VISIBLE);
@@ -624,7 +696,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onConferenceAddressGeneration(ChatRoom cr) {
 
 	}
-	
+
 	@Override
 	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
 
@@ -632,7 +704,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
-	
+
 	@Override
 	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
@@ -678,6 +750,19 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			dialog.show();
 		}
 	}
+
+	/*@Override
+	public void onAllInformationReceived(ChatRoom cr) {
+		// Currently flexisip doesn't send the participants list in the INVITE
+		// So we have to refresh the display when information is available
+		// In the meantime header will be chatroom-xxxxxxx
+		if (mChatRoom == null) mChatRoom = cr;
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
+			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
+		}
+		getContactsForParticipants();
+		displayChatRoomHeader();
+	}*/
 
 	@Override
 	public void onChatMessageReceived(ChatRoom cr, EventLog event) {
@@ -764,6 +849,16 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
+
+	}
+
+	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog eventLog) {
 
 	}
 

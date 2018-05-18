@@ -227,7 +227,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			public void onClick(View view) {
 				if (!mIsAlreadyCreatedGroup) {
 					mWaitLayout.setVisibility(View.VISIBLE);
-					mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString());
+					mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), mParticipants.size() == 1);
 					mTempChatRoom.addListener(mChatRoomCreationListener);
 
 					Address addresses[] = new Address[mParticipants.size()];
@@ -249,7 +249,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					for (Participant p : mChatRoom.getParticipants()) {
 						boolean found = false;
 						for (ContactAddress c : mParticipants) {
-							if (c.getAddress().asStringUriOnly().equals(p.getAddress().asStringUriOnly())) {
+							if (c.getAddress().weakEqual(p.getAddress())) {
 								found = true;
 								break;
 							}
@@ -267,7 +267,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					for (ContactAddress c : mParticipants) {
 						boolean found = false;
 						for (Participant p : mChatRoom.getParticipants()) {
-							if (p.getAddress().asStringUriOnly().equals(c.getAddress().asStringUriOnly())) {
+							if (p.getAddress().weakEqual(c.getAddress())) {
 								// Admin rights
 								if (c.isAdmin() != p.isAdmin()) {
 									mChatRoom.setParticipantAdminStatus(p, c.isAdmin());
@@ -348,7 +348,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			    String displayName = LinphoneUtils.getAddressDisplayName(a);
 			    c.setFullName(displayName);
 		    }
-		    ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
+		    ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
 		    mParticipants.add(ca);
 	    }
 
@@ -449,6 +449,16 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
 	public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {
 
 	}
@@ -462,7 +472,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 
 	}
-	
+
 	@Override
 	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
 
@@ -470,7 +480,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	@Override
 	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
-	
+
 	@Override
 	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}

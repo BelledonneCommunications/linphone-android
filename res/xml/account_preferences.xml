@@ -103,6 +103,11 @@
 			android:key="@string/pref_link_account_key"
 			android:persistent="false"/>
 
+        <CheckBoxPreference
+            android:title="@string/pref_proxy_push_notif"
+            android:key="@string/pref_proxy_push_notif_key"
+            android:persistent="false"/>
+
     </PreferenceCategory>
 
 	<PreferenceCategory

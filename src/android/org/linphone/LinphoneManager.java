@@ -64,7 +64,6 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
-import android.preference.CheckBoxPreference;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
@@ -100,7 +99,6 @@ import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.CoreException;
-import org.linphone.core.ErrorInfo;
 import org.linphone.core.Factory;
 import org.linphone.core.CoreListener;
 import org.linphone.core.Event;
@@ -110,13 +108,13 @@ import org.linphone.core.InfoMessage;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.PublishState;
+import org.linphone.core.Tunnel;
 import org.linphone.core.tools.OpenH264DownloadHelperListener;
-import org.linphone.core.PayloadType;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.Reason;
 import org.linphone.core.SubscriptionState;
-//import org.linphone.core.TunnelConfig;
+import org.linphone.core.TunnelConfig;
 import org.linphone.core.VersionUpdateCheckResult;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
@@ -237,7 +235,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private final String mRingSoundFile;
 	private final String mCallLogDatabaseFile;
 	private final String mFriendsDatabaseFile;
-	private byte[] mUploadingImage;
 	private Timer mTimer;
 	private Map<String, Integer> mUnreadChatsPerRoom;
 
@@ -502,13 +499,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		String getDisplayedName();
 	}
 
-
-	public interface NewOutgoingCallUiListener {
-		public void onWrongDestinationAddress();
-		public void onCannotGetCallParameters();
-		public void onAlreadyInCall();
-	}
-
 	public void enableCamera(Call call, boolean enable) {
 		if (call != null) {
 			call.enableCamera(enable);
@@ -538,17 +528,18 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (!mLc.tunnelAvailable())
 			return;
 
-		/*NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
-		mLc.tunnelCleanServers();
+		NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+		Tunnel tunnel = mLc.getTunnel();
+		tunnel.cleanServers();
 		TunnelConfig config = mPrefs.getTunnelConfig();
 		if (config.getHost() != null) {
-			mLc.tunnelAddServer(config);
+			tunnel.addServer(config);
 			manageTunnelServer(info);
-		}*/ // TODO FIXME
+		}
 	}
 
 	private boolean isTunnelNeeded(NetworkInfo info) {
-		/*if (info == null) {
+		if (info == null) {
 			Log.i("No connectivity: tunnel should be disabled");
 			return false;
 		}
@@ -563,7 +554,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				&& getString(R.string.tunnel_mode_entry_value_3G_only).equals(pref)) {
 			Log.i("need tunnel: 'no wifi' connection");
 			return true;
-		}*/ // TODO FIXME
+		}
 
 		return false;
 	}
@@ -571,19 +562,20 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private void manageTunnelServer(NetworkInfo info) {
 		if (mLc == null) return;
 		if (!mLc.tunnelAvailable()) return;
+		Tunnel tunnel = mLc.getTunnel();
 
-		/*Log.i("Managing tunnel");
+		Log.i("Managing tunnel");
 		if (isTunnelNeeded(info)) {
 			Log.i("Tunnel need to be activated");
-			mLc.tunnelSetMode(Core.TunnelMode.enable);
+			tunnel.setMode(Tunnel.Mode.Enable);
 		} else {
 			Log.i("Tunnel should not be used");
 			String pref = mPrefs.getTunnelMode();
-			mLc.tunnelSetMode(Core.TunnelMode.disable);
+			tunnel.setMode(Tunnel.Mode.Disable);
 			if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
-				mLc.tunnelSetMode(Core.TunnelMode.auto);
+				tunnel.setMode(Tunnel.Mode.Auto);
 			}
-		}*/ // TODO FIXME
+		}
 	}
 
 	public synchronized final void destroyCore() {
@@ -691,10 +683,18 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				Log.i("[Push Notification] Assuming GCM jar is not provided.");
 			}
 		}else if (getString(R.string.push_type).equals("firebase")){
-			final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
-			if (refreshedToken != null) {
-				Log.i("[Push Notification] current token is: " + refreshedToken);
-				LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
+			try{
+				Class<?> firebaseClass = Class.forName("com.google.firebase.iid.FirebaseInstanceId");
+				Object firebaseInstance = firebaseClass.getMethod("getInstance").invoke(null);
+				final String refreshedToken = (String)firebaseClass.getMethod("getToken").invoke(firebaseInstance);
+
+				//final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
+				if (refreshedToken != null) {
+					Log.i("[Push Notification] current token is: " + refreshedToken);
+					LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
+				}
+			}catch(Exception e){
+				Log.i("[Push Notification] firebase not available.");
 			}
 		}
 	}
@@ -1111,9 +1111,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			} else {
 				String subject = cr.getSubject();
 				if (contact != null) {
-					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asString(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
+					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
 				} else {
-					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asString(), from.getUsername(), null, textMessage);
+					LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage);
 				}
 			}
 		}
@@ -1121,6 +1121,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void setCurrentChatRoomAddress(Address address) {
 		mCurrentChatRoomAddress = address;
+		LinphoneService.instance().setCurrentlyDisplayedChatRoom(address != null ? address.asStringUriOnly() : null);
 	}
 
 	@Override
@@ -1624,6 +1625,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		Log.d("Notify received for event "+eventName);
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getStringBuffer());
 	}
+
+	@Override
+	public void onSubscribeReceived(Core lc, Event lev, String subscribeEvent, Content body) {
+
+	}
+
 	@Override
 	public void onPublishStateChanged(Core lc, Event ev, PublishState state) {
 		Log.d("Publish state changed to " + state + " for event name " + ev.getName());

@@ -38,6 +38,8 @@ import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.Config;
 //import org.linphone.core.TunnelConfig;
+import org.linphone.core.Tunnel;
+import org.linphone.core.TunnelConfig;
 import org.linphone.core.VideoActivationPolicy;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.Purchasable;
@@ -395,6 +397,7 @@ public class LinphonePreferences {
 			int port = 0;
 			if (transport.equals(getString(R.string.pref_transport_udp_key))) {
 				proxyAddr.setTransport(TransportType.Udp);
+
 			} else if (transport.equals(getString(R.string.pref_transport_tcp_key))) {
 				proxyAddr.setTransport(TransportType.Tcp);
 			} else if (transport.equals(getString(R.string.pref_transport_tls_key))) {
@@ -722,6 +725,20 @@ public class LinphonePreferences {
 		prxCfg.edit();
 		prxCfg.setDialEscapePlus(replace);
 		prxCfg.done();
+	}
+
+	public void enablePushNotifForProxy(int n, boolean enable) {
+		ProxyConfig prxCfg = getProxyConfig(n);
+		prxCfg.edit();
+		prxCfg.setPushNotificationAllowed(enable);
+		prxCfg.done();
+
+		setPushNotificationEnabled(isPushNotificationEnabled());
+	}
+
+	public boolean isPushNotifEnabledForProxy(int n) {
+		ProxyConfig prxCfg = getProxyConfig(n);
+		return prxCfg.isPushNotificationAllowed();
 	}
 
 	public boolean isFriendlistsubscriptionEnabled() {
@@ -1142,13 +1159,22 @@ public class LinphonePreferences {
 			 String appId = getString(R.string.push_sender_id);
 			 if (regId != null && lc.getProxyConfigList().length > 0) {
 				 for (ProxyConfig lpc : lc.getProxyConfigList()) {
-					 String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
-					 String prevContactParams = lpc.getContactParameters();
-					 if (prevContactParams == null || prevContactParams.compareTo(contactInfos)!=0) {
+					 if (!lpc.isPushNotificationAllowed()) {
 						 lpc.edit();
-						 lpc.setContactUriParameters(contactInfos);
+						 lpc.setContactUriParameters(null);
 						 lpc.done();
-						 Log.d("Push notif infos added to proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+						 if (lpc.getIdentityAddress() != null)
+							 Log.d("Push notif infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+					 } else {
+						 String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
+						 String prevContactParams = lpc.getContactParameters();
+						 if (prevContactParams == null || prevContactParams.compareTo(contactInfos) != 0) {
+							 lpc.edit();
+							 lpc.setContactUriParameters(contactInfos);
+							 lpc.done();
+							 if (lpc.getIdentityAddress() != null)
+								 Log.d("Push notif infos added to proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+						 }
 					 }
 				 }
 				 lc.refreshRegisters();
@@ -1159,7 +1185,8 @@ public class LinphonePreferences {
 					 lpc.edit();
 					 lpc.setContactUriParameters(null);
 					 lpc.done();
-					 Log.d("Push notif infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+					 if (lpc.getIdentityAddress() != null)
+					    Log.d("Push notif infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
 				 }
 				 lc.refreshRegisters();
 			 }
@@ -1192,12 +1219,20 @@ public class LinphonePreferences {
 	// Advanced settings
 	public void setDebugEnabled(boolean enabled) {
 		getConfig().setBool("app", "debug", enabled);
-		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
-		Factory.instance().setDebugMode(enabled, getString(R.string.app_name));
+		LinphoneUtils.initLoggingService(enabled, mContext.getString(R.string.app_name));
 	}
 
 	public boolean isDebugEnabled() {
 		return getConfig().getBool("app", "debug", false);
+	}
+
+	public void setJavaLogger(boolean enabled) {
+		getConfig().setBool("app", "java_logger", enabled);
+		LinphoneUtils.initLoggingService(isDebugEnabled(), mContext.getString(R.string.app_name));
+	}
+
+	public boolean useJavaLogger() {
+		return getConfig().getBool("app", "java_logger", false);
 	}
 
 	public void setBackgroundModeEnabled(boolean enabled) {
@@ -1257,12 +1292,13 @@ public class LinphonePreferences {
 	// End of advanced settings
 
 	// Tunnel settings
-	/*private TunnelConfig tunnelConfig = null;
+	private TunnelConfig tunnelConfig = null;
 
 	public TunnelConfig getTunnelConfig() {
 		if(getLc().tunnelAvailable()) {
-			if(tunnelConfig == null) {
-				TunnelConfig servers[] = getLc().tunnelGetServers();
+			Tunnel tunnel = getLc().getTunnel();
+			if (tunnelConfig == null) {
+				TunnelConfig servers[] = tunnel.getServers();
 				if(servers.length > 0) {
 					tunnelConfig = servers[0];
 				} else {
@@ -1316,7 +1352,7 @@ public class LinphonePreferences {
 	public void setTunnelMode(String mode) {
 		getConfig().setString("app", "tunnel", mode);
 		LinphoneManager.getInstance().initTunnelFromConf();
-	}*/
+	}
 	// End of tunnel settings
 
 	public boolean isProvisioningLoginViewEnabled() {

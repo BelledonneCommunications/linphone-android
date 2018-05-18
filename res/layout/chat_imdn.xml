@@ -26,12 +26,22 @@
                 android:layout_weight="0.2"
                 android:padding="18dp"/>
 
+            <TextView
+                android:text="@string/imdn_info"
+                style="@style/font6"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:padding="15dp"/>
+
             <ImageView
                 android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
+                android:layout_weight="0.2"
                 android:padding="15dp"/>
+
         </LinearLayout>
 
     </RelativeLayout>
@@ -116,6 +126,35 @@
                     android:orientation="vertical"/>
 
                 <LinearLayout
+                    android:id="@+id/sent_layout_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:background="@color/colorG">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/font28"
+                        android:text="@string/sent"/>
+
+                    <ImageView
+                        android:visibility="invisible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/message_delivered"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sent_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+                <LinearLayout
                     android:id="@+id/undelivered_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,7 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="@style/font29"
-                        android:text="@string/undelivered"/>
+                        android:text="@string/error"/>
 
                     <ImageView
                         android:layout_width="wrap_content"

@@ -129,7 +129,7 @@ public class GroupInfoAdapter extends BaseAdapter {
         } else if (mChatRoom != null) {
 	        boolean found = false;
 	        for (Participant p : mChatRoom.getParticipants()) {
-		        if (p.getAddress().asStringUriOnly().equals(ca.getAddress().asStringUriOnly())) {
+		        if (p.getAddress().weakEqual(ca.getAddress())) {
 			        found = true;
 			        break;
 		        }

@@ -730,8 +730,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 		}
 
-		LinphoneService.instance().resetMessageNotifCount();
-		LinphoneService.instance().removeMessageNotification();
 		LinphoneManager.getInstance().updateUnreadCountForChatRoom(sipUri, 0);
 		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 	}
@@ -798,8 +796,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		}
 
-		LinphoneService.instance().resetMessageNotifCount();
-		LinphoneService.instance().removeMessageNotification();
 		LinphoneManager.getInstance().updateUnreadCountForChatRoom(sipUri, 0);
 		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 	}
@@ -1470,7 +1466,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
-			LinphoneService.instance().removeMessageNotification();
 			String sipUri = extras.getString("ChatContactSipUri");
 			doNotGoToCallActivity = true;
 			displayChat(sipUri, null, null);
@@ -1478,7 +1473,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			doNotGoToCallActivity = true;
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
 		} else if (extras != null && extras.getBoolean("GoToInapp", false)) {
-			LinphoneService.instance().removeMessageNotification();
 			doNotGoToCallActivity = true;
 			displayInapp();
 		} else if (extras != null && extras.getBoolean("Notification", false)) {

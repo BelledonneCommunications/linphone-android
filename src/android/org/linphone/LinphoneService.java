@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
@@ -32,6 +34,9 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.Core;
 import org.linphone.core.GlobalState;
+import org.linphone.core.LogLevel;
+import org.linphone.core.LoggingService;
+import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
@@ -64,6 +69,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.util.ArrayMap;
 import android.view.WindowManager;
 
 /**
@@ -89,7 +95,6 @@ public final class LinphoneService extends Service {
 
 	private final static int NOTIF_ID=1;
 	private final static int INCALL_NOTIF_ID=2;
-	private final static int MESSAGE_NOTIF_ID=3;
 	private final static int CUSTOM_NOTIF_ID=4;
 	private final static int MISSED_NOTIF_ID=5;
 	private final static int SAS_NOTIF_ID=6;
@@ -115,10 +120,8 @@ public final class LinphoneService extends Service {
 
 	private Notification mNotif;
 	private Notification mIncallNotif;
-	private Notification mMsgNotif;
 	private Notification mCustomNotif;
 	private Notification mSasNotif;
-	private int mMsgNotifCount;
 	private PendingIntent mNotifContentIntent;
 	private String mNotificationTitle;
 	private boolean mDisableRegistrationStatus;
@@ -128,7 +131,27 @@ public final class LinphoneService extends Service {
 	private LinphoneOverlay mOverlay;
 	private Application.ActivityLifecycleCallbacks activityCallbacks;
 
+	private class Notified {
+		int notificationId;
+		int numberOfUnreadMessage;
+	}
 
+	private HashMap<String, Notified> mChatNotifMap;
+	private int mLastNotificationId;
+
+	public void setCurrentlyDisplayedChatRoom(String address) {
+		if (address != null) {
+			resetMessageNotifCount(address);
+		}
+	}
+
+	private void resetMessageNotifCount(String address) {
+		Notified notif = mChatNotifMap.get(address);
+		if (notif != null)  {
+			notif.numberOfUnreadMessage = 0;
+			mNM.cancel(notif.notificationId);
+		}
+	}
 
 	/*Believe me or not, but knowing the application visibility state on Android is a nightmare.
 	After two days of hard work I ended with the following class, that does the job more or less reliabily.
@@ -241,6 +264,9 @@ public final class LinphoneService extends Service {
 			if (LinphoneManager.isInstanciated())
 				LinphoneManager.getInstance().subscribeFriendList(false);
 		}
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
+		}
 	}
 
 	protected void onForegroundMode() {
@@ -249,15 +275,14 @@ public final class LinphoneService extends Service {
 			if (LinphoneManager.isInstanciated())
 				LinphoneManager.getInstance().subscribeFriendList(true);
 		}
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterForeground();
+		}
 	}
 
 	private void setupActivityMonitor(){
 		if (activityCallbacks != null) return;
 		getApplication().registerActivityLifecycleCallbacks(activityCallbacks = new ActivityMonitor());
-	}
-
-	public void resetMessageNotifCount() {
-		mMsgNotifCount = 0;
 	}
 
 	public boolean displayServiceNotification() {
@@ -289,6 +314,8 @@ public final class LinphoneService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		mLastNotificationId = 8; // To not interfere with other notifs ids
+		mChatNotifMap = new HashMap<String, Notified>();
 
 		setupActivityMonitor();
 		// In case restart after a crash. Main in LinphoneActivity
@@ -298,8 +325,7 @@ public final class LinphoneService extends Service {
 		LinphonePreferences.instance().setContext(getBaseContext());
 		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
 		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		Factory.instance().enableLogCollection(LogCollectionState.Enabled);
-		Factory.instance().setDebugMode(isDebugEnabled, getString(R.string.app_name));
+		LinphoneUtils.initLoggingService(isDebugEnabled, getString(R.string.app_name));
 
 		// Dump some debugging information to the logs
 		Log.i(START_LINPHONE_LOGS);
@@ -582,11 +608,6 @@ public final class LinphoneService extends Service {
 		notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
 	}
 
-	public void removeCustomNotification() {
-		mNM.cancel(CUSTOM_NOTIF_ID);
-		resetIntentLaunchedOnNotificationClick();
-	}
-
 	public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message) {
 		Intent notifIntent = new Intent(this, LinphoneActivity.class);
 		notifIntent.putExtra("GoToChat", true);
@@ -594,10 +615,15 @@ public final class LinphoneService extends Service {
 
 		PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		if (mMsgNotif == null) {
-			mMsgNotifCount = 1;
+		Notified notif = mChatNotifMap.get(conferenceAddress);
+		if (notif != null) {
+			notif.numberOfUnreadMessage += 1;
 		} else {
-			mMsgNotifCount++;
+			notif = new Notified();
+			notif.numberOfUnreadMessage = 1;
+			notif.notificationId = mLastNotificationId;
+			mLastNotificationId += 1;
+			mChatNotifMap.put(conferenceAddress, notif);
 		}
 
 		Bitmap bm = null;
@@ -610,10 +636,10 @@ public final class LinphoneService extends Service {
 		} else {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
-		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, subject,
+		Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, subject,
 				getString(R.string.group_chat_notif).replace("%1", fromName).replace("%2", message), bm, notifContentIntent);
 
-		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+		notifyWrapper(notif.notificationId, notification);
 	}
 
 	public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message) {
@@ -627,10 +653,15 @@ public final class LinphoneService extends Service {
 			fromName = fromSipUri;
 		}
 
-		if (mMsgNotif == null) {
-			mMsgNotifCount = 1;
+		Notified notif = mChatNotifMap.get(fromSipUri);
+		if (notif != null) {
+			notif.numberOfUnreadMessage += 1;
 		} else {
-			mMsgNotifCount++;
+			notif = new Notified();
+			notif.numberOfUnreadMessage = 1;
+			notif.notificationId = mLastNotificationId;
+			mLastNotificationId += 1;
+			mChatNotifMap.put(fromSipUri, notif);
 		}
 
 		Bitmap bm = null;
@@ -643,9 +674,9 @@ public final class LinphoneService extends Service {
 		} else {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
 		}
-		mMsgNotif = Compatibility.createMessageNotification(getApplicationContext(), mMsgNotifCount, fromName, message, bm, notifContentIntent);
+		Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, fromName, message, bm, notifContentIntent);
 
-		notifyWrapper(MESSAGE_NOTIF_ID, mMsgNotif);
+		notifyWrapper(notif.notificationId, notification);
 	}
 
 	public void displayInappNotification(String message) {
@@ -656,11 +687,6 @@ public final class LinphoneService extends Service {
 		mNotif = Compatibility.createSimpleNotification(getApplicationContext(), getString(R.string.inapp_notification_title), message, notifContentIntent);
 
 		notifyWrapper(NOTIF_ID, mNotif);
-	}
-
-	public void removeMessageNotification() {
-		mNM.cancel(MESSAGE_NOTIF_ID);
-		resetIntentLaunchedOnNotificationClick();
 	}
 
 	public void displaySasNotification(String sas) {
@@ -837,7 +863,10 @@ public final class LinphoneService extends Service {
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);
 	    mNM.cancel(INCALL_NOTIF_ID);
-	    mNM.cancel(MESSAGE_NOTIF_ID);
+	    for (Notified notif : mChatNotifMap.values()) {
+		    mNM.cancel(notif.notificationId);
+	    }
+
 
 	    // This will prevent the app from crashing if the service gets killed in background mode
 	    if (LinphoneActivity.isInstanciated()) {
@@ -857,17 +886,6 @@ public final class LinphoneService extends Service {
 		} catch (ClassNotFoundException e) {
 			Log.e(e);
 		}
-		resetIntentLaunchedOnNotificationClick();
-	}
-
-	private void resetIntentLaunchedOnNotificationClick() {
-		Intent notifIntent = new Intent(this, incomingReceivedActivity);
-		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		/*if (mNotif != null) {
-			mNotif.contentIntent = mNotifContentIntent;
-		}
-		notifyWrapper(NOTIF_ID, mNotif);*/
 	}
 
 	protected void onIncomingReceived() {

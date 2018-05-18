@@ -29,11 +29,11 @@ allprojects {
 apply plugin: 'com.android.application'
 
 dependencies {
-  androidTestCompile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+  androidTestCompile 'org.apache.commons:commons-compress:1.16.1'
   androidTestCompile group: 'junit', name: 'junit', version: '+'
   androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium', version: '+'
   androidTestCompile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
-  compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+  compile 'org.apache.commons:commons-compress:1.16.1'
   compile group: 'junit', name: 'junit', version: '+'
   compile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
   compile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
