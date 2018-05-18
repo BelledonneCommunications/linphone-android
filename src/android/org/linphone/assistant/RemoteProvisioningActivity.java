@@ -178,13 +178,8 @@ public class RemoteProvisioningActivity extends Activity {
 
 		LinphonePreferences.instance().setContext(this); // Needed, else the next call will crash
 		LinphonePreferences.instance().setRemoteProvisioningUrl(configUri);
-
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				LinphoneManager.getInstance().restartCore();
-			}
-		}, 1000);
+		LinphoneManager.getLc().getConfig().sync();
+		LinphoneManager.getInstance().restartCore();
 	}
 
 	private void goToLinphoneActivity() {
