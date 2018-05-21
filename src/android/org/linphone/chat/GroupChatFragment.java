@@ -751,19 +751,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
-	/*@Override
-	public void onAllInformationReceived(ChatRoom cr) {
-		// Currently flexisip doesn't send the participants list in the INVITE
-		// So we have to refresh the display when information is available
-		// In the meantime header will be chatroom-xxxxxxx
-		if (mChatRoom == null) mChatRoom = cr;
-		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
-			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
-		}
-		getContactsForParticipants();
-		displayChatRoomHeader();
-	}*/
-
 	@Override
 	public void onChatMessageReceived(ChatRoom cr, EventLog event) {
 		cr.markAsRead();
@@ -843,22 +830,32 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog event) {
+		// Currently flexisip doesn't send the participants list in the INVITE
+		// So we have to refresh the display when information is available
+		// In the meantime header will be chatroom-xxxxxxx
+		if (mChatRoom == null) mChatRoom = cr;
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
+			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
+		}
+		getContactsForParticipants();
+		displayChatRoomHeader();
+
+		mEventsAdapter.addToHistory(event);
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog event) {
+		mEventsAdapter.addToHistory(event);
+	}
+
+	@Override
 	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
 		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event) {
-
-	}
-
-	@Override
-	public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
-
-	}
-
-	@Override
-	public void onConferenceLeft(ChatRoom cr, EventLog eventLog) {
 
 	}
 

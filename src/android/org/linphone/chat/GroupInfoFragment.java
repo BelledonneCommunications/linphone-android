@@ -383,6 +383,14 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     }
 
 	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog event_log) {
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog event_log) {
+	}
+
+	@Override
 	public void onParticipantAdded(ChatRoom cr, EventLog event_log) {
 		refreshParticipantsList();
 	}
@@ -445,16 +453,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 
 	@Override
 	public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event_log) {
-
-	}
-
-	@Override
-	public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
-
-	}
-
-	@Override
-	public void onConferenceLeft(ChatRoom cr, EventLog eventLog) {
 
 	}
 
