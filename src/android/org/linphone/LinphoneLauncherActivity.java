@@ -64,7 +64,9 @@ public class LinphoneLauncherActivity extends Activity {
 					addressToCall = intent.getData().toString();
 					addressToCall = addressToCall.replace("%40", "@");
 					addressToCall = addressToCall.replace("%3A", ":");
-					if (addressToCall.startsWith("sip:")) {
+					if (addressToCall.startsWith("tel:")) {
+						addressToCall = addressToCall.substring("tel:".length());
+					} else if (addressToCall.startsWith("sip:")) {
 						addressToCall = addressToCall.substring("sip:".length());
 					}
 				}
