@@ -333,16 +333,16 @@ copy-libs:
 \t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \\
 \tfi
 \tif test -d "liblinphone-sdk/android-arm/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-arm/share/belr/grammars/cpim_grammar res/raw/; \\
+\t\tcp liblinphone-sdk/android-arm/share/belr/grammars/*_grammar res/raw/; \\
 \tfi
 \tif test -d "liblinphone-sdk/android-armv7/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-armv7/share/belr/grammars/cpim_grammar res/raw/; \\
+\t\tcp liblinphone-sdk/android-armv7/share/belr/grammars/*_grammar res/raw/; \\
 \tfi
 \tif test -d "liblinphone-sdk/android-arm64/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-arm64/share/belr/grammars/cpim_grammar res/raw/; \\
+\t\tcp liblinphone-sdk/android-arm64/share/belr/grammars/*_grammar res/raw/; \\
 \tfi
 \tif test -d "liblinphone-sdk/android-x86/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-x86/share/belr/grammars/cpim_grammar res/raw/; \\
+\t\tcp liblinphone-sdk/android-x86/share/belr/grammars/*_grammar res/raw/; \\
 \tfi
 
 copy-libs-mediastreamer:
