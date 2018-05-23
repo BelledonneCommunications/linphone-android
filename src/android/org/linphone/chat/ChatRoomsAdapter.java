@@ -25,6 +25,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,8 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 		public Context mContext;
 		public ChatRoom mRoom;
 
-		public ChatRoomViewHolder(Context context,View itemView) {
+
+		public ChatRoomViewHolder(Context context,View itemView, ClickListener listener) {
 			super(itemView);
 			this.mContext= context;
 			this.lastMessageSenderView = itemView.findViewById(R.id.lastMessageSender);
@@ -76,6 +78,9 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 			this.unreadMessages = itemView.findViewById(R.id.unreadMessages);
 			this.delete = itemView.findViewById(R.id.delete_chatroom);
 			this.contactPicture = itemView.findViewById(R.id.contact_picture);
+			//this.selectedOverlay = itemView.findViewById(R.id.selected_overlay);
+			this.listener = listener;
+
 			itemView.setOnClickListener(this);
 		}
 		public void bindChatRoom(ChatRoom room) {
@@ -87,7 +92,11 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 			this.date.setText(mRoom.getLastMessageInHistory()!=null ? LinphoneUtils.timestampToHumanDate(this.mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
 			this.displayName.setText(getContact(mRoom));
 			this.unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
-			this.delete.setChecked(!this.delete.isChecked());
+//			this.delete.setChecked(!this.delete.isChecked());
+//			this.delete.setChecked(!this.delete.isChecked());
+//			this.delete.setVisibility(this.editionMode == true ? View.VISIBLE : View.INVISIBLE);
+//			this.unreadMessages.setVisibility(this.editionMode == false ? View.VISIBLE : View.INVISIBLE);
+
 			getAvatar(mRoom);
 
 		}
@@ -100,6 +109,16 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 				LinphoneActivity.instance().goToChat(mRoom.getPeerAddress().asString());
 			}
 		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			if (listener != null) {
+
+				return listener.onItemLongClicked(getAdapterPosition());
+			}
+			return false;
+		}
+
 
 		public String getSender(ChatRoom mRoom){
 			if (mRoom.getLastMessageInHistory() != null) {
@@ -138,6 +157,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 
 
 
+
 	}
 
 	private Context mContext;
@@ -146,9 +166,16 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
 	private ChatRoomListenerStub mListener;
 	private int itemResource;
+	private ChatRoomViewHolder.ClickListener clickListener;
+	private boolean editionMode;
+
+//	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms) {
+	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms, ChatRoomViewHolder.ClickListener clickListener) {
 
 	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms) {
 		super();
+		this.editionMode = false;
+		this.clickListener = clickListener;
 		this.mRooms = mRooms;
 		this.mContext = context;
 		this.itemResource = itemResource;
@@ -182,10 +209,25 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 		// 5. Use position to access the correct Bakery object
 		ChatRoom room = this.mRooms.get(position);
 
+		//Colors the item when selected
+		holder.delete.setVisibility(this.editionMode == true ? View.VISIBLE : View.INVISIBLE);
+		holder.unreadMessages.setVisibility(this.editionMode == false ? View.VISIBLE : View.INVISIBLE);
+
+		holder.delete.setChecked(isSelected(position) ? true : false);
+//		holder.unreadMessages.setVisibility(View.VISIBLE);
 		// 6. Bind the bakery object to the holder
 		holder.bindChatRoom(room);
 	}
+	public void setEditionMode(ActionMode actionMode) {
+		if ( actionMode != null) {
+			this.editionMode=true;
+			this.notifyDataSetChanged();
+		} else {
+			this.editionMode=false;
+			this.notifyDataSetChanged();
+		}
 
+	}
 	public void refresh() {
 		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
 		Collections.sort(mRooms, new Comparator<ChatRoom>() {
@@ -231,6 +273,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 	public long getItemId(int position) {
 		return position;
 	}
+
 
 //	@Override
 //	public View getView(final int position, View convertView, ViewGroup viewGroup) {
