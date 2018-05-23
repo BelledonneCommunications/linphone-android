@@ -53,3 +53,4 @@ gradle.properties
 .*clang*
 linphone.iml
 src/linphone-wrapper
+liblinphone_tester/res/raw/

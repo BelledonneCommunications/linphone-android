@@ -57,3 +57,15 @@ copy-files: ../submodules/linphone/tester/tester_hosts
 	cp -rf ../submodules/linphone/tester/rcfiles assets/config_files
 	cp -rf ../submodules/linphone/tester/sounds assets/config_files
 	cp -rf ../submodules/linphone/tester/vcards assets/config_files
+	if test -d "../liblinphone-sdk/android-arm/share/belr/grammars"; then \
+		cp ../liblinphone-sdk/android-arm/share/belr/grammars/*_grammar res/raw/; \
+	fi
+	if test -d "../liblinphone-sdk/android-armv7/share/belr/grammars"; then \
+		cp ../liblinphone-sdk/android-armv7/share/belr/grammars/*_grammar res/raw/; \
+	fi
+	if test -d "../liblinphone-sdk/android-arm64/share/belr/grammars"; then \
+		cp ../liblinphone-sdk/android-arm64/share/belr/grammars/*_grammar res/raw/; \
+	fi
+	if test -d "../liblinphone-sdk/android-x86/share/belr/grammars"; then \
+		cp ../liblinphone-sdk/android-x86/share/belr/grammars/*_grammar res/raw/; \
+	fi
