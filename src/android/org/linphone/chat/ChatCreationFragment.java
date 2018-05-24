@@ -288,7 +288,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private void addSelectedContactAddress(ContactAddress ca) {
 		View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
 		if (ca.getContact() != null) {
-			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getContact().getFullName());
+			String name = (ca.getContact().getFullName() != null && !ca.getContact().getFullName().isEmpty()) ?
+					ca.getContact().getFullName() : (ca.getDisplayName() != null) ?
+					ca.getDisplayName() : (ca.getUsername() != null) ?
+					ca.getUsername() : "";
+			((TextView) viewContact.findViewById(R.id.sipUri)).setText(name);
 		} else {
 			((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddressAsDisplayableString());
 		}

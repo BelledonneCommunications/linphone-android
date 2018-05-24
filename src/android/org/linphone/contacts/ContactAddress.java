@@ -85,6 +85,26 @@ public class ContactAddress implements Serializable {
 		return addr;
 	}
 
+	public String getDisplayName() {
+		if (address != null) {
+			Address addr = Factory.instance().createAddress(address);
+			if (addr != null) {
+				return addr.getDisplayName();
+			}
+		}
+		return null;
+	}
+
+	public String getUsername() {
+		if (address != null) {
+			Address addr = Factory.instance().createAddress(address);
+			if (addr != null) {
+				return addr.getUsername();
+			}
+		}
+		return null;
+	}
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
