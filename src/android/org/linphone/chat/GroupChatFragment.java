@@ -162,7 +162,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false);
+				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false, null);
 			}
 		});
 
@@ -214,6 +214,25 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mChatEventsList = view.findViewById(R.id.chat_message_list);
 		registerForContextMenu(mChatEventsList);
+
+		if (getArguments() != null) {
+			String fileSharedUri = getArguments().getString("fileSharedUri");
+			if (fileSharedUri != null) {
+				if (LinphoneUtils.isExtensionImage(fileSharedUri)) {
+					addImageToPendingList(fileSharedUri);
+				} else {
+					if (fileSharedUri.startsWith("content://") || fileSharedUri.startsWith("file://")) {
+						fileSharedUri = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
+					} else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
+						fileSharedUri = LinphoneUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
+					}
+					addFileToPendingList(fileSharedUri);
+				}
+			}
+
+			if (getArguments().getString("messageDraft") != null)
+				mMessageTextToSend.setText(getArguments().getString("messageDraft"));
+		}
 
 		return view;
 	}

@@ -244,7 +244,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				@Override
 				public void onClick(View v) {
 					ChatRoom chatRoom = mRooms.get(position);
-					LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asString());
+					LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asString(), null);
 				}
 			});
 			holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);

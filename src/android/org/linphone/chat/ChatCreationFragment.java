@@ -76,6 +76,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private String mChatRoomSubject, mChatRoomAddress;
 	private ChatRoom mChatRoom;
 	private ChatRoomListenerStub mChatRoomCreationListener;
+	private Bundle mShareInfos;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -177,7 +178,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 				if (newState == ChatRoom.State.Created) {
 					mWaitLayout.setVisibility(View.GONE);
-					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
 				} else if (newState == ChatRoom.State.CreationFailed) {
 					mWaitLayout.setVisibility(View.GONE);
 					LinphoneActivity.instance().displayChatRoomError();
@@ -185,6 +186,23 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				}
 			}
 		};
+
+		if (getArguments() != null) {
+			String fileSharedUri = getArguments().getString("fileSharedUri");
+			String messageDraft = getArguments().getString("messageDraft");
+
+			if (fileSharedUri != null || messageDraft != null)
+				mShareInfos = new Bundle();
+
+			if (fileSharedUri != null) {
+				LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
+				mShareInfos.putString("fileSharedUri", fileSharedUri);
+			}
+
+			if (messageDraft != null)
+				mShareInfos.putString("messageDraft", messageDraft);
+		}
+
 
 		return view;
 	}
@@ -367,17 +385,17 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 							mChatRoom.addParticipant(participant);
 						} else {
 							chatRoom = lc.getChatRoom(participant);
-							LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
+							LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
 						}
 					} else {
-						LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
+						LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
 					}
 				} else {
 					mContactsSelectedLayout.removeAllViews();
-					LinphoneActivity.instance().goToChatGroupInfos(null, mContactsSelected, null, true, false);
+					LinphoneActivity.instance().goToChatGroupInfos(null, mContactsSelected, null, true, false, mShareInfos);
 				}
 			} else {
-				LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, mContactsSelected, mChatRoomSubject, true, true);
+				LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, mContactsSelected, mChatRoomSubject, true, true, mShareInfos);
 			}
 		} else if (id == R.id.clearSearchField) {
 			mSearchField.setText("");
@@ -395,7 +413,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		ProxyConfig lpc = lc.getDefaultProxyConfig();
 		if (lpc == null || lpc.getConferenceFactoryUri() == null) {
 			ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
-			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly());
+			LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
 		} else {
 			removeContactFromSelection(ca);
 		}

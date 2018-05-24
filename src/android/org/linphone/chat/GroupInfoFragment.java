@@ -72,6 +72,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private ChatRoom mChatRoom, mTempChatRoom;
 	private Dialog mAdminStateChangedDialog;
 	private ChatRoomListenerStub mChatRoomCreationListener;
+	private Bundle mShareInfos;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,18 +119,30 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mParticipantsList.setAdapter(mAdapter);
 		mAdapter.setChatRoom(mChatRoom);
 
+		String fileSharedUri = getArguments().getString("fileSharedUri");
+		String messageDraft = getArguments().getString("messageDraft");
+
+		if (fileSharedUri != null || messageDraft != null)
+			mShareInfos = new Bundle();
+
+		if (fileSharedUri != null)
+			mShareInfos.putString("fileSharedUri", fileSharedUri);
+
+		if (messageDraft != null)
+			mShareInfos.putString("messageDraft", messageDraft);
+
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (mIsAlreadyCreatedGroup) {
 					if (LinphoneActivity.instance().isTablet()) {
-						LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly());
+						LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly(), mShareInfos);
 					} else {
 						getFragmentManager().popBackStack();
 					}
 				} else {
-					LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true);
+					LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos);
 				}
 			}
 		});
@@ -150,7 +163,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					public void onClick(View view) {
 						if (mChatRoom != null) {
 							mChatRoom.leave();
-							LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
+							LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null);
 						} else {
 							Log.e("Can't leave, chatRoom for address " + mGroupChatRoomAddress.asString() + " is null...");
 						}
@@ -174,7 +187,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			@Override
 			public void onClick(View view) {
 				if (mIsEditionEnabled) {
-					LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup);
+					LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null);
 				}
 			}
 		});
@@ -182,7 +195,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup);
+				LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null);
 			}
 		});
 
@@ -213,7 +226,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					// This will remove both the creation fragment and the group info fragment from the back stack
 					getFragmentManager().popBackStack();
 					getFragmentManager().popBackStack();
-					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
 				} else if (newState == ChatRoom.State.CreationFailed) {
 					mWaitLayout.setVisibility(View.GONE);
 					LinphoneActivity.instance().displayChatRoomError();
@@ -289,7 +302,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 					toAdd.toArray(participantsToAdd);
 					mChatRoom.addParticipants(participantsToAdd);
 
-					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString());
+					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null);
 				}
 			}
 		});
