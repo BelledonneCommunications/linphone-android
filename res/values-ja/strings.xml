@@ -11,10 +11,12 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_text">GNU General Public License V2\n © 2010-2017 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">linphoneに問い合わせる</string>
   <!--Common-->
   <string name="username">ユーザー名</string>
+  <string name="userid">ユーザID(オプション)</string>
   <string name="phone_number">電話番号</string>
   <string name="display_name">表示名</string>
   <string name="password">パスワード</string>
@@ -44,6 +46,7 @@
   <string name="maybe_later">また今度</string>
   <string name="later">そのうち</string>
   <string name="no">いいえ</string>
+  <string name="ok">OK</string>
   <string name="yes">はい</string>
   <string name="link_account">アカウントをリンクする</string>
   <!--Launch screen-->
@@ -85,6 +88,8 @@
   <string name="assistant_error_bad_credentials">ユーザー名かパスワードが異なります</string>
   <string name="assistant_codec_down_question">Cisco Systems,Incが提供するOpenH264ビデオコーデックをダウンロードしますか？</string>
   <string name="assistant_codec_downloading">Cisco Systems,Incが提供するOpenH264ビデオコーデックをダウンロードします。</string>
+  <string name="assistant_openh264_downloading">OpenH264をダウンロードしています。</string>
+  <string name="assistant_openh264_restart">OpenH264コーデックを使うためには再起動する必要があります%s</string>
   <string name="assistant_codec_downloaded">Cisco Systems,Incが提供するOpenH264ビデオコーデックがダウンロードされました。</string>
   <string name="wizard_failed">エラーが発生しました。のちほど再試行してください。</string>
   <string name="wizard_server_unavailable">ネットワーク接続を確認してください。</string>
@@ -164,7 +169,10 @@
   <string name="image_saved">保存した画像</string>
   <string name="image_not_saved">エラー、画像が保存できません。</string>
   <string name="wait">お待ちください...</string>
+  <string name="message_not_encrypted">このメッセージは暗号化されていません。</string>
+  <string name="message_cant_be_decrypted_notif">このメッセージを復号化することが出来ませんでした。</string>
   <string name="processing_image">画像の処理は、ファイルサイズによっては数秒かかることがあります</string>
+  <string name="resend">再送信</string>
   <!--Status Bar-->
   <string name="status_connected">登録済</string>
   <string name="status_not_connected">登録なし</string>
@@ -191,6 +199,8 @@
   <string name="call_stats_ice">ICE 接続:</string>
   <string name="call_stats_video_resolution_sent">送信ビデオ解像度：</string>
   <string name="call_stats_video_resolution_received">受信ビデオ解像度：</string>
+  <string name="call_stats_video_fps_sent">送信ビデオfps:</string>
+  <string name="call_stats_video_fps_received">受信ビデオfps:</string>
   <string name="call_stats_sender_loss_rate">送信ロス：</string>
   <string name="call_stats_receiver_loss_rate">受信ロス：</string>
   <string name="call_stats_encoder_name">エンコーダー：</string>
@@ -216,6 +226,7 @@
   <string name="error_user_busy">ビジーです</string>
   <string name="error_user_not_found">ユーザーがおりません</string>
   <string name="error_incompatible_media">互換性のないメディアパラメーター</string>
+  <string name="error_low_bandwidth">あなたの相手の通信幅が狭いのでビデオが使えません</string>
   <string name="error_network_unreachable">ネットワークに到達できません</string>
   <string name="error_bad_credentials">不正な証明書です</string>
   <string name="error_unauthorized">無断</string>
@@ -309,6 +320,7 @@
   <string name="pref_rfc2833_dtmf">DTMFをインバンド(RFC2833)で送信する</string>
   <string name="pref_sipinfo_dtmf">DTMFをSIP(情報)で送信する</string>
   <string name="pref_voice_mail">音声メールのURI</string>
+  <string name="pref_dialer_call">Linphoneを標準の電話アプリとして使う</string>
   <!--Chat settings-->
   <string name="pref_chat_title">チャット</string>
   <string name="pref_image_sharing_server_title">共有サーバー</string>

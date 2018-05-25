@@ -111,6 +111,7 @@
   <string name="use_email_for_validation">Använd e-postadress för kontovalidering</string>
   <string name="login_with_username">Använd ditt användarnamn och lösenord istället för ditt telefonnummer</string>
   <string name="phone_number_info_title">Vad ska mitt telefonnummer användas för?</string>
+  <string name="phone_number_info_content">\nTack vare ditt telefonnummer kommer dina vänner att hitta dig lättare.\n\n Du kommer att se i din adressbok vem som använder Linphone och dina vänner kommer veta att de kan nå dig på Linphone också.\n</string>
   <string name="phone_number_link_info_content">\nDina vänner hittar dig lättare om du kopplar ditt konto till ditt telefonnummer\n\nDu ser i din adressbok vilka som använder Linphone och dina vänner vet att de når dig på Linphone också.\n</string>
   <string name="phone_number_link_info_content_already_account">Du kan bara använda ditt telefonnummer med ett Linphone-konto.\n\nOm du redan har länkat ditt nummer till ett annat konto, men du föredrar att använda det här, kopplar du bara det nu och ditt nummer flyttas automatiskt till det här kontot.</string>
   <!--Status-->
@@ -140,8 +141,8 @@
   <!--Dailer-->
   <string name="address_bar_hint">Ange ett nummer eller en adress</string>
   <!--History-->
-  <string name="no_call_history">Inget samtal i din historia</string>
-  <string name="no_missed_call_history">Inget missat samtal i din historia</string>
+  <string name="no_call_history">Inga samtal i din historik</string>
+  <string name="no_missed_call_history">Inga missade samtal i din historik</string>
   <string name="delete_history_log">Vill du ta bort vald samtalslog?</string>
   <string name="today">Idag</string>
   <string name="yesterday">Igår</string>
@@ -178,6 +179,7 @@
   <string name="displayed">Läs</string>
   <string name="delivered">Levererades</string>
   <string name="resend">Skicka igen</string>
+  <string name="error_opening_file">Ett fel uppstår när filen öppnas.</string>
   <!--Status Bar-->
   <string name="status_connected">Registrerad</string>
   <string name="status_not_connected">Inte registrerad</string>
@@ -334,6 +336,7 @@
   <string name="pref_rfc2833_dtmf">Skicka in-band DTMF (RFC2833)</string>
   <string name="pref_sipinfo_dtmf">Skicka ut-band DTMF (SIP INFO)</string>
   <string name="pref_voice_mail">Röstbrevlåda URI</string>
+  <string name="pref_dialer_call">Använd Linphone som standard telefonapp</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chatt</string>
   <string name="pref_image_sharing_server_title">Delar server</string>

@@ -29,6 +29,7 @@
   <string name="retry">Повторить</string>
   <string name="cancel">Отменить</string>
   <string name="accept">Принять</string>
+  <string name="open">Открыть</string>
   <string name="continue_text">Продолжить</string>
   <string name="about">О программе</string>
   <string name="deny">Отклонить</string>
@@ -67,19 +68,19 @@
   <string name="assistant_remote_provisioning_desc">Укажите URL-адрес конфигурации</string>
   <string name="transport">Транспорт</string>
   <string name="assistant_create_account_phone_number_address">Ваш SIP-адрес</string>
-  <string name="assistant_login_linphone">Использовать учетную запись Linphone</string>
-  <string name="assistant_login_generic">Использовать учетную запись SIP</string>
-  <string name="assistant_remote_provisioning">Выбор удаленной конфигурации</string>
+  <string name="assistant_login_linphone">Использовать аккаунт Linphone</string>
+  <string name="assistant_login_generic">Использовать SIP-аккаунт</string>
+  <string name="assistant_remote_provisioning">Удаленная конфигурация</string>
   <string name="assistant_create_account_part_1">Подтвердите код страны и введите свой номер телефона</string>
   <string name="assistant_create_account_part_2">Мы отправили SMS-сообщение с кодом подтверждения на ваш номер телефона:</string>
   <string name="assistant_create_account_part_3">Чтобы завершить проверку номера телефона, введите 4-значный код ниже:\n</string>
   <string name="assistant_create_account_part_email">Введите имя пользователя, адрес электронной почты и пароль для вашей учетной записи Linphone</string>
   <string name="assistant_display_name_optional">Отображаемое имя (необязательно)</string>
-  <string name="assistant_linphone_account">Использовать учетную запись Linphone</string>
-  <string name="assistant_generic_account">Использовать учетную запись SIP</string>
-  <string name="assistant_remote_provisioning_title">Выбор удаленной конфигурации</string>
+  <string name="assistant_linphone_account">Использовать аккаунт Linphone</string>
+  <string name="assistant_generic_account">Использовать SIP-аккаунт</string>
+  <string name="assistant_remote_provisioning_title">Удаленная конфигурация</string>
   <string name="assistant_fetch_apply">Получить и применить</string>
-  <string name="assistant_login">Имя пользователя</string>
+  <string name="assistant_login">Авторизация</string>
   <string name="assistant_ec_calibration">Выполняется калибровка эхоподавления</string>
   <string name="assistant_remote_provisioning_login">Введите имя пользователя</string>
   <string name="assistant_account_not_validated">Ваша учетная запись еще не проверена.</string>
@@ -111,6 +112,7 @@
   <string name="use_email_for_validation">Использовать адрес электронной почты для проверки учетной записи</string>
   <string name="login_with_username">Вместо номера телефона использовать имя пользователя и пароль</string>
   <string name="phone_number_info_title">Для чего будет использоваться мой номер телефона?</string>
+  <string name="phone_number_info_content">\nВашим друзьям будет проще связаться с вами, если вы свяжете свою учетную запись со своим номером телефона.\n\n В вашей адресной книге вы увидите, кто использует Linphone, а ваши друзья смогут узнать, что вы также зарегистрированы в Linphone.\n</string>
   <string name="phone_number_link_info_content">\nВашим друзьям будет проще связаться с вами, если вы свяжете свою учетную запись со своим номером телефона.\n\nВ вашей адресной книге вы увидите, кто использует Linphone, а ваши друзья смогут узнать, что вы также зарегистрированы в Linphone.\n</string>
   <string name="phone_number_link_info_content_already_account">Номер телефона можно использовать только с одной учетной записью Linphone.\n\nЕсли ваш номер уже был связан с другой учетной записью, но вы предпочитаете использовать его, просто свяжите его сейчас, и ваш номер будет автоматически перенесен в эту учетную запись.</string>
   <!--Status-->
@@ -159,6 +161,8 @@
   <string name="delete_conversation">Вы действительно хотите удалить выбранный разговор?</string>
   <string name="delete_message">Вы действительно хотите удалить выбранное сообщение?</string>
   <string name="remote_composing">Собеседник пишет...</string>
+  <string name="remote_composing_single">%s печатает...</string>
+  <string name="remote_composing_multiple">%s печатают...</string>
   <string name="share_picture_size_small">Маленький</string>
   <string name="share_picture_size_medium">Средний</string>
   <string name="share_picture_size_large">Большой</string>
@@ -177,7 +181,28 @@
   <string name="processing_image">Обработка изображения может занять несколько секунд в зависимости от размера файла</string>
   <string name="displayed">Прочитано</string>
   <string name="delivered">Доставлено</string>
+  <string name="undelivered">Не доставлено</string>
+  <string name="sent">Отправлено</string>
   <string name="resend">Переслать</string>
+  <string name="error_opening_file">При открытии этого файла возникает ошибка.</string>
+  <string name="conversation_information">Информация</string>
+  <string name="administrator">Администратор</string>
+  <string name="chat_room_infos_title">Информация</string>
+  <string name="chat_room_infos_admin">Администратор</string>
+  <string name="chat_room_participants">Участники</string>
+  <string name="chat_room_leave_group">Покинуть группу</string>
+  <string name="device_added">новое устройство для %s</string>
+  <string name="device_removed">устройство для %s удалено</string>
+  <string name="subject_changed">новая тема: %s</string>
+  <string name="admin_set">%s это администратор</string>
+  <string name="admin_unset">%s больше не администратор</string>
+  <string name="group_chat_notif" formatted="false">%1: %2</string>
+  <string name="chat_room_you_are_now_admin">Теперь вы администратор</string>
+  <string name="chat_room_you_are_no_longer_admin">Вы больше не администратор</string>
+  <string name="chat_room_creation_failed">Не удалось создать чат-комнату</string>
+  <string name="chat_room_leave_button">Покинуть</string>
+  <string name="separator">: </string>
+  <string name="imdn_info">Статус доставки</string>
   <!--Status Bar-->
   <string name="status_connected">Зарегистрирован</string>
   <string name="status_not_connected">Не зарегистрирован</string>
@@ -233,6 +258,7 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Предупреждение: служба не готова</string>
   <string name="error">Ошибка</string>
+  <string name="file_transfer_error">Ошибка передачи файла</string>
   <string name="warning_wrong_destination_address">Невозможно создать адрес назначения из %s</string>
   <string name="error_unknown">Неизвестная ошибка</string>
   <string name="error_call_declined">Вызов отклонен</string>
@@ -245,7 +271,7 @@
   <string name="error_unauthorized">Неавторизован</string>
   <string name="error_io_error">Ошибка сети</string>
   <string name="download_image_failed">Загрузка не удалась. Проверьте сетевое подключение или повторите попытку позже.</string>
-  <string name="remote_provisioning_failure">Не удалось загрузить или применить профиль удаленного конфигурирования...</string>
+  <string name="remote_provisioning_failure">Не удалось загрузить или применить профиль удаленной конфигурации...</string>
   <string name="remote_provisioning_again_title">Удаленное конфигурирование</string>
   <string name="remote_provisioning_again_message">Вы хотите изменить URI конфигурирования?</string>
   <!--Account Settings-->
@@ -280,6 +306,7 @@
   <string name="pref_change_password">Изменить пароль</string>
   <string name="pref_default_account">Использовать по умолчанию</string>
   <string name="pref_password_changed">Пароль изменен</string>
+  <string name="pref_proxy_push_notif">Разрешить push-уведомление</string>
   <!--Settings-->
   <string name="pref_sipaccounts">Учетные записи SIP</string>
   <string name="default_account_flag">Учетная запись по умолчанию</string>
@@ -335,6 +362,7 @@
   <string name="pref_sipinfo_dtmf">Отправить вне потока DTMFs(SIP INFO)</string>
   <string name="pref_call_timeout_title">Таймаут вызова(в секундах)</string>
   <string name="pref_voice_mail">URI голосовой почты</string>
+  <string name="pref_dialer_call">Использовать Linphone в качестве приложения для звонков по умолчанию.</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Чат</string>
   <string name="pref_image_sharing_server_title">Сервер обмена</string>
@@ -367,6 +395,7 @@
   <string name="pref_advanced_title">Дополнительно</string>
   <string name="pref_debug_title">Отладка</string>
   <string name="pref_debug">Отладка</string>
+  <string name="pref_java_debug">Использовать Java-регистратор</string>
   <string name="pref_friendlist_subscribe">Подписка</string>
   <string name="pref_background_mode">Фоновый режим</string>
   <string name="pref_animation_enable_title">Включить анимацию</string>
@@ -458,4 +487,6 @@
   <string name="content_description_exit_conference">Выйти из конференции</string>
   <string name="content_title_notification_service">Служба Linphone</string>
   <string name="content_title_notification">Уведомление Linphone</string>
+  <string name="content_description_conversation_subject">Тема группового чата</string>
+  <string name="content_description_conversation_infos">Информация о групповом чате</string>
 </resources>
