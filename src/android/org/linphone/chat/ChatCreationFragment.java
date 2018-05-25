@@ -203,12 +203,12 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				mShareInfos.putString("messageDraft", messageDraft);
 		}
 
-
 		return view;
 	}
 
 	@Override
 	public void onResume() {
+		ContactsManager.addContactsListener(this);
 		super.onResume();
 
 		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
@@ -222,6 +222,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		if (mChatRoom != null) {
 			mChatRoom.removeListener(mChatRoomCreationListener);
 		}
+		ContactsManager.removeContactsListener(this);
 		super.onPause();
 	}
 
@@ -425,6 +426,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	@Override
 	public void onContactsUpdated() {
-		mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
+		ContactsManager.getInstance().fetchContactsAsync();
+		updateList();
 	}
 }

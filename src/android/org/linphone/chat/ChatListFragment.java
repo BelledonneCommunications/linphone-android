@@ -208,6 +208,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		if (mChatRoomDeletionPendingCount > 0) {
 			mWaitLayout.setVisibility(View.VISIBLE);
 		}
+		LinphoneActivity.instance().refreshMissedChatCountDisplay();
 	}
 
 	@Override
