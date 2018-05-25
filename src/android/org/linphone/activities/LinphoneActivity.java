@@ -697,7 +697,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			extras.putString("ThumbnailUri", thumbnailUri);
 		}
 
-		changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
+		if (sipUri == null) {
+			changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
+		} else {
+			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
+		}
 	}
 
 	public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack, Bundle shareInfos) {
