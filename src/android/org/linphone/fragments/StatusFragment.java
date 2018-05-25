@@ -402,6 +402,9 @@ public class StatusFragment extends Fragment {
 
 			ZRTPdialog = new Dialog(getActivity());
 			ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 			Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
 			d.setAlpha(200);
 			ZRTPdialog.setContentView(R.layout.dialog);
