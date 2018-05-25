@@ -1,3 +1,2 @@
-include ':libLinphoneAndroidSdk'
-project(':libLinphoneAndroidSdk').projectDir = new File(rootProject.projectDir,'..')
-project(':libLinphoneAndroidSdk').buildFileName = "libLinphoneAndroidSdk.gradle"
+include ':liblinphone-sdk'
+project(':liblinphone-sdk').projectDir = new File(rootProject.projectDir,'../liblinphone-sdk')
