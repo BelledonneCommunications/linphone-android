@@ -426,7 +426,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	@Override
 	public void onContactsUpdated() {
-		ContactsManager.getInstance().fetchContactsAsync();
 		updateList();
 	}
 }
