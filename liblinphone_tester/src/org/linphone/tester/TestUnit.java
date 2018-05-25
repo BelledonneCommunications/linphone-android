@@ -66,6 +66,7 @@ public class TestUnit extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (isAssetCopied ==false) {
+			Tester.setApplicationContext(getContext());
 			copyAssetsFromPackage(getContext());
 			isAssetCopied=true;
 		}
