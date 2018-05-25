@@ -21,18 +21,36 @@ allprojects {
     }
 }
 
+
 configurations {
     javadocDeps
 }
 
+
+
+
 apply plugin: 'com.android.library'
+
 
 dependencies {
     compile 'org.apache.commons:commons-compress:1.16.1'
     javadocDeps 'org.apache.commons:commons-compress:1.16.1'
 }
 
-def srcDir = ['submodules/mediastreamer2/java/src', 'src/linphone-wrapper']
+def srcDir = ['../submodules/mediastreamer2/java/src']
+def rootSdk
+
+if (file('android-arm64/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-arm64'
+else if (file('android-arm/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-arm'
+else if (file('android-armv7/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-armv7'
+else if (file('android-x86/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-x86'
+
+srcDir += [rootSdk+'/share/linphonej/java/org/linphone/core/']
+
 
 def excludePackage = []
 
@@ -42,6 +60,13 @@ excludePackage.add('**/**tester**')
 excludePackage.add('**/LICENSE.txt')
 
 android {
+
+
+    buildTypes {
+        release {}
+        debug{}
+    }
+
     defaultConfig {
         compileSdkVersion 26
         buildToolsVersion "26.0.0"
@@ -59,10 +84,10 @@ android {
         main {
             manifest.srcFile 'AndroidManifestLibrary.xml'
             java.srcDirs = srcDir
-            resources.srcDirs = srcDir
             aidl.srcDirs = srcDir
+            assets.srcDirs = ["${buildDir}/sdk-assets/assets/"]
             renderscript.srcDirs = srcDir
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['../libs']
 
             java.excludes = ['**/mediastream/MediastreamerActivity.java']
 
@@ -79,7 +104,7 @@ android {
 ///////////// Task /////////////
 
 task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
-    source = ['submodules/mediastreamer2/java/src', 'src/linphone-wrapper']
+    source = srcDir
     excludes = ['**/mediastream/MediastreamerActivity.java',
                 '**/**.html',
                 '**/**.aidl']
@@ -109,3 +134,26 @@ task sdkZip(type: Zip) {
     include '*'
     archiveName newSdkName
 }
+
+task copyAssets(type: Sync) {
+    from rootSdk
+    into "${buildDir}/sdk-assets/assets/org.linphone.core"
+    include '**/*.png'
+    include '**/*.pem'
+    include '**/*.mkv'
+    include '**/*.wav'
+    include '**/*_grammar'
+
+    //rename '(.*)', '$1'.toLowerCase()
+    eachFile {
+        path = path.toLowerCase() //to workaround case insensitive fs (macosx)
+        println("Syncing sdk asset ${sourcePath} to ${path}")
+    }
+    doFirst {
+        println("Syncing sdk assets into root dir ${destinationDir}")
+     }
+    // do not copy those
+    includeEmptyDirs = false
+
+}
+project.tasks['preBuild'].dependsOn 'copyAssets'

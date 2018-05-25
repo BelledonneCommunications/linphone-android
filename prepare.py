@@ -248,13 +248,10 @@ install-test:
 java-clean:
 \t./gradlew clean
 
-$(TOPDIR)/res/raw/rootca.pem:
-\tcp liblinphone-sdk/android-{first_arch}/share/linphone/rootca.pem $@
 
 copy-libs:
 \trm -rf libs-debug/armeabi
 \trm -rf libs/armeabi
-\trm -rf src/linphone-wrapper && mkdir -p src/linphone-wrapper/
 \tif test -d "liblinphone-sdk/android-arm"; then \\
 \t\tmkdir -p libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*.so libs-debug/armeabi && \\
@@ -321,30 +318,6 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdbserver libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
-\tif test -d "liblinphone-sdk/android-arm/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-arm/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-armv7/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-armv7/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-arm64/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-arm64/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-x86/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-arm/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-arm/share/belr/grammars/*_grammar res/raw/; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-armv7/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-armv7/share/belr/grammars/*_grammar res/raw/; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-arm64/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-arm64/share/belr/grammars/*_grammar res/raw/; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-x86/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-x86/share/belr/grammars/*_grammar res/raw/; \\
-\tfi
 
 copy-libs-mediastreamer:
 \trm -rf submodules/mediastreamer2/java/libs/armeabi
@@ -372,7 +345,7 @@ copy-libs-mediastreamer:
 \t\tsh WORK/android-x86/strip.sh submodules/mediastreamer2/java/libs/x86/*.so; \\
 \tfi
 
-generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+generate-apk: java-clean build copy-libs
 \t./gradlew assembleDebug
 
 quick: clean install-apk run-linphone
@@ -392,17 +365,17 @@ unsigned: java-clean build copy-libs
 generate-sdk: liblinphone-android-sdk
 
 generate-javadoc:
-\t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
-\t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
+\t./gradlew -q androidJavadocsJar
+\t./gradlew -q sourcesJar
 
-liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
-\t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
-\t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
-\t./gradlew -b libLinphoneAndroidSdk.gradle assembleRelease
+liblinphone-android-sdk: java-clean build copy-libs 
+\t./gradlew -q androidJavadocsJar
+\t./gradlew -q sourcesJar
+\t./gradlew -q assembleRelease
 \t@mv $(TOPDIR)/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
-\t./gradlew -b libLinphoneAndroidSdk.gradle sdkZip
+\t./gradlew -q sdkZip
 
-linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+linphone-android-sdk: java-clean build copy-libs 
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
 \t./gradlew -b linphoneAndroidSdk.gradle assembleRelease
