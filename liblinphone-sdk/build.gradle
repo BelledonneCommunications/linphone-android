@@ -48,6 +48,10 @@ else if (file('android-armv7/share/linphonej/java/org/linphone/core/Factory.java
     rootSdk = 'android-armv7'
 else if (file('android-x86/share/linphonej/java/org/linphone/core/Factory.java').exists() )
     rootSdk = 'android-x86'
+else {
+	println ("native sdk not ready yet")
+	rootSdk = ""
+}
 
 srcDir += [rootSdk+'/share/linphonej/java/org/linphone/core/']
 
