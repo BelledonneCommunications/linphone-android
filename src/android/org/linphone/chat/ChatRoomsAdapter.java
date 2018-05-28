@@ -323,6 +323,8 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 
 	private void removeRange(int positionStart, int itemCount) {
 		for (int i = 0; i < itemCount; ++i) {
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			lc.deleteChatRoom(mRooms.get(positionStart));
 			mRooms.remove(positionStart);
 		}
 		notifyItemRangeRemoved(positionStart, itemCount);
@@ -342,6 +344,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 
 	@Override
 	public int getItemCount() {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 
 		return this.mRooms.size();
 	}
