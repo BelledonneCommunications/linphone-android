@@ -1,58 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/edit_list"
+	xmlns:app="https://schemas.android.com/apk/res-auto"
+	android:id="@+id/edit_list_menu"
 	android:orientation="horizontal"
-	android:background="@color/colorF"
-	android:layout_width="match_parent"
-	android:layout_height="60dp"
-	android:visibility="gone">
+	android:background="@color/colorA"
+	android:height="100dp"
+	android:layout_width="0dp"
+	android:layout_height="100dp"
+	android:visibility="gone"
+	>
 
-	<ImageView
-		android:id="@+id/cancel"
-		android:src="@drawable/cancel_edit"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_cancel_button"
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="0.2"
-		android:padding="15dp"/>
-
-	<View
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="0.4"/>
-
-	<ImageView
-		android:id="@+id/select_all"
-		android:src="@drawable/select_all"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_select_all"
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="0.2"
-		android:padding="15dp"/>
-
-	<ImageView
-		android:id="@+id/deselect_all"
-		android:src="@drawable/deselect_all"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_deselect_all"
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="0.2"
-		android:visibility="gone"
-		android:padding="15dp"/>
-
-	<ImageView
+	<item
 		android:id="@+id/delete"
-		android:src="@drawable/delete_button"
-		android:background="@drawable/toolbar_button"
-		android:contentDescription="@string/content_description_delete_selection"
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="0.2"
-		android:padding="15dp"/>
-
+		android:icon="@drawable/delete"
+		app:showAsAction="ifRoom"
+		android:orderInCategory="1000"
+		android:title=""/>
+	<item
+		android:id="@+id/select_all"
+		android:icon="@drawable/select_all"
+		app:showAsAction="ifRoom"
+		android:orderInCategory="100"
+		android:title=""/>
+	<item
+		android:id="@+id/deselect_all"
+		android:icon="@drawable/deselect_all"
+		app:showAsAction="ifRoom"
+		android:orderInCategory="200"
+		android:visible="false"
+		android:title=""/>
 
 </menu>

@@ -54,7 +54,7 @@
         </LinearLayout>
 
         <include layout="@layout/edit_list"/>
-
+        <!--<include layout="@layout/context_bar"></include>-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chatList"
             android:layout_width="match_parent"

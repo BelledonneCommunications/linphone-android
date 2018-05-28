@@ -152,8 +152,8 @@ public class CodecDownloaderFragment extends Fragment {
 			if (savedInstanceState.containsKey("downloaded"))
 				downloaded.setVisibility((Integer) savedInstanceState.getSerializable("downloaded"));
 
-			if (savedInstanceState.containsKey("bar"))
-				bar.setVisibility((Integer) savedInstanceState.getSerializable("bar"));
+			if (savedInstanceState.containsKey("context_bar"))
+				bar.setVisibility((Integer) savedInstanceState.getSerializable("context_bar"));
 
 			if (savedInstanceState.containsKey("downloadingInfo"))
 				downloadingInfo.setVisibility((Integer) savedInstanceState.getSerializable("downloadingInfo"));
@@ -177,7 +177,7 @@ public class CodecDownloaderFragment extends Fragment {
 		if (yes != null) outState.putSerializable("yes", yes.getVisibility());
 		if (no != null) outState.putSerializable("no", no.getVisibility());
 		if (ok != null) outState.putSerializable("ok", ok.getVisibility());
-		if (bar != null) outState.putSerializable("bar", bar.getVisibility());
+		if (bar != null) outState.putSerializable("context_bar", bar.getVisibility());
 		if (downloadingInfo != null) outState.putSerializable("downloadingInfo", downloadingInfo.getVisibility());
 		super.onSaveInstanceState(outState);
 	}
