@@ -33,6 +33,7 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
+import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 
@@ -63,7 +64,6 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	private ProgressBar progressBar;
 	private boolean mOnlySipContact = false;
 	private View.OnClickListener listener;
-	private int oldSize;
 
 	public List<ContactAddress> getContacts() {
 		return contacts;
@@ -82,7 +82,6 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		progressBar = pB;
 		setContactsSelectedList(null);
 		setContactsList(contactsList);
-		oldSize = 0;
 	}
 
 	private boolean contactIsSelected(ContactAddress ca) {
@@ -166,17 +165,6 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	}
 
 	public void searchContacts(String search, ListView resultContactsSearch) {
-		if (search == null || search.length() == 0 || search.trim().length() == 0) {
-			contacts = getContactsList();
-			resultContactsSearch.setAdapter(this);
-			if (ContactsManager.getInstance() != null) {
-				ContactsManager.getInstance().getMagicSearch().resetSearchCache();
-			}
-			oldSize = 0;
-			return;
-		}
-
-		search = search.trim();
 		List<ContactAddress> result = new ArrayList<>();
 
 		String domain = "";
@@ -213,7 +201,6 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			}
 		}
 
-		oldSize = search.length();
 		contacts = result;
 		resultContactsSearch.setAdapter(this);
 		this.notifyDataSetChanged();
@@ -256,6 +243,10 @@ public class SearchContactsListAdapter extends BaseAdapter {
 				holder.name.setVisibility(View.VISIBLE);
 				holder.name.setText(contact.getAddress().getDisplayName());
 			}
+		} else if (address != null) {
+			Address tmpAddr = Factory.instance().createAddress(address);
+			holder.name.setVisibility(View.VISIBLE);
+			holder.name.setText((tmpAddr.getDisplayName() != null) ? tmpAddr.getDisplayName() : tmpAddr.getUsername()) ;
 		} else {
 			holder.name.setVisibility(View.GONE);
 		}

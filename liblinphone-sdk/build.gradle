@@ -1,0 +1,163 @@
+// Project information
+buildDir = 'bin'
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+        google()
+    }
+}
+
+
+configurations {
+    javadocDeps
+}
+
+
+
+
+apply plugin: 'com.android.library'
+
+
+dependencies {
+    compile 'org.apache.commons:commons-compress:1.16.1'
+    javadocDeps 'org.apache.commons:commons-compress:1.16.1'
+}
+
+def srcDir = ['../submodules/mediastreamer2/java/src']
+def rootSdk
+
+if (file('android-arm64/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-arm64'
+else if (file('android-arm/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-arm'
+else if (file('android-armv7/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-armv7'
+else if (file('android-x86/share/linphonej/java/org/linphone/core/Factory.java').exists() )
+    rootSdk = 'android-x86'
+else {
+	println ("native sdk not ready yet")
+	rootSdk = ""
+}
+
+srcDir += [rootSdk+'/share/linphonej/java/org/linphone/core/']
+
+
+def excludePackage = []
+
+excludePackage.add('**/gdb.*')
+excludePackage.add('**/libopenh264**')
+excludePackage.add('**/**tester**')
+excludePackage.add('**/LICENSE.txt')
+
+android {
+
+
+    buildTypes {
+        release {}
+        debug{}
+    }
+
+    defaultConfig {
+        compileSdkVersion 26
+        buildToolsVersion "26.0.0"
+        multiDexEnabled true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifestLibrary.xml'
+            java.srcDirs = srcDir
+            aidl.srcDirs = srcDir
+            assets.srcDirs = ["${buildDir}/sdk-assets/assets/"]
+            renderscript.srcDirs = srcDir
+            jniLibs.srcDirs = ['../libs']
+
+            java.excludes = ['**/mediastream/MediastreamerActivity.java']
+
+            // Exclude some useless files
+            packagingOptions {
+                excludes = excludePackage
+            }
+        }
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+}
+
+///////////// Task /////////////
+
+task(releaseJavadoc, type: Javadoc, dependsOn: "assembleRelease") {
+    source = srcDir
+    excludes = ['**/mediastream/MediastreamerActivity.java',
+                '**/**.html',
+                '**/**.aidl']
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += files(android.libraryVariants.release.javaCompile.classpath.files)
+    classpath += configurations.javadocDeps
+    options.encoding = 'UTF-8'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: releaseJavadoc) {
+    classifier = 'javadoc'
+    from releaseJavadoc.destinationDir
+}
+
+task sdkZip(type: Zip) {
+    String appName = "liblinphone-android-sdk"
+    String gitSha = 'git describe --always'.execute().text.trim()
+    String newSdkName = appName + "-" + gitSha + ".zip"
+
+    from('bin/libs',
+         'bin/outputs/aar')
+    include '*'
+    archiveName newSdkName
+}
+
+task copyAssets(type: Sync) {
+    from rootSdk
+    into "${buildDir}/sdk-assets/assets/org.linphone.core"
+    include '**/*.png'
+    include '**/*.pem'
+    include '**/*.mkv'
+    include '**/*.wav'
+    include '**/*_grammar'
+
+    //rename '(.*)', '$1'.toLowerCase()
+    eachFile {
+        path = path.toLowerCase() //to workaround case insensitive fs (macosx)
+        println("Syncing sdk asset ${sourcePath} to ${path}")
+    }
+    doFirst {
+        println("Syncing sdk assets into root dir ${destinationDir}")
+     }
+    // do not copy those
+    includeEmptyDirs = false
+
+}
+project.tasks['preBuild'].dependsOn 'copyAssets'

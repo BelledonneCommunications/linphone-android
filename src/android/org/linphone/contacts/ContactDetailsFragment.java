@@ -77,7 +77,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				Address participant = Factory.instance().createAddress(tag);
 				ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
 				if (room != null) {
-					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
 				} else {
 					ProxyConfig lpc = lc.getDefaultProxyConfig();
 					if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
@@ -87,7 +87,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 						mChatRoom.addParticipant(participant);
 					} else {
 						room = lc.getChatRoom(participant);
-						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
 					}
 				}
 			}
@@ -134,7 +134,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
 				if (newState == ChatRoom.State.Created) {
 					mWaitLayout.setVisibility(View.GONE);
-					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly());
+					LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), null);
 				} else if (newState == ChatRoom.State.CreationFailed) {
 					mWaitLayout.setVisibility(View.GONE);
 					LinphoneActivity.instance().displayChatRoomError();

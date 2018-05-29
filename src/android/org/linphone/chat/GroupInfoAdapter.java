@@ -85,7 +85,8 @@ public class GroupInfoAdapter extends BaseAdapter {
         final LinearLayout isAdmin = view.findViewById(R.id.isAdminLayout);
         final LinearLayout isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
 
-        name.setText(c.getFullName());
+        name.setText((c.getFullName() != null) ? c.getFullName() :
+		        (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
         if (c.hasPhoto()) {
             LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
         }

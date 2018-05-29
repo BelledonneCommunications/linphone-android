@@ -29,6 +29,7 @@
   <string name="retry">Yeniden dene</string>
   <string name="cancel">İptal</string>
   <string name="accept">Kabul et</string>
+  <string name="open">Aç</string>
   <string name="continue_text">Sürdür</string>
   <string name="about">Hakkında</string>
   <string name="deny">Yoksay</string>
@@ -111,6 +112,7 @@
   <string name="use_email_for_validation">Hesap doğrulama için e-posta adresi kullan</string>
   <string name="login_with_username">Telefon numaranız yerine kullanıcı adınızı ve parolanızı kullanın</string>
   <string name="phone_number_info_title">Telefon numaram ne için kullanılacak?</string>
+  <string name="phone_number_info_content">\nTelefon numaranız sayesinde arkadaşlarınız sizi daha kolay bulacak.\n\n Adres defterinizde kimlerin Linphone kullandığını göreceksiniz ve arkadaşlarınız da size Linphone\'dan ulaşabileceklerini bilecek.\n</string>
   <string name="phone_number_link_info_content">\nEğer hesabını telefon numarana bağlarsan arkadaşların seni daha kolay bulacak\n\nAdres listende kimlerin Linphone kullandığını göreceksin ve arkadaşların da sana Linphone üzerinden ulaşabileceğini bilecek.\n</string>
   <string name="phone_number_link_info_content_already_account">Telefon numaranı yalnızca tek Linphone hesabıyla kullanabilirsin.\n\nEğer hesabını zaten başka bir hesaba bağladıysan ama bunu kullanmak istiyorsan, şimdi bağla ve numaran kendiliğinden bu hesaba taşınsın.</string>
   <!--Status-->
@@ -159,6 +161,8 @@
   <string name="delete_conversation">Seçilen görüşmeyi silmek ister misiniz?</string>
   <string name="delete_message">Seçilen iletiyi silmek ister misiniz?</string>
   <string name="remote_composing">Karşıdan yazılıyor...</string>
+  <string name="remote_composing_single">%s yazıyor...</string>
+  <string name="remote_composing_multiple">%s yazıyor...</string>
   <string name="share_picture_size_small">Küçük</string>
   <string name="share_picture_size_medium">Orta</string>
   <string name="share_picture_size_large">Büyük</string>
@@ -177,7 +181,24 @@
   <string name="processing_image">Görüntü işleniyor, dosyanın boyutuna bağlı olarak bir kaç saniye sürebilir</string>
   <string name="displayed">Okundu</string>
   <string name="delivered">Ulaştırıldı</string>
+  <string name="sent">Gönderildi</string>
   <string name="resend">Yeniden gönder</string>
+  <string name="error_opening_file">Bu dosya açılırken bir hata oluştu.</string>
+  <string name="administrator">Yönetici</string>
+  <string name="chat_room_infos_admin">Yönetici</string>
+  <string name="chat_room_participants">Katılımcılar</string>
+  <string name="chat_room_leave_group">Kümeden ayrıl</string>
+  <string name="device_added">%s için yeni aygıt</string>
+  <string name="device_removed">%s için aygıt kaldırıldı</string>
+  <string name="subject_changed">yeni konu: %s</string>
+  <string name="admin_set">%s yöneticidir</string>
+  <string name="admin_unset">%s artık yönetici değildir</string>
+  <string name="group_chat_notif" formatted="false">%1: %2</string>
+  <string name="chat_room_you_are_now_admin">Şimdi yöneticisiniz</string>
+  <string name="chat_room_you_are_no_longer_admin">Artık yönetici değilsiniz</string>
+  <string name="chat_room_creation_failed">Konuşma odası oluşturma başarısız</string>
+  <string name="chat_room_leave_button">Ayrıl</string>
+  <string name="separator">: </string>
   <!--Status Bar-->
   <string name="status_connected">Kayıtlı</string>
   <string name="status_not_connected">Kayıtsız</string>
@@ -233,6 +254,7 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Uyarı: hizmet hazır değil</string>
   <string name="error">Hata</string>
+  <string name="file_transfer_error">Dosya aktarım hatası</string>
   <string name="warning_wrong_destination_address">%s dan gidilecek adres inşa edilemiyor</string>
   <string name="error_unknown">Tanımlanmayan hata</string>
   <string name="error_call_declined">Reddedilen çağrı</string>
@@ -335,6 +357,7 @@
   <string name="pref_sipinfo_dtmf">Bant dışı DTMF(SIP INFO) gönder</string>
   <string name="pref_call_timeout_title">Çağrı zaman aşımı (saniye türünde)</string>
   <string name="pref_voice_mail">Sesli posta adresi</string>
+  <string name="pref_dialer_call">Linphone\'u öntanımlı telefon uygulaması olarak kullan</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Konuşma</string>
   <string name="pref_image_sharing_server_title">Paylaşım sunucusu</string>
@@ -458,4 +481,5 @@
   <string name="content_description_exit_conference">Görüşmeden çık</string>
   <string name="content_title_notification_service">Linphone Hizmeti</string>
   <string name="content_title_notification">Linphone Bildirimi</string>
+  <string name="content_description_conversation_subject">Küme konuşma odası konusu</string>
 </resources>

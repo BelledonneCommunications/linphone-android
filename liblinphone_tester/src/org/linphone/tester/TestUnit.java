@@ -26,7 +26,8 @@ public class TestUnit extends AndroidTestCase {
 	public TestUnit(String name) {
 		String[] tab = name.split("/");
 		mSuite = tab[0];
-		mTest = tab[1];
+		if (tab.length == 2)
+			mTest = tab[1];
 		setName(name);
 	}
 
@@ -66,6 +67,7 @@ public class TestUnit extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (isAssetCopied ==false) {
+			Tester.setApplicationContext(getContext());
 			copyAssetsFromPackage(getContext());
 			isAssetCopied=true;
 		}

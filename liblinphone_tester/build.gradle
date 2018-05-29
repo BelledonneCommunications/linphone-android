@@ -37,7 +37,7 @@ dependencies {
   compile group: 'junit', name: 'junit', version: '+'
   compile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
   compile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
-  compile project(":libLinphoneAndroidSdk")
+  compile project(":liblinphone-sdk")
 }
 
 android {

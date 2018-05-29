@@ -48,15 +48,12 @@ dependencies {
         implementation 'com.google.firebase:firebase-messaging:15.0.2'
     }
     implementation 'com.android.support:support-v4:26.0.1'
+    implementation project(':liblinphone-sdk')
 }
 
 if (firebaseEnable()) {
     apply plugin: 'com.google.gms.google-services'
 }
-
-//// Submodule Dir /////
-def submoduleDir = ['submodules/mediastreamer2/java/src']
-////////////////////////
 
 ///// Exclude Files /////
 def excludeFiles = []
@@ -68,7 +65,7 @@ if (!firebaseEnable()) {
     excludeFiles.add('**/gcm*')
     println '[Push Notification] Firebase enabled'
 }
-excludeFiles.add('**/mediastream/MediastreamerActivity.java')
+
 excludeFiles.add('src/android/org/linphone/tutorials/*.java')
 
 def excludePackage = []
@@ -110,20 +107,19 @@ android {
         packaged {
             initWith release
             signingConfig null
+            matchingFallbacks = ['debug', 'release']
         }
     }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            def srcDirs = submoduleDir
-            srcDirs.addAll(['src/linphone-wrapper', 'src/android'])
+            def srcDirs = ['src/android']
             java.srcDirs = srcDirs
             resources.srcDirs = srcDirs
             aidl.srcDirs = srcDirs
             renderscript.srcDirs = srcDirs
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
             java.excludes = excludeFiles
 
             // Exclude some useless files
@@ -138,16 +134,13 @@ android {
     sourceSets {
         androidTest {
             manifest.srcFile 'AndroidManifest.xml'
-            def srcDirs = submoduleDir
-            srcDirs.addAll(['src/android',
-                            'src/androidTest'])
+            def srcDirs = ['src/android', 'src/androidTest']
             java.srcDirs = srcDirs
             resources.srcDirs = srcDirs
             aidl.srcDirs = srcDirs
             renderscript.srcDirs = srcDirs
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
             java.excludes = excludeFiles
 
             // Exclude some useless files

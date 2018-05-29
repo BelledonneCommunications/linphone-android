@@ -240,7 +240,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			@Override
 			public void onRegistrationStateChanged(Core lc, ProxyConfig proxy, RegistrationState state, String smessage) {
 				AuthInfo authInfo = lc.findAuthInfo(proxy.getRealm(), proxy.getIdentityAddress().getUsername(), proxy.getDomain());
-				
+
 				refreshAccounts();
 
 				if(getResources().getBoolean(R.bool.use_phone_number_validation)
@@ -424,6 +424,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			fragment = new ChatListFragment();
 			break;
 		case CREATE_CHAT:
+			checkAndRequestWriteContactsPermission();
 			fragment = new ChatCreationFragment();
 			break;
 		case INFO_GROUP_CHAT:
@@ -685,6 +686,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private void displayChat(String sipUri, String message, String fileUri, String pictureUri, String thumbnailUri, String displayName, Address lAddress) {
 		Bundle extras = new Bundle();
 		extras.putString("SipUri", sipUri);
+
 		if (message != null)
 			extras.putString("messageDraft", message);
 		if (fileUri != null)
@@ -694,14 +696,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			extras.putString("PictureUri", pictureUri);
 			extras.putString("ThumbnailUri", thumbnailUri);
 		}
-		if (sipUri == null && message == null && fileUri == null) {
+
+		if (sipUri == null) {
 			changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
 		} else {
 			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 		}
 	}
 
-	public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack) {
+	public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack, Bundle shareInfos) {
 		if (currentFragment == FragmentsAvailable.INFO_GROUP_CHAT && isGoBack) {
 			getFragmentManager().popBackStackImmediate();
 			getFragmentManager().popBackStackImmediate();
@@ -710,23 +713,37 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		extras.putSerializable("selectedContacts", selectedContacts);
 		extras.putString("subject", subject);
 		extras.putString("groupChatRoomAddress", address);
+
+		if (shareInfos != null) {
+			if (shareInfos.getString("fileSharedUri") != null)
+				extras.putString("fileSharedUri", shareInfos.getString("fileSharedUri"));
+			if (shareInfos.getString("messageDraft") != null)
+				extras.putString("messageDraft", shareInfos.getString("messageDraft"));
+		}
+
 		changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
 	}
 
-	public void goToChat(String sipUri) {
+	public void goToChat(String sipUri, Bundle shareInfos) {
+		Bundle extras = new Bundle();
+		extras.putString("SipUri", sipUri);
+
+		if (shareInfos != null) {
+			if (shareInfos.getString("fileSharedUri") != null)
+				extras.putString("fileSharedUri", shareInfos.getString("fileSharedUri"));
+			if (shareInfos.getString("messageDraft") != null)
+				extras.putString("messageDraft", shareInfos.getString("messageDraft"));
+		}
+
 		if (isTablet()) {
 			Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
 			if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.GROUP_CHAT && !emptyFragment) {
 				GroupChatFragment chatFragment = (GroupChatFragment) fragment2;
 				chatFragment.changeDisplayedChat(sipUri);
 			} else {
-				Bundle extras = new Bundle();
-				extras.putString("SipUri", sipUri);
 				changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 			}
 		} else {
-			Bundle extras = new Bundle();
-			extras.putString("SipUri", sipUri);
 			changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
 		}
 
@@ -734,7 +751,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 	}
 
-	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled, boolean isGoBack) {
+	public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled, boolean isGoBack, Bundle shareInfos) {
 		if (currentFragment == FragmentsAvailable.CREATE_CHAT && isGoBack) {
 			getFragmentManager().popBackStackImmediate();
 			getFragmentManager().popBackStackImmediate();
@@ -744,6 +761,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		extras.putBoolean("isEditionEnabled", isEditionEnabled);
 		extras.putSerializable("ContactAddress", contacts);
 		extras.putString("subject", subject);
+
+		if (shareInfos != null) {
+			if (shareInfos.getString("fileSharedUri") != null)
+				extras.putString("fileSharedUri", shareInfos.getString("fileSharedUri"));
+			if (shareInfos.getString("messageDraft") != null)
+				extras.putString("messageDraft", shareInfos.getString("messageDraft"));
+		}
+
 		changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
 	}
 
@@ -1255,7 +1280,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		int readContactsI = -1;
 		for (int i = 0; i < permissions.length; i++) {
 			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-			if (permissions[i].compareTo(Manifest.permission.READ_CONTACTS) == 0)
+			if (permissions[i].compareTo(Manifest.permission.READ_CONTACTS) == 0 ||
+					permissions[i].compareTo(Manifest.permission.WRITE_CONTACTS) == 0)
 				readContactsI = i;
 		}
 
@@ -1528,17 +1554,24 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (currentFragment == FragmentsAvailable.DIALER
-					|| currentFragment == FragmentsAvailable.CONTACTS_LIST
-					|| currentFragment == FragmentsAvailable.HISTORY_LIST
-					|| currentFragment == FragmentsAvailable.CHAT_LIST) {
-				boolean isBackgroundModeActive = LinphonePreferences.instance().isBackgroundModeEnabled();
-				if (!isBackgroundModeActive) {
-					stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
-					finish();
-				} else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
+			switch(currentFragment) {
+				case DIALER :
+				case CONTACTS_LIST:
+				case HISTORY_LIST:
+				case CHAT_LIST:
+					boolean isBackgroundModeActive = LinphonePreferences.instance().isBackgroundModeEnabled();
+					if (!isBackgroundModeActive) {
+						stopService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
+						finish();
+					} else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
+						return true;
+					}
+					break;
+				case GROUP_CHAT:
+					LinphoneActivity.instance().goToChatList();
 					return true;
-				}
+				default:
+					break;
 			}
 		}
 		return super.onKeyDown(keyCode, event);
