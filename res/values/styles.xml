@@ -10,14 +10,14 @@
 	</style>
 
 	<style name="NoTitle.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-		<item name="android:background">@color/colorF</item>
-		<item name="android:height">100dp</item>
+		<item name="android:background"></item>
+		<item name="android:height">1dp</item>
 	</style>
 
 	<style name="ActionModeButtonStyle" parent="Widget.AppCompat.ActionButton">
-		<item name="android:minWidth">30dp</item>
-		<item name="android:maxWidth">48dp</item>
-		<item name="android:width">48dp</item>
+		<item name="android:minWidth">1dp</item>
+		<item name="android:maxWidth">1dp</item>
+		<item name="android:width">1dp</item>
 
 	</style>
 

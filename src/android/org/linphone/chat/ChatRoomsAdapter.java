@@ -302,6 +302,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 			if (positions.size() == 1) {
 				removeItem(positions.get(0));
 				positions.remove(0);
+
 			} else {
 				int count = 1;
 				while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {

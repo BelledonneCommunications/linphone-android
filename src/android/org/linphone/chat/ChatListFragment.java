@@ -25,22 +25,18 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
+import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-//import android.widget.Toolbar;
-import android.support.v7.widget.Toolbar;
+
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
@@ -52,7 +48,6 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,15 +55,18 @@ import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
+//import android.widget.Toolbar;
+
+//public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
+public class ChatListFragment extends Fragment implements ContactsUpdatedListener, /**ListSelectionHelper.DeleteListener,*/ ChatRoomsAdapter.ChatRoomViewHolder.ClickListener {
+
 //public class ChatListFragment extends Fragment {
 	private ActionModeCallback actionModeCallback = new ActionModeCallback();
 	private ActionMode actionMode;
 
-	private LinearLayout mTabBar;
+	private LinearLayout mTabBar, mEditTopBar, mTopBar;
 	private DrawerLayout mSideMenu;
-	private ImageView mEditButton;
-	private MenuItem mSelectAllButton, mDeselectAllButton, mDeleteButton;
+	private ImageView mEditButton, mSelectAllButton, mDeselectAllButton,mDeleteButton, mCancelButton;
 	private RecyclerView mChatRoomsList;
 	private TextView mNoChatHistory;
 	private ImageView mNewDiscussionButton, mBackToCallButton;
@@ -121,18 +119,11 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 //		mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
 //		mNoChatHistory.setVisibility(View.GONE);
-		//mEditTopBar = view.findViewById(R.id.edit_list_menu);
-
-
-
-//		mTopBar = view.findViewById(R.id.top_bar);
-//		Toolbar toolbar = this.getActivity().findViewById(R.id.context_bar);
-
-
-
-
-//		mStatusBar = view.findViewById(R.id.status);
-
+		mEditTopBar = view.findViewById(R.id.edit_list);
+		mTopBar = view.findViewById(R.id.top_bar);
+		mSelectAllButton = view.findViewById(R.id.select_all);
+		mDeselectAllButton = view.findViewById(R.id.deselect_all);
+		mDeleteButton= view.findViewById(R.id.delete);
 		mEditButton = view.findViewById(R.id.edit);
 		mEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -140,22 +131,18 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 				actionMode = getActivity().startActionMode(actionModeCallback);
 
 
-
 //				getActivity().setActionBar();
-				//				mChatRoomsAdapter.setEditionMode(actionMode);
-//				mTopBar.setVisibility(View.GONE);
-//				mEditTopBar.setVisibility(View.VISIBLE);
+
 			}
 		});
 
-//		mCancelButton = view.findViewById(R.id.cancel);
+		mCancelButton = view.findViewById(R.id.cancel);
 //		mCancelButton.setOnClickListener(new View.OnClickListener() {
 //			@Override
 //			public void onClick(View v) {
 //				actionMode.invalidate();
 //			}
 //		});
-//		mDeselectAllButton = view.findViewById(R.id.deselect_all);
 //		mSelectAllButton = view.findViewById(R.id.select_all);
 
 
@@ -240,19 +227,21 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 //
 		int count = mChatRoomsAdapter.getSelectedItemCount();
 
-		if (count < mChatRoomsAdapter.getItemCount()) {
+		if (count < mChatRoomsAdapter.getItemCount()/* || (mChatRoomsAdapter.getItemCount()==1 && count == 1)*/) {
 //			actionMode.finish();
-			mDeselectAllButton.setVisible(false);
-			mSelectAllButton.setVisible(true);
+			mDeselectAllButton.setVisibility(View.GONE);
+			mSelectAllButton.setVisibility(View.VISIBLE);
 
-		} else {
+		} /*else if (mChatRoomsAdapter.getItemCount()==1 && count == 1){
 
 //			actionMode.setTitle(String.valueOf(count));
-			mDeselectAllButton.setVisible(true);
-			mSelectAllButton.setVisible(false);
-
+			mSelectAllButton.setVisibility(View.VISIBLE);
+			mDeselectAllButton.setVisibility(View.GONE);
+		} */else{
+			mSelectAllButton.setVisibility(View.GONE);
+			mDeselectAllButton.setVisibility(View.VISIBLE);
 		}
-		getActivity().invalidateOptionsMenu();
+		mChatRoomsAdapter.notifyItemChanged(position);
 		actionMode.invalidate();
 
 	}
@@ -263,39 +252,62 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			//mTopBar.setVisibility(View.GONE);
-//			Toolbar contextBar =
-//			(RelativeLayout) view.findViewById(R.id.status);
-//			getActivity().getContext();
-//			View v = View.inflate(R.layout.status, null);
-//			View view = (RelativeLayout)inflater.inflate(R.layout.chatlist, container, false);
-//			mStatusBar.setVisibility(View.VISIBLE);
-			mode.getMenuInflater().inflate (R.menu.edit_list_menu, menu);
-//			Menu contextBar = menu;
-			mDeselectAllButton = menu.findItem(R.id.deselect_all);
-			mSelectAllButton = menu.findItem(R.id.select_all);
-			mDeleteButton = menu.findItem(R.id.select_all);
-			mTabBar = (LinearLayout)  getActivity().findViewById(R.id.footer);
-			mTabBar.setVisibility(View.INVISIBLE);
-			mSideMenu=(DrawerLayout) getActivity().findViewById(R.id.side_menu);
-
-			mSideMenu.setDrawerLockMode(1);
-//			SlidingDrawer simpleSlidingDrawer = (SlidingDrawer) getActivity().findViewById(R.id.side_menu); // initiate the SlidingDrawer
-//			simpleSlidingDrawer.lock(); // lock the sliderDrawer so that touch event are disabled
-
-//			menu.findItem(R.id.menu_search).getActionView();
-//			LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//			View tv= inflater.inflate(R.layout.context_bar, null);
-//			mode.setCustomView(tv);
-
-//			(Toolbar) findViewById(R.id.status);
-
-
-			//mEditTopBar.setVisibility(View.VISIBLE);
-
+			actionMode=mode;
 			for (Integer i = 0; i <= mChatRoomsAdapter.getItemCount(); i++) {
 				mChatRoomsAdapter.setEditionMode(mode);
 			}
+			mTopBar.setVisibility(View.GONE);
+			mEditTopBar.setVisibility(View.VISIBLE);
+
+//			mode.getMenuInflater().inflate (R.menu.edit_list_menu, menu);
+			mCancelButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					actionMode.finish();
+				}
+			});
+			mTabBar = (LinearLayout)  getActivity().findViewById(R.id.footer);
+//			mTabBar.setVisibility(View.GONE);
+			mSideMenu=(DrawerLayout) getActivity().findViewById(R.id.side_menu);
+
+			mSideMenu.setDrawerLockMode(1);
+
+			//Add all non-selected items to the selection
+			mSelectAllButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					for (Integer i = 0; i < mChatRoomsAdapter.getItemCount(); i++) {
+						if (!mChatRoomsAdapter.isSelected(i)) {
+							toggleSelection(i);
+						}
+					}
+				}
+			});
+
+			//Remove all selected items from the selection
+			mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					for (Integer i = 0; i < mChatRoomsAdapter.getItemCount(); i++) {
+						if (mChatRoomsAdapter.isSelected(i)) {
+							toggleSelection(i);
+						}
+					}
+				}
+			});
+
+			mDeleteButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mChatRoomsAdapter.removeItems(mChatRoomsAdapter.getSelectedItems());
+					actionMode.finish();
+				}
+			});
+
+
+
+
+
 			return true;
 		}
 
@@ -315,30 +327,30 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
 
-				case R.id.delete:
-					// TODO: actually remove items
-//					Log.d(TAG, "menu_remove");
-					mChatRoomsAdapter.removeItems(mChatRoomsAdapter.getSelectedItems());
-					mode.finish();
-					return true;
+//				case R.id.delete:
+//					// TODO: actually remove items
+////					Log.d(TAG, "menu_remove");
+//					mChatRoomsAdapter.removeItems(mChatRoomsAdapter.getSelectedItems());
+//					mode.finish();
+//					return true;
+//
+//				case R.id.select_all:
+//				//Add all non-selected items to the selection
+//						for (Integer i = 0; i < mChatRoomsAdapter.getItemCount(); i++) {
+//							if (!mChatRoomsAdapter.isSelected(i)) {
+//								toggleSelection(i);
+//							}
+//						}
+//
+//					return true;
 
-				case R.id.select_all:
-				//Add all non-selected items to the selection
-						for (Integer i = 0; i < mChatRoomsAdapter.getItemCount(); i++) {
-							if (!mChatRoomsAdapter.isSelected(i)) {
-								toggleSelection(i);
-							}
-						}
-
-					return true;
-
-				case R.id.deselect_all:
-					for (Integer i = 0; i < mChatRoomsAdapter.getItemCount(); i++) {
-						if (mChatRoomsAdapter.isSelected(i)) {
-							toggleSelection(i);
-						}
-					}
-					return true;
+//				case R.id.deselect_all:
+//					for (Integer i = 0; i < mChatRoomsAdapter.getItemCount(); i++) {
+//						if (mChatRoomsAdapter.isSelected(i)) {
+//							toggleSelection(i);
+//						}
+//					}
+//					return true;
 //				case R.id.cancel:
 //					mode.finish();
 				default:
@@ -351,9 +363,12 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		public void onDestroyActionMode(ActionMode mode) {
 
 			mChatRoomsAdapter.clearSelection();
-			mTabBar.setVisibility(View.VISIBLE);
+//			mTabBar.setVisibility(View.VISIBLE);
+			mTopBar.setVisibility(View.VISIBLE);
+			mEditTopBar.setVisibility(View.GONE);
 			mSideMenu.setDrawerLockMode(0);
 
+			mChatRoomsAdapter.clearSelection();
 			actionMode = null;
 			mChatRoomsAdapter.setEditionMode(actionMode);
 
@@ -392,7 +407,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		if (LinphoneManager.getLc().getCallsNb() > 0) {
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
-			mBackToCallButton.setVisibility(View.INVISIBLE);
+			mBackToCallButton.setVisibility(View.GONE);
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -417,13 +432,8 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		ContactsManager.removeContactsListener(this);
 
 
-		mChatRoomsAdapter.clearSelection();
-//		mTabBar.setVisibility(View.VISIBLE);
 
-		actionMode = null;
-		mChatRoomsAdapter.setEditionMode(actionMode);
-
-		mChatRoomsAdapter.clear();
+//		mChatRoomsAdapter.clear();
 		super.onPause();
 	}
 
