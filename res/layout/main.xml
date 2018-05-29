@@ -81,117 +81,78 @@
 
 				<RelativeLayout
 					android:id="@+id/history"
-					android:background="@drawable/footer_button"
-					android:layout_weight="1"
 					android:layout_width="0dp"
-					android:layout_height="match_parent">
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="@drawable/footer_button">
 
 					<ImageView
-						android:src="@drawable/footer_history"
+						android:id="@+id/history_image"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
+						android:layout_height="match_parent"
+						android:layout_centerInParent="true"
+						android:background="@drawable/footer_button"
 						android:contentDescription="@string/content_description_history"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/history_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"
-						android:visibility="gone"/>
+						android:padding="18dp"
+						android:src="@drawable/footer_history"/>
 
 					<TextView
 						android:id="@+id/missed_calls"
-						android:background="@drawable/history_chat_indicator"
 						style="@style/font18"
 						android:layout_width="20dp"
 						android:layout_height="20dp"
 						android:layout_margin="15dp"
+						android:background="@drawable/history_chat_indicator"
 						android:gravity="center"
 						android:visibility="gone"/>
 
 				</RelativeLayout>
 
-				<RelativeLayout
+				<ImageView
 					android:id="@+id/contacts"
-					android:background="@drawable/footer_button"
-					android:layout_weight="1"
 					android:layout_width="0dp"
-					android:layout_height="match_parent">
+					android:layout_height="wrap_content"
+					android:layout_centerInParent="true"
+					android:layout_weight="1"
+					android:background="@drawable/footer_button"
+					android:contentDescription="@string/content_description_contacts"
+					android:padding="18dp"
+					android:src="@drawable/footer_contacts"/>
 
-					<ImageView
-						android:src="@drawable/footer_contacts"
-						android:contentDescription="@string/content_description_contacts"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/contacts_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"
-						android:visibility="gone"/>
-				</RelativeLayout>
-
-				<RelativeLayout
+				<ImageView
 					android:id="@+id/dialer"
-					android:background="@drawable/footer_button"
-					android:layout_weight="1"
 					android:layout_width="0dp"
-					android:layout_height="match_parent">
-
-					<ImageView
-						android:src="@drawable/footer_dialer"
-						android:contentDescription="@string/content_description_dialer"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/dialer_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"/>
-
-				</RelativeLayout>
+					android:layout_height="wrap_content"
+					android:layout_centerInParent="true"
+					android:layout_weight="1"
+					android:background="@drawable/footer_button"
+					android:contentDescription="@string/content_description_dialer"
+					android:padding="18dp"
+					android:src="@drawable/footer_dialer"/>
 
 				<RelativeLayout
 					android:id="@+id/chat"
-					android:background="@drawable/footer_button"
-					android:layout_weight="1"
 					android:layout_width="0dp"
-					android:layout_height="match_parent">
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:background="@drawable/footer_button">
 
 					<ImageView
-						android:src="@drawable/footer_chat"
-						android:contentDescription="@string/content_description_chat_button"
+						android:id="@+id/chat_image"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true" />
-
-					<View
-						android:id="@+id/chat_select"
-						android:background="@color/colorA"
-						android:layout_width="match_parent"
-						android:layout_height="5dp"
-						android:layout_alignParentBottom="true"
-						android:visibility="gone"/>
+						android:layout_centerInParent="true"
+						android:background="@drawable/footer_button"
+						android:padding="18dp"
+						android:src="@drawable/footer_chat"/>
 
 					<TextView
 						android:id="@+id/missed_chats"
-						android:background="@drawable/history_chat_indicator"
 						style="@style/font18"
 						android:layout_width="20dp"
 						android:layout_height="20dp"
 						android:layout_margin="15dp"
+						android:background="@drawable/history_chat_indicator"
 						android:gravity="center"
 						android:visibility="gone"/>
 
@@ -243,42 +204,42 @@
 				android:layout_centerInParent="true"/>
 		</RelativeLayout>
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/colorH"
-			android:layout_above="@id/side_menu_quit"
-			android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/side_menu_quit"
+            android:background="@color/colorG"
+            android:orientation="vertical">
 
-			<include layout="@layout/side_menu_main_account"/>
+            <include layout="@layout/side_menu_main_account"/>
 
-			<ListView
-				android:id="@+id/accounts_list"
-				android:background="@color/colorH"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:choiceMode="singleChoice"
-				android:cacheColorHint="@color/transparent"
-				android:divider="@android:color/transparent"
-				android:dividerHeight="0dp"/>
+            <ListView
+                android:id="@+id/accounts_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorG"
+                android:cacheColorHint="@color/transparent"
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"/>
 
 			<ListView
 				android:id="@+id/item_list"
-				android:background="@color/colorH"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:background="@color/colorG"
 				android:choiceMode="singleChoice"
 				android:divider="@color/colorE"
-				android:listSelector="@color/colorH"
+				android:dividerHeight="1dp"
 				android:footerDividersEnabled="true"
-				android:dividerHeight="1dp"/>
-			
-			<View
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:background="@color/colorE"/>
+				android:listSelector="@color/colorG"/>
 
-		</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorE"/>
+
+        </LinearLayout>
 	</RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

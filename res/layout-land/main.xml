@@ -87,6 +87,7 @@
 					android:layout_height="0dp">
 
 					<ImageView
+						android:id="@+id/history_image"
 						android:src="@drawable/footer_history"
 						android:contentDescription="@string/content_description_history"
 						android:layout_width="wrap_content"
@@ -117,53 +118,26 @@
 
 				</RelativeLayout>
 
-				<RelativeLayout
+				<ImageView
 					android:id="@+id/contacts"
+					android:src="@drawable/footer_contacts"
 					android:background="@drawable/footer_button"
-					android:layout_weight="1"
-					android:layout_width="60dp"
-					android:layout_height="0dp">
+					android:contentDescription="@string/content_description_contacts"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="15dp"
+					android:layout_centerInParent="true"/>
 
-					<ImageView
-						android:src="@drawable/footer_contacts"
-						android:contentDescription="@string/content_description_contacts"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
 
-					<View
-						android:id="@+id/contacts_select"
-						android:background="@color/colorA"
-						android:layout_width="5dp"
-						android:layout_height="match_parent"
-						android:layout_alignParentLeft="true"
-						android:visibility="gone"/>
-				</RelativeLayout>
-
-				<RelativeLayout
+				<ImageView
 					android:id="@+id/dialer"
+					android:src="@drawable/footer_dialer"
 					android:background="@drawable/footer_button"
-					android:layout_weight="1"
-					android:layout_width="60dp"
-					android:layout_height="0dp">
-
-					<ImageView
-						android:src="@drawable/footer_dialer"
-						android:contentDescription="@string/content_description_dialer"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:padding="15dp"
-						android:layout_centerInParent="true"/>
-
-					<View
-						android:id="@+id/dialer_select"
-						android:background="@color/colorA"
-						android:layout_width="5dp"
-						android:layout_height="match_parent"
-						android:layout_alignParentLeft="true"/>
-
-				</RelativeLayout>
+					android:contentDescription="@string/content_description_dialer"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="15dp"
+					android:layout_centerInParent="true"/>
 
 				<RelativeLayout
 					android:id="@+id/chat"
@@ -173,6 +147,7 @@
 					android:layout_height="0dp">
 
 					<ImageView
+						android:id="@+id/chat_image"
 						android:src="@drawable/footer_chat"
 						android:contentDescription="@string/content_description_chat_button"
 						android:layout_width="match_parent"

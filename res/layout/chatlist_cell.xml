@@ -46,10 +46,11 @@
 
 				<ImageView
 					android:id="@+id/mask"
-					android:src="@drawable/avatar_mask"
 					android:layout_width="35dp"
 					android:layout_height="35dp"
-					android:adjustViewBounds="true"/>
+					android:adjustViewBounds="true"
+					android:src="@drawable/avatar_mask"
+					android:visibility="gone"/>
 
 			</RelativeLayout>
 

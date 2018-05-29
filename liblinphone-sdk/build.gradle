@@ -103,6 +103,7 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+    buildToolsVersion '27.0.3'
 }
 
 ///////////// Task /////////////

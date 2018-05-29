@@ -2,19 +2,19 @@
 <resources>
 
     <!-- Custom -->
-    <string name="app_name">Linphone</string>
-    <string name="service_name">Linphone Service</string>
-    <string name="addressbook_label">Linphone</string>
-    <string name="notification_title">Linphone</string>
+    <string name="app_name">Mobile Security Intense</string>
+    <string name="service_name">Mobile Security Intense Service</string>
+    <string name="addressbook_label">Mobile Security Intense</string>
+    <string name="notification_title">Mobile Security Intense</string>
     <string name="wait_dialog_text">Starting up</string>
     <string name="notification_registered">%s registered</string>
     <string name="notification_register_failure">%s failed to register</string>
     <string name="tunnel_host"></string>
-    <string name="about_version">Linphone Android %s</string>
-    <string name="about_liblinphone_version">Linphone Core %s</string>
+    <string name="about_version">Mobile Security Intense Version %s</string>
+    <string name="about_liblinphone_version">Mobile Security Intense Core %s</string>
     <string name="about_text">GNU General Public License V2\n © 2010-2017 Belledonne Communications</string>
     <string name="about_link">www.linphone.org</string>
-    <string name="sync_account_name">linphone contacts</string>
+    <string name="sync_account_name">Mobile Security Intense contacts</string>
 
     <!-- Common -->
     <string name="username">Username</string>
@@ -54,7 +54,7 @@
     <string name="link_account">Link your account</string>
 
     <!-- Launch screen -->
-    <string name="app_description">the <i>libre</i> SIP client</string>
+    <string name="app_description"></string>
 
     <!-- Assistant -->
     <string name="welcome">Welcome</string>

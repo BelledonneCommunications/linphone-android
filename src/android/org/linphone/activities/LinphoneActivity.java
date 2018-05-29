@@ -141,8 +141,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	private StatusFragment statusFragment;
 	private TextView missedCalls, missedChats;
-	private RelativeLayout contacts, history, dialer, chat;
-	private View contacts_selected, history_selected, dialer_selected, chat_selected;
+	private ImageView contacts, history, dialer, chat;
 	private RelativeLayout mTopBar;
 	private ImageView cancel;
 	private FragmentsAvailable pendingFragmentTransaction, currentFragment, leftFragment;
@@ -226,7 +225,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		currentFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
-			changeCurrentFragment(FragmentsAvailable.DIALER, getIntent().getExtras());
+			displayDialer();
 		} else {
 			currentFragment = (FragmentsAvailable) savedInstanceState.getSerializable("currentFragment");
 		}
@@ -316,19 +315,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		cancel = (ImageView) findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
-		history = (RelativeLayout) findViewById(R.id.history);
+		history = (ImageView) findViewById(R.id.history_image);
 		history.setOnClickListener(this);
-		contacts = (RelativeLayout) findViewById(R.id.contacts);
+		contacts = (ImageView) findViewById(R.id.contacts);
 		contacts.setOnClickListener(this);
-		dialer = (RelativeLayout) findViewById(R.id.dialer);
+		dialer = (ImageView) findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
-		chat = (RelativeLayout) findViewById(R.id.chat);
+		chat = (ImageView) findViewById(R.id.chat_image);
 		chat.setOnClickListener(this);
-
-		history_selected = findViewById(R.id.history_select);
-		contacts_selected = findViewById(R.id.contacts_select);
-		dialer_selected = findViewById(R.id.dialer_select);
-		chat_selected = findViewById(R.id.chat_select);
 
 		missedCalls = (TextView) findViewById(R.id.missed_calls);
 		missedChats = (TextView) findViewById(R.id.missed_chats);
@@ -830,20 +824,20 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		int id = v.getId();
 		resetSelection();
 
-		if (id == R.id.history) {
+		if (id == R.id.history_image) {
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
-			history_selected.setVisibility(View.VISIBLE);
+			history.setImageResource(R.drawable.footer_history_selected);
 			LinphoneManager.getLc().resetMissedCallsCount();
 			displayMissedCalls(0);
 		} else if (id == R.id.contacts) {
 			changeCurrentFragment(FragmentsAvailable.CONTACTS_LIST, null);
-			contacts_selected.setVisibility(View.VISIBLE);
+			contacts.setImageResource(R.drawable.footer_contacts_selected);
 		} else if (id == R.id.dialer) {
 			changeCurrentFragment(FragmentsAvailable.DIALER, null);
-			dialer_selected.setVisibility(View.VISIBLE);
-		} else if (id == R.id.chat) {
+			dialer.setImageResource(R.drawable.footer_dialer_selected);
+		} else if (id == R.id.chat_image) {
 			changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
-			chat_selected.setVisibility(View.VISIBLE);
+			chat.setImageResource(R.drawable.footer_chat_selected);
 		} else if (id == R.id.cancel){
 			hideTopBar();
 			displayDialer();
@@ -851,10 +845,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	private void resetSelection() {
-		history_selected.setVisibility(View.GONE);
-		contacts_selected.setVisibility(View.GONE);
-		dialer_selected.setVisibility(View.GONE);
-		chat_selected.setVisibility(View.GONE);
+		history.setImageResource(R.drawable.footer_history);
+		contacts.setImageResource(R.drawable.footer_contacts);
+		dialer.setImageResource(R.drawable.footer_dialer);
+		chat.setImageResource(R.drawable.footer_chat);
 	}
 
 	public void hideTabBar(Boolean hide) {
@@ -877,15 +871,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		switch (menuToSelect) {
 		case HISTORY_LIST:
 		case HISTORY_DETAIL:
-			history_selected.setVisibility(View.VISIBLE);
+			history.setImageResource(R.drawable.footer_history_selected);
 			break;
 		case CONTACTS_LIST:
+			contacts.setImageResource(R.drawable.footer_contacts_selected);
 			case CONTACT_DETAIL:
 			case CONTACT_EDITOR:
-			contacts_selected.setVisibility(View.VISIBLE);
 			break;
 		case DIALER:
-			dialer_selected.setVisibility(View.VISIBLE);
+			dialer.setImageResource(R.drawable.footer_dialer_selected);
 			break;
 		case SETTINGS:
 		case ACCOUNT_SETTINGS:
@@ -901,7 +895,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		case INFO_GROUP_CHAT:
 		case MESSAGE_IMDN:
 		case CHAT:
-			chat_selected.setVisibility(View.VISIBLE);
+			chat.setImageResource(R.drawable.footer_chat_selected);
 			break;
 		}
 	}
@@ -912,8 +906,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void goToDialerFragment() {
-		changeCurrentFragment(FragmentsAvailable.DIALER, null);
-		dialer_selected.setVisibility(View.VISIBLE);
+		displayDialer();
 	}
 
 	public void updateStatusFragment(StatusFragment fragment) {
@@ -925,6 +918,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void displayDialer() {
+		dialer.setImageResource(R.drawable.footer_dialer_selected);
 		changeCurrentFragment(FragmentsAvailable.DIALER, null);
 	}
 

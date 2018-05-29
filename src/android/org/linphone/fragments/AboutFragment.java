@@ -46,8 +46,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AboutFragment extends Fragment implements OnClickListener {
-	View sendLogButton = null;
-	View resetLogButton = null;
+	/*View sendLogButton = null;
+	View resetLogButton = null;*/
 	ImageView cancel;
 	CoreListenerStub mListener;
 	private ProgressDialog progress;
@@ -69,13 +69,13 @@ public class AboutFragment extends Fragment implements OnClickListener {
 		cancel = (ImageView) view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
-		sendLogButton = view.findViewById(R.id.send_log);
+		/*sendLogButton = view.findViewById(R.id.send_log);
 		sendLogButton.setOnClickListener(this);
 		sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
 		resetLogButton = view.findViewById(R.id.reset_log);
 		resetLogButton.setOnClickListener(this);
-		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);*/
 
 		mListener = new CoreListenerStub() {
 			@Override
@@ -157,7 +157,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if (LinphoneActivity.isInstanciated()) {
-			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			/*Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 			if (v == sendLogButton) {
 				if (lc != null) {
 					lc.uploadLogCollection();
@@ -166,7 +166,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 				if (lc != null) {
 					lc.resetLogCollection();
 				}
-			} else if (v == cancel) {
+			} else */if (v == cancel) {
 				LinphoneActivity.instance().goToDialerFragment();
 			}
 		}

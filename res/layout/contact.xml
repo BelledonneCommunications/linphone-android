@@ -10,20 +10,20 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:background="@color/colorF"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="60dp"
+            android:background="@color/colorG"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/back"
-                android:src="@drawable/back"
-                android:background="@drawable/toolbar_button"
-                android:contentDescription="@string/content_description_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:padding="18dp"/>
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_back"
+                android:padding="18dp"
+                android:src="@drawable/back"/>
 
             <View
                 android:layout_width="0dp"
@@ -32,23 +32,23 @@
 
             <ImageView
                 android:id="@+id/deleteContact"
-                android:src="@drawable/delete"
-                android:background="@drawable/toolbar_button"
-                android:contentDescription="@string/content_description_delete"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:padding="15dp"/>
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_delete"
+                android:padding="15dp"
+                android:src="@drawable/delete"/>
 
             <ImageView
                 android:id="@+id/editContact"
-                android:src="@drawable/edit"
-                android:background="@drawable/toolbar_button"
-                android:contentDescription="@string/content_description_edit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:padding="15dp"/>
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_edit"
+                android:padding="15dp"
+                android:src="@drawable/edit"/>
 
         </LinearLayout>
 

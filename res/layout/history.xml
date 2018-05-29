@@ -7,10 +7,10 @@
 
 	<LinearLayout
 		android:id="@+id/top_bar"
-		android:orientation="horizontal"
-		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="60dp">
+		android:layout_height="60dp"
+		android:background="@color/colorG"
+		android:orientation="horizontal">
 
 		<RelativeLayout
 			android:layout_width="0dp"
@@ -19,19 +19,21 @@
 
 			<ImageView
 				android:id="@+id/all_calls"
-				android:src="@drawable/history_all"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_all_contacts"
 				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+				android:src="@drawable/history_all"/>
 
-			<View
+			<ImageView
 				android:id="@+id/all_calls_select"
-				android:background="@color/colorA"
 				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"/>
+				android:layout_height="match_parent"
+				android:background="@drawable/toolbar_button"
+				android:contentDescription="@string/content_description_all_contacts"
+				android:padding="15dp"
+				android:src="@drawable/history_all_over"/>
 		</RelativeLayout>
 
 		<RelativeLayout
@@ -41,21 +43,23 @@
 
 			<ImageView
 				android:id="@+id/missed_calls"
-				android:src="@drawable/history_missed"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_linphone_contacts"
 				android:gravity="center"
 				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+				android:src="@drawable/history_missed"/>
 
-			<View
+			<ImageView
 				android:id="@+id/missed_calls_select"
-				android:background="@color/colorA"
 				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:visibility="gone"
-				android:layout_alignParentBottom="true"/>
+				android:layout_height="match_parent"
+				android:background="@drawable/toolbar_button"
+				android:contentDescription="@string/content_description_linphone_contacts"
+				android:gravity="center"
+				android:padding="15dp"
+				android:src="@drawable/history_missed_over"/>
 		</RelativeLayout>
 
 		<View
@@ -65,24 +69,30 @@
 
 		<ImageView
 			android:id="@+id/edit"
-			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit_list"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
-			android:padding="15dp"/>
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit_list"
+			android:padding="15dp"
+			android:src="@drawable/edit_list_button"/>
 	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
+
+	<View
+		android:id="@+id/view"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/colorE"/>
 
 	<ListView
 		android:id="@+id/history_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:divider="@color/colorE"
 		android:cacheColorHint="@color/transparent"
-		android:dividerHeight="1dp" />
+		android:divider="@color/colorE"
+		android:dividerHeight="1dp"/>
 
 	<TextView
 		android:id="@+id/no_call_history"

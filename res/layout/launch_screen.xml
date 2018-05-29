@@ -1,50 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@color/colorC"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+			 android:layout_width="match_parent"
+			 android:layout_height="match_parent"
+			 android:background="@color/colorF">
 
 	<LinearLayout
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:layout_gravity="center"
+		android:layout_marginBottom="20dp"
+		android:gravity="center"
 		android:orientation="vertical">
 
 		<ImageView
-			android:src="@drawable/splashscreen"
 			android:layout_width="200dp"
 			android:layout_height="200dp"
-			android:layout_gravity="center"/>
+			android:layout_gravity="center"
+			android:src="@drawable/linphone_logo"/>
 
 		<TextView
-			android:text="@string/app_name"
-			style="@style/font21"
-            android:visibility="gone"
+			style="@style/font22"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_gravity="center"
 			android:layout_marginTop="20dp"
-			android:layout_gravity="center"/>
-
-		<TextView
-			android:text="@string/app_description"
-			android:textSize="28sp"
-			android:textColor="@color/colorA"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"/>
+			android:text="@string/app_name"/>
 
 	</LinearLayout>
 
-    <ProgressBar 
-        android:layout_height="wrap_content" 
-        android:layout_width="wrap_content"
-		android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal|bottom" />
+	<ProgressBar
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal|bottom"
+		android:layout_marginBottom="20dp"/>
 
-	<View
-		android:background="@color/colorA"
-		android:layout_height="10dp"
-		android:layout_width="100dp"
-		android:layout_gravity="center_horizontal|bottom" />
+	<ImageView
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		android:layout_gravity="right|bottom"
+		android:padding="10dp"
+		android:src="@drawable/logo_orange"/>
 
 </FrameLayout>

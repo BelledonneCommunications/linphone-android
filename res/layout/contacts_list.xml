@@ -7,10 +7,11 @@
 
 	<LinearLayout
 		android:id="@+id/top_bar"
-		android:orientation="horizontal"
-		android:background="@color/colorF"
 		android:layout_width="match_parent"
-		android:layout_height="60dp">
+		android:layout_height="60dp"
+		android:background="@color/colorF"
+		android:orientation="horizontal"
+		android:visibility="gone">
 
 		<RelativeLayout
 			android:layout_width="0dp"
@@ -19,19 +20,19 @@
 
 			<ImageView
 				android:id="@+id/all_contacts"
-				android:src="@drawable/contacts_all"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_all_contacts"
 				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+				android:src="@drawable/contacts_all"/>
 
 			<View
 				android:id="@+id/all_contacts_select"
-				android:background="@color/colorA"
 				android:layout_width="match_parent"
 				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"/>
+				android:layout_alignParentBottom="true"
+				android:background="@color/colorA"/>
 		</RelativeLayout>
 
 		<RelativeLayout
@@ -41,21 +42,21 @@
 
 			<ImageView
 				android:id="@+id/linphone_contacts"
-				android:src="@drawable/contacts_sip"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_linphone_contacts"
 				android:gravity="center"
 				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+				android:src="@drawable/contacts_sip"/>
 
 			<View
 				android:id="@+id/linphone_contacts_select"
-				android:background="@color/colorA"
 				android:layout_width="match_parent"
 				android:layout_height="5dp"
-				android:visibility="gone"
-				android:layout_alignParentBottom="true"/>
+				android:layout_alignParentBottom="true"
+				android:background="@color/colorA"
+				android:visibility="gone"/>
 		</RelativeLayout>
 
 		<View
@@ -65,23 +66,23 @@
 
 		<ImageView
 			android:id="@+id/newContact"
-			android:src="@drawable/contact_add"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_new_contact"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
-			android:padding="15dp"/>
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_new_contact"
+			android:padding="15dp"
+			android:src="@drawable/contact_add"/>
 
 		<ImageView
 			android:id="@+id/edit"
-			android:src="@drawable/edit_list_button"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit_list"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="0.2"
-			android:padding="15dp"/>
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit_list"
+			android:padding="15dp"
+			android:src="@drawable/edit_list_button"/>
 	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
@@ -89,31 +90,38 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="10dp">
+		android:layout_margin="10dp"
+		android:background="@color/colorH">
 
 		<EditText
-            android:contentDescription="@string/content_description_search_contact"
-			android:textCursorDrawable="@null"
 			android:id="@+id/searchField"
 			android:layout_width="match_parent"
 			android:layout_height="40dp"
-			android:textColor="@android:color/black"
 			android:background="@drawable/resizable_textfield"
+			android:contentDescription="@string/content_description_search_contact"
 			android:gravity="center"
+			android:inputType="textPersonName"
 			android:paddingRight="5dp"
-			android:inputType="textPersonName"/>
+			android:textColor="@android:color/black"
+			android:textCursorDrawable="@null"/>
 
 		<ImageView
 			android:id="@+id/clearSearchField"
 			android:layout_width="30dp"
 			android:layout_height="30dp"
-			android:src="@drawable/clean_field_default"
-			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"
+			android:layout_centerVertical="true"
 			android:paddingLeft="5dp"
-			android:paddingRight="5dp"/>
+			android:paddingRight="5dp"
+			android:src="@drawable/clean_field_default"/>
 
 	</RelativeLayout>
+
+	<View
+		android:id="@+id/view"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/colorE"/>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
@@ -127,7 +135,7 @@
 			android:fastScrollEnabled="true"
 			android:fastScrollAlwaysVisible="true"
 			android:dividerHeight="1dp" />
-		
+
 		<ProgressBar
 			android:id="@+id/contactsFetchInProgress"
 			style="?android:attr/progressBarStyle"

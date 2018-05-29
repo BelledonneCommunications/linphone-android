@@ -63,8 +63,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private ListView historyList;
 	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
-	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel;
-	private View allCallsSelected, missedCallsSelected;
+	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel, allCallsSelected, missedCallsSelected;
 	private LinearLayout editList, topBar;
 	private boolean onlyDisplayMissedCalls, isEditMode;
 	private List<CallLog> mLogs;
@@ -93,12 +92,14 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		allCalls = (ImageView) view.findViewById(R.id.all_calls);
 		allCalls.setOnClickListener(this);
 
-		allCallsSelected = view.findViewById(R.id.all_calls_select);
+		allCallsSelected = (ImageView) view.findViewById(R.id.all_calls_select);
+		allCallsSelected.setOnClickListener(this);
 
 		missedCalls = (ImageView) view.findViewById(R.id.missed_calls);
 		missedCalls.setOnClickListener(this);
 
-		missedCallsSelected = view.findViewById(R.id.missed_calls_select);
+		missedCallsSelected = (ImageView) view.findViewById(R.id.missed_calls_select);
+		missedCallsSelected.setOnClickListener(this);
 
 		selectAll = (ImageView) view.findViewById(R.id.select_all);
 		selectAll.setOnClickListener(this);
@@ -107,6 +108,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		deselectAll.setOnClickListener(this);
 
 		allCalls.setEnabled(false);
+		allCallsSelected.setVisibility(View.VISIBLE);
+		missedCallsSelected.setVisibility(View.GONE);
 		onlyDisplayMissedCalls = false;
 
 		edit = (ImageView) view.findViewById(R.id.edit);
@@ -295,14 +298,14 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		if (id == R.id.all_calls) {
 			allCalls.setEnabled(false);
 			allCallsSelected.setVisibility(View.VISIBLE);
-			missedCallsSelected.setVisibility(View.INVISIBLE);
+			missedCallsSelected.setVisibility(View.GONE);
 			missedCalls.setEnabled(true);
 			onlyDisplayMissedCalls = false;
 			refresh();
 		}
 		if (id == R.id.missed_calls) {
 			allCalls.setEnabled(true);
-			allCallsSelected.setVisibility(View.INVISIBLE);
+			allCallsSelected.setVisibility(View.GONE);
 			missedCallsSelected.setVisibility(View.VISIBLE);
 			missedCalls.setEnabled(false);
 			onlyDisplayMissedCalls = true;
