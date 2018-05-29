@@ -62,11 +62,10 @@ import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
 public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
 //public class ChatListFragment extends Fragment {
-	//	private LayoutInflater mInflater;
 	private ActionModeCallback actionModeCallback = new ActionModeCallback();
 	private ActionMode actionMode;
 
-	private LinearLayout mEditTopBar, mTabBar;
+	private LinearLayout mTabBar;
 	private DrawerLayout mSideMenu;
 	private ImageView mEditButton;
 	private MenuItem mSelectAllButton, mDeselectAllButton, mDeleteButton;

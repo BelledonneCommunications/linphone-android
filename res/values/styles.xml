@@ -10,7 +10,7 @@
 	</style>
 
 	<style name="NoTitle.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
-		<item name="android:background">@color/colorE</item>
+		<item name="android:background">@color/colorF</item>
 		<item name="android:height">100dp</item>
 	</style>
 
