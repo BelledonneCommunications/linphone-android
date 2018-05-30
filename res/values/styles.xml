@@ -6,47 +6,29 @@
 		<item name="android:fastScrollTextColor">@android:color/white</item>
 		<item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scroll_preview</item>
 		<item name="android:windowActionModeOverlay">true</item>
-		<!--<item name="windowActionBar">false</item>-->
 	</style>
 
 	<style name="NoTitle.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+		<!--Invisible ContextActionBar-->
 		<item name="android:background"></item>
 		<item name="android:height">1dp</item>
 	</style>
 
-	<style name="ActionModeButtonStyle" parent="Widget.AppCompat.ActionButton">
-		<item name="android:minWidth">1dp</item>
-		<item name="android:maxWidth">1dp</item>
-		<item name="android:width">1dp</item>
-
-	</style>
-
-	<style name="NoCloseButton" parent="@android:style/Widget.ActionButton.CloseMode">
-		<!--<item name="android:visibility">invisible</item>-->
-		<item name="android:maxWidth">10dp</item>
-		<item name="android:minWidth">10dp</item>
-		<item name="android:width">10dp</item>
-
-	</style>
-
 	<style name="NoTitle" parent="android:Theme.Holo.Light.NoActionBar">
-		<item name="android:actionButtonStyle">@style/ActionModeButtonStyle</item>
 		<item name="android:actionModeStyle">@style/NoTitle.ActionMode</item>
 		<item name="android:actionModeCloseDrawable">@drawable/cancel_with_padding</item>
-		<item name="android:actionModeCloseButtonStyle">@style/NoCloseButton</item>
-		<!--<item name="android:actionModeBackground">@color/colorE</item>-->
 		<item name="android:fastScrollThumbDrawable">@drawable/fast_scroll</item>
 		<item name="android:fastScrollTextColor">@android:color/white</item>
 		<item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scroll_preview</item>
 		<item name="android:windowActionModeOverlay">true</item>
-		<!--<item name="windowActionBar">true</item>-->
+	<!--windowActionModeOverlay prevents the CAB to push all others layouts to bottom-->
+
 	</style>
 	<style name="FullScreen" parent="android:Theme.Holo.Light.NoActionBar">
 		<item name="android:fastScrollThumbDrawable">@drawable/fast_scroll</item>
 		<item name="android:fastScrollTextColor">@android:color/white</item>
 		<item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scroll_preview</item>
 		<item name="android:windowActionModeOverlay">true</item>
-		<!--<item name="windowActionBar">false</item>-->
 	</style>
 
 	<style name="font1" parent="@android:style/TextAppearance.Medium">

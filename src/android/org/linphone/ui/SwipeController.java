@@ -17,6 +17,10 @@ enum ButtonsState {
     LEFT_VISIBLE,
     RIGHT_VISIBLE
 }
+/*
+*   Taken from https://github.com/FanFataL/swipe-controller-demo
+*   https://codeburst.io/android-swipe-menu-with-recyclerview-8f28a235ff28
+* */
 
 public class SwipeController extends Callback {
 
