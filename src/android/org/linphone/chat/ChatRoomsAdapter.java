@@ -22,8 +22,6 @@ package org.linphone.chat;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -31,10 +29,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-//import org.linphone.Chat;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
@@ -56,9 +53,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//import org.linphone.Chat;
+
 public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.ChatRoomViewHolder> {
 
-	public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public static class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 		public TextView lastMessageSenderView;
 		public TextView lastMessageView;
 		public TextView date;
@@ -68,6 +67,8 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 		public ImageView contactPicture;
 		public Context mContext;
 		public ChatRoom mRoom;
+		public ClickListener listener;
+		public RelativeLayout viewBackground, viewForeground;
 
 
 		public ChatRoomViewHolder(Context context,View itemView, ClickListener listener) {
@@ -84,6 +85,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 			this.listener = listener;
 
 			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
 		}
 		public void bindChatRoom(ChatRoom room) {
 
@@ -191,7 +193,7 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 	}
 
 	private Context mContext;
-	private List<ChatRoom> mRooms;
+	public List<ChatRoom> mRooms;
 	private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
 	private ChatRoomListenerStub mListener;
@@ -202,7 +204,6 @@ public class ChatRoomsAdapter extends RecyclerView.Adapter<ChatRoomsAdapter.Chat
 //	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms) {
 	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms, ChatRoomViewHolder.ClickListener clickListener) {
 
-	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms) {
 		super();
 		this.editionMode = false;
 		this.clickListener = clickListener;

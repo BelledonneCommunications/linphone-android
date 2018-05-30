@@ -6,7 +6,8 @@
     android:paddingLeft="10dp"
 	android:paddingRight="10dp"
 	android:paddingTop="5dp"
-    android:background="@drawable/list_selector">
+	android:foreground="?android:attr/selectableItemBackground"
+	android:background="@drawable/list_selector">
 
 	<CheckBox
 		android:id="@+id/delete_chatroom"
@@ -122,5 +123,11 @@
 		</RelativeLayout>
 
 	</LinearLayout>
+	<View
+		android:id="@+id/selected_overlay"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/notification_color_led"
+		android:visibility="invisible" />
 
 </RelativeLayout>
