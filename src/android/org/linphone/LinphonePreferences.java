@@ -1525,6 +1525,14 @@ public class LinphonePreferences {
 		getConfig().setBool("app", "device_ringtone", enable);
 	}
 
+	public boolean isVibrateEnabled() {
+		return getConfig().getBool("app", "vibrate", true);
+	}
+
+	public void enableVibrate(boolean enable) {
+		getConfig().setBool("app", "vibrate", enable);
+	}
+
 	public boolean isBisFeatureEnabled() {
 		return getConfig().getBool("app", "bis_feature", true);
 	}

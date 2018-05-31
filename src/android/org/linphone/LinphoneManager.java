@@ -1576,7 +1576,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		mAudioManager.setMode(MODE_RINGTONE);
 
 		try {
-			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {
+			if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null && mPrefs.isVibrateEnabled()) {
 				long[] patern = {0,1000,1000};
 				mVibrator.vibrate(patern, 1);
 			}

@@ -908,6 +908,7 @@ public class SettingsFragment extends PreferencesListFragment {
 
 	private void initCallSettings() {
 		CheckBoxPreference deviceRingtone = (CheckBoxPreference) findPreference(getString(R.string.pref_device_ringtone_key));
+		CheckBoxPreference vibrate = (CheckBoxPreference) findPreference(getString(R.string.pref_vibrate_key));
 		CheckBoxPreference autoAnswer = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
@@ -919,6 +920,7 @@ public class SettingsFragment extends PreferencesListFragment {
 		rfc2833.setChecked(mPrefs.useRfc2833Dtmfs());
 		sipInfo.setChecked(mPrefs.useSipInfoDtmfs());
 		deviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
+		vibrate.setChecked(mPrefs.isVibrateEnabled());
 		autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
 		incTimeout.setText(String.valueOf(mPrefs.getIncTimeout()));
 		incTimeout.setSummary(String.valueOf(mPrefs.getIncTimeout()));
@@ -958,6 +960,15 @@ public class SettingsFragment extends PreferencesListFragment {
 					LinphoneManager.getInstance().enableDeviceRingtone(false);
 				}
 
+				return true;
+			}
+		});
+
+		findPreference(getString(R.string.pref_vibrate_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				boolean use = (Boolean) newValue;
+				mPrefs.enableVibrate(use);
 				return true;
 			}
 		});

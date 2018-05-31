@@ -188,6 +188,11 @@
 				    android:key="@string/pref_device_ringtone_key"
 					android:persistent="false"/>
 
+				<CheckBoxPreference
+					android:title="@string/pref_vibrate"
+				    android:key="@string/pref_vibrate_key"
+					android:persistent="false"/>
+
 				<ListPreference
 				    android:title="@string/pref_media_encryption"
 					android:key="@string/pref_media_encryption_key"

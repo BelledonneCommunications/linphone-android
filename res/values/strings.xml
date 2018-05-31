@@ -353,6 +353,7 @@
     <!-- Call settings -->
     <string name="pref_call_title">Call</string>
     <string name="pref_device_ringtone">Use device ringtone</string>
+    <string name="pref_vibrate">Vibrate on incoming calls</string>
     <string name="pref_auto_answer">Auto answer incoming calls</string>
     <string name="pref_auto_answer_time">Auto answer time(in milliseconds)</string>
     <string name="pref_rfc2833_dtmf">Send in-band DTMFs(RFC2833)</string>
