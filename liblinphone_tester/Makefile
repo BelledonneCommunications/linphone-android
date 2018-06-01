@@ -57,6 +57,7 @@ copy-files: ../submodules/linphone/tester/tester_hosts
 	cp -rf ../submodules/linphone/tester/rcfiles assets/config_files
 	cp -rf ../submodules/linphone/tester/sounds assets/config_files
 	cp -rf ../submodules/linphone/tester/vcards assets/config_files
+	cp -rf ../submodules/linphone/tester/db assets/config_files
 	mkdir -p res/raw
 	if test -d "../liblinphone-sdk/android-arm/share/belr/grammars"; then \
 		cp ../liblinphone-sdk/android-arm/share/belr/grammars/*_grammar res/raw/; \
