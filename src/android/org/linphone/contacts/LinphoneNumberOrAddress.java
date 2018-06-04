@@ -47,6 +47,13 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 		}
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj.getClass() != LinphoneNumberOrAddress.class) return false;
+		LinphoneNumberOrAddress noa = (LinphoneNumberOrAddress) obj;
+		return (this.compareTo(noa) == 0);
+	}
+
 	public boolean isSIPAddress() {
 		return isSIPAddress;
 	}

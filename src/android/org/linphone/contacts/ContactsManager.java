@@ -264,7 +264,15 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized void setContacts(List<LinphoneContact> c) {
-		contacts = c;
+		if (contacts.isEmpty()) {
+			contacts = c;
+		} else {
+			for (LinphoneContact contact : c) {
+				if (!contacts.contains(contact)) {
+					contacts.add(contact);
+				}
+			}
+		}
 	}
 
 	public synchronized void setSipContacts(List<LinphoneContact> c) {
