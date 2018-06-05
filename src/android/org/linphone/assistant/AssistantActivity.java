@@ -677,7 +677,7 @@ private static AssistantActivity instance;
 
 	private void goToLinphoneActivity() {
 		mPrefs.firstLaunchSuccessful();
-		setResult(Activity.RESULT_OK, new Intent().putExtra("isNewProxyConfig", true));
+		startActivity(new Intent().setClass(this, LinphoneActivity.class).putExtra("isNewProxyConfig", true));
 		finish();
 	}
 
