@@ -372,7 +372,7 @@ liblinphone-android-sdk: java-clean build copy-libs
 \t./gradlew -q androidJavadocsJar
 \t./gradlew -q sourcesJar
 \t./gradlew -q assembleRelease
-\t.mkdir -p $(TOPDIR)/bin/outputs/aar
+\tmkdir -p $(TOPDIR)/bin/outputs/aar
 \t@mv $(TOPDIR)/liblinphone-sdk/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
 \t./gradlew -q sdkZip
 
