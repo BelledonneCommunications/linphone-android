@@ -700,53 +700,9 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
-	public synchronized final void destroyLinphoneCore() {
-		sExited = true;
-		ContactsManagerDestroy();
-		BluetoothManagerDestroy();
-		try {
-			mTimer.cancel();
-			mLc.destroy();
-		}
-		catch (RuntimeException e) {
-			Log.e(e);
-		}
-		finally {
-			try {
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-					mServiceContext.unregisterReceiver(mNetworkReceiver);
-				}
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mHookReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mCallReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				dozeManager(false);
-			} catch (IllegalArgumentException iae) {
-				Log.e(iae);
-			}catch (Exception e) {
-				Log.e(e);
-			}
-			mLc = null;
-		}
-	}
 
 	public void restartLinphoneCore() {
-		destroyLinphoneCore();
+		doDestroy();
 		startLibLinphone(mServiceContext);
 		sExited = false;
 	}
@@ -807,7 +763,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				Class<?> firebaseClass = Class.forName("com.google.firebase.iid.FirebaseInstanceId");
 				Object firebaseInstance = firebaseClass.getMethod("getInstance").invoke(null);
 				final String refreshedToken = (String)firebaseClass.getMethod("getToken").invoke(firebaseInstance);
-			
+
 				//final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
 				if (refreshedToken != null) {
 					Log.i("[Push Notification] current token is: " + refreshedToken);
@@ -1050,13 +1006,24 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 		}
 	}
 
+	private void destroyLinphoneCore() {
+		if (LinphonePreferences.instance() != null) {
+			// We set network reachable at false before destroy LC to not send register with expires at 0
+			if (LinphonePreferences.instance().isPushNotificationEnabled()
+					|| LinphonePreferences.instance().isBackgroundModeEnabled()) {
+				mLc.setNetworkReachable(false);
+			}
+		}
+		mLc = null;
+	}
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void doDestroy() {
 		ContactsManagerDestroy();
 		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
-			mLc.destroy();
+			destroyLinphoneCore();
 		}
 		catch (RuntimeException e) {
 			Log.e(e);
