@@ -1014,7 +1014,7 @@ public class LinphoneManager implements LinphoneCoreListener, LinphoneChatMessag
 				mLc.setNetworkReachable(false);
 			}
 		}
-		mLc = null;
+		mLc.destroy();
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
