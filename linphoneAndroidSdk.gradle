@@ -1,12 +1,8 @@
 // Project information
 buildDir = 'bin'
-def firebaseEnable() {
-    File googleFile = new File('google-services.json')
-    return googleFile.exists()
-}
+
 
 buildscript {
-    File googleFile = new File('google-services.json')
     repositories {
         jcenter()
         mavenCentral()
@@ -15,9 +11,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
-        if (googleFile.exists()) {
-            classpath 'com.google.gms:google-services:3.1.0'
-        }
     }
 }
 
@@ -33,28 +26,17 @@ allprojects {
 apply plugin: 'com.android.library'
 
 dependencies {
-    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
-    if (firebaseEnable()) {
-        implementation 'com.google.firebase:firebase-messaging:15.0.2'
-    } else {
-        implementation 'com.android.support:support-v4:26.0.1'
-    }
-}
-
-if (firebaseEnable()) {
-    apply plugin: 'com.google.gms.google-services'
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    compile 'com.android.support:support-v4:26.0.2'
 }
 
 
 def srcDirs = ['submodules/mediastreamer2/java/src', 'src/linphone-wrapper', 'src/android']
 
 def excludeFiles = []
-// Exclude firebase file if not enable
-if (!firebaseEnable()) {
-    excludeFiles.add('**/Firebase*')
-} else {
-    excludeFiles.add('**/gcm*')
-}
+
+excludeFiles.add('**/Firebase*')
+excludeFiles.add('**/gcm*')
 excludeFiles.add('**/mediastream/MediastreamerActivity.java')
 
 def excludePackage = []
