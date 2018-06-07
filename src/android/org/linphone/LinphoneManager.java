@@ -906,13 +906,24 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		}
 	}
 
+	private void destroyLinphoneCore() {
+		if (LinphonePreferences.instance() != null) {
+			// We set network reachable at false before destroy LC to not send register with expires at 0
+			if (LinphonePreferences.instance().isPushNotificationEnabled()
+					|| LinphonePreferences.instance().isBackgroundModeEnabled()) {
+				mLc.setNetworkReachable(false);
+			}
+		}
+		mLc = null;
+	}
+
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void doDestroy() {
 		ContactsManagerDestroy();
 		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
-			mLc = null;
+			destroyLinphoneCore();
 		}
 		catch (RuntimeException e) {
 			Log.e(e);
@@ -947,7 +958,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			} catch (Exception e) {
 				Log.e(e);
 			}
-			mLc = null;
 			instance = null;
 		}
 	}
