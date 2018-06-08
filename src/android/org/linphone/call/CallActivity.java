@@ -229,7 +229,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					boolean remoteVideo = call.getRemoteParams().videoEnabled();
 					boolean localVideo = call.getCurrentParams().videoEnabled();
 					boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
-					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !(LinphoneManager.getLc().getConference() != null)) {
+					if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 							showAcceptCallUpdateDialog();
 							createTimerForDialog(SECONDS_BEFORE_DENYING_CALL_UPDATE);
 					}
@@ -591,7 +591,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void enableAndRefreshInCallActions() {
 		int confsize = 0;
 
-		if( LinphoneManager.getLc().getConference() != null) {
+		if(LinphoneManager.getLc().isInConference()) {
 			confsize = LinphoneManager.getLc().getConferenceSize() - (LinphoneManager.getLc().getConference() != null ? 1 : 0);
 		}
 
@@ -951,7 +951,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		if (currentCall != null) {
 			lc.terminateCall(currentCall);
-		} else if (lc.getConference() != null) {
+		} else if (lc.isInConference()) {
 			lc.terminateConference();
 		} else {
 			lc.terminateAllCalls();
@@ -1412,7 +1412,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	public void refreshCallList(Resources resources) {
-		isConferenceRunning = LinphoneManager.getLc().getConference() != null;
+		isConferenceRunning = LinphoneManager.getLc().isInConference();
 		List<Call> pausedCalls = LinphoneUtils.getCallsInState(LinphoneManager.getLc(), Arrays.asList(State.PausedByRemote));
 
 		//MultiCalls
@@ -1489,7 +1489,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void exitConference(final Call call){
 		Core lc = LinphoneManager.getLc();
 
-		if (call.getConference() != null) {
+		if (lc.isInConference()) {
 			lc.removeFromConference(call);
 			if (lc.getConferenceSize() <= 1) {
 				lc.leaveConference();
@@ -1506,7 +1506,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		Core lc = LinphoneManager.getLc();
 		conferenceStatus = (ImageView) findViewById(R.id.conference_pause);
 		if(conferenceStatus != null) {
-			if (lc.getConference() != null) {
+			if (lc.isInConference()) {
 				conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
 				lc.leaveConference();
 			} else {
