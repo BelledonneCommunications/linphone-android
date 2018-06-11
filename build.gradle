@@ -47,7 +47,7 @@ dependencies {
     if (firebaseEnable()) {
         implementation 'com.google.firebase:firebase-messaging:15.0.2'
     }
-    implementation 'com.android.support:support-v4:26.0.1'
+    implementation 'com.android.support:support-v4:27.0.1'
     implementation project(':liblinphone-sdk')
 }
 
@@ -79,6 +79,7 @@ excludePackage.add('**/LICENSE.txt')
 android {
     defaultConfig {
         compileSdkVersion 26
+        buildToolsVersion "27.0.3"
         applicationId getPackageName()
         multiDexEnabled true
 
@@ -155,7 +156,7 @@ android {
     packagingOptions {
         pickFirst 'META-INF/NOTICE'
         pickFirst 'META-INF/LICENSE'
-	pickFirst 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/MANIFEST.MF'
     }
 }
 

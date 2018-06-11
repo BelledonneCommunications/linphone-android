@@ -144,7 +144,7 @@ class AndroidPreparator(prepare.Preparator):
         retval = True
         ndk_build = find_executable('ndk-build')
         ndk_path = os.path.dirname(ndk_build)
-	# NDK prior to r11 had a RELEASE.TXT file holding the version number
+        # NDK prior to r11 had a RELEASE.TXT file holding the version number
         release_file = os.path.join(ndk_path, 'RELEASE.TXT')
         if os.path.isfile(release_file):
             version = open(release_file).read().strip()

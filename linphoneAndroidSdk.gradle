@@ -26,7 +26,7 @@ allprojects {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    compile group: 'org.apache.commons', name: 'commons-compress', version: '1.16.1'
     compile 'com.android.support:support-v4:26.0.2'
 }
 
@@ -49,6 +49,7 @@ excludePackage.add('**/LICENSE.txt')
 android {
     defaultConfig {
         compileSdkVersion 26
+        buildToolsVersion "27.0.3"
         multiDexEnabled true
     }
 
@@ -61,7 +62,7 @@ android {
 
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifestLibrary.xml'
+            manifest.srcFile 'AndroidManifestSdk.xml'
             java.srcDirs = srcDirs
             resources.srcDirs = srcDirs
             aidl.srcDirs = srcDirs

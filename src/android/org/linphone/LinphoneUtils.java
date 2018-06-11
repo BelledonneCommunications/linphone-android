@@ -609,11 +609,7 @@ public final class LinphoneUtils {
 			if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
 				final String docId = DocumentsContract.getDocumentId(uri);
 				final String[] split = docId.split(":");
-				final String type = split[0];
-
-				if ("primary".equalsIgnoreCase(type)) {
-					return Environment.getExternalStorageDirectory() + "/" + split[1];
-				}
+				if (split.length >= 1) return Environment.getExternalStorageDirectory() + "/" + split[1];
 
 				// TODO handle non-primary volumes
 			}// Docs storage
