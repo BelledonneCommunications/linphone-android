@@ -2,10 +2,10 @@
 <manifest package="org.linphone.core"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="3320"
-          android:versionName="3.3.2">
+          android:versionCode="4001"
+          android:versionName="4.0.0">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="26"/>
+        android:targetSdkVersion="28"/>
 </manifest>
