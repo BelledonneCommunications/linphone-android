@@ -71,6 +71,7 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.activities.LinphoneGenericActivity;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.core.CallListenerStub;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallParams;
 import org.linphone.core.CallStats;
@@ -138,6 +139,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private TimerTask mTask;
 	private HashMap<String, String> mEncoderTexts;
 	private HashMap<String, String> mDecoderTexts;
+	private CallListenerStub mCallListener;
 
 	private boolean oldIsSpeakerEnabled = false;
 
@@ -1706,6 +1708,16 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		final View videoLayout = view.findViewById(R.id.callStatsVideo);
 		final View audioLayout = view.findViewById(R.id.callStatsAudio);
 
+		mCallListener = new CallListenerStub(){
+			public void onStateChanged(Call call, Call.State cstate, String message){
+				if (cstate == Call.State.End || cstate == Call.State.Error){
+					if (mTimer != null) {
+						Log.i("Call is terminated, stopping timer in charge of stats refreshing.");
+						mTimer.cancel();
+					}
+				}
+			}
+		};
 
 	 	mTimer = new Timer();
 		mTask = new TimerTask() {
@@ -1762,6 +1774,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				});
 			}
 		};
+		call.addListener(mCallListener);
 		mTimer.scheduleAtFixedRate(mTask, 0, 1000);
 	}
 
