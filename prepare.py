@@ -368,12 +368,10 @@ generate-javadoc:
 \t./gradlew -q androidJavadocsJar
 \t./gradlew -q sourcesJar
 
-liblinphone-android-sdk: java-clean build copy-libs 
-\t./gradlew -q androidJavadocsJar
-\t./gradlew -q sourcesJar
-\t./gradlew -q assembleRelease
-\tmkdir -p $(TOPDIR)/bin/outputs/aar
-\t@mv $(TOPDIR)/liblinphone-sdk/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
+debug-sdk: java-clean build copy-libs generate-javadoc generate-apk
+\t./gradlew -q sdkZip
+
+release-sdk: java-clean build copy-libs generate-javadoc release
 \t./gradlew -q sdkZip
 
 linphone-android-sdk: java-clean build copy-libs 
