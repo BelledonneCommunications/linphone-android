@@ -53,6 +53,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static org.linphone.LinphoneUtils.getTextFromRegistrationStatement;
+
 public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, voicemailCount;
@@ -88,21 +90,21 @@ public class StatusFragment extends Fragment {
 
 				if(lc.getProxyConfigList() == null){
 					statusLed.setImageResource(R.drawable.led_disconnected);
-					statusText.setText(getString(R.string.no_account));
+					//statusText.setText(getString(R.string.no_account));
 				} else {
 					statusLed.setVisibility(View.VISIBLE);
 				}
 
 				if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
 					statusLed.setImageResource(getStatusIconResource(state, true));
-					statusText.setText(getStatusIconText(state));
+					//statusText.setText(getStatusIconText(state));
 				} else if(lc.getDefaultProxyConfig() == null) {
 					statusLed.setImageResource(getStatusIconResource(state, true));
-					statusText.setText(getStatusIconText(state));
+					//statusText.setText(getStatusIconText(state));
 				}
 
 				try {
-					statusText.setOnClickListener(new OnClickListener() {
+					statusLed.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							lc.refreshRegisters();
@@ -223,28 +225,14 @@ public class StatusFragment extends Fragment {
 		return R.drawable.led_disconnected;
 	}
 
-	private String getStatusIconText(RegistrationState state) {
+	private String getStatusIconText(ProxyConfig proxy) {
 		Context context = getActivity();
 		if (!isAttached && LinphoneActivity.isInstanciated())
 			context = LinphoneActivity.instance();
 		else if (!isAttached && LinphoneService.isReady())
 			context = LinphoneService.instance();
 
-		try {
-			if (state == RegistrationState.Ok && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().getState() == RegistrationState.Ok) {
-				return context.getString(R.string.status_connected);
-			} else if (state == RegistrationState.Progress) {
-				return context.getString(R.string.status_in_progress);
-			} else if (state == RegistrationState.Failed) {
-				return context.getString(R.string.status_error);
-			} else {
-				return context.getString(R.string.status_not_connected);
-			}
-		} catch (Exception e) {
-			Log.e(e);
-		}
-
-		return context.getString(R.string.status_not_connected);
+		return getTextFromRegistrationStatement(context, proxy);
 	}
 
 	//INCALL STATUS BAR
@@ -326,7 +314,7 @@ public class StatusFragment extends Fragment {
 					statusText.setText(getString(R.string.no_account));
 				} else {
 					statusLed.setImageResource(getStatusIconResource(lc.getDefaultProxyConfig().getState(),true));
-					statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+					statusText.setText(getStatusIconText(lc.getDefaultProxyConfig()));
 				}
 			}
 		} else {

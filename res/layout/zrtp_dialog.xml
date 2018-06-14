@@ -5,7 +5,7 @@
 	android:layout_height="wrap_content"
 	android:background="@color/colorB"
 	android:orientation="vertical" >
-	
+
 	<TextView
 		android:id="@+id/toastMessage"
 		android:textColor="@android:color/black"
@@ -17,7 +17,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal">
-		
+
 		<ImageView
 		   android:id="@+id/toastNotOK"
 		   android:src="@drawable/security_pending"
@@ -27,7 +27,7 @@
 		   android:adjustViewBounds="true"
 		   android:layout_width="match_parent"
 		   android:layout_height="wrap_content" />
-		
+
 		<ImageView
 		   android:id="@+id/toastOK"
 		   android:src="@drawable/security_ok"
@@ -37,7 +37,7 @@
 		   android:adjustViewBounds="true"
 		   android:layout_width="match_parent"
 		   android:layout_height="wrap_content" />
-	
+
 	</LinearLayout>
 
 </LinearLayout>

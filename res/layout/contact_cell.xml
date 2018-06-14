@@ -15,10 +15,13 @@
 
 		<TextView
 			android:id="@+id/separator_text"
-			style="@style/font1"
 			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:gravity="center" />
+			android:layout_height="23dp"
+			android:background="@color/colorN"
+			android:gravity="center"
+			android:textColor="#ffffff"
+			android:textSize="13.3sp"
+			android:textStyle="bold"/>
 
 		<ImageView
 			android:background="@color/colorE"
@@ -41,22 +44,23 @@
 
 			<ImageView
 				android:id="@+id/contact_picture"
-				android:src="@drawable/avatar"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="35dp"
-				android:layout_height="35dp"
-				android:adjustViewBounds="true"
+				android:layout_width="40dp"
+				android:layout_height="40dp"
 				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"/>
+				android:layout_marginLeft="5dp"
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/content_description_contact_picture"
+				android:src="@drawable/avatar_big_secure1"/>
 
 			<ImageView
 				android:id="@+id/mask"
-				android:src="@drawable/avatar_mask"
 				android:layout_width="35dp"
 				android:layout_height="35dp"
-				android:adjustViewBounds="true"
 				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"/>
+				android:layout_marginLeft="5dp"
+				android:adjustViewBounds="true"
+				android:src="@drawable/avatar_mask"
+				android:visibility="gone"/>
 
 		</RelativeLayout>
 

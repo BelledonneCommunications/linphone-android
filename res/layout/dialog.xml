@@ -17,30 +17,33 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
+		android:layout_margin="20dp"
 		android:gravity="center"
-		android:orientation="horizontal">
-
-		<Button
-			android:id="@+id/cancel"
-			android:text="@string/cancel"
-			android:background="@drawable/resizable_cancel_button"
-			style="@style/font8"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:padding="10dp"/>
+		android:orientation="vertical">
 
 		<Button
 			android:id="@+id/delete_button"
-			android:text="@string/delete"
-			android:background="@drawable/resizable_confirm_delete_button"
-			style="@style/font15"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="10dp"
-			android:padding="10dp"/>
+			android:background=" #ff6600"
+			android:padding="10dp"
+			android:text="@string/delete"
+			android:textColor="#ffffff"
+			android:textSize="20sp"/>
 
-		</LinearLayout>
+		<Button
+			android:id="@+id/cancel"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="10dp"
+			android:background=" #595959"
+			android:padding="10dp"
+			android:text="@string/cancel"
+			android:textColor="#ffffff"
+			android:textSize="20sp"/>
+
+	</LinearLayout>
 
 
 

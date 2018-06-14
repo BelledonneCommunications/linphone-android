@@ -75,6 +75,7 @@ import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Reason;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
 
@@ -118,6 +119,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat, container, false);
+
+		LinphoneActivity.instance().hideTabBar(true);
 
 		mSelectionHelper = new ListSelectionHelper(view, this);
 
@@ -241,9 +244,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onResume() {
 		super.onResume();
 
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(CHAT);
-		}
 		ContactsManager.addContactsListener(this);
 
 		addVirtualKeyboardVisiblityListener();
@@ -521,7 +521,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) || mChatRoom.getNbParticipants() <= 1) {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
 				mParticipantsLabel.setVisibility(View.GONE);

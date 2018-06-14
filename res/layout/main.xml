@@ -9,8 +9,8 @@
 		android:id="@+id/status"
 		android:name="org.linphone.fragments.StatusFragment"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		tools:layout="@layout/status" />
+		android:layout_height="30dp"
+		tools:layout="@layout/status"/>
 
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/side_menu"
@@ -75,7 +75,7 @@
 			<LinearLayout
 				android:id="@+id/footer"
 				android:layout_width="match_parent"
-				android:layout_height="60dp"
+				android:layout_height="50dp"
 				android:layout_alignParentBottom="true"
 				android:orientation="horizontal">
 
@@ -86,49 +86,94 @@
 					android:layout_weight="1"
 					android:background="@drawable/footer_button">
 
+					<View
+						android:id="@+id/history_select"
+						android:layout_width="match_parent"
+						android:layout_height="3dp"
+						android:layout_alignParentTop="true"
+						android:background="@color/colorB"
+						android:visibility="gone"/>
+
 					<ImageView
 						android:id="@+id/history_image"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_centerInParent="true"
+						android:layout_margin="10dp"
 						android:background="@drawable/footer_button"
 						android:contentDescription="@string/content_description_history"
-						android:padding="18dp"
 						android:src="@drawable/footer_history"/>
 
 					<TextView
 						android:id="@+id/missed_calls"
-						style="@style/font18"
-						android:layout_width="20dp"
-						android:layout_height="20dp"
-						android:layout_margin="15dp"
+						android:layout_width="12dp"
+						android:layout_height="12dp"
+						android:layout_marginLeft="55dp"
+						android:layout_marginTop="30dp"
 						android:background="@drawable/history_chat_indicator"
 						android:gravity="center"
+						android:text="1"
+						android:textColor="#000000"
+						android:textSize="8.3sp"
 						android:visibility="gone"/>
 
 				</RelativeLayout>
 
-				<ImageView
-					android:id="@+id/contacts"
+				<RelativeLayout
+					android:id="@+id/contact_footer"
 					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_centerInParent="true"
+					android:layout_height="match_parent"
 					android:layout_weight="1"
-					android:background="@drawable/footer_button"
-					android:contentDescription="@string/content_description_contacts"
-					android:padding="18dp"
-					android:src="@drawable/footer_contacts"/>
+					android:background="@drawable/footer_button">
 
-				<ImageView
-					android:id="@+id/dialer"
+					<View
+						android:id="@+id/contacts_select"
+						android:layout_width="match_parent"
+						android:layout_height="3dp"
+						android:layout_alignParentTop="true"
+						android:background="@color/colorB"
+						android:visibility="gone"/>
+
+					<ImageView
+						android:id="@+id/contacts"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_centerInParent="true"
+						android:layout_margin="10dp"
+						android:layout_weight="1"
+						android:background="@drawable/footer_button"
+						android:contentDescription="@string/content_description_contacts"
+						android:src="@drawable/footer_contacts"/>
+
+				</RelativeLayout>
+
+				<RelativeLayout
+					android:id="@+id/dialer_footer"
 					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_centerInParent="true"
+					android:layout_height="match_parent"
 					android:layout_weight="1"
-					android:background="@drawable/footer_button"
-					android:contentDescription="@string/content_description_dialer"
-					android:padding="18dp"
-					android:src="@drawable/footer_dialer"/>
+					android:background="@drawable/footer_button">
+
+					<View
+						android:id="@+id/dialer_select"
+						android:layout_width="match_parent"
+						android:layout_height="3dp"
+						android:layout_alignParentTop="true"
+						android:background="@color/colorB"
+						android:visibility="gone"/>
+
+					<ImageView
+						android:id="@+id/dialer"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_centerInParent="true"
+						android:layout_margin="10dp"
+						android:layout_weight="1"
+						android:background="@drawable/footer_button"
+						android:contentDescription="@string/content_description_dialer"
+						android:src="@drawable/footer_dialer"/>
+
+				</RelativeLayout>
 
 				<RelativeLayout
 					android:id="@+id/chat"
@@ -137,23 +182,34 @@
 					android:layout_weight="1"
 					android:background="@drawable/footer_button">
 
+					<View
+						android:id="@+id/chat_select"
+						android:layout_width="match_parent"
+						android:layout_height="3dp"
+						android:layout_alignParentTop="true"
+						android:background="@color/colorB"
+						android:visibility="gone"/>
+
 					<ImageView
 						android:id="@+id/chat_image"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_centerInParent="true"
+						android:layout_margin="10dp"
 						android:background="@drawable/footer_button"
-						android:padding="18dp"
 						android:src="@drawable/footer_chat"/>
 
 					<TextView
 						android:id="@+id/missed_chats"
-						style="@style/font18"
-						android:layout_width="20dp"
-						android:layout_height="20dp"
-						android:layout_margin="15dp"
+						android:layout_width="12dp"
+						android:layout_height="12dp"
+						android:layout_marginLeft="55dp"
+						android:layout_marginTop="30dp"
 						android:background="@drawable/history_chat_indicator"
 						android:gravity="center"
+						android:textAlignment="center"
+						android:textColor="#000000"
+						android:textSize="8.3sp"
 						android:visibility="gone"/>
 
 				</RelativeLayout>
@@ -189,7 +245,7 @@
 				android:src="@drawable/quit"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:padding="5dp"
+				android:padding="14dp"
 				android:layout_alignParentLeft="true"
 				android:layout_centerVertical="true" />
 
@@ -204,42 +260,42 @@
 				android:layout_centerInParent="true"/>
 		</RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/side_menu_quit"
-            android:background="@color/colorG"
-            android:orientation="vertical">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_above="@id/side_menu_quit"
+			android:background="@color/colorH"
+			android:orientation="vertical">
 
-            <include layout="@layout/side_menu_main_account"/>
+			<include layout="@layout/side_menu_main_account"/>
 
-            <ListView
-                android:id="@+id/accounts_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorG"
-                android:cacheColorHint="@color/transparent"
-                android:choiceMode="singleChoice"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="0dp"/>
+			<ListView
+				android:id="@+id/accounts_list"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@color/colorH"
+				android:cacheColorHint="@color/transparent"
+				android:choiceMode="singleChoice"
+				android:divider="@android:color/transparent"
+				android:dividerHeight="0dp"/>
 
 			<ListView
 				android:id="@+id/item_list"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:background="@color/colorG"
+				android:background="@color/colorH"
 				android:choiceMode="singleChoice"
 				android:divider="@color/colorE"
 				android:dividerHeight="1dp"
 				android:footerDividersEnabled="true"
-				android:listSelector="@color/colorG"/>
+				android:listSelector="@color/colorH"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorE"/>
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:background="@color/colorH"/>
 
-        </LinearLayout>
+		</LinearLayout>
 	</RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

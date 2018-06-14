@@ -50,6 +50,7 @@ public class ChatBubbleViewHolder {
 	public TextView imdmLabel;
 
 	public TextView messageText;
+	public TextView messageDate;
 	public ImageView messageImage;
 
 	public RelativeLayout fileTransferLayout;
@@ -79,6 +80,7 @@ public class ChatBubbleViewHolder {
 	    imdmLabel = view.findViewById(R.id.imdmText);
 
 	    messageText = view.findViewById(R.id.message);
+		messageDate = view.findViewById(R.id.message_date);
 	    messageImage = view.findViewById(R.id.image);
 
 	    fileTransferLayout = view.findViewById(R.id.file_transfer_layout);

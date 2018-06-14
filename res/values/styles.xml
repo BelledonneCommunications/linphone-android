@@ -58,8 +58,9 @@
 	</style>
 
 	<style name="font8" parent="@android:style/TextAppearance.Medium">
-		<item name="android:textColor">@color/colorG</item>
-		<item name="android:textSize">22sp</item>
+		<item name="android:textColor">@color/colorC</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textSize">16sp</item>
 	</style>
 
 	<style name="font9" parent="@android:style/TextAppearance.Small">
@@ -88,23 +89,23 @@
 	</style>
 
 	<style name="font14" parent="@android:style/TextAppearance.Small">
-		<item name="android:textColor">@color/colorG</item>
+		<item name="android:textColor">@color/colorH</item>
 		<item name="android:textSize">21sp</item>
 	</style>
 
 	<style name="font15" parent="@android:style/TextAppearance.Small">
-		<item name="android:textColor">@color/colorG</item>
+		<item name="android:textColor">@color/colorH</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:textSize">16sp</item>
 	</style>
 
 	<style name="font16" parent="@android:style/TextAppearance.Small">
-		<item name="android:textColor">@color/colorG</item>
+		<item name="android:textColor">@color/colorH</item>
 		<item name="android:textSize">15sp</item>
 	</style>
 
 	<style name="font17" parent="@android:style/TextAppearance.Small">
-		<item name="android:textColor">@color/colorG</item>
+		<item name="android:textColor">@color/colorH</item>
 		<item name="android:textStyle">bold</item>
 		<item name="android:textSize">13sp</item>
 	</style>
@@ -156,27 +157,34 @@
 		<item name="android:textStyle">bold</item>
 	</style>
 
-    <style name="font26" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorD</item>
-        <item name="android:textSize">12sp</item>
-    </style>
+	<style name="font26" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">12sp</item>
+	</style>
 
-    <style name="font27" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorK</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+	<style name="font27" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorK</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textStyle">bold</item>
+	</style>
 
-    <style name="font28" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorD</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+	<style name="font28" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorD</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textStyle">bold</item>
+	</style>
 
-    <style name="font29" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorI</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+	<style name="font29" parent="@android:style/TextAppearance.Medium">
+		<item name="android:textColor">@color/colorI</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textStyle">bold</item>
+	</style>
+
+	<style name="Header">
+		<item name="android:textSize">8sp</item>
+		<item name="android:fontFamily">sans-serif</item>
+		<item name="android:textStyle">normal</item>
+		<item name="android:textColor">#574751</item>
+	</style>
 
 </resources>

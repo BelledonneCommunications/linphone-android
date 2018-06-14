@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:id="@+id/status"
 				android:layout_width="match_parent"
-				android:layout_height="40dp"
+				android:layout_height="30dp"
 				android:background="@color/colorF"
 				android:orientation="horizontal">
 
 	<RelativeLayout
 		android:id="@+id/status_bar"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:background="#ff6600">
 
 		<ImageView
 			android:id="@+id/side_menu_button"
@@ -18,7 +19,9 @@
 			android:layout_alignParentLeft="true"
 			android:layout_centerInParent="true"
 			android:contentDescription="@string/content_description_menu"
-			android:padding="10dp"
+			android:paddingBottom="6.7dp"
+			android:paddingLeft="10dp"
+			android:paddingTop="6.7dp"
 			android:src="@drawable/menu_burger"/>
 
 		<ImageView
@@ -33,25 +36,34 @@
 			android:visibility="invisible"/>
 
 		<ImageView
-			android:id="@+id/status_led"
-			android:layout_width="20dp"
-			android:layout_height="wrap_content"
+			android:id="@+id/logo_app"
+			android:layout_width="18dp"
+			android:layout_height="18dp"
 			android:layout_centerInParent="true"
-			android:layout_toRightOf="@id/side_menu_button"
+			android:layout_toLeftOf="@id/status_text"
 			android:adjustViewBounds="true"
-			android:paddingLeft="5dp"
-			android:src="@drawable/led_disconnected"/>
+			android:src="@drawable/linphone_notification_icon"/>
 
 		<TextView
 			android:id="@+id/status_text"
-			style="@style/font16"
 			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_centerVertical="true"
-			android:layout_toRightOf="@id/status_led"
+			android:layout_height="30dp"
+			android:layout_centerInParent="true"
 			android:gravity="center_vertical"
-			android:paddingLeft="5dp"
-			android:text="@string/status_not_connected"/>
+			android:lineSpacingExtra="0sp"
+			android:text="@string/app_name"
+			android:textColor="#ffffff"
+			android:textSize="13.3sp"/>
+
+		<ImageView
+			android:id="@+id/status_led"
+			android:layout_width="30dp"
+			android:layout_height="wrap_content"
+			android:layout_alignParentEnd="true"
+			android:gravity="end"
+			android:layout_alignParentTop="true"
+			android:adjustViewBounds="true"
+			android:src="@drawable/led_disconnected"/>
 
 		<ImageView
 			android:id="@+id/voicemail"

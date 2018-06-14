@@ -12,7 +12,7 @@
     <string name="tunnel_host"></string>
     <string name="about_version">Mobile Security Intense Version %s</string>
     <string name="about_liblinphone_version">Mobile Security Intense Core %s</string>
-    <string name="about_text">GNU General Public License V2\n © 2010-2017 Belledonne Communications</string>
+    <string name="about_text">GNU General Public License V2\n © 2010-2018 Belledonne Communications</string>
     <string name="about_link">www.linphone.org</string>
     <string name="sync_account_name">Mobile Security Intense contacts</string>
 

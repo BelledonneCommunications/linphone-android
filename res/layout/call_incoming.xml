@@ -10,8 +10,8 @@
 		android:id="@+id/status"
 		android:name="org.linphone.fragments.StatusFragment"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		tools:layout="@layout/status" />
+		android:layout_height="30dp"
+		tools:layout="@layout/status"/>
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
@@ -87,91 +87,91 @@
 	<LinearLayout
 		android:id="@+id/menu"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_alignParentBottom="true"
-		android:orientation="horizontal" >
+		android:orientation="horizontal">
 
 		<ImageView
 			android:id="@+id/decline"
-			android:src="@drawable/call_hangup"
-			android:background="@drawable/hangup"
-			android:contentDescription="@string/content_description_decline"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="12dp"/>
+			android:background="@drawable/hangup"
+			android:contentDescription="@string/content_description_decline"
+			android:padding="12dp"
+			android:src="@drawable/call_hangup"/>
 
 		<LinearLayout
 			android:id="@+id/acceptUnlock"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:visibility="gone"
-			android:orientation="horizontal"
+			android:layout_gravity="bottom"
 			android:background="@color/colorA"
+			android:orientation="horizontal"
+			android:paddingBottom="15dp"
 			android:paddingLeft="15dp"
 			android:paddingTop="15dp"
-			android:paddingBottom="15dp"
-			android:layout_gravity="bottom">
+			android:visibility="gone">
 
 			<ImageView
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-
-			<ImageView
-				android:src="@drawable/arrow_accept"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:alpha="0.6"/>
+				android:src="@drawable/arrow_accept"/>
+
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:alpha="0.6"
+				android:src="@drawable/arrow_accept"/>
 
 			<ImageView
 				android:id="@+id/acceptArrow"
-				android:src="@drawable/arrow_accept"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:alpha="0.2"/>
+				android:alpha="0.2"
+				android:src="@drawable/arrow_accept"/>
 		</LinearLayout>
 
 		<ImageView
 			android:id="@+id/accept"
-			android:src="@drawable/call_audio_start"
-			android:background="@drawable/call"
-			android:contentDescription="@string/content_description_accept"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="12dp"/>
+			android:background="@drawable/call"
+			android:contentDescription="@string/content_description_accept"
+			android:padding="12dp"
+			android:src="@drawable/call_audio_start"/>
 
 		<LinearLayout
 			android:id="@+id/declineUnlock"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:visibility="gone"
-			android:orientation="horizontal"
+			android:layout_gravity="bottom"
 			android:background="@color/colorD"
+			android:orientation="horizontal"
+			android:paddingBottom="15dp"
 			android:paddingLeft="15dp"
 			android:paddingTop="15dp"
-			android:paddingBottom="15dp"
-			android:layout_gravity="bottom">
+			android:visibility="gone">
 
 			<ImageView
 				android:id="@+id/arrow_hangup"
-				android:src="@drawable/arrow_hangup"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:alpha="0.2"/>
+				android:alpha="0.2"
+				android:src="@drawable/arrow_hangup"/>
 
 
 			<ImageView
-				android:src="@drawable/arrow_hangup"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:alpha="0.6"/>
+				android:alpha="0.6"
+				android:src="@drawable/arrow_hangup"/>
 
 			<ImageView
-				android:src="@drawable/arrow_hangup"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+				android:layout_height="wrap_content"
+				android:src="@drawable/arrow_hangup"/>
 
 		</LinearLayout>
 	</LinearLayout>

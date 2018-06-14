@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:background="@color/colorG"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/colorB"
               android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/colorF"
+        android:layout_height="50dp"
+        android:background="@color/colorB"
         android:orientation="horizontal">
 
         <View
@@ -19,14 +19,16 @@
 
         <TextView
             android:id="@+id/menu_name"
-            style="@style/font22"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="0.4"
             android:gravity="center"
+            android:lineSpacingExtra="13.3sp"
             android:maxLines="1"
             android:text="@string/about"
-            android:textAllCaps="true"/>
+            android:textColor="#ffffff"
+            android:textSize="20sp"/>
 
         <ImageView
             android:id="@+id/cancel"
@@ -34,69 +36,74 @@
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:contentDescription="@string/content_description_edit"
-            android:padding="15dp"
-            android:src="@drawable/footer_dialer"/>
+            android:padding="10dp"
+            android:src="@drawable/footer_contacts"/>
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorE"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:gravity="center"
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@color/colorB"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <ImageView
-            android:src="@drawable/linphone_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:layout_gravity="center"/>
+            android:layout_width="183.3dp"
+            android:layout_height="183.3dp"
+            android:layout_gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="30dp"
+            android:src="@drawable/logo_secure_phone_big"/>
 
         <TextView
-            style="@style/font22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="6.7sp"
+            android:paddingBottom="10dp"
+            android:text="@string/app_name"
+            android:textColor="#ffffff"
+            android:textSize="20sp"/>
+
+        <TextView
+            style="@style/font2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/app_name"/>
-
-        <TextView
             android:text="@string/app_description"
-            style="@style/font2"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/about_android_version"
-            style="@style/font15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="20dp"
+            android:textSize="11.7sp"
+            android:textColor="#ffffff"
+            android:lineSpacingExtra="5sp"
+            android:gravity="center_horizontal"
             android:text="@string/about_version"/>
 
         <TextView
             android:id="@+id/about_liblinphone_version"
-            style="@style/font15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:textSize="11.7sp"
+            android:textColor="#ffffff"
+            android:lineSpacingExtra="5sp"
+            android:gravity="center_horizontal"
             android:text="@string/about_liblinphone_version"/>
 
     </LinearLayout>
 
     <ImageView
-        android:src="@drawable/logo_orange"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" android:layout_gravity="right"/>
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_margin="30dp"
+        android:src="@drawable/logo_orange"/>
 
 </LinearLayout>

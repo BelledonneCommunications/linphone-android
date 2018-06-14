@@ -3,17 +3,17 @@
 				android:id="@+id/default_account"
 				android:layout_width="match_parent"
 				android:layout_height="70dp"
-				android:background="@color/colorH"
+				android:background="@color/colorM"
 				android:contentDescription="@string/content_description_default_account">
 
 	<ImageView
 		android:id="@+id/main_account_avatar"
-		android:layout_width="30dp"
-		android:layout_height="30dp"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
 		android:layout_centerVertical="true"
-		android:layout_marginLeft="12dp"
-		android:layout_marginRight="12dp"
-		android:src="@drawable/avatar"/>
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:src="@drawable/avatar_small_secure_1"/>
 
 	<LinearLayout
 		android:id="@+id/layout"
@@ -25,15 +25,18 @@
 
 		<TextView
 			android:id="@+id/main_account_display_name"
-			style="@style/font7"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:lineSpacingExtra="15sp"
+			android:textColor="#000000"
+			android:textSize="18.3sp"/>
 
 		<TextView
 			android:id="@+id/main_account_address"
-			style="@style/font3"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:textColor="#ff5e00"
+			android:textSize="13.3sp"/>
 
 	</LinearLayout>
 
@@ -45,6 +48,8 @@
 		android:layout_alignParentTop="true"
 		android:layout_marginTop="10dp"
 		android:padding="5dp"
-		android:src="@drawable/status_available"/>
+		android:src="@drawable/status_available"
+		android:visibility="gone"
+		/>
 
 </RelativeLayout>

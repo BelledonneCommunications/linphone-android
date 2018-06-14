@@ -383,12 +383,16 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		LinphoneContact contact = (LinphoneContact) adapter.getItemAtPosition(position);
-		if (editOnClick) {
+		/*if (editOnClick) {
 			editConsumed = true;
 			LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
 		} else {
 			lastKnownPosition = contactsList.getFirstVisiblePosition();
 			LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);
+		}*/
+		// Obiane spec
+		if (LinphoneActivity.isInstanciated() && contact.getNumbersOrAddresses() != null) {
+			LinphoneActivity.instance().displayHistoryDetail(contact.getNumbersOrAddresses().get(0).getValue(), null);
 		}
 	}
 
@@ -517,11 +521,11 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			View view = null;
 			LinphoneContact contact = (LinphoneContact) getItem(position);
 			if (contact == null) return null;
 
-			ViewHolder holder = null;
+			View view;
+			ViewHolder holder;
 			if (convertView != null) {
 				view = convertView;
 				holder = (ViewHolder) view.getTag();

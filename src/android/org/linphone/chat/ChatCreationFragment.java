@@ -49,6 +49,7 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -83,6 +84,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat_create, container, false);
 
+		LinphoneActivity.instance().hideTabBar(true);
 		mContactsSelected = new ArrayList<>();
 		mChatRoomSubject = null;
 		mChatRoomAddress = null;
@@ -214,6 +216,10 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
 		if (getActivity().getCurrentFocus() != null) {
 			inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+		}
+
+		if (LinphoneActivity.isInstanciated()) {
+			LinphoneActivity.instance().selectMenu(FragmentsAvailable.CREATE_CHAT);
 		}
 	}
 

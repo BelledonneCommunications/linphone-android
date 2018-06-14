@@ -46,6 +46,7 @@ import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
+import org.linphone.fragments.FragmentsAvailable;
 
 public class ImdnFragment extends Fragment {
 	private LayoutInflater mInflater;
@@ -64,6 +65,8 @@ public class ImdnFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		LinphoneActivity.instance().hideTabBar(true);
 
 		if (getArguments() != null) {
 			mRoomUri = getArguments().getString("SipUri");
@@ -113,7 +116,7 @@ public class ImdnFragment extends Fragment {
 		mBubble.fileTransferLayout.setVisibility(View.GONE);
 		mBubble.fileName.setVisibility(View.GONE);
 		mBubble.openFileButton.setVisibility(View.GONE);
-		mBubble.messageStatus.setVisibility(View.INVISIBLE);
+		mBubble.messageStatus.setVisibility(View.GONE);
 		mBubble.messageSendingInProgress.setVisibility(View.GONE);
 		mBubble.imdmLayout.setVisibility(View.INVISIBLE);
 		mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
@@ -131,13 +134,13 @@ public class ImdnFragment extends Fragment {
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		layoutParams.setMargins(100, 10, 10, 10);
 		if (mMessage.isOutgoing()) {
-			mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
+			mBubble.background.setBackgroundColor(0x26ff6600);
 			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
 			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
 			mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 			mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 		} else {
-			mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
+			mBubble.background.setBackgroundColor(0x19595959);
 			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font9);
 			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font8);
 			mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);

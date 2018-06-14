@@ -64,6 +64,7 @@ import org.linphone.core.LogLevel;
 import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -206,11 +207,11 @@ public final class LinphoneUtils {
 			cal.setTimeInMillis(timestamp * 1000); // Core returns timestamps in seconds...
 
 			SimpleDateFormat dateFormat;
-			if (isToday(cal)) {
+			/*if (isToday(cal)) {
 				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format), Locale.getDefault());
-			} else {
+			} else {*/
 				dateFormat = new SimpleDateFormat(format, Locale.getDefault());
-			}
+			//}
 
 			return dateFormat.format(cal.getTime());
 		} catch (NumberFormatException nfe) {
@@ -596,6 +597,24 @@ public final class LinphoneUtils {
 					.setNeutralButton(ctxt.getString(R.string.ok), null)
 					.show();
 		}
+	}
+
+	public static String getTextFromRegistrationStatement(Context ctxt, ProxyConfig prx) {
+		try {
+			if (prx.getState() == RegistrationState.Ok) {
+				return ctxt.getString(R.string.status_connected);
+			} else if (prx.getState() == RegistrationState.Progress) {
+				return ctxt.getString(R.string.status_in_progress);
+			} else if (prx.getState() == RegistrationState.Failed) {
+				return ctxt.getString(R.string.status_error);
+			} else {
+				return ctxt.getString(R.string.status_not_connected);
+			}
+		} catch (Exception e) {
+			Log.e(e);
+		}
+
+		return ctxt.getString(R.string.status_not_connected);
 	}
 
 

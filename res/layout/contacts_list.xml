@@ -89,30 +89,29 @@
 
 	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="33dp"
 		android:layout_margin="10dp"
 		android:background="@color/colorH">
 
 		<EditText
 			android:id="@+id/searchField"
 			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:background="@drawable/resizable_textfield"
+			android:layout_height="34dp"
+			android:layout_gravity="center"
+			android:layout_marginRight="20dp"
+			android:layout_toLeftOf="@+id/clearSearchField"
+			android:background=" #f3f3f3 "
 			android:contentDescription="@string/content_description_search_contact"
-			android:gravity="center"
 			android:inputType="textPersonName"
-			android:paddingRight="5dp"
 			android:textColor="@android:color/black"
 			android:textCursorDrawable="@null"/>
 
 		<ImageView
 			android:id="@+id/clearSearchField"
-			android:layout_width="30dp"
-			android:layout_height="30dp"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
 			android:layout_alignParentRight="true"
 			android:layout_centerVertical="true"
-			android:paddingLeft="5dp"
-			android:paddingRight="5dp"
 			android:src="@drawable/clean_field_default"/>
 
 	</RelativeLayout>
@@ -132,9 +131,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:divider="@color/colorE"
-			android:fastScrollEnabled="true"
-			android:fastScrollAlwaysVisible="true"
-			android:dividerHeight="1dp" />
+			android:dividerHeight="1dp"/>
 
 		<ProgressBar
 			android:id="@+id/contactsFetchInProgress"

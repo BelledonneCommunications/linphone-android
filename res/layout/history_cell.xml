@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  android:layout_width="match_parent"
 			  android:layout_height="wrap_content"
-			  android:background="@color/colorG"
+			  android:background="@color/colorH"
 			  android:gravity="center_vertical"
 			  android:orientation="vertical">
 
@@ -14,16 +14,17 @@
 
 		<TextView
 			android:id="@+id/separator_text"
-			style="@style/font8"
 			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:background="@color/colorA"
-			android:gravity="center"/>
+			android:layout_height="23.3dp"
+			android:background="@color/colorN"
+			android:gravity="center_horizontal"
+			android:textColor="#ffffff"
+			android:textSize="13.3sp"/>
 
 		<ImageView
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
-			android:background="@color/colorE"/>
+			android:background="@color/colorH"/>
 
 	</LinearLayout>
 
@@ -32,7 +33,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
 		android:layout_margin="5dp"
-		android:background="@color/colorG"
+		android:background="@color/colorH"
 		android:gravity="center_vertical">
 
 		<ImageView
@@ -40,21 +41,20 @@
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
+			android:layout_margin="10dp"
 			android:adjustViewBounds="true"
 			android:contentDescription="@string/content_description_detail"
-			android:paddingLeft="5dp"
-			android:paddingRight="5dp"
 			android:src="@drawable/list_detail"/>
 
 		<CheckBox
 			android:id="@+id/delete"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_height="match_parent"
 			android:layout_alignParentRight="true"
 			android:layout_centerInParent="true"
 			android:button="@drawable/checkbox"
 			android:contentDescription="@string/content_description_delete"
-			android:padding="5dp"
+			android:paddingRight="5dp"
 			android:visibility="gone"/>
 
 		<RelativeLayout
@@ -78,7 +78,7 @@
 					android:layout_marginLeft="5dp"
 					android:adjustViewBounds="true"
 					android:contentDescription="@string/content_description_contact_picture"
-					android:src="@drawable/avatar"/>
+					android:src="@drawable/avatar_big_secure1"/>
 
 				<ImageView
 					android:id="@+id/mask"
@@ -105,13 +105,14 @@
 
 			<TextView
 				android:id="@+id/sip_uri"
-				style="@style/font6"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_marginLeft="10dp"
 				android:layout_toRightOf="@id/icon"
 				android:ellipsize="end"
-				android:gravity="center_vertical"
+				android:textSize="20sp"
+				android:textColor="#000000"
+				android:lineSpacingExtra="13.3sp"
 				android:lines="1"
 				android:maxLines="1"/>
 		</RelativeLayout>

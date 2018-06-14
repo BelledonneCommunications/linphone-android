@@ -74,11 +74,11 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_add);
 			}
 		} else {
-			if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoActivationPolicy().getAutomaticallyInitiate()) {
+			/*if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
-			} else {
-				mCall.setImageResource(R.drawable.call_audio_start);
-			}
+			} else {*/
+				mCall.setImageResource(R.drawable.call_alt_start_selected);
+			//}
 		}
 
 		numpad = (AddressAware) view.findViewById(R.id.numpad);
@@ -206,11 +206,11 @@ public class DialerFragment extends Fragment {
 			mAddContact.setImageResource(R.drawable.call_alt_back);
 			mAddContact.setOnClickListener(cancelListener);
 		} else {
-			if (LinphoneManager.getLc().getVideoActivationPolicy().getAutomaticallyInitiate()) {
+			/*if (LinphoneManager.getLc().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
-			} else {
-				mCall.setImageResource(R.drawable.call_audio_start);
-			}
+			} else {*/
+				mCall.setImageResource(R.drawable.call_alt_start_selected);
+			//}
 			mAddContact.setEnabled(false);
 			mAddContact.setImageResource(R.drawable.contact_add_button);
 			mAddContact.setOnClickListener(addContactListener);

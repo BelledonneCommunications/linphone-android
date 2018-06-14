@@ -49,7 +49,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 	private ImageView dialBack, chat, addToContacts, goToContact, back;
 	private View view;
 	private ImageView contactPicture, callDirection;
-	private TextView contactName, contactAddress, time, date;
+	private TextView contactName, contactAddress, time, date, callText;
 	private String sipUri, displayName, pictureUri;
 	private RelativeLayout mWaitLayout;
 	private LinphoneContact contact;
@@ -102,7 +102,13 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		time = (TextView) view.findViewById(R.id.time);
 		date = (TextView) view.findViewById(R.id.date);
 
-		displayHistory(status, callTime, callDate);
+		callText = (TextView) view.findViewById(R.id.call_text);
+
+		// Obiane spec
+		if (!status.isEmpty() && !callTime.isEmpty() && !callDate.isEmpty()) {
+			displayHistory(status, callTime, callDate);
+			callText.setVisibility(View.VISIBLE);
+		}
 
 		mChatRoomCreationListener = new ChatRoomListenerStub() {
 			@Override
@@ -150,14 +156,14 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			if (contact != null) {
 				contactName.setText(contact.getFullName());
-				LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
-				addToContacts.setVisibility(View.GONE);
-				goToContact.setVisibility(View.VISIBLE);
+				//LinphoneUtils.setImagePictureFromUri(view.getContext(),contactPicture,contact.getPhotoUri(),contact.getThumbnailUri());
+				//addToContacts.setVisibility(View.GONE);
+				//goToContact.setVisibility(View.VISIBLE);
 			} else {
 				contactName.setText(displayName == null ? LinphoneUtils.getAddressDisplayName(sipUri) : displayName);
-				contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-				addToContacts.setVisibility(View.VISIBLE);
-				goToContact.setVisibility(View.GONE);
+				//contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+				//addToContacts.setVisibility(View.VISIBLE);
+				//goToContact.setVisibility(View.GONE);
 			}
 		} else {
 			contactAddress.setText(sipUri);

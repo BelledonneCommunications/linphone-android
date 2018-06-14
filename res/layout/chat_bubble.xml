@@ -57,30 +57,31 @@
 
 	<RelativeLayout
 		android:id="@+id/bubble"
-		android:layout_width="wrap_content"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete_message">
+		android:layout_toLeftOf="@id/delete_message">
 
 		<LinearLayout
-		    android:id="@+id/background"
-			android:layout_width="wrap_content"
+			android:id="@+id/background"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal">
 
-		    <RelativeLayout
+			<RelativeLayout
 				android:id="@+id/avatar_layout"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content"
+				android:visibility="gone">
 
 				<ImageView
 					android:id="@+id/contact_picture"
-					android:src="@drawable/avatar"
+					android:layout_width="45dp"
+					android:layout_height="45dp"
+					android:adjustViewBounds="true"
 					android:contentDescription="@string/content_description_contact_picture"
 					android:paddingLeft="10dp"
 					android:paddingTop="10dp"
-					android:layout_width="45dp"
-					android:layout_height="45dp"
-					android:adjustViewBounds="true"/>
+					android:src="@drawable/avatar"/>
 
 				<ImageView
 					android:id="@+id/mask"
@@ -95,111 +96,134 @@
 			</RelativeLayout>
 
 			<LinearLayout
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
-				android:paddingTop="10dp"
 				android:paddingLeft="10dp"
-				android:paddingRight="10dp">
+				android:paddingRight="10dp"
+				android:paddingTop="10dp">
 
 				<TextView
 					android:id="@+id/contact_header"
-					android:maxLines="1"
 					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
+					android:layout_height="wrap_content"
+					android:maxLines="1"
+					android:textColor="#595959"
+					android:textSize="13.3sp"
+					android:textStyle="bold"/>
 
 				<RelativeLayout
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/file_name"
-                        style="@style/font26"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+					<TextView
+						android:id="@+id/file_name"
+						style="@style/font26"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
 
-                    <ImageView
-                        android:id="@+id/image"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_below="@id/file_name"
-                        android:layout_centerHorizontal="true"
-                        android:scaleType="centerInside"/>
+					<ImageView
+						android:id="@+id/image"
+						android:layout_width="150dp"
+						android:layout_height="150dp"
+						android:layout_below="@id/file_name"
+						android:layout_centerHorizontal="true"
+						android:scaleType="centerInside"/>
 
-                    <Button
-                        android:id="@+id/open_file"
-                        android:textAppearance="@style/font8"
-                        android:text="@string/open"
-                        android:background="@drawable/resizable_assistant_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/file_name"
-                        android:layout_centerVertical="true"
-                        android:visibility="gone"/>
+					<Button
+						android:id="@+id/open_file"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_below="@id/file_name"
+						android:layout_centerVertical="true"
+						android:background="@drawable/resizable_assistant_button"
+						android:text="@string/open"
+						android:textAppearance="@style/font8"
+						android:visibility="gone"/>
 
 				</RelativeLayout>
 
-                <TextView
-                    android:id="@+id/message"
-                    style="@style/font11"
-                    android:autoLink="web"
-                    android:linksClickable="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+				<TextView
+					android:id="@+id/message"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:autoLink="web"
+					android:linksClickable="true"
+					android:textColor="#595959"
+					android:textSize="13.3sp"/>
 
 				<RelativeLayout
 					android:id="@+id/file_transfer_layout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-                    android:visibility="gone">
+					android:visibility="gone">
 
 					<ProgressBar
 						android:id="@+id/progress_bar"
 						style="@android:style/Widget.ProgressBar.Horizontal"
-						android:paddingRight="5dp"
-						android:layout_marginTop="10dp"
-						android:layout_marginBottom="10dp"
 						android:layout_width="150dp"
-						android:layout_height="5dp"/>
+						android:layout_height="5dp"
+						android:layout_marginBottom="10dp"
+						android:layout_marginTop="10dp"
+						android:paddingRight="5dp"/>
 
 					<Button
 						android:id="@+id/file_transfer_action"
-                        android:textAppearance="@style/font8"
-                        android:background="@drawable/resizable_assistant_button"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_below="@id/progress_bar"/>
+						android:layout_below="@id/progress_bar"
+						android:background="@drawable/resizable_assistant_button"
+						android:textAppearance="@style/font8"/>
 
 				</RelativeLayout>
 
 				<LinearLayout
-					android:id="@+id/imdmLayout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_alignParentRight="true"
-					android:layout_marginTop="2dp"
-					android:layout_marginBottom="2dp"
-					android:orientation="horizontal"
-					android:layout_gravity="right"
-					android:gravity="right"
-					android:visibility="invisible">
+					android:layout_gravity="right">
 
 					<TextView
-						android:id="@+id/imdmText"
+						android:id="@+id/message_date"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:text="Displayed"
-						android:textSize="12sp"
-						android:paddingRight="3dp"/>
+						android:layout_gravity="right"
+						android:layout_toLeftOf="@id/imdmLayout"
+						android:layout_weight="1"
+						android:gravity="right"
+						android:orientation="horizontal"
+						android:paddingRight="5dp"
+						android:textColor="#595959"
+						android:textSize="8.3sp"/>
 
-					<ImageView
-						android:id="@+id/imdmIcon"
-						android:layout_width="10dp"
-						android:layout_height="10dp"
-						android:src="@drawable/valid"
-						android:scaleType="fitCenter"
-						android:layout_marginTop="2dp" />
+					<LinearLayout
+						android:id="@+id/imdmLayout"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="right"
+						android:layout_marginBottom="2dp"
+						android:layout_marginTop="2dp"
+						android:gravity="right"
+						android:orientation="horizontal"
+						android:visibility="gone">
 
+						<TextView
+							android:id="@+id/imdmText"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:paddingRight="3dp"
+							android:text="Displayed"
+							android:textSize="8.3sp"/>
+
+						<ImageView
+							android:id="@+id/imdmIcon"
+							android:layout_width="8dp"
+							android:layout_height="8dp"
+							android:layout_marginTop="2dp"
+							android:scaleType="fitCenter"
+							android:src="@drawable/chat_read"/>
+
+					</LinearLayout>
 				</LinearLayout>
 
 			</LinearLayout>
@@ -207,32 +231,32 @@
 		</LinearLayout>
 
 		<RelativeLayout
-		    android:layout_alignRight="@id/background"
-		    android:layout_alignTop="@id/background"
 			android:layout_width="15dp"
 			android:layout_height="15dp"
-			android:paddingTop="5dp"
-			android:paddingBottom="3dp">
+			android:layout_alignRight="@id/background"
+			android:layout_alignTop="@id/background"
+			android:paddingBottom="3dp"
+			android:paddingTop="5dp">
 
 			<ImageView
 				android:id="@+id/status"
-				android:contentDescription="@string/content_description_message_status"
-				android:visibility="invisible"
-				android:layout_alignParentTop="true"
-				android:layout_alignParentRight="true"
-				android:paddingRight="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:adjustViewBounds="true" />
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:adjustViewBounds="true"
+				android:contentDescription="@string/content_description_message_status"
+				android:paddingRight="5dp"
+				android:visibility="invisible"/>
 
 			<ProgressBar
 				android:id="@+id/inprogress"
-                android:progressTint="@color/colorB"
-				android:layout_alignParentTop="true"
-				android:layout_alignParentRight="true"
-				android:paddingRight="5dp"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+				android:layout_height="match_parent"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:paddingRight="5dp"
+				android:progressTint="@color/colorB"/>
 
 		</RelativeLayout>
 

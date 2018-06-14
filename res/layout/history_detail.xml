@@ -12,8 +12,8 @@
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/colorG"
+            android:layout_height="50dp"
+            android:background="@color/colorH"
             android:orientation="horizontal">
 
             <ImageView
@@ -23,7 +23,6 @@
                 android:layout_weight="0.2"
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_back"
-                android:padding="18dp"
                 android:src="@drawable/back"/>
 
             <View
@@ -39,7 +38,8 @@
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_add_contact"
                 android:padding="15dp"
-                android:src="@drawable/contact_add"/>
+                android:src="@drawable/contact_add"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/goto_contact"
@@ -61,64 +61,78 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="20dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="20dp">
 
                 <RelativeLayout
                     android:id="@+id/avatar_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="66dp"
                     android:gravity="center">
 
                     <ImageView
                         android:id="@+id/contact_picture"
-                        android:src="@drawable/avatar"
-                        android:contentDescription="@string/content_description_contact_picture"
                         android:layout_width="100dp"
-                        android:layout_height="100dp"/>
+                        android:layout_height="100dp"
+                        android:contentDescription="@string/content_description_contact_picture"
+                        android:src="@drawable/avatar_big_secure1"/>
 
                     <ImageView
                         android:id="@+id/mask"
-                        android:src="@drawable/avatar_mask"
                         android:layout_width="100dp"
-                        android:layout_height="100dp"/>
+                        android:layout_height="100dp"
+                        android:src="@drawable/avatar_mask"/>
 
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/contact_name"
                     style="@style/font5"
-                    android:gravity="center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"/>
 
                 <TextView
                     android:id="@+id/contact_address"
                     style="@style/font2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"/>
+
+                <TextView
+                    android:id="@+id/separator_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="23.3dp"
+                    android:background="@color/colorN"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="appel sécurisé"
+                    android:textAllCaps="true"
+                    android:textColor="#ffffff"
+                    android:textSize="13.3sp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/call"
-                        android:src="@drawable/call_start_body_default"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_margin="10dp"
                         android:contentDescription="@string/content_description_call"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_margin="10dp"/>
+                        android:src="@drawable/call_start_body_default"/>
 
                     <ImageView
                         android:id="@+id/chat"
-                        android:src="@drawable/chat_start_body_default"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_margin="10dp"
                         android:contentDescription="@string/content_description_chat"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_margin="10dp"/>
+                        android:src="@drawable/chat_start_body_default"/>
 
                 </LinearLayout>
 
@@ -129,39 +143,41 @@
                     android:orientation="vertical">
 
                     <View
-                        android:background="@color/colorE"
                         android:layout_width="wrap_content"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp"
+                        android:background="@color/colorH"/>
 
                     <TextView
-                        android:text="@string/call"
+                        android:id="@+id/call_text"
                         style="@style/font13"
-                        android:textAllCaps="true"
-                        android:layout_marginTop="2dp"
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/call"
+                        android:textAllCaps="false"
+                        android:visibility="gone"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
                         android:gravity="center"
-                        android:padding="10dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/direction"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:paddingRight="5dp"/>
 
                         <TextView
                             android:id="@+id/date"
                             style="@style/font10"
-                            android:paddingRight="10dp"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content"
+                            android:paddingRight="10dp"/>
 
                         <TextView
                             android:id="@+id/time"

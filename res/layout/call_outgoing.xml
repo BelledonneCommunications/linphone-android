@@ -9,9 +9,9 @@
 	<fragment
 		android:id="@+id/status"
 		android:name="org.linphone.fragments.StatusFragment"
-		tools:layout="@layout/status"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"/>
+		android:layout_height="30dp"
+		tools:layout="@layout/status"/>
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
@@ -95,40 +95,40 @@
 	<LinearLayout
 		android:id="@+id/menu"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="50dp"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentLeft="true"
-		android:orientation="horizontal" >
+		android:orientation="horizontal">
 
 		<ImageView
 			android:id="@+id/micro"
-			android:src="@drawable/micro_default"
-			android:background="@drawable/button_background"
-			android:contentDescription="@string/content_description_toggle_micro"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="10dp"/>
+			android:background="@drawable/button_background"
+			android:contentDescription="@string/content_description_toggle_micro"
+			android:padding="10dp"
+			android:src="@drawable/micro_default"/>
 
 		<ImageView
 			android:id="@+id/speaker"
-			android:src="@drawable/speaker_default"
-			android:background="@drawable/button_background"
-			android:contentDescription="@string/content_description_toggle_speaker"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:padding="15dp"/>
+			android:background="@drawable/button_background"
+			android:contentDescription="@string/content_description_toggle_speaker"
+			android:padding="15dp"
+			android:src="@drawable/speaker_default"/>
 
 		<ImageView
 			android:id="@+id/outgoing_hang_up"
-			android:src="@drawable/call_hangup"
-			android:background="@drawable/hangup"
-			android:contentDescription="@string/content_description_hang_up"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="0.7"
-			android:padding="12dp"/>
+			android:background="@drawable/hangup"
+			android:contentDescription="@string/content_description_hang_up"
+			android:padding="12dp"
+			android:src="@drawable/call_hangup"/>
 
 	</LinearLayout>
 

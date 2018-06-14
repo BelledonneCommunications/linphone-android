@@ -1,19 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Custom-->
-  <string name="app_name">Linphone</string>
-  <string name="service_name">Linphone Service</string>
-  <string name="addressbook_label">Linphone</string>
-  <string name="notification_title">Linphone</string>
+  <string name="app_name">Mobile Security Intense</string>
+  <string name="service_name">Mobile Security Intense Service</string>
+  <string name="addressbook_label">Mobile Security Intense</string>
+  <string name="notification_title">Mobile Security Intense</string>
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s enregistré</string>
   <string name="notification_register_failure">%s n\'a pas pu s\'enregistrer</string>
   <string name="tunnel_host"></string>
-  <string name="about_version">Linphone Android %s</string>
-  <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_version">Mobile Security Intense Version %s</string>
+  <string name="about_liblinphone_version">Mobile Security Intense Core %s</string>
   <string name="about_text">GNU General Public License V2\n © 2010-2017 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
-  <string name="sync_account_name">contacts linphone</string>
+  <string name="sync_account_name">contacts Mobile Security Intense</string>
   <!--Common-->
   <string name="username">Nom d\'utilisateur</string>
   <string name="phone_number">Numéro de téléphone</string>

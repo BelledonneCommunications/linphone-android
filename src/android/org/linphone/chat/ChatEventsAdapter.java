@@ -185,9 +185,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    holder.fileTransferAction.setEnabled(true);
 	    holder.fileName.setVisibility(View.GONE);
 	    holder.openFileButton.setVisibility(View.GONE);
-	    holder.messageStatus.setVisibility(View.INVISIBLE);
+	    holder.messageStatus.setVisibility(View.GONE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
-	    holder.imdmLayout.setVisibility(View.INVISIBLE);
+	    holder.imdmLayout.setVisibility(View.GONE);
 	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
@@ -219,10 +219,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
 			    }
 
-			    if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory && status != ChatMessage.State.InProgress) {
+			    /*if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory && status != ChatMessage.State.InProgress) {
 				    holder.messageStatus.setVisibility(View.VISIBLE);
 				    holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
-			    }
+			    }*/
 
 			    if (status == ChatMessage.State.Delivered) {
 				    /*holder.imdmLayout.setVisibility(View.VISIBLE);
@@ -259,8 +259,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    layoutParams.setMargins(100, 10, 10, 10);
 			    }
 
-			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
-			    Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
+			    holder.background.setBackgroundColor(0x26ff6600);
+			    //Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
+			    holder.contactName.setVisibility(View.GONE);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
 			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
@@ -280,8 +281,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    layoutParams.setMargins(10, 10, 100, 10);
 			    }
 
-			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
-			    Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
+			    holder.background.setBackgroundColor(0x19595959);
+			    //Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
+			    holder.contactName.setVisibility(View.VISIBLE);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
 			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
@@ -305,8 +307,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		    }
-		    holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
-
+		    holder.contactName.setText(displayName);
 		    if (message.hasTextContent()) {
 			    String msg = message.getTextContent();
 			    Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
@@ -369,6 +370,8 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 					}
 				});
 			}
+		    holder.messageDate.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.today_date_format));
+		    holder.messageDate.setVisibility(View.VISIBLE);
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
 	    } else { // Event is not chat message

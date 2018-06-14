@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:gravity="center_vertical"
-    android:paddingLeft="10dp"
-	android:paddingRight="10dp"
-	android:paddingTop="5dp"
-    android:background="@drawable/list_selector">
-
-	<CheckBox
-		android:id="@+id/delete_chatroom"
-		android:button="@drawable/checkbox"
-		android:contentDescription="@string/content_description_delete"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:adjustViewBounds="true"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:visibility="invisible" android:layout_alignParentTop="true"/>
+				android:layout_width="match_parent"
+				android:layout_height="72dp"
+				android:background="@drawable/list_selector"
+				android:gravity="center_vertical"
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingTop="5dp">
 
 	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_centerVertical="true"
-	    android:orientation="horizontal">
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_centerVertical="true"
+		android:orientation="horizontal">
 
 		<RelativeLayout
 			android:layout_width="wrap_content"
@@ -38,11 +27,12 @@
 
 				<ImageView
 					android:id="@+id/contact_picture"
-					android:src="@drawable/avatar"
+					android:layout_width="40dp"
+					android:layout_height="40dp"
+					android:adjustViewBounds="true"
 					android:contentDescription="@string/content_description_contact_picture"
-					android:layout_width="35dp"
-					android:layout_height="35dp"
-					android:adjustViewBounds="true"/>
+					android:foregroundGravity="center"
+					android:src="@drawable/avatar_big_secure1"/>
 
 				<ImageView
 					android:id="@+id/mask"
@@ -54,15 +44,6 @@
 
 			</RelativeLayout>
 
-			<TextView
-				android:id="@+id/date"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/avatar_layout"
-				android:layout_marginTop="5dp"
-				android:maxLines="1"
-				style="@style/font2"/>
-
 		</RelativeLayout>
 
 		<RelativeLayout
@@ -71,53 +52,98 @@
 			android:layout_toLeftOf="@id/delete_chatroom"
 			android:paddingLeft="10dp">
 
-			<TextView
-				android:id="@+id/sipUri"
-				android:lines="1"
-				android:ellipsize="end"
-				android:scrollHorizontally="true"
-				android:maxLines="1"
-				style="@style/font6"
+			<CheckBox
+				android:id="@+id/delete_chatroom"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginRight="30dp"/>
+				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
+				android:layout_centerVertical="true"
+				android:layout_marginEnd="18dp"
+				android:layout_marginTop="10dp"
+				android:adjustViewBounds="true"
+				android:button="@drawable/checkbox"
+				android:contentDescription="@string/content_description_delete"
+				android:scaleX="0.8"
+				android:scaleY="0.8"
+				android:visibility="gone"/>
+
+			<TextView
+				android:id="@+id/date"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"
+				android:layout_alignRight="@+id/unreadMessages"
+				android:layout_marginEnd="18dp"
+				android:layout_marginTop="14dp"
+				android:maxLines="1"
+				android:textColor="#ff5e00"
+				android:textSize="13.3sp"/>
+
+			<TextView
+				android:id="@+id/sipUri"
+				android:layout_width="180dp"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="30dp"
+				android:layout_marginTop="8dp"
+				android:ellipsize="end"
+				android:lineSpacingExtra="13.3sp"
+				android:lines="1"
+				android:maxLines="1"
+				android:scrollHorizontally="true"
+				android:textColor="#ff6600"
+				android:textSize="20sp"/>
 
 			<TextView
 				android:id="@+id/unreadMessages"
+				style="@style/font18"
 				android:layout_width="20dp"
 				android:layout_height="20dp"
-				android:contentDescription="@string/content_description_unread_chat_message"
+				android:layout_alignBottom="@+id/sipUri"
+				android:layout_alignParentEnd="true"
+				android:layout_marginBottom="4dp"
+				android:layout_marginEnd="100dp"
 				android:background="@drawable/chat_list_indicator"
-				style="@style/font18"
+				android:contentDescription="@string/content_description_unread_chat_message"
 				android:gravity="center"
-				android:maxLines="1"
-				android:layout_above="@+id/lastMessageLayout"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"/>
+				android:maxLines="1"/>
 
-            <LinearLayout
-                android:id="@id/lastMessageLayout"
-                android:layout_below="@id/sipUri"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+			<LinearLayout
+				android:id="@id/lastMessageLayout"
+				android:layout_width="match_parent"
+				android:layout_height="21dp"
+				android:layout_below="@id/sipUri"
+				android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/lastMessageSender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/font11"/>
+				<ImageView
+					android:id="@+id/lastMessageStatus"
+					android:layout_width="11dp"
+					android:layout_height="11dp"
+					android:layout_gravity="center_vertical|center_horizontal|center"
+					android:foregroundGravity="center"
+					android:src="@drawable/chat_read"
+					android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/lastMessage"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
-                    style="@style/font11"/>
+				<TextView
+					android:id="@+id/lastMessageSender"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:textColor="#595959"
+					android:textSize="16.7sp"/>
 
-            </LinearLayout>
+				<TextView
+					android:id="@+id/lastMessage"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginEnd="18dp"
+					android:layout_marginStart="5dp"
+					android:ellipsize="end"
+					android:maxLines="1"
+					android:textColor="#aeaeae"
+					android:textSize="16.7sp"/>
+
+			</LinearLayout>
 
 		</RelativeLayout>
 

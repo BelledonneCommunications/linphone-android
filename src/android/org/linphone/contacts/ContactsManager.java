@@ -82,7 +82,7 @@ public class ContactsManager extends ContentObserver {
 	private ContactsManager(Handler handler) {
 		super(handler);
 		this.handler = handler;
-		defaultAvatar = BitmapFactory.decodeResource(LinphoneService.instance().getResources(), R.drawable.avatar);
+		defaultAvatar = BitmapFactory.decodeResource(LinphoneService.instance().getResources(), R.drawable.avatar_big_secure1);
 		androidContactsCache = new HashMap<String, LinphoneContact>();
 		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
 		contacts = new ArrayList<LinphoneContact>();

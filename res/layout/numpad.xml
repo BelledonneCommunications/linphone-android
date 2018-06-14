@@ -4,7 +4,13 @@
 			 android:layout_width="match_parent" android:layout_height="match_parent" >
 
 <TableRow android:layout_weight="1" android:gravity="center">
-	<org.linphone.ui.Digit android:id="@+id/Digit1"	android:text="1" style="@style/DialerDigit" android:background="@drawable/numpad_one" android:soundEffectsEnabled="true"/>
+
+	<org.linphone.ui.Digit
+		android:id="@+id/Digit1"
+		style="@style/DialerDigit"
+		android:background="@drawable/numpad_one"
+		android:soundEffectsEnabled="true"
+		android:text="1"/>
 	<org.linphone.ui.Digit android:id="@+id/Digit2"	android:text="2" style="@style/DialerDigit" android:background="@drawable/numpad_two" android:soundEffectsEnabled="true" />
 	<org.linphone.ui.Digit android:id="@+id/Digit3"	android:text="3" style="@style/DialerDigit" android:background="@drawable/numpad_three" android:soundEffectsEnabled="true" />
 </TableRow>

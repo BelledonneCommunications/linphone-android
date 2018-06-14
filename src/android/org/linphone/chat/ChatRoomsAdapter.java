@@ -61,6 +61,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		public TextView unreadMessages;
 		public CheckBox delete;
 		public ImageView contactPicture;
+		public ImageView messageStatus;
 
 		public ChatRoomViewHolder(View view) {
 			lastMessageSenderView = view.findViewById(R.id.lastMessageSender);
@@ -70,6 +71,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			unreadMessages = view.findViewById(R.id.unreadMessages);
 			delete = view.findViewById(R.id.delete_chatroom);
 			contactPicture = view.findViewById(R.id.contact_picture);
+			messageStatus = view.findViewById(R.id.lastMessageStatus);
 		}
 	}
 
@@ -84,8 +86,8 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		mContext = context;
 		mLayoutInflater = inflater;
 		mRooms = new ArrayList<>();
-		mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
-		mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
+		mDefaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.avatar_big_secure1);
+		mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.avatar_group_small_unregistered);
 
 		mListener = new ChatRoomListenerStub() {
 			@Override
@@ -176,12 +178,31 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				holder.lastMessageView.setText(lastMessage.getTextContent());
 			}
 
-			Address lastMessageSenderAddress = lastMessage.getFromAddress();
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lastMessageSenderAddress);
-			if (contact != null) {
-				holder.lastMessageSenderView.setText(contact.getFullName() + mContext.getString(R.string.separator));
+			if (lastMessage.isOutgoing()) {
+				holder.messageStatus.setVisibility(View.VISIBLE);
+				holder.lastMessageSenderView.setVisibility(View.GONE);
+				if (lastMessage.getState().toInt() == ChatMessage.State.Delivered.toInt() ||
+						lastMessage.getState().toInt() == ChatMessage.State.DeliveredToUser.toInt() ||
+						lastMessage.getState().toInt() == ChatMessage.State.FileTransferDone.toInt()) {
+					holder.messageStatus.setImageResource(R.drawable.message_delivered);
+				} else if (lastMessage.getState().toInt() == ChatMessage.State.Displayed.toInt()) {
+					holder.messageStatus.setImageResource(R.drawable.message_read);
+				} else if (lastMessage.getState().toInt() == ChatMessage.State.Idle.toInt() ||
+						lastMessage.getState().toInt() == ChatMessage.State.InProgress.toInt()) {
+					holder.messageStatus.setImageResource(R.drawable.chat_message_inprogress);
+				} else {
+					holder.messageStatus.setImageResource(R.drawable.message_undelivered);
+				}
 			} else {
-				holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) +  mContext.getString(R.string.separator));
+				Address lastMessageSenderAddress = lastMessage.getFromAddress();
+				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lastMessageSenderAddress);
+				holder.lastMessageSenderView.setVisibility(View.VISIBLE);
+				holder.messageStatus.setVisibility(View.GONE);
+				if (contact != null) {
+					holder.lastMessageSenderView.setText(contact.getFullName() + mContext.getString(R.string.separator));
+				} else {
+					holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) + mContext.getString(R.string.separator));
+				}
 			}
 		}
 
@@ -194,7 +215,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				contact = ContactsManager.getInstance().findContactFromAddress(chatRoom.getParticipants()[0].getAddress());
 				if (contact != null) {
 					holder.displayName.setText(contact.getFullName());
-					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+					//LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 				} else {
 					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(chatRoom.getParticipants()[0].getAddress()));
 				}
@@ -202,14 +223,22 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
 				if (contact != null) {
 					holder.displayName.setText(contact.getFullName());
-					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+					//LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
 				} else {
 					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
 				}
 			}
+
+			if (chatRoom.limeAvailable()) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+			}
 		} else {
 			holder.displayName.setText(chatRoom.getSubject());
-			holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
+			if (chatRoom.limeAvailable()) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
+			} else {
+				holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
+			}
 		}
 
 		if (unreadMessagesCount > 0) {
@@ -239,6 +268,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			holder.delete.setChecked(getSelectedItemsPosition().contains(position));
 			holder.delete.setTag(position);
 			holder.delete.setOnCheckedChangeListener(getDeleteListener());
+			holder.date.setVisibility(View.GONE);
 		} else {
 			view.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -248,6 +278,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				}
 			});
 			holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
+			holder.date.setVisibility(View.VISIBLE);
 		}
 		return view;
 	}

@@ -49,6 +49,7 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat_infos, container, false);
+
+		LinphoneActivity.instance().hideTabBar(true);
 
 		if (getArguments() == null || getArguments().isEmpty()) {
 			return null;

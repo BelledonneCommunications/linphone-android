@@ -8,8 +8,8 @@
 	<LinearLayout
 		android:id="@+id/top_bar"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
-		android:background="@color/colorG"
+		android:layout_height="50dp"
+		android:background="@color/colorH"
 		android:orientation="horizontal">
 
 		<RelativeLayout
@@ -23,8 +23,8 @@
 				android:layout_height="match_parent"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_all_contacts"
-				android:padding="15dp"
-				android:src="@drawable/history_all"/>
+				android:src="@drawable/history_all"
+				/>
 
 			<ImageView
 				android:id="@+id/all_calls_select"
@@ -32,8 +32,8 @@
 				android:layout_height="match_parent"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_all_contacts"
-				android:padding="15dp"
-				android:src="@drawable/history_all_over"/>
+				android:src="@drawable/history_all_selected"
+				/>
 		</RelativeLayout>
 
 		<RelativeLayout
@@ -48,7 +48,6 @@
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_linphone_contacts"
 				android:gravity="center"
-				android:padding="15dp"
 				android:src="@drawable/history_missed"/>
 
 			<ImageView
@@ -58,14 +57,14 @@
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_linphone_contacts"
 				android:gravity="center"
-				android:padding="15dp"
-				android:src="@drawable/history_missed_over"/>
+				android:src="@drawable/history_missed_selected"/>
 		</RelativeLayout>
 
 		<View
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			android:layout_weight="0.4"/>
+			android:layout_weight="0.4"
+			android:background="@color/colorH"/>
 
 		<ImageView
 			android:id="@+id/edit"
@@ -74,8 +73,7 @@
 			android:layout_weight="0.2"
 			android:background="@drawable/toolbar_button"
 			android:contentDescription="@string/content_description_edit_list"
-			android:padding="15dp"
-			android:src="@drawable/edit_list_button"/>
+			android:src="@drawable/delete"/>
 	</LinearLayout>
 
 	<include layout="@layout/edit_list"/>
