@@ -47,7 +47,6 @@ tests/tests.output
 WORK
 .d
 google-services.json
-gradle.properties
 .*clang*
 linphone.iml
 src/linphone-wrapper

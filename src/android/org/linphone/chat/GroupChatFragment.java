@@ -491,7 +491,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			//TODO error
 			return;
 		}
-		Address proxyConfigContact = core.getDefaultProxyConfig().getContact();
+		Address proxyConfigContact = (core.getDefaultProxyConfig() != null) ? core.getDefaultProxyConfig().getContact() : null;
 		if (proxyConfigContact != null) {
 			mChatRoom = core.findOneToOneChatRoom(proxyConfigContact, mRemoteSipAddress);
 		}

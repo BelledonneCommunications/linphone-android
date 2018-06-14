@@ -75,6 +75,13 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 		return fullName.compareTo(contactFullName);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj.getClass() != LinphoneContact.class) return false;
+		LinphoneContact contact = (LinphoneContact) obj;
+		return (this.compareTo(contact) == 0);
+	}
+
 	public void setFullName(String name) {
 		fullName = name;
 	}

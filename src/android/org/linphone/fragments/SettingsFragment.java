@@ -840,6 +840,12 @@ public class SettingsFragment extends PreferencesListFragment {
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				boolean enable = (Boolean) newValue;
 				mPrefs.enableVideo(enable);
+				if (!enable) {
+					mPrefs.setInitiateVideoCall(false);
+					mPrefs.setAutomaticallyAcceptVideoRequests(false);
+					((CheckBoxPreference) findPreference(getString(R.string.pref_video_initiate_call_with_video_key))).setChecked(mPrefs.shouldInitiateVideoCall());
+					((CheckBoxPreference) findPreference(getString(R.string.pref_video_automatically_accept_video_key))).setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
+				}
 				return true;
 			}
 		});
