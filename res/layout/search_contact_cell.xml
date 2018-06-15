@@ -15,22 +15,23 @@
 
 		<ImageView
 			android:id="@+id/contact_picture"
-			android:src="@drawable/avatar"
-			android:contentDescription="@string/content_description_contact_picture"
-			android:layout_width="35dp"
-			android:layout_height="35dp"
-			android:adjustViewBounds="true"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
 			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="5dp"/>
+			android:layout_marginLeft="5dp"
+			android:adjustViewBounds="true"
+			android:contentDescription="@string/content_description_contact_picture"
+			android:src="@drawable/avatar_big_secure1"/>
 
 		<ImageView
 			android:id="@+id/mask"
-			android:src="@drawable/avatar_mask"
 			android:layout_width="35dp"
 			android:layout_height="35dp"
-			android:adjustViewBounds="true"
 			android:layout_alignParentLeft="true"
-			android:layout_marginLeft="5dp"/>
+			android:layout_marginLeft="5dp"
+			android:adjustViewBounds="true"
+			android:src="@drawable/avatar_mask"
+			android:visibility="gone"/>
 
 	</RelativeLayout>
 
@@ -53,6 +54,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
+			android:layout_marginLeft="15dp"
 			android:gravity="top|left"
 			android:lines="1"/>
 
@@ -64,7 +66,8 @@
 			android:layout_centerVertical="true"
 			android:ellipsize="end"
 			android:gravity="bottom|left"
-			android:lines="1"/>
+			android:lines="1"
+			android:visibility="gone"/>
 
 	</LinearLayout>
 
@@ -72,12 +75,13 @@
 		android:id="@id/contact_linphone"
 		android:layout_width="30dp"
 		android:layout_height="30dp"
+		android:layout_centerVertical="true"
 		android:layout_gravity="right"
+		android:layout_toLeftOf="@+id/contact_is_select"
+		android:layout_toStartOf="@+id/contact_is_select"
 		android:paddingRight="10dp"
 		android:src="@drawable/linphone_user"
-		android:layout_centerVertical="true"
-		android:layout_toLeftOf="@+id/contact_is_select"
-		android:layout_toStartOf="@+id/contact_is_select"/>
+		android:visibility="gone"/>
 
 	<ImageView
 		android:id="@+id/contact_is_select"

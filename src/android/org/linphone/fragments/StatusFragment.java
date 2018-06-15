@@ -58,11 +58,10 @@ import static org.linphone.LinphoneUtils.getTextFromRegistrationStatement;
 public class StatusFragment extends Fragment {
 	private Handler refreshHandler = new Handler();
 	private TextView statusText, voicemailCount;
-	private ImageView statusLed, callQuality, encryption, menu, voicemail;
+	private ImageView statusLed, callQuality, menu, voicemail;
 	private Runnable mCallQualityUpdater;
-	private boolean isInCall, isAttached = false, isZrtpAsk;
+	private boolean isInCall, isAttached = false;
 	private CoreListenerStub mListener;
-	private Dialog ZRTPdialog = null;
 	private int mDisplayedQuality = -1;
 
 	@Override
@@ -73,7 +72,6 @@ public class StatusFragment extends Fragment {
 		statusText = (TextView) view.findViewById(R.id.status_text);
 		statusLed = (ImageView) view.findViewById(R.id.status_led);
 		callQuality = (ImageView) view.findViewById(R.id.call_quality);
-		encryption = (ImageView) view.findViewById(R.id.encryption);
 		menu = (ImageView) view.findViewById(R.id.side_menu_button);
 		voicemail = (ImageView) view.findViewById(R.id.voicemail);
 		voicemailCount = (TextView) view.findViewById(R.id.voicemail_count);
@@ -302,10 +300,8 @@ public class StatusFragment extends Fragment {
 			if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
 				if (call != null) {
 					startCallQuality();
-					refreshStatusItems(call, call.getCurrentParams().videoEnabled());
 				}
 				menu.setVisibility(View.INVISIBLE);
-				encryption.setVisibility(View.VISIBLE);
 				callQuality.setVisibility(View.VISIBLE);
 
 				// We are obviously connected
@@ -319,7 +315,6 @@ public class StatusFragment extends Fragment {
 			}
 		} else {
 			statusText.setVisibility(View.VISIBLE);
-			encryption.setVisibility(View.GONE);
 		}
 	}
 
@@ -336,130 +331,5 @@ public class StatusFragment extends Fragment {
 			refreshHandler.removeCallbacks(mCallQualityUpdater);
 			mCallQualityUpdater = null;
 		}
-	}
-
-	public void refreshStatusItems(final Call call, boolean isVideoEnabled) {
-		if (call != null) {
-			voicemailCount.setVisibility(View.GONE);
-			MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
-
-			if (isVideoEnabled) {
-				//background.setVisibility(View.GONE);
-			} else {
-				//background.setVisibility(View.VISIBLE);
-			}
-
-			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
-				encryption.setImageResource(R.drawable.security_ok);
-			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
-				encryption.setImageResource(R.drawable.security_pending);
-			} else {
-				encryption.setImageResource(R.drawable.security_ko);
-			}
-
-			if (mediaEncryption == MediaEncryption.ZRTP) {
-				encryption.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						showZRTPDialog(call);
-					}
-				});
-			} else {
-				encryption.setOnClickListener(null);
-			}
-		}
-	}
-
-	public void showZRTPDialog(final Call call) {
-		if (getActivity() == null) {
-			Log.w("Can't display ZRTP popup, no Activity");
-			return;
-		}
-
-		if(ZRTPdialog == null || !ZRTPdialog.isShowing()) {
-			String token = call.getAuthenticationToken();
-
-			if (token == null){
-				Log.w("Can't display ZRTP popup, no token !");
-				return;
-			}
-			if (token.length()<4){
-				Log.w("Can't display ZRTP popup, token is invalid ("+token+")");
-				return;
-			}
-
-			ZRTPdialog = new Dialog(getActivity());
-			ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
-			d.setAlpha(200);
-			ZRTPdialog.setContentView(R.layout.dialog);
-			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-			ZRTPdialog.getWindow().setBackgroundDrawable(d);
-			String zrtpToRead, zrtpToListen;
-			isZrtpAsk = true;
-
-			if (call.getDir().equals(Call.Dir.Incoming)) {
-				zrtpToRead = token.substring(0,2);
-				zrtpToListen = token.substring(2);
-			} else {
-				zrtpToListen = token.substring(0,2);
-				zrtpToRead = token.substring(2);
-			}
-
-			// Obiane specific dev : display sas notif only if screen locked
-			KeyguardManager myKM = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
-			if( myKM.inKeyguardRestrictedInputMode()) {
-				//Screen is locked
-				LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
-			}
-			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
-			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
-					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
-			customText.setText(newText);
-			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete_button);
-			delete.setText(R.string.accept);
-			Button cancel = (Button) ZRTPdialog.findViewById(R.id.cancel);
-			cancel.setText(R.string.deny);
-
-			delete.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					call.setAuthenticationTokenVerified(true);
-					if (encryption != null) {
-						encryption.setImageResource(R.drawable.security_ok);
-					}
-					isZrtpAsk = false;
-					ZRTPdialog.dismiss();
-					LinphoneService.instance().removeSasNotification();
-				}
-			});
-
-			cancel.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					if (call != null) {
-						call.setAuthenticationTokenVerified(false);
-						if (encryption != null) {
-							encryption.setImageResource(R.drawable.security_ko);
-						}
-					}
-					isZrtpAsk = false;
-					ZRTPdialog.dismiss();
-					LinphoneService.instance().removeSasNotification();
-				}
-			});
-			ZRTPdialog.show();
-		}
-	}
-
-	public boolean getisZrtpAsk() {
-		return isZrtpAsk;
-	}
-
-	public void setisZrtpAsk(boolean bool) {
-		isZrtpAsk = bool;
 	}
 }

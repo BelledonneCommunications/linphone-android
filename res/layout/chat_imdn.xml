@@ -11,38 +11,45 @@
 
         <LinearLayout
             android:id="@+id/top_bar"
-            android:orientation="horizontal"
-            android:background="@color/colorF"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="60dp"
+            android:background="@color/colorH"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/back"
-                android:src="@drawable/back"
-                android:background="@drawable/toolbar_button"
-                android:contentDescription="@string/content_description_back"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:padding="18dp"/>
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_back"
+                android:src="@drawable/back"
+                />
 
             <TextView
-                android:text="@string/imdn_info"
                 style="@style/font6"
-                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
-                android:padding="15dp"/>
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="@string/imdn_info"/>
 
             <ImageView
-                android:visibility="invisible"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:padding="15dp"/>
+                android:padding="15dp"
+                android:visibility="invisible"/>
 
         </LinearLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/top_bar"
+            android:background="@color/colorE"/>
 
     </RelativeLayout>
 
@@ -73,14 +80,14 @@
                     android:id="@+id/read_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:background="@color/colorH"
                     android:gravity="center"
-                    android:background="@color/colorG">
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/font27"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font27"
                         android:text="@string/displayed"/>
 
                     <ImageView
@@ -101,14 +108,14 @@
                     android:id="@+id/delivered_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:background="@color/colorH"
                     android:gravity="center"
-                    android:background="@color/colorG">
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/font28"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font28"
                         android:text="@string/delivered"/>
 
                     <ImageView
@@ -129,22 +136,22 @@
                     android:id="@+id/sent_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:background="@color/colorH"
                     android:gravity="center"
-                    android:background="@color/colorG">
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/font28"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font28"
                         android:text="@string/sent"/>
 
                     <ImageView
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:src="@drawable/message_delivered"/>
+                        android:src="@drawable/message_delivered"
+                        android:visibility="invisible"/>
 
                 </LinearLayout>
 
@@ -158,14 +165,14 @@
                     android:id="@+id/undelivered_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:background="@color/colorH"
                     android:gravity="center"
-                    android:background="@color/colorG">
+                    android:orientation="horizontal">
 
                     <TextView
+                        style="@style/font29"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font29"
                         android:text="@string/error"/>
 
                     <ImageView

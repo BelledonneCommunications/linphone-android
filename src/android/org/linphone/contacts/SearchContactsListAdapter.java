@@ -251,13 +251,14 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			holder.name.setVisibility(View.GONE);
 		}
 		holder.address.setText(a);
-		if (holder.linphoneContact != null) {
+		// Obiane
+		/*if (holder.linphoneContact != null) {
 			if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
 				holder.linphoneContact.setVisibility(View.VISIBLE);
 			} else {
 				holder.linphoneContact.setVisibility(View.GONE);
 			}
-		}
+		}*/
 		if (holder.isSelect != null) {
 			if (contactIsSelected(contact)) {
 				holder.isSelect.setVisibility(View.VISIBLE);

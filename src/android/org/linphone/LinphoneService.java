@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.call.CallActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -353,7 +354,8 @@ public final class LinphoneService extends Service {
 		}
 		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, mNotifContentIntent, true,notifcationsPriority);
 
-		LinphoneManager.createAndStart(LinphoneService.this);
+		if (!LinphoneManager.isInstanciated())
+			LinphoneManager.createAndStart(LinphoneService.this);
 
 		instance = this; // instance is ready once linphone manager has been created
 		incomingReceivedActivityName = LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
@@ -378,9 +380,9 @@ public final class LinphoneService extends Service {
 
 				if (state == State.End || state == State.Released || state == State.Error) {
 					if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() == 0) {
-						if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getStatusFragment() != null) {
+						if (CallActivity.isInstanciated()) {
 							removeSasNotification();
-							LinphoneActivity.instance().getStatusFragment().setisZrtpAsk(false);
+							CallActivity.instance().setisZrtpAsk(false);
 						}
 					}
 					destroyOverlay();

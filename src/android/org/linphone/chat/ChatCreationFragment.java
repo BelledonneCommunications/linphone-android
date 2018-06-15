@@ -117,7 +117,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 		mNextButton = view.findViewById(R.id.next);
 		mNextButton.setOnClickListener(this);
-		mNextButton.setEnabled(false);
+		//mNextButton.setEnabled(false);
 		mSearchLayout = view.findViewById(R.id.layoutSearchField);
 
 		mClearSearchFieldButton = view.findViewById(R.id.clearSearchField);
@@ -234,7 +234,8 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private void displayChatCreation() {
 		mNextButton.setVisibility(View.VISIBLE);
-		mNextButton.setEnabled(mContactsSelected.size() > 0);
+		//mNextButton.setEnabled(mContactsSelected.size() > 0);
+		updateListSelected();
 
 		mContactsList.setVisibility(View.VISIBLE);
 		mSearchLayout.setVisibility(View.VISIBLE);
@@ -268,9 +269,13 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	private void updateListSelected() {
 		if (mContactsSelected.size() > 0) {
 			mContactsSelectLayout.invalidate();
-			mNextButton.setEnabled(true);
+			//mNextButton.setEnabled(true);
+			mNextButton.setImageAlpha(255);
+			mNextButton.setClickable(true);
 		} else {
-			mNextButton.setEnabled(false);
+			//mNextButton.setEnabled(false);
+			mNextButton.setImageAlpha(100);
+			mNextButton.setClickable(false);
 		}
 	}
 

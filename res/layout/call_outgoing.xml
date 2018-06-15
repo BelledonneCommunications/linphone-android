@@ -15,19 +15,30 @@
 
 	<RelativeLayout
 		android:id="@+id/top_bar"
-		android:background="@color/colorF"
 		android:layout_width="match_parent"
 		android:layout_height="60dp"
-		android:layout_below="@id/status">
+		android:layout_below="@id/status"
+		android:layout_gravity="center"
+		android:background="@color/colorH"
+		android:gravity="center">
+
+		<ImageView
+			android:id="@+id/imageView2"
+			android:layout_width="25dp"
+			android:layout_height="25dp"
+			android:layout_centerInParent="false"
+			android:layout_centerVertical="true"
+			android:layout_marginRight="10dp"
+			android:src="@drawable/call_outgoing"/>
 
 		<TextView
-			android:text="@string/outgoing_call"
 			style="@style/font1"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:paddingLeft="10dp"
-			android:gravity="center"/>
-
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerVertical="true"
+			android:layout_toEndOf="@+id/imageView2"
+			android:gravity="center"
+			android:text="@string/outgoing_call"/>
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -43,7 +54,7 @@
 			style="@style/font5"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
+			android:layout_below="@id/avatar_layout"
 			android:layout_centerHorizontal="true"
 			android:paddingTop="5dp"
 			android:gravity="center_vertical|center_horizontal" />
@@ -62,24 +73,25 @@
 			android:id="@+id/avatar_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/contact_number"
+			android:layout_alignParentTop="true"
 			android:layout_margin="5dp"
 			android:gravity="center">
 
 			<ImageView
 				android:id="@+id/contact_picture"
-				android:src="@drawable/avatar"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="200dp"
-				android:layout_height="wrap_content"
-				android:adjustViewBounds="true"/>
-
-			<ImageView
-				android:src="@drawable/avatar_mask_border"
 				android:layout_width="200dp"
 				android:layout_height="wrap_content"
 				android:adjustViewBounds="true"
-				android:layout_alignParentTop="true"/>
+				android:contentDescription="@string/content_description_contact_picture"
+				android:src="@drawable/avatar_big_secure1"/>
+
+			<ImageView
+				android:layout_width="200dp"
+				android:layout_height="wrap_content"
+				android:layout_alignParentTop="true"
+				android:adjustViewBounds="true"
+				android:src="@drawable/avatar_mask_border"
+				android:visibility="gone"/>
 
 		</RelativeLayout>
 
@@ -105,7 +117,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:background="@drawable/button_background"
+			android:background=" #595959 "
 			android:contentDescription="@string/content_description_toggle_micro"
 			android:padding="10dp"
 			android:src="@drawable/micro_default"/>
@@ -115,9 +127,9 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:background="@drawable/button_background"
+			android:background=" #595959 "
 			android:contentDescription="@string/content_description_toggle_speaker"
-			android:padding="15dp"
+			android:padding="10dp"
 			android:src="@drawable/speaker_default"/>
 
 		<ImageView
@@ -127,7 +139,6 @@
 			android:layout_weight="0.7"
 			android:background="@drawable/hangup"
 			android:contentDescription="@string/content_description_hang_up"
-			android:padding="12dp"
 			android:src="@drawable/call_hangup"/>
 
 	</LinearLayout>

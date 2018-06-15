@@ -93,7 +93,7 @@
 			android:layout_gravity="center"
 			android:layout_weight="1"
 			android:adjustViewBounds="true"
-			android:background="@drawable/call"
+			android:background="@color/colorH"
 			android:scaleType="center"
 			android:src="@drawable/call_alt_start_over"/>
 

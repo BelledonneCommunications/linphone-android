@@ -7,14 +7,14 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:background="@color/colorG"
+                  android:background="@color/colorH"
                   android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/colorF"
+            android:background="@color/colorH"
             android:orientation="horizontal">
 
             <ImageView
@@ -25,13 +25,13 @@
                 android:layout_weight="0.2"
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_back"
-                android:padding="18dp"
                 android:src="@drawable/back"/>
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2">
+                android:layout_weight="0.2"
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/all_contacts"
@@ -53,7 +53,8 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2">
+                android:layout_weight="0.2"
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/linphone_contacts"
@@ -82,7 +83,6 @@
                 android:layout_weight="0.2"
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_valid"
-                android:padding="18dp"
                 android:src="@drawable/chat_room_creation_next"/>
 
         </LinearLayout>
@@ -96,32 +96,30 @@
         <RelativeLayout
             android:id="@+id/layoutSearchField"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="33dp"
             android:layout_margin="10dp"
-            android:background="@color/colorG">
+            android:background="#f5f5f5">
 
             <EditText
                 android:id="@+id/searchField"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/resizable_textfield"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/clearSearchField"
+                android:background=" #f3f3f3 "
                 android:contentDescription="@string/content_description_search_contact"
-                android:gravity="center"
-                android:hint="@string/chat_room_creation_filter_hint"
                 android:inputType="textPersonName"
-                android:paddingRight="5dp"
                 android:textColor="@android:color/black"
                 android:textCursorDrawable="@null"/>
 
             <ImageView
                 android:id="@+id/clearSearchField"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:src="@drawable/clean_field"/>
+                android:src="@drawable/clean_field_default"/>
 
         </RelativeLayout>
 
@@ -130,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/resizable_textfield"
+            android:background="@color/colorG"
             android:fadeScrollbars="false"
             android:lines="1">
 
@@ -155,7 +153,7 @@
                 android:id="@+id/contactsList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/colorE"
+                android:divider="@color/colorM"
                 android:dividerHeight="1dp"
                 android:fastScrollAlwaysVisible="true"
                 android:fastScrollEnabled="true"/>

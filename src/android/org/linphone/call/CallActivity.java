@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -111,13 +112,13 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private TextView missedChats;
 	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout;
 	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
-	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu, chat;
+	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu, chat, encryption;
 	private LinearLayout mNoCurrentCall, callInfo, mCallPaused;
 	private ProgressBar videoProgress;
 	private StatusFragment status;
 	private CallAudioFragment audioCallFragment;
 	private CallVideoFragment videoCallFragment;
-	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed, isVideoAsk;
+	private boolean isSpeakerEnabled = false, isMicMuted = false, isTransferAllowed, isVideoAsk, isZrtpAsk;
 	private LinearLayout mControlsLayout;
 	private Numpad numpad;
 	private int cameraNumber;
@@ -126,6 +127,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private Dialog dialog = null;
 	private static long TimeRemind = 0;
 	private HeadsetReceiver headsetReceiver;
+	private Dialog ZRTPdialog = null;
 
 	private LinearLayout callsList, conferenceList;
 	private LayoutInflater inflater;
@@ -185,10 +187,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			@Override
 			public void onCallStateChanged(Core lc, final Call call, Call.State state, String message) {
 				if (LinphoneManager.getLc().getCallsNb() == 0) {
-					if (status != null) {
-						LinphoneService.instance().removeSasNotification();
-						status.setisZrtpAsk(false);
-					}
+					LinphoneService.instance().removeSasNotification();
+					setisZrtpAsk(false);
 					finish();
 					return;
 				}
@@ -205,7 +205,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					}
 				} else if (state == State.Resuming) {
 					if(LinphonePreferences.instance().isVideoEnabled()){
-						status.refreshStatusItems(call, isVideoEnabled(call));
+						refreshStatusItems(call, isVideoEnabled(call));
 						if(call.getCurrentParams().videoEnabled()){
 							showVideoView();
 						}
@@ -217,10 +217,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					switchVideo(isVideoEnabled(call));
 					enableAndRefreshInCallActions();
 
-					if (status != null) {
-						videoProgress.setVisibility(View.GONE);
-						status.refreshStatusItems(call, isVideoEnabled(call));
-					}
+					videoProgress.setVisibility(View.GONE);
+					refreshStatusItems(call, isVideoEnabled(call));
 				} else if (state == State.UpdatedByRemote) {
 					// If the correspondent proposes video while audio call
 					boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
@@ -251,12 +249,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 			@Override
 			public void onCallEncryptionChanged(Core lc, final Call call, boolean encrypted, String authenticationToken) {
-				if (status != null) {
-					if(call.getCurrentParams().getMediaEncryption().equals(MediaEncryption.ZRTP) && !call.getAuthenticationTokenVerified()){
-						status.showZRTPDialog(call);
+				if(call.getCurrentParams().getMediaEncryption().equals(MediaEncryption.ZRTP) && !call.getAuthenticationTokenVerified()){
+						showZRTPDialog(call);
 					}
-					status.refreshStatusItems(call, call.getCurrentParams().videoEnabled());
-				}
+					refreshStatusItems(call, call.getCurrentParams().videoEnabled());
 			}
 
 		};
@@ -281,8 +277,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					TimeRemind = savedInstanceState.getLong("TimeRemind");
 					createTimerForDialog(TimeRemind);
 				}
-                if (status != null && savedInstanceState.getBoolean("AskingZrtp")) {
-                    status.setisZrtpAsk(savedInstanceState.getBoolean("AskingZrtp"));
+                if (savedInstanceState.getBoolean("AskingZrtp")) {
+                    setisZrtpAsk(savedInstanceState.getBoolean("AskingZrtp"));
                 }
 				refreshInCallActions();
 				return;
@@ -341,7 +337,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		outState.putBoolean("VideoCallPaused", isVideoCallPaused);
 		outState.putBoolean("AskingVideo", isVideoAsk);
 		outState.putLong("TimeRemind", TimeRemind);
-        if (status != null) outState.putBoolean("AskingZrtp", status.getisZrtpAsk());
+        if (status != null) outState.putBoolean("AskingZrtp", getisZrtpAsk());
 		if (dialog != null) dialog.dismiss();
 		super.onSaveInstanceState(outState);
 	}
@@ -434,6 +430,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		switchCamera.setOnClickListener(this);
 
 		mControlsLayout = (LinearLayout) findViewById(R.id.menu);
+
+		encryption = (ImageView) findViewById(R.id.encryption);
+		encryption.setVisibility(View.VISIBLE);
 
 		if (!isTransferAllowed) {
 			addCall.setBackgroundResource(R.drawable.options_add_call);
@@ -540,10 +539,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		} else {
 			if(video.isEnabled()) {
 				if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-					video.setImageResource(R.drawable.camera_selected);
+					video.setImageResource(R.drawable.camera_default);
 					videoProgress.setVisibility(View.INVISIBLE);
 				} else {
-					video.setImageResource(R.drawable.camera_button);
+					video.setImageResource(R.drawable.camera_disabled);
 				}
 			} else {
 				video.setImageResource(R.drawable.camera_button);
@@ -554,7 +553,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 
 		if (isSpeakerEnabled) {
-			speaker.setImageResource(R.drawable.speaker_selected);
+			speaker.setImageResource(R.drawable.route_speaker_default);
 		} else {
 			speaker.setImageResource(R.drawable.speaker_default);
 		}
@@ -569,21 +568,28 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 
 		try {
-			routeSpeaker.setImageResource(R.drawable.route_speaker);
+			routeSpeaker.setImageResource(R.drawable.speaker_default);
 			if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
 				isSpeakerEnabled = false; // We need this if isSpeakerEnabled wasn't set correctly
-				routeEarpiece.setImageResource(R.drawable.route_earpiece);
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				//routeEarpiece.setImageResource(R.drawable.route_earpiece);
+				//routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				routeEarpiece.setAlpha(0.5f);
+				routeBluetooth.setAlpha(1f);
 				return;
 			} else {
-				routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+				//routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
+				//routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+				routeEarpiece.setAlpha(1f);
+				routeBluetooth.setAlpha(0.5f);
 			}
 
 			if (isSpeakerEnabled) {
-				routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
-				routeEarpiece.setImageResource(R.drawable.route_earpiece);
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+				routeSpeaker.setImageResource(R.drawable.route_speaker);
+				//routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
+				//routeEarpiece.setImageResource(R.drawable.route_earpiece);
+				//routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+				routeEarpiece.setAlpha(0.5f);
+				routeBluetooth.setAlpha(0.5f);
 			}
 		} catch (NullPointerException npe) {
 			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (4)");
@@ -702,26 +708,35 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		else if (id == R.id.route_bluetooth) {
 			if (BluetoothManager.getInstance().routeAudioToBluetooth()) {
 				isSpeakerEnabled = false;
-				routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+				/*routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
 				routeSpeaker.setImageResource(R.drawable.route_speaker);
-				routeEarpiece.setImageResource(R.drawable.route_earpiece);
+				routeEarpiece.setImageResource(R.drawable.route_earpiece);*/
+				routeEarpiece.setAlpha(0.5f);
+				routeBluetooth.setAlpha(1f);
+				routeSpeaker.setImageResource(R.drawable.speaker_default);
 			}
 			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.route_earpiece) {
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			isSpeakerEnabled = false;
-			routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+			/*routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			routeSpeaker.setImageResource(R.drawable.route_speaker);
-			routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
+			routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);*/
+			routeEarpiece.setAlpha(1f);
+			routeBluetooth.setAlpha(0.5f);
+			routeSpeaker.setImageResource(R.drawable.speaker_default);
 			hideOrDisplayAudioRoutes();
 		}
 		else if (id == R.id.route_speaker) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
 			isSpeakerEnabled = true;
-			routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+			/*routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
-			routeEarpiece.setImageResource(R.drawable.route_earpiece);
+			routeEarpiece.setImageResource(R.drawable.route_earpiece);*/
+			routeEarpiece.setAlpha(0.5f);
+			routeBluetooth.setAlpha(0.5f);
+			routeSpeaker.setImageResource(R.drawable.route_speaker_default);
 			hideOrDisplayAudioRoutes();
 		}
 
@@ -919,7 +934,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
-			speaker.setImageResource(R.drawable.speaker_selected);
+			speaker.setImageResource(R.drawable.route_speaker_default);
 			LinphoneManager.getInstance().enableSpeaker(isSpeakerEnabled);
 		} else {
 			Log.d("Toggle speaker off, routing back to earpiece");
@@ -1006,7 +1021,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					conference.setVisibility(View.INVISIBLE);
 					displayVideoCall(false);
 					numpad.setVisibility(View.GONE);
-					options.setImageResource(R.drawable.options_default);
+					//options.setImageResource(R.drawable.options_default);
+					options.setImageAlpha(125);
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);
 		}
@@ -1056,7 +1072,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void hideOrDisplayCallOptions() {
 		//Hide options
 		if (addCall.getVisibility() == View.VISIBLE) {
-			options.setImageResource(R.drawable.options_default);
+			//options.setImageResource(R.drawable.options_disabled);
+			options.setImageAlpha(125);
 			if (isTransferAllowed) {
 				transfer.setVisibility(View.INVISIBLE);
 			}
@@ -1068,7 +1085,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 			addCall.setVisibility(View.VISIBLE);
 			conference.setVisibility(View.VISIBLE);
-			options.setImageResource(R.drawable.options_selected);
+			//options.setImageResource(R.drawable.options_default);
+			options.setImageAlpha(255);
 			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
 	}
@@ -1208,14 +1226,137 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		refreshIncallUi();
 		handleViewIntent();
 
-        if (status != null && status.getisZrtpAsk() && lc != null) {
-            status.showZRTPDialog(lc.getCurrentCall());
+		if (lc != null) {
+			refreshStatusItems(lc.getCurrentCall(), lc.getCurrentCall().getCurrentParams().videoEnabled());
+		}
+
+        if (lc != null) {
+            showZRTPDialog(lc.getCurrentCall());
         }
 
 		if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 			if (!isSpeakerEnabled) {
 				LinphoneManager.getInstance().enableProximitySensing(true);
 				removeCallbacks();
+			}
+		}
+	}
+
+	public void showZRTPDialog(final Call call) {
+		if(ZRTPdialog == null || !ZRTPdialog.isShowing()) {
+			String token = call.getAuthenticationToken();
+
+			if (token == null){
+				Log.w("Can't display ZRTP popup, no token !");
+				return;
+			}
+			if (token.length()<4){
+				Log.w("Can't display ZRTP popup, token is invalid ("+token+")");
+				return;
+			}
+
+			ZRTPdialog = new Dialog(this);
+			ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
+			d.setAlpha(200);
+			ZRTPdialog.setContentView(R.layout.dialog);
+			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+			ZRTPdialog.getWindow().setBackgroundDrawable(d);
+			String zrtpToRead, zrtpToListen;
+			isZrtpAsk = true;
+
+			if (call.getDir().equals(Call.Dir.Incoming)) {
+				zrtpToRead = token.substring(0,2);
+				zrtpToListen = token.substring(2);
+			} else {
+				zrtpToListen = token.substring(0,2);
+				zrtpToRead = token.substring(2);
+			}
+
+			// Obiane specific dev : display sas notif only if screen locked
+			KeyguardManager myKM = (KeyguardManager) this.getSystemService(Context.KEYGUARD_SERVICE);
+			if( myKM.inKeyguardRestrictedInputMode()) {
+				//Screen is locked
+				LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
+			}
+			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
+			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
+					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
+			customText.setText(newText);
+			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete_button);
+			delete.setText(R.string.accept);
+			Button cancel = (Button) ZRTPdialog.findViewById(R.id.cancel);
+			cancel.setText(R.string.deny);
+
+			delete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					call.setAuthenticationTokenVerified(true);
+					if (encryption != null) {
+						encryption.setImageResource(R.drawable.security_button_default);
+					}
+					isZrtpAsk = false;
+					ZRTPdialog.dismiss();
+					LinphoneService.instance().removeSasNotification();
+				}
+			});
+
+			cancel.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if (call != null) {
+						call.setAuthenticationTokenVerified(false);
+						if (encryption != null) {
+							encryption.setImageResource(R.drawable.security_button1_over);
+						}
+					}
+					isZrtpAsk = false;
+					ZRTPdialog.dismiss();
+					LinphoneService.instance().removeSasNotification();
+				}
+			});
+			ZRTPdialog.show();
+		}
+	}
+
+	public boolean getisZrtpAsk() {
+		return isZrtpAsk;
+	}
+
+	public void setisZrtpAsk(boolean bool) {
+		isZrtpAsk = bool;
+	}
+
+	public void refreshStatusItems(final Call call, boolean isVideoEnabled) {
+		if (call != null) {
+			MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
+
+			if (isVideoEnabled) {
+				//background.setVisibility(View.GONE);
+			} else {
+				//background.setVisibility(View.VISIBLE);
+			}
+
+			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
+				encryption.setImageResource(R.drawable.security_button_default);
+			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
+				encryption.setImageResource(R.drawable.security_button1_default);
+			} else {
+				encryption.setImageResource(R.drawable.security_button1_over);
+			}
+
+			if (mediaEncryption == MediaEncryption.ZRTP) {
+				encryption.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						showZRTPDialog(call);
+					}
+				});
+			} else {
+				encryption.setOnClickListener(null);
 			}
 		}
 	}

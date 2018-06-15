@@ -31,7 +31,6 @@
 			android:layout_alignParentLeft="true"
 			android:layout_centerInParent="true"
 			android:contentDescription="@string/content_description_call_quality"
-			android:padding="10dp"
 			android:src="@drawable/call_quality_indicator_0"
 			android:visibility="invisible"/>
 
@@ -57,12 +56,13 @@
 
 		<ImageView
 			android:id="@+id/status_led"
-			android:layout_width="30dp"
+			android:layout_width="45dp"
 			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
-			android:gravity="end"
 			android:layout_alignParentTop="true"
 			android:adjustViewBounds="true"
+			android:gravity="end"
+			android:paddingRight="15dp"
 			android:src="@drawable/led_disconnected"/>
 
 		<ImageView
@@ -83,18 +83,6 @@
 			android:layout_centerVertical="true"
 			android:paddingLeft="5dp"
 			android:paddingRight="10dp"
-			android:visibility="gone"/>
-
-		<ImageView
-			android:id="@+id/encryption"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_centerInParent="true"
-			android:adjustViewBounds="true"
-			android:contentDescription="@string/content_description_encryption"
-			android:padding="5dp"
-			android:src="@drawable/security_ko"
 			android:visibility="gone"/>
 	</RelativeLayout>
 </RelativeLayout>
