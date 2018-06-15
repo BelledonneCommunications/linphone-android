@@ -415,7 +415,7 @@ public final class LinphoneUtils {
 		String extension = LinphoneUtils.getExtensionFromFileName(path);
 		if(extension != null)
 			extension = extension.toLowerCase();
-		return (extension != null && extension.matches(".*(png|jpg|jpeg|bmp|gif).*"));
+		return (extension != null && extension.matches("(png|jpg|jpeg|bmp|gif)"));
 	}
 
 	public static void recursiveFileRemoval(File root) {
