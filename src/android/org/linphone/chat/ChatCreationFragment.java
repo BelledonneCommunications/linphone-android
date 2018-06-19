@@ -124,7 +124,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mClearSearchFieldButton.setOnClickListener(this);
 
 		mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
-		mContactsFetchInProgress.setVisibility(View.VISIBLE);
+		mContactsFetchInProgress.setVisibility(View.GONE);
 
 		mSearchAdapter = new SearchContactsListAdapter(null, mInflater, mContactsFetchInProgress);
 

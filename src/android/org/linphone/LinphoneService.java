@@ -859,8 +859,8 @@ public final class LinphoneService extends Service {
 			lc.removeListener(mListener);
 		}
 
-		instance = null;
 		LinphoneManager.destroy();
+		instance = null;
 
 	    // Make sure our notification is gone.
 	    stopForegroundCompat(NOTIF_ID);

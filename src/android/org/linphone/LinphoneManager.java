@@ -988,7 +988,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	public static void ContactsManagerDestroy() {
-		if (LinphoneManager.instance != null && LinphoneManager.instance.mServiceContext != null)
+		if (LinphoneManager.isInstanciated() && LinphoneManager.instance.mServiceContext != null)
 			LinphoneManager.instance.mServiceContext.getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
 		ContactsManager.getInstance().destroy();
 	}
@@ -1266,6 +1266,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	@Override
 	public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
 
+	}
+
+	@Override
+	public void onQrcodeFound(Core lc, String result) {
 	}
 
 	public void onCallEncryptionChanged(Core lc, Call call,

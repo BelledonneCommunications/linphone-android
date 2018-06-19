@@ -184,11 +184,22 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		//This must be done before calling super.onCreate().
 		super.onCreate(savedInstanceState);
 
+		//Obiane specifics
+		//HTTP to HTTPS migration
+		try {
+			if (LinphonePreferences.instance().getRemoteProvisioningUrl() != null
+					&& LinphonePreferences.instance().getRemoteProvisioningUrl().startsWith("http://")) {
+				LinphonePreferences.instance().setRemoteProvisioningUrl(LinphonePreferences.instance().getRemoteProvisioningUrl().replace("http://", "https://"));
+			}
+		}catch(NullPointerException nPE){
+			Log.e(nPE);
+		}
+
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 		boolean useFirstLoginActivity = getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
-		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
+		if (LinphonePreferences.instance().isProvisioningLoginViewEnabled() && LinphonePreferences.instance().isFirstLaunch()) {
 			Intent wizard = new Intent();
 			wizard.setClass(this, RemoteProvisioningLoginActivity.class);
 			wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
@@ -228,7 +239,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		currentFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
-			displayDialer();
+			displayContacts(false);
 		} else {
 			currentFragment = (FragmentsAvailable) savedInstanceState.getSerializable("currentFragment");
 		}
@@ -1250,7 +1261,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	public void checkAndRequestWriteContactsPermission() {
-		checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
+		//checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
 	}
 
 	public void checkAndRequestRecordAudioPermissionForEchoCanceller() {
@@ -1340,10 +1351,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
 				LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
 				break;
-			case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
+			/*case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
 				if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
 					((SettingsFragment) fragment).startEchoTester();
-				break;
+				break;*/
 		}
 		if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
 			ContactsManager.getInstance().enableContactsAccess();
@@ -1359,8 +1370,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		super.onStart();
 		ArrayList<String> permissionsList = new ArrayList<String>();
 
-		int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
-		Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		/*int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
+		Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));*/
 
 		int readPhone = getPackageManager().checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
 		Log.i("[Permission] Read phone state permission is " + (readPhone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
@@ -1380,17 +1391,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				permissionsList.add(Manifest.permission.READ_PHONE_STATE);
 			}
 		}
-		if (contacts != PackageManager.PERMISSION_GRANTED) {
+		/*if (contacts != PackageManager.PERMISSION_GRANTED) {
 			if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
 				Log.i("[Permission] Asking for contacts");
 				permissionsList.add(Manifest.permission.READ_CONTACTS);
 			}
-		} else {
+		} else {*/
 			if (!ContactsManager.getInstance().contactsFetchedOnce()) {
 				ContactsManager.getInstance().enableContactsAccess();
 				ContactsManager.getInstance().fetchContactsAsync();
 			}
-		}
+		//}
 
 		if (permissionsList.size() > 0) {
 			String[] permissions = new String[permissionsList.size()];
@@ -1442,14 +1453,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		refreshAccounts();
 
-		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
+		/*if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
 			isTrialAccount();
-		}
+		}*/
 
 		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
-		LinphoneManager.getInstance().changeStatusToOnline();
+		//LinphoneManager.getInstance().changeStatusToOnline();
 
 		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {
@@ -1622,12 +1633,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	public void initSideMenu() {
 		sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
 		sideMenuItems = new ArrayList<String>();
-		sideMenuItems.add(getResources().getString(R.string.menu_assistant));
+		/*sideMenuItems.add(getResources().getString(R.string.menu_assistant));
 		sideMenuItems.add(getResources().getString(R.string.menu_settings));
 		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
 			sideMenuItems.add(getResources().getString(R.string.inapp));
-		}
+		}*/
 		sideMenuItems.add(getResources().getString(R.string.menu_about));
+		sideMenuItems.add("");
 		sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
 		sideMenuItemList = (ListView)findViewById(R.id.item_list);
 		menu = (ImageView) findViewById(R.id.side_menu_button);
@@ -1729,16 +1741,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	public void refreshAccounts(){
 		if (LinphoneManager.getLc().getProxyConfigList() != null &&
 				LinphoneManager.getLc().getProxyConfigList().length > 1) {
-			accountsList.setVisibility(View.VISIBLE);
+			accountsList.setVisibility(View.GONE);
 			accountsList.setAdapter(new AccountsListAdapter());
 			accountsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-					if(view != null && view.getTag() != null) {
+					/*if(view != null && view.getTag() != null) {
 						int position = Integer.parseInt(view.getTag().toString());
 						LinphoneActivity.instance().displayAccountSettings(position);
 					}
-					openOrCloseSideMenu(false);
+					openOrCloseSideMenu(false);*/
 				}
 			});
 		} else {

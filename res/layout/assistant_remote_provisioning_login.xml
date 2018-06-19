@@ -1,125 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				android:background="@color/colorG"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:layout_gravity="center"
+			  android:background="@color/colorH"
+			  android:gravity="center">
 
-	<LinearLayout
+	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:padding="20dp"
-		android:orientation="vertical">
+		android:layout_gravity="center"
+		android:layout_weight="0.1"
+		android:gravity="center">
 
-		<LinearLayout
+		<RelativeLayout
+			android:id="@+id/header_text"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal">
+			android:layout_height="120dp"
+			android:layout_marginBottom="20dp"
+			android:layout_marginLeft="35dp"
+			android:layout_marginRight="35dp">
 
-			<ImageView
-				android:src="@drawable/linphone_logo"
-				android:layout_width="60dp"
-				android:layout_height="60dp"
-				android:layout_gravity="bottom"/>
-
-			<LinearLayout
+			<TextView
+				android:id="@+id/textView2"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:paddingLeft="20dp"
-				android:layout_gravity="bottom"
-				android:orientation="vertical">
+				android:layout_centerVertical="true"
+				android:layout_toEndOf="@+id/imageView3"
+				android:text="Bienvenue sur
+Mobile Security Intense"
+				android:textColor="#595959"
+				android:textSize="20sp"/>
 
-				<TextView
-					android:text="@string/welcome"
-					style="@style/font13"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
+			<ImageView
+				android:id="@+id/imageView3"
+				android:layout_width="65dp"
+				android:layout_height="65dp"
+				android:layout_alignParentStart="true"
+				android:layout_centerVertical="true"
+				android:layout_marginRight="10dp"
+				android:src="@drawable/logo_secure_phone_big"/>
+		</RelativeLayout>
 
-				<TextView
-					android:text="@string/assistant_remote_provisioning_login"
-					style="@style/font11"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"/>
-			</LinearLayout>
-
-		</LinearLayout>
-
-		<TextView
-			android:text="@string/username"
-			style="@style/font9"
-			android:layout_marginTop="30dp"
+		<RelativeLayout
+			android:id="@+id/bottom_text"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_height="match_parent"
+			android:layout_below="@+id/header_text"
+			android:layout_gravity="center"
+			android:layout_margin="50dp"
+			android:foreground="@drawable/avatar_mask_border"
+			android:gravity="center"
+			>
 
-		<EditText
-			android:id="@+id/assistant_username"
-			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorC"
-			android:textCursorDrawable="@null"
-			android:inputType="textNoSuggestions"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:maxLines="1"/>
+			<SurfaceView
+				android:id="@+id/qrcodeCaptureSurface"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
+				android:layout_weight="10"
+				android:visibility="visible"/>
+		</RelativeLayout>
+	</RelativeLayout>
 
-		<TextView
-			style="@style/font9"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="20dp"
-			android:text="@string/domain"/>
-
-		<EditText
-			android:id="@+id/assistant_domain"
-			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorC"
-			android:textCursorDrawable="@null"
-			android:inputType="textEmailAddress"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:maxLines="1"/>
-
-		<TextView
-			android:text="@string/password"
-			style="@style/font9"
-			android:paddingTop="20dp"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-
-		<EditText
-			android:id="@+id/assistant_password"
-			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorC"
-			android:textCursorDrawable="@null"
-			android:inputType="textPassword"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:maxLines="1"/>
-
-		<Button
-			android:id="@+id/assistant_connect"
-			android:text="@string/connect"
-			android:background="@drawable/assistant_button"
-			style="@style/font5"
-			android:textAllCaps="false"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:paddingLeft="10dp"
-			android:paddingRight="10dp"
-			android:layout_marginTop="20dp"/>
-
-	</LinearLayout>
-
-	<ImageView
-		android:src="@drawable/logo_orange"
-		android:layout_width="60dp"
-		android:layout_height="60dp"
-		android:layout_margin="30dp"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentRight="true"/>
-
-</RelativeLayout>
+</LinearLayout>

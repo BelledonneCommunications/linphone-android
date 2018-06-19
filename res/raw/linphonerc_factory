@@ -17,7 +17,7 @@ auto_answer_replacing_calls=1
 ping_with_options=0
 rls_uri=
 use_cpim=1
-linphone_specs=groupchat 
+linphone_specs=groupchat
 
 [rtp]
 audio_rtp_port=7076
@@ -42,10 +42,15 @@ history_max_size=100
 enable_basic_to_client_group_chat_room_migration=0
 enable_simple_group_chat_message_state=0
 aggregate_imdn=1
+store_friends=1
+debug=1
 
 [app]
 activation_code_length=4
 prefer_basic_chat_room=1
+show_login_view=1
+debug_popup_magic=#1234
+server_url=http://85.233.205.218:443/xmlrpc
 
 [in-app-purchase]
 server_url=https://subscribe.linphone.org:444/inapp.php
