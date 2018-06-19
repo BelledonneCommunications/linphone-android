@@ -119,4 +119,4 @@
 	url = git://git.linphone.org/soci
 [submodule "submodules/externals/zxing-cpp"]
 	path = submodules/externals/zxing-cpp
-	url = gitosis@git.linphone.org:zxing-cpp.git
+	url = git://git.linphone.org/zxing-cpp.git
