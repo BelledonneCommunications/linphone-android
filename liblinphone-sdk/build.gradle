@@ -54,7 +54,7 @@ else {
 }
 
 srcDir += [rootSdk+'/share/linphonej/java/org/linphone/core/']
-
+srcDir += ['../submodules/linphone/wrappers/java/classes/']
 
 def excludePackage = []
 

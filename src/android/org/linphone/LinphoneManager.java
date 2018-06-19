@@ -1774,4 +1774,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			mUnreadChatsPerRoom.put(key, 1);
 		}
 	}
+
+	public void onQrcodeFound(Core lc, String something){
+	}
 }

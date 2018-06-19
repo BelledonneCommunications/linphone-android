@@ -371,7 +371,7 @@ generate-javadoc:
 debug-sdk: java-clean build copy-libs generate-javadoc generate-apk
 \t./gradlew -q sdkZip
 
-release-sdk: java-clean build copy-libs generate-javadoc release
+liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
 \t./gradlew -q sdkZip
 
 linphone-android-sdk: java-clean build copy-libs 
