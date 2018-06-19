@@ -140,6 +140,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private HashMap<String, String> mEncoderTexts;
 	private HashMap<String, String> mDecoderTexts;
 	private CallListenerStub mCallListener;
+	private Call mCallDisplayedInStats;
 
 	private boolean oldIsSpeakerEnabled = false;
 
@@ -1675,9 +1676,16 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	public void initCallStatsRefresher(final Call call, final View view) {
+		if (mCallDisplayedInStats == call) return;
+	
 		if (mTimer != null && mTask != null) {
-			return;
+			mTimer.cancel();
+			mTimer = null;
+			mTask = null;
 		}
+		mCallDisplayedInStats = call;
+		
+		if (call == null) return;
 
 		final TextView titleAudio = (TextView) view.findViewById(R.id.call_stats_audio);
 		final TextView titleVideo = (TextView) view.findViewById(R.id.call_stats_video);
@@ -1742,7 +1750,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					public void run() {
 						if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() == null) return;
 						synchronized(LinphoneManager.getLc()) {
-							if (LinphoneActivity.isInstanciated()) {
+							if (LinphoneActivity.isInstanciated() && call.getState() != Call.State.Released) {
 								CallParams params = call.getCurrentParams();
 								if (params != null) {
 									CallStats audioStats = call.getStats(StreamType.Audio);
