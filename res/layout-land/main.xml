@@ -67,7 +67,8 @@
 						android:id="@+id/fragmentContainer"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:orientation="horizontal" />
+						android:background="@color/colorB"
+						android:orientation="horizontal"/>
 				</FrameLayout>
 
 			</LinearLayout>
@@ -244,12 +245,12 @@
 
 			<ImageView
 				android:id="@+id/quit_button"
-				android:src="@drawable/quit"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:padding="5dp"
 				android:layout_alignParentLeft="true"
-				android:layout_centerVertical="true" />
+				android:layout_centerVertical="true"
+				android:padding="14dp"
+				android:src="@drawable/quit"/>
 
 			<TextView
 				android:id="@+id/quit"
@@ -283,19 +284,19 @@
 
 			<ListView
 				android:id="@+id/item_list"
-				android:background="@color/colorH"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:background="@color/colorH"
 				android:choiceMode="singleChoice"
 				android:divider="@color/colorE"
-				android:listSelector="@color/colorH"
+				android:dividerHeight="1dp"
 				android:footerDividersEnabled="true"
-				android:dividerHeight="1dp"/>
+				android:listSelector="@color/colorH"/>
 
 			<View
 				android:layout_width="match_parent"
 				android:layout_height="1dp"
-				android:background="@color/colorE"/>
+				android:background="@color/colorH"/>
 
 		</LinearLayout>
 	</RelativeLayout>
