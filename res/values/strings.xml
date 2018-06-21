@@ -119,6 +119,10 @@
     <string name="phone_number_info_content">\nThanks to your phone number, your friends will find you more easily.\n\n You will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
     <string name="phone_number_link_info_content">\nYour friends will find you more easily if you link your account to your phone number\n\nYou will see in your address book who is using Linphone and your friends will know that they can reach you on Linphone as well.\n</string>
     <string name="phone_number_link_info_content_already_account">You can only use your phone number with one Linphone account.\n\nIf you had already linked your number to an other account but you prefer to use this one, simply link it now and your number will automatically be moved to this account.</string>
+    <string name="assistant_step1">Étape 1</string>
+    <string name="assistant_step2">Étape 2</string>
+    <string name="assistant_instruction1">Veuillez scanner le code reçu dans votre courriel.</string>
+    <string name="assistant_instruction2">Veuillez saisir le code SMS</string>
 
     <!-- Status -->
     <string name="invalid_email">Invalid email</string>

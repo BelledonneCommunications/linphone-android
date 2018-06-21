@@ -183,7 +183,9 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public boolean hasContactsAccess() {
-		if (context == null) {
+		//Obiane spec
+		return false;
+		/*if (context == null) {
 			context = LinphoneManager.getInstance().getContext();
 		}
 		if (context == null) {
@@ -192,7 +194,7 @@ public class ContactsManager extends ContentObserver {
 		boolean contactsR = (PackageManager.PERMISSION_GRANTED ==
 				context.getPackageManager().checkPermission(android.Manifest.permission.READ_CONTACTS, context.getPackageName()));
 		context.getPackageManager();
-		return contactsR && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
+		return contactsR && !context.getResources().getBoolean(R.bool.force_use_of_linphone_friends);*/
 	}
 
 	public void setLinphoneContactsPrefered(boolean isPrefered) {
@@ -264,7 +266,9 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized void setContacts(List<LinphoneContact> c) {
-		if (contacts.isEmpty() || contacts.size() > c.size()) {
+		// Obiane spec
+		contacts = c;
+		/*if (contacts.isEmpty() || contacts.size() > c.size()) {
 			contacts = c;
 		} else {
 			for (LinphoneContact contact : c) {
@@ -273,11 +277,13 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 		}
-		Collections.sort(contacts);
+		Collections.sort(contacts);*/
 	}
 
 	public synchronized void setSipContacts(List<LinphoneContact> c) {
-		if (sipContacts.isEmpty() || sipContacts.size() > c.size()) {
+		// Obiane spec
+		sipContacts = c;
+		/*if (sipContacts.isEmpty() || sipContacts.size() > c.size()) {
 			sipContacts = c;
 		} else {
 			for (LinphoneContact contact : c) {
@@ -286,7 +292,7 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 		}
-		Collections.sort(sipContacts);
+		Collections.sort(sipContacts);*/
 	}
 
 	public synchronized void refreshSipContact(Friend lf) {

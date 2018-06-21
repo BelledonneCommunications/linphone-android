@@ -108,7 +108,7 @@
 					android:layout_height="match_parent">
 
 					<ImageView
-						android:id="@+id/footer_history"
+						android:id="@+id/history_image"
 						android:src="@drawable/footer_history"
 						android:contentDescription="@string/content_description_history"
 						android:layout_width="match_parent"
@@ -118,7 +118,7 @@
 
 					<View
 						android:id="@+id/history_select"
-						android:background="@color/colorA"
+						android:background="@color/colorB"
 						android:layout_width="match_parent"
 						android:layout_height="5dp"
 						android:layout_alignParentBottom="true"
@@ -139,13 +139,14 @@
 				</RelativeLayout>
 
 				<RelativeLayout
-					android:id="@+id/contacts"
+					android:id="@+id/contacts_footer"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
 					android:layout_width="0dp"
 					android:layout_height="match_parent">
 
 					<ImageView
+						android:id="@+id/contacts"
 						android:src="@drawable/footer_contacts"
 						android:contentDescription="@string/content_description_contacts"
 						android:layout_width="match_parent"
@@ -155,7 +156,7 @@
 
 					<View
 						android:id="@+id/contacts_select"
-						android:background="@color/colorA"
+						android:background="@color/colorB"
 						android:layout_width="match_parent"
 						android:layout_height="5dp"
 						android:layout_alignParentBottom="true"
@@ -163,13 +164,14 @@
 				</RelativeLayout>
 
 				<RelativeLayout
-					android:id="@+id/dialer"
+					android:id="@+id/dialer_footer"
 					android:background="@drawable/footer_button"
 					android:layout_weight="1"
 					android:layout_width="0dp"
 					android:layout_height="match_parent">
 
 					<ImageView
+						android:id="@+id/dialer"
 						android:src="@drawable/footer_dialer"
 						android:contentDescription="@string/content_description_dialer"
 						android:layout_width="match_parent"
@@ -179,7 +181,7 @@
 
 					<View
 						android:id="@+id/dialer_select"
-						android:background="@color/colorA"
+						android:background="@color/colorB"
 						android:layout_width="match_parent"
 						android:layout_height="5dp"
 						android:layout_alignParentBottom="true"/>
@@ -194,6 +196,7 @@
 					android:layout_height="match_parent">
 
 					<ImageView
+						android:id="@+id/chat_image"
 						android:src="@drawable/footer_chat"
 						android:contentDescription="@string/content_description_chat"
 						android:layout_width="match_parent"
@@ -203,7 +206,7 @@
 
 					<View
 						android:id="@+id/chat_select"
-						android:background="@color/colorA"
+						android:background="@color/colorB"
 						android:layout_width="match_parent"
 						android:layout_height="5dp"
 						android:layout_alignParentBottom="true"

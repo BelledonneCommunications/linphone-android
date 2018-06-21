@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  xmlns:app="http://schemas.android.com/apk/res-auto"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
@@ -10,17 +10,47 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
 		android:layout_gravity="center"
 		android:layout_weight="0.1"
 		android:gravity="center">
+
+		<TextView
+			android:id="@+id/instruction"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_above="@+id/bottom_text"
+			android:layout_centerHorizontal="true"
+			android:gravity="center_horizontal"
+			android:lineSpacingExtra="0sp"
+			android:paddingEnd="35dp"
+			android:paddingStart="35dp"
+			android:text="@string/assistant_instruction1"
+			android:textColor="#000000"
+			android:textSize="20sp"/>
+
+		<TextView
+			android:id="@+id/step"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_above="@+id/instruction"
+			android:layout_centerHorizontal="true"
+			android:paddingBottom="10dp"
+			android:text="@string/assistant_step1"
+			android:textColor="#ff6600"
+			android:textSize="16.7sp"/>
 
 		<RelativeLayout
 			android:id="@+id/header_text"
 			android:layout_width="match_parent"
 			android:layout_height="120dp"
+			android:layout_alignParentTop="true"
 			android:layout_marginBottom="20dp"
-			android:layout_marginLeft="35dp"
-			android:layout_marginRight="35dp">
+			android:layout_marginEnd="35dp"
+			android:layout_marginStart="35dp"
+			android:layout_marginTop="30dp"
+			android:gravity="center">
 
 			<TextView
 				android:id="@+id/textView2"
@@ -39,30 +69,63 @@ Mobile Security Intense"
 				android:layout_height="65dp"
 				android:layout_alignParentStart="true"
 				android:layout_centerVertical="true"
-				android:layout_marginRight="10dp"
+				android:layout_marginRight="20dp"
 				android:src="@drawable/logo_secure_phone_big"/>
 		</RelativeLayout>
 
 		<RelativeLayout
 			android:id="@+id/bottom_text"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_below="@+id/header_text"
+			android:layout_width="250dp"
+			android:layout_height="250dp"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true"
 			android:layout_gravity="center"
-			android:layout_margin="50dp"
-			android:foreground="@drawable/avatar_mask_border"
+			android:layout_marginBottom="30dp"
 			android:gravity="center"
-			>
+			android:paddingTop="20dp">
 
 			<SurfaceView
 				android:id="@+id/qrcodeCaptureSurface"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignParentBottom="true"
-				android:layout_alignParentRight="true"
+				android:layout_alignParentTop="true"
 				android:layout_weight="10"
+				android:foreground="@drawable/avatar_mask_border"
 				android:visibility="visible"/>
+
+			<EditText
+				android:id="@+id/code_sms"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_marginBottom="15dp"
+				android:background="#c4c4c4"
+				android:inputType="text|textNoSuggestions"
+				android:maxLines="1"
+				android:textColor="@color/colorB"
+				android:visibility="gone"/>
+
+			<Button
+				android:id="@+id/valider"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_below="@+id/code_sms"
+				android:layout_marginBottom="15dp"
+				android:background="#ff6600"
+				android:text="valider"
+				android:textColor="#ffffff"
+				android:visibility="gone"/>
+
+			<Button
+				android:id="@+id/retour"
+				android:layout_width="match_parent"
+				android:layout_height="40dp"
+				android:layout_below="@+id/valider"
+				android:background="#595959"
+				android:text="retour"
+				android:textColor="#ffffff"
+				android:visibility="gone"/>
+
 		</RelativeLayout>
 	</RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

@@ -253,10 +253,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(100, 10, 10, 10);
+				    layoutParams.setMargins(200, 10, 10, 10);
 			    } else {
 				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				    layoutParams.setMargins(100, 10, 10, 10);
+				    layoutParams.setMargins(200, 10, 10, 10);
 			    }
 
 			    holder.background.setBackgroundColor(0x26ff6600);
@@ -275,10 +275,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(100, 10, 10, 10);
+				    layoutParams.setMargins(200, 10, 10, 10);
 			    } else {
 				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				    layoutParams.setMargins(10, 10, 100, 10);
+				    layoutParams.setMargins(10, 10, 200, 10);
 			    }
 
 			    holder.background.setBackgroundColor(0x19595959);

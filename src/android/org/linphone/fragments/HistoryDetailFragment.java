@@ -97,6 +97,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		contactName = (TextView) view.findViewById(R.id.contact_name);
 		contactAddress = (TextView) view.findViewById(R.id.contact_address);
 
+		contactName.setText(displayName);
+
 		callDirection = (ImageView) view.findViewById(R.id.direction);
 
 		time = (TextView) view.findViewById(R.id.time);

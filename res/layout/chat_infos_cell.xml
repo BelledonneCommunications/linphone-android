@@ -21,24 +21,35 @@
 
             <ImageView
                 android:id="@+id/contact_picture"
-                android:src="@drawable/avatar"
-                android:contentDescription="@string/content_description_contact_picture"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:adjustViewBounds="true"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_description_contact_picture"
+                android:src="@drawable/avatar_big_secure1"/>
 
             <ImageView
                 android:id="@+id/mask"
-                android:src="@drawable/avatar_mask"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:adjustViewBounds="true"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/avatar_mask"
+                android:visibility="gone"/>
 
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/secure"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/security_1"
+            android:visibility="visible"/>
 
         <ImageView
             android:id="@+id/delete"
@@ -87,23 +98,24 @@
                 android:id="@+id/isNotAdminLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp">
+                android:layout_marginRight="20dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:paddingRight="5dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
+                    android:paddingRight="5dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/check_unselected" />
+                    android:src="@drawable/check_unselected"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/colorF"
-                    android:text="@string/chat_room_infos_admin"/>
+                    android:text="@string/chat_room_infos_admin"
+                    android:textColor="@color/colorF"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -113,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/avatar_layout"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/adminLayout"
+            android:layout_toLeftOf="@id/secure"
             android:layout_marginLeft="10dp">
 
             <TextView

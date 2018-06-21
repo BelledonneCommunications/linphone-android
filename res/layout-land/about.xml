@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:background="@color/colorG"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/colorB"
               android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/colorF"
+        android:layout_height="50dp"
+        android:background="@color/colorB"
         android:orientation="horizontal">
 
         <View
@@ -19,14 +19,14 @@
 
         <TextView
             android:id="@+id/menu_name"
-            style="@style/font22"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
             android:gravity="center"
-            android:padding="15dp"
             android:singleLine="true"
-            android:text="@string/about"/>
+            android:text="@string/about"
+            android:textColor="#ffffff"
+            android:textSize="20sp"/>
 
         <ImageView
             android:id="@+id/cancel"
@@ -34,31 +34,31 @@
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:contentDescription="@string/content_description_dialer_back"
-            android:padding="15dp"
-            android:src="@drawable/dialer_back"/>
+            android:padding="10dp"
+            android:src="@drawable/footer_contacts"/>
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorE"
-        android:orientation="horizontal"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center">
+        android:layout_height="258dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@color/colorB"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
             <ImageView
-                android:src="@drawable/linphone_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_gravity="center"/>
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center"
+                android:src="@drawable/logo_secure_phone_big"/>
 
             <TextView
                 style="@style/font14"
@@ -71,12 +71,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/about_android_version"
@@ -98,11 +98,12 @@
     </LinearLayout>
 
     <ImageView
-        android:src="@drawable/logo_orange"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" android:layout_gravity="right"/>
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_margin="30dp"
+        android:src="@drawable/logo_orange"/>
 
 </LinearLayout>

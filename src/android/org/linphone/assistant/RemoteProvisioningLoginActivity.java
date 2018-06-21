@@ -27,17 +27,22 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.SurfaceView;
 import android.view.View;
@@ -45,52 +50,88 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.os.SystemClock.sleep;
+
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
-	private EditText login, password, domain;
-	private Button connect;
+	private static RemoteProvisioningLoginActivity instance;
+	private EditText code_sms;
+	private TextView step, instruction;
+	private Button ok, back;
 	private ProgressDialog progress;
+	private String qrcodeString;
+	private RelativeLayout bottom;
 	private CoreListenerStub mListener;
 	private SurfaceView mQrcodeView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
+	private boolean cameraAuthorize = false;
+	private boolean readQRCode = true;
+	private int PERMISSION_CAMERA = 108;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		instance = this;
 		setContentView(R.layout.assistant_remote_provisioning_login);
+
+		if (getPackageManager().checkPermission(Manifest.permission.CAMERA,
+				getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+			checkAndRequestVideoPermission();
+		} else {
+			cameraAuthorize = true;
+		}
+
 		mQrcodeView = (SurfaceView) findViewById(R.id.qrcodeCaptureSurface);
+		bottom = (RelativeLayout) findViewById(R.id.bottom_text);
+		code_sms = (EditText) findViewById(R.id.code_sms);
+		step = (TextView) findViewById(R.id.step);
+		instruction = (TextView) findViewById(R.id.instruction);
+
+		ok = (Button) findViewById(R.id.valider);
+		back = (Button) findViewById(R.id.retour);
+
+		ok.setOnClickListener(this);
+		back.setOnClickListener(this);
+
+		mQrcodeView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (readQRCode && getPackageManager().checkPermission(Manifest.permission.CAMERA,
+						getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+					checkAndRequestVideoPermission();
+				}
+			}
+		});
 
 		mListener = new CoreListenerStub() {
 			@Override
 			public void onQrcodeFound(Core lc, String result) {
-				enableQrcodeReader(false);
-				//AssistantActivity.instance().displayRemoteProvisioning(result);
+				//TODO check validitée du qrcode
+				instance.qrcodeString = result;
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						instance.enableQrcodeReader(false);
+						instance.displayCodeSms();
+					}
+				});
 			}
 
-		};
-
-		/*login = (EditText) findViewById(R.id.assistant_username);
-		password = (EditText) findViewById(R.id.assistant_password);
-		domain = (EditText) findViewById(R.id.assistant_domain);
-		domain.setText(getString(R.string.default_domain));
-
-		connect = (Button) findViewById(R.id.assistant_connect);
-		connect.setOnClickListener(this);
-
-		String defaultDomain = getIntent().getStringExtra("Domain");
-		if (defaultDomain != null) {
-			domain.setText(defaultDomain);
-			domain.setEnabled(false);
-		}
-
-		mListener = new CoreListenerStub(){
 			@Override
 			public void onConfiguringStatus(Core lc, final ConfiguringState state, String message) {
 				if (state == ConfiguringState.Successful) {
 					//TODO
 				} else if (state == ConfiguringState.Failed) {
 					Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							instance.ok.setEnabled(true);
+						}
+					});
 				}
 			}
 
@@ -103,7 +144,20 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 				}
 				if (progress != null) progress.dismiss();
 			}
-		};*/
+
+		};
+
+
+		displayQrCode();
+	}
+
+	void checkAndRequestVideoPermission() {
+		int permissionGranted = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+		Log.i("[Permission] " + Manifest.permission.CAMERA + " is " + (permissionGranted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+		if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
+		}
 	}
 
 	private void cancelWizard(boolean bypassCheck) {
@@ -114,56 +168,39 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		}
 	}
 
-	private boolean storeAccount(String username, String password, String domain) {
-		/*XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
-		xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
-			@Override
-			public void onRemoteProvisioningFilenameSent(String result) {
-				LinphonePreferences.instance().setRemoteProvisioningUrl(result);
-				LinphoneManager.getInstance().restartCore();
-			}
-		}, username.toString(), password.toString(), domain.toString());*/
+	private void displayQrCode() {
+		mQrcodeView.setVisibility(View.VISIBLE);
+		code_sms.setVisibility(View.GONE);
+		ok.setVisibility(View.GONE);
+		back.setVisibility(View.GONE);
 
-		LinphonePreferences.instance().setRemoteProvisioningUrl("https://85.233.205.218/xmlrpc?username=" + username + "&password=" + password + "&domain=" + domain);
-		///////// TODO
-		LinphoneManager.getLc().iterate();
-		LinphoneManager.getLc().iterate();
-		LinphoneManager.getLc().iterate();
-		LinphoneManager.getLc().iterate();
-		LinphoneManager.getLc().iterate();
-		LinphoneManager.getLc().iterate();
-		///////// TODO
-		LinphoneManager.getInstance().restartCore();
-		LinphoneManager.getLc().addListener(mListener);
-		//LinphonePreferences.instance().firstLaunchSuccessful();
-		//setResult(Activity.RESULT_OK);
-		//finish();
-		/*String identity = "sip:" + username + "@" + domain;
-		ProxyConfig prxCfg = lc.createProxyConfig();
-		try {
-			prxCfg.setIdentityAddress(identity);
-			lc.addProxyConfig(prxCfg);
-		} catch (CoreException e) {
-			Log.e(e);
-			return false;
-		}
+		step.setText(getString(R.string.assistant_step1));
+		instruction.setText(getString(R.string.assistant_instruction1));
 
-		AuthInfo authInfo = Factory.instance().createAuthInfo(username, null, password, null, null, domain);
-		lc.addAuthInfo(authInfo);
+		readQRCode = true;
+	}
 
-		if (LinphonePreferences.instance().getAccountCount() == 1)
-			lc.setDefaultProxyConfig(prxCfg);
-		*/
-		return true;
+	private void displayCodeSms() {
+		mQrcodeView.setVisibility(View.GONE);
+		code_sms.setVisibility(View.VISIBLE);
+		ok.setVisibility(View.VISIBLE);
+		back.setVisibility(View.VISIBLE);
+
+		step.setText(getString(R.string.assistant_step2));
+		instruction.setText(getString(R.string.assistant_instruction2));
+
+		readQRCode = false;
 	}
 
 	private void enableQrcodeReader(boolean enable) {
-		LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
-		LinphoneManager.getLc().enableVideoPreview(enable);
-		if (enable) {
-			LinphoneManager.getLc().addListener(mListener);
-		} else {
-			LinphoneManager.getLc().removeListener(mListener);
+		if (cameraAuthorize && readQRCode) {
+			LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
+			LinphoneManager.getLc().enableVideoPreview(enable);
+			if (enable) {
+				LinphoneManager.getLc().addListener(mListener);
+			} else {
+				LinphoneManager.getLc().removeListener(mListener);
+			}
 		}
 	}
 
@@ -177,6 +214,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		String[] devices = LinphoneManager.getLc().getVideoDevicesList();
 		String newDevice = devices[camId];
 		LinphoneManager.getLc().setVideoDevice(newDevice);
+
 	}
 
 	private void launchQrcodeReader() {
@@ -196,7 +234,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-
+				LinphoneManager.getLc().setNativePreviewWindowId(null);
 			}
 		});
 
@@ -210,17 +248,17 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 	@Override
 	public void onResume() {
-		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(mListener);
-		}
+		super.onResume();
 		launchQrcodeReader();
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
 				LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
 			}
 		}
-		super.onResume();
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+		}
 	}
 
 	@Override
@@ -255,16 +293,42 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		if (id == R.id.cancel) {
 			cancelWizard(false);
 		}
-		/*if (id == R.id.assistant_connect){
+		if (id == R.id.retour) {
+			displayQrCode();
+			enableQrcodeReader(true);
+		}
+		if (id == R.id.valider) {
 			displayRemoteProvisioningInProgressDialog();
-			connect.setEnabled(false);
-			storeAccount(login.getText().toString(), password.getText().toString(), domain.getText().toString());
-		}*/
+			ok.setEnabled(false);
+			storeAccount(qrcodeString);
+		}
 	}
 
 	@Override
-	public void onBackPressed() {
-		cancelWizard(false);
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		for (int i = 0; i < permissions.length; i++) {
+			Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+		}
+
+		if (requestCode == PERMISSION_CAMERA) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				cameraAuthorize = true;
+			}
+		}
+	}
+
+	private boolean storeAccount(String url) {
+		LinphonePreferences.instance().setRemoteProvisioningUrl(url);
+		//TODO
+		LinphoneManager.getLc().iterate();
+		sleep(1000);
+		LinphoneManager.getLc().iterate();
+		//TODO
+
+		LinphoneManager.getInstance().restartCore();
+		LinphoneManager.getLc().addListener(mListener);
+
+		return true;
 	}
 
 	private void displayRemoteProvisioningInProgressDialog() {

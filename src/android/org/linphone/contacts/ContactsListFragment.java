@@ -391,8 +391,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);
 		}*/
 		// Obiane spec
-		if (LinphoneActivity.isInstanciated() && contact.getNumbersOrAddresses() != null) {
-			LinphoneActivity.instance().displayHistoryDetail(contact.getNumbersOrAddresses().get(0).getValue(), null);
+		if (LinphoneActivity.isInstanciated() && contact.getFriend() != null && contact.getFriend().getAddress() != null) {
+			LinphoneActivity.instance().displayHistoryDetail(contact.getFriend().getAddress().asStringUriOnly(), null);
 		}
 	}
 

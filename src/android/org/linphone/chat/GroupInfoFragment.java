@@ -116,7 +116,13 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 				mParticipants.remove(ca);
 				mAdapter.updateDataSet(mParticipants);
 				mParticipantsList.setAdapter(mAdapter);
-				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
+				if (mSubjectField.getText().length() > 0 && mParticipants.size() > 0) {
+					mConfirmButton.setClickable(true);
+					mConfirmButton.setImageAlpha(255);
+				} else {
+					mConfirmButton.setClickable(false);
+					mConfirmButton.setImageAlpha(140);
+				}
 			}
 		});
 		mParticipantsList.setAdapter(mAdapter);
@@ -216,7 +222,13 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 
 			@Override
 			public void afterTextChanged(Editable editable) {
-				mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
+				if (mSubjectField.getText().length() > 0 && mParticipants.size() > 0) {
+					mConfirmButton.setClickable(true);
+					mConfirmButton.setImageAlpha(255);
+				} else {
+					mConfirmButton.setClickable(false);
+					mConfirmButton.setImageAlpha(140);
+				}
 			}
 		});
 		mSubjectField.setText(mSubject);
@@ -309,7 +321,13 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 				}
 			}
 		});
-		mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
+		if (mSubjectField.getText().length() > 0 && mParticipants.size() > 0) {
+			mConfirmButton.setClickable(true);
+			mConfirmButton.setImageAlpha(255);
+		} else {
+			mConfirmButton.setClickable(false);
+			mConfirmButton.setImageAlpha(140);
+		}
 
 		if (!mIsEditionEnabled) {
 			mSubjectField.setEnabled(false);

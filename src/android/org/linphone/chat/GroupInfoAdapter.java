@@ -82,6 +82,7 @@ public class GroupInfoAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.name);
         ImageView avatar = view.findViewById(R.id.contact_picture);
         ImageView delete = view.findViewById(R.id.delete);
+        ImageView secure = view.findViewById(R.id.secure);
         final LinearLayout isAdmin = view.findViewById(R.id.isAdminLayout);
         final LinearLayout isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
 
@@ -100,6 +101,19 @@ public class GroupInfoAdapter extends BaseAdapter {
             }
         });
         delete.setTag(ca);
+
+        final String sipUri = ca.getAddress().asStringUriOnly();
+        final String nameString = name.getText().toString();
+
+	    secure.setVisibility(View.VISIBLE);
+	    secure.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    if (LinphoneActivity.isInstanciated()) {
+				    LinphoneActivity.instance().setAddresGoToDialerAndCall(sipUri, nameString, null);
+			    }
+		    }
+	    });
 
         isAdmin.setVisibility(ca.isAdmin() ? View.VISIBLE : View.GONE);
         isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.VISIBLE);
