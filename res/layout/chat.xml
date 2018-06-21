@@ -155,7 +155,7 @@
 				android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
 				android:maxLines="6"
 				android:padding="5dp"
-				android:textColor="@color/colorH"
+				android:textColor="@color/colorB"
 				android:textCursorDrawable="@null"/>
 
 			<ImageView
