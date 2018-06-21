@@ -553,7 +553,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 
 		if (isSpeakerEnabled) {
-			speaker.setImageResource(R.drawable.route_speaker_default);
+			speaker.setImageResource(R.drawable.speaker);
 		} else {
 			speaker.setImageResource(R.drawable.speaker_default);
 		}
@@ -736,7 +736,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			routeEarpiece.setImageResource(R.drawable.route_earpiece);*/
 			routeEarpiece.setImageAlpha(120);
 			routeBluetooth.setImageAlpha(120);
-			routeSpeaker.setImageResource(R.drawable.route_speaker_default);
+			routeSpeaker.setImageResource(R.drawable.speaker);
 			hideOrDisplayAudioRoutes();
 		}
 
@@ -934,7 +934,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 		if (isSpeakerEnabled) {
 			LinphoneManager.getInstance().routeAudioToSpeaker();
-			speaker.setImageResource(R.drawable.route_speaker_default);
+			speaker.setImageResource(R.drawable.speaker);
 			LinphoneManager.getInstance().enableSpeaker(isSpeakerEnabled);
 		} else {
 			Log.d("Toggle speaker off, routing back to earpiece");

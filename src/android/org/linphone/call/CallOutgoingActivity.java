@@ -231,7 +231,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		if (id == R.id.speaker) {
 			isSpeakerEnabled = !isSpeakerEnabled;
 			if(isSpeakerEnabled) {
-				speaker.setImageResource(R.drawable.speaker_selected);
+				speaker.setImageResource(R.drawable.speaker);
 			} else {
 				speaker.setImageResource(R.drawable.speaker_default);
 			}
