@@ -573,14 +573,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				isSpeakerEnabled = false; // We need this if isSpeakerEnabled wasn't set correctly
 				//routeEarpiece.setImageResource(R.drawable.route_earpiece);
 				//routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
-				routeEarpiece.setAlpha(0.5f);
-				routeBluetooth.setAlpha(1f);
+				routeEarpiece.setImageAlpha(120);
+				routeBluetooth.setImageAlpha(255);
 				return;
 			} else {
 				//routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
 				//routeBluetooth.setImageResource(R.drawable.route_bluetooth);
-				routeEarpiece.setAlpha(1f);
-				routeBluetooth.setAlpha(0.5f);
+				routeEarpiece.setImageAlpha(255);
+				routeBluetooth.setImageAlpha(120);
 			}
 
 			if (isSpeakerEnabled) {
@@ -588,8 +588,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				//routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
 				//routeEarpiece.setImageResource(R.drawable.route_earpiece);
 				//routeBluetooth.setImageResource(R.drawable.route_bluetooth);
-				routeEarpiece.setAlpha(0.5f);
-				routeBluetooth.setAlpha(0.5f);
+				routeEarpiece.setImageAlpha(120);
+				routeBluetooth.setImageAlpha(120);
 			}
 		} catch (NullPointerException npe) {
 			Log.e("Bluetooth: Audio routes menu disabled on tablets for now (4)");
@@ -711,8 +711,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				/*routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
 				routeSpeaker.setImageResource(R.drawable.route_speaker);
 				routeEarpiece.setImageResource(R.drawable.route_earpiece);*/
-				routeEarpiece.setAlpha(0.5f);
-				routeBluetooth.setAlpha(1f);
+				routeEarpiece.setImageAlpha(120);
+				routeBluetooth.setImageAlpha(255);
 				routeSpeaker.setImageResource(R.drawable.speaker_default);
 			}
 			hideOrDisplayAudioRoutes();
@@ -723,8 +723,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			/*routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			routeSpeaker.setImageResource(R.drawable.route_speaker);
 			routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);*/
-			routeEarpiece.setAlpha(1f);
-			routeBluetooth.setAlpha(0.5f);
+			routeEarpiece.setImageAlpha(255);
+			routeBluetooth.setImageAlpha(120);
 			routeSpeaker.setImageResource(R.drawable.speaker_default);
 			hideOrDisplayAudioRoutes();
 		}
@@ -734,8 +734,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			/*routeBluetooth.setImageResource(R.drawable.route_bluetooth);
 			routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
 			routeEarpiece.setImageResource(R.drawable.route_earpiece);*/
-			routeEarpiece.setAlpha(0.5f);
-			routeBluetooth.setAlpha(0.5f);
+			routeEarpiece.setImageAlpha(120);
+			routeBluetooth.setImageAlpha(120);
 			routeSpeaker.setImageResource(R.drawable.route_speaker_default);
 			hideOrDisplayAudioRoutes();
 		}

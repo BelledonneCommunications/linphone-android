@@ -121,22 +121,26 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom"
-			android:background="@color/colorA"
+			android:background="@color/colorN"
 			android:orientation="horizontal"
-			android:paddingBottom="15dp"
-			android:paddingLeft="15dp"
-			android:paddingTop="15dp"
+			android:paddingBottom="10dp"
+			android:paddingLeft="10dp"
+			android:paddingTop="10dp"
 			android:visibility="gone">
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginRight="-15dp"
+				android:layout_weight="1.1"
 				android:src="@drawable/arrow_accept"/>
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginRight="-15dp"
 				android:alpha="0.6"
+				android:layout_weight="1.1"
 				android:src="@drawable/arrow_accept"/>
 
 			<ImageView
@@ -144,6 +148,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:alpha="0.2"
+				android:layout_weight="1.1"
 				android:src="@drawable/arrow_accept"/>
 		</LinearLayout>
 
@@ -163,9 +168,9 @@
 			android:layout_gravity="bottom"
 			android:background="@color/colorB"
 			android:orientation="horizontal"
-			android:paddingBottom="15dp"
-			android:paddingLeft="15dp"
-			android:paddingTop="15dp"
+			android:paddingBottom="10dp"
+			android:paddingLeft="10dp"
+			android:paddingTop="10dp"
 			android:visibility="gone">
 
 			<ImageView
@@ -173,18 +178,23 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:alpha="0.2"
+				android:layout_weight="1.1"
 				android:src="@drawable/arrow_hangup"/>
 
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginLeft="-15dp"
 				android:alpha="0.6"
+				android:layout_weight="1.1"
 				android:src="@drawable/arrow_hangup"/>
 
 			<ImageView
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginLeft="-15dp"
+				android:layout_weight="1.1"
 				android:src="@drawable/arrow_hangup"/>
 
 		</LinearLayout>

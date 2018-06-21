@@ -138,7 +138,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 						answerX = curX;
 						if (oldMove < -25)
 							begin = false;
-						if (curX < arrow.getWidth() && !begin) {
+						if (curX < acceptUnlock.getWidth()*1.5f && !begin) {
 							answer();
 							return true;
 						}
@@ -167,7 +167,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 						curX = motionEvent.getX();
 						view.scrollBy((int) (declineX - curX), view.getScrollY());
 						declineX = curX;
-						if (curX > (screenWidth-arrow.getWidth()*4)) {
+						if (curX > (screenWidth-arrow.getWidth()*6)) {
 							decline();
 							return true;
 						}

@@ -473,13 +473,16 @@
 
 		<RelativeLayout
 			android:id="@+id/side_menu_content"
-			android:background="@color/colorH"
-			android:layout_marginTop="40dp"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_gravity="left">
+			android:layout_gravity="left"
+			android:layout_marginTop="30dp"
+			android:background="@color/colorH">
 
-			<include layout="@layout/incall_stats" android:id="@+id/incall_stats"/>
+			<include
+				android:id="@+id/incall_stats"
+				layout="@layout/incall_stats"
+				/>
 
 		</RelativeLayout>
 
