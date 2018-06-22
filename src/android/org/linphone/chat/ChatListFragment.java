@@ -20,7 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +50,16 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
 public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
-	private LayoutInflater mInflater;
-	private ListView mChatRoomsList;
+//public class ChatListFragment extends Fragment {
+	//	private LayoutInflater mInflater;
+	private RecyclerView mChatRoomsList;
 	private TextView mNoChatHistory;
 	private ImageView mNewDiscussionButton, mBackToCallButton;
 	private ChatRoomsAdapter mChatRoomsAdapter;
@@ -61,23 +68,31 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 	private RelativeLayout mWaitLayout;
 	private int mChatRoomDeletionPendingCount;
 	private ChatRoomListenerStub mChatRoomListener;
+	private Context mContext;
+	private List<ChatRoom> mRooms;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mInflater = inflater;
+//		mInflater = inflater;
 
+		super.onCreate(savedInstanceState);
+		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
+		this.mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chatlist, container, false);
-		mSelectionHelper = new ListSelectionHelper(view, this);
-		mChatRoomsAdapter = new ChatRoomsAdapter(getActivity(), mSelectionHelper, mInflater);
-		mSelectionHelper.setAdapter(mChatRoomsAdapter);
-		mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
+		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+
+		mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms);
+//		mSelectionHelper = new ListSelectionHelper(view, this);
+//		mChatRoomsAdapter = new ChatRoomsAdapter(this, mSelectionHelper, mRooms);
+//		mSelectionHelper.setAdapter(mChatRoomsAdapter);
+//		mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
 		mWaitLayout = view.findViewById(R.id.waitScreen);
 		mWaitLayout.setVisibility(View.GONE);
 
 		mChatRoomsList = view.findViewById(R.id.chatList);
 		mChatRoomsList.setAdapter(mChatRoomsAdapter);
-
+		mChatRoomsList.setLayoutManager(layoutManager);
 		mNoChatHistory = view.findViewById(R.id.noChatHistory);
 		mNoChatHistory.setVisibility(View.GONE);
 
@@ -135,12 +150,12 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 	private void refreshChatRoomsList() {
 		mChatRoomsAdapter.refresh();
-		mNoChatHistory.setVisibility(mChatRoomsAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
+		mNoChatHistory.setVisibility(mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	public void displayFirstChat() {
 		ChatRoomsAdapter adapter = (ChatRoomsAdapter)mChatRoomsList.getAdapter();
-		if (adapter != null && adapter.getCount() > 0) {
+		if (adapter != null && adapter.getItemCount() > 0) {
 			ChatRoom room = (ChatRoom) adapter.getItem(0);
 			LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
 		} else {
@@ -210,16 +225,15 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		}
 	}
 
-	@Override
+		@Override
 	public void onContactsUpdated() {
 		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST)
 			return;
 
 		ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
 		if (adapter != null) {
-			adapter.notifyDataSetInvalidated();
+			//adapter.notifyDataSetInvalidated();
 		}
 	}
 }
-
 
