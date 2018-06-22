@@ -46,6 +46,8 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.16.1'
     if (firebaseEnable()) {
         implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    } else {
+        implementation fileTree(include: 'gcm.jar', dir: 'libs')
     }
     implementation 'com.android.support:support-v4:26.0.1'
 }
