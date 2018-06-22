@@ -30,7 +30,6 @@ project.properties
 res/.DS_Store
 res/raw/lpconfig.xsd
 res/raw/rootca.pem
-res/raw/*_grammar
 submodules/externals/build/cunit/CUnit/
 submodules/externals/build/ffmpeg/arm/
 submodules/externals/build/ffmpeg/x86

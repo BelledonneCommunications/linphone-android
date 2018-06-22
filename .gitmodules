@@ -108,12 +108,3 @@
 [submodule "submodules/bcmatroska2"]
 	path = submodules/bcmatroska2
 	url = git://git.linphone.org/bcmatroska2.git
-[submodule "submodules/externals/libxsd"]
-	path = submodules/externals/libxsd
-	url = git://git.linphone.org/libxsd
-[submodule "submodules/externals/soci"]
-	path = submodules/externals/soci
-	url = git://git.linphone.org/soci
-[submodule "submodules/externals/xerces-c"]
-	path = submodules/externals/xerces-c
-	url = git://git.linphone.org/xerces-c
