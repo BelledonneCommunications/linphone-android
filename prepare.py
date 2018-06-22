@@ -54,6 +54,7 @@ class AndroidTarget(prepare.Target):
         self.additional_args = [
             "-DLINPHONE_BUILDER_EXTERNAL_BUILDERS_PATH=" + external_builders_path
         ]
+        self.additional_args += ['-DENABLE_JAVA_WRAPPER=NO']
 
 
 class AndroidArmTarget(AndroidTarget):
@@ -95,18 +96,18 @@ android_targets = {
     'x86_64': AndroidX86_64Target()
 }
 
-android_virtual_targets= {
+android_virtual_targets = {
     'all': ['arm', 'armv7', 'arm64', 'x86', 'x86_64']
 }
 
 class AndroidPreparator(prepare.Preparator):
 
     def __init__(self, targets=android_targets):
-        prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64', 'x86'], virtual_targets=android_virtual_targets)
-        self.min_supported_ndk = 11
-        self.max_supported_ndk = 17
+        prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64'], virtual_targets=android_virtual_targets)
+        self.min_supported_ndk = 16
+        self.max_supported_ndk = 16
         self.unsupported_ndk_version = None
-        self.min_cmake_version = "3.7"
+        self.min_cmake_version = "3.10"
         self.release_with_debug_info = True
         self.veryclean = True
         self.show_gpl_disclaimer = True
@@ -331,6 +332,18 @@ copy-libs:
 \tfi
 \tif test -d "liblinphone-sdk/android-x86/share/linphonej"; then \\
 \t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-arm/share/belr/grammars"; then \\
+\t\tcp liblinphone-sdk/android-arm/share/belr/grammars/*_grammar res/raw/; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-armv7/share/belr/grammars"; then \\
+\t\tcp liblinphone-sdk/android-armv7/share/belr/grammars/*_grammar res/raw/; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-arm64/share/belr/grammars"; then \\
+\t\tcp liblinphone-sdk/android-arm64/share/belr/grammars/*_grammar res/raw/; \\
+\tfi
+\tif test -d "liblinphone-sdk/android-x86/share/belr/grammars"; then \\
+\t\tcp liblinphone-sdk/android-x86/share/belr/grammars/*_grammar res/raw/; \\
 \tfi
 
 copy-libs-mediastreamer:
