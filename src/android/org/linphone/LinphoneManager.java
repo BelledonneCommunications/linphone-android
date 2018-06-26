@@ -1771,6 +1771,13 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		}
 	}
 
-	public void onQrcodeFound(Core lc, String something){
+	@Override
+	public void onGetConfirmationKey(AccountCreator ac, AccountCreator.Status status, String key) {
+
+	}
+
+	@Override
+	public void onDeleteAccount(AccountCreator ac, AccountCreator.Status status, String resp) {
+
 	}
 }

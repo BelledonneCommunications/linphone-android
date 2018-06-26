@@ -762,6 +762,16 @@ private static AssistantActivity instance;
 
 	}
 
+	@Override
+	public void onGetConfirmationKey(AccountCreator ac, AccountCreator.Status status, String key) {
+
+	}
+
+	@Override
+	public void onDeleteAccount(AccountCreator ac, AccountCreator.Status status, String resp) {
+
+	}
+
 	public CountryListAdapter getCountryListAdapter() {
 		return countryListAdapter;
 	}
