@@ -12,6 +12,13 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 
+## [4.0.1] - 2018-06-26
+
+### Fixed
+- fix loading of plugins
+- fix issue with video stream, not started when receiving an incoming call just after the app is launched
+- fix issue with TURN
+
 ## [4.0.0] - 2018-06-15
 
 ### Added
