@@ -371,7 +371,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {
-		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT) {
+		if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT
+				&& newFragmentType != FragmentsAvailable.GROUP_CHAT) {
 			return;
 		}
 

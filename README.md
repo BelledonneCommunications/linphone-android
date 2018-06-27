@@ -1,14 +1,16 @@
+[![pipeline status](https://gitlab.linphone.org/BC/public/linphone-android/badges/master/pipeline.svg)](https://gitlab.linphone.org/BC/public/linphone-android/commits/master)
+
 Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 # COMPILATION INSTRUCTIONS
 
 ## To build liblinphone for Android, you must:
 
-1. Download the Android sdk (API 26.0.1 at max) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
+1. Download the Android sdk (API 28.0.0 at max) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
 
-2. Download the Android ndk (version r11c or 15) from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
+2. Download the Android ndk (version 16) from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
 
-3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_ and _cmake(>=3.7)_.
+3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_ and _cmake(>=3.10)_.
   * On 64 bits linux systems you'll need the _ia32-libs_ package.
   * With the latest Debian (multiarch), you need this:
     * `dpkg --add-architecture i386`
@@ -64,11 +66,6 @@ You can speed up the compilation by using ccache (compiler cache, see [ccache.sa
 
 To enable firebase in Linphone, just add your 'google-service.json' in project root, add your key at 'push_sender_id' and add 'firebase' at 'push_type' in 'res/values/non_localizable_custom.xml'
 Be sure to have all services for Firebase in your 'AndroidManifest.xml'
-
-## Google
-
-To enable google push in Linphone, remove 'google-service.json' file if it exist, add your key at 'push_sender_id' and add 'google' at 'push_type' in 'res/values/non_localizable_custom.xml'
-Be sure to have every permissions and services for GCM in your 'AndroidManifest.xml'
 
 # TROUBLESHOOTING
 

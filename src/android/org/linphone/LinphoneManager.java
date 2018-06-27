@@ -584,7 +584,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
-			mLc = null;
+			destroyLinphoneCore();
 		}
 		catch (RuntimeException e) {
 			Log.e(e);
@@ -622,6 +622,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			mLc = null;
 		}
 	}
+
 
 	public void restartCore() {
 		destroyCore();
@@ -906,50 +907,15 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void doDestroy() {
-		ContactsManagerDestroy();
-		BluetoothManagerDestroy();
-		try {
-			mTimer.cancel();
-			mLc = null;
+	private void destroyLinphoneCore() {
+		if (LinphonePreferences.instance() != null) {
+			// We set network reachable at false before destroy LC to not send register with expires at 0
+			if (LinphonePreferences.instance().isPushNotificationEnabled()
+					|| LinphonePreferences.instance().isBackgroundModeEnabled()) {
+				mLc.setNetworkReachable(false);
+			}
 		}
-		catch (RuntimeException e) {
-			Log.e(e);
-		}
-		finally {
-			try {
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-					mServiceContext.unregisterReceiver(mNetworkReceiver);
-				}
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mHookReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mCallReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				dozeManager(false);
-			} catch (IllegalArgumentException iae) {
-				Log.e(iae);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			mLc = null;
-			instance = null;
-		}
+		mLc = null;
 	}
 
 	public void dozeManager(boolean enable) {
@@ -1035,7 +1001,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (instance == null) return;
 		getInstance().changeStatusToOffline();
 		sExited = true;
-		instance.doDestroy();
+		instance.destroyCore();
 	}
 
 	private String getString(int key) {
@@ -1808,5 +1774,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		} else {
 			mUnreadChatsPerRoom.put(key, 1);
 		}
+	}
+
+	public void onQrcodeFound(Core lc, String something){
 	}
 }

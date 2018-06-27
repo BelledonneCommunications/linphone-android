@@ -144,7 +144,7 @@ class AndroidPreparator(prepare.Preparator):
         retval = True
         ndk_build = find_executable('ndk-build')
         ndk_path = os.path.dirname(ndk_build)
-	# NDK prior to r11 had a RELEASE.TXT file holding the version number
+        # NDK prior to r11 had a RELEASE.TXT file holding the version number
         release_file = os.path.join(ndk_path, 'RELEASE.TXT')
         if os.path.isfile(release_file):
             version = open(release_file).read().strip()
@@ -368,11 +368,10 @@ generate-javadoc:
 \t./gradlew -q androidJavadocsJar
 \t./gradlew -q sourcesJar
 
-liblinphone-android-sdk: java-clean build copy-libs 
-\t./gradlew -q androidJavadocsJar
-\t./gradlew -q sourcesJar
-\t./gradlew -q assembleRelease
-\t@mv $(TOPDIR)/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
+debug-sdk: java-clean build copy-libs generate-javadoc generate-apk
+\t./gradlew -q sdkZip
+
+liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
 \t./gradlew -q sdkZip
 
 linphone-android-sdk: java-clean build copy-libs 

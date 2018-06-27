@@ -40,6 +40,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -49,6 +51,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -350,7 +353,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 
-    	PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
+		final PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
     	EditTextPreference username = (EditTextPreference) account.getPreference(0);
 		username.setOnPreferenceChangeListener(usernameChangedListener);
 		if (!isNewAccount){
@@ -485,8 +488,10 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			mainAccount.setEnabled(!mainAccount.isChecked());
 		}
 
+		//final AccountCreatorListener fragment = this;
+
 		final Preference changePassword = manage.getPreference(2);
-		if (mPrefs.getAccountDomain(n).compareTo(getString(R.string.default_domain)) == 0) {
+		/*if (mPrefs.getAccountDomain(n).compareTo(getString(R.string.default_domain)) == 0) {
 			changePassword.setEnabled(!isNewAccount);
 			changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				public boolean onPreferenceClick(Preference preference) {
@@ -501,15 +506,19 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 							dialog.dismiss();
 						}
 					});
-					/*alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+					alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							AccountCreator.PasswordStatus status = accountCreator.setPassword(pass1.getText().toString());
 							if (status.equals(AccountCreator.PasswordStatus.Ok)) {
 								if (pass1.getText().toString().compareTo(pass2.getText().toString()) == 0) {
 									accountCreator.setUsername(mPrefs.getAccountUsername(n));
+									accountCreator.setDomain(mPrefs.getAccountDomain(n));
 									accountCreator.setHa1(mPrefs.getAccountHa1(n));
-									AccountCreator.Status req_status = accountCreator.updatePassword(pass1.getText().toString());
+									accountCreator.setListener(fragment);
+									accountCreator.setPassword(pass1.getText().toString());
+									AccountCreator.Status req_status = accountCreator.updateAccount();
 									if (!req_status.equals(AccountCreator.Status.RequestOk)) {
 										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(req_status)
 												, LinphoneActivity.instance());
@@ -532,14 +541,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 						}
 					});*/ // TODO FIXME
 
-					alert.setView(layout);
+					/*alert.setView(layout);
 					alert.show();
 					return true;
 				}
 			});
-		} else {
+		} else {*/
 			changePassword.setEnabled(false);
-		}
+		//}
 
 		final Preference delete = manage.getPreference(3);
     	delete.setEnabled(!isNewAccount);
