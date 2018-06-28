@@ -162,9 +162,9 @@
 				android:id="@+id/send_message"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_gravity="center"
 				android:contentDescription="@string/content_description_send_message"
-				android:padding="10dp"
-				android:src="@drawable/chat_send_message"/>
+				android:src="@drawable/chat_send"/>
 
 		</LinearLayout>
 

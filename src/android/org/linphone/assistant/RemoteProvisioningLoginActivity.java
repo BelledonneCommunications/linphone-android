@@ -54,6 +54,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.spec.KeySpec;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+
 import static android.os.SystemClock.sleep;
 
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
@@ -63,12 +76,14 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private Button ok, back;
 	private ProgressDialog progress;
 	private String qrcodeString;
+	private String remoteUrl;
 	private RelativeLayout bottom;
 	private CoreListenerStub mListener;
 	private SurfaceView mQrcodeView;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 	private boolean cameraAuthorize = false;
 	private boolean readQRCode = true;
+	private boolean backCamera = true;
 	private int PERMISSION_CAMERA = 108;
 
 	@Override
@@ -102,6 +117,8 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 				if (readQRCode && getPackageManager().checkPermission(Manifest.permission.CAMERA,
 						getPackageName()) != PackageManager.PERMISSION_GRANTED) {
 					checkAndRequestVideoPermission();
+				} else {
+					instance.setBackCamera(!backCamera);
 				}
 			}
 		});
@@ -130,6 +147,14 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 						@Override
 						public void run() {
 							instance.ok.setEnabled(true);
+						}
+					});
+					if (progress != null) progress.dismiss();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							instance.displayQrCode();
+							instance.launchQrcodeReader();
 						}
 					});
 				}
@@ -196,11 +221,6 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		if (cameraAuthorize && readQRCode) {
 			LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
 			LinphoneManager.getLc().enableVideoPreview(enable);
-			if (enable) {
-				LinphoneManager.getLc().addListener(mListener);
-			} else {
-				LinphoneManager.getLc().removeListener(mListener);
-			}
 		}
 	}
 
@@ -214,28 +234,22 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		String[] devices = LinphoneManager.getLc().getVideoDevicesList();
 		String newDevice = devices[camId];
 		LinphoneManager.getLc().setVideoDevice(newDevice);
-
+		backCamera = useBackCamera;
 	}
 
 	private void launchQrcodeReader() {
 		setBackCamera(true);
 
 		androidVideoWindowImpl = new AndroidVideoWindowImpl(null, mQrcodeView, new AndroidVideoWindowImpl.VideoWindowListener() {
-			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
+			public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {}
 
-			}
-
-			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-
-			}
+			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {}
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
 				LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
 			}
 
-			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-				LinphoneManager.getLc().setNativePreviewWindowId(null);
-			}
+			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {}
 		});
 
 		enableQrcodeReader(true);
@@ -300,7 +314,18 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		if (id == R.id.valider) {
 			displayRemoteProvisioningInProgressDialog();
 			ok.setEnabled(false);
-			storeAccount(qrcodeString);
+			if (qrcodeString != null
+					&& (qrcodeString.startsWith("http://")
+					|| qrcodeString.startsWith("https://"))) {
+				storeAccount(qrcodeString);
+			} else {
+				if (decryptQrcode()) {
+					storeAccount(remoteUrl);
+				} else {
+					ok.setEnabled(true);
+					if (progress != null) progress.cancel();
+				}
+			}
 		}
 	}
 
@@ -315,6 +340,54 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 				cameraAuthorize = true;
 			}
 		}
+	}
+
+	private byte[] removeUselessByte(byte[] tab, int wantedSize) {
+		if (wantedSize == tab.length) return tab;
+		byte[] newTab = new byte[wantedSize];
+		for (int i = 1 ; i < tab.length ; i++) {
+			newTab[i-1] = tab[i];
+		}
+		return newTab;
+	}
+
+	private boolean decryptQrcode() {
+		try {
+			byte[] unBased64Data = qrcodeString.getBytes();
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(unBased64Data);
+
+			byte[] salt = new byte[16];
+			byte[] iv = new byte[256 / 8];
+			byte[] contentToDecrypt = new byte[unBased64Data.length - 48];
+
+			inputStream.read(salt);
+			inputStream.read(iv);
+			inputStream.read(contentToDecrypt);
+
+			String saltString = new String(salt);
+			BigInteger saltHex = new BigInteger(saltString, 16);
+			String ivString = new String(iv);
+			BigInteger ivHex = new BigInteger(ivString, 16);
+
+			byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
+			byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
+
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("AES/CBC/PKCS5Padding");
+			KeySpec keySpec = new PBEKeySpec(code_sms.getText().toString().toCharArray(), saltByte, 10000, 128);
+			SecretKey tmpSecretKey = factory.generateSecret(keySpec);
+			SecretKeySpec secretKeySpec = new SecretKeySpec(tmpSecretKey.getEncoded(), "AES");
+
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ivByte));
+
+			remoteUrl = new String(cipher.doFinal(Base64.getDecoder().decode(contentToDecrypt)));
+		} catch (Exception ex) {
+			Toast.makeText(RemoteProvisioningLoginActivity.this, "Code mauvais", Toast.LENGTH_LONG).show();
+			Log.e("RemoteProvisioningLoginActivity: Decrypt problem: " + ex);
+			remoteUrl = null;
+			return false;
+		}
+		return true;
 	}
 
 	private boolean storeAccount(String url) {

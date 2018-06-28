@@ -1621,7 +1621,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			if (prefs.isProvisioningLoginViewEnabled()) {
 				ProxyConfig proxyConfig = lc.createProxyConfig();
 				Address addr = proxyConfig.getIdentityAddress();
-				wizardLoginViewDomain = addr.getDomain();
+				wizardLoginViewDomain = (addr != null) ? addr.getDomain() : "";
 			}
 			prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
 		}

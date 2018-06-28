@@ -120,3 +120,9 @@
 [submodule "submodules/externals/zxing-cpp"]
 	path = submodules/externals/zxing-cpp
 	url = git://git.linphone.org/zxing-cpp.git
+[submodule "submodules/externals/decaf"]
+	path = submodules/externals/decaf
+	url = git://git.linphone.org/decaf.git
+[submodule "submodules/lime"]
+	path = submodules/lime
+	url = gitosis@git.linphone.org:lime.git
