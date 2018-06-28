@@ -210,4 +210,14 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
 	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
+
+	@Override
+	public void onGetConfirmationKey(AccountCreator ac, AccountCreator.Status status, String key) {
+
+	}
+
+	@Override
+	public void onDeleteAccount(AccountCreator ac, AccountCreator.Status status, String resp) {
+
+	}
 }

@@ -123,4 +123,14 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
+
+	@Override
+	public void onGetConfirmationKey(AccountCreator ac, AccountCreator.Status status, String resp) {
+
+	}
+
+	@Override
+	public void onDeleteAccount(AccountCreator ac, AccountCreator.Status status, String resp) {
+
+	}
 }

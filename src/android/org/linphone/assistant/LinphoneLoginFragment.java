@@ -399,4 +399,14 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 
 	}
+
+	@Override
+	public void onGetConfirmationKey(AccountCreator ac, AccountCreator.Status status, String key) {
+
+	}
+
+	@Override
+	public void onDeleteAccount(AccountCreator ac, AccountCreator.Status status, String resp) {
+
+	}
 }

@@ -678,4 +678,14 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
 		}
 	}
+
+	@Override
+	public void onGetConfirmationKey(AccountCreator ac, AccountCreator.Status status, String key) {
+
+	}
+
+	@Override
+	public void onDeleteAccount(AccountCreator ac, AccountCreator.Status status, String resp) {
+
+	}
 }

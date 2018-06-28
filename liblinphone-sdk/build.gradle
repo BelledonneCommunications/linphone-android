@@ -94,7 +94,7 @@ android {
         packaged {
             initWith release
             signingConfig null
-            matchingFallbacks = ['debug', 'release']
+            //matchingFallbacks = ['debug', 'release']
         }
     }
 
