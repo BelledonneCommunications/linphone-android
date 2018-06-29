@@ -73,7 +73,7 @@
 	url = https://gitlab.linphone.org/BC/public/bctoolbox.git
 [submodule "submodules/externals/mbedtls"]
 	path = submodules/externals/mbedtls
-	url = https://gitlab.linphone.org/BC/public/mbedtls.git
+	url = https://gitlab.linphone.org/BC/public/external/mbedtls.git
 	ignore = dirty
 [submodule "submodules/cmake-builder"]
 	path = submodules/cmake-builder
@@ -107,16 +107,16 @@
 	url = https://gitlab.linphone.org/BC/public/ortp.git
 [submodule "submodules/bcmatroska2"]
 	path = submodules/bcmatroska2
-	url = https://gitlab.linphone.org/BC/public/bcmatroska2.git
+	url = git://git.linphone.org/bcmatroska2.git
 [submodule "submodules/externals/xerces-c"]
 	path = submodules/externals/xerces-c
 	url = https://gitlab.linphone.org/BC/public/external/xerces-c.git
 [submodule "submodules/externals/libxsd"]
 	path = submodules/externals/libxsd
-	url = https://gitlab.linphone.org/BC/public/external/libxsd
+	url = https://gitlab.linphone.org/BC/public/external/libxsd.git
 [submodule "submodules/externals/soci"]
 	path = submodules/externals/soci
-	url = https://gitlab.linphone.org/BC/public/external/soci
+	url = https://gitlab.linphone.org/BC/public/external/soci.git
 [submodule "submodules/externals/zxing-cpp"]
 	path = submodules/externals/zxing-cpp
 	url = https://gitlab.linphone.org/BC/public/external/zxing-cpp.git
