@@ -20,7 +20,7 @@
 	url = https://gitlab.linphone.org/BC/public/external/msx264.git
 [submodule "submodules/externals/opencore-amr"]
 	path = submodules/externals/opencore-amr
-	url = https://gitlab.linphone.org/BC/public/external/opencore-amr.git
+	url = git://git.linphone.org/opencore-amr.git
 	ignore = dirty
 [submodule "submodules/msamr"]
 	path = submodules/msamr
