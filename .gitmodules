@@ -17,7 +17,7 @@
 	ignore = dirty
 [submodule "submodules/msx264"]
 	path = submodules/msx264
-	url = https://gitlab.linphone.org/BC/public/external/msx264.git
+	url = git://git.linphone.org/msx264.git
 [submodule "submodules/externals/opencore-amr"]
 	path = submodules/externals/opencore-amr
 	url = git://git.linphone.org/opencore-amr.git
