@@ -63,7 +63,7 @@
 	url = git://git.linphone.org/msopenh264.git
 [submodule "submodules/externals/openh264"]
 	path = submodules/externals/openh264
-	url = https://github.com/cisco/openh264
+	url = https://gitlab.linphone.org/BC/public/external/openh264.git
 	ignore = dirty
 [submodule "submodules/mscodec2"]
 	path = submodules/mscodec2
