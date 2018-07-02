@@ -19,7 +19,7 @@
 	path = submodules/msx264
 	url = https://gitlab.linphone.org/BC/public/msx264.git
 [submodule "submodules/externals/opencore-amr"]
-	path = submodules/externals/opencore-amr
+	path = submodules/externals/opencore-amr.git
 	url = https://gitlab.linphone.org/BC/public/external/opencore-amr.git
 	ignore = dirty
 [submodule "submodules/msamr"]
@@ -95,7 +95,7 @@
 	url = https://gitlab.linphone.org/BC/public/external/vo-amrwbenc.git
 [submodule "submodules/externals/codec2"]
 	path = submodules/externals/codec2
-	url = https://gitlab.linphone.org/BC/public/external/codec2
+	url = https://gitlab.linphone.org/BC/public/external/codec2.git
 [submodule "submodules/externals/libjpeg-turbo"]
 	path = submodules/externals/libjpeg-turbo
 	url = https://gitlab.linphone.org/BC/public/external/libjpeg-turbo.git
