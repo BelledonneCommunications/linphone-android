@@ -24,7 +24,7 @@
 	ignore = dirty
 [submodule "submodules/msamr"]
 	path = submodules/msamr
-	url = https://gitlab.linphone.org/BC/public/external/msamr.git
+	url = git://git.linphone.org/msamr.git
 [submodule "submodules/externals/libvpx"]
 	path = submodules/externals/libvpx
 	url = https://gitlab.linphone.org/BC/public/external/libvpx.git
@@ -37,7 +37,7 @@
 	url = https://gitlab.linphone.org/BC/public/external/srtp.git
 [submodule "submodules/mssilk"]
 	path = submodules/mssilk
-	url = https://gitlab.linphone.org/BC/public/external/mssilk.git
+	url = git://git.linphone.org/mssilk.git
 [submodule "submodules/bcg729"]
 	path = submodules/bcg729
 	url = https://gitlab.linphone.org/BC/public/bcg729.git
@@ -57,17 +57,17 @@
 	ignore = dirty
 [submodule "submodules/mswebrtc"]
 	path = submodules/mswebrtc
-	url = https://gitlab.linphone.org/BC/public/external/mswebrtc.git
+	url = git://git.linphone.org/mswebrtc.git
 [submodule "submodules/msopenh264"]
 	path = submodules/msopenh264
-	url = https://gitlab.linphone.org/BC/public/external/msopenh264.git
+	url = git://git.linphone.org/msopenh264.git
 [submodule "submodules/externals/openh264"]
 	path = submodules/externals/openh264
 	url = https://github.com/cisco/openh264
 	ignore = dirty
 [submodule "submodules/mscodec2"]
 	path = submodules/mscodec2
-	url = https://gitlab.linphone.org/BC/public/external/mscodec2.git
+	url = git://git.linphone.org/mscodec2.git
 [submodule "submodules/bctoolbox"]
 	path = submodules/bctoolbox
 	url = https://gitlab.linphone.org/BC/public/bctoolbox.git
