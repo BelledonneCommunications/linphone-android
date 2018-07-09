@@ -362,7 +362,9 @@ release: java-clean build copy-libs
 unsigned: java-clean build copy-libs
 \t./gradlew assemblePackaged
 
-generate-sdk: liblinphone-android-sdk
+generate-release-sdk: liblinphone-android-sdk-release
+
+generate-sdk: liblinphone-android-sdk-debug
 
 generate-javadoc:
 \t./gradlew -q androidJavadocsJar
@@ -377,7 +379,13 @@ liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
 linphone-android-sdk: java-clean build copy-libs 
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
+
+linphone-android-sdk-release: linphone-android-sdk
 \t./gradlew -b linphoneAndroidSdk.gradle assembleRelease
+\t./gradlew -b linphoneAndroidSdk.gradle sdkZip
+
+linphone-android-sdk-debug: linphone-android-sdk
+\t./gradlew -b linphoneAndroidSdk.gradle debugRelease
 \t./gradlew -b linphoneAndroidSdk.gradle sdkZip
 
 mediastreamer2-sdk: build copy-libs-mediastreamer
