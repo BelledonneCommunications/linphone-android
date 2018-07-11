@@ -113,6 +113,7 @@ android {
             assets.srcDirs = ["${buildDir}/sdk-assets/assets/"]
             renderscript.srcDirs = srcDir
             jniLibs.srcDirs = ['../libs']
+            resources.srcDir("res")
 
             java.excludes = ['**/mediastream/MediastreamerActivity.java']
 

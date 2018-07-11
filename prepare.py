@@ -268,7 +268,8 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-arm/bin/gdb.setup libs/armeabi; \\
 \tfi
 \tif test -f "liblinphone-sdk/android-arm/lib/wrap.sh"; then \\
-\t\tcp -f liblinphone-sdk/android-arm/lib/wrap.sh libs/armeabi; \\
+\t\tmkdir -p liblinphone-sdk/res/lib/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/wrap.sh liblinphone-sdk/res/lib/armeabi; \\
 \tfi
 \trm -rf libs-debug/armeabi-v7a
 \trm -rf libs/armeabi-v7a
@@ -288,7 +289,8 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdb.setup libs/armeabi-v7a; \\
 \tfi
 \tif test -f "liblinphone-sdk/android-armv7/lib/wrap.sh"; then \\
-\t\tcp -f liblinphone-sdk/android-armv7/lib/wrap.sh libs/armeabi-v7a; \\
+\t\tmkdir -p liblinphone-sdk/res/lib/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/wrap.sh liblinphone-sdk/res/lib/armeabi-v7a; \\
 \tfi
 \trm -rf libs-debug/arm64-v8a
 \trm -rf libs/arm64-v8a
@@ -308,7 +310,8 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-arm64/bin/gdb.setup libs/arm64-v8a; \\
 \tfi
 \tif test -f "liblinphone-sdk/android-arm64/lib/wrap.sh"; then \\
-\t\tcp -f liblinphone-sdk/android-arm64/lib/wrap.sh libs/arm64-v8a; \\
+\t\tmkdir -p liblinphone-sdk/res/lib/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/wrap.sh liblinphone-sdk/res/lib/arm64-v8a; \\
 \tfi
 \trm -rf libs-debug/x86
 \trm -rf libs/x86
@@ -328,7 +331,8 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
 \tif test -f "liblinphone-sdk/android-x86/lib/wrap.sh"; then \\
-\t\tcp -f liblinphone-sdk/android-x86/lib/wrap.sh libs/x86; \\
+\t\tmkdir -p liblinphone-sdk/res/lib/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/wrap.sh liblinphone-sdk/res/lib/x86; \\
 \tfi
 
 copy-libs-mediastreamer:
