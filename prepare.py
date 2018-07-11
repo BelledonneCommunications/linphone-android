@@ -267,6 +267,9 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-arm/bin/gdbserver libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/bin/gdb.setup libs/armeabi; \\
 \tfi
+\tif test -f "liblinphone-sdk/android-arm/lib/wrap.sh"; then \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/wrap.sh libs/armeabi; \\
+\tfi
 \trm -rf libs-debug/armeabi-v7a
 \trm -rf libs/armeabi-v7a
 \tif test -d "liblinphone-sdk/android-armv7"; then \\
@@ -283,6 +286,9 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdb.setup libs-debug/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdbserver libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdb.setup libs/armeabi-v7a; \\
+\tfi
+\tif test -f "liblinphone-sdk/android-armv7/lib/wrap.sh"; then \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/wrap.sh libs/armeabi-v7a; \\
 \tfi
 \trm -rf libs-debug/arm64-v8a
 \trm -rf libs/arm64-v8a
@@ -301,6 +307,9 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-arm64/bin/gdbserver libs/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/bin/gdb.setup libs/arm64-v8a; \\
 \tfi
+\tif test -f "liblinphone-sdk/android-arm64/lib/wrap.sh"; then \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/wrap.sh libs/arm64-v8a; \\
+\tfi
 \trm -rf libs-debug/x86
 \trm -rf libs/x86
 \tif test -d "liblinphone-sdk/android-x86"; then \\
@@ -317,6 +326,9 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs-debug/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdbserver libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
+\tfi
+\tif test -f "liblinphone-sdk/android-x86/lib/wrap.sh"; then \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/wrap.sh libs/x86; \\
 \tfi
 
 copy-libs-mediastreamer:
@@ -362,7 +374,9 @@ release: java-clean build copy-libs
 unsigned: java-clean build copy-libs
 \t./gradlew assemblePackaged
 
-generate-sdk: liblinphone-android-sdk
+generate-release-sdk: liblinphone-android-sdk-release
+
+generate-sdk: liblinphone-android-sdk-debug
 
 generate-javadoc:
 \t./gradlew -q androidJavadocsJar
@@ -377,7 +391,13 @@ liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
 linphone-android-sdk: java-clean build copy-libs 
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
+
+linphone-android-sdk-release: linphone-android-sdk
 \t./gradlew -b linphoneAndroidSdk.gradle assembleRelease
+\t./gradlew -b linphoneAndroidSdk.gradle sdkZip
+
+linphone-android-sdk-debug: linphone-android-sdk
+\t./gradlew -b linphoneAndroidSdk.gradle debugRelease
 \t./gradlew -b linphoneAndroidSdk.gradle sdkZip
 
 mediastreamer2-sdk: build copy-libs-mediastreamer
