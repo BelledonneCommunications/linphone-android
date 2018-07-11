@@ -92,19 +92,20 @@
 
 							<ImageView
 								android:id="@+id/contact_picture"
-								android:src="@drawable/avatar"
-								android:contentDescription="@string/content_description_contact_picture"
 								android:layout_width="150dp"
 								android:layout_height="150dp"
-								android:adjustViewBounds="true"/>
+								android:adjustViewBounds="true"
+								android:contentDescription="@string/content_description_contact_picture"
+								android:src="@drawable/avatar_big_secure1"/>
 
 							<ImageView
 								android:id="@+id/mask"
-								android:src="@drawable/avatar_mask_border"
-								android:contentDescription="@string/content_description_contact_picture"
 								android:layout_width="150dp"
 								android:layout_height="150dp"
-								android:adjustViewBounds="true"/>
+								android:adjustViewBounds="true"
+								android:contentDescription="@string/content_description_contact_picture"
+								android:src="@drawable/avatar_mask_border"
+								android:visibility="gone"/>
 
 						</RelativeLayout>
 
@@ -223,13 +224,13 @@
 
 					<ImageView
 						android:id="@+id/dialer"
-						android:src="@drawable/footer_dialer"
-						android:background="@color/colorC"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
+						android:background="@color/colorB"
+						android:contentDescription="@string/content_description_numpad"
 						android:padding="15dp"
-						android:contentDescription="@string/content_description_numpad"/>
+						android:src="@drawable/footer_dialer"/>
 
 					<ImageView
 						android:id="@+id/hang_up"
@@ -246,17 +247,17 @@
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1">
-						
+
 						<ImageView
 							android:id="@+id/chat"
-							android:src="@drawable/footer_chat"
-							android:background="@color/colorC"
-							android:contentDescription="@string/content_description_chat_button"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
+							android:layout_centerInParent="true"
+							android:background="@color/colorB"
+							android:contentDescription="@string/content_description_chat_button"
 							android:padding="15dp"
-							android:layout_centerInParent="true"/>
-	
+							android:src="@drawable/footer_chat"/>
+
 						<TextView
 							android:id="@+id/missed_chats"
 							android:background="@drawable/history_chat_indicator"
@@ -274,74 +275,70 @@
 					android:layout_width="match_parent"
 					android:layout_height="60dp"
 					android:layout_weight="1"
+					android:background=" #595959 "
 					android:orientation="horizontal">
 
 					<RelativeLayout
-						android:background="@drawable/button_background"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:layout_weight="1">
+						android:layout_weight="1"
+						>
 
 						<ImageView
 							android:id="@+id/video"
-							android:src="@drawable/camera_default"
-							android:background="@drawable/button_background"
-							android:padding="20dp"
 							android:layout_width="match_parent"
 							android:layout_height="match_parent"
-							android:contentDescription="@string/content_description_switch_video"/>
+							android:contentDescription="@string/content_description_switch_video"
+							android:padding="20dp"
+							android:src="@drawable/camera_default"/>
 
 						<ProgressBar
 							android:id="@+id/video_in_progress"
 							style="?android:attr/progressBarStyle"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
 							android:layout_centerHorizontal="true"
 							android:layout_centerVertical="true"
-							android:visibility="gone"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"/>
+							android:visibility="gone"/>
 
 					</RelativeLayout>
 
 					<ImageView
 						android:id="@+id/micro"
-						android:src="@drawable/micro_default"
-						android:background="@drawable/button_background"
-						android:padding="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:contentDescription="@string/content_description_toggle_micro"/>
+						android:contentDescription="@string/content_description_toggle_micro"
+						android:padding="10dp"
+						android:src="@drawable/micro_default"/>
 
 					<ImageView
 						android:id="@+id/speaker"
-						android:src="@drawable/speaker_default"
-						android:background="@drawable/button_background"
-						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_weight="1"
-						android:contentDescription="@string/content_description_toggle_speaker"/>
+						android:contentDescription="@string/content_description_toggle_speaker"
+						android:padding="15dp"
+						android:src="@drawable/speaker_default"/>
 
 					<ImageView
 						android:id="@+id/audio_route"
-						android:src="@drawable/routes_default"
-						android:background="@drawable/button_background"
-						android:visibility="gone"
-						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_weight="1"
-						android:contentDescription="@string/content_description_audio_route"/>
+						android:contentDescription="@string/content_description_audio_route"
+						android:padding="15dp"
+						android:src="@drawable/routes_default"
+						android:visibility="gone"/>
 
 					<ImageView
 						android:id="@+id/options"
-						android:src="@drawable/options_default"
-						android:background="@drawable/button_background"
-						android:padding="15dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_weight="1"
-						android:contentDescription="@string/content_description_call_options"/>
+						android:contentDescription="@string/content_description_call_options"
+						android:padding="15dp"
+						android:src="@drawable/options_default"/>
 
 				</LinearLayout>
 

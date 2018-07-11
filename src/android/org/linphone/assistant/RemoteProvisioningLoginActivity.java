@@ -57,7 +57,11 @@ import android.widget.Toast;
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -353,34 +357,53 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 	private boolean decryptQrcode() {
 		try {
-			byte[] unBased64Data = qrcodeString.getBytes();
+			/*byte[] unBased64Data = qrcodeString.getBytes();
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(unBased64Data);
 
-			byte[] salt = new byte[16];
-			byte[] iv = new byte[256 / 8];
-			byte[] contentToDecrypt = new byte[unBased64Data.length - 48];
+			byte[] contentToDecrypt = new byte[unBased64Data.length];
 
-			inputStream.read(salt);
-			inputStream.read(iv);
 			inputStream.read(contentToDecrypt);
 
-			String saltString = new String(salt);
-			BigInteger saltHex = new BigInteger(saltString, 16);
-			String ivString = new String(iv);
-			BigInteger ivHex = new BigInteger(ivString, 16);
+			BigInteger saltHex = new BigInteger(, 16);
+			BigInteger ivHex = new BigInteger("F58B8C9A49B321DBA000000000000000", 16);
 
 			byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 			byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
 
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("AES/CBC/PKCS5Padding");
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEwithMD5AND128BITAES-CBC-OPENSSL");
 			KeySpec keySpec = new PBEKeySpec(code_sms.getText().toString().toCharArray(), saltByte, 10000, 128);
 			SecretKey tmpSecretKey = factory.generateSecret(keySpec);
 			SecretKeySpec secretKeySpec = new SecretKeySpec(tmpSecretKey.getEncoded(), "AES");
 
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
 			cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ivByte));
 
-			remoteUrl = new String(cipher.doFinal(Base64.getDecoder().decode(contentToDecrypt)));
+			remoteUrl = new String(cipher.doFinal(Base64.getDecoder().decode(contentToDecrypt)));*/
+			final byte[] pass = code_sms.getText().toString().getBytes(StandardCharsets.US_ASCII);
+
+			final Base64.Decoder decoder = Base64.getDecoder();
+			final byte[] inBytes = decoder.decode(qrcodeString.getBytes());
+
+			final byte[] salt = "F000000000000000".getBytes(StandardCharsets.US_ASCII);
+
+			final byte[] passAndSalt = concat(pass, salt);
+
+			byte[] hash = new byte[0];
+			byte[] keyAndIv = new byte[0];
+			for (int i = 0; i < 3; i++) {
+				final byte[] data = concat(hash, passAndSalt);
+				final MessageDigest md = MessageDigest.getInstance("MD5");
+				hash = md.digest(data);
+				keyAndIv = concat(keyAndIv, hash);
+			}
+
+			final byte[] keyValue = Arrays.copyOfRange(keyAndIv, 0, 32);
+			final byte[] iv = Arrays.copyOfRange(keyAndIv, 32, 48);
+			final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			final SecretKeySpec key = new SecretKeySpec(keyValue, "AES");
+			cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
+			final byte[] clear = cipher.doFinal(inBytes, 16, inBytes.length - 16);
+			remoteUrl = new String(clear, StandardCharsets.ISO_8859_1);
 		} catch (Exception ex) {
 			Toast.makeText(RemoteProvisioningLoginActivity.this, "Code mauvais", Toast.LENGTH_LONG).show();
 			Log.e("RemoteProvisioningLoginActivity: Decrypt problem: " + ex);
@@ -388,6 +411,13 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			return false;
 		}
 		return true;
+	}
+
+	private static byte[] concat(final byte[] a, final byte[] b) {
+		final byte[] c = new byte[a.length + b.length];
+		System.arraycopy(a, 0, c, 0, a.length);
+		System.arraycopy(b, 0, c, a.length, b.length);
+		return c;
 	}
 
 	private boolean storeAccount(String url) {

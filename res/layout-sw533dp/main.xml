@@ -9,8 +9,8 @@
 		android:id="@+id/status"
 		android:name="org.linphone.fragments.StatusFragment"
 		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		tools:layout="@layout/status" />
+		android:layout_height="30dp"
+		tools:layout="@layout/status"/>
 
 	<android.support.v4.widget.DrawerLayout
 		android:id="@+id/side_menu"
@@ -244,23 +244,21 @@
 
 			<ListView
 				android:id="@+id/accounts_list"
-				android:background="@color/colorB"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:choiceMode="singleChoice"
+				android:background="@color/colorB"
 				android:cacheColorHint="@color/transparent"
-				android:divider="@android:color/transparent"
+				android:choiceMode="singleChoice"
 				android:dividerHeight="0dp"/>
 
 			<ListView
 				android:id="@+id/item_list"
-				android:background="@color/colorH"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
+				android:background="@color/colorH"
 				android:choiceMode="singleChoice"
-				android:divider="@color/colorE"
-				android:listSelector="@color/colorH"
-				android:dividerHeight="1dp"/>
+				android:dividerHeight="1dp"
+				android:listSelector="@color/colorH"/>
 		</LinearLayout>
 
 		<RelativeLayout

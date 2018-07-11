@@ -24,30 +24,30 @@
 
 			<RelativeLayout
 				android:id="@+id/top_bar"
-				android:background="@color/colorF"
 				android:layout_width="match_parent"
 				android:layout_height="60dp"
-				android:visibility="gone"
-				android:layout_alignParentTop="true">
+				android:layout_alignParentTop="true"
+				android:background="@color/colorH"
+				android:visibility="gone">
 
 				<TextView
 					android:id="@+id/menu_name"
-					android:text="@string/settings"
 					style="@style/font1"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
 					android:layout_centerInParent="true"
-					android:gravity="center_vertical"/>
+					android:gravity="center_vertical"
+					android:text="@string/settings"/>
 
 				<ImageView
 					android:id="@+id/cancel"
-					android:src="@drawable/dialer_back"
-					android:contentDescription="@string/content_description_dialer_back"
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent"
-					android:padding="15dp"
+					android:layout_alignParentRight="true"
 					android:layout_centerInParent="true"
-					android:layout_alignParentRight="true"/>
+					android:contentDescription="@string/content_description_dialer_back"
+					android:padding="15dp"
+					android:src="@drawable/dialer_back"/>
 
 			</RelativeLayout>
 

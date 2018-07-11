@@ -27,16 +27,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
 public class GroupInfoAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
@@ -88,9 +92,20 @@ public class GroupInfoAdapter extends BaseAdapter {
 
         name.setText((c.getFullName() != null) ? c.getFullName() :
 		        (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
-        if (c.hasPhoto()) {
+        /*if (c.hasPhoto()) {
             LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
-        }
+        }*/
+        //Spec Obiane
+	    ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ca.getAddress().asStringUriOnly());
+	    if (securityLevel == ChatRoomSecurityLevel.Safe) {
+		    avatar.setImageResource(R.drawable.avatar_big_secure2);
+	    } else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+		    avatar.setImageResource(R.drawable.avatar_big_unsecure);
+	    } else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+		    avatar.setImageResource(R.drawable.avatar_big_secure1);
+	    } else {
+		    avatar.setImageResource(R.drawable.avatar_medium_unregistered);
+	    }
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +129,17 @@ public class GroupInfoAdapter extends BaseAdapter {
 			    }
 		    }
 	    });
+
+	    if (securityLevel == ChatRoomSecurityLevel.Safe) {
+		    secure.setImageResource(R.drawable.security_ok);
+	    } else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+		    secure.setImageResource(R.drawable.security_ko);
+	    } else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+		    secure.setImageResource(R.drawable.security_pending);
+	    } else {
+		    secure.setOnClickListener(null);
+		    secure.setVisibility(View.INVISIBLE);
+	    }
 
         isAdmin.setVisibility(ca.isAdmin() ? View.VISIBLE : View.GONE);
         isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.VISIBLE);

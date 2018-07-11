@@ -7,7 +7,9 @@
 	<ImageView
 		android:layout_width="400dp"
 		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
 		android:layout_centerHorizontal="true"
+		android:layout_marginTop="22dp"
 		android:src="@drawable/linphone_logo"/>
 
 	<RelativeLayout
@@ -86,7 +88,6 @@
 					android:layout_alignParentBottom="true"
 					android:background="@drawable/toolbar_button"
 					android:contentDescription="@string/content_description_add_contact"
-					android:padding="15dp"
 					android:src="@drawable/contact_add_button"/>
 
 			</RelativeLayout>

@@ -55,6 +55,8 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Friend;
@@ -902,6 +904,14 @@ public final class LinphoneUtils {
 			}
 		}
 		return null;
+	}
+
+	public static ChatRoomSecurityLevel getSecurityLevelForSipUri(Core lc, String sipUri) {
+		ChatRoom cr = lc.getChatRoomFromUri(sipUri);
+
+		if (cr != null) return cr.getSecurityLevel();
+
+		return ChatRoomSecurityLevel.ClearText;
 	}
 }
 

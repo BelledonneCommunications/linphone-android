@@ -772,6 +772,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		accountCreator.setListener(this);
 		callGsmON = false;
 
+		//lc.enableLimeV2(true);
+
 		updateMissedChatCount();
 	}
 

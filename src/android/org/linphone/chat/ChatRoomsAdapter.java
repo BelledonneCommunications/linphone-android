@@ -41,6 +41,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.EventLog;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
@@ -230,12 +231,28 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			}
 
 			if (chatRoom.limeAvailable()) {
-				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
+					holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
+					holder.contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
+					holder.contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+				} else {
+					holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
 			}
 		} else {
 			holder.displayName.setText(chatRoom.getSubject());
 			if (chatRoom.limeAvailable()) {
-				holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
+				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
+					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
+				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
+					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unsecure);
+				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
+					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure1);
+				} else {
+					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unregistered);
+				}
 			} else {
 				holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
 			}

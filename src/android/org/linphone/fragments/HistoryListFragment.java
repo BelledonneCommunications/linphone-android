@@ -36,6 +36,7 @@ import org.linphone.core.Call;
 import org.linphone.core.Address;
 import org.linphone.core.CallLog;
 import org.linphone.core.Call.Status;
+import org.linphone.core.ChatRoomSecurityLevel;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -58,6 +59,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
 public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private ListView historyList;
@@ -480,11 +483,22 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
 			String displayName = null;
 			final String sipUri = (address != null) ? address.asString() : "";
-			if (c != null) {
+			/*if (c != null) {
 				displayName = c.getFullName();
 				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, c.getThumbnailUri());
 			} else {
 				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			}*/
+			//Spec Obiane
+			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), sipUri);
+			if (securityLevel == ChatRoomSecurityLevel.Safe) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+			} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+			} else {
+				holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
 			}
 
 			if (displayName == null) {
