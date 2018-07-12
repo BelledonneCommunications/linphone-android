@@ -250,6 +250,7 @@ java-clean:
 
 
 copy-libs:
+\trm -rf liblinphone-sdk/res
 \trm -rf libs-debug/armeabi
 \trm -rf libs/armeabi
 \tif test -d "liblinphone-sdk/android-arm"; then \\
@@ -392,7 +393,7 @@ debug-sdk: java-clean build copy-libs generate-javadoc generate-apk
 liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
 \t./gradlew -q sdkZip
 
-linphone-android-sdk: java-clean build copy-libs 
+linphone-android-sdk: java-clean build copy-libs
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
 
