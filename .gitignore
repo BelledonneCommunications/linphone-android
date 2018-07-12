@@ -48,6 +48,9 @@ WORK
 .d
 google-services.json
 .*clang*
-linphone.iml
+**/*.iml
 src/linphone-wrapper
 liblinphone_tester/res/raw/
+**/.classpath
+**/.project
+**/*.kdev4
