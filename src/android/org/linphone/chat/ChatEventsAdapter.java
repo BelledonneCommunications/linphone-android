@@ -337,7 +337,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    String externalBodyUrl = message.getExternalBodyUrl();
 		    Content fileTransferContent = message.getFileTransferInformation();
 
-		    if (message.getAppdata() != null) { // Something to display
+		    if (fileTransferContent != null && fileTransferContent.isFile()) { // Something to display
 				displayAttachedFile(message, holder);
 		    }
 
@@ -506,9 +506,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	private void displayAttachedFile(ChatMessage message, ChatBubbleViewHolder holder) {
 		holder.fileName.setVisibility(View.VISIBLE);
 
-		String appData = message.getAppdata();
-		if (appData != null) {
-			holder.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
+		Content fileContent = message.getFileTransferInformation();
+		String appData = fileContent.getFilePath();
+		if (fileContent != null && fileContent.isFile() && appData != null) {
+			holder.fileName.setText(fileContent.getName());
 			if (LinphoneUtils.isExtensionImage(appData)) {
 				holder.messageImage.setVisibility(View.VISIBLE);
 				loadBitmap(appData, holder.messageImage);
