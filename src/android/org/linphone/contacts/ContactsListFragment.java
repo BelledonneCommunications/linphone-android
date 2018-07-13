@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Dialog;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 	private LayoutInflater mInflater;
 	private ListView contactsList;
 	private TextView noSipContact, noContact;
+	private SwipeRefreshLayout swipeRefresh;
 	private ImageView allContacts, linphoneContacts, newContact, edit, selectAll, deselectAll, delete, cancel;
 	private boolean onlyDisplayLinphoneContacts, isEditMode, isSearchMode;
 	private View allContactsSelected, linphoneContactsSelected;
@@ -86,6 +88,18 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
         noSipContact = (TextView) view.findViewById(R.id.noSipContact);
         noContact = (TextView) view.findViewById(R.id.noContact);
+
+        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+		swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				//TODO get contact
+				if (LinphoneManager.getLc() != null) {
+					LinphoneManager.getLc().refreshRegisters();
+				}
+				swipeRefresh.setRefreshing(false);
+			}
+		});
 
         contactsList = (ListView) view.findViewById(R.id.contactsList);
         contactsList.setOnItemClickListener(this);

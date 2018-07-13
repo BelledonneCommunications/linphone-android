@@ -125,12 +125,19 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
-		<ListView
-			android:id="@+id/contactsList"
+		<android.support.v4.widget.SwipeRefreshLayout
+			android:id="@+id/swipeRefreshLayout"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:divider="@color/colorE"
-			android:dividerHeight="1dp"/>
+			android:layout_height="match_parent">
+
+			<ListView
+				android:id="@+id/contactsList"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:divider="@color/colorE"
+				android:dividerHeight="1dp"/>
+
+		</android.support.v4.widget.SwipeRefreshLayout>
 
 		<ProgressBar
 			android:id="@+id/contactsFetchInProgress"
