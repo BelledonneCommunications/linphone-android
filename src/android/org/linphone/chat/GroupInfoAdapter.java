@@ -33,9 +33,11 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
+import org.linphone.core.ProxyConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +98,10 @@ public class GroupInfoAdapter extends BaseAdapter {
             LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
         }*/
         //Spec Obiane
-	    ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ca.getAddress().asStringUriOnly());
+		avatar.setVisibility(View.VISIBLE);
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+	    ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, ca.getAddress());
 	    if (securityLevel == ChatRoomSecurityLevel.Safe) {
 		    avatar.setImageResource(R.drawable.avatar_big_secure2);
 	    } else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {

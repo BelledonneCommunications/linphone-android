@@ -250,6 +250,7 @@ java-clean:
 
 
 copy-libs:
+\trm -rf liblinphone-sdk/res
 \trm -rf libs-debug/armeabi
 \trm -rf libs/armeabi
 \tif test -d "liblinphone-sdk/android-arm"; then \\

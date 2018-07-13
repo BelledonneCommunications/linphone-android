@@ -256,12 +256,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 				refreshAccounts();
 
-				if(getResources().getBoolean(R.bool.use_phone_number_validation)
+				/*if(getResources().getBoolean(R.bool.use_phone_number_validation)
 						&& authInfo != null && authInfo.getDomain().equals(getString(R.string.default_domain))) {
 					if (state.equals(RegistrationState.Ok)) {
 						LinphoneManager.getInstance().isAccountWithAlias();
 					}
-				}
+				}*/
 
 				if(state.equals(RegistrationState.Failed) && newProxyConfig) {
 					newProxyConfig = false;

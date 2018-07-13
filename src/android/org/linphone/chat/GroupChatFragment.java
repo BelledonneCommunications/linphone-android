@@ -522,7 +522,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) || mChatRoom.getNbParticipants() <= 1) {
+			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
 				mParticipantsLabel.setVisibility(View.GONE);

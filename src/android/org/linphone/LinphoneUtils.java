@@ -65,6 +65,7 @@ import org.linphone.core.LogCollectionState;
 import org.linphone.core.LogLevel;
 import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
+import org.linphone.core.Participant;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
@@ -906,10 +907,17 @@ public final class LinphoneUtils {
 		return null;
 	}
 
-	public static ChatRoomSecurityLevel getSecurityLevelForSipUri(Core lc, String sipUri) {
-		ChatRoom cr = lc.getChatRoomFromUri(sipUri);
+	public static ChatRoomSecurityLevel getSecurityLevelForSipUri(Core lc, Address ourUri, Address sipUri) {
+		if (ourUri == null || sipUri == null) return ChatRoomSecurityLevel.ClearText;
 
-		if (cr != null) return cr.getSecurityLevel();
+		for (ChatRoom cr : lc.getChatRooms()) {
+			for (Participant pa : cr.getParticipants()) {
+				if (pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
+					return pa.getSecurityLevel();
+				}
+			}
+		}
+
 
 		return ChatRoomSecurityLevel.ClearText;
 	}

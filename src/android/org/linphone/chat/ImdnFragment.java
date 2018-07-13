@@ -47,6 +47,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
+import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 
 import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
@@ -160,8 +161,10 @@ public class ImdnFragment extends Fragment {
 		refreshInfo();
 	}
 
-	private void setPictureForContact(ImageView img, String sipUri) {
-		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), sipUri);
+	private void setPictureForContact(ImageView img, Address sipUri) {
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, sipUri);
 		if (securityLevel == ChatRoomSecurityLevel.Safe) {
 			img.setImageResource(R.drawable.avatar_big_secure2);
 		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
@@ -233,7 +236,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address.asStringUriOnly());
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
 
 			mRead.addView(v);
 			first = false;
@@ -257,7 +260,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address.asStringUriOnly());
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
 
 			mDelivered.addView(v);
 			first = false;
@@ -281,7 +284,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address.asStringUriOnly());
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
 
 			mSent.addView(v);
 			first = false;
@@ -304,7 +307,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address.asStringUriOnly());
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
 
 			mUndelivered.addView(v);
 			first = false;

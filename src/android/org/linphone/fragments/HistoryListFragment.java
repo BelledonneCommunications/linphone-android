@@ -37,6 +37,7 @@ import org.linphone.core.Address;
 import org.linphone.core.CallLog;
 import org.linphone.core.Call.Status;
 import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.ProxyConfig;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -490,7 +491,10 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
 			//Spec Obiane
-			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), sipUri);
+			holder.contactPicture.setVisibility(View.VISIBLE);
+			ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+			Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, address);
 			if (securityLevel == ChatRoomSecurityLevel.Safe) {
 				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
 			} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {

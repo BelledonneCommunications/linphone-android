@@ -84,7 +84,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 						mWaitLayout.setVisibility(View.VISIBLE);
 						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
 						mChatRoom.addListener(mChatRoomCreationListener);
-						mChatRoom.addParticipant(participant);
+						Address participants[] = new Address[1];
+						participants[0] = participant;
+						mChatRoom.addParticipants(participants);
 					} else {
 						room = lc.getChatRoom(participant);
 						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
