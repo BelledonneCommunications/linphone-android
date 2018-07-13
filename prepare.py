@@ -104,7 +104,7 @@ class AndroidPreparator(prepare.Preparator):
     def __init__(self, targets=android_targets):
         prepare.Preparator.__init__(self, targets, default_targets=['armv7', 'arm64'], virtual_targets=android_virtual_targets)
         self.min_supported_ndk = 16
-        self.max_supported_ndk = 16
+        self.max_supported_ndk = 17
         self.unsupported_ndk_version = None
         self.min_cmake_version = "3.10"
         self.release_with_debug_info = True
@@ -144,7 +144,7 @@ class AndroidPreparator(prepare.Preparator):
         retval = True
         ndk_build = find_executable('ndk-build')
         ndk_path = os.path.dirname(ndk_build)
-	# NDK prior to r11 had a RELEASE.TXT file holding the version number
+        # NDK prior to r11 had a RELEASE.TXT file holding the version number
         release_file = os.path.join(ndk_path, 'RELEASE.TXT')
         if os.path.isfile(release_file):
             version = open(release_file).read().strip()
@@ -241,19 +241,18 @@ install: install-apk run-linphone
 install-test:
 \t$(MAKE) -C liblinphone_tester copy-libs
 \t$(MAKE) -C liblinphone_tester copy-files
+\t./gradlew -b liblinphone_tester/build.gradle clean
 \t./gradlew -b liblinphone_tester/build.gradle assembleDebug
 \t./gradlew -b liblinphone_tester/build.gradle installDebug
 
 java-clean:
 \t./gradlew clean
 
-$(TOPDIR)/res/raw/rootca.pem:
-\tcp liblinphone-sdk/android-{first_arch}/share/linphone/rootca.pem $@
 
 copy-libs:
+\trm -rf liblinphone-sdk/res
 \trm -rf libs-debug/armeabi
 \trm -rf libs/armeabi
-\trm -rf src/linphone-wrapper && mkdir -p src/linphone-wrapper/
 \tif test -d "liblinphone-sdk/android-arm"; then \\
 \t\tmkdir -p libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/lib/lib*.so libs-debug/armeabi && \\
@@ -268,6 +267,10 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-arm/bin/gdb.setup libs-debug/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/bin/gdbserver libs/armeabi && \\
 \t\tcp -f liblinphone-sdk/android-arm/bin/gdb.setup libs/armeabi; \\
+\tfi
+\tif test -f "liblinphone-sdk/android-arm/lib/wrap.sh"; then \\
+\t\tmkdir -p liblinphone-sdk/res/lib/armeabi && \\
+\t\tcp -f liblinphone-sdk/android-arm/lib/wrap.sh liblinphone-sdk/res/lib/armeabi; \\
 \tfi
 \trm -rf libs-debug/armeabi-v7a
 \trm -rf libs/armeabi-v7a
@@ -286,6 +289,10 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdbserver libs/armeabi-v7a && \\
 \t\tcp -f liblinphone-sdk/android-armv7/bin/gdb.setup libs/armeabi-v7a; \\
 \tfi
+\tif test -f "liblinphone-sdk/android-armv7/lib/wrap.sh"; then \\
+\t\tmkdir -p liblinphone-sdk/res/lib/armeabi-v7a && \\
+\t\tcp -f liblinphone-sdk/android-armv7/lib/wrap.sh liblinphone-sdk/res/lib/armeabi-v7a; \\
+\tfi
 \trm -rf libs-debug/arm64-v8a
 \trm -rf libs/arm64-v8a
 \tif test -d "liblinphone-sdk/android-arm64"; then \\
@@ -302,6 +309,10 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-arm64/bin/gdb.setup libs-debug/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/bin/gdbserver libs/arm64-v8a && \\
 \t\tcp -f liblinphone-sdk/android-arm64/bin/gdb.setup libs/arm64-v8a; \\
+\tfi
+\tif test -f "liblinphone-sdk/android-arm64/lib/wrap.sh"; then \\
+\t\tmkdir -p liblinphone-sdk/res/lib/arm64-v8a && \\
+\t\tcp -f liblinphone-sdk/android-arm64/lib/wrap.sh liblinphone-sdk/res/lib/arm64-v8a; \\
 \tfi
 \trm -rf libs-debug/x86
 \trm -rf libs/x86
@@ -320,29 +331,9 @@ copy-libs:
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdbserver libs/x86 && \\
 \t\tcp -f liblinphone-sdk/android-x86/bin/gdb.setup libs/x86; \\
 \tfi
-\tif test -d "liblinphone-sdk/android-arm/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-arm/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-armv7/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-armv7/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-arm64/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-arm64/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-x86/share/linphonej"; then \\
-\t\tcp -R liblinphone-sdk/android-x86/share/linphonej/java/* src/linphone-wrapper; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-arm/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-arm/share/belr/grammars/cpim_grammar res/raw/; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-armv7/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-armv7/share/belr/grammars/cpim_grammar res/raw/; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-arm64/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-arm64/share/belr/grammars/cpim_grammar res/raw/; \\
-\tfi
-\tif test -d "liblinphone-sdk/android-x86/share/belr/grammars"; then \\
-\t\tcp liblinphone-sdk/android-x86/share/belr/grammars/cpim_grammar res/raw/; \\
+\tif test -f "liblinphone-sdk/android-x86/lib/wrap.sh"; then \\
+\t\tmkdir -p liblinphone-sdk/res/lib/x86 && \\
+\t\tcp -f liblinphone-sdk/android-x86/lib/wrap.sh liblinphone-sdk/res/lib/x86; \\
 \tfi
 
 copy-libs-mediastreamer:
@@ -371,7 +362,7 @@ copy-libs-mediastreamer:
 \t\tsh WORK/android-x86/strip.sh submodules/mediastreamer2/java/libs/x86/*.so; \\
 \tfi
 
-generate-apk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+generate-apk: java-clean build copy-libs
 \t./gradlew assembleDebug
 
 quick: clean install-apk run-linphone
@@ -388,23 +379,30 @@ release: java-clean build copy-libs
 unsigned: java-clean build copy-libs
 \t./gradlew assemblePackaged
 
-generate-sdk: liblinphone-android-sdk
+generate-release-sdk: liblinphone-android-sdk-release
+
+generate-sdk: liblinphone-android-sdk-debug
 
 generate-javadoc:
-\t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
-\t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
+\t./gradlew -q androidJavadocsJar
+\t./gradlew -q sourcesJar
 
-liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
-\t./gradlew -b libLinphoneAndroidSdk.gradle androidJavadocsJar
-\t./gradlew -b libLinphoneAndroidSdk.gradle sourcesJar
-\t./gradlew -b libLinphoneAndroidSdk.gradle assembleRelease
-\t@mv $(TOPDIR)/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
-\t./gradlew -b libLinphoneAndroidSdk.gradle sdkZip
+debug-sdk: java-clean build copy-libs generate-javadoc generate-apk
+\t./gradlew -q sdkZip
 
-linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
+\t./gradlew -q sdkZip
+
+linphone-android-sdk: java-clean build copy-libs
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
+
+linphone-android-sdk-release: linphone-android-sdk
 \t./gradlew -b linphoneAndroidSdk.gradle assembleRelease
+\t./gradlew -b linphoneAndroidSdk.gradle sdkZip
+
+linphone-android-sdk-debug: linphone-android-sdk
+\t./gradlew -b linphoneAndroidSdk.gradle debugRelease
 \t./gradlew -b linphoneAndroidSdk.gradle sdkZip
 
 mediastreamer2-sdk: build copy-libs-mediastreamer

@@ -264,6 +264,9 @@ public final class LinphoneService extends Service {
 			if (LinphoneManager.isInstanciated())
 				LinphoneManager.getInstance().subscribeFriendList(false);
 		}
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
+		}
 	}
 
 	protected void onForegroundMode() {
@@ -271,6 +274,9 @@ public final class LinphoneService extends Service {
 		if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
 			if (LinphoneManager.isInstanciated())
 				LinphoneManager.getInstance().subscribeFriendList(true);
+		}
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
+			LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterForeground();
 		}
 	}
 

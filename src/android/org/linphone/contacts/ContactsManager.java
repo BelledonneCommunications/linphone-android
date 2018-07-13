@@ -264,11 +264,20 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized void setContacts(List<LinphoneContact> c) {
-		contacts = c;
+		if (contacts.isEmpty() || contacts.size() > c.size()) {
+			contacts = c;
+		} else {
+			for (LinphoneContact contact : c) {
+				if (!contacts.contains(contact)) {
+					contacts.add(contact);
+				}
+			}
+		}
+		Collections.sort(contacts);
 	}
 
 	public synchronized void setSipContacts(List<LinphoneContact> c) {
-		if (sipContacts.isEmpty()) {
+		if (sipContacts.isEmpty() || sipContacts.size() > c.size()) {
 			sipContacts = c;
 		} else {
 			for (LinphoneContact contact : c) {
@@ -277,6 +286,7 @@ public class ContactsManager extends ContentObserver {
 				}
 			}
 		}
+		Collections.sort(sipContacts);
 	}
 
 	public synchronized void refreshSipContact(Friend lf) {
@@ -458,8 +468,6 @@ public class ContactsManager extends ContentObserver {
 			Log.w("[Permission] Read contacts permission wasn't granted, only fetch Friends");
 		}
 
-		Collections.sort(contacts);
-		Collections.sort(sipContacts);
 		setContacts(contacts);
 		setSipContacts(sipContacts);
 

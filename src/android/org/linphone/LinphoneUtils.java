@@ -415,7 +415,7 @@ public final class LinphoneUtils {
 		String extension = LinphoneUtils.getExtensionFromFileName(path);
 		if(extension != null)
 			extension = extension.toLowerCase();
-		return (extension != null && extension.matches(".*(png|jpg|jpeg|bmp|gif).*"));
+		return (extension != null && extension.matches("(png|jpg|jpeg|bmp|gif)"));
 	}
 
 	public static void recursiveFileRemoval(File root) {
@@ -609,11 +609,7 @@ public final class LinphoneUtils {
 			if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
 				final String docId = DocumentsContract.getDocumentId(uri);
 				final String[] split = docId.split(":");
-				final String type = split[0];
-
-				if ("primary".equalsIgnoreCase(type)) {
-					return Environment.getExternalStorageDirectory() + "/" + split[1];
-				}
+				if (split.length >= 1) return Environment.getExternalStorageDirectory() + "/" + split[1];
 
 				// TODO handle non-primary volumes
 			}// Docs storage

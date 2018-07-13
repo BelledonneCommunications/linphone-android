@@ -16,6 +16,7 @@
   <string name="sync_account_name">جهات اتصال لِنْفُونْ</string>
   <!--Common-->
   <string name="username">اسم المستخدم</string>
+  <string name="userid">معرِّف المستخدم (اختياري)</string>
   <string name="phone_number">رقم الهاتف</string>
   <string name="display_name">الاسم المعروض</string>
   <string name="password">كلمة السر</string>
@@ -110,6 +111,7 @@
   <string name="use_email_for_validation">استخدم عنوان البريد الإلكتروني لتأكيد الحساب</string>
   <string name="login_with_username">استعمل اسم المستخدم وكلمة السر عوضا عن رقم هاتفك</string>
   <string name="phone_number_info_title">لأي غرض سيجري استخدام رقم هاتفي ؟</string>
+  <string name="phone_number_info_content">\nبفضل رقم هاتفك، يستطيع أصدقاؤك العثور عليك بسهولة.\n\nسوف ترى في دفتر عناوينك من يستخدم لِنْفُونْ كما سيتمكن أصدقاؤك كذلك من الوصول إليك عبر لِنْفُونْ.\n</string>
   <string name="phone_number_link_info_content">
 \nسيجدك أصدقاؤك بسهولة إن ربطت حسابك برقم هاتفك\\n\nسوف تجد في دفتر عناوينك من يستخدم لِنْفُونْ وسيتمكن أصدقاؤك من الوصول إليك بواسطة لِنْفُونْ كذلك.لِنْفُونْ.\n</string>
   <string name="phone_number_link_info_content_already_account">يمكنك استخدام رقم هاتفي واحد مع حساب لنفون واحد.\n\nإن ربطت رقم هاتفك مع حساب آخر لكنك تود استخدام هذا الحساب، يمكنك ببساطة ربطه مع رقم هاتفك تلقائيا وسيُنقَل هذا الأخير إلى هذا الحساب.</string>
@@ -178,6 +180,7 @@
   <string name="displayed">قُرِأ</string>
   <string name="delivered">سُلِّم</string>
   <string name="resend">أعد اﻹرسال</string>
+  <string name="error_opening_file">حدث خطأ خلال فتح هذا الملف.</string>
   <!--Status Bar-->
   <string name="status_connected">مُسجَّل</string>
   <string name="status_not_connected">غير مُسجَّل</string>
@@ -207,9 +210,12 @@
   <string name="call_stats_ip">صنف IP :</string>
   <string name="call_stats_upload">صبيب الرفع :</string>
   <string name="call_stats_download">صبيب التنزيل :</string>
+  <string name="call_stats_estimated_download">تقدير صبيب التنزيل :</string>
   <string name="call_stats_ice">توصيل ICE :</string>
   <string name="call_stats_video_resolution_sent">دقة الفيديو المُرسَل :</string>
   <string name="call_stats_video_resolution_received">دقة الفيديو المُستلَم :</string>
+  <string name="call_stats_video_fps_sent">معدل عرض الفيديو المُرسَل :</string>
+  <string name="call_stats_video_fps_received">معدل عرض الفيديو المُستلَم : </string>
   <string name="call_stats_sender_loss_rate">معدل ضياع المُرسِل :</string>
   <string name="call_stats_receiver_loss_rate">معدل ضياع المتلقي :</string>
   <string name="call_stats_jitter_buffer">صِوان الارتعاش :</string>
@@ -330,7 +336,9 @@
   <string name="pref_auto_answer_time">مهلة التشغيل التلقائي (بالميلي-ثواني)</string>
   <string name="pref_rfc2833_dtmf">أرسل DTMF مع التدفق (RFC2833)</string>
   <string name="pref_sipinfo_dtmf">أرسل DTMF خارج التدفق (SIP INFO)</string>
+  <string name="pref_call_timeout_title">مهلة المكالمة (بالثواني)</string>
   <string name="pref_voice_mail">عنوان العلبة الصوتية</string>
+  <string name="pref_dialer_call">استخدمْ لِنْفُونْ كتطبيق هاتفك الافتراضي</string>
   <!--Chat settings-->
   <string name="pref_chat_title">المحادثة</string>
   <string name="pref_image_sharing_server_title">خادم المشاركة</string>

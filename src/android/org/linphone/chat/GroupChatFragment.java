@@ -69,7 +69,6 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
-import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
@@ -160,10 +159,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 						String displayName = LinphoneUtils.getAddressDisplayName(a);
 						c.setFullName(displayName);
 					}
-					ContactAddress ca = new ContactAddress(c, a.asString(), c.isFriend(), p.isAdmin());
+					ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
 					participants.add(ca);
 				}
-				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false);
+				LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false, null);
 			}
 		});
 
@@ -215,6 +214,25 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mChatEventsList = view.findViewById(R.id.chat_message_list);
 		registerForContextMenu(mChatEventsList);
+
+		if (getArguments() != null) {
+			String fileSharedUri = getArguments().getString("fileSharedUri");
+			if (fileSharedUri != null) {
+				if (LinphoneUtils.isExtensionImage(fileSharedUri)) {
+					addImageToPendingList(fileSharedUri);
+				} else {
+					if (fileSharedUri.startsWith("content://") || fileSharedUri.startsWith("file://")) {
+						fileSharedUri = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
+					} else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
+						fileSharedUri = LinphoneUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
+					}
+					addFileToPendingList(fileSharedUri);
+				}
+			}
+
+			if (getArguments().getString("messageDraft") != null)
+				mMessageTextToSend.setText(getArguments().getString("messageDraft"));
+		}
 
 		return view;
 	}
@@ -290,7 +308,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
 					addImageToPendingList(fileToUploadPath);
 				} else {
-					if (fileToUploadPath.startsWith("content://")) {
+					if (fileToUploadPath.startsWith("content://") || fileToUploadPath.startsWith("file://")) {
 						fileToUploadPath = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
 					} else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
 						fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
@@ -369,28 +387,29 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		ChatMessage message = event.getChatMessage();
 		String messageId = message.getMessageId();
 
-		switch(item.getItemId()) {
-			case R.id.resend:
-				mEventsAdapter.removeItem(info.position);
-				message.resend();
-				return true;
-			case R.id.imdn_infos:
-				LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
-				return true;
-			case R.id.copy_text:
-				if (message.hasTextContent()) {
-					ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-					ClipData clip = ClipData.newPlainText("Message", message.getTextContent());
-					clipboard.setPrimaryClip(clip);
-				}
-				return true;
-			case R.id.delete_message:
-				mChatRoom.deleteMessage(message);
-				mEventsAdapter.removeItem(info.position);
-				return true;
-			default:
-				return super.onContextItemSelected(item);
+		if (item.getItemId() == R.id.resend) {
+			mEventsAdapter.removeItem(info.position);
+			message.resend();
+			return true;
 		}
+		if (item.getItemId() == R.id.imdn_infos) {
+			LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
+			return true;
+		}
+		if (item.getItemId() == R.id.copy_text) {
+			if (message.hasTextContent()) {
+				ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText("Message", message.getTextContent());
+				clipboard.setPrimaryClip(clip);
+			}
+			return true;
+		}
+		if (item.getItemId() == R.id.delete_message) {
+			mChatRoom.deleteMessage(message);
+			mEventsAdapter.removeItem(info.position);
+			return true;
+		}
+		return super.onContextItemSelected(item);
 	}
 
 	/**
@@ -473,7 +492,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			//TODO error
 			return;
 		}
-		Address proxyConfigContact = core.getDefaultProxyConfig().getContact();
+		Address proxyConfigContact = (core.getDefaultProxyConfig() != null) ? core.getDefaultProxyConfig().getContact() : null;
 		if (proxyConfigContact != null) {
 			mChatRoom = core.findOneToOneChatRoom(proxyConfigContact, mRemoteSipAddress);
 		}
@@ -697,7 +716,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	public void onConferenceAddressGeneration(ChatRoom cr) {
 
 	}
-	
+
 	@Override
 	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
 
@@ -705,7 +724,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
-	
+
 	@Override
 	public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr){
 	}
@@ -750,19 +769,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			});
 			dialog.show();
 		}
-	}
-
-	@Override
-	public void onAllInformationReceived(ChatRoom cr) {
-		// Currently flexisip doesn't send the participants list in the INVITE
-		// So we have to refresh the display when information is available
-		// In the meantime header will be chatroom-xxxxxxx
-		if (mChatRoom == null) mChatRoom = cr;
-		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
-			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
-		}
-		getContactsForParticipants();
-		displayChatRoomHeader();
 	}
 
 	@Override
@@ -841,6 +847,26 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	@Override
 	public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
 
+	}
+
+	@Override
+	public void onConferenceJoined(ChatRoom cr, EventLog event) {
+		// Currently flexisip doesn't send the participants list in the INVITE
+		// So we have to refresh the display when information is available
+		// In the meantime header will be chatroom-xxxxxxx
+		if (mChatRoom == null) mChatRoom = cr;
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mChatRoom.getParticipants().length > 0) {
+			mRemoteParticipantAddress = mChatRoom.getParticipants()[0].getAddress();
+		}
+		getContactsForParticipants();
+		displayChatRoomHeader();
+
+		mEventsAdapter.addToHistory(event);
+	}
+
+	@Override
+	public void onConferenceLeft(ChatRoom cr, EventLog event) {
+		mEventsAdapter.addToHistory(event);
 	}
 
 	@Override

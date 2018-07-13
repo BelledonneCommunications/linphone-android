@@ -14,7 +14,7 @@ default.properties
 doc
 gen
 liblinphone-junit-report.xml
-liblinphone-sdk
+liblinphone-sdk/android-*
 liblinphonetester_*.zip
 libs
 libs-debug
@@ -29,7 +29,6 @@ proguard-project.txt
 project.properties
 res/.DS_Store
 res/raw/lpconfig.xsd
-res/raw/rootca.pem
 submodules/externals/build/cunit/CUnit/
 submodules/externals/build/ffmpeg/arm/
 submodules/externals/build/ffmpeg/x86
@@ -49,7 +48,12 @@ tests/tests.output
 WORK
 .d
 google-services.json
-gradle.properties
 .*clang*
-linphone.iml
+**/*.iml
 src/linphone-wrapper
+liblinphone_tester/res/raw/
+**/.classpath
+**/.project
+**/*.kdev4
+liblinphone-sdk/res/
+**/.vscode

@@ -320,13 +320,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 	 * Adapter's methods
 	 */
 
-//				oldVersion, kept in case of calls from other classes
-//	@Override
-//	public int getCount() {
-//		return mRooms.size();
-//	}
-
-
 
 	@Override
 	public int getItemCount() {
@@ -340,5 +333,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 	@Override
 	public long getItemId(int position) {
 		return position;
+
 	}
 }

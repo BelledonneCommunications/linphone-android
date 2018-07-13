@@ -5,12 +5,34 @@ Group changes to describe their impact on the project, as follows:
 
     Added for new features.
     Changed for changes in existing functionality.
-    Deprecated for once-stable features removed in upcoming releases.é
+    Deprecated for once-stable features removed in upcoming releases.
     Removed for deprecated features removed in this release.
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
 ## [Incomming]
+- feature: support of H265 codec.
+
+## [4.0.1] - 2018-06-26
+
+### Fixed
+- fix loading of plugins
+- fix issue with video stream, not started when receiving an incoming call just after the app is launched
+- fix issue with TURN
+
+## [4.0.0] - 2018-06-15
+
+### Added
+- Group chat between linphone.org SIP accounts.
+- new JAVA/JNI wrapper. This new wrapper is automatically generated from liblinphone C API. It breaks compatibility with previous, hand-made wrapper.
+  (more information about new wrapper [here.](https://wiki.linphone.org/xwiki/wiki/public/view/Lib/Linphone%20%28Android%29%20Java%20wrapper/) )
+
+### Deprecated
+- hand-made java API in submodules/linphone/java is deprecated. However it is still possible to use it by checking out the 3.4.x branch of linphone-android.
+
+### Fixed
+- issue with changing push notification token not passed to library, possibly resulting in a loss of incoming calls.
+
 
 ## [3.3.0] - 2017-10-18
 

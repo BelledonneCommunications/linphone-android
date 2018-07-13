@@ -156,7 +156,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinphoneActivity.instance().goToChatCreator(null, null, null, false);
+				LinphoneActivity.instance().goToChatCreator(null, null, null, false, null);
 			}
 		});
 
@@ -211,7 +211,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			toggleSelection(position);
 		}else{
 			ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
-			LinphoneActivity.instance().goToChat(room.getPeerAddress().asString());
+			LinphoneActivity.instance().goToChat(room.getPeerAddress().asString(),null);
 		}
 	}
 
@@ -366,7 +366,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		ChatRoomsAdapter adapter = (ChatRoomsAdapter)mChatRoomsList.getAdapter();
 		if (adapter != null && adapter.getItemCount() > 0) {
 			ChatRoom room = (ChatRoom) adapter.getItem(0);
-			LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly());
+			LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
 		} else {
 			LinphoneActivity.instance().displayEmptyFragment();
 		}
@@ -403,11 +403,9 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			lc.removeListener(mListener);
 		}
 		ContactsManager.removeContactsListener(this);
-
-
-
 		mChatRoomsAdapter.clear();
 		super.onPause();
+
 	}
 
 		@Override

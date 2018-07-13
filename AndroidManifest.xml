@@ -2,12 +2,12 @@
 <manifest package="org.linphone"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="3995"
-          android:versionName="3.99.4">
+          android:versionCode="4002"
+          android:versionName="4.0.1">
 
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="26"/>
+        android:targetSdkVersion="28"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>

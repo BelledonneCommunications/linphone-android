@@ -23,7 +23,7 @@ public class LogsActivity extends Activity {
 
 		@Override
 		public void run() {
-			String res_path = mLogsActivity.getFilesDir().getAbsolutePath()+"/config_files";
+			String res_path = mLogsActivity.getFilesDir().getAbsolutePath();
 			String write_path = mLogsActivity.getCacheDir().getPath();
 			tester = new TesterLogger(mLogsActivity);
 			List<String> list = new LinkedList<String>(Arrays.asList(new String[]{"tester", "--verbose", "--resource-dir", res_path, "--writable-dir", write_path}));

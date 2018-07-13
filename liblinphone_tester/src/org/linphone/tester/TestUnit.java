@@ -26,46 +26,24 @@ public class TestUnit extends AndroidTestCase {
 	public TestUnit(String name) {
 		String[] tab = name.split("/");
 		mSuite = tab[0];
-		mTest = tab[1];
+		if (tab.length == 2)
+			mTest = tab[1];
 		setName(name);
 	}
 
 	static public void copyAssetsFromPackage(Context ctx) throws IOException {
-		copyAssetsFromPackage(ctx,"config_files");
+		//copy sdk assets
+		org.linphone.core.tools.AndroidPlatformHelper.copyAssetsFromPackage(ctx,"org.linphone.core",".");
+		//copy tester assets
+		org.linphone.core.tools.AndroidPlatformHelper.copyAssetsFromPackage(ctx,"config_files",".");
 	}
 
 
-	public static void copyAssetsFromPackage(Context ctx,String fromPath) throws IOException {
-		new File(ctx.getFilesDir().getPath()+"/"+fromPath).mkdir();
-
-		for (String f :ctx.getAssets().list(fromPath)) {
-			String current_name=fromPath+"/"+f;
-			InputStream lInputStream;
-			try {
-				 lInputStream = ctx.getAssets().open(current_name);
-			} catch (IOException e) {
-				//probably a dir
-				new File(ctx.getFilesDir().getPath()+"/"+current_name).mkdir();
-				copyAssetsFromPackage(ctx,current_name);
-				continue;
-			}
-			FileOutputStream lOutputStream =  new FileOutputStream(new File(ctx.getFilesDir().getPath()+"/"+current_name));//ctx.openFileOutput (fromPath+"/"+f, 0);
-
-
-			int readByte;
-			byte[] buff = new byte[8048];
-			while (( readByte = lInputStream.read(buff)) != -1) {
-				lOutputStream.write(buff,0, readByte);
-			}
-			lOutputStream.flush();
-			lOutputStream.close();
-			lInputStream.close();
-		}
-	}
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (isAssetCopied ==false) {
+			Tester.setApplicationContext(getContext());
 			copyAssetsFromPackage(getContext());
 			isAssetCopied=true;
 		}
@@ -78,7 +56,7 @@ public class TestUnit extends AndroidTestCase {
 
 	@Override
 	protected void runTest() {
-		String res_path = getContext().getFilesDir().getPath()+"/config_files";
+		String res_path = getContext().getFilesDir().getPath();
 		String write_path = getContext().getCacheDir().getPath();
 		Tester tester = new Tester();
 

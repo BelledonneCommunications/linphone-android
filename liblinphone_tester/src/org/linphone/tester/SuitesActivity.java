@@ -2,6 +2,7 @@ package org.linphone.tester;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.Menu;
@@ -19,6 +20,7 @@ public class SuitesActivity extends Activity {
 		if (extras != null) {
 			mSuite = extras.getString("suite");
 		    if(mSuite != null) {
+			    Tester.setApplicationContext(getBaseContext());
 		    	this.setTitle(this.getResources().getString(R.string.app_name) + " | " + mSuite);
 				TesterList suitesTest = new TesterList();
 				suitesTest.run(new String[]{"tester", "--list-tests", mSuite});
@@ -59,6 +61,11 @@ public class SuitesActivity extends Activity {
 	}
 
 
+	@Override
+	public void onDestroy() {
+		Tester.removeApplicationContext();
+		super.onDestroy();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

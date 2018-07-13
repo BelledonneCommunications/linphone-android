@@ -1,26 +1,8 @@
-/*
-LinphoneManager.java
-Copyright (C) 2010  Belledonne Communications, Grenoble, France
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
 package org.linphone;
 
 /*
 LinphoneManager.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -373,7 +355,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	public void changeStatusToOnThePhone() {
 		Core lc = getLcIfManagerNotDestroyedOrNull();
 		if (lc == null) return;
-		
+
 		if (isInstanciated() && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.OnThePhone) {
 			lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.OnThePhone);
 		} else if (isInstanciated() && !isPresenceModelActivitySet()) {
@@ -584,7 +566,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
-			mLc = null;
+			destroyLinphoneCore();
 		}
 		catch (RuntimeException e) {
 			Log.e(e);
@@ -622,6 +604,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			mLc = null;
 		}
 	}
+
 
 	public void restartCore() {
 		destroyCore();
@@ -687,7 +670,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				Class<?> firebaseClass = Class.forName("com.google.firebase.iid.FirebaseInstanceId");
 				Object firebaseInstance = firebaseClass.getMethod("getInstance").invoke(null);
 				final String refreshedToken = (String)firebaseClass.getMethod("getToken").invoke(firebaseInstance);
-			
+
 				//final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
 				if (refreshedToken != null) {
 					Log.i("[Push Notification] current token is: " + refreshedToken);
@@ -906,50 +889,15 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void doDestroy() {
-		ContactsManagerDestroy();
-		BluetoothManagerDestroy();
-		try {
-			mTimer.cancel();
-			mLc = null;
+	private void destroyLinphoneCore() {
+		if (LinphonePreferences.instance() != null) {
+			// We set network reachable at false before destroy LC to not send register with expires at 0
+			if (LinphonePreferences.instance().isPushNotificationEnabled()
+					|| LinphonePreferences.instance().isBackgroundModeEnabled()) {
+				mLc.setNetworkReachable(false);
+			}
 		}
-		catch (RuntimeException e) {
-			Log.e(e);
-		}
-		finally {
-			try {
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-					mServiceContext.unregisterReceiver(mNetworkReceiver);
-				}
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mHookReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				mServiceContext.unregisterReceiver(mCallReceiver);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			try {
-				dozeManager(false);
-			} catch (IllegalArgumentException iae) {
-				Log.e(iae);
-			} catch (Exception e) {
-				Log.e(e);
-			}
-			mLc = null;
-			instance = null;
-		}
+		mLc = null;
 	}
 
 	public void dozeManager(boolean enable) {
@@ -1035,7 +983,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (instance == null) return;
 		getInstance().changeStatusToOffline();
 		sExited = true;
-		instance.doDestroy();
+		instance.destroyCore();
 	}
 
 	private String getString(int key) {
@@ -1620,6 +1568,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		Log.d("Notify received for event "+eventName);
 		if (content!=null) Log.d("with content "+content.getType()+"/"+content.getSubtype()+" data:"+content.getStringBuffer());
 	}
+
+	@Override
+	public void onSubscribeReceived(Core lc, Event lev, String subscribeEvent, Content body) {
+
+	}
+
 	@Override
 	public void onPublishStateChanged(Core lc, Event ev, PublishState state) {
 		Log.d("Publish state changed to " + state + " for event name " + ev.getName());
@@ -1797,5 +1751,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		} else {
 			mUnreadChatsPerRoom.put(key, 1);
 		}
+	}
+
+	public void onQrcodeFound(Core lc, String something){
 	}
 }
