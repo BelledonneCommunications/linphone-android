@@ -365,7 +365,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			public CheckBox select;
 			public ImageView callDirection;
 			public ImageView contactPicture;
-			public RelativeLayout CallContact;
+			public RelativeLayout CallContact, viewHolder;
 
 			public ViewHolder(View view) {
 				contact = (TextView) view.findViewById(R.id.sip_uri);
@@ -374,6 +374,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				callDirection = (ImageView) view.findViewById(R.id.icon);
 				contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
 				CallContact = (RelativeLayout) view.findViewById(R.id.history_click);
+				viewHolder = (RelativeLayout) view.findViewById(R.id.viewHolder);
 			}
 		}
 
@@ -538,10 +539,16 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 				holder.detail.setVisibility(View.INVISIBLE);
 				if(historyList.isItemChecked(position)) {
 					holder.select.setChecked(true);
+					view.setBackgroundColor(0x26ff6600);
+					holder.viewHolder.setBackgroundColor(0x26ff6600);
 				} else {
 					holder.select.setChecked(false);
+					view.setBackgroundColor(0xffffff);
+					holder.viewHolder.setBackgroundColor(0xffffff);
 				}
 			} else {
+				view.setBackgroundColor(0xffffff);
+				holder.viewHolder.setBackgroundColor(0xffffff);
 				holder.select.setVisibility(View.GONE);
 				holder.detail.setVisibility(View.VISIBLE);
 				holder.detail.setOnClickListener(new OnClickListener() {

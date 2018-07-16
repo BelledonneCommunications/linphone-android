@@ -50,7 +50,7 @@ public class DialerFragment extends Fragment {
 	private AddressAware numpad;
 	private AddressText mAddress;
 	private CallButton mCall;
-	private ImageView mAddContact;
+	private ImageView mAddContact, mLogo;
 	private OnClickListener addContactListener, cancelListener, transferListener;
 	private boolean shouldEmptyAddressField = true;
 
@@ -61,6 +61,8 @@ public class DialerFragment extends Fragment {
 
 		mAddress = (AddressText) view.findViewById(R.id.address);
 		mAddress.setDialerFragment(this);
+
+		mLogo = (ImageView) view.findViewById(R.id.logodialer);
 
 		EraseButton erase = (EraseButton) view.findViewById(R.id.erase);
 		erase.setAddressWidget(mAddress);
@@ -163,8 +165,10 @@ public class DialerFragment extends Fragment {
 		boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 		if(isOrientationLandscape && !getResources().getBoolean(R.bool.isTablet)) {
 			((LinearLayout) numpad).setVisibility(View.GONE);
+			mLogo.setVisibility(View.VISIBLE);
 		} else {
 			((LinearLayout) numpad).setVisibility(View.VISIBLE);
+			mLogo.setVisibility(View.GONE);
 		}
 
 		if (shouldEmptyAddressField) {

@@ -1041,7 +1041,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	public Dialog displayDialog(String text){
 		Dialog dialog = new Dialog(this);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
+		Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorB));
 		d.setAlpha(200);
 		dialog.setContentView(R.layout.dialog);
 		dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);

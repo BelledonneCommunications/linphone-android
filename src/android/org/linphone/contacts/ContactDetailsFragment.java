@@ -86,7 +86,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 						mChatRoom.addListener(mChatRoomCreationListener);
 						Address participants[] = new Address[1];
 						participants[0] = participant;
-						mChatRoom.addParticipants(participants);
+						mChatRoom.addParticipant(participant);
 					} else {
 						room = lc.getChatRoom(participant);
 						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
@@ -115,14 +115,14 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 		deleteContact = view.findViewById(R.id.deleteContact);
 		deleteContact.setOnClickListener(this);
 
-		organization = view.findViewById(R.id.contactOrganization);
+		/*organization = view.findViewById(R.id.contactOrganization);
 		boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
 		String org = contact.getOrganization();
 		if (org != null && !org.isEmpty() && isOrgVisible) {
 			organization.setText(org);
 		} else {
 			organization.setVisibility(View.GONE);
-		}
+		}*/
 
 		back = view.findViewById(R.id.back);
 		if (getResources().getBoolean(R.bool.isTablet)) {
@@ -172,7 +172,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 
 		TextView contactName = view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getFullName());
-		organization.setText((contact.getOrganization() != null) ? contact.getOrganization() : "");
+		//organization.setText((contact.getOrganization() != null) ? contact.getOrganization() : "");
 
 		TableLayout controls = view.findViewById(R.id.controls);
 		controls.removeAllViews();
@@ -191,10 +191,12 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				label.setText(R.string.phone_number);
 				skip |= getResources().getBoolean(R.bool.hide_contact_phone_numbers);
 			}
+			label.setVisibility(View.GONE);
 
 			TextView tv = v.findViewById(R.id.numeroOrAddress);
 			tv.setText(displayednumberOrAddress);
 			tv.setSelected(true);
+			tv.setVisibility(View.GONE);
 
 
 			ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();

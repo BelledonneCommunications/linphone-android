@@ -1261,7 +1261,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 			ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
+			Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorB));
 			d.setAlpha(200);
 			ZRTPdialog.setContentView(R.layout.dialog);
 			ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
@@ -1343,10 +1343,13 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
 				encryption.setImageResource(R.drawable.security_button_default);
+				contactPicture.setImageResource(R.drawable.avatar_big_secure2);
 			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
 				encryption.setImageResource(R.drawable.security_button1_default);
+				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
 			} else {
 				encryption.setImageResource(R.drawable.security_button1_over);
+				contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
 			}
 
 			if (mediaEncryption == MediaEncryption.ZRTP) {
@@ -1818,14 +1821,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	public void initCallStatsRefresher(final Call call, final View view) {
 		if (mCallDisplayedInStats == call) return;
-	
+
 		if (mTimer != null && mTask != null) {
 			mTimer.cancel();
 			mTimer = null;
 			mTask = null;
 		}
 		mCallDisplayedInStats = call;
-		
+
 		if (call == null) return;
 
 		final TextView titleAudio = (TextView) view.findViewById(R.id.call_stats_audio);

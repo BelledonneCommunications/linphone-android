@@ -68,7 +68,7 @@
                 <RelativeLayout
                     android:id="@+id/avatar_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="66dp"
                     android:gravity="center">
 
                     <ImageView
@@ -78,7 +78,7 @@
                         android:layout_alignParentLeft="true"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/content_description_contact_picture"
-                        android:src="@drawable/avatar"/>
+                        android:src="@drawable/avatar_big_secure1"/>
 
                     <ImageView
                         android:id="@+id/mask"
@@ -99,12 +99,16 @@
                     android:maxLines="1"/>
 
                 <TextView
-                    android:id="@+id/contactOrganization"
-                    style="@style/font9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:maxLines="1"/>
+                    android:id="@+id/separator_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="23.3dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/colorN"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="appel sécurisé"
+                    android:textAllCaps="true"
+                    android:textColor="#ffffff"
+                    android:textSize="13.3sp"/>
 
                 <TableLayout
                     android:id="@+id/controls"

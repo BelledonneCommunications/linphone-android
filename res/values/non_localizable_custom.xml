@@ -20,6 +20,7 @@
 	<string name="messages_date_format">yyyy/dd</string>
 	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">dd/MM - HH:mm</string>
+    <string name="today_date_format2">HH:mm</string>
 
 	<!-- Phone numbers -->
 	<bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->

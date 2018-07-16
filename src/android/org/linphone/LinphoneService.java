@@ -365,94 +365,95 @@ public final class LinphoneService extends Service {
 			Log.e(e);
 		}
 
-		LinphoneManager.getLc().addListener(mListener = new CoreListenerStub() {
-			@Override
-			public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
-				if (instance == null) {
-					Log.i("Service not ready, discarding call state change to ",state.toString());
-					return;
-				}
-
-				if (state == Call.State.IncomingReceived) {
-					if(! LinphoneManager.getInstance().getCallGsmON())
-						onIncomingReceived();
-				}
-
-				if (state == State.End || state == State.Released || state == State.Error) {
-					if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() == 0) {
-						if (CallActivity.isInstanciated()) {
-							removeSasNotification();
-							CallActivity.instance().setisZrtpAsk(false);
-						}
+		if (LinphoneManager.getLc() != null) {
+			LinphoneManager.getLc().addListener(mListener = new CoreListenerStub() {
+				@Override
+				public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
+					if (instance == null) {
+						Log.i("Service not ready, discarding call state change to ", state.toString());
+						return;
 					}
-					destroyOverlay();
-				}
 
-				if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
-					int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
-					String body;
-					if (missedCallCount > 1) {
-						body = getString(R.string.missed_calls_notif_body).replace("%i", String.valueOf(missedCallCount));
-					} else {
-						Address address = call.getRemoteAddress();
-						LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
-						if (c != null) {
-							body = c.getFullName();
-						} else {
-							body = address.getDisplayName();
-							if (body == null) {
-								body = address.asStringUriOnly();
+					if (state == Call.State.IncomingReceived) {
+						if (!LinphoneManager.getInstance().getCallGsmON())
+							onIncomingReceived();
+					}
+
+					if (state == State.End || state == State.Released || state == State.Error) {
+						if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() == 0) {
+							if (CallActivity.isInstanciated()) {
+								removeSasNotification();
+								CallActivity.instance().setisZrtpAsk(false);
 							}
 						}
+						destroyOverlay();
 					}
 
+					if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
+						int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
+						String body;
+						if (missedCallCount > 1) {
+							body = getString(R.string.missed_calls_notif_body).replace("%i", String.valueOf(missedCallCount));
+						} else {
+							Address address = call.getRemoteAddress();
+							LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
+							if (c != null) {
+								body = c.getFullName();
+							} else {
+								body = address.getDisplayName();
+								if (body == null) {
+									body = address.asStringUriOnly();
+								}
+							}
+						}
 
-					Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
-					missedCallNotifIntent.putExtra("GoToHistory", true);
-					PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-					Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, intent);
-					notifyWrapper(MISSED_NOTIF_ID, notif);
+
+						Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
+						missedCallNotifIntent.putExtra("GoToHistory", true);
+						PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+						Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, intent);
+						notifyWrapper(MISSED_NOTIF_ID, notif);
+					}
+
+					if (state == State.StreamsRunning) {
+						// Workaround bug current call seems to be updated after state changed to streams running
+						if (getResources().getBoolean(R.bool.enable_call_notification))
+							refreshIncallIcon(call);
+					} else {
+						if (getResources().getBoolean(R.bool.enable_call_notification))
+							refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
+					}
 				}
 
-				if (state == State.StreamsRunning) {
-					// Workaround bug current call seems to be updated after state changed to streams running
-					if (getResources().getBoolean(R.bool.enable_call_notification))
-						refreshIncallIcon(call);
-				} else {
-					if (getResources().getBoolean(R.bool.enable_call_notification))
-						refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
+				@Override
+				public void onGlobalStateChanged(Core lc, GlobalState state, String message) {
+					if (!mDisableRegistrationStatus && state == GlobalState.On && displayServiceNotification()) {
+						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
+					}
 				}
-			}
 
-			@Override
-			public void onGlobalStateChanged(Core lc,GlobalState state, String message) {
-				if (!mDisableRegistrationStatus && state == GlobalState.On && displayServiceNotification()) {
-					sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
-				}
-			}
-
-			@Override
-			public void onRegistrationStateChanged(Core lc, ProxyConfig cfg, RegistrationState state, String smessage) {
+				@Override
+				public void onRegistrationStateChanged(Core lc, ProxyConfig cfg, RegistrationState state, String smessage) {
 //				if (instance == null) {
 //					Log.i("Service not ready, discarding registration state change to ",state.toString());
 //					return;
 //				}
-				if (!mDisableRegistrationStatus) {
-					if (displayServiceNotification() && state == RegistrationState.Ok && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().getState() == RegistrationState.Ok) {
-						sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
-					}
+					if (!mDisableRegistrationStatus) {
+						if (displayServiceNotification() && state == RegistrationState.Ok && LinphoneManager.getLc().getDefaultProxyConfig() != null && LinphoneManager.getLc().getDefaultProxyConfig().getState() == RegistrationState.Ok) {
+							sendNotification(IC_LEVEL_ORANGE, R.string.notification_registered);
+						}
 
-					if (displayServiceNotification() && (state == RegistrationState.Failed || state == RegistrationState.Cleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !(LinphoneManager.getLc().getDefaultProxyConfig().getState() == RegistrationState.Ok))) {
-						sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
-					}
+						if (displayServiceNotification() && (state == RegistrationState.Failed || state == RegistrationState.Cleared) && (LinphoneManager.getLc().getDefaultProxyConfig() == null || !(LinphoneManager.getLc().getDefaultProxyConfig().getState() == RegistrationState.Ok))) {
+							sendNotification(IC_LEVEL_ORANGE, R.string.notification_register_failure);
+						}
 
-					if (displayServiceNotification() && state == RegistrationState.None) {
-						sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
+						if (displayServiceNotification() && state == RegistrationState.None) {
+							sendNotification(IC_LEVEL_ORANGE, R.string.notification_started);
+						}
 					}
 				}
-			}
-		});
-
+			});
+		}
 
 		try {
 			mStartForeground = getClass().getMethod("startForeground", mStartFgSign);

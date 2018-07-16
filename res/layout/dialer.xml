@@ -60,6 +60,15 @@
 		android:background="@color/colorB"
 		android:padding="10dp"/>
 
+	<ImageView
+		android:id="@+id/logodialer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:padding="50dp"
+		android:src="@drawable/logo_secure_phone_big"
+		android:visibility="gone"/>
+
 	<LinearLayout
 		android:id="@+id/controls"
 		android:layout_width="match_parent"

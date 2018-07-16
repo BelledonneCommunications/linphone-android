@@ -200,21 +200,21 @@ public final class LinphoneUtils {
 		return true;
 	}
 
-	public static String timestampToHumanDate(Context context, long timestamp, int resFormat) {
-		return LinphoneUtils.timestampToHumanDate(context, timestamp, context.getString(resFormat));
+	public static String timestampToHumanDate(Context context, long timestamp, int resFormat, boolean useToday) {
+		return LinphoneUtils.timestampToHumanDate(context, timestamp, context.getString(resFormat), useToday);
 	}
 
-	public static String timestampToHumanDate(Context context, long timestamp, String format) {
+	public static String timestampToHumanDate(Context context, long timestamp, String format, boolean useToday) {
 		try {
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(timestamp * 1000); // Core returns timestamps in seconds...
 
 			SimpleDateFormat dateFormat;
-			/*if (isToday(cal)) {
+			if (useToday && isToday(timestamp)) {
 				dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format), Locale.getDefault());
-			} else {*/
+			} else {
 				dateFormat = new SimpleDateFormat(format, Locale.getDefault());
-			//}
+			}
 
 			return dateFormat.format(cal.getTime());
 		} catch (NumberFormatException nfe) {
@@ -222,7 +222,9 @@ public final class LinphoneUtils {
 		}
 	}
 
-	static boolean isToday(Calendar cal) {
+	public static boolean isToday(long timestamp) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp * 1000); // Core returns timestamps in seconds...
 		return isSameDay(cal, Calendar.getInstance());
 	}
 
@@ -282,7 +284,7 @@ public final class LinphoneUtils {
 		}
 		if (pictureUri.getScheme().startsWith("http")) {
 			Bitmap bm = downloadBitmap(pictureUri);
-			if (bm == null) view.setImageResource(R.drawable.avatar);
+			if (bm == null) view.setImageResource(R.drawable.avatar_small_secure1);
 			view.setImageBitmap(bm);
 		} else {
 			Bitmap bm = null;
@@ -311,7 +313,7 @@ public final class LinphoneUtils {
 		}
 		if (tUri.getScheme().startsWith("http")) {
 			Bitmap bm = downloadBitmap(tUri);
-			if (bm == null) view.setImageResource(R.drawable.avatar);
+			if (bm == null) view.setImageResource(R.drawable.avatar_small_secure1);
 			view.setImageBitmap(bm);
 		} else {
 			Bitmap bm = null;
@@ -917,7 +919,6 @@ public final class LinphoneUtils {
 				}
 			}
 		}
-
 
 		return ChatRoomSecurityLevel.ClearText;
 	}

@@ -25,6 +25,15 @@
 				android:contentDescription="@string/content_description_back"
 				android:src="@drawable/back"/>
 
+			<ImageView
+				android:id="@+id/avatar_top"
+				android:layout_width="0dp"
+				android:layout_height="33dp"
+				android:layout_gravity="center"
+				android:layout_weight="0.2"
+				android:contentDescription="@string/content_description_call"
+				android:src="@drawable/avatar_small_secure_1"/>
+
 			<LinearLayout
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
@@ -77,7 +86,7 @@
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_conversation_infos"
 				android:padding="10dp"
-				android:src="@drawable/chat_room_group_infos"/>
+				android:src="@drawable/list_detail"/>
 
 			<ImageView
 				android:id="@+id/back_to_call"

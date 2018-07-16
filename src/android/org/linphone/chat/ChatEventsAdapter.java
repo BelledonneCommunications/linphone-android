@@ -370,7 +370,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 					}
 				});
 			}
-		    holder.messageDate.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.today_date_format));
+		    holder.messageDate.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.today_date_format, false));
 		    holder.messageDate.setVisibility(View.VISIBLE);
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);

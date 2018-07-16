@@ -52,6 +52,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static android.text.format.DateUtils.isToday;
+
 public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 	private class ChatRoomViewHolder {
@@ -169,7 +171,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		ChatMessage lastMessage = chatRoom.getLastMessageInHistory();
 		holder.lastMessageView.setText("");
 		holder.lastMessageSenderView.setText("");
-		holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, chatRoom.getLastUpdateTime(), R.string.messages_list_date_format));
+		holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, chatRoom.getLastUpdateTime(), ((LinphoneUtils.isToday(chatRoom.getLastUpdateTime())) ? R.string.today_date_format2 : R.string.messages_list_date_format), false));
 
 		if (lastMessage != null) {
 			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
@@ -232,13 +234,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 			if (chatRoom.limeAvailable()) {
 				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
-					holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure2);
 				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
-					holder.contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+					holder.contactPicture.setImageResource(R.drawable.avatar_small_unsecure);
 				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
-					holder.contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure1);
 				} else {
-					holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					holder.contactPicture.setImageResource(R.drawable.avatar_small_unregistered);
 				}
 			}
 		} else {
@@ -286,7 +288,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			holder.delete.setTag(position);
 			holder.delete.setOnCheckedChangeListener(getDeleteListener());
 			holder.date.setVisibility(View.GONE);
+			if (getSelectedItemsPosition().contains(position)) {
+				view.setBackgroundColor(0x26ff6600);
+			} else {
+				view.setBackgroundColor(0xffffff);
+			}
 		} else {
+			view.setBackgroundColor(0xffffff);
 			view.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
