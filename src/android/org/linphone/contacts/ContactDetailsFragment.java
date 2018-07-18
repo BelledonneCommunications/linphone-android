@@ -208,9 +208,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 			}
 
 			String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
-			if (contactAddress != null) {
+			/*if (contactAddress != null) {
 				v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
-			}
+			}*/
 
 			if (!displayChatAddressOnly) {
 				v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
