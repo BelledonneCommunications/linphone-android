@@ -38,6 +38,7 @@ public class ChatBubbleViewHolder {
 	public TextView eventMessage;
 
 	public RelativeLayout bubbleLayout;
+	public LinearLayout separatorLayout;
 	public LinearLayout background;
 	public ImageView contactPicture;
 	public ImageView contactPictureMask;
@@ -68,6 +69,7 @@ public class ChatBubbleViewHolder {
 	    eventMessage = view.findViewById(R.id.event_text);
 
 	    bubbleLayout = view.findViewById(R.id.bubble);
+	    separatorLayout = view.findViewById(R.id.separator);
 	    background = view.findViewById(R.id.background);
 	    contactPicture = view.findViewById(R.id.contact_picture);
 	    contactPictureMask = view.findViewById(R.id.mask);

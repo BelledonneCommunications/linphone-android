@@ -17,9 +17,10 @@
 		android:id="@+id/event"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_toLeftOf="@id/delete_message"
-		android:gravity="center_vertical"
-		android:orientation="horizontal">
+        android:layout_toLeftOf="@id/delete_message"
+		android:layout_marginTop="5dp"
+		android:layout_marginBottom="5dp"
+		android:gravity="center_vertical">
 
 		<ImageView
 			android:layout_width="match_parent"
@@ -111,6 +112,11 @@
                     android:textColor="#595959"
                     android:textSize="13.3sp"
                     android:textStyle="bold"/>
+				<LinearLayout
+					android:id="@+id/separator"
+					android:layout_width="100dp"
+					android:layout_height="10dp"
+					android:orientation="horizontal"/>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"

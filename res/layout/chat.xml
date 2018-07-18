@@ -188,17 +188,17 @@
 
 	<ListView
 		android:id="@+id/chat_message_list"
+		android:divider="@android:color/transparent"
+		android:choiceMode="multipleChoice"
+		android:stackFromBottom="true"
+		android:transcriptMode="normal"
+		android:cacheColorHint="@color/transparent"
+    	android:listSelector="@color/transparent"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_marginRight="10dp"
+		android:layout_marginLeft="10dp"
 		android:layout_above="@id/footer"
-		android:layout_below="@+id/view"
-		android:layout_margin="10dp"
-		android:cacheColorHint="@color/transparent"
-		android:choiceMode="multipleChoice"
-		android:divider="@android:color/transparent"
-		android:dividerHeight="10dp"
-		android:listSelector="@color/transparent"
-		android:stackFromBottom="true"
-		android:transcriptMode="normal"/>
+		android:layout_below="@+id/view"/>
 
 </RelativeLayout>
