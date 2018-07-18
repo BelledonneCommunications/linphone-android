@@ -45,6 +45,10 @@ import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import org.linphone.core.Address;
+import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.FriendList;
+import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
@@ -56,6 +60,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
 public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
@@ -85,6 +91,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				displayName = getArguments().getString("DisplayName");
 			onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
+
+        FriendList test[] = LinphoneManager.getLc().getFriendsLists();
 
         noSipContact = (TextView) view.findViewById(R.id.noSipContact);
         noContact = (TextView) view.findViewById(R.id.noContact);
@@ -633,6 +641,19 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 					holder.friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
 				}
 			}*/
+
+			ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+			Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getFriend().getAddress());
+			if (securityLevel == ChatRoomSecurityLevel.Safe) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+			} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+			} else {
+				holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+			}
 
 			return view;
 		}

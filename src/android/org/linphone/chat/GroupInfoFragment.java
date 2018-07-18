@@ -145,11 +145,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 			@Override
 			public void onClick(View view) {
 				if (mIsAlreadyCreatedGroup) {
-					if (LinphoneActivity.instance().isTablet()) {
-						LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly(), mShareInfos);
-					} else {
-						getFragmentManager().popBackStack();
-					}
+					LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly(), mShareInfos);
 				} else {
 					LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos);
 				}

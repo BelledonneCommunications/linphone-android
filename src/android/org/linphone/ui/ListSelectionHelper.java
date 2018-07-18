@@ -138,6 +138,7 @@ public class ListSelectionHelper {
 			mSelectAllButton.setVisibility(View.VISIBLE);
 			mDeselectAllButton.setVisibility(View.GONE);
 		}
+		mAdapter.notifyDataSetInvalidated();
 	}
 
 	private void quitEditionMode() {

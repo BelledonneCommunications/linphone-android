@@ -232,7 +232,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				}
 			}
 
-			if (chatRoom.limeAvailable()) {
+			if (LinphoneManager.getLc().limeV2Enabled()) {
 				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure2);
 				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
@@ -245,7 +245,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			}
 		} else {
 			holder.displayName.setText(chatRoom.getSubject());
-			if (chatRoom.limeAvailable()) {
+			if (LinphoneManager.getLc().limeV2Enabled()) {
 				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
 				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
@@ -279,6 +279,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				public void onClick(View v) {
 					ChatRoomViewHolder holder = (ChatRoomViewHolder)v.getTag();
 					holder.delete.setChecked(!holder.delete.isChecked());
+					notifyDataSetInvalidated();
 				}
 			});
 			holder.unreadMessages.setVisibility(View.GONE);

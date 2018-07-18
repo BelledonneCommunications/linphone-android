@@ -86,7 +86,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 						mChatRoom.addListener(mChatRoomCreationListener);
 						Address participants[] = new Address[1];
 						participants[0] = participant;
-						mChatRoom.addParticipant(participant);
+						mChatRoom.addParticipants(participants);
 					} else {
 						room = lc.getChatRoom(participant);
 						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);

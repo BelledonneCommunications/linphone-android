@@ -203,8 +203,9 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_transfer);
 				mCall.setExternalClickListener(transferListener);
 			} else {
-				mCall.setImageResource(R.drawable.call_add);
-				mCall.resetClickListener();
+				mCall.setImageResource(R.drawable.call_alt_start_selected);
+				//mCall.setImageResource(R.drawable.call_add);
+				//mCall.resetClickListener();
 			}
 			mAddContact.setEnabled(true);
 			mAddContact.setImageResource(R.drawable.call_alt_back);

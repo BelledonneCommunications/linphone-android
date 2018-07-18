@@ -1602,6 +1602,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 		LinphonePreferences prefs = LinphonePreferences.instance();
 		if (state == ConfiguringState.Successful) {
+			if (lc.getFriendsLists() != null) lc.removeFriendList(lc.getFriendsLists()[0]);
 			if (prefs.isProvisioningLoginViewEnabled()) {
 				ProxyConfig proxyConfig = lc.createProxyConfig();
 				Address addr = proxyConfig.getIdentityAddress();
