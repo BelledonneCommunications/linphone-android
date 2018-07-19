@@ -90,7 +90,7 @@ public class chiffrement {
 			}
 			try {
 				BufferedWriter writer = Files.newBufferedWriter(output.toPath(), Charset.forName("UTF-8"));
-				writer.write(encrypted + "\0", 0, encrypted.length());
+				writer.write(encrypted, 0, encrypted.length());
 				writer.close();
 			} catch (Exception ex) {
 				System.out.println(ex);
