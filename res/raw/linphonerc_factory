@@ -44,6 +44,7 @@ enable_simple_group_chat_message_state=0
 aggregate_imdn=1
 store_friends=0
 debug=1
+version_check_url_root=https://www.linphone.org/releases
 
 [app]
 activation_code_length=4
