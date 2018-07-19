@@ -30,8 +30,6 @@ import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.xmlrpc.XmlRpcHelper;
-import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 import android.Manifest;
 import android.app.Activity;
@@ -40,10 +38,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,13 +54,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
-import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -370,15 +362,14 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 			byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
 
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEwithSHA256AND256BITAES-CBC-BC");
 			KeySpec keySpec = new PBEKeySpec(code_sms.getText().toString().toCharArray(), saltByte, 10000, 128);
 			SecretKey tmpSecretKey = factory.generateSecret(keySpec);
 			SecretKeySpec secretKeySpec = new SecretKeySpec(tmpSecretKey.getEncoded(), "AES");
 
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(ivByte));
-
-			remoteUrl = new String(cipher.doFinal(Base64.getDecoder().decode(contentToDecrypt)));
+			remoteUrl = new String(cipher.doFinal(Base64.decode(contentToDecrypt, Base64.DEFAULT)));
 		} catch (Exception ex) {
 			Toast.makeText(RemoteProvisioningLoginActivity.this, "Code mauvais", Toast.LENGTH_LONG).show();
 			Log.e("RemoteProvisioningLoginActivity: Decrypt problem: " + ex);

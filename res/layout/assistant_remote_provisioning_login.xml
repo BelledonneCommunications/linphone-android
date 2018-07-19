@@ -99,8 +99,8 @@ Mobile Security Intense"
 				android:layout_height="40dp"
 				android:layout_marginBottom="15dp"
 				android:background="#c4c4c4"
-				android:inputType="text|textNoSuggestions"
 				android:maxLines="1"
+				android:inputType="number"
 				android:textColor="@color/colorB"
 				android:visibility="gone"/>
 

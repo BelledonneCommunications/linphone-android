@@ -292,7 +292,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		};
 
-		int missedCalls = (LinphoneManager.isInstanciated()) ? LinphoneManager.getLc().getMissedCallsCount() : 0;
+		int missedCalls = (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) ? LinphoneManager.getLc().getMissedCallsCount() : 0;
 		displayMissedCalls(missedCalls);
 
 		int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -992,7 +992,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			missedCalls.setText(missedCallsCount + "");
 			missedCalls.setVisibility(View.VISIBLE);
 		} else {
-			if (LinphoneManager.isInstanciated()) LinphoneManager.getLc().resetMissedCallsCount();
+			if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) LinphoneManager.getLc().resetMissedCallsCount();
 			missedCalls.clearAnimation();
 			missedCalls.setVisibility(View.GONE);
 		}
