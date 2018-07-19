@@ -35,7 +35,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -55,12 +57,14 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
+import org.linphone.core.ChatRoom;
 import org.linphone.core.Content;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
+import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,19 +76,24 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatEventsAdapter extends ListSelectionAdapter {
+public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder> {
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
+//	private int itemResource;
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
 	private ChatMessageListenerStub mListener;
 
+//    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
     public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
-	    super(helper);
+//	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom > mRooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper	helper) {
+
+		super();
 	    mFragment = fragment;
 	    mContext = mFragment.getActivity();
+//		itemResource = inflater.;
         mLayoutInflater = inflater;
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
@@ -120,6 +129,77 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    };
     }
 
+    @Override
+    public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = mLayoutInflater.inflate(R.layout.chat_bubble, parent, false);
+		return new ChatBubbleViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
+		EventLog event = (EventLog)getItem(position);
+		final ChatMessage message = event.getChatMessage();
+
+		//Apply generic bindings
+		holder.bindEvent(event);
+
+//		holder.delete.setVisibility(this.isEditionEnabled() == true ? View.VISIBLE : View.INVISIBLE);
+//		holder.delete.setChecked(isSelected(position) ? true : false);
+
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+		//If event is Chat Message
+		if(event.getType() == EventLog.Type.ConferenceChatMessage) {
+
+
+			//layoutParams Settings
+
+
+
+			if (isEditionEnabled()) {
+				layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
+				layoutParams.setMargins(100, 10, 10, 10);
+			} else if (message.isOutgoing()) {
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				layoutParams.setMargins(100, 10, 10, 10);
+
+			} else {
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				layoutParams.setMargins(10, 10, 100, 10);
+			}
+
+
+			//Display attached files
+			if (message.getAppdata() != null) {
+				displayAttachedFile(message, holder);
+			}
+
+
+			if (message.getExternalBodyUrl() != null ) {
+				holder.fileTransferProgressBar.setVisibility(View.GONE);
+				holder.fileTransferLayout.setVisibility(View.VISIBLE);
+			}
+
+			if (message.isFileTransferInProgress()){
+				holder.fileTransferLayout.setVisibility(View.VISIBLE);
+			}
+
+		}
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return i;
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
+
+
+
     public void addToHistory(EventLog log) {
 	    mHistory.add(log);
 	    notifyDataSetChanged();
@@ -144,22 +224,22 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    mHistory.clear();
     }
 
-    @Override
+//    @Override
     public int getCount() {
         return mHistory.size();
     }
 
-    @Override
+//    @Override
     public Object getItem(int i) {
         return mHistory.get(i);
     }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+	@NonNull
 
-    public void removeItem(int i) {
+
+
+
+	public void removeItem(int i) {
     	mHistory.remove(i);
     	notifyDataSetChanged();
     }

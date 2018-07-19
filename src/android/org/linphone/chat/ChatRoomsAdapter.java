@@ -54,6 +54,7 @@ import java.util.List;
 public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoomViewHolder> {
 
 	public static class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+
 		public TextView lastMessageSenderView;
 		public TextView lastMessageView;
 		public TextView date;

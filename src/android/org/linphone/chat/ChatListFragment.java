@@ -112,15 +112,16 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 		//Actions allowed by swipe buttons
 
-		/*final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
-			*//*@Override
-			public void onLeftClicked(int position) {
-				super.onLeftClicked(position);
-			}*//*
+		final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
+//			@Override
+//			public void onLeftClicked(int position) {
+//				super.onLeftClicked(position);
+//			}
 
 			@Override
 			public void onRightClicked(int position) {
 				mChatRoomsAdapter.removeItem(position);
+				mChatRoomsAdapter.notifyDataSetChanged();
 			}
 		});
 
@@ -137,7 +138,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 				swipeController.onDraw(c);
 			}
 		});
-*/
 
 
 		// Buttons onClickListeners definitions

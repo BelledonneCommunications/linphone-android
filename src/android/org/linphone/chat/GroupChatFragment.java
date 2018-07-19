@@ -96,6 +96,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private ListView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
 	private ListSelectionHelper mSelectionHelper;
+//	private ListSelectionHelper mSelectionHelper;
 
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
@@ -551,6 +552,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		if (mChatRoom == null) return;
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
 			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryMessageEvents(0), mParticipants);
+//			mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
 		} else {
 			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
 		}

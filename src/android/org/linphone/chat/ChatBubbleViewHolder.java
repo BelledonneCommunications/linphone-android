@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,11 +29,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.EventLog;
 
-public class ChatBubbleViewHolder {
+public class ChatBubbleViewHolder extends RecyclerView.ViewHolder{
 	public String messageId;
-
+    public EventLog mEvent;
+    public ChatMessage message;
 	public LinearLayout eventLayout;
 	//public TextView eventTime;
 	public TextView eventMessage;
@@ -62,7 +69,8 @@ public class ChatBubbleViewHolder {
 	public CheckBox delete;
 
 	public ChatBubbleViewHolder(View view) {
-	    eventLayout = view.findViewById(R.id.event);
+		super(view);
+		eventLayout = view.findViewById(R.id.event);
 	    //eventTime = view.findViewById(R.id.event_date);
 	    eventMessage = view.findViewById(R.id.event_text);
 
@@ -90,4 +98,25 @@ public class ChatBubbleViewHolder {
 
 	    delete = view.findViewById(R.id.delete_message);
 	}
+
+    public void bindEvent(EventLog event) {
+
+        //Bind the data to the ViewHolder
+        this.mEvent = event;
+        this.message = event.getChatMessage();
+        this.messageId = message.getMessageId();
+
+        this.eventLayout.setVisibility(event.getType() == EventLog.Type.ConferenceChatMessage ? View.GONE : View.VISIBLE);
+        this.bubbleLayout.setVisibility(event.getType() == EventLog.Type.ConferenceChatMessage ? View.VISIBLE : View.GONE);
+        this.messageText.setVisibility(event.getType() == EventLog.Type.ConferenceChatMessage ? View.VISIBLE : View.GONE);
+        this.messageImage.setVisibility(View.GONE);
+        this.fileTransferLayout.setVisibility(View.GONE);
+
+        this.lastMessageSenderView.setText(getSender(mRoom));
+        this.lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent(): "");
+        this.date.setText(mRoom.getLastMessageInHistory()!=null ? LinphoneUtils.timestampToHumanDate(this.mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
+        this.displayName.setText(getContact(mRoom));
+        this.unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
+        getAvatar(mRoom);
+    }
 }
