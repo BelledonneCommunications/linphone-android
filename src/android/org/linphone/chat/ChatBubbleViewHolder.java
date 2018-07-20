@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +40,7 @@ import org.linphone.core.LimeState;
 
 public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 	public String messageId;
-    public EventLog mEvent;
+	public Context mContext;
     public ChatMessage message;
 	public LinearLayout eventLayout;
 	//public TextView eventTime;
@@ -70,8 +71,10 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	public CheckBox delete;
 	private ClickListener listener;
 
-	public ChatBubbleViewHolder(View view, ClickListener listener) {
+	public ChatBubbleViewHolder(Context context, View view, ClickListener listener) {
 		super(view);
+		this.mContext = context;
+
 		this.listener = listener;
 		eventLayout = view.findViewById(R.id.event);
 	    //eventTime = view.findViewById(R.id.event_date);
@@ -135,8 +138,8 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	}
 	@Override
 	public void onClick(View v) {
-		listener.onItemClicked(getAdapterPosition());	}
-
+		listener.onItemClicked(getAdapterPosition());
+	}
 	public interface ClickListener {
 		public void onItemClicked(int position);
 	}

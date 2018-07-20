@@ -82,22 +82,24 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
-    private LayoutInflater mLayoutInflater;
+//    private LayoutInflater mLayoutInflater;
+	private int itemResource;
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
 	private ChatMessageListenerStub mListener;
+
 	private ChatBubbleViewHolder.ClickListener clickListener;
 
 //    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
-    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
+    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, int itemResource, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 //    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 
 		super(helper);
-	    this.mFragment = fragment;
-	    this.mContext = mFragment.getActivity();
-//		itemResource = inflater.;
-        this.mLayoutInflater = inflater;
+	    this.mContext = fragment.getActivity();
+		this.itemResource = itemResource;
+//        this.mLayoutInflater = inflater;
         this.mHistory = mHistory;
+
 	    this.mParticipants = participants;
 
 	    mListener = new ChatMessageListenerStub() {
@@ -133,14 +135,15 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     @Override
     public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = mLayoutInflater.inflate(R.layout.chat_bubble, parent, false);
-		return new ChatBubbleViewHolder(v, clickListener);
+//        View v = mLayoutInflater.inflate(R.layout.chat_bubble, parent, false);
+        View v = LayoutInflater.from(parent.getContext())
+				.inflate(this.itemResource, parent, false);
+		return new ChatBubbleViewHolder(this.mContext,v, clickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
-		EventLog event = (EventLog)getItem(position);
-
+		EventLog event = this.mHistory.get(position);
 		holder.eventLayout.setVisibility(View.GONE);
 		holder.bubbleLayout.setVisibility(View.GONE);
 		holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);

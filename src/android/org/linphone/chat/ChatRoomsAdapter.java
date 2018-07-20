@@ -176,7 +176,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		this.mRooms = mRooms;
 		this.mContext = context;
 		this.itemResource = itemResource;
-		mContext = context;
 		mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
 		//mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
 	}

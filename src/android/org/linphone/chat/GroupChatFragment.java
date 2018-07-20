@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -53,7 +52,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -64,6 +62,7 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
@@ -76,10 +75,8 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
-import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.ListSelectionHelper;
 import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
@@ -562,12 +559,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             EventLog[] history = mChatRoom.getHistoryMessageEvents(0);
 			mHistory = new ArrayList<>(Arrays.asList(history));
-            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mHistory, mParticipants, this);
+            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mHistory, mParticipants, this);
 //			mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
 		} else {
 			EventLog[] history = mChatRoom.getHistoryEvents(0);
 			mHistory = new ArrayList<>(Arrays.asList(history));
-            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mHistory, mParticipants, this);
+            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mHistory, mParticipants, this);
 		}
 		mChatEventsList.setAdapter(mEventsAdapter);
         mSelectionHelper.setAdapter(mEventsAdapter);
