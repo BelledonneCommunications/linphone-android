@@ -311,7 +311,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			break;
 		}
 
-		if (LinphoneManager.isInstanciated()) {
+		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			LinphoneManager.getLc().setDeviceRotation(rotation);
 		}
 		mAlwaysChangingPhoneAngle = rotation;

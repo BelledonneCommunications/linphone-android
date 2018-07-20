@@ -73,6 +73,7 @@ import org.linphone.core.CallStats;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
+import org.linphone.core.Config;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.AuthMethod;
@@ -128,6 +129,7 @@ import java.util.TimerTask;
 import static android.media.AudioManager.MODE_RINGTONE;
 import static android.media.AudioManager.STREAM_RING;
 import static android.media.AudioManager.STREAM_VOICE_CALL;
+import static android.os.SystemClock.sleep;
 
 /**
  *
@@ -1090,6 +1092,15 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (state == GlobalState.On){
 			try {
 				Log.e("LinphoneManager"," onGlobalStateChanged ON");
+
+				// TODO workaround multiple proxy
+				ProxyConfig prx = lc.getProxyConfigList()[0];
+				for (ProxyConfig tmp : lc.getProxyConfigList()) {
+					lc.removeProxyConfig(tmp);
+				}
+				if (prx != null) lc.addProxyConfig(prx);
+				//TODO
+
 				initLiblinphone(lc);
 
 			}catch(IllegalArgumentException iae){
@@ -1648,9 +1659,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 							}
 						}
 					});
-					builder.show();
+					if (builder != null) builder.show();
 				}
-			}, 1000);
+			}, 2000);
 		}
 	}
 
