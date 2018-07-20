@@ -1096,9 +1096,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				// TODO workaround multiple proxy
 				ProxyConfig prx = lc.getProxyConfigList()[0];
 				for (ProxyConfig tmp : lc.getProxyConfigList()) {
-					lc.removeProxyConfig(tmp);
+					if (prx != tmp) lc.removeProxyConfig(tmp);
 				}
-				if (prx != null) lc.addProxyConfig(prx);
 				//TODO
 
 				initLiblinphone(lc);
