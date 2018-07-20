@@ -35,8 +35,9 @@ import org.linphone.R;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.EventLog;
+import org.linphone.core.LimeState;
 
-public class ChatBubbleViewHolder extends RecyclerView.ViewHolder{
+public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 	public String messageId;
     public EventLog mEvent;
     public ChatMessage message;
@@ -67,9 +68,11 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder{
 	public Button openFileButton;
 
 	public CheckBox delete;
+	private ClickListener listener;
 
-	public ChatBubbleViewHolder(View view) {
+	public ChatBubbleViewHolder(View view, ClickListener listener) {
 		super(view);
+		this.listener = listener;
 		eventLayout = view.findViewById(R.id.event);
 	    //eventTime = view.findViewById(R.id.event_date);
 	    eventMessage = view.findViewById(R.id.event_text);
@@ -97,26 +100,44 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder{
 	    openFileButton = view.findViewById(R.id.open_file);
 
 	    delete = view.findViewById(R.id.delete_message);
+		view.setOnClickListener(this);
 	}
+	public ChatBubbleViewHolder(View view) {
+		super(view);
+		this.listener = listener;
+		eventLayout = view.findViewById(R.id.event);
+		//eventTime = view.findViewById(R.id.event_date);
+		eventMessage = view.findViewById(R.id.event_text);
 
-    public void bindEvent(EventLog event) {
+		bubbleLayout = view.findViewById(R.id.bubble);
+		background = view.findViewById(R.id.background);
+		contactPicture = view.findViewById(R.id.contact_picture);
+		contactPictureMask = view.findViewById(R.id.mask);
+		contactName = view.findViewById(R.id.contact_header);
 
-        //Bind the data to the ViewHolder
-        this.mEvent = event;
-        this.message = event.getChatMessage();
-        this.messageId = message.getMessageId();
+		messageStatus = view.findViewById(R.id.status);
+		messageSendingInProgress = view.findViewById(R.id.inprogress);
+		imdmLayout = view.findViewById(R.id.imdmLayout);
+		imdmIcon = view.findViewById(R.id.imdmIcon);
+		imdmLabel = view.findViewById(R.id.imdmText);
 
-        this.eventLayout.setVisibility(event.getType() == EventLog.Type.ConferenceChatMessage ? View.GONE : View.VISIBLE);
-        this.bubbleLayout.setVisibility(event.getType() == EventLog.Type.ConferenceChatMessage ? View.VISIBLE : View.GONE);
-        this.messageText.setVisibility(event.getType() == EventLog.Type.ConferenceChatMessage ? View.VISIBLE : View.GONE);
-        this.messageImage.setVisibility(View.GONE);
-        this.fileTransferLayout.setVisibility(View.GONE);
+		messageText = view.findViewById(R.id.message);
+		messageImage = view.findViewById(R.id.image);
 
-        this.lastMessageSenderView.setText(getSender(mRoom));
-        this.lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent(): "");
-        this.date.setText(mRoom.getLastMessageInHistory()!=null ? LinphoneUtils.timestampToHumanDate(this.mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
-        this.displayName.setText(getContact(mRoom));
-        this.unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
-        getAvatar(mRoom);
-    }
+		fileTransferLayout = view.findViewById(R.id.file_transfer_layout);
+		fileTransferProgressBar = view.findViewById(R.id.progress_bar);
+		fileTransferAction = view.findViewById(R.id.file_transfer_action);
+
+		fileName = view.findViewById(R.id.file_name);
+		openFileButton = view.findViewById(R.id.open_file);
+
+		delete = view.findViewById(R.id.delete_message);
+	}
+	@Override
+	public void onClick(View v) {
+		listener.onItemClicked(getAdapterPosition());	}
+
+	public interface ClickListener {
+		public void onItemClicked(int position);
+	}
 }

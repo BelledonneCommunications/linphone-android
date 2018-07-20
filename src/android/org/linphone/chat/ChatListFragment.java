@@ -92,10 +92,9 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 		//Creation and affectation of adapter to the RecyclerView
 		mSelectionHelper = new SelectableHelper(view, this);
-
         mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
-		mChatRoomsList.setAdapter(mChatRoomsAdapter);
 
+		mChatRoomsList.setAdapter(mChatRoomsAdapter);
 		mSelectionHelper.setAdapter(mChatRoomsAdapter);
 		mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 

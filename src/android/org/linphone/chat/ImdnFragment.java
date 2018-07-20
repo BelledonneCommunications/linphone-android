@@ -47,7 +47,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
 
-public class ImdnFragment extends Fragment {
+public class ImdnFragment extends Fragment{
 	private LayoutInflater mInflater;
 	private LinearLayout mRead, mReadHeader, mDelivered, mDeliveredHeader, mSent, mSentHeader, mUndelivered, mUndeliveredHeader;
 	private ImageView mBackButton;

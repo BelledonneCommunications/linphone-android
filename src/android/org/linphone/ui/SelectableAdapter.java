@@ -17,8 +17,8 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     public SelectableAdapter(SelectableHelper helper) {
         mSelectedItems = new SparseBooleanArray();
         mListHelper = helper;
-
     }
+
     private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {

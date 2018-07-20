@@ -64,6 +64,7 @@ import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
+import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
@@ -76,27 +77,28 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder> {
+public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
+//public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder> {
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
     private LayoutInflater mLayoutInflater;
-//	private int itemResource;
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
 	private ChatMessageListenerStub mListener;
+	private ChatBubbleViewHolder.ClickListener clickListener;
 
 //    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
-    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
-//	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom > mRooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper	helper) {
+    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
+//    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 
-		super();
-	    mFragment = fragment;
-	    mContext = mFragment.getActivity();
+		super(helper);
+	    this.mFragment = fragment;
+	    this.mContext = mFragment.getActivity();
 //		itemResource = inflater.;
-        mLayoutInflater = inflater;
-        mHistory = new ArrayList<>(Arrays.asList(history));
-	    mParticipants = participants;
+        this.mLayoutInflater = inflater;
+        this.mHistory = mHistory;
+	    this.mParticipants = participants;
 
 	    mListener = new ChatMessageListenerStub() {
 		    @Override
@@ -132,57 +134,259 @@ public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder
     @Override
     public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = mLayoutInflater.inflate(R.layout.chat_bubble, parent, false);
-		return new ChatBubbleViewHolder(v);
+		return new ChatBubbleViewHolder(v, clickListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
 		EventLog event = (EventLog)getItem(position);
-		final ChatMessage message = event.getChatMessage();
 
+		holder.eventLayout.setVisibility(View.GONE);
+		holder.bubbleLayout.setVisibility(View.GONE);
+		holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
+		holder.messageText.setVisibility(View.GONE);
+		holder.messageImage.setVisibility(View.GONE);
+		holder.fileTransferLayout.setVisibility(View.GONE);
+		holder.fileTransferProgressBar.setProgress(0);
+		holder.fileTransferAction.setEnabled(true);
+		holder.fileName.setVisibility(View.GONE);
+		holder.openFileButton.setVisibility(View.GONE);
+		holder.messageStatus.setVisibility(View.INVISIBLE);
+		holder.messageSendingInProgress.setVisibility(View.GONE);
+		holder.imdmLayout.setVisibility(View.INVISIBLE);
+		holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		//Apply generic bindings
-		holder.bindEvent(event);
 
-//		holder.delete.setVisibility(this.isEditionEnabled() == true ? View.VISIBLE : View.INVISIBLE);
-//		holder.delete.setChecked(isSelected(position) ? true : false);
-
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		if (isEditionEnabled()) {
+			holder.delete.setOnCheckedChangeListener(null);
+			holder.delete.setChecked(isSelected(position));
+			holder.delete.setTag(position);
+			holder.delete.setOnCheckedChangeListener(getDeleteListener());
+		}
 
 		//If event is Chat Message
 		if(event.getType() == EventLog.Type.ConferenceChatMessage) {
+			holder.bubbleLayout.setVisibility(View.VISIBLE);
 
+			final ChatMessage message = event.getChatMessage();
+			holder.messageId = message.getMessageId();
+			message.setUserData(holder);
 
-			//layoutParams Settings
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
+			ChatMessage.State status = message.getState();
+			Address remoteSender = message.getFromAddress();
+			String displayName;
 
+			LinphoneContact contact = null;
+			if (message.isOutgoing()) {
+				message.setListener(mListener);
 
-			if (isEditionEnabled()) {
-				layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				layoutParams.setMargins(100, 10, 10, 10);
-			} else if (message.isOutgoing()) {
-				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				layoutParams.setMargins(100, 10, 10, 10);
+				if (status == ChatMessage.State.InProgress) {
+					holder.messageSendingInProgress.setVisibility(View.VISIBLE);
+				}
 
+				if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory && status != ChatMessage.State.InProgress) {
+					holder.messageStatus.setVisibility(View.VISIBLE);
+					holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
+				}
+
+				if (status == ChatMessage.State.Delivered) {
+				    /*holder.imdmLayout.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setText(R.string.sent);
+				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
+				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));*/
+				} else if (status == ChatMessage.State.DeliveredToUser) {
+					holder.imdmLayout.setVisibility(View.VISIBLE);
+					holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
+					holder.imdmLabel.setText(R.string.delivered);
+					holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
+				} else if (status == ChatMessage.State.Displayed) {
+					holder.imdmLayout.setVisibility(View.VISIBLE);
+					holder.imdmIcon.setImageResource(R.drawable.chat_read);
+					holder.imdmLabel.setText(R.string.displayed);
+					holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorK));
+				} else if (status == ChatMessage.State.NotDelivered) {
+					holder.imdmLayout.setVisibility(View.VISIBLE);
+					holder.imdmIcon.setImageResource(R.drawable.chat_error);
+					holder.imdmLabel.setText(R.string.error);
+					holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
+				} else if (status == ChatMessage.State.FileTransferError) {
+					holder.imdmLayout.setVisibility(View.VISIBLE);
+					holder.imdmIcon.setImageResource(R.drawable.chat_error);
+					holder.imdmLabel.setText(R.string.file_transfer_error);
+					holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
+				}
+
+				if (isEditionEnabled()) {
+					layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
+					layoutParams.setMargins(100, 10, 10, 10);
+				} else {
+					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+					layoutParams.setMargins(100, 10, 10, 10);
+				}
+
+				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
+				Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
+				Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
+				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
+				holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 			} else {
-				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				layoutParams.setMargins(10, 10, 100, 10);
+				for (LinphoneContact c : mParticipants) {
+					if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
+						contact = c;
+						break;
+					}
+				}
+
+				if (isEditionEnabled()) {
+					layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
+					layoutParams.setMargins(100, 10, 10, 10);
+				} else {
+					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+					layoutParams.setMargins(10, 10, 100, 10);
+				}
+
+				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
+				Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
+				Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
+				holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+				holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 			}
 
+			if (contact == null) {
+				contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
+			}
+			if (contact != null) {
+				if (contact.getFullName() != null) {
+					displayName = contact.getFullName();
+				} else {
+					displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+				}
 
-			//Display attached files
-			if (message.getAppdata() != null) {
+				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+				if (contact.hasPhoto()) {
+					LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
+				}
+			} else {
+				displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+				holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			}
+			holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
+
+			if (message.hasTextContent()) {
+				String msg = message.getTextContent();
+				Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
+				holder.messageText.setText(text);
+				holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+				holder.messageText.setVisibility(View.VISIBLE);
+			}
+
+			String externalBodyUrl = message.getExternalBodyUrl();
+			Content fileTransferContent = message.getFileTransferInformation();
+
+			if (message.getAppdata() != null) { // Something to display
 				displayAttachedFile(message, holder);
 			}
 
+			if (externalBodyUrl != null) { // Incoming file transfer not yet downloaded
+				holder.fileName.setVisibility(View.VISIBLE);
+				holder.fileName.setText(fileTransferContent.getName());
 
-			if (message.getExternalBodyUrl() != null ) {
+				holder.fileTransferLayout.setVisibility(View.VISIBLE);
 				holder.fileTransferProgressBar.setVisibility(View.GONE);
+				if (message.isFileTransferInProgress()) { // Incoming file transfer in progress
+					holder.fileTransferAction.setVisibility(View.GONE);
+				} else {
+					holder.fileTransferAction.setText(mContext.getString(R.string.accept));
+//					holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+//						@Override
+//						public void onClick(View v) {
+//							if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+//								v.setEnabled(false);
+//								String filename = message.getFileTransferInformation().getName();
+//								File file = new File(Environment.getExternalStorageDirectory(), filename);
+//								int prefix = 1;
+//								while (file.exists()) {
+//									file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
+//									Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
+//									prefix += 1;
+//								}
+//								message.setListener(mListener);
+//								message.setFileTransferFilepath(file.getPath());
+//								message.downloadFile();
+//
+//							} else {
+//								Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+//								LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+//							}
+//						}
+//					});
+				}
+			} else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
+				message.setListener(mListener); // add the listener for file upload progress display
+				holder.messageSendingInProgress.setVisibility(View.GONE);
 				holder.fileTransferLayout.setVisibility(View.VISIBLE);
+				holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
+//				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						message.cancelFileTransfer();
+//						notifyDataSetChanged();
+//					}
+//				});
 			}
 
-			if (message.isFileTransferInProgress()){
-				holder.fileTransferLayout.setVisibility(View.VISIBLE);
+			holder.bubbleLayout.setLayoutParams(layoutParams);
+		} else { // Event is not chat message
+			holder.eventLayout.setVisibility(View.VISIBLE);
+
+			Address address = event.getParticipantAddress();
+			String displayName = null;
+			if (address != null) {
+				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+				if (contact != null) {
+					displayName = contact.getFullName();
+				} else {
+					displayName = LinphoneUtils.getAddressDisplayName(address);
+				}
 			}
+
+			switch (event.getType()) {
+				case ConferenceCreated:
+					holder.eventMessage.setText(mContext.getString(R.string.conference_created));
+					break;
+				case ConferenceTerminated:
+					holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
+					break;
+				case ConferenceParticipantAdded:
+					holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
+					break;
+				case ConferenceParticipantRemoved:
+					holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
+					break;
+				case ConferenceSubjectChanged:
+					holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
+					break;
+				case ConferenceParticipantSetAdmin:
+					holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
+					break;
+				case ConferenceParticipantUnsetAdmin:
+					holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
+					break;
+				case ConferenceParticipantDeviceAdded:
+					holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
+					break;
+				case ConferenceParticipantDeviceRemoved:
+					holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
+					break;
+				case None:
+				default:
+					//TODO
+					break;
+			}
+
+
 
 		}
     }
@@ -210,7 +414,7 @@ public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder
     }
 
     public void refresh(EventLog[] history) {
-		mHistory = new ArrayList<>(Arrays.asList(history));
+//		mHistory = new ArrayList<>(Arrays.asList(history));
 	    notifyDataSetChanged();
     }
 
@@ -244,264 +448,6 @@ public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder
     	notifyDataSetChanged();
     }
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ChatBubbleViewHolder holder;
-        if (view != null) {
-            holder = (ChatBubbleViewHolder) view.getTag();
-        } else {
-            view = mLayoutInflater.inflate(R.layout.chat_bubble, null);
-            holder = new ChatBubbleViewHolder(view);
-            view.setTag(holder);
-        }
-
-	    holder.eventLayout.setVisibility(View.GONE);
-	    holder.bubbleLayout.setVisibility(View.GONE);
-	    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
-	    holder.messageText.setVisibility(View.GONE);
-	    holder.messageImage.setVisibility(View.GONE);
-	    holder.fileTransferLayout.setVisibility(View.GONE);
-	    holder.fileTransferProgressBar.setProgress(0);
-	    holder.fileTransferAction.setEnabled(true);
-	    holder.fileName.setVisibility(View.GONE);
-	    holder.openFileButton.setVisibility(View.GONE);
-	    holder.messageStatus.setVisibility(View.INVISIBLE);
-	    holder.messageSendingInProgress.setVisibility(View.GONE);
-	    holder.imdmLayout.setVisibility(View.INVISIBLE);
-	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-
-	    if (isEditionEnabled()) {
-		    holder.delete.setOnCheckedChangeListener(null);
-		    holder.delete.setChecked(getSelectedItemsPosition().contains(i));
-		    holder.delete.setTag(i);
-		    holder.delete.setOnCheckedChangeListener(getDeleteListener());
-	    }
-
-	    EventLog event = (EventLog)getItem(i);
-	    if (event.getType() == EventLog.Type.ConferenceChatMessage) {
-		    holder.bubbleLayout.setVisibility(View.VISIBLE);
-
-		    final ChatMessage message = event.getChatMessage();
-		    holder.messageId = message.getMessageId();
-		    message.setUserData(holder);
-
-		    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-		    ChatMessage.State status = message.getState();
-		    Address remoteSender = message.getFromAddress();
-			String displayName;
-
-		    LinphoneContact contact = null;
-		    if (message.isOutgoing()) {
-			    message.setListener(mListener);
-
-			    if (status == ChatMessage.State.InProgress) {
-				    holder.messageSendingInProgress.setVisibility(View.VISIBLE);
-			    }
-
-			    if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory && status != ChatMessage.State.InProgress) {
-				    holder.messageStatus.setVisibility(View.VISIBLE);
-				    holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
-			    }
-
-			    if (status == ChatMessage.State.Delivered) {
-				    /*holder.imdmLayout.setVisibility(View.VISIBLE);
-				    holder.imdmLabel.setText(R.string.sent);
-				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
-				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));*/
-			    } else if (status == ChatMessage.State.DeliveredToUser) {
-				    holder.imdmLayout.setVisibility(View.VISIBLE);
-				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
-				    holder.imdmLabel.setText(R.string.delivered);
-				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
-			    } else if (status == ChatMessage.State.Displayed) {
-				    holder.imdmLayout.setVisibility(View.VISIBLE);
-				    holder.imdmIcon.setImageResource(R.drawable.chat_read);
-				    holder.imdmLabel.setText(R.string.displayed);
-				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorK));
-			    } else if (status == ChatMessage.State.NotDelivered) {
-				    holder.imdmLayout.setVisibility(View.VISIBLE);
-				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
-				    holder.imdmLabel.setText(R.string.error);
-				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
-			    } else if (status == ChatMessage.State.FileTransferError) {
-				    holder.imdmLayout.setVisibility(View.VISIBLE);
-				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
-				    holder.imdmLabel.setText(R.string.file_transfer_error);
-				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
-			    }
-
-			    if (isEditionEnabled()) {
-				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(100, 10, 10, 10);
-			    } else {
-				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				    layoutParams.setMargins(100, 10, 10, 10);
-			    }
-
-			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
-			    Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
-			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
-			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
-			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
-		    } else {
-			    for (LinphoneContact c : mParticipants) {
-				    if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
-					    contact = c;
-					    break;
-				    }
-			    }
-
-			    if (isEditionEnabled()) {
-				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(100, 10, 10, 10);
-			    } else {
-				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				    layoutParams.setMargins(10, 10, 100, 10);
-			    }
-
-			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
-			    Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
-			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
-			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
-			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
-		    }
-
-		    if (contact == null) {
-			    contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
-		    }
-		    if (contact != null) {
-			    if (contact.getFullName() != null) {
-				    displayName = contact.getFullName();
-			    } else {
-				    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-			    }
-
-			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-			    if (contact.hasPhoto()) {
-				    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-			    }
-		    } else {
-			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-		    }
-		    holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
-
-		    if (message.hasTextContent()) {
-			    String msg = message.getTextContent();
-			    Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
-			    holder.messageText.setText(text);
-			    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
-			    holder.messageText.setVisibility(View.VISIBLE);
-		    }
-
-		    String externalBodyUrl = message.getExternalBodyUrl();
-		    Content fileTransferContent = message.getFileTransferInformation();
-
-		    if (message.getAppdata() != null) { // Something to display
-				displayAttachedFile(message, holder);
-		    }
-
-		    if (externalBodyUrl != null) { // Incoming file transfer not yet downloaded
-			    holder.fileName.setVisibility(View.VISIBLE);
-			    holder.fileName.setText(fileTransferContent.getName());
-
-			    holder.fileTransferLayout.setVisibility(View.VISIBLE);
-			    holder.fileTransferProgressBar.setVisibility(View.GONE);
-			    if (message.isFileTransferInProgress()) { // Incoming file transfer in progress
-				    holder.fileTransferAction.setVisibility(View.GONE);
-			    } else {
-				    holder.fileTransferAction.setText(mContext.getString(R.string.accept));
-				    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-					    @Override
-					    public void onClick(View v) {
-						    if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-							    v.setEnabled(false);
-							    String filename = message.getFileTransferInformation().getName();
-							    File file = new File(Environment.getExternalStorageDirectory(), filename);
-							    int prefix = 1;
-							    while (file.exists()) {
-								    file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
-								    Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
-								    prefix += 1;
-							    }
-							    message.setListener(mListener);
-							    message.setFileTransferFilepath(file.getPath());
-							    message.downloadFile();
-
-						    } else {
-							    Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-							    LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
-						    }
-					    }
-				    });
-			    }
-		    } else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
-				message.setListener(mListener); // add the listener for file upload progress display
-				holder.messageSendingInProgress.setVisibility(View.GONE);
-				holder.fileTransferLayout.setVisibility(View.VISIBLE);
-				holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
-				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						message.cancelFileTransfer();
-						notifyDataSetChanged();
-					}
-				});
-			}
-
-		    holder.bubbleLayout.setLayoutParams(layoutParams);
-	    } else { // Event is not chat message
-		    holder.eventLayout.setVisibility(View.VISIBLE);
-
-		    Address address = event.getParticipantAddress();
-		    String displayName = null;
-		    if (address != null) {
-			    LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
-			    if (contact != null) {
-				    displayName = contact.getFullName();
-			    } else {
-				    displayName = LinphoneUtils.getAddressDisplayName(address);
-			    }
-		    }
-
-		    switch (event.getType()) {
-			    case ConferenceCreated:
-				    holder.eventMessage.setText(mContext.getString(R.string.conference_created));
-			    	break;
-			    case ConferenceTerminated:
-				    holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
-			    	break;
-			    case ConferenceParticipantAdded:
-				    holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
-			    	break;
-			    case ConferenceParticipantRemoved:
-				    holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
-			    	break;
-			    case ConferenceSubjectChanged:
-				    holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
-			    	break;
-			    case ConferenceParticipantSetAdmin:
-				    holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
-			    	break;
-			    case ConferenceParticipantUnsetAdmin:
-				    holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
-			    	break;
-			    case ConferenceParticipantDeviceAdded:
-				    holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
-				    break;
-			    case ConferenceParticipantDeviceRemoved:
-				    holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
-				    break;
-			    case None:
-			    default:
-			    	//TODO
-			    	break;
-		    }
-	    }
-
-        return view;
-    }
 
 	private void loadBitmap(String path, ImageView imageView) {
 		if (cancelPotentialWork(path, imageView)) {

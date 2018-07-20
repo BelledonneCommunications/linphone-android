@@ -34,6 +34,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -77,15 +80,17 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
+import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
-public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
+public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ChatBubbleViewHolder.ClickListener ,SelectableHelper.DeleteListener {
 	private static final int ADD_PHOTO = 1337;
 
 	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
@@ -93,11 +98,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
 	private EditText mMessageTextToSend;
 	private LayoutInflater mInflater;
-	private ListView mChatEventsList;
+	private RecyclerView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
-	private ListSelectionHelper mSelectionHelper;
-//	private ListSelectionHelper mSelectionHelper;
-
+	private SelectableHelper mSelectionHelper;
+	private Context mContext;
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
 	private ChatEventsAdapter mEventsAdapter;
@@ -105,6 +109,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private Address mRemoteSipAddress, mRemoteParticipantAddress;
 	private ChatRoom mChatRoom;
 	private ArrayList<LinphoneContact> mParticipants;
+	private ArrayList<EventLog> mHistory;
+	private LinearLayoutManager layoutManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -116,11 +122,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mRemoteSipUri = getArguments().getString("SipUri");
 			mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
 		}
-
-		mInflater = inflater;
+		this.mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chat, container, false);
+		mChatEventsList = view.findViewById(R.id.chat_message_list);
+		mSelectionHelper = new SelectableHelper(view, this);
 
-		mSelectionHelper = new ListSelectionHelper(view, this);
+
+		layoutManager = new LinearLayoutManager(mContext);
+		mChatEventsList.setLayoutManager(layoutManager);
 
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -551,24 +560,46 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private void displayChatRoomHistory() {
 		if (mChatRoom == null) return;
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryMessageEvents(0), mParticipants);
+            EventLog[] history = mChatRoom.getHistoryMessageEvents(0);
+			mHistory = new ArrayList<>(Arrays.asList(history));
+            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mHistory, mParticipants, this);
 //			mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
 		} else {
-			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
+			EventLog[] history = mChatRoom.getHistoryEvents(0);
+			mHistory = new ArrayList<>(Arrays.asList(history));
+            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mHistory, mParticipants, this);
 		}
-		mSelectionHelper.setAdapter(mEventsAdapter);
 		mChatEventsList.setAdapter(mEventsAdapter);
-	}
+        mSelectionHelper.setAdapter(mEventsAdapter);
+
+
+    }
 
 	public void scrollToBottom() {
-		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
-			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
+		if (((layoutManager.findLastVisibleItemPosition() >= (mEventsAdapter.getCount() - 1)) && (layoutManager.findFirstVisibleItemPosition() <= (mEventsAdapter.getCount() - 1)))) {
+//		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
+			mChatEventsList.getLayoutManager().scrollToPosition(mEventsAdapter.getCount() - 1);
+//			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
 		}
 	}
 
 	public String getRemoteSipUri() {
 		return mRemoteSipUri;
 	}
+
+
+	/*
+	*if isEditionEnabled() true, select the message
+	* */
+
+
+	@Override
+	public void onItemClicked(int position) {
+		if (mEventsAdapter.isEditionEnabled()) {
+			mEventsAdapter.toggleSelection(position);
+		}
+	}
+
 
 	/**
 	 * File transfer related
