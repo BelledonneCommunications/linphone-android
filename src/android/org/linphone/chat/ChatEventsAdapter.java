@@ -285,7 +285,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 		    } else {
 			    for (LinphoneContact c : mParticipants) {
-				    if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
+				    if (c != null && remoteSender!=null && c.hasAddress(remoteSender.asStringUriOnly())) {
 					    contact = c;
 					    break;
 				    }
@@ -466,13 +466,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		if (path.startsWith("file://")) {
 			path = path.substring("file://".length());
 			file = new File(path);
-			contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+			contentUri = FileProvider.getUriForFile(mContext, "com.orange.msiphone.provider", file);
 		} else if (path.startsWith("content://")) {
 			contentUri = Uri.parse(path);
 		} else {
 			file = new File(path);
 			try {
-				contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+				contentUri = FileProvider.getUriForFile(mContext, "com.orange.msiphone.provider", file);
 			} catch (Exception e) {
 				contentUri = Uri.parse(path);
 			}
