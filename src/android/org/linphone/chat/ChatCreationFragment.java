@@ -396,7 +396,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					if (chatRoom == null) {
 						ProxyConfig lpc = lc.getDefaultProxyConfig();
 						if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
 							mChatRoom.addListener(mChatRoomCreationListener);
 							mChatRoom.addParticipant(participant);
 						} else {

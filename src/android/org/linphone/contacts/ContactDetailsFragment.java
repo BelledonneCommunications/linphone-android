@@ -82,7 +82,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 					ProxyConfig lpc = lc.getDefaultProxyConfig();
 					if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
 						mWaitLayout.setVisibility(View.VISIBLE);
-						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
 						mChatRoom.addListener(mChatRoomCreationListener);
 						Address participants[] = new Address[1];
 						participants[0] = participant;
