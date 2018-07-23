@@ -91,17 +91,17 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 	private ChatBubbleViewHolder.ClickListener clickListener;
 
 //    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
-    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, int itemResource, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
+    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 //    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 
 		super(helper);
 	    this.mContext = fragment.getActivity();
 		this.itemResource = itemResource;
 //        this.mLayoutInflater = inflater;
-        this.mHistory = mHistory;
-
+//        this.mHistory = mHistory;
+		mHistory = new ArrayList<>(Arrays.asList(history));
 	    this.mParticipants = participants;
-
+		this.clickListener = clickListener;
 	    mListener = new ChatMessageListenerStub() {
 		    @Override
 		    public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
@@ -134,7 +134,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChatBubbleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //        View v = mLayoutInflater.inflate(R.layout.chat_bubble, parent, false);
         View v = LayoutInflater.from(parent.getContext())
 				.inflate(this.itemResource, parent, false);
@@ -142,8 +142,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
-		EventLog event = this.mHistory.get(position);
+    public void onBindViewHolder(ChatBubbleViewHolder holder, int position) {
+		final EventLog event = this.mHistory.get(position);
 		holder.eventLayout.setVisibility(View.GONE);
 		holder.bubbleLayout.setVisibility(View.GONE);
 		holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
@@ -342,6 +342,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
 			holder.bubbleLayout.setLayoutParams(layoutParams);
 		} else { // Event is not chat message
+
 			holder.eventLayout.setVisibility(View.VISIBLE);
 
 			Address address = event.getParticipantAddress();
@@ -401,11 +402,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+		return this.mHistory.size();
     }
-
-
-
 
     public void addToHistory(EventLog log) {
 	    mHistory.add(log);
@@ -417,7 +415,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     public void refresh(EventLog[] history) {
-//		mHistory = new ArrayList<>(Arrays.asList(history));
+		mHistory = new ArrayList<>(Arrays.asList(history));
 	    notifyDataSetChanged();
     }
 
@@ -433,7 +431,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
 //    @Override
     public int getCount() {
-        return mHistory.size();
+        return this.mHistory.size();
     }
 
 //    @Override
@@ -643,6 +641,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 	}
 
 	private BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+//	private BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
 		if (imageView != null) {
 			final Drawable drawable = imageView.getDrawable();
 			if (drawable instanceof AsyncBitmap) {

@@ -22,7 +22,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-            Integer position = (Integer)compoundButton.getTag();
+//            Integer position = (Integer)compoundButton.getTag();
 
             mListHelper.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == getItemCount());
         }
