@@ -33,7 +33,7 @@ apply plugin: 'com.android.library'
 
 
 dependencies {
-    compile 'org.apache.commons:commons-compress:1.16.1'
+    implementation 'org.apache.commons:commons-compress:1.16.1'
     javadocDeps 'org.apache.commons:commons-compress:1.16.1'
 }
 
