@@ -95,7 +95,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 //    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 
 		super(helper);
-	    this.mContext = fragment.getActivity();
+		this.mFragment=fragment;
+	    this.mContext = mFragment.getActivity();
 		this.itemResource = itemResource;
 //        this.mLayoutInflater = inflater;
 //        this.mHistory = mHistory;
@@ -135,10 +136,12 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     @Override
     public ChatBubbleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        View v = mLayoutInflater.inflate(R.layout.chat_bubble, parent, false);
         View v = LayoutInflater.from(parent.getContext())
 				.inflate(this.itemResource, parent, false);
-		return new ChatBubbleViewHolder(this.mContext,v, clickListener);
+		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(this.mContext,v, clickListener);
+		mFragment.registerForContextMenu(v);
+		v.setTag(VH);
+		return VH;
     }
 
     @Override
@@ -302,42 +305,42 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 					holder.fileTransferAction.setVisibility(View.GONE);
 				} else {
 					holder.fileTransferAction.setText(mContext.getString(R.string.accept));
-//					holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-//								v.setEnabled(false);
-//								String filename = message.getFileTransferInformation().getName();
-//								File file = new File(Environment.getExternalStorageDirectory(), filename);
-//								int prefix = 1;
-//								while (file.exists()) {
-//									file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
-//									Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
-//									prefix += 1;
-//								}
-//								message.setListener(mListener);
-//								message.setFileTransferFilepath(file.getPath());
-//								message.downloadFile();
-//
-//							} else {
-//								Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-//								LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
-//							}
-//						}
-//					});
+					holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+								v.setEnabled(false);
+								String filename = message.getFileTransferInformation().getName();
+								File file = new File(Environment.getExternalStorageDirectory(), filename);
+								int prefix = 1;
+								while (file.exists()) {
+									file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
+									Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
+									prefix += 1;
+								}
+								message.setListener(mListener);
+								message.setFileTransferFilepath(file.getPath());
+								message.downloadFile();
+
+							} else {
+								Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+								LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+							}
+						}
+					});
 				}
 			} else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
 				message.setListener(mListener); // add the listener for file upload progress display
 				holder.messageSendingInProgress.setVisibility(View.GONE);
 				holder.fileTransferLayout.setVisibility(View.VISIBLE);
 				holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
-//				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						message.cancelFileTransfer();
-//						notifyDataSetChanged();
-//					}
-//				});
+				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						message.cancelFileTransfer();
+						notifyDataSetChanged();
+					}
+				});
 			}
 
 			holder.bubbleLayout.setLayoutParams(layoutParams);

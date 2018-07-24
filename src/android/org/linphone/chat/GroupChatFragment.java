@@ -81,7 +81,6 @@ import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -108,7 +107,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private ArrayList<LinphoneContact> mParticipants;
 	private ArrayList<EventLog> mHistory;
 	private LinearLayoutManager layoutManager;
-
+	private int mContextMenuMessagePosition;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -222,7 +221,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mSelectionHelper = new SelectableHelper(view, this);
 		layoutManager = new LinearLayoutManager(mContext);
 		mChatEventsList.setLayoutManager(layoutManager);
-		registerForContextMenu(mChatEventsList);
+//		registerForContextMenu(mChatEventsList);
 
 
 
@@ -356,12 +355,16 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		ChatBubbleViewHolder holder = (ChatBubbleViewHolder) v.getTag();
+		mContextMenuMessagePosition = holder.getAdapterPosition();
+
+		EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
+//		EventLog event = log.getEventLog();
 		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
 			return;
 		}
@@ -374,8 +377,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			inflater.inflate(R.menu.chat_bubble_menu, menu);
 		}
 
-		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-			// Do not show messages' IDMN state in 1 to 1 chat room as it is already visible in the lower corner of the bubble
+		if (!message.isOutgoing() && mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			// Do not show incoming messages IDMN state in 1 to 1 chat room as we don't receive IMDN for them
 			menu.removeItem(R.id.imdn_infos);
 		}
 		if (!message.hasTextContent()) {
@@ -384,11 +387,18 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
+
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//
 
-		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+
+
+		EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
+//		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+
 		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
 			return super.onContextItemSelected(item);
 		}
@@ -397,7 +407,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		String messageId = message.getMessageId();
 
 		if (item.getItemId() == R.id.resend) {
-			mEventsAdapter.removeItem(info.position);
+			mEventsAdapter.removeItem(mContextMenuMessagePosition);
 			message.resend();
 			return true;
 		}
@@ -415,7 +425,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 		if (item.getItemId() == R.id.delete_message) {
 			mChatRoom.deleteMessage(message);
-			mEventsAdapter.removeItem(info.position);
+			mEventsAdapter.removeItem(mContextMenuMessagePosition);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -566,22 +576,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 		mSelectionHelper.setAdapter(mEventsAdapter);
 		mChatEventsList.setAdapter(mEventsAdapter);
-
-
 		scrollToBottom();
-        /*if (mChatRoom == null) return;
-		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            EventLog[] history = mChatRoom.getHistoryMessageEvents(0);
-			mHistory = new ArrayList<>(Arrays.asList(history));
-            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mHistory, mParticipants, this);
-//			mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
-		} else {
-			EventLog[] history = mChatRoom.getHistoryEvents(0);
-			mHistory = new ArrayList<>(Arrays.asList(history));
-            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mHistory, mParticipants, this);
-		}
-		mChatEventsList.setAdapter(mEventsAdapter);
-        mSelectionHelper.setAdapter(mEventsAdapter);*/
     }
 
 	public void scrollToBottom() {
