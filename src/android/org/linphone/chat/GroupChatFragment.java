@@ -530,7 +530,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		getContactsForParticipants();
 
-		mRemoteComposing.setVisibility(View.INVISIBLE);
+		mRemoteComposing.setVisibility(View.GONE);
 	}
 
 	private void displayChatRoomHeader() {

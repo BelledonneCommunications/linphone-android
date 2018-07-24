@@ -59,6 +59,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Content;
+import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
@@ -77,12 +78,14 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
+
 public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
-//public class ChatEventsAdapter extends RecyclerView.Adapter<ChatBubbleViewHolder> {
+
+	private static int MARGIN_BETWEEN_MESSAGES = 10;
+	private static int SIDE_MARGIN = 100;
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
-//    private LayoutInflater mLayoutInflater;
 	private int itemResource;
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
@@ -90,16 +93,12 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
 	private ChatBubbleViewHolder.ClickListener clickListener;
 
-//    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
     public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
-//    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, LayoutInflater inflater, ArrayList<EventLog> mHistory, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
 
 		super(helper);
 		this.mFragment=fragment;
 	    this.mContext = mFragment.getActivity();
 		this.itemResource = itemResource;
-//        this.mLayoutInflater = inflater;
-//        this.mHistory = mHistory;
 		mHistory = new ArrayList<>(Arrays.asList(history));
 	    this.mParticipants = participants;
 		this.clickListener = clickListener;
@@ -224,13 +223,14 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 					holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 				}
 
-				if (isEditionEnabled()) {
-					layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-					layoutParams.setMargins(100, 10, 10, 10);
-				} else {
-					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-					layoutParams.setMargins(100, 10, 10, 10);
-				}
+
+			    if (isEditionEnabled()) {
+				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
+				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
+			    } else {
+				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
+			    }
 
 				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
 				Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
@@ -245,13 +245,14 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 					}
 				}
 
-				if (isEditionEnabled()) {
-					layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-					layoutParams.setMargins(100, 10, 10, 10);
-				} else {
-					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-					layoutParams.setMargins(10, 10, 100, 10);
-				}
+
+			    if (isEditionEnabled()) {
+				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
+				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
+			    } else {
+				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+				    layoutParams.setMargins(0, MARGIN_BETWEEN_MESSAGES/2, SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2);
+			    }
 
 				holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
 				Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
@@ -644,7 +645,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 	}
 
 	private BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-//	private BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
 		if (imageView != null) {
 			final Drawable drawable = imageView.getDrawable();
 			if (drawable instanceof AsyncBitmap) {

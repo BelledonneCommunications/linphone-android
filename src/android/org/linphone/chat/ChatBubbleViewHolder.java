@@ -47,6 +47,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	public TextView eventMessage;
 
 	public RelativeLayout bubbleLayout;
+	public LinearLayout separatorLayout;
 	public LinearLayout background;
 	public ImageView contactPicture;
 	public ImageView contactPictureMask;
@@ -93,6 +94,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 
 		this.messageText = view.findViewById(R.id.message);
 		this.messageImage = view.findViewById(R.id.image);
+	    this.separatorLayout = view.findViewById(R.id.separator);
 
 		this.fileTransferLayout = view.findViewById(R.id.file_transfer_layout);
 		this.fileTransferProgressBar = view.findViewById(R.id.progress_bar);
@@ -128,6 +130,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 
 		this.messageText = view.findViewById(R.id.message);
 		this.messageImage = view.findViewById(R.id.image);
+		this.separatorLayout = view.findViewById(R.id.separator);
 
 		this.fileTransferLayout = view.findViewById(R.id.file_transfer_layout);
 		this.fileTransferProgressBar = view.findViewById(R.id.progress_bar);
