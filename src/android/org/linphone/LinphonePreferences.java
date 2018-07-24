@@ -152,6 +152,7 @@ public class LinphonePreferences {
 
 	// Accounts settings
 	private ProxyConfig getProxyConfig(int n) {
+		if (getLc() == null) return null;
 		ProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		if (n < 0 || n >= prxCfgs.length)
 			return null;
@@ -171,6 +172,7 @@ public class LinphonePreferences {
 	 * Useful to edit a authInfo (you should call saveAuthInfo after the modifications to save them).
 	 */
 	private AuthInfo getClonedAuthInfo(int n) {
+		if (getLc() == null) return null;
 		AuthInfo authInfo = getAuthInfo(n);
 		if (authInfo == null)
 			return null;
@@ -185,6 +187,7 @@ public class LinphonePreferences {
 	 * Useful to save the changes made to a cloned authInfo.
 	 */
 	private void saveAuthInfo(AuthInfo authInfo) {
+		if (getLc() == null) return;
 		getLc().addAuthInfo(authInfo);
 	}
 
@@ -339,8 +342,12 @@ public class LinphonePreferences {
 					proxy = tempProxy;
 				}
 			}
+
 			Address proxyAddr = Factory.instance().createAddress(proxy);
 			Address identityAddr = Factory.instance().createAddress(identity);
+			if (proxyAddr == null || identityAddr == null) {
+				throw new CoreException("Proxy or Identity address is null !");
+			}
 
 			if (tempDisplayName != null) {
 				identityAddr.setDisplayName(tempDisplayName);
@@ -539,6 +546,7 @@ public class LinphonePreferences {
 	}
 
 	private void setAccountPassword(int n, String password, String ha1) {
+		if (getLc() == null) return;
 		String user = getAccountUsername(n);
 		String domain = getAccountDomain(n);
 		String userid = null;
@@ -632,6 +640,8 @@ public class LinphonePreferences {
 		}
 
 		Address proxyAddr = Factory.instance().createAddress(proxy);
+		if (proxyAddr == null) return;
+
 		if (!proxy.contains("transport=")) {
 			proxyAddr.setTransport(getAccountTransport(n));
 		}
@@ -758,6 +768,7 @@ public class LinphonePreferences {
 	}
 
 	public void setDefaultAccount(int accountIndex) {
+		if (getLc() == null) return;
 		ProxyConfig[] prxCfgs = getLc().getProxyConfigList();
 		if (accountIndex >= 0 && accountIndex < prxCfgs.length)
 			getLc().setDefaultProxyConfig(prxCfgs[accountIndex]);
@@ -787,6 +798,7 @@ public class LinphonePreferences {
 	}
 
 	public void setAccountEnabled(int n, boolean enabled) {
+		if (getLc() == null) return;
 		ProxyConfig prxCfg = getProxyConfig(n);
 		if (prxCfg == null) {
 			LinphoneUtils.displayErrorAlert(getString(R.string.error), mContext);
@@ -815,6 +827,7 @@ public class LinphonePreferences {
 	}
 
 	public void resetDefaultProxyConfig(){
+		if (getLc() == null) return;
 		int count = getLc().getProxyConfigList().length;
 		for (int i = 0; i < count; i++) {
 			if (isAccountEnabled(i)) {
@@ -829,6 +842,7 @@ public class LinphonePreferences {
 	}
 
 	public void deleteAccount(int n) {
+		if (getLc() == null) return;
 		ProxyConfig proxyCfg = getProxyConfig(n);
 		if (proxyCfg != null)
 			getLc().removeProxyConfig(proxyCfg);
@@ -849,10 +863,12 @@ public class LinphonePreferences {
 
 	// Audio settings
 	public void setEchoCancellation(boolean enable) {
+		if (getLc() == null) return;
 		getLc().enableEchoCancellation(enable);
 	}
 
 	public boolean echoCancellationEnabled() {
+		if (getLc() == null) return false;
 		return getLc().echoCancellationEnabled();
 	}
 
@@ -879,42 +895,50 @@ public class LinphonePreferences {
 	}
 
 	public boolean isVideoEnabled() {
+		if (getLc() == null) return false;
 		return getLc().videoSupported() && getLc().videoEnabled();
 	}
 
 	public void enableVideo(boolean enable) {
+		if (getLc() == null) return;
 		getLc().enableVideoCapture(enable);
 		getLc().enableVideoDisplay(enable);
 	}
 
 	public boolean shouldInitiateVideoCall() {
+		if (getLc() == null) return false;
 		return getLc().getVideoActivationPolicy().getAutomaticallyInitiate();
 	}
 
 	public void setInitiateVideoCall(boolean initiate) {
+		if (getLc() == null) return;
 		VideoActivationPolicy vap = getLc().getVideoActivationPolicy();
 		vap.setAutomaticallyInitiate(initiate);
 		getLc().setVideoActivationPolicy(vap);
 	}
 
 	public boolean shouldAutomaticallyAcceptVideoRequests() {
+		if (getLc() == null) return false;
 		VideoActivationPolicy vap = getLc().getVideoActivationPolicy();
 		return vap.getAutomaticallyAccept();
 	}
 
 	public void setAutomaticallyAcceptVideoRequests(boolean accept) {
+		if (getLc() == null) return;
 		VideoActivationPolicy vap = getLc().getVideoActivationPolicy();
 		vap.setAutomaticallyAccept(accept);
 		getLc().setVideoActivationPolicy(vap);
 	}
 
 	public String getVideoPreset() {
+		if (getLc() == null) return null;
 		String preset = getLc().getVideoPreset();
 		if (preset == null) preset = "default";
 		return preset;
 	}
 
 	public void setVideoPreset(String preset) {
+		if (getLc() == null) return;
 		if (preset.equals("default")) preset = null;
 		getLc().setVideoPreset(preset);
 		preset = getVideoPreset();
@@ -930,22 +954,27 @@ public class LinphonePreferences {
 	}
 
 	public void setPreferredVideoSize(String preferredVideoSize) {
+		if (getLc() == null) return;
 		getLc().setPreferredVideoSizeByName(preferredVideoSize);
 	}
 
 	public int getPreferredVideoFps() {
+		if (getLc() == null) return 0;
 		return (int)getLc().getPreferredFramerate();
 	}
 
 	public void setPreferredVideoFps(int fps) {
+		if (getLc() == null) return;
 		getLc().setPreferredFramerate(fps);
 	}
 
 	public int getBandwidthLimit() {
+		if (getLc() == null) return 0;
 		return getLc().getDownloadBandwidth();
 	}
 
 	public void setBandwidthLimit(int bandwidth) {
+		if (getLc() == null) return;
 		getLc().setUploadBandwidth(bandwidth);
 		getLc().setDownloadBandwidth(bandwidth);
 	}
@@ -953,34 +982,42 @@ public class LinphonePreferences {
 
 	// Call settings
 	public boolean useRfc2833Dtmfs() {
+		if (getLc() == null) return false;
 		return getLc().getUseRfc2833ForDtmf();
 	}
 
 	public void sendDtmfsAsRfc2833(boolean use) {
+		if (getLc() == null) return;
 		getLc().setUseRfc2833ForDtmf(use);
 	}
 
 	public boolean useSipInfoDtmfs() {
+		if (getLc() == null) return false;
 		return getLc().getUseInfoForDtmf();
 	}
 
 	public void sendDTMFsAsSipInfo(boolean use) {
+		if (getLc() == null) return;
 		getLc().setUseInfoForDtmf(use);
 	}
 
 	public int getIncTimeout() {
+		if (getLc() == null) return 0;
 		return getLc().getIncTimeout();
 	}
 
 	public void setIncTimeout(int timeout) {
+		if (getLc() == null) return;
 		getLc().setIncTimeout(timeout);
 	}
 
 	public int getInCallTimeout() {
+		if (getLc() == null) return 0;
 		return getLc().getInCallTimeout();
 	}
 
 	public void setInCallTimeout(int timeout) {
+		if (getLc() == null) return;
 		getLc().setInCallTimeout(timeout);
 	}
 
@@ -1030,6 +1067,7 @@ public class LinphonePreferences {
 	}
 
 	public String getSipPort() {
+		if (getLc() == null) return null;
 		Transports transports = getLc().getTransports();
 		int port;
 		if (transports.getUdpPort() > 0)
@@ -1040,6 +1078,7 @@ public class LinphonePreferences {
 	}
 
 	public void setSipPort(int port) {
+		if (getLc() == null) return;
 		Transports transports = getLc().getTransports();
 		transports.setUdpPort(port);
 		transports.setTcpPort(port);
@@ -1048,6 +1087,7 @@ public class LinphonePreferences {
 	}
 
 	private NatPolicy getOrCreateNatPolicy() {
+		if (getLc() == null) return null;
 		NatPolicy nat = getLc().getNatPolicy();
 		if (nat == null) {
 			nat = getLc().createNatPolicy();
@@ -1061,6 +1101,7 @@ public class LinphonePreferences {
 	}
 
 	public void setStunServer(String stun) {
+		if (getLc() == null) return;
 		NatPolicy nat = getOrCreateNatPolicy();
 		nat.setStunServer(stun);
 
@@ -1070,6 +1111,7 @@ public class LinphonePreferences {
 	}
 
 	public void setIceEnabled(boolean enabled) {
+		if (getLc() == null) return;
 		NatPolicy nat = getOrCreateNatPolicy();
 		nat.enableIce(enabled);
 		nat.enableStun(enabled);
@@ -1077,12 +1119,14 @@ public class LinphonePreferences {
 	}
 
 	public void setTurnEnabled(boolean enabled) {
+		if (getLc() == null) return;
 		NatPolicy nat = getOrCreateNatPolicy();
 		nat.enableTurn(enabled);
 		getLc().setNatPolicy(nat);
 	}
 
 	public void setUpnpEnabled(boolean enabled) {
+		if (getLc() == null) return;
 		NatPolicy nat = getOrCreateNatPolicy();
 		nat.enableUpnp(enabled);
 		getLc().setNatPolicy(nat);
@@ -1109,6 +1153,7 @@ public class LinphonePreferences {
 	}
 
 	public void setTurnUsername(String username) {
+		if (getLc() == null) return;
 		NatPolicy nat = getOrCreateNatPolicy();
 		AuthInfo authInfo = getLc().findAuthInfo(null, nat.getStunServerUsername(), null);
 
@@ -1127,6 +1172,7 @@ public class LinphonePreferences {
 	}
 
 	public void setTurnPassword(String password) {
+		if (getLc() == null) return;
 		NatPolicy nat = getOrCreateNatPolicy();
 		AuthInfo authInfo = getLc().findAuthInfo(null, nat.getStunServerUsername(), null);
 
@@ -1142,10 +1188,12 @@ public class LinphonePreferences {
 	}
 
 	public MediaEncryption getMediaEncryption() {
+		if (getLc() == null) return null;
 		return getLc().getMediaEncryption();
 	}
 
 	public void setMediaEncryption(MediaEncryption menc) {
+		if (getLc() == null) return;
 		if (menc == null)
 			return;
 
@@ -1166,6 +1214,7 @@ public class LinphonePreferences {
 			 String appId = getString(R.string.push_sender_id);
 			 if (regId != null && lc.getProxyConfigList().length > 0) {
 				 for (ProxyConfig lpc : lc.getProxyConfigList()) {
+					 if (lpc == null) continue;
 					 if (!lpc.isPushNotificationAllowed()) {
 						 lpc.edit();
 						 lpc.setContactUriParameters(null);
@@ -1215,10 +1264,12 @@ public class LinphonePreferences {
 	}
 
 	public void useIpv6(Boolean enable) {
+		if (getLc() == null) return;
 		 getLc().enableIpv6(enable);
 	}
 
 	public boolean isUsingIpv6() {
+		if (getLc() == null) return false;
 		return getLc().ipv6Enabled();
 	}
 	// End of network settings
@@ -1259,14 +1310,17 @@ public class LinphonePreferences {
 	}
 
 	public String getSharingPictureServerUrl() {
+		if (getLc() == null) return null;
 		return getLc().getFileTransferServer();
 	}
 
 	public void setSharingPictureServerUrl(String url) {
+		if (getLc() == null) return;
 		getLc().setFileTransferServer(url);
 	}
 
 	public void setRemoteProvisioningUrl(String url) {
+		if (getLc() == null) return;
 		if (url != null && url.length() == 0) {
 			url = null;
 		}
@@ -1274,26 +1328,31 @@ public class LinphonePreferences {
 	}
 
 	public String getRemoteProvisioningUrl() {
+		if (getLc() == null) return null;
 		return getLc().getProvisioningUri();
 	}
 
 	public void setDefaultDisplayName(String displayName) {
+		if (getLc() == null) return;
 		Address primary = getLc().getPrimaryContactParsed();
 		primary.setDisplayName(displayName);
 		getLc().setPrimaryContact(primary.asString());
 	}
 
 	public String getDefaultDisplayName() {
+		if (getLc() == null) return null;
 		return getLc().getPrimaryContactParsed().getDisplayName();
 	}
 
 	public void setDefaultUsername(String username) {
+		if (getLc() == null) return;
 		Address primary = getLc().getPrimaryContactParsed();
 		primary.setUsername(username);
 		getLc().setPrimaryContact(primary.asString());
 	}
 
 	public String getDefaultUsername() {
+		if (getLc() == null) return null;
 		return getLc().getPrimaryContactParsed().getUsername();
 	}
 	// End of advanced settings
@@ -1302,6 +1361,7 @@ public class LinphonePreferences {
 	private TunnelConfig tunnelConfig = null;
 
 	public TunnelConfig getTunnelConfig() {
+		if (getLc() == null) return null;
 		if(getLc().tunnelAvailable()) {
 			Tunnel tunnel = getLc().getTunnel();
 			if (tunnelConfig == null) {
@@ -1384,10 +1444,12 @@ public class LinphonePreferences {
 	}
 
 	public boolean adaptiveRateControlEnabled() {
+		if (getLc() == null) return false;
 		return getLc().adaptiveRateControlEnabled();
 	}
 
 	public void enableAdaptiveRateControl(boolean enabled) {
+		if (getLc() == null) return;
 		getLc().enableAdaptiveRateControl(enabled);
 	}
 
@@ -1501,10 +1563,12 @@ public class LinphonePreferences {
 	}
 
 	public LimeState limeEnabled() {
+		if (getLc() == null) return LimeState.Disabled;
 		return getLc().limeEnabled();
 	}
 
 	public void enableLime(LimeState lime) {
+		if (getLc() == null) return;
 		getLc().enableLime(lime);
 	}
 

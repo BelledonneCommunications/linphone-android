@@ -542,7 +542,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 							} else {
 								address = log.getToAddress();
 							}
-							LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
+							if (address != null) {
+								LinphoneActivity.instance().setAddresGoToDialerAndCall(address.asStringUriOnly(), address.getDisplayName(), null);
+							}
 						}
 					}
 				});

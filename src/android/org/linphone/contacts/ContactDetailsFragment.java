@@ -75,19 +75,21 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				String tag = (String)v.getTag();
 				Core lc = LinphoneManager.getLc();
 				Address participant = Factory.instance().createAddress(tag);
-				ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
-				if (room != null) {
-					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
-				} else {
-					ProxyConfig lpc = lc.getDefaultProxyConfig();
-					if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-						mWaitLayout.setVisibility(View.VISIBLE);
-						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
-						mChatRoom.addListener(mChatRoomCreationListener);
-						mChatRoom.addParticipant(participant);
-					} else {
-						room = lc.getChatRoom(participant);
+				ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
+				if (defaultProxyConfig != null) {
+					ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant);
+					if (room != null) {
 						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+					} else {
+						if (defaultProxyConfig.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+							mWaitLayout.setVisibility(View.VISIBLE);
+							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+							mChatRoom.addListener(mChatRoomCreationListener);
+							mChatRoom.addParticipant(participant);
+						} else {
+							room = lc.getChatRoom(participant);
+							LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+						}
 					}
 				}
 			}

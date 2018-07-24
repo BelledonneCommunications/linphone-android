@@ -521,7 +521,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 		});
 
-		initCallStatsRefresher(LinphoneManager.getLc().getCurrentCall(), findViewById(R.id.incall_stats));
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			initCallStatsRefresher(lc.getCurrentCall(), findViewById(R.id.incall_stats));
+		}
 	}
 
 	private void refreshIncallUi(){

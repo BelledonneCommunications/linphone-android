@@ -24,6 +24,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 
+import org.linphone.core.Core;
+
 import org.linphone.LinphoneManager;
 
 /**
@@ -39,7 +41,8 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
 
 		if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState) || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
 			LinphoneManager.getInstance().setCallGsmON(true);
-			LinphoneManager.getLc().pauseAllCalls();
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			lc.pauseAllCalls();
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
 			LinphoneManager.getInstance().setCallGsmON(false);
         }
