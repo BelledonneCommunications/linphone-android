@@ -92,8 +92,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 			onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
 
-        FriendList test[] = LinphoneManager.getLc().getFriendsLists();
-
         noSipContact = (TextView) view.findViewById(R.id.noSipContact);
         noContact = (TextView) view.findViewById(R.id.noContact);
 

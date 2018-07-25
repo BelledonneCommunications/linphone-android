@@ -913,9 +913,11 @@ public final class LinphoneUtils {
 		if (ourUri == null || sipUri == null) return ChatRoomSecurityLevel.ClearText;
 
 		for (ChatRoom cr : lc.getChatRooms()) {
-			for (Participant pa : cr.getParticipants()) {
-				if (pa.getAddress() != null && pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
-					return pa.getSecurityLevel();
+			if (cr != null && cr.getParticipants() != null) {
+				for (Participant pa : cr.getParticipants()) {
+					if (pa.getAddress() != null && pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
+						return pa.getSecurityLevel();
+					}
 				}
 			}
 		}

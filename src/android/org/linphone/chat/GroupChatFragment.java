@@ -228,6 +228,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 						fileSharedUri = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
 					} else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
 						fileSharedUri = LinphoneUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
+					} else {
+						fileSharedUri = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
 					}
 					addFileToPendingList(fileSharedUri);
 				}
