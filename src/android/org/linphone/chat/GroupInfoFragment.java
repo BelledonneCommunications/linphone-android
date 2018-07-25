@@ -21,7 +21,10 @@ package org.linphone.chat;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -61,7 +64,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private Address mGroupChatRoomAddress;
 	private EditText mSubjectField;
 	private LayoutInflater mInflater;
-	private ListView mParticipantsList;
+
+	private RecyclerView mParticipantsList;
+
 	private LinearLayout mLeaveGroupButton;
 	private RelativeLayout mWaitLayout;
 	private GroupInfoAdapter mAdapter;
@@ -73,6 +78,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private Dialog mAdminStateChangedDialog;
 	private ChatRoomListenerStub mChatRoomCreationListener;
 	private Bundle mShareInfos;
+	private Context mContext;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +88,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		if (getArguments() == null || getArguments().isEmpty()) {
 			return null;
 		}
+		this.mContext = getActivity().getApplicationContext();
+
 		mParticipants = (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 
 		mGroupChatRoomAddress = null;
@@ -118,6 +126,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		});
 		mParticipantsList.setAdapter(mAdapter);
 		mAdapter.setChatRoom(mChatRoom);
+		mParticipantsList.setLayoutManager(new LinearLayoutManager(mContext));
+
+
+
 
 		String fileSharedUri = getArguments().getString("fileSharedUri");
 		String messageDraft = getArguments().getString("messageDraft");

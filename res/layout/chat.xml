@@ -173,7 +173,6 @@
 		android:layout_height="wrap_content"
 		android:layout_above="@id/footer"/>
 
-	<!--<ListView-->
 	<android.support.v7.widget.RecyclerView
 
 		android:id="@+id/chat_message_list"
