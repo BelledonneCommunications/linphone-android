@@ -21,6 +21,8 @@ package org.linphone.chat;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -60,9 +62,9 @@ import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class ChatCreationFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, ContactsUpdatedListener {
+public class ChatCreationFragment extends Fragment implements View.OnClickListener ,SearchContactsListAdapter.ViewHolder.ClickListener, ContactsUpdatedListener {
 	private LayoutInflater mInflater;
-	private ListView mContactsList;
+	private RecyclerView mContactsList;
 	private LinearLayout mContactsSelectedLayout;
 	private HorizontalScrollView mContactsSelectLayout;
 	private ArrayList<ContactAddress> mContactsSelected;
@@ -80,6 +82,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat_create, container, false);
 
@@ -124,7 +127,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
 		mContactsFetchInProgress.setVisibility(View.VISIBLE);
 
-		mSearchAdapter = new SearchContactsListAdapter(null, mInflater, mContactsFetchInProgress);
+		mSearchAdapter = new SearchContactsListAdapter(null, mInflater, mContactsFetchInProgress, this);
 
 		mSearchField = view.findViewById(R.id.searchField);
 		mSearchField.addTextChangedListener(new TextWatcher() {
@@ -145,9 +148,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 				mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
 			}
 		});
-
+		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		mContactsList.setAdapter(mSearchAdapter);
-		mContactsList.setOnItemClickListener(this);
+
+		mContactsList.setLayoutManager(layoutManager);
+//		mContactsList.setOnItemClickListener(this);
 		if (savedInstanceState != null && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
 			mContactsSelectedLayout.removeAllViews();
 			// We need to get all contacts not only sip
@@ -329,7 +334,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private void removeContactFromSelection(ContactAddress ca) {
 		updateContactsClick(ca, mSearchAdapter.getContactsSelectedList());
-		mSearchAdapter.notifyDataSetInvalidated();
+		mSearchAdapter.notifyDataSetChanged();
 		updateListSelected();
 	}
 
@@ -412,8 +417,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-		ContactAddress ca = mSearchAdapter.getContacts().get(i);
+	public void onItemClicked(int position) {
+//	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+		ContactAddress ca = mSearchAdapter.getContacts().get(position);
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		ProxyConfig lpc = lc.getDefaultProxyConfig();
 		if (lpc == null || lpc.getConferenceFactoryUri() == null) {

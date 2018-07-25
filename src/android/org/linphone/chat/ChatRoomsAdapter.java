@@ -35,8 +35,10 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
@@ -125,14 +127,31 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		}
 
 		public String getContact(ChatRoom mRoom) {
-			LinphoneContact contact;
-			contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getLastMessageInHistory().getFromAddress());
-			if (contact != null) {
 
-				return (contact.getFullName());
+			Address contactAddress = mRoom.getPeerAddress();
+			if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mRoom.getParticipants().length > 0) {
+				contactAddress = mRoom.getParticipants()[0].getAddress();
+			}
 
+			if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+				LinphoneContact contact;
+				if (mRoom.getParticipants().length > 0) {
+					contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getParticipants()[0].getAddress());
+					if (contact != null) {
+						return (contact.getFullName());
+					} else {
+						return (LinphoneUtils.getAddressDisplayName(mRoom.getParticipants()[0].getAddress()));
+					}
+				} else {
+					contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
+					if (contact != null) {
+						return (contact.getFullName());
+					} else {
+						return (LinphoneUtils.getAddressDisplayName(contactAddress));
+					}
+				}
 			} else {
-				return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress()));
+				return (mRoom.getSubject());
 			}
 		}
 

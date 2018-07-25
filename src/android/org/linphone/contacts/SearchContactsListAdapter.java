@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.contacts;
 
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.chat.ChatBubbleViewHolder;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
@@ -40,22 +43,42 @@ import org.linphone.core.SearchResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchContactsListAdapter extends BaseAdapter {
+public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContactsListAdapter.ViewHolder> {
+//public class SearchContactsListAdapter extends BaseAdapter {
+	@SuppressWarnings("unused")
+	private static final String TAG = SearchContactsListAdapter.class.getSimpleName();
 
-	private class ViewHolder {
+	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		public TextView name;
 		public TextView address;
 		public ImageView linphoneContact;
 		public ImageView isSelect;
 		public ImageView avatar;
 
-		public ViewHolder(View view) {
+		private ClickListener listener;
+
+		public ViewHolder(View view, ClickListener listener) {
+			super(view);
 			name = view.findViewById(R.id.contact_name);
 			address = view.findViewById(R.id.contact_address);
 			linphoneContact = view.findViewById(R.id.contact_linphone);
 			isSelect = view.findViewById(R.id.contact_is_select);
 			avatar = view.findViewById(R.id.contact_picture);
+			this.listener=listener;
+			view.setOnClickListener(this);
 		}
+
+		@Override
+		public void onClick(View view) {
+			if (listener != null) {
+				listener.onItemClicked(getAdapterPosition());
+			}
+
+		}
+		public interface ClickListener {
+			public void onItemClicked(int position);
+		}
+
 	}
 
 	private List<ContactAddress> contacts;
@@ -63,7 +86,8 @@ public class SearchContactsListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private ProgressBar progressBar;
 	private boolean mOnlySipContact = false;
-	private View.OnClickListener listener;
+	private ViewHolder.ClickListener listener;
+//	private View.OnClickListener listener;
 
 	public List<ContactAddress> getContacts() {
 		return contacts;
@@ -73,15 +97,80 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		mOnlySipContact = enable;
 	}
 
-	public void setListener(View.OnClickListener listener) {
+	public void setListener(ViewHolder.ClickListener listener) {
 		this.listener = listener;
 	}
 
-	public SearchContactsListAdapter(List<ContactAddress> contactsList, LayoutInflater inflater, ProgressBar pB) {
+	public SearchContactsListAdapter(List<ContactAddress> contactsList, LayoutInflater inflater, ProgressBar pB, ViewHolder.ClickListener clickListener) {
+		this.listener=clickListener;
 		mInflater = inflater;
 		progressBar = pB;
 		setContactsSelectedList(null);
 		setContactsList(contactsList);
+	}
+
+	@NonNull
+	@Override
+	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_contact_cell, parent, false);
+		return new ViewHolder(v, listener);
+
+	}
+
+	@Override
+	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+		ContactAddress contact = getItem(position);
+		final String a = (contact.getAddressAsDisplayableString().isEmpty()) ? contact.getPhoneNumber() : contact.getAddressAsDisplayableString();
+		LinphoneContact c = contact.getContact();
+
+		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+		if (c != null && c.hasPhoto()) {
+			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
+		}
+
+		String address = contact.getAddressAsDisplayableString();
+		if (c != null && c.getFullName() != null) {
+			if (address == null)
+				address = c.getPresenceModelForUriOrTel(a);
+			holder.name.setVisibility(View.VISIBLE);
+			holder.name.setText(c.getFullName());
+		} else if (contact.getAddress() != null) {
+			if (contact.getAddress().getUsername() != null) {
+				holder.name.setVisibility(View.VISIBLE);
+				holder.name.setText(contact.getAddress().getUsername());
+			} else if (contact.getAddress().getDisplayName() != null) {
+				holder.name.setVisibility(View.VISIBLE);
+				holder.name.setText(contact.getAddress().getDisplayName());
+			}
+		} else if (address != null) {
+			Address tmpAddr = Factory.instance().createAddress(address);
+			holder.name.setVisibility(View.VISIBLE);
+			holder.name.setText((tmpAddr.getDisplayName() != null) ? tmpAddr.getDisplayName() : tmpAddr.getUsername()) ;
+		} else {
+			holder.name.setVisibility(View.GONE);
+		}
+		holder.address.setText(a);
+		if (holder.linphoneContact != null) {
+			if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
+				holder.linphoneContact.setVisibility(View.VISIBLE);
+			} else {
+				holder.linphoneContact.setVisibility(View.GONE);
+			}
+		}
+		if (holder.isSelect != null) {
+			if (contactIsSelected(contact)) {
+				holder.isSelect.setVisibility(View.VISIBLE);
+			} else {
+				holder.isSelect.setVisibility(View.INVISIBLE);
+			}
+		}
+//		view.setTag(R.id.contact_search_name, address != null ? address : a);
+//		if (listener != null)
+//			view.setOnClickListener(listener);
+	}
+
+	public long getItemId(int position) {
+		return position;
 	}
 
 	private boolean contactIsSelected(ContactAddress ca) {
@@ -160,11 +249,15 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		return contacts.get(position);
 	}
 
-	public long getItemId(int position) {
-		return position;
+
+
+	@Override
+	public int getItemCount() {
+		return contacts.size();
 	}
 
-	public void searchContacts(String search, ListView resultContactsSearch) {
+	public void searchContacts(String search, RecyclerView resultContactsSearch) {
+//	public void searchContacts(String search, ListView resultContactsSearch) {
 		List<ContactAddress> result = new ArrayList<>();
 
 		String domain = "";
@@ -206,69 +299,69 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View view;
-		ViewHolder holder;
-
-		if (convertView != null) {
-			view = convertView;
-			holder = (ViewHolder) view.getTag();
-		} else {
-			view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
-			holder = new ViewHolder(view);
-			view.setTag(holder);
-		}
-
-		ContactAddress contact = getItem(position);
-		final String a = (contact.getAddressAsDisplayableString().isEmpty()) ? contact.getPhoneNumber() : contact.getAddressAsDisplayableString();
-		LinphoneContact c = contact.getContact();
-
-		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-		if (c != null && c.hasPhoto()) {
-			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
-		}
-
-		String address = contact.getAddressAsDisplayableString();
-		if (c != null && c.getFullName() != null) {
-			if (address == null)
-				address = c.getPresenceModelForUriOrTel(a);
-			holder.name.setVisibility(View.VISIBLE);
-			holder.name.setText(c.getFullName());
-		} else if (contact.getAddress() != null) {
-			if (contact.getAddress().getUsername() != null) {
-				holder.name.setVisibility(View.VISIBLE);
-				holder.name.setText(contact.getAddress().getUsername());
-			} else if (contact.getAddress().getDisplayName() != null) {
-				holder.name.setVisibility(View.VISIBLE);
-				holder.name.setText(contact.getAddress().getDisplayName());
-			}
-		} else if (address != null) {
-			Address tmpAddr = Factory.instance().createAddress(address);
-			holder.name.setVisibility(View.VISIBLE);
-			holder.name.setText((tmpAddr.getDisplayName() != null) ? tmpAddr.getDisplayName() : tmpAddr.getUsername()) ;
-		} else {
-			holder.name.setVisibility(View.GONE);
-		}
-		holder.address.setText(a);
-		if (holder.linphoneContact != null) {
-			if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
-				holder.linphoneContact.setVisibility(View.VISIBLE);
-			} else {
-				holder.linphoneContact.setVisibility(View.GONE);
-			}
-		}
-		if (holder.isSelect != null) {
-			if (contactIsSelected(contact)) {
-				holder.isSelect.setVisibility(View.VISIBLE);
-			} else {
-				holder.isSelect.setVisibility(View.INVISIBLE);
-			}
-		}
-		view.setTag(R.id.contact_search_name, address != null ? address : a);
-		if (listener != null)
-			view.setOnClickListener(listener);
-		return view;
-	}
+//	@Override
+//	public View getView(int position, View convertView, ViewGroup parent) {
+//		View view;
+//		ViewHolder holder;
+//
+//		if (convertView != null) {
+//			view = convertView;
+//			holder = (ViewHolder) view.getTag();
+//		} else {
+//			view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
+//			holder = new ViewHolder(view);
+//			view.setTag(holder);
+//		}
+//
+//		ContactAddress contact = getItem(position);
+//		final String a = (contact.getAddressAsDisplayableString().isEmpty()) ? contact.getPhoneNumber() : contact.getAddressAsDisplayableString();
+//		LinphoneContact c = contact.getContact();
+//
+//		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+//		if (c != null && c.hasPhoto()) {
+//			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
+//		}
+//
+//		String address = contact.getAddressAsDisplayableString();
+//		if (c != null && c.getFullName() != null) {
+//			if (address == null)
+//				address = c.getPresenceModelForUriOrTel(a);
+//			holder.name.setVisibility(View.VISIBLE);
+//			holder.name.setText(c.getFullName());
+//		} else if (contact.getAddress() != null) {
+//			if (contact.getAddress().getUsername() != null) {
+//				holder.name.setVisibility(View.VISIBLE);
+//				holder.name.setText(contact.getAddress().getUsername());
+//			} else if (contact.getAddress().getDisplayName() != null) {
+//				holder.name.setVisibility(View.VISIBLE);
+//				holder.name.setText(contact.getAddress().getDisplayName());
+//			}
+//		} else if (address != null) {
+//			Address tmpAddr = Factory.instance().createAddress(address);
+//			holder.name.setVisibility(View.VISIBLE);
+//			holder.name.setText((tmpAddr.getDisplayName() != null) ? tmpAddr.getDisplayName() : tmpAddr.getUsername()) ;
+//		} else {
+//			holder.name.setVisibility(View.GONE);
+//		}
+//		holder.address.setText(a);
+//		if (holder.linphoneContact != null) {
+//			if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
+//				holder.linphoneContact.setVisibility(View.VISIBLE);
+//			} else {
+//				holder.linphoneContact.setVisibility(View.GONE);
+//			}
+//		}
+//		if (holder.isSelect != null) {
+//			if (contactIsSelected(contact)) {
+//				holder.isSelect.setVisibility(View.VISIBLE);
+//			} else {
+//				holder.isSelect.setVisibility(View.INVISIBLE);
+//			}
+//		}
+//		view.setTag(R.id.contact_search_name, address != null ? address : a);
+//		if (listener != null)
+//			view.setOnClickListener(listener);
+//		return view;
+//	}
 }
 

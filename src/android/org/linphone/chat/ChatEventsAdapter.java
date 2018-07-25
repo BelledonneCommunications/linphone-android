@@ -134,7 +134,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public ChatBubbleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
 				.inflate(this.itemResource, parent, false);
 		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(this.mContext,v, clickListener);
@@ -144,7 +144,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ChatBubbleViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
 		final EventLog event = this.mHistory.get(position);
 		holder.eventLayout.setVisibility(View.GONE);
 		holder.bubbleLayout.setVisibility(View.GONE);
