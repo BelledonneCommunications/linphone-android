@@ -914,7 +914,7 @@ public final class LinphoneUtils {
 
 		for (ChatRoom cr : lc.getChatRooms()) {
 			for (Participant pa : cr.getParticipants()) {
-				if (pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
+				if (pa.getAddress() != null && pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
 					return pa.getSecurityLevel();
 				}
 			}
