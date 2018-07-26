@@ -56,6 +56,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.Content;
+import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
@@ -73,6 +74,9 @@ import java.util.List;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class ChatEventsAdapter extends ListSelectionAdapter {
+	private static int MARGIN_BETWEEN_MESSAGES = 10;
+	private static int SIDE_MARGIN = 100;
+
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
@@ -177,6 +181,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
+	    holder.separatorLayout.setVisibility(i == 0 ? View.GONE : View.VISIBLE); // Hide separator if first item in list
 	    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
 	    holder.messageText.setVisibility(View.GONE);
 	    holder.messageImage.setVisibility(View.GONE);
@@ -200,8 +205,21 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    EventLog event = (EventLog)getItem(i);
 	    if (event.getType() == EventLog.Type.ConferenceChatMessage) {
 		    holder.bubbleLayout.setVisibility(View.VISIBLE);
-
 		    final ChatMessage message = event.getChatMessage();
+
+		    if (i > 0) {
+			    EventLog previousEvent = (EventLog)getItem(i-1);
+			    if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
+				    ChatMessage previousMessage = previousEvent.getChatMessage();
+				    if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
+					    holder.separatorLayout.setVisibility(View.GONE);
+				    }
+			    } else {
+			    	// No separator if previous event is not a message
+				    holder.separatorLayout.setVisibility(View.GONE);
+			    }
+		    }
+
 		    holder.messageId = message.getMessageId();
 		    message.setUserData(holder);
 
@@ -253,10 +271,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(100, 10, 10, 10);
+				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
 			    } else {
 				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				    layoutParams.setMargins(100, 10, 10, 10);
+				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
 			    }
 
 			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
@@ -274,10 +292,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(100, 10, 10, 10);
+				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
 			    } else {
 				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				    layoutParams.setMargins(10, 10, 100, 10);
+				    layoutParams.setMargins(0, MARGIN_BETWEEN_MESSAGES/2, SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2);
 			    }
 
 			    holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);

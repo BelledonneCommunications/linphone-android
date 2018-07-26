@@ -278,7 +278,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		removeVirtualKeyboardVisiblityListener();
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
 		if (mChatRoom != null) mChatRoom.removeListener(this);
-		mEventsAdapter.clear();
+		if (mEventsAdapter != null) mEventsAdapter.clear();
 		super.onPause();
 	}
 
@@ -387,28 +387,29 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		ChatMessage message = event.getChatMessage();
 		String messageId = message.getMessageId();
 
-		switch(item.getItemId()) {
-			case R.id.resend:
-				mEventsAdapter.removeItem(info.position);
-				message.resend();
-				return true;
-			case R.id.imdn_infos:
-				LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
-				return true;
-			case R.id.copy_text:
-				if (message.hasTextContent()) {
-					ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-					ClipData clip = ClipData.newPlainText("Message", message.getTextContent());
-					clipboard.setPrimaryClip(clip);
-				}
-				return true;
-			case R.id.delete_message:
-				mChatRoom.deleteMessage(message);
-				mEventsAdapter.removeItem(info.position);
-				return true;
-			default:
-				return super.onContextItemSelected(item);
+		if (item.getItemId() == R.id.resend) {
+			mEventsAdapter.removeItem(info.position);
+			message.resend();
+			return true;
 		}
+		if (item.getItemId() == R.id.imdn_infos) {
+			LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
+			return true;
+		}
+		if (item.getItemId() == R.id.copy_text) {
+			if (message.hasTextContent()) {
+				ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText("Message", message.getTextContent());
+				clipboard.setPrimaryClip(clip);
+			}
+			return true;
+		}
+		if (item.getItemId() == R.id.delete_message) {
+			mChatRoom.deleteMessage(message);
+			mEventsAdapter.removeItem(info.position);
+			return true;
+		}
+		return super.onContextItemSelected(item);
 	}
 
 	/**
@@ -510,7 +511,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		getContactsForParticipants();
 
-		mRemoteComposing.setVisibility(View.INVISIBLE);
+		mRemoteComposing.setVisibility(View.GONE);
 	}
 
 	private void displayChatRoomHeader() {

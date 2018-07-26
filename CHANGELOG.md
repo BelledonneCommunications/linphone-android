@@ -11,6 +11,7 @@ Group changes to describe their impact on the project, as follows:
     Security to invite users to upgrade in case of vulnerabilities.
 
 ## [Incomming]
+- feature: support of H265 codec.
 
 ## [4.0.1] - 2018-06-26
 

@@ -42,6 +42,7 @@ public class BootReceiver extends BroadcastReceiver {
 			if (autostart) {
 				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
 				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
+				lLinphoneServiceIntent.putExtra("ForceStartForeground", true);
 				Compatibility.startService(context, lLinphoneServiceIntent);
 			}
 		}

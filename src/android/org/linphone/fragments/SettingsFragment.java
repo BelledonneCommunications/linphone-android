@@ -526,33 +526,35 @@ public class SettingsFragment extends PreferencesListFragment {
 		codecs.removeAll();
 
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		for (final PayloadType pt : lc.getAudioPayloadTypes()) {
-			CheckBoxPreference codec = new CheckBoxPreference(getActivity());
-			codec.setTitle(pt.getMimeType());
-			/* Special case */
-			if (pt.getMimeType().equals("mpeg4-generic")) {
-				if (android.os.Build.VERSION.SDK_INT < 16) {
-					/* Make sure AAC is disabled */
-					pt.enable(false);
-					continue;
-				} else {
-					codec.setTitle("AAC-ELD");
+		if (lc != null) {
+			for (final PayloadType pt : lc.getAudioPayloadTypes()) {
+				CheckBoxPreference codec = new CheckBoxPreference(getActivity());
+				codec.setTitle(pt.getMimeType());
+				/* Special case */
+				if (pt.getMimeType().equals("mpeg4-generic")) {
+					if (android.os.Build.VERSION.SDK_INT < 16) {
+						/* Make sure AAC is disabled */
+						pt.enable(false);
+						continue;
+					} else {
+						codec.setTitle("AAC-ELD");
+					}
 				}
+
+				codec.setSummary(pt.getClockRate() + " Hz");
+				codec.setDefaultValue(pt.enabled());
+
+				codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+					@Override
+					public boolean onPreferenceChange(Preference preference, Object newValue) {
+						boolean enable = (Boolean) newValue;
+						pt.enable(enable);
+						return true;
+					}
+				});
+
+				codecs.addPreference(codec);
 			}
-
-			codec.setSummary(pt.getClockRate() + " Hz");
-			codec.setDefaultValue(pt.enabled());
-
-			codec.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-				@Override
-				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					boolean enable = (Boolean) newValue;
-					pt.enable(enable);
-					return true;
-				}
-			});
-
-			codecs.addPreference(codec);
 		}
 
 		CheckBoxPreference echoCancellation = (CheckBoxPreference) findPreference(getString(R.string.pref_echo_cancellation_key));
@@ -1062,8 +1064,13 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
 				String value = (String)newValue;
-				mPrefs.setIncTimeout(Integer.valueOf(value));
-				preference.setSummary(value);
+				try {
+					mPrefs.setIncTimeout(Integer.valueOf(value));
+					preference.setSummary(value);
+				} catch (NumberFormatException nfe) {
+					Log.e("Value is not an Integer ! " + value);
+					return false;
+				}
 				return true;
 			}
 		});
