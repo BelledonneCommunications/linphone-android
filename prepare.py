@@ -402,6 +402,9 @@ liblinphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t@mv $(TOPDIR)/bin/outputs/aar/*.aar $(TOPDIR)/bin/outputs/aar/liblinphone-sdk.aar
 \t./gradlew -b libLinphoneAndroidSdk.gradle sdkZip
 
+debug-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
+\t./gradlew -b libLinphoneAndroidSdk.gradle assembleDebug
+
 linphone-android-sdk: java-clean build copy-libs $(TOPDIR)/res/raw/rootca.pem
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
