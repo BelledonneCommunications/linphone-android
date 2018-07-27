@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -221,6 +222,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mSelectionHelper = new SelectableHelper(view, this);
 		layoutManager = new LinearLayoutManager(mContext);
 		mChatEventsList.setLayoutManager(layoutManager);
+
 //		registerForContextMenu(mChatEventsList);
 
 

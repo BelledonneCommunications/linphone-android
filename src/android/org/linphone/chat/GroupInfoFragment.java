@@ -23,6 +23,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -79,6 +80,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private ChatRoomListenerStub mChatRoomCreationListener;
 	private Bundle mShareInfos;
 	private Context mContext;
+	private LinearLayoutManager layoutManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,7 +128,14 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		});
 		mParticipantsList.setAdapter(mAdapter);
 		mAdapter.setChatRoom(mChatRoom);
-		mParticipantsList.setLayoutManager(new LinearLayoutManager(mContext));
+		layoutManager = new LinearLayoutManager(mContext);
+		mParticipantsList.setLayoutManager(layoutManager);
+
+		//Divider between items
+		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mParticipantsList.getContext(),
+				layoutManager.getOrientation());
+		dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
+		mParticipantsList.addItemDecoration(dividerItemDecoration);
 
 
 

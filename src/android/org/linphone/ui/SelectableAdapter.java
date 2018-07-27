@@ -19,17 +19,15 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
         mListHelper = helper;
     }
 
-    private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-//            Integer position = (Integer)compoundButton.getTag();
-
-            mListHelper.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == getItemCount());
-        }
-    };
-    public CompoundButton.OnCheckedChangeListener getDeleteListener() {
-        return mDeleteCheckboxListener;
-    }
+//    private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
+//        @Override
+//        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+//            mListHelper.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == getItemCount());
+//        }
+//    };
+//    public CompoundButton.OnCheckedChangeListener getDeleteListener() {
+//        return mDeleteCheckboxListener;
+//    }
     public boolean isEditionEnabled() {
         return mIsEditionEnabled;
     }
@@ -98,8 +96,11 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     public void selectAll() {
         for (Integer i = 0; i < getItemCount(); i++) {
             mSelectedItems.put(i, true);
-            notifyItemChanged(i);
+//            notifyItemChanged(i);
+            notifyDataSetChanged();
+
         }
+
         mListHelper.updateSelectionButtons(false, true);
 //        notifyDataSetChanged();
     }

@@ -69,6 +69,7 @@
 			android:layout_alignParentRight="true"
 			android:layout_centerInParent="true"
 			android:visibility="gone"
+			android:clickable="false"
 			android:paddingLeft="5dp"
 			android:paddingRight="5dp" />
 

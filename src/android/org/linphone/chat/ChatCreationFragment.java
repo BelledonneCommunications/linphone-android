@@ -21,6 +21,7 @@ package org.linphone.chat;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -150,6 +151,14 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		});
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 		mContactsList.setAdapter(mSearchAdapter);
+
+		//Divider between items
+		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContactsList.getContext(),
+				layoutManager.getOrientation());
+		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
+		mContactsList.addItemDecoration(dividerItemDecoration);
+
+
 
 		mContactsList.setLayoutManager(layoutManager);
 //		mContactsList.setOnItemClickListener(this);

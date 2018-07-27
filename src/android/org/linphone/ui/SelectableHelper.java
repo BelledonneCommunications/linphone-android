@@ -144,7 +144,7 @@ public class SelectableHelper {
         }
     }
 
-    private void quitEditionMode() {
+    public void quitEditionMode() {
         mAdapter.enableEdition(false);
         mTopBar.setVisibility(View.VISIBLE);
         mEditTopBar.setVisibility(View.GONE);

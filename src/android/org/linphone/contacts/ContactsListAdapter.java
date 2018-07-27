@@ -29,7 +29,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 //public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ViewHolder> implements SectionIndexer {
 //	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         public CheckBox delete;
         public ImageView linphoneFriend;
         public TextView name;
@@ -53,6 +53,8 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             //friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
             this.listener= listener;
             view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+
         }
 
         @Override
@@ -63,8 +65,16 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 
         }
 
+        public boolean onLongClick(View v) {
+            if (listener != null) {
+                return listener.onItemLongClicked(getAdapterPosition());
+            }
+            return false;
+        }
+
         public interface ClickListener {
             void onItemClicked(int position);
+            boolean onItemLongClicked(int position);
         }
 
     }
@@ -101,31 +111,20 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         holder.name.setText(contact.getFullName());
 
         if (!isSearchMode) {
-            if (getPositionForSection(getSectionForPosition(position)) != position) {
-                holder.separator.setVisibility(View.GONE);
-            } else {
-                holder.separator.setVisibility(View.VISIBLE);
                 String fullName = contact.getFullName();
                 if (fullName != null && !fullName.isEmpty()) {
                     holder.separatorText.setText(String.valueOf(fullName.charAt(0)));
                 }
-            }
-        } else {
-            holder.separator.setVisibility(View.GONE);
         }
-
-        if (contact.isInFriendList()) {
-            holder.linphoneFriend.setVisibility(View.VISIBLE);
-        } else {
-            holder.linphoneFriend.setVisibility(View.GONE);
-        }
+        holder.separator.setVisibility(isSearchMode || (!isSearchMode && getPositionForSection(getSectionForPosition(position)) != position ) ? View.GONE:View.VISIBLE);
+        holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE:View.GONE);
 
         holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         if (contact.hasPhoto()) {
             LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
         }
 
-        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+        boolean isOrgVisible = mContext.getResources().getBoolean(R.bool.display_contact_organization);
         String org = contact.getOrganization();
         if (org != null && !org.isEmpty() && isOrgVisible) {
             holder.organization.setText(org);
@@ -143,15 +142,19 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         return contacts.size();
     }
 
-//        public int getCount() {
-//            return contacts.size();
-//        }
+
 
     public Object getItem(int position) {
         if (position >= getItemCount()) return null;
         return contacts.get(position);
     }
+    public boolean isSearchMode(){
+        return this.isSearchMode;
+    }
 
+    public void setSearchMode(boolean set){
+        isSearchMode = set;
+    }
     public long getItemId(int position) {
         return position;
     }
@@ -181,111 +184,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 
         notifyDataSetChanged();
     }
-
-
-
-//		public View getView(final int position, View convertView, ViewGroup parent) {
-//			View view = null;
-//			LinphoneContact contact = (LinphoneContact) getItem(position);
-//			if (contact == null) return null;
-//
-//			ViewHolder holder = null;
-//			if (convertView != null) {
-//				view = convertView;
-//				holder = (ViewHolder) view.getTag();
-//			} else {
-//				view = mInflater.inflate(R.layout.contact_cell, parent, false);
-//				holder = new ViewHolder(view);
-//				view.setTag(holder);
-//			}
-//
-//			holder.name.setText(contact.getFullName());
-//
-//			if (!isSearchMode) {
-//				if (getPositionForSection(getSectionForPosition(position)) != position) {
-//					holder.separator.setVisibility(View.GONE);
-//				} else {
-//					holder.separator.setVisibility(View.VISIBLE);
-//					String fullName = contact.getFullName();
-//					if (fullName != null && !fullName.isEmpty()) {
-//						holder.separatorText.setText(String.valueOf(fullName.charAt(0)));
-//					}
-//				}
-//			} else {
-//				holder.separator.setVisibility(View.GONE);
-//			}
-//
-//			if (contact.isInFriendList()) {
-//				holder.linphoneFriend.setVisibility(View.VISIBLE);
-//			} else {
-//				holder.linphoneFriend.setVisibility(View.GONE);
-//			}
-//
-//			holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-//			if (contact.hasPhoto()) {
-//				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-//			}
-//
-//			boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
-//			String org = contact.getOrganization();
-//			if (org != null && !org.isEmpty() && isOrgVisible) {
-//				holder.organization.setText(org);
-//				holder.organization.setVisibility(View.VISIBLE);
-//			} else {
-//				holder.organization.setVisibility(View.GONE);
-//			}
-//
-//			if (isEditMode) {
-//				holder.delete.setVisibility(View.VISIBLE);
-//				holder.delete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//					@Override
-//					public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//						contactsList.setItemChecked(position, b);
-//						if(getNbItemsChecked() == getCount()){
-//							deselectAll.setVisibility(View.VISIBLE);
-//							selectAll.setVisibility(View.GONE);
-//							enabledDeleteButton(true);
-//						} else {
-//							if(getNbItemsChecked() == 0){
-//								deselectAll.setVisibility(View.GONE);
-//								selectAll.setVisibility(View.VISIBLE);
-//								enabledDeleteButton(false);
-//							} else {
-//								deselectAll.setVisibility(View.GONE);
-//								selectAll.setVisibility(View.VISIBLE);
-//								enabledDeleteButton(true);
-//							}
-//						}
-//					}
-//				});
-//				if (contactsList.isItemChecked(position)) {
-//					holder.delete.setChecked(true);
-//				} else {
-//					holder.delete.setChecked(false);
-//				}
-//			} else {
-//				holder.delete.setVisibility(View.INVISIBLE);
-//			}
-//
-//			/*Friend[] friends = LinphoneManager.getLc().getFriendsLists();
-//			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
-//				holder.friendStatus.setVisibility(View.VISIBLE);
-//				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();
-//				if (presenceActivity == PresenceActivityType.Online) {
-//					holder.friendStatus.setImageResource(R.drawable.led_connected);
-//				} else if (presenceActivity == PresenceActivityType.Busy) {
-//					holder.friendStatus.setImageResource(R.drawable.led_error);
-//				} else if (presenceActivity == PresenceActivityType.Away) {
-//					holder.friendStatus.setImageResource(R.drawable.led_inprogress);
-//				} else if (presenceActivity == PresenceActivityType.Offline) {
-//					holder.friendStatus.setImageResource(R.drawable.led_disconnected);
-//				} else {
-//					holder.friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
-//				}
-//			}*/
-//
-//			return view;
-//		}
 
     @Override
     public Object[] getSections() {

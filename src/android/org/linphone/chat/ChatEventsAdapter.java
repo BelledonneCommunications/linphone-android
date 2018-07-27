@@ -166,7 +166,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 			holder.delete.setOnCheckedChangeListener(null);
 			holder.delete.setChecked(isSelected(position));
 			holder.delete.setTag(position);
-			holder.delete.setOnCheckedChangeListener(getDeleteListener());
 		}
 
 		//If event is Chat Message

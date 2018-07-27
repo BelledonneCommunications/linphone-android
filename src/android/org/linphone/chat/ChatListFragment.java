@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -101,6 +102,15 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		//Initialize the LayoutManager
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
 		mChatRoomsList.setLayoutManager(layoutManager);
+
+
+		//Divider between items
+		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mChatRoomsList.getContext(),
+				((LinearLayoutManager) layoutManager).getOrientation());
+		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
+		mChatRoomsList.addItemDecoration(dividerItemDecoration);
+
+
 		mWaitLayout.setVisibility(View.GONE);
 
 
