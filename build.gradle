@@ -49,7 +49,7 @@ dependencies {
     } else {
         implementation fileTree(include: 'gcm.jar', dir: 'libs')
     }
-    implementation 'com.android.support:support-v4:26.0.1'
+    implementation 'com.android.support:support-v4:27.0.1'
 }
 
 if (firebaseEnable()) {
