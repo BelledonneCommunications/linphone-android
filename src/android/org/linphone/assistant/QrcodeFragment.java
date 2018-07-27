@@ -113,7 +113,7 @@ public class QrcodeFragment extends Fragment {
 		launchQrcodeReader();
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
-				LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
+				//LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
 			}
 		}
 		super.onResume();
@@ -123,11 +123,11 @@ public class QrcodeFragment extends Fragment {
 	public void onPause() {
 		if (androidVideoWindowImpl != null) {
 			synchronized (androidVideoWindowImpl) {
-				LinphoneManager.getLc().setNativePreviewWindowId(null);
+				//LinphoneManager.getLc().setNativePreviewWindowId(null);
 			}
 		}
 		enableQrcodeReader(false);
-		setBackCamera(false);
+		//setBackCamera(false);
 		super.onPause();
 	}
 

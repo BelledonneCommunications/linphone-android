@@ -52,7 +52,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <!-- Needed for kill application yourself -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
-
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
