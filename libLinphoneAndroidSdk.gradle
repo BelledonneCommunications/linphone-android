@@ -68,7 +68,8 @@ android {
             aidl.srcDirs = submoduleDir
             renderscript.srcDirs = submoduleDir
             jniLibs.srcDirs = ['libs']
-
+            assets.srcDirs = ["${buildDir}/sdk-assets/assets/"]
+            
             java.excludes = ['**/mediastream/MediastreamerActivity.java']
 
             // Exclude some useless files
@@ -79,6 +80,21 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+}
+
+def rootSdk
+
+if (file('liblinphone-sdk/android-arm64/share/linphone/rootca.pem').exists() )
+    rootSdk = 'liblinphone-sdk/android-arm64'
+else if (file('liblinphone-sdk/android-arm/share/linphone/rootca.pem').exists() )
+    rootSdk = 'liblinphone-sdk/android-arm'
+else if (file('liblinphone-sdk/android-armv7/share/linphone/rootca.pem').exists() )
+    rootSdk = 'liblinphone-sdk/android-armv7'
+else if (file('liblinphone-sdk/android-x86/share/linphone/rootca.pem').exists() )
+    rootSdk = 'liblinphone-sdk/android-x86'
+else {
+	println ("native sdk not ready yet")
+	rootSdk = ""
 }
 
 ///////////// Task /////////////
@@ -114,3 +130,22 @@ task sdkZip(type: Zip) {
     include '*'
     archiveName newSdkName
 }
+
+task copyAssets(type: Sync) {
+    from rootSdk
+    into "${buildDir}/sdk-assets/assets/org.linphone.core"
+    include '**/*_grammar'
+
+    //rename '(.*)', '$1'.toLowerCase()
+    eachFile {
+        path = path.toLowerCase() //to workaround case insensitive fs (macosx)
+        println("Syncing sdk asset ${sourcePath} to ${path}")
+    }
+    doFirst {
+        println("Syncing sdk assets into root dir ${destinationDir}")
+     }
+    // do not copy those
+    includeEmptyDirs = false
+
+}
+project.tasks['preBuild'].dependsOn 'copyAssets'

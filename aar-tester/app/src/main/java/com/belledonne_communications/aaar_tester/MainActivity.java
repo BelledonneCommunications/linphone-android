@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import org.linphone.core.LinphoneCore;
 import org.linphone.core.LinphoneCoreFactory;
+import org.linphone.core.LinphoneCoreListenerBase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
 		LinphoneCoreFactory.instance().setDebugMode(true, getString(R.string.app_name));
 
 		try {
-			LinphoneCore core = LinphoneCoreFactory.instance().createLinphoneCore(null, this);
+			LinphoneCore core = LinphoneCoreFactory.instance().createLinphoneCore(new LinphoneCoreListenerBase() {
+
+			}, this);
 			((TextView)findViewById(R.id.version)).setText(core.getVersion());
 		} catch (Exception e) {
 			((TextView)findViewById(R.id.version)).setText("Error ! " + e);
