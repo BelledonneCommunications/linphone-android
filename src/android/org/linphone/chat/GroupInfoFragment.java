@@ -36,7 +36,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
@@ -115,7 +114,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		}
 
 		mParticipantsList = view.findViewById(R.id.chat_room_participants);
-		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
+		mAdapter = new GroupInfoAdapter(mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
 		mAdapter.setOnDeleteClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

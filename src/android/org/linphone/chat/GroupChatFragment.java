@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -48,7 +47,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -106,7 +104,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private Address mRemoteSipAddress, mRemoteParticipantAddress;
 	private ChatRoom mChatRoom;
 	private ArrayList<LinphoneContact> mParticipants;
-	private ArrayList<EventLog> mHistory;
 	private LinearLayoutManager layoutManager;
 	private int mContextMenuMessagePosition;
 	@Override
@@ -222,10 +219,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mSelectionHelper = new SelectableHelper(view, this);
 		layoutManager = new LinearLayoutManager(mContext);
 		mChatEventsList.setLayoutManager(layoutManager);
-
-//		registerForContextMenu(mChatEventsList);
-
-
 
 		if (getArguments() != null) {
 			String fileSharedUri = getArguments().getString("fileSharedUri");
@@ -366,7 +359,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mContextMenuMessagePosition = holder.getAdapterPosition();
 
 		EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
-//		EventLog event = log.getEventLog();
 		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
 			return;
 		}
@@ -393,13 +385,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-//		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-//
-
-
 
 		EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
-//		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
 
 		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
 			return super.onContextItemSelected(item);
@@ -582,11 +569,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     }
 
 	public void scrollToBottom() {
-//		if ((layoutManager.findLastVisibleItemPosition() >= (mEventsAdapter.getCount() - 1)) && (layoutManager.findFirstVisibleItemPosition() <= (mEventsAdapter.getCount() - 1))) {
-//		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
 			mChatEventsList.getLayoutManager().scrollToPosition(mEventsAdapter.getCount() - 1);
-//			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
-//		}
 	}
 
 	public String getRemoteSipUri() {

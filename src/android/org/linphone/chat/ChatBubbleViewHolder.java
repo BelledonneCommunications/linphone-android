@@ -30,20 +30,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatRoom;
-import org.linphone.core.EventLog;
-import org.linphone.core.LimeState;
 
 public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 	public String messageId;
 	public Context mContext;
     public ChatMessage message;
 	public LinearLayout eventLayout;
-	//public TextView eventTime;
 	public TextView eventMessage;
 
 	public RelativeLayout bubbleLayout;
@@ -111,7 +105,6 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	}
 	public ChatBubbleViewHolder(View view) {
 		super(view);
-		this.listener = listener;
 		this.eventLayout = view.findViewById(R.id.event);
 		//eventTime = view.findViewById(R.id.event_date);
 		this.eventMessage = view.findViewById(R.id.event_text);
@@ -149,6 +142,6 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	}
 
 	public interface ClickListener {
-		public void onItemClicked(int position);
+		void onItemClicked(int position);
 	}
 }

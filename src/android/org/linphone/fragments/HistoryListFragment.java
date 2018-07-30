@@ -19,29 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-
-import org.linphone.call.CallHistoryAdapter;
-import org.linphone.contacts.ContactsListAdapter;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.ContactsUpdatedListener;
-import org.linphone.contacts.LinphoneContact;
-import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
-import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.core.Call;
-import org.linphone.core.Address;
-import org.linphone.core.CallLog;
-import org.linphone.core.Call.Status;
-import org.linphone.ui.SelectableHelper;
-
-import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -52,22 +29,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.linphone.LinphoneManager;
+import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
+import org.linphone.call.CallHistoryAdapter;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.ContactsUpdatedListener;
+import org.linphone.core.Address;
+import org.linphone.core.Call;
+import org.linphone.core.CallLog;
+import org.linphone.ui.SelectableHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, CallHistoryAdapter.ViewHolder.ClickListener  ,ContactsUpdatedListener,SelectableHelper.DeleteListener{
 	private RecyclerView historyList;
-	private LayoutInflater mInflater;
 	private TextView noCallHistory, noMissedCallHistory;
 	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel;
 	private View allCallsSelected, missedCallsSelected;
@@ -81,7 +65,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		mInflater = inflater;
 		View view = inflater.inflate(R.layout.history, container, false);
         mContext = getActivity().getApplicationContext();
 		mSelectionHelper = new SelectableHelper(view, this);
@@ -101,20 +84,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
 		historyList.addItemDecoration(dividerItemDecoration);
 
-
-
-
-
-
-//		delete = (ImageView) view.findViewById(R.id.delete);
-//		delete.setOnClickListener(this);
-
-		editList = (LinearLayout) view.findViewById(R.id.edit_list);
-		topBar = (LinearLayout) view.findViewById(R.id.top_bar);
-
-//		cancel = (ImageView) view.findViewById(R.id.cancel);
-//		cancel.setOnClickListener(this);
-
 		allCalls = (ImageView) view.findViewById(R.id.all_calls);
 		allCalls.setOnClickListener(this);
 
@@ -125,17 +94,10 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 		missedCallsSelected = view.findViewById(R.id.missed_calls_select);
 
-//		selectAll = (ImageView) view.findViewById(R.id.select_all);
-//		selectAll.setOnClickListener(this);
-//
-//		deselectAll = (ImageView) view.findViewById(R.id.deselect_all);
-//		deselectAll.setOnClickListener(this);
-
 		allCalls.setEnabled(false);
 		onlyDisplayMissedCalls = false;
 
 		edit = (ImageView) view.findViewById(R.id.edit);
-//		edit.setOnClickListener(this);
 
 		return view;
 	}
@@ -205,7 +167,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-//			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             mhistoryAdapter= new CallHistoryAdapter(getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
 			historyList.setAdapter(mhistoryAdapter);
 			mSelectionHelper.setAdapter(mhistoryAdapter);
@@ -279,6 +240,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		}
 	}
 
+	//ClickListeners bound to items
 	@Override
 	public void onItemClicked(int position) {
 		if (mhistoryAdapter.isEditionEnabled()) {

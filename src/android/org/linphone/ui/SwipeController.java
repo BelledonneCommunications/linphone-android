@@ -22,6 +22,11 @@ enum ButtonsState {
 *   https://codeburst.io/android-swipe-menu-with-recyclerview-8f28a235ff28
 * */
 
+
+/*
+* All commented code is meant to preserve left swipe behaviour for future work
+* */
+
 public class SwipeController extends Callback {
 
     private boolean swipeBack = false;

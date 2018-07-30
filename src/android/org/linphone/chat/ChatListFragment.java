@@ -21,18 +21,15 @@ package org.linphone.chat;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -47,8 +44,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.ui.SelectableHelper;
-import org.linphone.ui.SwipeController;
-import org.linphone.ui.SwipeControllerActions;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,13 +53,12 @@ import java.util.List;
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
 /*
-* Sources: Linphone + https://enoent.fr/blog/2015/01/18/recyclerview-basics/
+* Main sources: Linphone + https://enoent.fr/blog/2015/01/18/recyclerview-basics/
 * */
 
 public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomsAdapter.ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
 
 	private RecyclerView mChatRoomsList;
-	private TextView mNoChatHistory;
 	private ImageView mNewDiscussionButton, mBackToCallButton;
 	private ChatRoomsAdapter mChatRoomsAdapter;
 	private CoreListenerStub mListener;
@@ -91,7 +85,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		mNewDiscussionButton = view.findViewById(R.id.new_discussion);
 		mBackToCallButton = view.findViewById(R.id.back_in_call);
 
-		//Creation and affectation of adapter to the RecyclerView
+		//Creation and affectation of adapter to the RecyclerView and SelectionHelper
 		mSelectionHelper = new SelectableHelper(view, this);
         mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
 
@@ -117,39 +111,39 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 
 
-		//All commentend code below, until line 145, have to be uncommented to allow swipe actions.
+			//All commentend code below, from line 123 to line 148, have to be uncommented to allow swipe actions.
 
-		//Actions allowed by swipe buttons
+			//Actions allowed by swipe buttons
 
-		final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
+//		final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
+////			@Override
+////			public void onLeftClicked(int position) {
+////				super.onLeftClicked(position);
+////			}
+//
 //			@Override
-//			public void onLeftClicked(int position) {
-//				super.onLeftClicked(position);
+//			public void onRightClicked(int position) {
+//				mChatRoomsAdapter.removeItem(position);
+//				mChatRoomsAdapter.notifyDataSetChanged();
 //			}
-
-			@Override
-			public void onRightClicked(int position) {
-				mChatRoomsAdapter.removeItem(position);
-				mChatRoomsAdapter.notifyDataSetChanged();
-			}
-		});
-
-		//Initialize swipe detection
-
-
-		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-		itemTouchHelper.attachToRecyclerView(mChatRoomsList);
-
-		//Add swipe buttons
-		mChatRoomsList.addItemDecoration(new RecyclerView.ItemDecoration() {
-			@Override
-			public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-				swipeController.onDraw(c);
-			}
-		});
+//		});
+//
+//			//Initialize swipe detection
+//
+//
+//		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+//		itemTouchHelper.attachToRecyclerView(mChatRoomsList);
+//
+//			//Add swipe buttons
+//		mChatRoomsList.addItemDecoration(new RecyclerView.ItemDecoration() {
+//			@Override
+//			public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+//				swipeController.onDraw(c);
+//			}
+//		});
 
 
-		// Buttons onClickListeners definitions
+			// Buttons onClickListeners definitions
 
 
 
@@ -201,10 +195,10 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 				}
 			}
 		};
-
 		return view;
 	}
 
+	//On a click on an item, go to the selected ChatRoom if no SelectionMode chosen, select the item if it does
 	@Override
 	public void onItemClicked(int position) {
 		if (mChatRoomsAdapter.isEditionEnabled()) {

@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.ViewHolder> {
-//public class GroupInfoAdapter extends BaseAdapter {
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView name;
@@ -66,7 +65,6 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
 
 
 
-    private LayoutInflater mInflater;
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
@@ -75,8 +73,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
 
 
 
-    public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
-        mInflater = inflater;
+    public GroupInfoAdapter(List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures || isCreation;
 

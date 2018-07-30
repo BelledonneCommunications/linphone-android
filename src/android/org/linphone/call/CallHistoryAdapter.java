@@ -7,9 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
-import org.linphone.contacts.ContactsListAdapter;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -32,6 +29,9 @@ import java.util.Calendar;
 import java.util.List;
 
 public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.ViewHolder> {
+
+    //This ViewHolder links fields from the xml to variables that will display values provided by the adapter
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener{
         public TextView contact;
@@ -40,7 +40,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         public ImageView callDirection;
         public ImageView contactPicture;
         public RelativeLayout CallContact;
-        public RelativeLayout SelectContact;
         public LinearLayout separator;
         public TextView separatorText;
         private CallHistoryAdapter.ViewHolder.ClickListener listener;
@@ -53,7 +52,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
             callDirection = (ImageView) view.findViewById(R.id.icon);
             contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
             CallContact = (RelativeLayout) view.findViewById(R.id.history_click);
-            SelectContact = (RelativeLayout) view.findViewById(R.id.history_whole);
             separator = (LinearLayout) view.findViewById(R.id.separator);
             separatorText = (TextView) view.findViewById(R.id.separator_text);
             this.listener = listener;
@@ -62,6 +60,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
 
         }
 
+        //Thoses methods are caught up by the fragment
         @Override
         public void onClick(View view) {
             if (listener != null) {
@@ -78,8 +77,8 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         }
 
         public interface ClickListener {
-            public void onItemClicked(int position);
-            public boolean onItemLongClicked(int position);
+            void onItemClicked(int position);
+            boolean onItemLongClicked(int position);
         }
 
     }
@@ -103,12 +102,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         return mLogs.get(position);
     }
 
-
-    public long getItemId(int position) {
-        return position;
-    }
-
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -116,6 +109,8 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         return new ViewHolder(v, clickListener);
 
     }
+
+    //Links datas, visibility and listeners of inner items from the adapter to the ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {

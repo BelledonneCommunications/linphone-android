@@ -36,16 +36,12 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
-import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListenerStub;
-import org.linphone.core.Core;
-import org.linphone.core.EventLog;
 import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,14 +92,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		}
 
 		//Handle the onClick/onLongClick event for the ViewHolder
-//		@Override
 		public void onClick(View v) {
 			if (listener != null) {
 				listener.onItemClicked(getAdapterPosition());
 			}
 		}
 
-//		@Override
 		public boolean onLongClick(View v) {
 			if (listener != null) {
 				return listener.onItemLongClicked(getAdapterPosition());
@@ -226,18 +220,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		holder.bindChatRoom(room);
 	}
 
-//	Let know the adapter if ActionMode is enabled
-//	public void setEditionMode(ActionMode actionMode) {
-//		if ( isEditionEnabled() == true) {
-//			this.editionMode=true;
-//			this.notifyDataSetChanged();	//Needed to update the whole list checkboxes
-//		} else {
-//			this.editionMode=false;
-//			this.notifyDataSetChanged();
-//		}
-//
-//	}
-
 	public void refresh() {
 		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
 		Collections.sort(mRooms, new Comparator<ChatRoom>() {
@@ -258,77 +240,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		mRooms.clear();
 		notifyDataSetChanged();
 	}
-
-
-	public void removeItem(int position) {
-
-		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		cleanRoom(position);
-		lc.deleteChatRoom(mRooms.get(position));
-		mRooms.remove(position);
-		notifyItemRemoved(position);
-	}
-//
-//	public void removeItems(List<Integer> positions) {
-//		// Reverse-sort the list
-//		Collections.sort(positions, new Comparator<Integer>() {
-//			@Override
-//			public int compare(Integer lhs, Integer rhs) {
-//				return rhs - lhs;
-//			}
-//		});
-//
-//		// Split the list in ranges
-//		while (!positions.isEmpty()) {
-//			if (positions.size() == 1) {
-//				removeItem(positions.get(0));
-//				positions.remove(0);
-//
-//			} else {
-//				int count = 1;
-//				while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
-//					++count;
-//				}
-//
-//				if (count == 1) {
-//					removeItem(positions.get(0));
-//				} else {
-//					removeRange(positions.get(count - 1), count);
-//				}
-//
-//				for (int i = 0; i < count; ++i) {
-//					positions.remove(0);
-//				}
-//			}
-//		}
-//	}
-//
-//	private void removeRange(int positionStart, int itemCount) {
-//		for (int i = 0; i < itemCount; ++i) {
-//			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-//			cleanRoom(positionStart);
-//			lc.deleteChatRoom(mRooms.get(positionStart));
-//			mRooms.remove(positionStart);
-//		}
-//		notifyItemRangeRemoved(positionStart, itemCount);
-//	}
-//
-//	//Delete downloaded file from incoming message that will be deleted
-	private void cleanRoom (int position) {
-
-		for (EventLog eventLog : mRooms.get(position).getHistoryEvents(0)) {
-			if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
-				ChatMessage message = eventLog.getChatMessage();
-				if (message.getAppdata() != null && !message.isOutgoing()) {
-					File file = new File(message.getAppdata());
-					if (file.exists()) {
-						file.delete();
-					}
-				}
-			}
-		}
-	}
-
 
 
 	/**

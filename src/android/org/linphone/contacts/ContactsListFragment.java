@@ -20,12 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,46 +30,29 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import org.linphone.core.ChatRoom;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.ui.SelectableHelper;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class ContactsListFragment extends Fragment implements OnItemClickListener, ContactsUpdatedListener, ContactsListAdapter.ViewHolder.ClickListener ,SelectableHelper.DeleteListener {
-//public class ContactsListFragment extends Fragment implements OnClickListener, OnItemClickListener, ContactsUpdatedListener {
-	private LayoutInflater mInflater;
 	private RecyclerView contactsList;
 	private TextView noSipContact, noContact;
 	private ImageView allContacts, linphoneContacts, newContact, edit;
 	private boolean onlyDisplayLinphoneContacts;
 	private View allContactsSelected, linphoneContactsSelected;
-	private LinearLayout topbar;
 	private int lastKnownPosition;
 	private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
 	private String sipAddressToAdd, displayName = null;
@@ -86,7 +66,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mInflater = inflater;
         View view = inflater.inflate(R.layout.contacts_list, container, false);
 		mContext = getActivity().getApplicationContext();
 		mSelectionHelper = new SelectableHelper(view, this);
@@ -107,7 +86,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		linphoneContacts = (ImageView) view.findViewById(R.id.linphone_contacts);
 		allContactsSelected = view.findViewById(R.id.all_contacts_select);
 		linphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
-		topbar = (LinearLayout) view.findViewById(R.id.top_bar);
 		edit = (ImageView) view.findViewById(R.id.edit);
 		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
 		newContact = (ImageView) view.findViewById(R.id.newContact);
@@ -202,26 +180,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		return view;
     }
 
-//	public int getNbItemsChecked(){
-//		int size = mContactAdapter.getItemCount();
-////		int size = contactsList.getAdapter().getItemCount();
-//		int nb = 0;
-//		for(int i=0; i<size; i++) {
-//			if(mContactAdapter.isSelected(i)) {
-//				nb ++;
-//			}
-//		}
-//		return nb;
-//	}
-
-//	public void quitEditMode(){
-//		mSelectionHelper.quitEditionMode();
-//		invalidate();
-//		if(getResources().getBoolean(R.bool.isTablet)){
-//			displayFirstContact();
-//		}
-//	}
-
 	public void displayFirstContact(){
 		if (contactsList != null && contactsList.getAdapter() != null && contactsList.getAdapter().getItemCount() > 0) {
 			ContactsListAdapter mAdapt = (ContactsListAdapter)contactsList.getAdapter();
@@ -231,13 +189,8 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		}
 	}
 
-//	private void searchContacts() {
-//		searchContacts(searchField.getText().toString());
-//	}
-
 	private void searchContacts(String search) {
 		boolean isEditionEnabled = false;
-//		mSelectionHelper.quitEditionMode();
 		if (search == null || search.length() == 0) {
 			changeContactsAdapter();
 			return;
@@ -298,7 +251,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
 
 		mContactAdapter = new ContactsListAdapter(mContext, listContact, this, mSelectionHelper);
-//		mContactAdapter.setSearchMode(false);
 
 		mSelectionHelper.setAdapter(mContactAdapter);
 

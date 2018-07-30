@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
@@ -26,8 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.ViewHolder> implements SectionIndexer {
-//public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ViewHolder> implements SectionIndexer {
-//	class ContactsListAdapter extends BaseAdapter implements SectionIndexer {
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         public CheckBox delete;
@@ -147,9 +145,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     public Object getItem(int position) {
         if (position >= getItemCount()) return null;
         return contacts.get(position);
-    }
-    public boolean isSearchMode(){
-        return this.isSearchMode;
     }
 
     public void setSearchMode(boolean set){

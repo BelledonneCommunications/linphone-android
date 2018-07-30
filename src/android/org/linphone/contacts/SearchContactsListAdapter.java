@@ -24,9 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,7 +32,6 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
-import org.linphone.chat.ChatBubbleViewHolder;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
@@ -44,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContactsListAdapter.ViewHolder> {
-//public class SearchContactsListAdapter extends BaseAdapter {
 	@SuppressWarnings("unused")
 	private static final String TAG = SearchContactsListAdapter.class.getSimpleName();
 
@@ -76,18 +72,16 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 
 		}
 		public interface ClickListener {
-			public void onItemClicked(int position);
+			void onItemClicked(int position);
 		}
 
 	}
 
 	private List<ContactAddress> contacts;
 	private List<ContactAddress> contactsSelected;
-	private LayoutInflater mInflater;
 	private ProgressBar progressBar;
 	private boolean mOnlySipContact = false;
 	private ViewHolder.ClickListener listener;
-//	private View.OnClickListener listener;
 
 	public List<ContactAddress> getContacts() {
 		return contacts;
@@ -101,9 +95,8 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 		this.listener = listener;
 	}
 
-	public SearchContactsListAdapter(List<ContactAddress> contactsList, LayoutInflater inflater, ProgressBar pB, ViewHolder.ClickListener clickListener) {
+	public SearchContactsListAdapter(List<ContactAddress> contactsList, ProgressBar pB, ViewHolder.ClickListener clickListener) {
 		this.listener=clickListener;
-		mInflater = inflater;
 		progressBar = pB;
 		setContactsSelectedList(null);
 		setContactsList(contactsList);
@@ -164,9 +157,6 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 				holder.isSelect.setVisibility(View.INVISIBLE);
 			}
 		}
-//		view.setTag(R.id.contact_search_name, address != null ? address : a);
-//		if (listener != null)
-//			view.setOnClickListener(listener);
 	}
 
 	public long getItemId(int position) {
@@ -257,7 +247,6 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 	}
 
 	public void searchContacts(String search, RecyclerView resultContactsSearch) {
-//	public void searchContacts(String search, ListView resultContactsSearch) {
 		List<ContactAddress> result = new ArrayList<>();
 
 		String domain = "";
@@ -298,70 +287,5 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 		resultContactsSearch.setAdapter(this);
 		this.notifyDataSetChanged();
 	}
-
-//	@Override
-//	public View getView(int position, View convertView, ViewGroup parent) {
-//		View view;
-//		ViewHolder holder;
-//
-//		if (convertView != null) {
-//			view = convertView;
-//			holder = (ViewHolder) view.getTag();
-//		} else {
-//			view = mInflater.inflate(R.layout.search_contact_cell, parent, false);
-//			holder = new ViewHolder(view);
-//			view.setTag(holder);
-//		}
-//
-//		ContactAddress contact = getItem(position);
-//		final String a = (contact.getAddressAsDisplayableString().isEmpty()) ? contact.getPhoneNumber() : contact.getAddressAsDisplayableString();
-//		LinphoneContact c = contact.getContact();
-//
-//		holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-//		if (c != null && c.hasPhoto()) {
-//			LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
-//		}
-//
-//		String address = contact.getAddressAsDisplayableString();
-//		if (c != null && c.getFullName() != null) {
-//			if (address == null)
-//				address = c.getPresenceModelForUriOrTel(a);
-//			holder.name.setVisibility(View.VISIBLE);
-//			holder.name.setText(c.getFullName());
-//		} else if (contact.getAddress() != null) {
-//			if (contact.getAddress().getUsername() != null) {
-//				holder.name.setVisibility(View.VISIBLE);
-//				holder.name.setText(contact.getAddress().getUsername());
-//			} else if (contact.getAddress().getDisplayName() != null) {
-//				holder.name.setVisibility(View.VISIBLE);
-//				holder.name.setText(contact.getAddress().getDisplayName());
-//			}
-//		} else if (address != null) {
-//			Address tmpAddr = Factory.instance().createAddress(address);
-//			holder.name.setVisibility(View.VISIBLE);
-//			holder.name.setText((tmpAddr.getDisplayName() != null) ? tmpAddr.getDisplayName() : tmpAddr.getUsername()) ;
-//		} else {
-//			holder.name.setVisibility(View.GONE);
-//		}
-//		holder.address.setText(a);
-//		if (holder.linphoneContact != null) {
-//			if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
-//				holder.linphoneContact.setVisibility(View.VISIBLE);
-//			} else {
-//				holder.linphoneContact.setVisibility(View.GONE);
-//			}
-//		}
-//		if (holder.isSelect != null) {
-//			if (contactIsSelected(contact)) {
-//				holder.isSelect.setVisibility(View.VISIBLE);
-//			} else {
-//				holder.isSelect.setVisibility(View.INVISIBLE);
-//			}
-//		}
-//		view.setTag(R.id.contact_search_name, address != null ? address : a);
-//		if (listener != null)
-//			view.setOnClickListener(listener);
-//		return view;
-//	}
 }
 

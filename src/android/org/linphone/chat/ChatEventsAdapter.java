@@ -37,7 +37,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -57,14 +56,10 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
-import org.linphone.core.ChatRoom;
 import org.linphone.core.Content;
-import org.linphone.core.Event;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.ListSelectionAdapter;
-import org.linphone.ui.ListSelectionHelper;
 import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
@@ -138,6 +133,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         View v = LayoutInflater.from(parent.getContext())
 				.inflate(this.itemResource, parent, false);
 		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(this.mContext,v, clickListener);
+
+		//Allows onLongClick ContextMenu on bubbles
 		mFragment.registerForContextMenu(v);
 		v.setTag(VH);
 		return VH;
@@ -222,7 +219,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 					holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 				}
 
-
+				//layoutParams allow bubbles alignment during selection mode
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
 				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
@@ -399,11 +396,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
     public int getItemCount() {
 		return this.mHistory.size();
     }
@@ -432,20 +424,13 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 	    mHistory.clear();
     }
 
-//    @Override
     public int getCount() {
         return this.mHistory.size();
     }
 
-//    @Override
     public Object getItem(int i) {
         return mHistory.get(i);
     }
-
-	@NonNull
-
-
-
 
 	public void removeItem(int i) {
     	mHistory.remove(i);

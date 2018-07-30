@@ -51,6 +51,8 @@ public class SelectableHelper {
         mContext = view.getContext();
         mDeleteListener = listener;
 
+        //Define XML layout items used for selection mode
+
         mEditTopBar = view.findViewById(R.id.edit_list);
         mTopBar = view.findViewById(R.id.top_bar);
 
@@ -63,12 +65,13 @@ public class SelectableHelper {
         });
 
         mEditButton = view.findViewById(R.id.edit);
+
+        //Set visibility behaviour on click on edit button + enter Edition Mode
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAdapter.getItemCount() > 0) {
                     enterEditionMode();
-//                    mAdapter.enableEdition(true);
                     mTopBar.setVisibility(View.GONE);
                     mEditTopBar.setVisibility(View.VISIBLE);
                 }
@@ -132,12 +135,15 @@ public class SelectableHelper {
 
 
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
+
+        //Delete button availability
         if (isSelectionEmpty) {
             mDeleteSelectionButton.setEnabled(false);
         } else {
             mDeleteSelectionButton.setEnabled(true);
         }
 
+        //(De)select button visibility
         if (isSelectionFull) {
             mSelectAllButton.setVisibility(View.GONE);
             mDeselectAllButton.setVisibility(View.VISIBLE);

@@ -2,7 +2,6 @@ package org.linphone.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
-import android.widget.CompoundButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +18,6 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
         mListHelper = helper;
     }
 
-//    private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
-//        @Override
-//        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-//            mListHelper.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == getItemCount());
-//        }
-//    };
-//    public CompoundButton.OnCheckedChangeListener getDeleteListener() {
-//        return mDeleteCheckboxListener;
-//    }
     public boolean isEditionEnabled() {
         return mIsEditionEnabled;
     }
@@ -63,17 +53,6 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     }
 
     /**
-     * Clear the selection status for all items
-     */
-//    public void clearSelection() {
-//        List<Integer> selection = getSelectedItems();
-//        mSelectedItems.clear();
-//        for (Integer i : selection) {
-//            notifyItemChanged(i);
-//        }
-//    }
-
-    /**
      * Count the selected items
      * @return Selected items count
      */
@@ -96,13 +75,10 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
     public void selectAll() {
         for (Integer i = 0; i < getItemCount(); i++) {
             mSelectedItems.put(i, true);
-//            notifyItemChanged(i);
             notifyDataSetChanged();
-
         }
 
         mListHelper.updateSelectionButtons(false, true);
-//        notifyDataSetChanged();
     }
 
     public void deselectAll() {
