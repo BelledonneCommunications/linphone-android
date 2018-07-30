@@ -64,7 +64,7 @@ public class ListSelectionHelper {
 		mEditButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mAdapter.getCount() > 0) {
+				if (mAdapter != null && mAdapter.getCount() > 0) {
 					mAdapter.enableEdition(true);
 					mTopBar.setVisibility(View.GONE);
 					mEditTopBar.setVisibility(View.VISIBLE);

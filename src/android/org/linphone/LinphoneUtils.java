@@ -867,6 +867,8 @@ public final class LinphoneUtils {
     }
 
 	public static Spanned getTextWithHttpLinks(String text) {
+		if (text == null) return null;
+		
 		if (text.contains("<")) {
 			text = text.replace("<", "&lt;");
 		}

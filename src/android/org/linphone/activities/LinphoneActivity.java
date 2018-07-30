@@ -292,8 +292,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		};
 
-		int missedCalls = (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) ? LinphoneManager.getLc().getMissedCallsCount() : 0;
-		displayMissedCalls(missedCalls);
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			int missedCalls = lc.getMissedCallsCount();
+			displayMissedCalls(missedCalls);
+		}
 
 		int rotation = getWindowManager().getDefaultDisplay().getRotation();
 		switch (rotation) {

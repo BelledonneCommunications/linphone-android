@@ -40,8 +40,9 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 
 	@Override
 	public int compareTo(LinphoneNumberOrAddress noa) {
-		if (noa.isSIPAddress() == isSIPAddress() && noa.getValue() != null) {
-			return noa.getValue().compareTo(getValue());
+		String value = noa.getValue();
+		if (noa.isSIPAddress() == isSIPAddress() && value != null) {
+			return value.compareTo(getValue());
 		} else {
 			return isSIPAddress() ? -1 : 1;
 		}

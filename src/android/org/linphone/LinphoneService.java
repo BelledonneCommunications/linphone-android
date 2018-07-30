@@ -311,68 +311,21 @@ public final class LinphoneService extends Service {
 		stopForegroundCompat(NOTIF_ID);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		mLastNotificationId = 8; // To not interfere with other notifs ids
-		mChatNotifMap = new HashMap<String, Notified>();
-
-		setupActivityMonitor();
-		// In case restart after a crash. Main in LinphoneActivity
-		mNotificationTitle = getString(R.string.service_name);
-
-		// Needed in order for the two next calls to succeed, libraries must have been loaded first
-		LinphonePreferences.instance().setContext(getBaseContext());
-		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
-		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-		LinphoneUtils.initLoggingService(isDebugEnabled, getString(R.string.app_name));
-
-		// Dump some debugging information to the logs
-		Log.i(START_LINPHONE_LOGS);
-		dumpDeviceInformation();
-		dumpInstalledLinphoneInformation();
-
-		//Disable service notification for Android O
-		if ((Version.sdkAboveOrEqual(Version.API26_O_80))) {
-			LinphonePreferences.instance().setServiceNotificationVisibility(false);
-			mDisableRegistrationStatus = true;
-		}
-
-		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
-		Compatibility.CreateChannel(this);
-
-		Intent notifIntent = new Intent(this, incomingReceivedActivity);
-		notifIntent.putExtra("Notification", true);
-		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		Bitmap bm = null;
-		try {
-			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-		} catch (Exception e) {
-		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, mNotifContentIntent, true,notifcationsPriority);
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
 
 		if (!LinphoneManager.isInstanciated())
 			LinphoneManager.createAndStart(LinphoneService.this);
 
 		instance = this; // instance is ready once linphone manager has been created
-		incomingReceivedActivityName = LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
-		try {
-			incomingReceivedActivity = (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
-		} catch (ClassNotFoundException e) {
-			Log.e(e);
-		}
-
-		if (LinphoneManager.getLc() != null) {
-			LinphoneManager.getLc().addListener(mListener = new CoreListenerStub() {
-				@Override
-				public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
-					if (instance == null) {
-						Log.i("Service not ready, discarding call state change to ", state.toString());
-						return;
-					}
+		LinphoneManager.getLc().addListener(mListener = new CoreListenerStub() {
+			@Override
+			public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
+				if (instance == null) {
+					Log.i("Service not ready, discarding call state change to ",state.toString());
+					return;
+				}
 
 					if (state == Call.State.IncomingReceived) {
 						if (!LinphoneManager.getInstance().getCallGsmON())
@@ -452,23 +405,15 @@ public final class LinphoneService extends Service {
 						}
 					}
 				}
-			});
-		}
+		});
 
-		try {
-			mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
-			mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
-		} catch (NoSuchMethodException e) {
-			Log.e(e, "Couldn't find startForeground or stopForeground");
+		if (displayServiceNotification() || (Version.sdkAboveOrEqual(Version.API26_O_80) && intent.getBooleanExtra("ForceStartForeground", false))) {
+			startForegroundCompat(NOTIF_ID, mNotif);
 		}
 
 		if (!Version.sdkAboveOrEqual(Version.API26_O_80)
 				|| (ContactsManager.getInstance() != null && ContactsManager.getInstance().hasContactsAccess())) {
 			getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, ContactsManager.getInstance());
-		}
-
-		if (displayServiceNotification()) {
-			startForegroundCompat(NOTIF_ID, mNotif);
 		}
 
 		if (!mTestDelayElapsed) {
@@ -481,10 +426,70 @@ public final class LinphoneService extends Service {
 		}
 
 		//make sure the application will at least wakes up every 10 mn
-		Intent intent = new Intent(this, KeepAliveReceiver.class);
-		PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+		Intent keepAliveIntent = new Intent(this, KeepAliveReceiver.class);
+		PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, keepAliveIntent, PendingIntent.FLAG_ONE_SHOT);
 		AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
 		Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+
+		return START_STICKY;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mLastNotificationId = 8; // To not interfere with other notifs ids
+		mChatNotifMap = new HashMap<String, Notified>();
+
+		setupActivityMonitor();
+		// In case restart after a crash. Main in LinphoneActivity
+		mNotificationTitle = getString(R.string.service_name);
+
+		// Needed in order for the two next calls to succeed, libraries must have been loaded first
+		LinphonePreferences.instance().setContext(getBaseContext());
+		Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
+		boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+		LinphoneUtils.initLoggingService(isDebugEnabled, getString(R.string.app_name));
+
+		// Dump some debugging information to the logs
+		Log.i(START_LINPHONE_LOGS);
+		dumpDeviceInformation();
+		dumpInstalledLinphoneInformation();
+
+		//Disable service notification for Android O
+		if ((Version.sdkAboveOrEqual(Version.API26_O_80))) {
+			LinphonePreferences.instance().setServiceNotificationVisibility(false);
+			mDisableRegistrationStatus = true;
+		}
+
+		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
+		Compatibility.CreateChannel(this);
+
+		Intent notifIntent = new Intent(this, incomingReceivedActivity);
+		notifIntent.putExtra("Notification", true);
+		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Bitmap bm = null;
+		try {
+			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+		} catch (Exception e) {
+		}
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, "", R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, mNotifContentIntent, true,notifcationsPriority);
+
+		incomingReceivedActivityName = LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
+		try {
+			incomingReceivedActivity = (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
+		} catch (ClassNotFoundException e) {
+			Log.e(e);
+		}
+
+		try {
+			mStartForeground = getClass().getMethod("startForeground", mStartFgSign);
+			mStopForeground = getClass().getMethod("stopForeground", mStopFgSign);
+		} catch (NoSuchMethodException e) {
+			Log.e(e, "Couldn't find startForeground or stopForeground");
+		}
 
 		mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 	}

@@ -414,9 +414,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private void createOrUpdateFriend() {
 		boolean created = false;
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc == null) return;
 
 		if (!isFriend()) {
-			friend = LinphoneManager.getLc().createFriend();
+			friend = lc.createFriend();
 			friend.enableSubscribes(false);
 			friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
 			if (isAndroidContact()) {

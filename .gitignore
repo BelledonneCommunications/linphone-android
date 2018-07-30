@@ -53,3 +53,5 @@ liblinphone_tester/res/raw/
 **/.classpath
 **/.project
 **/*.kdev4
+liblinphone-sdk/res/
+**/.vscode

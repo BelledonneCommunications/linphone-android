@@ -393,7 +393,7 @@ debug-sdk: java-clean build copy-libs generate-javadoc generate-apk
 liblinphone-android-sdk: java-clean build copy-libs generate-javadoc release
 \t./gradlew -q sdkZip
 
-linphone-android-sdk: java-clean build copy-libs 
+linphone-android-sdk: java-clean build copy-libs
 \t./gradlew -b linphoneAndroidSdk.gradle androidJavadocsJar
 \t./gradlew -b linphoneAndroidSdk.gradle sourcesJar
 
