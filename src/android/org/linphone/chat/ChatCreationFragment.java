@@ -398,7 +398,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 						if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
 							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
 							mChatRoom.addListener(mChatRoomCreationListener);
-							mChatRoom.addParticipant(participant);
+							Address participants[] = new Address[1];
+							participants[0] = participant;
+							mChatRoom.addParticipants(participants);
 						} else {
 							chatRoom = lc.getChatRoom(participant);
 							LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
