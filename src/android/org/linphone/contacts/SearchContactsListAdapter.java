@@ -265,7 +265,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 			}
 			if (sr.getAddress() != null || sr.getPhoneNumber() != null) {
 				for (ContactAddress ca : result) {
-					String normalizedPhoneNumber = (ca.getPhoneNumber() != null) ? prx.normalizePhoneNumber(ca.getPhoneNumber()) : null;
+					String normalizedPhoneNumber = (ca != null && ca.getPhoneNumber() != null && prx != null) ? prx.normalizePhoneNumber(ca.getPhoneNumber()) : null;
 					if ((sr.getAddress() != null && ca.getAddress() != null
 							&& ca.getAddress().asStringUriOnly().equals(sr.getAddress().asStringUriOnly()))
 						|| (sr.getPhoneNumber() != null && normalizedPhoneNumber != null

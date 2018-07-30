@@ -281,7 +281,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		removeVirtualKeyboardVisiblityListener();
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
 		if (mChatRoom != null) mChatRoom.removeListener(this);
-		mEventsAdapter.clear();
+		if (mEventsAdapter != null) mEventsAdapter.clear();
 		super.onPause();
 	}
 
