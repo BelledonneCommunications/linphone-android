@@ -67,7 +67,8 @@ public class SelectableHelper {
             @Override
             public void onClick(View v) {
                 if (mAdapter.getItemCount() > 0) {
-                    mAdapter.enableEdition(true);
+                    enterEditionMode();
+//                    mAdapter.enableEdition(true);
                     mTopBar.setVisibility(View.GONE);
                     mEditTopBar.setVisibility(View.VISIBLE);
                 }
@@ -92,6 +93,8 @@ public class SelectableHelper {
 
         mDeleteSelectionButton = view.findViewById(R.id.delete);
         mDeleteSelectionButton.setEnabled(false);
+
+        //Display confirmation for deletion
         mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,8 +152,8 @@ public class SelectableHelper {
         mTopBar.setVisibility(View.VISIBLE);
         mEditTopBar.setVisibility(View.GONE);
         mDeleteSelectionButton.setEnabled(false);
-        mSelectAllButton.setVisibility(View.VISIBLE);
-        mDeselectAllButton.setVisibility(View.GONE);
+        mSelectAllButton.setVisibility(View.GONE);
+        mDeselectAllButton.setVisibility(View.VISIBLE);
     }
 
     public void enterEditionMode() {
@@ -158,8 +161,8 @@ public class SelectableHelper {
         mTopBar.setVisibility(View.GONE);
         mEditTopBar.setVisibility(View.VISIBLE);
         mDeleteSelectionButton.setEnabled(false);
-        mSelectAllButton.setVisibility(View.GONE);
-        mDeselectAllButton.setVisibility(View.VISIBLE);
+        mSelectAllButton.setVisibility(View.VISIBLE);
+        mDeselectAllButton.setVisibility(View.GONE);
     }
 
     private Object[] getSelectedObjects() {

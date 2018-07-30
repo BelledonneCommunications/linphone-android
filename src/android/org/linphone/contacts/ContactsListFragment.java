@@ -237,7 +237,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
 	private void searchContacts(String search) {
 		boolean isEditionEnabled = false;
-
+//		mSelectionHelper.quitEditionMode();
 		if (search == null || search.length() == 0) {
 			changeContactsAdapter();
 			return;
@@ -343,6 +343,22 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 	}
 
 	@Override
+	public void onItemClicked(int position) {
+		LinphoneContact contact = (LinphoneContact) mContactAdapter.getItem(position);
+
+		if (mContactAdapter.isEditionEnabled()) {
+			mContactAdapter.toggleSelection(position);
+
+		}else if (editOnClick) {
+			editConsumed = true;
+			LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
+		} else {
+			lastKnownPosition = layoutManager.findFirstVisibleItemPosition();
+			LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);
+		}
+	}
+
+	@Override
 	public boolean onItemLongClicked(int position) {
 		if (!mContactAdapter.isEditionEnabled()) {
 			mSelectionHelper.enterEditionMode();
@@ -421,19 +437,5 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 	}
 
 
-	@Override
-	public void onItemClicked(int position) {
-		LinphoneContact contact = (LinphoneContact) mContactAdapter.getItem(position);
 
-		if (mContactAdapter.isEditionEnabled()) {
-			mContactAdapter.toggleSelection(position);
-
-		}else if (editOnClick) {
-			editConsumed = true;
-			LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
-		} else {
-			lastKnownPosition = layoutManager.findFirstVisibleItemPosition();
-			LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);
-		}
-	}
 }

@@ -59,7 +59,6 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
             delete = view.findViewById(R.id.delete);
             isAdmin = view.findViewById(R.id.isAdminLayout);
             isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
-
         }
 
    }
