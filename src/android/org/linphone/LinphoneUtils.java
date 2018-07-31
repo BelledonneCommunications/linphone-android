@@ -868,7 +868,7 @@ public final class LinphoneUtils {
 
 	public static Spanned getTextWithHttpLinks(String text) {
 		if (text == null) return null;
-		
+
 		if (text.contains("<")) {
 			text = text.replace("<", "&lt;");
 		}
@@ -917,7 +917,10 @@ public final class LinphoneUtils {
 		for (ChatRoom cr : lc.getChatRooms()) {
 			if (cr != null && cr.getParticipants() != null) {
 				for (Participant pa : cr.getParticipants()) {
-					if (pa.getAddress() != null && pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
+					if (pa.getAddress() != null
+							&& pa.getAddress().asStringUriOnly() != null
+							&& sipUri.asStringUriOnly() != null
+							&& pa.getAddress().asStringUriOnly().compareTo(sipUri.asStringUriOnly()) == 0) {
 						return pa.getSecurityLevel();
 					}
 				}

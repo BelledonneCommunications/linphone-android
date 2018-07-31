@@ -48,6 +48,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,9 +75,11 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private ProgressDialog progress;
 	private String qrcodeString;
 	private String remoteUrl;
-	private RelativeLayout bottom;
+	private LinearLayout bottom;
+	private RelativeLayout layout_button;
 	private CoreListenerStub mListener;
 	private SurfaceView mQrcodeView;
+	private ImageView mImageMask;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
 	private boolean cameraAuthorize = false;
 	private boolean readQRCode = true;
@@ -96,10 +100,12 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		}
 
 		mQrcodeView = (SurfaceView) findViewById(R.id.qrcodeCaptureSurface);
-		bottom = (RelativeLayout) findViewById(R.id.bottom_text);
+		bottom = (LinearLayout) findViewById(R.id.bottom_text);
 		code_sms = (EditText) findViewById(R.id.code_sms);
 		step = (TextView) findViewById(R.id.step);
 		instruction = (TextView) findViewById(R.id.instruction);
+		mImageMask = (ImageView) findViewById(R.id.imageView4);
+		layout_button = (RelativeLayout) findViewById(R.id.layout_button);
 
 		ok = (Button) findViewById(R.id.valider);
 		back = (Button) findViewById(R.id.retour);
@@ -107,7 +113,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		ok.setOnClickListener(this);
 		back.setOnClickListener(this);
 
-		mQrcodeView.setOnClickListener(new OnClickListener() {
+		mImageMask.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (readQRCode && getPackageManager().checkPermission(Manifest.permission.CAMERA,
@@ -122,7 +128,6 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		mListener = new CoreListenerStub() {
 			@Override
 			public void onQrcodeFound(Core lc, String result) {
-				//TODO check validitée du qrcode
 				instance.qrcodeString = result;
 				runOnUiThread(new Runnable() {
 					@Override
@@ -191,9 +196,11 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 	private void displayQrCode() {
 		mQrcodeView.setVisibility(View.VISIBLE);
+		mImageMask.setVisibility(View.VISIBLE);
 		code_sms.setVisibility(View.GONE);
 		ok.setVisibility(View.GONE);
 		back.setVisibility(View.GONE);
+		layout_button.setVisibility(View.GONE);
 
 		step.setText(getString(R.string.assistant_step1));
 		instruction.setText(getString(R.string.assistant_instruction1));
@@ -203,9 +210,11 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 	private void displayCodeSms() {
 		mQrcodeView.setVisibility(View.GONE);
+		mImageMask.setVisibility(View.GONE);
 		code_sms.setVisibility(View.VISIBLE);
 		ok.setVisibility(View.VISIBLE);
 		back.setVisibility(View.VISIBLE);
+		layout_button.setVisibility(View.VISIBLE);
 
 		step.setText(getString(R.string.assistant_step2));
 		instruction.setText(getString(R.string.assistant_instruction2));

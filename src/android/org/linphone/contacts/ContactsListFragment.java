@@ -148,6 +148,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		clearSearchField.setOnClickListener(this);
 
 		searchField = (EditText) view.findViewById(R.id.searchField);
+		searchField.clearFocus();
 		searchField.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
