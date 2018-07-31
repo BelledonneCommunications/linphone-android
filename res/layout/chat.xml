@@ -95,7 +95,6 @@
 				android:layout_weight="0.2"
 				android:background="@drawable/toolbar_button"
 				android:contentDescription="@string/content_description_back_call"
-				android:padding="15dp"
 				android:src="@drawable/call_back"
 				android:visibility="gone"/>
 

@@ -110,10 +110,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private Runnable mControls;
 	private ImageView switchCamera;
 	private TextView missedChats;
-	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout;
-	private ImageView pause, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
+	private RelativeLayout mActiveCallHeader, sideMenuContent, avatar_layout, action_bar, mCallPaused;
+	private ImageView pause, pause2, hangUp, dialer, video, micro, speaker, options, addCall, transfer, conference, conferenceStatus, contactPicture;
 	private ImageView audioRoute, routeSpeaker, routeEarpiece, routeBluetooth, menu, chat, encryption;
-	private LinearLayout mNoCurrentCall, callInfo, mCallPaused;
+	private LinearLayout mNoCurrentCall, callInfo;
 	private ProgressBar videoProgress;
 	private StatusFragment status;
 	private CallAudioFragment audioCallFragment;
@@ -392,14 +392,17 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 		pause = (ImageView) findViewById(R.id.pause);
 		pause.setOnClickListener(this);
+		pause2 = (ImageView) findViewById(R.id.pause2);
+		pause2.setOnClickListener(this);
 		enabledPauseButton(false);
 
 		mActiveCallHeader = (RelativeLayout) findViewById(R.id.active_call);
 		mNoCurrentCall = (LinearLayout) findViewById(R.id.no_current_call);
-		mCallPaused = (LinearLayout) findViewById(R.id.remote_pause);
+		mCallPaused = (RelativeLayout) findViewById(R.id.remote_pause);
 
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 		avatar_layout = (RelativeLayout) findViewById(R.id.avatar_layout);
+		action_bar = (RelativeLayout) findViewById(R.id.action_menu);
 
 		//Options
 		addCall = (ImageView) findViewById(R.id.add_call);
@@ -679,7 +682,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		else if (id == R.id.add_call) {
 			goBackToDialer();
 		}
-		else if (id == R.id.pause) {
+		else if (id == R.id.pause || id == R.id.pause2) {
 			pauseOrResumeCall(LinphoneManager.getLc().getCurrentCall());
 		}
 		else if (id == R.id.hang_up) {
@@ -764,9 +767,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void enabledPauseButton(boolean enabled){
 		if(enabled) {
 			pause.setEnabled(true);
+			pause2.setEnabled(true);
 			pause.setImageResource(R.drawable.pause_big_default);
 		} else {
 			pause.setEnabled(false);
+			pause2.setEnabled(false);
 			//pause.setImageResource(R.drawable.pause_big_disabled);
 		}
 	}
@@ -870,20 +875,24 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void displayNoCurrentCall(boolean display){
-		if(!display) {
+		/*if(!display) {
 			mActiveCallHeader.setVisibility(View.VISIBLE);
 			mNoCurrentCall.setVisibility(View.GONE);
 		} else {
 			mActiveCallHeader.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.VISIBLE);
-		}
+		}*/
 	}
 
 	private void displayCallPaused(boolean display){
 		if(display){
 			mCallPaused.setVisibility(View.VISIBLE);
+			avatar_layout.setVisibility(View.GONE);
+			action_bar.setVisibility(View.GONE);
 		} else {
 			mCallPaused.setVisibility(View.GONE);
+			avatar_layout.setVisibility(View.VISIBLE);
+			action_bar.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -957,11 +966,18 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			//pause.setImageResource(R.drawable.pause_big_over_selected);
 		} else if (call != null) {
 			if (call.getState() == State.Paused) {
-				lc.resumeCall(call);
+				call.resume();
 				if (isVideoCallPaused) {
 					isVideoCallPaused = false;
 				}
 				pause.setImageResource(R.drawable.pause_big_default);
+			}
+		} else if (lc.getCallsNb() > 0) {
+			for (int cpt = 0 ; cpt < lc.getCallsNb() ; cpt++) {
+				if (lc.getCalls()[cpt].getState() == State.Paused) {
+					lc.getCalls()[cpt].resume();
+					return;
+				}
 			}
 		}
 	}
@@ -1230,7 +1246,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		refreshIncallUi();
 		handleViewIntent();
 
-		if (lc != null) {
+		if (lc != null && lc.getCurrentCall() != null) {
 			refreshStatusItems(lc.getCurrentCall(), lc.getCurrentCall().getCurrentParams().videoEnabled());
 		}
 
@@ -1247,7 +1263,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	public void showZRTPDialog(final Call call) {
-		if(ZRTPdialog == null || !ZRTPdialog.isShowing()) {
+		if(call != null && (ZRTPdialog == null || !ZRTPdialog.isShowing())) {
 			String token = call.getAuthenticationToken();
 
 			if (token == null){
