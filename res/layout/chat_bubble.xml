@@ -136,16 +136,15 @@
                         android:layout_centerHorizontal="true"
                         android:scaleType="centerInside"/>
 
-                    <Button
-                        android:id="@+id/open_file"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/file_name"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/resizable_assistant_button"
-                        android:text="@string/open"
-                        android:textAppearance="@style/font8"
-                        android:visibility="gone"/>
+					<Button
+						android:id="@+id/open_file"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_below="@id/file_name"
+						android:layout_centerVertical="true"
+						android:text="@string/open"
+						android:textAppearance="@style/font8"
+						android:visibility="gone"/>
 
                 </RelativeLayout>
 
@@ -173,13 +172,12 @@
                         android:layout_marginTop="10dp"
                         android:paddingRight="5dp"/>
 
-                    <Button
-                        android:id="@+id/file_transfer_action"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/progress_bar"
-                        android:background="@drawable/resizable_assistant_button"
-                        android:textAppearance="@style/font8"/>
+					<Button
+						android:id="@+id/file_transfer_action"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_below="@id/progress_bar"
+						android:textAppearance="@style/font8"/>
 
                 </RelativeLayout>
 
