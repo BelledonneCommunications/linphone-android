@@ -407,7 +407,7 @@ public final class LinphoneService extends Service {
 				}
 		});
 
-		if (displayServiceNotification() || (Version.sdkAboveOrEqual(Version.API26_O_80) && intent.getBooleanExtra("ForceStartForeground", false))) {
+		if (displayServiceNotification() || (Version.sdkAboveOrEqual(Version.API26_O_80) && intent != null && intent.getBooleanExtra("ForceStartForeground", false))) {
 			startForegroundCompat(NOTIF_ID, mNotif);
 		}
 

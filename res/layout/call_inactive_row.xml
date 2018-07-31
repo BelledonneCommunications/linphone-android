@@ -17,23 +17,24 @@
 
 	<TextView
 		android:id="@+id/contact_name"
-		style="@style/font14"
 		android:layout_width="0dip"
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
 		android:gravity="center_vertical|left"
 		android:maxLines="1"
 		android:paddingLeft="20dp"
-		android:paddingRight="10dp"/>
+		android:paddingRight="10dp"
+		android:textColor="#aeaeae"/>
 
 	<Chronometer
 		android:id="@+id/call_timer"
-		style="@style/font16"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical|right"
 		android:paddingLeft="10dp"
-		android:paddingRight="20dp"/>
+		android:paddingRight="20dp"
+		android:textColor="#ff5e00"
+		android:textSize="13.3sp"/>
 
 	<ImageView
 		android:id="@+id/call_pause"

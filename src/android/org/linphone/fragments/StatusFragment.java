@@ -187,7 +187,7 @@ public class StatusFragment extends Fragment {
 
 			if(LinphoneManager.getLc().getProxyConfigList().length == 0){
 				statusLed.setImageResource(R.drawable.led_disconnected);
-				statusText.setText(getString(R.string.no_account));
+				//statusText.setText(getString(R.string.no_account));
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class StatusFragment extends Fragment {
 	public void resetAccountStatus(){
 		if(LinphoneManager.getLc().getProxyConfigList().length == 0){
 			statusLed.setImageResource(R.drawable.led_disconnected);
-			statusText.setText(getString(R.string.no_account));
+			//statusText.setText(getString(R.string.no_account));
 		}
 	}
 
@@ -307,14 +307,14 @@ public class StatusFragment extends Fragment {
 				// We are obviously connected
 				if(lc.getDefaultProxyConfig() == null){
 					statusLed.setImageResource(R.drawable.led_disconnected);
-					statusText.setText(getString(R.string.no_account));
+					//statusText.setText(getString(R.string.no_account));
 				} else {
 					statusLed.setImageResource(getStatusIconResource(lc.getDefaultProxyConfig().getState(),true));
-					statusText.setText(getStatusIconText(lc.getDefaultProxyConfig()));
+					//statusText.setText(getStatusIconText(lc.getDefaultProxyConfig()));
 				}
 			}
 		} else {
-			statusText.setVisibility(View.VISIBLE);
+			//statusText.setVisibility(View.VISIBLE);
 		}
 	}
 
