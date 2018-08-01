@@ -357,10 +357,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 						    if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 							    v.setEnabled(false);
 							    String filename = message.getFileTransferInformation().getName();
-							    File file = new File(Environment.getExternalStorageDirectory(), filename);
+							    String directory_path = Environment.getExternalStorageDirectory() + "/" + mContext.getString(R.string.app_name);
+							    File file = new File(Environment.getExternalStorageDirectory(), mContext.getString(R.string.app_name));
+							    file.mkdirs();
+							    file = new File(directory_path, filename);
 							    int prefix = 1;
 							    while (file.exists()) {
-								    file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
+								    file = new File(directory_path, prefix + "_" + filename);
 								    Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
 								    prefix += 1;
 							    }
