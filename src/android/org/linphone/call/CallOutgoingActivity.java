@@ -86,6 +86,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		number = (TextView) findViewById(R.id.contact_number);
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 
+		number.setVisibility(View.GONE);
+
 		isMicMuted = false;
 		isSpeakerEnabled = false;
 

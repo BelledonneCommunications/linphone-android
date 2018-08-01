@@ -137,7 +137,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="inapp_notification_trial_expire">La période d\'essai se terminera le %s</string>
   <string name="inapp_notification_account_expire">L\'abonnement se terminera le %s</string>
   <!--Dailer-->
-  <string name="address_bar_hint">Entrez un numéro ou une adresse</string>
+  <string name="address_bar_hint">Entrez une adresse</string>
   <!--History-->
   <string name="no_call_history">Aucun appel dans votre historique</string>
   <string name="no_missed_call_history">Aucun appel manqué dans votre historique</string>

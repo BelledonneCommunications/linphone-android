@@ -90,6 +90,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		number = (TextView) findViewById(R.id.contact_number);
 		contactPicture = (ImageView) findViewById(R.id.contact_picture);
 
+		number.setVisibility(View.GONE);
+
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
