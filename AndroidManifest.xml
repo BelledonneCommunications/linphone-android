@@ -2,8 +2,8 @@
 <manifest package="org.linphone"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="1410"
-          android:versionName="1.4.1">
+          android:versionCode="1420"
+          android:versionName="1.4.2">
 
     <uses-sdk
         android:minSdkVersion="16"
