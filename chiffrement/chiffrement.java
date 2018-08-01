@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -25,6 +26,11 @@ public class chiffrement {
 		return newTab;
 	}
 
+	static void help() {
+		System.out.println("Usage chiffrement:\n\tcrypt(0: decrypt, 1: crypt)\n\tpassword\n\tcontent(to crypt or decrypt)\n\touputName\n\t(only when crypt):" +
+				"\n\t\tsalt(16 bytes in hexa)\n\t\tiv(32 byte in hexa)");
+	}
+
 	public static void main(String[] args) {
 		if (args.length >= 4) {
 			String encrypted;
@@ -40,12 +46,21 @@ public class chiffrement {
 					byte[] unBased64Data = content.getBytes();
 					ByteArrayInputStream inputStream = new ByteArrayInputStream(unBased64Data);
 
-					byte[] contentToDecrypt = new byte[unBased64Data.length];
+					byte[] salt = new byte[16];
+					byte[] iv = new byte[32];
+					byte[] contentToDecrypt = new byte[unBased64Data.length - 48];
 
+					inputStream.read(salt);
+					inputStream.read(iv);
 					inputStream.read(contentToDecrypt);
 
-					BigInteger saltHex = new BigInteger("F000000000000000", 16);
-					BigInteger ivHex = new BigInteger("F58B8C9A49B321DBA000000000000000", 16);
+					String saltString = new String(salt);
+					String ivString = new String(iv);
+					BigInteger saltHex = new BigInteger(saltString, 16);
+					BigInteger ivHex = new BigInteger(ivString, 16);
+
+					System.out.println("salut: iv " + ivString + " " + ivHex);
+					System.out.println("salut: salt " + saltString + " " + saltHex);
 
 					byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 					byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
@@ -63,10 +78,14 @@ public class chiffrement {
 					System.out.println(ex);
 					return;
 				}
-			} else {
+			} else if (args.length >= 6){
 				try {
-					BigInteger saltHex = new BigInteger("F000000000000000", 16);
-					BigInteger ivHex = new BigInteger("F58B8C9A49B321DBA000000000000000", 16);
+					String saltArg = args[4];
+					String ivArg = args[5];
+					BigInteger saltHex = new BigInteger(saltArg, 16);
+					BigInteger ivHex = new BigInteger(ivArg, 16);
+
+					byte[] contentToCrypt = content.getBytes(Charset.forName("UTF-8"));
 
 					byte[] salt = removeUselessByte(saltHex.toByteArray(), 8);
 					byte[] iv = removeUselessByte(ivHex.toByteArray(), 16);
@@ -79,14 +98,17 @@ public class chiffrement {
 
 					Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 					cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
-					byte[] encryptedBytes = cipher.doFinal(content.getBytes(Charset.forName("UTF-8")));
+					byte[] encryptedBytes = cipher.doFinal(contentToCrypt);
 
-					encrypted = new String(Base64.getEncoder().encode(encryptedBytes));
+					encrypted = new String(saltArg) + new String(ivArg) + new String(Base64.getEncoder().encode(encryptedBytes));
 
 				} catch (Exception ex) {
 					System.out.println(ex);
 					return;
 				}
+			} else {
+				help();
+				return;
 			}
 			try {
 				BufferedWriter writer = Files.newBufferedWriter(output.toPath(), Charset.forName("UTF-8"));
@@ -95,6 +117,8 @@ public class chiffrement {
 			} catch (Exception ex) {
 				System.out.println(ex);
 			}
+		} else {
+			help();
 		}
 	}
 }

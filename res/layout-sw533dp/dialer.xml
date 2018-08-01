@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
 	<ImageView
+		android:id="@+id/logodialer"
 		android:layout_width="400dp"
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"

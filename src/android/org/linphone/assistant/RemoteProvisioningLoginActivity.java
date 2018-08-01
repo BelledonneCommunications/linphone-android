@@ -55,6 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.security.spec.KeySpec;
 
@@ -361,12 +362,18 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			byte[] unBased64Data = qrcodeString.getBytes();
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(unBased64Data);
 
-			byte[] contentToDecrypt = new byte[unBased64Data.length];
+			byte[] salt = new byte[16];
+			byte[] iv = new byte[32];
+			byte[] contentToDecrypt = new byte[unBased64Data.length - 48];
 
+			inputStream.read(salt);
+			inputStream.read(iv);
 			inputStream.read(contentToDecrypt);
 
-			BigInteger saltHex = new BigInteger("F000000000000000", 16);
-			BigInteger ivHex = new BigInteger("F58B8C9A49B321DBA000000000000000", 16);
+			String saltString = new String(salt);
+			String ivString = new String(iv);
+			BigInteger saltHex = new BigInteger(saltString, 16);
+			BigInteger ivHex = new BigInteger(ivString, 16);
 
 			byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 			byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);

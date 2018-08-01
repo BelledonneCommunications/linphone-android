@@ -1780,9 +1780,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	public int getUnreadCountForChatRoom(ChatRoom cr) {
-		String key = cr.getPeerAddress().asStringUriOnly();
-		if (mUnreadChatsPerRoom.containsKey(key)) {
-			return mUnreadChatsPerRoom.get(key);
+		if (cr != null && cr.getPeerAddress() != null) {
+			String key = cr.getPeerAddress().asStringUriOnly();
+			if (mUnreadChatsPerRoom.containsKey(key)) {
+				return mUnreadChatsPerRoom.get(key);
+			}
 		}
 		return 0;
 	}
