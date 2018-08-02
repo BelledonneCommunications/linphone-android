@@ -141,17 +141,7 @@ public class LinphoneLauncherActivity extends Activity {
 								newIntent.putExtra("fileShared", stringFileShared);
 							}
 						}else {
-							if(((String) intent.getStringExtra(Intent.EXTRA_STREAM)) != null){
-								stringUriFileShared = intent.getStringExtra(Intent.EXTRA_STREAM);
-							}else {
-								fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-								stringUriFileShared = LinphoneUtils.getRealPathFromURI(getBaseContext(), fileUri);
-								if(stringUriFileShared == null)
-									if(fileUri.getPath().contains("/0/1/mediakey:/local") || fileUri.getPath().contains("/ORIGINAL/NONE/")) {
-										stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
-									}else
-										stringUriFileShared = fileUri.getPath();
-							}
+							stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
 							newIntent.putExtra("fileShared", stringUriFileShared);
 						}
 					}else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {

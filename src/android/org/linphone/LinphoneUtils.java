@@ -22,9 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -37,7 +35,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.Spanned;
@@ -599,84 +596,30 @@ public final class LinphoneUtils {
 	}
 
 
-	/************************************************************************************************
-	 *							Picasa/Photos management workaround									*
-	 ************************************************************************************************/
-
 	public static String getFilePath(final Context context, final Uri uri) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
-			// ExternalStorageProvider
-			if ("com.android.externalstorage.documents".equals(uri.getAuthority())) {
-				final String docId = DocumentsContract.getDocumentId(uri);
-				final String[] split = docId.split(":");
-				if (split.length >= 1) return Environment.getExternalStorageDirectory() + "/" + split[1];
+		String result = null;
+		Cursor returnCursor =
+				context.getContentResolver().query(uri, null, null, null, null);
+		String type = getTypeFromUri(uri, context);
 
-				// TODO handle non-primary volumes
-			}// Docs storage
-			else if ("com.google.android.apps.docs.storage".equals(uri.getAuthority())) {
-				//Google doc not supported right now
+		returnCursor.moveToFirst();
+		try {
+			File localFile = createFile(context, null, type);
+			InputStream remoteFile = context.getContentResolver().openInputStream(uri);
+
+			if(copyToFile(remoteFile, localFile)) {
+				result = localFile.getAbsolutePath();
 			}
-			// DownloadsProvider
-			else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
 
-				final String id = DocumentsContract.getDocumentId(uri);
-				try {
-					final Uri contentUri = ContentUris.withAppendedId(
-							Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-					return getDataColumn(context, contentUri, null, null);
-				} catch (NumberFormatException nfe) {
-					if (id.startsWith("raw:")) {
-						return id.substring(4);
-					}
-				}
-			}
-			// MediaProvider
-			else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
-				final String docId = DocumentsContract.getDocumentId(uri);
-				final String[] split = docId.split(":");
-				final String type = split[0];
-
-				Uri contentUri = null;
-				if ("image".equals(type)) {
-					contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-				} else if ("video".equals(type)) {
-					contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-				} else if ("audio".equals(type)) {
-					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-				}
-
-				final String selection = "_id=?";
-				final String[] selectionArgs = new String[] {
-						split[1]
-				};
-
-				return getDataColumn(context, contentUri, selection, selectionArgs);
-			}
-		} else if ("content".equalsIgnoreCase(uri.getScheme())) {
-			String type = getTypeFromUri(uri, context);
-			String result = getDataColumn(context, uri, null, null); //
-			if (TextUtils.isEmpty(result))
-				if (uri.getAuthority().contains("com.google.android") || uri.getAuthority().contains("com.android")) {
-					try {
-						File localFile = createFile(context, null, type);
-						FileInputStream remoteFile = getSourceStream(context, uri);
-						if(copyToFile(remoteFile, localFile))
-							result = localFile.getAbsolutePath();
-						remoteFile.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			return result;
-		} else if ("file".equalsIgnoreCase(uri.getScheme())) { // File
-			return uri.getPath();
+			remoteFile.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return null;
+
+		return result;
 	}
 
-
-	private static String getTypeFromUri(Uri uri, Context context){
+	private static String getTypeFromUri(Uri uri, Context context) {
 		ContentResolver cR = context.getContentResolver();
 		MimeTypeMap mime = MimeTypeMap.getSingleton();
 		String type = mime.getExtensionFromMimeType(cR.getType(uri));
@@ -719,7 +662,6 @@ public final class LinphoneUtils {
 			imageFileName = getStartDate()+"."+type; // make random filename if you want.
 
 		final File root;
-		imageFileName = imageFileName;
 		root = context.getExternalCacheDir();
 
 		if (root != null && !root.exists())
@@ -780,8 +722,7 @@ public final class LinphoneUtils {
 
 	public static String getRealPathFromURI(Context context, Uri contentUri) {
 		String[] proj = {MediaStore.Images.Media.DATA};
-		CursorLoader loader = new CursorLoader(context, contentUri, proj, null, null, null);
-		Cursor cursor = loader.loadInBackground();
+		Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			String result = cursor.getString(column_index);
@@ -844,7 +785,7 @@ public final class LinphoneUtils {
 
 	public static Spanned getTextWithHttpLinks(String text) {
 		if (text == null) return null;
-		
+
 		if (text.contains("<")) {
 			text = text.replace("<", "&lt;");
 		}
