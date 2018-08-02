@@ -613,7 +613,7 @@ public final class LinphoneUtils {
 
 			remoteFile.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e("Enable to get sharing file", e);
 		}
 
 		return result;

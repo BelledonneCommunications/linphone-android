@@ -135,7 +135,7 @@ public class LinphoneLauncherActivity extends Activity {
 						if(("text/plain").equals(type) && (String)intent.getStringExtra(Intent.EXTRA_TEXT)!= null) {
 							stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
 							newIntent.putExtra("msgShared", stringFileShared);
-						}else {
+						} else {
 							fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 							stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
 							newIntent.putExtra("fileShared", stringUriFileShared);
