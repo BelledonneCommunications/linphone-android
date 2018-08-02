@@ -36,6 +36,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.telephony.TelephonyManager;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -598,14 +599,12 @@ public final class LinphoneUtils {
 
 	public static String getFilePath(final Context context, final Uri uri) {
 		if (uri == null) return null;
-		String result = null;
-		Cursor returnCursor =
-				context.getContentResolver().query(uri, null, null, null, null);
-		String type = getTypeFromUri(uri, context);
 
-		returnCursor.moveToFirst();
+		String result = null;
+		String name = getNameFromUri(uri, context);
+
 		try {
-			File localFile = createFile(context, null, type);
+			File localFile = createFile(context, name);
 			InputStream remoteFile = context.getContentResolver().openInputStream(uri);
 
 			if(copyToFile(remoteFile, localFile)) {
@@ -620,11 +619,20 @@ public final class LinphoneUtils {
 		return result;
 	}
 
-	private static String getTypeFromUri(Uri uri, Context context) {
-		ContentResolver cR = context.getContentResolver();
-		MimeTypeMap mime = MimeTypeMap.getSingleton();
-		String type = mime.getExtensionFromMimeType(cR.getType(uri));
-		return type;
+	private static String getNameFromUri(Uri uri, Context context) {
+		String name = null;
+		if (uri.getScheme().equals("content")) {
+			Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
+			if (returnCursor != null) {
+				returnCursor.moveToFirst();
+				int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+				name = returnCursor.getString(nameIndex);
+				returnCursor.close();
+			}
+		} else if (uri.getScheme().equals("file")) {
+			name = uri.getLastPathSegment();
+		}
+		return name;
 	}
 
 	/**
@@ -658,67 +666,20 @@ public final class LinphoneUtils {
 		}
 	}
 
-	public static File createFile(Context context, String imageFileName, String type) throws IOException {
-		if (TextUtils.isEmpty(imageFileName))
-			imageFileName = getStartDate()+"."+type; // make random filename if you want.
+	public static File createFile(Context context, String fileName) throws IOException {
+		if (TextUtils.isEmpty(fileName))
+			fileName = getStartDate();
+
+		if (!fileName.contains(".")) {
+			fileName = fileName + ".unknown";
+		}
 
 		final File root;
 		root = context.getExternalCacheDir();
 
 		if (root != null && !root.exists())
 			root.mkdirs();
-		return new File(root, imageFileName);
-	}
-
-
-	public static FileInputStream getSourceStream(Context context, Uri u) throws FileNotFoundException {
-		FileInputStream out = null;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			ParcelFileDescriptor parcelFileDescriptor =
-					context.getContentResolver().openFileDescriptor(u, "r");
-			FileDescriptor fileDescriptor = null;
-			if (parcelFileDescriptor != null) {
-				fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-				out = new FileInputStream(fileDescriptor);
-			}
-		} else {
-			out = (FileInputStream) context.getContentResolver().openInputStream(u);
-		}
-		return out;
-	}
-
-	/**
-	 * Get the value of the data column for this Uri. This is useful for
-	 * MediaStore Uris, and other file-based ContentProviders.
-	 *
-	 * @param context       The context.
-	 * @param uri           The Uri to query.
-	 * @param selection     (Optional) Filter used in the query.
-	 * @param selectionArgs (Optional) Selection arguments used in the query.
-	 * @return The value of the _data column, which is typically a file path.
-	 */
-	static String getDataColumn(Context context, Uri uri, String selection,
-								String[] selectionArgs) {
-
-		Cursor cursor = null;
-		final String column = "_data";
-		final String[] projection = {
-				column
-		};
-
-		try {
-			cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-					null);
-			if (cursor != null && cursor.moveToFirst()) {
-				final int column_index = cursor.getColumnIndexOrThrow(column);
-				return cursor.getString(column_index);
-			}
-		} finally {
-			if (cursor != null)
-				cursor.close();
-		}
-
-		return null;
+		return new File(root, fileName);
 	}
 
 	public static String getRealPathFromURI(Context context, Uri contentUri) {
@@ -732,32 +693,6 @@ public final class LinphoneUtils {
 		}
 		return null;
 	}
-
-    public static String processContactUri(Context context, Uri contactUri){
-		ContentResolver cr = context.getContentResolver();
-        InputStream stream = null;
-		if(cr !=null) {
-			try {
-				stream = cr.openInputStream(contactUri);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			if(stream != null) {
-				StringBuffer fileContent = new StringBuffer("");
-				int ch;
-				try {
-					while ((ch = stream.read()) != -1)
-						fileContent.append((char) ch);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				String data = new String(fileContent);
-				return data;
-			}
-			return null;
-		}
-		return null;
-    }
 
     public static String getContactNameFromVcard(String vcard){
 		if(vcard != null) {

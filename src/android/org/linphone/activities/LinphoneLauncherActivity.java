@@ -132,14 +132,9 @@ public class LinphoneLauncherActivity extends Activity {
 					String type = intent.getType();
 					newIntent.setData(intent.getData());
 					if (Intent.ACTION_SEND.equals(action) && type != null) {
-						if (type.contains("text/")){
-							if(("text/plain").equals(type) && (String)intent.getStringExtra(Intent.EXTRA_TEXT)!= null) {
-								stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
-								newIntent.putExtra("msgShared", stringFileShared);
-							} else if(((Uri) intent.getExtras().get(Intent.EXTRA_STREAM)) != null){
-								stringFileShared = (LinphoneUtils.createCvsFromString(LinphoneUtils.processContactUri(getApplicationContext(), (Uri)intent.getExtras().get(Intent.EXTRA_STREAM)))).toString();
-								newIntent.putExtra("fileShared", stringFileShared);
-							}
+						if(("text/plain").equals(type) && (String)intent.getStringExtra(Intent.EXTRA_TEXT)!= null) {
+							stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
+							newIntent.putExtra("msgShared", stringFileShared);
 						}else {
 							fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 							stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
