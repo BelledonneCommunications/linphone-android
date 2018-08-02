@@ -597,6 +597,7 @@ public final class LinphoneUtils {
 
 
 	public static String getFilePath(final Context context, final Uri uri) {
+		if (uri == null) return null;
 		String result = null;
 		Cursor returnCursor =
 				context.getContentResolver().query(uri, null, null, null, null);
