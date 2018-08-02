@@ -141,6 +141,7 @@ public class LinphoneLauncherActivity extends Activity {
 								newIntent.putExtra("fileShared", stringFileShared);
 							}
 						}else {
+							fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 							stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
 							newIntent.putExtra("fileShared", stringUriFileShared);
 						}
