@@ -91,6 +91,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="33dp"
 		android:layout_margin="10dp"
+		android:focusable="true"
+		android:focusableInTouchMode="true"
 		android:background="@color/colorH">
 
 		<EditText
