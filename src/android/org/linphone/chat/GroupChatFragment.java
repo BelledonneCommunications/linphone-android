@@ -331,8 +331,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			EventLog eventLog = (EventLog)obj;
 			if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
 				ChatMessage message = eventLog.getChatMessage();
-				if (message.getAppdata() != null && !message.isOutgoing()) {
-					File file = new File(message.getAppdata());
+				if (message.getContents() != null && message.getContents().length > 0 && !message.isOutgoing()) {
+					File file = new File(message.getContents()[0].getFilePath());
 					if (file.exists()) {
 						file.delete(); // Delete downloaded file from incoming message that will be deleted
 					}
@@ -684,34 +684,38 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	 */
 
 	private void sendMessage() {
-		String text = mMessageTextToSend.getText().toString();
-
 		ChatMessage msg;
-		//TODO: rework when we'll send multiple files at once
-		if (mFilesUploadLayout.getChildCount() > 0) {
-			String filePath = (String) mFilesUploadLayout.getChildAt(0).getTag();
-			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
-			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
-			Content content = Factory.instance().createContent();
-			if (LinphoneUtils.isExtensionImage(fileName)) {
-				content.setType("image");
-			} else {
-				content.setType("file");
-			}
-			content.setSubtype(extension);
-			content.setName(fileName);
-			msg = mChatRoom.createFileTransferMessage(content);
-			msg.setFileTransferFilepath(filePath); // Let the file body handler take care of the upload
-			msg.setAppdata(filePath);
+		String text = mMessageTextToSend.getText().toString();
+		boolean textSend = false;
 
-			if (text != null && text.length() > 0) {
-				msg.addTextContent(text);
+		if (mFilesUploadLayout.getChildCount() > 0) {
+			for (int i = 0 ; i < mFilesUploadLayout.getChildCount() ; i++) {
+				String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
+				String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+				String extension = LinphoneUtils.getExtensionFromFileName(fileName);
+				Content content = Factory.instance().createContent();
+				if (LinphoneUtils.isExtensionImage(fileName)) {
+					content.setType("image");
+				} else {
+					content.setType("file");
+				}
+				content.setSubtype(extension);
+				content.setName(fileName);
+				content.setFilePath(filePath);
+				msg = mChatRoom.createFileTransferMessage(content);
+
+				if (!textSend && text != null && text.length() > 0) {
+					msg.addTextContent(text);
+					textSend = true;
+				}
+				// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
+				msg.send();
 			}
 		} else {
 			msg = mChatRoom.createMessage(text);
+			// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
+			msg.send();
 		}
-		// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
-		msg.send();
 
 		mFilesUploadLayout.removeAllViews();
 		mAttachImageButton.setEnabled(true);

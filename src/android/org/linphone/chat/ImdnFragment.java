@@ -206,7 +206,7 @@ public class ImdnFragment extends Fragment {
 			mBubble.messageText.setVisibility(View.VISIBLE);
 		}
 
-		String appData = mMessage.getAppdata();
+		String appData = (mMessage.getContents().length > 0) ? mMessage.getContents()[0].getFilePath() : "";
 		if (appData != null) { // Something to display
 			mBubble.fileName.setVisibility(View.VISIBLE);
 			mBubble.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));

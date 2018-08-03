@@ -174,7 +174,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		holder.date.setText(LinphoneUtils.timestampToHumanDate(mContext, chatRoom.getLastUpdateTime(), ((LinphoneUtils.isToday(chatRoom.getLastUpdateTime())) ? R.string.today_date_format2 : R.string.messages_list_date_format), false));
 
 		if (lastMessage != null) {
-			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getAppdata() != null) {
+			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || lastMessage.getContents().length > 0) {
 				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
 			} else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
 				holder.lastMessageView.setBackgroundResource(0);
