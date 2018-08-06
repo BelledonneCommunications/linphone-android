@@ -80,6 +80,7 @@
 	<bool name="disable_chat_send_file">false</bool>
 	<string name="temp_photo_name">linphone-android-photo-temp</string>
 	<string name="temp_photo_name_with_date">linphone-android-photo-%s</string>
+	<bool name="lower_space_between_chat_bubbles_if_same_person">false</bool>
 
 	<!-- Contacts -->
 	<bool name="hide_contact_phone_numbers">false</bool>

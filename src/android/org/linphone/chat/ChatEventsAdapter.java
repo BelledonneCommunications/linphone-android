@@ -207,7 +207,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    holder.bubbleLayout.setVisibility(View.VISIBLE);
 		    final ChatMessage message = event.getChatMessage();
 
-		    if (i > 0) {
+		    if (i > 0 && mContext.getResources().getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
 			    EventLog previousEvent = (EventLog)getItem(i-1);
 			    if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
 				    ChatMessage previousMessage = previousEvent.getChatMessage();
