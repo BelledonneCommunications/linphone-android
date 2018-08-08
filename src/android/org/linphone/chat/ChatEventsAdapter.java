@@ -409,8 +409,8 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    }
 		    }
 
-		    switch (event.getType()) {
-			    case ConferenceCreated:
+			switch (event.getType()) {
+				case ConferenceCreated:
 				    holder.eventMessage.setText(mContext.getString(R.string.conference_created));
 			    	break;
 			    case ConferenceTerminated:
@@ -437,6 +437,15 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    case ConferenceParticipantDeviceRemoved:
 				    holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
 				    break;
+			    case ConferenceSecurityAlert:
+					String message;
+					if (event.getSecurityAlertFaultyDevice() != null) {
+						message = mContext.getString(R.string.security_alert_address).replace("%s", event.getSecurityAlertFaultyDevice().asStringUriOnly());
+					} else {
+						message = mContext.getString(R.string.security_alert);
+					}
+					holder.eventMessage.setText(message);
+					break;
 			    case None:
 			    default:
 			    	//TODO

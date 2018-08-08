@@ -214,6 +214,8 @@
     <string name="participant_removed">%s has left</string>
     <string name="device_added">new device for %s</string>
     <string name="device_removed">device for %s removed</string>
+    <string name="security_alert_address">Security of chatroom have been compromised by %s</string>
+    <string name="security_alert">Security of chatroom have been compromised</string>
     <string name="subject_changed">new subject: %s</string>
     <string name="admin_set">%s is admin</string>
     <string name="admin_unset">%s is no longer admin</string>

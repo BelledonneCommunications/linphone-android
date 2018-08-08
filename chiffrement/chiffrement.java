@@ -59,9 +59,6 @@ public class chiffrement {
 					BigInteger saltHex = new BigInteger(saltString, 16);
 					BigInteger ivHex = new BigInteger(ivString, 16);
 
-					System.out.println("salut: iv " + ivString + " " + ivHex);
-					System.out.println("salut: salt " + saltString + " " + saltHex);
-
 					byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 					byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
 

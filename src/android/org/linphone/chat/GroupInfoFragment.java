@@ -502,6 +502,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
+	public void onSecurityAlert(ChatRoom cr, EventLog eventLog) {
+
+	}
+
+	@Override
 	public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
 
 	}

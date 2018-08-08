@@ -928,6 +928,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
+	public void onSecurityAlert(ChatRoom cr, EventLog event) {
+		mEventsAdapter.addToHistory(event);
+	}
+
+	@Override
 	public void onParticipantAdded(ChatRoom cr, EventLog event) {
 		getContactsForParticipants();
 		mEventsAdapter.addToHistory(event);
