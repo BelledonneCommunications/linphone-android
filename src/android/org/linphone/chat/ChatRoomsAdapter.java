@@ -231,13 +231,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 					holder.displayName.setText(LinphoneUtils.getAddressDisplayName(contactAddress));
 				}
 			}
-
+			ChatRoomSecurityLevel level = chatRoom.getSecurityLevel();
 			if (LinphoneManager.getLc().limeV2Enabled()) {
-				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
+				if (level == ChatRoomSecurityLevel.Safe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure2);
-				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
+				} else if (level == ChatRoomSecurityLevel.Unsafe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_unsecure);
-				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
+				} else if (level == ChatRoomSecurityLevel.Encrypted) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure1);
 				} else {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_unregistered);
@@ -245,12 +245,13 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			}
 		} else {
 			holder.displayName.setText(chatRoom.getSubject());
+			ChatRoomSecurityLevel level = chatRoom.getSecurityLevel();
 			if (LinphoneManager.getLc().limeV2Enabled()) {
-				if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
+				if (level == ChatRoomSecurityLevel.Safe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
-				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Unsafe) {
+				} else if (level == ChatRoomSecurityLevel.Unsafe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unsecure);
-				} else if (chatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
+				} else if (level == ChatRoomSecurityLevel.Encrypted) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure1);
 				} else {
 					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unregistered);

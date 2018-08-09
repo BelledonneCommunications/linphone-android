@@ -522,6 +522,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
+			ChatRoomSecurityLevel level = mChatRoom.getSecurityLevel();
 			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
 				mCallButton.setVisibility(View.VISIBLE);
 				mGroupInfosButton.setVisibility(View.GONE);
@@ -534,11 +535,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				} else {
 					mRoomLabel.setText(mParticipants.get(0).getFullName());
 				}
-				if (mChatRoom.getSecurityLevel() == ChatRoomSecurityLevel.ClearText) {
+				if (level == ChatRoomSecurityLevel.ClearText) {
 					avatarTop.setImageResource(R.drawable.avatar_small_unregistered);
-				} else if (mChatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
+				} else if (level == ChatRoomSecurityLevel.Encrypted) {
 					avatarTop.setImageResource(R.drawable.avatar_small_secure1);
-				} else if (mChatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
+				} else if (level == ChatRoomSecurityLevel.Safe) {
 					avatarTop.setImageResource(R.drawable.avatar_small_secure2);
 				} else {
 					avatarTop.setImageResource(R.drawable.avatar_small_unsecure);
@@ -548,11 +549,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				mGroupInfosButton.setVisibility(View.VISIBLE);
 				mRoomLabel.setText(mChatRoom.getSubject());
 				mParticipantsLabel.setVisibility(View.VISIBLE);
-				if (mChatRoom.getSecurityLevel() == ChatRoomSecurityLevel.ClearText) {
+				if (level == ChatRoomSecurityLevel.ClearText) {
 					avatarTop.setImageResource(R.drawable.avatar_group_small_unregistered);
-				} else if (mChatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Encrypted) {
+				} else if (level == ChatRoomSecurityLevel.Encrypted) {
 					avatarTop.setImageResource(R.drawable.avatar_group_small_secure1);
-				} else if (mChatRoom.getSecurityLevel() == ChatRoomSecurityLevel.Safe) {
+				} else if (level == ChatRoomSecurityLevel.Safe) {
 					avatarTop.setImageResource(R.drawable.avatar_group_small_secure2);
 				} else {
 					avatarTop.setImageResource(R.drawable.avatar_group_small_unsecure);
