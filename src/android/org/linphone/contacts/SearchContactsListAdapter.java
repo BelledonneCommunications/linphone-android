@@ -33,12 +33,15 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
 public class SearchContactsListAdapter extends BaseAdapter {
 
@@ -265,6 +268,19 @@ public class SearchContactsListAdapter extends BaseAdapter {
 			} else {
 				holder.isSelect.setVisibility(View.INVISIBLE);
 			}
+		}
+
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getAddress());
+		if (securityLevel == ChatRoomSecurityLevel.Safe) {
+			holder.avatar.setImageResource(R.drawable.avatar_big_secure2);
+		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+			holder.avatar.setImageResource(R.drawable.avatar_big_unsecure);
+		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+			holder.avatar.setImageResource(R.drawable.avatar_big_secure1);
+		} else {
+			holder.avatar.setImageResource(R.drawable.avatar_medium_unregistered);
 		}
 		view.setTag(R.id.contact_search_name, address != null ? address : a);
 		if (listener != null)
