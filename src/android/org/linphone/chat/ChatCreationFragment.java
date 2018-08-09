@@ -36,6 +36,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -392,21 +393,26 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 					mWaitLayout.setVisibility(View.VISIBLE);
 					Core lc = LinphoneManager.getLc();
 					Address participant = mContactsSelected.get(0).getAddress();
-					ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
-					if (chatRoom == null) {
-						ProxyConfig lpc = lc.getDefaultProxyConfig();
-						if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-							mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
-							mChatRoom.addListener(mChatRoomCreationListener);
-							Address participants[] = new Address[1];
-							participants[0] = participant;
-							mChatRoom.addParticipants(participants);
+					if (lc.getDefaultProxyConfig().getContact() != null) {
+						ChatRoom chatRoom = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+						if (chatRoom == null) {
+							ProxyConfig lpc = lc.getDefaultProxyConfig();
+							if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+								mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
+								mChatRoom.addListener(mChatRoomCreationListener);
+								Address participants[] = new Address[1];
+								participants[0] = participant;
+								mChatRoom.addParticipants(participants);
+							} else {
+								chatRoom = lc.getChatRoom(participant);
+								LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+							}
 						} else {
-							chatRoom = lc.getChatRoom(participant);
 							LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
 						}
 					} else {
-						LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+						mWaitLayout.setVisibility(View.GONE);
+						LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 					}
 				} else {
 					mContactsSelectedLayout.removeAllViews();

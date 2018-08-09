@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -205,20 +206,24 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		} else if (id == R.id.chat) {
 			Core lc = LinphoneManager.getLc();
 			Address participant = Factory.instance().createAddress(sipUri);
-			ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
-			if (room != null) {
-				LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
-			} else {
-				ProxyConfig lpc = lc.getDefaultProxyConfig();
-				if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-					mWaitLayout.setVisibility(View.VISIBLE);
-					mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
-					mChatRoom.addListener(mChatRoomCreationListener);
-					mChatRoom.addParticipant(participant);
-				} else {
-					room = lc.getChatRoom(participant);
+			if (lc.getDefaultProxyConfig().getContact() != null) {
+				ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+				if (room != null) {
 					LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+				} else {
+					ProxyConfig lpc = lc.getDefaultProxyConfig();
+					if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+						mWaitLayout.setVisibility(View.VISIBLE);
+						mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), false);
+						mChatRoom.addListener(mChatRoomCreationListener);
+						mChatRoom.addParticipant(participant);
+					} else {
+						room = lc.getChatRoom(participant);
+						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+					}
 				}
+			} else {
+				LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 			}
 		} else if (id == R.id.add_contact) {
 			Address addr = Factory.instance().createAddress(sipUri);

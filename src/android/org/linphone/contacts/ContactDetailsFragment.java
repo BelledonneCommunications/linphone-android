@@ -46,6 +46,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ContactDetailsFragment extends Fragment implements OnClickListener {
 	private LinphoneContact contact;
@@ -76,7 +77,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 				Core lc = LinphoneManager.getLc();
 				Address participant = Factory.instance().createAddress(tag);
 				ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
-				if (defaultProxyConfig != null) {
+				if (defaultProxyConfig != null && defaultProxyConfig.getContact() != null) {
 					ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant);
 					if (room != null) {
 						LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
@@ -93,6 +94,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 							LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
 						}
 					}
+				} else {
+					LinphoneActivity.instance().displayCustomToast(getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
 				}
 			}
 		}

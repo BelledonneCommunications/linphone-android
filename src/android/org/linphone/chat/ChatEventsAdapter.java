@@ -439,7 +439,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    break;
 			    case ConferenceSecurityAlert:
 					String message;
-					if (event.getSecurityAlertFaultyDevice() != null) {
+					if (event.getSecurityAlertFaultyDevice() != null && event.getSecurityAlertFaultyDevice().getUsername() != null ) {
 						message = mContext.getString(R.string.security_alert_address).replace("%s", event.getSecurityAlertFaultyDevice().asStringUriOnly());
 					} else {
 						message = mContext.getString(R.string.security_alert);
