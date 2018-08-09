@@ -276,8 +276,8 @@ public class ContactsManager extends ContentObserver {
 					contacts.add(contact);
 				}
 			}
-		}
-		Collections.sort(contacts);*/
+		}*/
+		Collections.sort(contacts);
 	}
 
 	public synchronized void setSipContacts(List<LinphoneContact> c) {
@@ -291,8 +291,8 @@ public class ContactsManager extends ContentObserver {
 					sipContacts.add(contact);
 				}
 			}
-		}
-		Collections.sort(sipContacts);*/
+		}*/
+		Collections.sort(sipContacts);
 	}
 
 	public synchronized void refreshSipContact(Friend lf) {
