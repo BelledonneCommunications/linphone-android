@@ -55,6 +55,7 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Friend;
@@ -805,6 +806,16 @@ public final class LinphoneUtils {
 		}
 
 		return ChatRoomSecurityLevel.ClearText;
+	}
+
+	public static boolean hasContentFileSharing(Content[] contents) {
+		if (contents == null) return false;
+
+		for (int i = 0 ; i < contents.length ; i++) {
+			if (contents[i].isFileTransfer()) return true;
+		}
+
+		return false;
 	}
 }
 
