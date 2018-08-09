@@ -138,16 +138,16 @@
 		<LinearLayout
 			android:id="@+id/message_layout"
 			android:layout_width="match_parent"
-			android:layout_height="50dp"
+			android:layout_height="wrap_content"
 			android:gravity="center_vertical"
 			android:orientation="horizontal">
 
 			<ImageView
 				android:id="@+id/send_picture"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_height="50dp"
 				android:contentDescription="@string/content_description_send_file"
-				android:padding="10dp"
+				android:paddingLeft="10dp"
 				android:src="@drawable/chat_send_file"/>
 
 			<EditText
@@ -161,7 +161,7 @@
 				android:contentDescription="@string/content_description_message"
 				android:imeOptions="flagNoExtractUi"
 				android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
-				android:maxLines="6"
+				android:maxLines="3"
 				android:padding="5dp"
 				android:textColor="@color/colorB"
 				android:textCursorDrawable="@null"/>
@@ -169,7 +169,7 @@
 			<ImageView
 				android:id="@+id/send_message"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
+				android:layout_height="50dp"
 				android:layout_gravity="center"
 				android:contentDescription="@string/content_description_send_message"
 				android:src="@drawable/chat_send"/>
