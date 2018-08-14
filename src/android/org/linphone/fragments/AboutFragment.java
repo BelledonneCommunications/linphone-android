@@ -167,7 +167,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 					lc.resetLogCollection();
 				}
 			} else */if (v == cancel) {
-				LinphoneActivity.instance().displayContacts(false);
+				LinphoneActivity.instance().popBackStack();
 			}
 		}
 	}

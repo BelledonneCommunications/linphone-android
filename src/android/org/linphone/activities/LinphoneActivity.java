@@ -184,17 +184,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		//This must be done before calling super.onCreate().
 		super.onCreate(savedInstanceState);
 
-		//Obiane specifics
-		//HTTP to HTTPS migration
-		try {
-			if (LinphonePreferences.instance().getRemoteProvisioningUrl() != null
-					&& LinphonePreferences.instance().getRemoteProvisioningUrl().startsWith("http://")) {
-				LinphonePreferences.instance().setRemoteProvisioningUrl(LinphonePreferences.instance().getRemoteProvisioningUrl().replace("http://", "https://"));
-			}
-		}catch(NullPointerException nPE){
-			Log.e(nPE);
-		}
-
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
         	setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
@@ -239,7 +228,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		currentFragment = FragmentsAvailable.EMPTY;
 		if (savedInstanceState == null) {
-			displayContacts(false);
+			goToChatList();
 		} else {
 			currentFragment = (FragmentsAvailable) savedInstanceState.getSerializable("currentFragment");
 		}
