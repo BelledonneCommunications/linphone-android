@@ -715,6 +715,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 
 		if (msg == null && text != null && text.length() > 0 && !textSend) {
+			msg = mChatRoom.createEmptyMessage();
 			msg.addTextContent(text);
 			// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
 			msg.send();
