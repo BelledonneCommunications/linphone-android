@@ -685,35 +685,37 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	 */
 
 	private void sendMessage() {
-		ChatMessage msg;
-		String text = mMessageTextToSend.getText().toString();
 		boolean textSend = false;
+		String text = mMessageTextToSend.getText().toString();
+		ChatMessage msg = null;
 
-		if (mFilesUploadLayout.getChildCount() > 0) {
-			for (int i = 0 ; i < mFilesUploadLayout.getChildCount() ; i++) {
-				String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
-				String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
-				String extension = LinphoneUtils.getExtensionFromFileName(fileName);
-				Content content = Factory.instance().createContent();
-				if (LinphoneUtils.isExtensionImage(fileName)) {
-					content.setType("image");
-				} else {
-					content.setType("file");
-				}
-				content.setSubtype(extension);
-				content.setName(fileName);
-				content.setFilePath(filePath);
-				msg = mChatRoom.createFileTransferMessage(content);
-
-				if (!textSend && text != null && text.length() > 0) {
-					msg.addTextContent(text);
-					textSend = true;
-				}
-				// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
-				msg.send();
+		for (int i = 0 ; i < mFilesUploadLayout.getChildCount() ; i++) {
+			String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
+			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+			String extension = LinphoneUtils.getExtensionFromFileName(fileName);
+			Content content = Factory.instance().createContent();
+			if (LinphoneUtils.isExtensionImage(fileName)) {
+				content.setType("image");
+			} else {
+				content.setType("file");
 			}
-		} else {
-			msg = mChatRoom.createMessage(text);
+			content.setSubtype(extension);
+			content.setName(fileName);
+			content.setFilePath(filePath);
+
+			msg = mChatRoom.createEmptyMessage();
+			msg.addFileContent(content);
+
+			if (text != null && text.length() > 0 && !textSend) {
+				msg.addTextContent(text);
+				textSend = true;
+			}
+			msg.send();
+			msg = null;
+		}
+
+		if (msg == null && text != null && text.length() > 0 && !textSend) {
+			msg.addTextContent(text);
 			// Set listener not required here anymore, message will be added to messages list and adapter will set the listener
 			msg.send();
 		}

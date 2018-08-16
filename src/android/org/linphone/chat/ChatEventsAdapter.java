@@ -181,7 +181,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
-	    holder.separatorLayout.setVisibility(i == 0 ? View.GONE : View.VISIBLE); // Hide separator if first item in list
 	    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
 	    holder.messageText.setVisibility(View.GONE);
 	    holder.messageImage.setVisibility(View.GONE);
@@ -211,13 +210,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    EventLog previousEvent = (EventLog)getItem(i-1);
 			    if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
 				    ChatMessage previousMessage = previousEvent.getChatMessage();
-				    if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
+				    /*if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
 					    holder.separatorLayout.setVisibility(View.GONE);
-				    }
-			    } else {
+				    }*/
+			    }/* else {
 			    	// No separator if previous event is not a message
 				    holder.separatorLayout.setVisibility(View.GONE);
-			    }
+			    }*/
 		    }
 
 		    holder.messageId = message.getMessageId();
@@ -281,7 +280,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    //Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
 			    holder.contactName.setVisibility(View.GONE);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
-			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
+			    //holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 		    } else {
 			    for (LinphoneContact c : mParticipants) {
@@ -303,7 +302,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    //Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
 			    holder.contactName.setVisibility(View.VISIBLE);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
-			    holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+			    //holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 		    }
 
