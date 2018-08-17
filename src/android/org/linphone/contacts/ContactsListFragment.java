@@ -572,11 +572,11 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.separator.setVisibility(View.GONE);
 			}
 
-			if (contact.isInFriendList()) {
+			/*if (contact.isInFriendList()) {
 				holder.linphoneFriend.setVisibility(View.VISIBLE);
 			} else {
 				holder.linphoneFriend.setVisibility(View.GONE);
-			}
+			}*/
 
 			holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			if (contact.hasPhoto()) {

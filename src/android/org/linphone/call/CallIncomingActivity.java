@@ -46,13 +46,17 @@ import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.CallParams;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
 public class CallIncomingActivity extends LinphoneGenericActivity implements LinphoneSliderTriggered {
 	private static CallIncomingActivity instance;
@@ -238,6 +242,18 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 			name.setText(contact.getFullName());
+			ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+			Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getFriend().getAddress());
+			if (securityLevel == ChatRoomSecurityLevel.Safe) {
+				contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+			} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+				contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+			} else {
+				contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+			}
 		} else {
 			name.setText(LinphoneUtils.getAddressDisplayName(address));
 		}
