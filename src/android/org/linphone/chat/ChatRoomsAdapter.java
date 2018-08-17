@@ -198,7 +198,8 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				} else {
 					holder.messageStatus.setImageResource(R.drawable.message_undelivered);
 				}
-			} else {
+			}
+			if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())){
 				Address lastMessageSenderAddress = lastMessage.getFromAddress();
 				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(lastMessageSenderAddress);
 				holder.lastMessageSenderView.setVisibility(View.VISIBLE);
