@@ -49,7 +49,9 @@ import org.linphone.ui.LedPreference;
 import org.linphone.ui.PreferencesListFragment;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,6 +59,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -68,6 +71,11 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
+import android.support.v4.content.PermissionChecker;
+import android.telecom.TelecomManager;
+
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class SettingsFragment extends PreferencesListFragment {
 	private LinphonePreferences mPrefs;
@@ -616,8 +624,8 @@ public class SettingsFragment extends PreferencesListFragment {
 				synchronized (SettingsFragment.this) {
 					preference.setSummary(R.string.ec_calibrating);
 
-					int recordAudio = getActivity().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getActivity().getPackageName());
-					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+					int recordAudio = getActivity().getPackageManager().checkPermission(RECORD_AUDIO, getActivity().getPackageName());
+					if (recordAudio == PERMISSION_GRANTED) {
 						startEchoCancellerCalibration();
 					} else {
 						LinphoneActivity.instance().checkAndRequestRecordAudioPermissionForEchoCanceller();
@@ -631,8 +639,8 @@ public class SettingsFragment extends PreferencesListFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				synchronized (SettingsFragment.this) {
-					int recordAudio = getActivity().getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getActivity().getPackageName());
-					if (recordAudio == PackageManager.PERMISSION_GRANTED) {
+					int recordAudio = getActivity().getPackageManager().checkPermission(RECORD_AUDIO, getActivity().getPackageName());
+					if (recordAudio == PERMISSION_GRANTED) {
 						if (LinphoneManager.getInstance().getEchoTesterStatus())
 							stopEchoTester();
 						else
@@ -932,12 +940,14 @@ public class SettingsFragment extends PreferencesListFragment {
 		});
 	}
 
+	@TargetApi(Build.VERSION_CODES.M)
 	private void initCallSettings() {
 		CheckBoxPreference deviceRingtone = (CheckBoxPreference) findPreference(getString(R.string.pref_device_ringtone_key));
 		CheckBoxPreference autoAnswer = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
 		CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
 		CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
 		CheckBoxPreference dialerCall = (CheckBoxPreference) findPreference(getString(R.string.pref_dialer_call_key));
+		CheckBoxPreference nativeCall = (CheckBoxPreference) findPreference(getString(R.string.pref_native_call_key));
 		EditTextPreference incTimeout = (EditTextPreference) findPreference(getString(R.string.pref_incoming_call_timeout_key));
 		EditTextPreference autoAnswerTime = (EditTextPreference) findPreference(getString(R.string.pref_auto_answer_time_key));
 
@@ -958,6 +968,9 @@ public class SettingsFragment extends PreferencesListFragment {
 
 		setPreferenceDefaultValueAndSummary(R.string.pref_voice_mail_key, mPrefs.getVoiceMailUri());
 		dialerCall.setChecked(mPrefs.getNativeDialerCall());
+		nativeCall.setChecked(mPrefs.getNativeUICall());
+
+
 	}
 
 	public void enableDeviceRingtone(boolean enabled) {
@@ -973,7 +986,7 @@ public class SettingsFragment extends PreferencesListFragment {
 				boolean use = (Boolean) newValue;
 				if (use) {
 					int readExternalStorage = getActivity().getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getActivity().getPackageName());
-					if (readExternalStorage == PackageManager.PERMISSION_GRANTED) {
+					if (readExternalStorage == PERMISSION_GRANTED) {
 						mPrefs.enableDeviceRingtone(true);
 						LinphoneManager.getInstance().enableDeviceRingtone(true);
 					} else {
@@ -1059,6 +1072,41 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
+
+
+		//New setting to enable linphone calls integration into system calling app
+		Preference prefSysUI = findPreference(getString(R.string.pref_native_call_key));
+		if(prefSysUI != null) {
+			prefSysUI.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					boolean use = (Boolean) newValue;
+
+					if (use){
+
+						Intent phoneAccountSelect = new Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS);
+						startActivity(phoneAccountSelect);
+
+
+						Intent phoneAccountEnable = new Intent();
+						phoneAccountEnable.setComponent(new ComponentName("com.android.server.telecom", "com.android.server.telecom.settings.EnableAccountPreferenceActivity"));
+						phoneAccountEnable.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(phoneAccountEnable);
+					}
+
+
+
+					mPrefs.setNativeUICall(use);
+					return true;
+				}
+			});
+		}else{
+			mPrefs.setNativeUICall(false);
+		}
+
+
+
+
 
 		findPreference(getString(R.string.pref_incoming_call_timeout_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			@Override

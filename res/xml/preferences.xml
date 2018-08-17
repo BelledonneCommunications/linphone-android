@@ -229,6 +229,11 @@
 					android:title="@string/pref_dialer_call"
 					android:key="@string/pref_dialer_call_key"
 					android:persistent="false"/>
+				<!--Linphone calls into native UI integration option-->
+				<CheckBoxPreference
+					android:title="@string/pref_native_call"
+					android:key="@string/pref_native_call_key"
+					android:persistent="false"/>
 
 
 			</PreferenceCategory>

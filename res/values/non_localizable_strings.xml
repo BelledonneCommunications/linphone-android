@@ -140,6 +140,8 @@
 	<string name="pref_sipinfo_dtmf_key">pref_sipinfo_dtmf_key</string>
 	<string name="pref_voice_mail_key">pref_voice_mail_key</string>
 	<string name="pref_dialer_call_key">pref_dialer_call_key</string>
+	<!--New key to enable system call UI integration-->
+	<string name="pref_native_call_key">pref_system_call_key</string>
 	<string name="pref_upnp_enable_key">pref_upnp_enable_key</string>
 
 	<string name="pref_first_time_linphone_chat_storage">pref_first_time_linphone_chat_storage</string>

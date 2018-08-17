@@ -1036,6 +1036,25 @@ public class LinphonePreferences {
 	public void setNativeDialerCall(boolean use) {
 		getConfig().setBool("app", "native_dialer_call", use);
 	}
+
+
+	// New methodes to get/set native calls UI enabling settings
+
+	public boolean getNativeUICall() {
+		return getConfig().getBool("app", "native_ui_call", false);
+	}
+
+	public void setNativeUICall(boolean use) {
+		getConfig().setBool("app", "native_ui_call", use);
+	}
+
+
+
+
+
+
+
+
 // End of call settings
 
 	// Network settings
