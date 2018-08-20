@@ -218,6 +218,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="no_current_call">Aucun appel en cours</string>
   <string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation de l\'appel</string>
   <string name="zrtp_dialog1">Indiquez le code SAS suivant à votre interlocuteur:\nDites: %s</string>
+  <string name="zrtp_dialog2">\nVotre interlocuteur doit dire: %s</string>
   <string name="unknown_incoming_call_name">Inconnu</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Vidéo</string>

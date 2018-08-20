@@ -84,14 +84,16 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
 	private ChatMessageListenerStub mListener;
+	private boolean isOneToOne;
 
-    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants) {
+    public ChatEventsAdapter(GroupChatFragment fragment, ListSelectionHelper helper, LayoutInflater inflater, EventLog[] history, ArrayList<LinphoneContact> participants, boolean oneToOne) {
 	    super(helper);
 	    mFragment = fragment;
 	    mContext = mFragment.getActivity();
         mLayoutInflater = inflater;
         mHistory = new ArrayList<>(Arrays.asList(history));
 	    mParticipants = participants;
+	    isOneToOne = oneToOne;
 
 	    mListener = new ChatMessageListenerStub() {
 		    @Override
@@ -394,7 +396,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    holder.messageDate.setVisibility(View.VISIBLE);
 
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
-	    } else { // Event is not chat message
+	    } else if (!isOneToOne) { // Event is not chat message
 		    holder.eventLayout.setVisibility(View.VISIBLE);
 
 		    Address address = event.getParticipantAddress();

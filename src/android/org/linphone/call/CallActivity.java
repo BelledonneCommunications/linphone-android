@@ -1250,7 +1250,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			refreshStatusItems(lc.getCurrentCall(), lc.getCurrentCall().getCurrentParams().videoEnabled());
 		}
 
-        if (lc != null) {
+        if (lc != null && getisZrtpAsk()) {
             showZRTPDialog(lc.getCurrentCall());
         }
 

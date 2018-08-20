@@ -39,7 +39,7 @@
                 android:contentDescription="@string/content_description_add_contact"
                 android:padding="15dp"
                 android:src="@drawable/contact_add"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/goto_contact"
@@ -50,7 +50,7 @@
                 android:contentDescription="@string/content_description_contacts"
                 android:padding="15dp"
                 android:src="@drawable/contact"
-                android:visibility="gone"/>
+                android:visibility="invisible"/>
         </LinearLayout>
 
         <ScrollView
