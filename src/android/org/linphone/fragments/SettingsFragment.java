@@ -29,6 +29,7 @@ import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.call.LinPhoneAccount;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.EcCalibratorStatus;
@@ -71,6 +72,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.PermissionChecker;
 import android.telecom.TelecomManager;
 
@@ -1078,23 +1080,32 @@ public class SettingsFragment extends PreferencesListFragment {
 		Preference prefSysUI = findPreference(getString(R.string.pref_native_call_key));
 		if(prefSysUI != null) {
 			prefSysUI.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				@RequiresApi(api = Build.VERSION_CODES.M)
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean use = (Boolean) newValue;
-
+					LinphoneManager mLinManager = LinphoneManager.getInstance();
 					if (use){
+						mLinManager.setLinPhoneAccount();
+//						LinPhoneAccount account = new LinPhoneAccount(LinphoneManager.getInstance().getContext());
+//						account.registerPhoneAccount();
+
 
 						Intent phoneAccountSelect = new Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS);
 						startActivity(phoneAccountSelect);
-
 
 						Intent phoneAccountEnable = new Intent();
 						phoneAccountEnable.setComponent(new ComponentName("com.android.server.telecom", "com.android.server.telecom.settings.EnableAccountPreferenceActivity"));
 						phoneAccountEnable.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(phoneAccountEnable);
+
+					}else{
+						LinPhoneAccount account = mLinManager.getLinPhoneAccount();
+						if (account != null){
+//						if (account.getAccountHandler() != null){
+							account.unregisterPhoneAccount();
+						}
 					}
-
-
 
 					mPrefs.setNativeUICall(use);
 					return true;

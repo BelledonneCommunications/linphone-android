@@ -19,8 +19,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.telecom.TelecomManager;
+
 import org.linphone.BandwidthManager;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
@@ -35,7 +43,7 @@ import org.linphone.mediastream.Log;
 public class CallManager {
 
 	private static CallManager instance;
-
+	private Call mCall;
 	private CallManager() {}
 	public static final synchronized CallManager getInstance() {
 		if (instance == null) instance = new CallManager();
@@ -46,6 +54,8 @@ public class CallManager {
 		return BandwidthManager.getInstance();
 	}
 
+	@TargetApi(Build.VERSION_CODES.M)
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) throws CoreException {
 		Core lc = LinphoneManager.getLc();
 
@@ -63,7 +73,17 @@ public class CallManager {
 			Log.d("Low bandwidth enabled in call params");
 		}
 
+
+//		TelecomManager telecomManager = (TelecomManager) LinphoneManager.getInstance().getContext().getSystemService(Context.TELECOM_SERVICE);
+
+
 		lc.inviteAddressWithParams(lAddress, params);
+//		LinphonePreferences mPrefs = LinphonePreferences.instance();
+//		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+//			Bundle extras = new Bundle();
+//			extras.putString("callId", mCall.getCallLog().getCallId());
+//			telecomManager.addNewIncomingCall(LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler(), extras);
+//		}
 	}
 
 	/**
@@ -129,6 +149,10 @@ public class CallManager {
 		CallParams params = lc.createCallParams(lCall);
 		bm().updateWithProfileSettings(lc, params);
 		lc.updateCall(lCall, null);
+	}
+
+	public Call getCall(){
+		return mCall;
 	}
 
 }

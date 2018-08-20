@@ -40,6 +40,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.telecom.TelecomManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,6 +66,7 @@ import android.widget.Toast;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.call.LinphoneConnectionService;
 import org.linphone.chat.ImdnFragment;
 import org.linphone.contacts.ContactPicked;
 import org.linphone.fragments.AboutFragment;
@@ -1101,11 +1103,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			Call call = LinphoneManager.getLc().getCalls()[0];
-			if (call.getState() == Call.State.IncomingReceived) {
-				startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
-			} else {
-				startIncallActivity(call);
-			}
+
+
+			//Use TelecomManager UI if option selected
+//			LinphonePreferences mPrefs = LinphonePreferences.instance();
+//			if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+//				startIncallTelecomManager();
+//			}else{
+				if (call.getState() == Call.State.IncomingReceived) {
+					startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
+				} else {
+					startIncallActivity(call);
+				}
+//			}
 		}
 	}
 
@@ -1427,8 +1437,18 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				Call call = LinphoneManager.getLc().getCalls()[0];
 				Call.State onCallStateChanged = call.getState();
 
+
 				if (onCallStateChanged == State.IncomingReceived) {
+
+
+
+
 					startActivity(new Intent(this, CallIncomingActivity.class));
+
+
+
+
+
 				} else if (onCallStateChanged == State.OutgoingInit || onCallStateChanged == State.OutgoingProgress || onCallStateChanged == State.OutgoingRinging) {
 					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
@@ -1864,4 +1884,23 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		return -1;
 	}
+
+
+
+
+
+
+//	private void startIncallTelecomManager(){
+//		final Call mCall = lookupCurrentCall();
+//
+//
+//		TelecomManager telecomManager = (TelecomManager) LinphoneManager.getInstance().getContext().getSystemService(Context.TELECOM_SERVICE);
+//
+//		Bundle extras = new Bundle();
+//		extras.putString(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
+//		telecomManager.addNewIncomingCall(LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler(), extras);
+//	}
+
+
+
 }

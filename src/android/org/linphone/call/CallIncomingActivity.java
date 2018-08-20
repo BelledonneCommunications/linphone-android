@@ -223,6 +223,11 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 		// Only one call ringing at a time is allowed
 		lookupCurrentCall();
+
+
+
+
+
 		if (mCall == null) {
 			//The incoming call no longer exists.
 			Log.d("Couldn't find incoming call");

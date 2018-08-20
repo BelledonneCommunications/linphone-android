@@ -49,6 +49,8 @@ import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.support.annotation.RequiresApi;
+import android.telecom.PhoneAccount;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +61,7 @@ import org.linphone.call.CallIncomingActivity;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallManager;
+import org.linphone.call.LinPhoneAccount;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreatorListener;
@@ -179,9 +182,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private boolean mProximitySensingEnabled;
 	private boolean handsetON = false;
 	private Address mCurrentChatRoomAddress;
+	private LinPhoneAccount mPhoneAccount;
 
 	public String wizardLoginViewDomain = null;
 
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	protected LinphoneManager(final Context c) {
 		mUnreadChatsPerRoom = new HashMap();
 		sExited = false;
@@ -314,6 +319,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		routeAudioToSpeakerHelper(false);
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public synchronized static final LinphoneManager createAndStart(Context c) {
 		if (instance != null)
 			throw new RuntimeException("Linphone Manager is already initialized");
@@ -408,6 +414,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		newOutgoingCall(to, address.getDisplayedName());
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void newOutgoingCall(String to, String displayName) {
 //		if (mLc.inCall()) {
 //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
@@ -1780,5 +1787,13 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	public void onQrcodeFound(Core lc, String something){
+	}
+
+	public LinPhoneAccount getLinPhoneAccount (){
+		return mPhoneAccount;
+	}
+
+	public void setLinPhoneAccount (){
+		mPhoneAccount = new LinPhoneAccount(getContext());
 	}
 }
