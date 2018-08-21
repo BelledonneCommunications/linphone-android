@@ -38,6 +38,8 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessageListener;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListenerStub;
@@ -84,6 +86,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 	private LayoutInflater mLayoutInflater;
 	private Bitmap mDefaultBitmap, mDefaultGroupBitmap;
 	private ChatRoomListenerStub mListener;
+	private ChatMessageListenerStub mChatMessageListener;
 
 	public ChatRoomsAdapter(Context context, ListSelectionHelper helper, LayoutInflater inflater) {
 		super(helper);
@@ -98,6 +101,14 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			public void onSubjectChanged(ChatRoom cr, EventLog eventLog) {
 				ChatRoomViewHolder holder = (ChatRoomViewHolder) cr.getUserData();
 				holder.displayName.setText(cr.getSubject());
+			}
+		};
+
+		mChatMessageListener = new ChatMessageListenerStub() {
+			@Override
+			public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
+				super.onMsgStateChanged(msg, state);
+				refresh();
 			}
 		};
 	}
@@ -159,6 +170,10 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		Address remoteAddress = chatRoom.getPeerAddress();
 		Address contactAddress = remoteAddress;
 
+		if (chatRoom.getLastMessageInHistory() != null && chatRoom.getLastMessageInHistory().isOutgoing()) {
+			chatRoom.getLastMessageInHistory().setListener(mChatMessageListener);
+		}
+
 		if (chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && chatRoom.getParticipants().length > 0) {
 			contactAddress = chatRoom.getParticipants()[0].getAddress();
 		}
@@ -198,6 +213,8 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				} else {
 					holder.messageStatus.setImageResource(R.drawable.message_undelivered);
 				}
+			} else {
+				holder.messageStatus.setVisibility(View.GONE);
 			}
 			if (!chatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())){
 				Address lastMessageSenderAddress = lastMessage.getFromAddress();
