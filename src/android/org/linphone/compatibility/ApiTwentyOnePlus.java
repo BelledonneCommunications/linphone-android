@@ -60,6 +60,7 @@ public class ApiTwentyOnePlus {
 			.setPriority(Notification.PRIORITY_HIGH)
 			.setNumber(msgCount)
 			.setWhen(System.currentTimeMillis())
+			.setShowWhen(true)
 			.build();
 
 		return notif;
@@ -81,6 +82,7 @@ public class ApiTwentyOnePlus {
 			.setLights(ContextCompat.getColor(context, R.color.notification_color_led),
 					context.getResources().getInteger(R.integer.notification_ms_on),
 					context.getResources().getInteger(R.integer.notification_ms_off))
+			.setShowWhen(true)
 			.build();
 
 		return notif;
@@ -103,6 +105,7 @@ public class ApiTwentyOnePlus {
 						context.getResources().getInteger(R.integer.notification_ms_off))
 				.setWhen(System.currentTimeMillis())
 				.setPriority(priority)
+				.setShowWhen(true)
 		        .build();
 		} else {
 			notif = new Notification.Builder(context)
@@ -117,6 +120,7 @@ public class ApiTwentyOnePlus {
 						context.getResources().getInteger(R.integer.notification_ms_off))
 				.setPriority(priority)
 				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
 		        .build();
 		}
 
@@ -143,6 +147,7 @@ public class ApiTwentyOnePlus {
 				context.getResources().getInteger(R.integer.notification_ms_off))
 		.setPriority(Notification.PRIORITY_HIGH)
 		.setWhen(System.currentTimeMillis())
+		.setShowWhen(true)
 		.build();
 
 		return notif;
@@ -164,6 +169,7 @@ public class ApiTwentyOnePlus {
 				context.getResources().getInteger(R.integer.notification_ms_off))
 		.setWhen(System.currentTimeMillis())
 		.setPriority(Notification.PRIORITY_HIGH)
+		.setShowWhen(true)
 		.build();
 
 		return notif;

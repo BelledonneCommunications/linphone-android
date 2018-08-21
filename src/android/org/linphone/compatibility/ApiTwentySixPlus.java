@@ -88,6 +88,7 @@ public class ApiTwentySixPlus {
 					.setPriority(Notification.PRIORITY_HIGH)
 					.setNumber(msgCount)
 					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
 					.build();
 
 		return notif;
@@ -108,6 +109,7 @@ public class ApiTwentySixPlus {
 				.setVisibility(Notification.VISIBILITY_PUBLIC)
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
 				.build();
 
 		return notif;
@@ -127,6 +129,7 @@ public class ApiTwentySixPlus {
 					.setVisibility(Notification.VISIBILITY_SECRET)
 					.setPriority(priority)
 					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
 					.build();
 		} else {
 			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
@@ -138,6 +141,7 @@ public class ApiTwentySixPlus {
 					.setVisibility(Notification.VISIBILITY_SECRET)
 					.setPriority(priority)
 					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
 					.build();
 		}
 
@@ -161,6 +165,7 @@ public class ApiTwentySixPlus {
 				.setVisibility(Notification.VISIBILITY_PRIVATE)
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
 				.build();
 
 		return notif;
@@ -179,6 +184,7 @@ public class ApiTwentySixPlus {
 				.setVisibility(Notification.VISIBILITY_PRIVATE)
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
 				.build();
 
 		return notif;
