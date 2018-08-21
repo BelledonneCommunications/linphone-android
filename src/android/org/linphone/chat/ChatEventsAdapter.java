@@ -183,6 +183,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
+	    holder.separatorLayout.setVisibility(i == 0 ? View.GONE : View.VISIBLE); // Hide separator if first item in list
 	    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
 	    holder.messageText.setVisibility(View.GONE);
 	    holder.messageImage.setVisibility(View.GONE);
@@ -212,13 +213,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    EventLog previousEvent = (EventLog)getItem(i-1);
 			    if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
 				    ChatMessage previousMessage = previousEvent.getChatMessage();
-				    /*if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
+				    if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
 					    holder.separatorLayout.setVisibility(View.GONE);
-				    }*/
-			    }/* else {
+				    }
+			    } else {
 			    	// No separator if previous event is not a message
 				    holder.separatorLayout.setVisibility(View.GONE);
-			    }*/
+			    }
 		    }
 
 		    holder.messageId = message.getMessageId();

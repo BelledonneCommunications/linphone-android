@@ -62,10 +62,17 @@
 		android:layout_height="wrap_content"
 		android:layout_toLeftOf="@id/delete_message">
 
+		<LinearLayout
+		android:id="@+id/separator"
+		android:layout_width="100dp"
+		android:layout_height="10dp"
+		android:orientation="horizontal"/>
+
         <LinearLayout
             android:id="@+id/background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/separator"
             android:orientation="horizontal">
 
             <RelativeLayout
