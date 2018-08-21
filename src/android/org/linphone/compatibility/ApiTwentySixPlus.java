@@ -87,6 +87,7 @@ public class ApiTwentySixPlus {
 					.setVisibility(Notification.VISIBILITY_PRIVATE)
 					.setPriority(Notification.PRIORITY_HIGH)
 					.setNumber(msgCount)
+					.setWhen(System.currentTimeMillis())
 					.build();
 
 		return notif;
@@ -106,6 +107,7 @@ public class ApiTwentySixPlus {
 				.setCategory(Notification.CATEGORY_CALL)
 				.setVisibility(Notification.VISIBILITY_PUBLIC)
 				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
 				.build();
 
 		return notif;
@@ -124,6 +126,7 @@ public class ApiTwentySixPlus {
 					.setCategory(Notification.CATEGORY_SERVICE)
 					.setVisibility(Notification.VISIBILITY_SECRET)
 					.setPriority(priority)
+					.setWhen(System.currentTimeMillis())
 					.build();
 		} else {
 			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
@@ -134,6 +137,7 @@ public class ApiTwentySixPlus {
 					.setCategory(Notification.CATEGORY_SERVICE)
 					.setVisibility(Notification.VISIBILITY_SECRET)
 					.setPriority(priority)
+					.setWhen(System.currentTimeMillis())
 					.build();
 		}
 
@@ -156,6 +160,7 @@ public class ApiTwentySixPlus {
 				.setCategory(Notification.CATEGORY_MESSAGE)
 				.setVisibility(Notification.VISIBILITY_PRIVATE)
 				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
 				.build();
 
 		return notif;
@@ -173,6 +178,7 @@ public class ApiTwentySixPlus {
 				.setCategory(Notification.CATEGORY_MESSAGE)
 				.setVisibility(Notification.VISIBILITY_PRIVATE)
 				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
 				.build();
 
 		return notif;
