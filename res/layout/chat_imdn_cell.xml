@@ -7,19 +7,6 @@
     android:background="@color/colorH"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/separator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <ImageView
-            android:background="@color/colorE"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -76,5 +63,18 @@
             android:layout_centerVertical="true"/>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:background="@color/colorE"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

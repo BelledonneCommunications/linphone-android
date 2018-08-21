@@ -228,7 +228,7 @@ public class ImdnFragment extends Fragment {
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
-			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			v.findViewById(R.id.separator).setVisibility(View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format, true));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			/*if (participantContact != null && participantContact.hasPhoto()) {
@@ -252,7 +252,7 @@ public class ImdnFragment extends Fragment {
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
-			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			v.findViewById(R.id.separator).setVisibility(View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format, true));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			/*if (participantContact != null && participantContact.hasPhoto()) {
@@ -276,7 +276,7 @@ public class ImdnFragment extends Fragment {
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
-			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			v.findViewById(R.id.separator).setVisibility(View.VISIBLE);
 			((TextView)v.findViewById(R.id.time)).setText(LinphoneUtils.timestampToHumanDate(getActivity(), participant.getStateChangeTime(), R.string.messages_date_format, true));
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			/*if (participantContact != null && participantContact.hasPhoto()) {
@@ -300,7 +300,7 @@ public class ImdnFragment extends Fragment {
 			String participantDisplayName = participantContact != null ? participantContact.getFullName() : LinphoneUtils.getAddressDisplayName(address);
 
 			View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
-			v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
+			v.findViewById(R.id.separator).setVisibility(View.VISIBLE);
 			((TextView)v.findViewById(R.id.name)).setText(participantDisplayName);
 			/*if (participantContact != null && participantContact.hasPhoto()) {
 				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), ((ImageView)v.findViewById(R.id.contact_picture)), participantContact.getThumbnailUri());
