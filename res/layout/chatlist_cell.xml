@@ -98,8 +98,8 @@
 			<TextView
 				android:id="@+id/unreadMessages"
 				style="@style/font18"
-				android:layout_width="20dp"
-				android:layout_height="20dp"
+				android:layout_width="25dp"
+				android:layout_height="25dp"
 				android:layout_alignBottom="@+id/sipUri"
 				android:layout_alignParentEnd="true"
 				android:layout_marginBottom="4dp"
@@ -107,7 +107,8 @@
 				android:background="@drawable/chat_list_indicator"
 				android:contentDescription="@string/content_description_unread_chat_message"
 				android:gravity="center"
-				android:maxLines="1"/>
+				android:maxLines="1"
+				android:textSize="18sp"/>
 
 			<LinearLayout
 				android:id="@id/lastMessageLayout"
