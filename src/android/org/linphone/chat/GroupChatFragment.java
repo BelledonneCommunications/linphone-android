@@ -853,7 +853,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mParticipantsLabel.setVisibility(View.GONE);
 		if (composing.size() == 0) {
 			mRemoteComposing.setVisibility(View.GONE);
-			mParticipantsLabel.setVisibility(View.VISIBLE);
+			if (!mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) mParticipantsLabel.setVisibility(View.VISIBLE);
 		} else if (composing.size() == 1) {
 			mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", composing.get(0)));
 		} else {
