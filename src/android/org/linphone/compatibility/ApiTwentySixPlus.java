@@ -77,7 +77,7 @@ public class ApiTwentySixPlus {
 		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 					.setContentTitle(title)
 					.setContentText(msg)
-					.setSmallIcon(R.drawable.topbar_chat_notification)
+					.setSmallIcon(R.drawable.logo_secure_phone_small)
 					.setAutoCancel(true)
 					.setContentIntent(intent)
 					.setDefaults(Notification.DEFAULT_SOUND
@@ -148,7 +148,7 @@ public class ApiTwentySixPlus {
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 				.setContentTitle(title)
 				.setContentText(text)
-				.setSmallIcon(R.drawable.call_status_missed)
+				.setSmallIcon(R.drawable.logo_secure_phone_small)
 				.setAutoCancel(true)
 				.setContentIntent(intent)
 				.setDefaults(Notification.DEFAULT_SOUND
@@ -165,7 +165,7 @@ public class ApiTwentySixPlus {
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 				.setContentTitle(title)
 				.setContentText(text)
-				.setSmallIcon(R.drawable.linphone_logo)
+				.setSmallIcon(R.drawable.logo_secure_phone_small)
 				.setAutoCancel(true)
 				.setContentIntent(intent)
 				.setDefaults(Notification.DEFAULT_SOUND

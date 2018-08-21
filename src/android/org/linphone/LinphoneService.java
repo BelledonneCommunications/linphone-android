@@ -561,7 +561,7 @@ public final class LinphoneService extends Service {
 		try {
 			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
 		} catch (Exception e) {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
 		}
 		String name = address.getDisplayName() == null ? address.getUsername() : address.getDisplayName();
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
@@ -639,10 +639,10 @@ public final class LinphoneService extends Service {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
 			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_secure1);
 			}
 		} else {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_secure1);
 		}
 		Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, subject,
 				getString(R.string.group_chat_notif).replace("%1", fromName).replace("%2", message), bm, notifContentIntent);
@@ -677,10 +677,10 @@ public final class LinphoneService extends Service {
 			try {
 				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
 			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
 			}
 		} else {
-			bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
 		}
 		Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, fromName, message, bm, notifContentIntent);
 
