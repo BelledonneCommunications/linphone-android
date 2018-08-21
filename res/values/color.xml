@@ -14,7 +14,7 @@
     <color name="colorL">#96c11f</color>
     <color name="colorM">#f1f1f1</color>
     <color name="colorN">#ff6600</color>
-    <color name="notification_color_led">#FF8000</color>
+    <color name="notification_color_led">#ff6600</color>
 
     <color name="transparent">#00000000</color>
 
