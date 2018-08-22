@@ -76,24 +76,18 @@
 		android:layout_alignParentBottom="true"
 		>
 
-		<RelativeLayout
-			android:layout_width="match_parent"
+		<ImageView
+			android:id="@+id/add_contact"
+			android:layout_width="200dp"
 			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
 			android:layout_weight="1"
 			android:adjustViewBounds="true"
+			android:background="#595959"
+			android:contentDescription="@string/content_description_add_contact"
 			android:focusable="true"
-			android:visibility="gone">
-
-			<ImageView
-				android:id="@+id/add_contact"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_alignParentBottom="true"
-				android:contentDescription="@string/content_description_add_contact"
-				android:padding="15dp"
-				android:src="@drawable/contact_add_button"/>
-
-		</RelativeLayout>
+			android:src="@drawable/back_white"
+			android:visibility="gone"/>
 
 		<org.linphone.ui.CallButton
 			android:id="@+id/call"

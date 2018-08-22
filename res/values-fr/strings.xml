@@ -197,6 +197,8 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="admin_set">%s est devenu(e) admin</string>
   <string name="admin_unset">%s n\'est plus admin</string>
   <string name="chat_room_you_are_now_admin">Vous êtes maintenant admin</string>
+  <string name="chat_room_you_are_no_longer_admin">Vous n\'êtes plus admin</string>
+  <string name="chat_room_creation_failed">La création de la conversation a échoué</string>
   <string name="chat_room_leave_dialog">Voulez vous vraiment quitter cette conversation ?</string>
   <string name="chat_room_leave_button">Quitter</string>
   <string name="chat_room_delete_dialog">Voulez vous vraiment quitter et supprimer les conversations selectionnées ?</string>
@@ -216,6 +218,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="incoming_call">appel entrant</string>
   <string name="outgoing_call">appel sortant</string>
   <string name="no_current_call">Aucun appel en cours</string>
+  <string name="add_video_dialog">Votre interlocuteur voudrait activer la vidéo</string>
   <string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation de l\'appel</string>
   <string name="zrtp_dialog1">Indiquez le code SAS suivant à votre interlocuteur:\nDites: %s</string>
   <string name="zrtp_dialog2">\nVotre interlocuteur doit dire: %s</string>

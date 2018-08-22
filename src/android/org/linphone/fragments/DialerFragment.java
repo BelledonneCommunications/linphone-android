@@ -208,8 +208,9 @@ public class DialerFragment extends Fragment {
 				//mCall.resetClickListener();
 			}
 			mAddContact.setEnabled(true);
-			mAddContact.setImageResource(R.drawable.call_alt_back);
+			//mAddContact.setImageResource(R.drawable.call_alt_back);
 			mAddContact.setOnClickListener(cancelListener);
+			mAddContact.setVisibility(View.VISIBLE);
 		} else {
 			/*if (LinphoneManager.getLc().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
@@ -217,14 +218,15 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_alt_start_selected);
 			//}
 			mAddContact.setEnabled(false);
-			mAddContact.setImageResource(R.drawable.contact_add_button);
-			mAddContact.setOnClickListener(addContactListener);
-			enableDisableAddContact();
+			//mAddContact.setImageResource(R.drawable.contact_add_button);
+			//mAddContact.setOnClickListener(addContactListener);
+			//enableDisableAddContact();
+			mAddContact.setVisibility(View.GONE);
 		}
 	}
 
 	public void enableDisableAddContact() {
-		mAddContact.setEnabled(LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
+		//mAddContact.setEnabled(LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
 	}
 
 	public void displayTextInAddressBar(String numberOrSipAddress) {

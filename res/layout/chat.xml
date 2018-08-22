@@ -148,8 +148,10 @@
 				android:id="@+id/send_picture"
 				android:layout_width="wrap_content"
 				android:layout_height="50dp"
+				android:layout_marginLeft="2dp"
+				android:layout_marginRight="-5dp"
 				android:contentDescription="@string/content_description_send_file"
-				android:paddingLeft="10dp"
+				android:padding="10dp"
 				android:src="@drawable/chat_send_file"/>
 
 			<EditText

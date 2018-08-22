@@ -153,8 +153,8 @@
 						android:layout_width="match_parent"
 						android:layout_height="80dp"
 						android:layout_alignParentBottom="true"
-						android:layout_below="@+id/avatar_layout"
 						android:layout_marginTop="-5dp"
+						android:alpha="0.8"
 						android:background="@color/colorH"
 						android:orientation="vertical">
 
@@ -164,7 +164,6 @@
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:layout_gravity="center"
-							android:background="@color/colorH"
 							android:gravity="center"
 							android:paddingTop="5dp"/>
 
@@ -174,7 +173,7 @@
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:layout_gravity="center"
-							android:background="@color/colorH"/>
+							/>
 					</LinearLayout>
 				</RelativeLayout>
 
