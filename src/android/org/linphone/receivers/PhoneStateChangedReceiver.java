@@ -24,6 +24,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 
+import org.linphone.LinphonePreferences;
+import org.linphone.call.TelecomManagerHelper;
 import org.linphone.core.Core;
 
 import org.linphone.LinphoneManager;
@@ -40,9 +42,13 @@ public class PhoneStateChangedReceiver extends BroadcastReceiver {
 			return;
 
 		if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState) || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
-			LinphoneManager.getInstance().setCallGsmON(true);
-			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			lc.pauseAllCalls();
+			//Use only if not in native UI mode, as in this mode all calls are considered GSM by Linphone
+			LinphonePreferences mPrefs = LinphonePreferences.instance();
+			if (mPrefs.getConfig() != null && !mPrefs.getNativeUICall()) {
+				LinphoneManager.getInstance().setCallGsmON(true);
+				Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+				lc.pauseAllCalls();
+			}
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
 			LinphoneManager.getInstance().setCallGsmON(false);
         }

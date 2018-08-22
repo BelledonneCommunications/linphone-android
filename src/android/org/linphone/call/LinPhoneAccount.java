@@ -39,7 +39,7 @@ public class LinPhoneAccount {
         String uriAdress = LinphoneManager.getLc().getIdentity();
 
         account= PhoneAccount.builder(accountHandle,"Linphone")
-                .setAddress(Uri.parse("sip.linphone.org"))
+//                .setAddress(Uri.parse("sip.linphone.org"))
                 .setAddress(Uri.fromParts(PhoneAccount.SCHEME_SIP, uriAdress, null))
                 .setIcon(Icon.createWithResource(mContext, R.drawable.linphone_logo))
                 .setSubscriptionAddress(null)

@@ -25,6 +25,7 @@ import android.telecom.TelecomManager;
 import android.util.Log;
 
 import org.linphone.LinphoneManager;
+import org.linphone.core.Call;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class LinphoneConnectionService extends ConnectionService {
 
     private static final String TAG = "LinphoneConnectionService";
 
+    //sip to tel
+    //Broadcast (or extras for EXT_TO_CS_CALL_ID) values used to communicate from other components to this ConnectionService implementation
     public static final String EXT_TO_CS_BROADCAST = "EXT_TO_CS_BROADCAST";
     public static final String EXT_TO_CS_ACTION = "EXT_TO_CS_ACTION";
     public static final String EXT_TO_CS_CALL_ID = "EXT_TO_CS_CALL_ID";
@@ -45,6 +48,8 @@ public class LinphoneConnectionService extends ConnectionService {
     public static final int EXT_TO_CS_HOLD_CALL = 2;
     public static final int EXT_TO_CS_ESTABLISHED = 3;
 
+    //tel to sip
+    //Broadcast (or extras for CS_TO_EXT_CALL_ID) values used to communicate from this ConnectionService implementation to other components
     public static final String CS_TO_EXT_BROADCAST = "CS_TO_EXT_BROADCAST";
     public static final String CS_TO_EXT_ACTION = "CS_TO_EXT_ACTION";
     public static final String CS_TO_EXT_CALL_ID = "CS_TO_EXT_CALL_ID";
@@ -128,30 +133,15 @@ public class LinphoneConnectionService extends ConnectionService {
         private final boolean mIsIncoming;
         private boolean mIsActive = false;
         private String mCallId;
-//        public Call call=null;
-//        private CallActivity.SinchCallListener mListener= new CallActivity.SinchCallListener();
 
-
-        //        MyConnection(Uri sipUri){
-//            mIsIncoming= false;
-////            call.addCallListener(mListener);
-//        }
-//        public void sendCall (Uri sipUri){
-//            call=sinchClient.getCallClient().callSip(sipUri.toString());
-//        }
         MyConnection(boolean isIncoming) {
             mIsIncoming = isIncoming;
-//            // Assume all calls are video capable.
+            // Assume all calls are video capable.
             int capabilities = getConnectionCapabilities();
             capabilities |= CAPABILITY_MUTE;
             capabilities |= CAPABILITY_SUPPORT_HOLD;
             capabilities |= CAPABILITY_HOLD;
             setConnectionCapabilities(capabilities);
-
-//            if (isIncoming) {
-//                this.putExtra(Connection.EXTRA_ANSWERING_DROPS_FG_CALL, true);
-//            }
-
 
 
         }
@@ -476,7 +466,7 @@ public class LinphoneConnectionService extends ConnectionService {
             final MyConnection connection = new MyConnection(false);
             log("set address: "+request.getAddress());
             setAddress(connection, providedHandle);
-            String tempId = CallManager.getInstance().getCall().getCallLog().getCallId();
+            String tempId = extras.getString(LinphoneConnectionService.EXT_TO_CS_CALL_ID);
             connection.setCallId(tempId);
             connection.setAudioModeIsVoip(true);
 //            connection.setAudioRoute(CallAudioState.ROUTE_EARPIECE);
@@ -525,6 +515,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     @Override
     public Connection onCreateIncomingConnection(
             PhoneAccountHandle connectionManagerAccount,
@@ -543,10 +534,12 @@ public class LinphoneConnectionService extends ConnectionService {
             Bundle extras = request.getExtras();
             Uri providedHandle = extras.getParcelable(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS);
             String callId = extras.getString(EXT_TO_CS_CALL_ID);
+
             connection.setCallId(callId);
             log("request.getAddress: "+request.getAddress());
             log("request.setCallId: "+callId);
             setAddress(connection, providedHandle);
+            connection.setAudioModeIsVoip(true);
             connection.setRinging();
             addCall(connection);
 

@@ -339,40 +339,44 @@ public final class LinphoneService extends Service {
 					}
 					destroyOverlay();
 				}
+                //Use only if not in native UI mode
+                LinphonePreferences mPrefs = LinphonePreferences.instance();
+                if (mPrefs.getConfig() != null && !mPrefs.getNativeUICall()) {
 
-				if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
-					int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
-					String body;
-					if (missedCallCount > 1) {
-						body = getString(R.string.missed_calls_notif_body).replace("%i", String.valueOf(missedCallCount));
+                    if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
+                        int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
+                        String body;
+                        if (missedCallCount > 1) {
+                            body = getString(R.string.missed_calls_notif_body).replace("%i", String.valueOf(missedCallCount));
+                        } else {
+                            Address address = call.getRemoteAddress();
+                            LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
+                            if (c != null) {
+                                body = c.getFullName();
+                            } else {
+                                body = address.getDisplayName();
+                                if (body == null) {
+                                    body = address.asStringUriOnly();
+                                }
+                            }
+                        }
+
+
+                        Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
+                        missedCallNotifIntent.putExtra("GoToHistory", true);
+                        PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, intent);
+                        notifyWrapper(MISSED_NOTIF_ID, notif);
+                    }
+
+					if (state == State.StreamsRunning) {
+						// Workaround bug current call seems to be updated after state changed to streams running
+						if (getResources().getBoolean(R.bool.enable_call_notification))
+							refreshIncallIcon(call);
 					} else {
-						Address address = call.getRemoteAddress();
-						LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
-						if (c != null) {
-							body = c.getFullName();
-						} else {
-							body = address.getDisplayName();
-							if (body == null) {
-								body = address.asStringUriOnly();
-							}
-						}
+						if (getResources().getBoolean(R.bool.enable_call_notification))
+							refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 					}
-
-
-					Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
-					missedCallNotifIntent.putExtra("GoToHistory", true);
-					PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-					Notification notif = Compatibility.createMissedCallNotification(instance, getString(R.string.missed_calls_notif_title), body, intent);
-					notifyWrapper(MISSED_NOTIF_ID, notif);
-				}
-
-				if (state == State.StreamsRunning) {
-					// Workaround bug current call seems to be updated after state changed to streams running
-					if (getResources().getBoolean(R.bool.enable_call_notification))
-						refreshIncallIcon(call);
-				} else {
-					if (getResources().getBoolean(R.bool.enable_call_notification))
-						refreshIncallIcon(LinphoneManager.getLc().getCurrentCall());
 				}
 			}
 

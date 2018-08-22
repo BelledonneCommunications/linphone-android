@@ -409,6 +409,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		return mLPConfigXsd;
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void newOutgoingCall(AddressType address) {
 		String to = address.getText().toString();
 		newOutgoingCall(to, address.getDisplayedName());

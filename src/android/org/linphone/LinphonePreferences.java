@@ -1038,7 +1038,7 @@ public class LinphonePreferences {
 	}
 
 
-	// New methodes to get/set native calls UI enabling settings
+	// New methods to get/set native calls UI enabling settings
 
 	public boolean getNativeUICall() {
 		return getConfig().getBool("app", "native_ui_call", false);

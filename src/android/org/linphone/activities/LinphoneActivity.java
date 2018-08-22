@@ -21,6 +21,7 @@ package org.linphone.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -35,8 +36,10 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -67,6 +70,7 @@ import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
 import org.linphone.call.LinphoneConnectionService;
+import org.linphone.call.TelecomManagerHelper;
 import org.linphone.chat.ImdnFragment;
 import org.linphone.contacts.ContactPicked;
 import org.linphone.fragments.AboutFragment;
@@ -266,16 +270,43 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				}
 			}
 
+			@TargetApi(Build.VERSION_CODES.M)
+			@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 			@Override
 			public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
-				if (state == State.IncomingReceived) {
-					startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
-				} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
-					startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
-				} else if (state == State.End || state == State.Error || state == State.Released) {
-					resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-				}
 
+				//If user choose native call UI mode
+				LinphonePreferences mPrefs = LinphonePreferences.instance();
+				if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+
+					TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
+
+					if (state == State.IncomingReceived) {
+						telecomHelper.startIncall();
+					} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+						telecomHelper.startOutgoingCall();
+					} else if (state == State.End || state == State.Error || state == State.Released) {
+						telecomHelper.stopCall();
+
+						if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
+							call = LinphoneManager.getLc().getCalls()[0];
+							if (call.getState() == Call.State.IncomingReceived) {
+								telecomHelper.startIncall();
+							} else {
+								startIncallActivity(call);
+							}
+						}
+					}
+				}else {
+				//If user choose Linphone call UI mode
+					if (state == State.IncomingReceived) {
+						startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
+					} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+						startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
+					} else if (state == State.End || state == State.Error || state == State.Released) {
+						resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+					}
+				}
 				int missedCalls = LinphoneManager.getLc().getMissedCallsCount();
 				displayMissedCalls(missedCalls);
 			}
@@ -1028,10 +1059,18 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		LinphoneManager.getInstance().newOutgoingCall(address);
 	}
 
+
+	//Start Call_Activity
 	public void startIncallActivity(Call currentCall) {
-		Intent intent = new Intent(this, CallActivity.class);
-		startOrientationSensor();
-		startActivityForResult(intent, CALL_ACTIVITY);
+		LinphonePreferences mPrefs = LinphonePreferences.instance();
+		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+			TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
+			telecomHelper.startIncall();
+		}else {
+			Intent intent = new Intent(this, CallActivity.class);
+			startOrientationSensor();
+			startActivityForResult(intent, CALL_ACTIVITY);
+		}
 	}
 
 	/**
@@ -1103,19 +1142,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 			Call call = LinphoneManager.getLc().getCalls()[0];
-
-
-			//Use TelecomManager UI if option selected
-//			LinphonePreferences mPrefs = LinphonePreferences.instance();
-//			if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
-//				startIncallTelecomManager();
-//			}else{
-				if (call.getState() == Call.State.IncomingReceived) {
-					startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
-				} else {
-					startIncallActivity(call);
-				}
-//			}
+			if (call.getState() == Call.State.IncomingReceived) {
+				startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
+			} else {
+				startIncallActivity(call);
+			}
 		}
 	}
 
@@ -1442,9 +1473,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 
 
-
-					startActivity(new Intent(this, CallIncomingActivity.class));
-
+					LinphonePreferences mPrefs = LinphonePreferences.instance();
+					if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+//						TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
+//						telecomHelper.startIncall();
+					}else {
+						startActivity(new Intent(this, CallIncomingActivity.class));
+					}
 
 
 
@@ -1562,10 +1597,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				Collection<Call.State> incoming = new ArrayList<Call.State>();
 				incoming.add(Call.State.IncomingReceived);
 				if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
-					if (CallActivity.isInstanciated()) {
-						CallActivity.instance().startIncomingCallActivity();
-					} else {
-						startActivity(new Intent(this, CallIncomingActivity.class));
+					LinphonePreferences mPrefs = LinphonePreferences.instance();
+					if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+//						TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
+//						telecomHelper.startIncall();
+					}else {
+						if (CallActivity.isInstanciated()) {
+							CallActivity.instance().startIncomingCallActivity();
+						} else {
+							startActivity(new Intent(this, CallIncomingActivity.class));
+						}
 					}
 				}
 			}
