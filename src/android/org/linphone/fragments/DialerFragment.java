@@ -79,7 +79,7 @@ public class DialerFragment extends Fragment {
 			/*if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
 			} else {*/
-				mCall.setImageResource(R.drawable.call_alt_start_selected);
+				mCall.setImageResource(R.drawable.call_start);
 			//}
 		}
 
@@ -203,7 +203,7 @@ public class DialerFragment extends Fragment {
 				mCall.setImageResource(R.drawable.call_transfer);
 				mCall.setExternalClickListener(transferListener);
 			} else {
-				mCall.setImageResource(R.drawable.call_alt_start_selected);
+				mCall.setImageResource(R.drawable.call_start);
 				//mCall.setImageResource(R.drawable.call_add);
 				//mCall.resetClickListener();
 			}
@@ -215,7 +215,7 @@ public class DialerFragment extends Fragment {
 			/*if (LinphoneManager.getLc().getVideoActivationPolicy().getAutomaticallyInitiate()) {
 				mCall.setImageResource(R.drawable.call_video_start);
 			} else {*/
-				mCall.setImageResource(R.drawable.call_alt_start_selected);
+				mCall.setImageResource(R.drawable.call_start);
 			//}
 			mAddContact.setEnabled(false);
 			//mAddContact.setImageResource(R.drawable.contact_add_button);

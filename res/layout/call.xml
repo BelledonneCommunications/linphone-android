@@ -47,6 +47,7 @@
 						android:id="@+id/action_menu"
 						android:layout_width="match_parent"
 						android:layout_height="50dp"
+						android:layout_alignParentTop="true"
 						android:layout_marginTop="10dp">
 
 						<ImageView
@@ -88,8 +89,8 @@
 
 						<ImageView
 							android:id="@+id/contact_picture"
-							android:layout_width="200dp"
-							android:layout_height="200dp"
+							android:layout_width="180dp"
+							android:layout_height="180dp"
 							android:adjustViewBounds="true"
 							android:contentDescription="@string/content_description_contact_picture"
 							android:src="@drawable/avatar_big_secure1"/>
@@ -109,8 +110,7 @@
 						android:id="@+id/remote_pause"
 						android:layout_width="match_parent"
 						android:layout_height="match_parent"
-						android:background="#e6ff6600"
-						android:gravity="center"
+						android:background="#ff6600"
 						android:visibility="gone">
 
 						<RelativeLayout
@@ -118,13 +118,14 @@
 							android:layout_width="match_parent"
 							android:layout_height="50dp"
 							android:layout_alignParentStart="true"
-							android:layout_alignParentTop="true">
+							android:layout_alignParentTop="false">
 
 							<ImageView
 								android:id="@+id/pause2"
 								android:layout_width="70dp"
 								android:layout_height="60dp"
-								android:layout_alignParentRight="true"
+								android:layout_alignParentEnd="true"
+								android:layout_alignParentTop="true"
 								android:contentDescription="@string/content_description_pause"
 								android:src="@drawable/pause_big_default"/>
 						</RelativeLayout>
@@ -134,6 +135,7 @@
 							android:layout_width="115dp"
 							android:layout_height="115dp"
 							android:layout_centerHorizontal="true"
+							android:layout_centerVertical="true"
 							android:layout_gravity="center"
 							android:src="@drawable/waiting_time"/>
 
@@ -153,7 +155,8 @@
 						android:layout_width="match_parent"
 						android:layout_height="80dp"
 						android:layout_alignParentBottom="true"
-						android:layout_marginTop="-5dp"
+						android:layout_below="@+id/avatar_layout"
+						android:layout_marginTop="5dp"
 						android:alpha="0.8"
 						android:background="@color/colorH"
 						android:orientation="vertical">
@@ -181,6 +184,7 @@
 					android:id="@+id/calls_list"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:layout_above="@+id/active_call"
 					android:layout_alignParentBottom="true"
 					android:layout_gravity="bottom"
 					android:background="@color/colorH"
@@ -196,7 +200,7 @@
 					android:background="#e6ff6600"
 					android:gravity="center_vertical"
 					android:orientation="vertical"
-					android:visibility="gone">
+					android:visibility="visible">
 
 					<ImageView
 						android:layout_width="115dp"
@@ -386,7 +390,7 @@
 					android:layout_weight="0.5"
 					android:background="#aeaeae"
 					android:contentDescription="@string/content_description_add_call"
-					android:padding="15dp"
+					android:padding="10dp"
 					android:src="@drawable/options_add_call_button"
 					android:visibility="invisible"/>
 
@@ -429,7 +433,7 @@
 					android:layout_weight="0.5"
 					android:background="#aeaeae"
 					android:contentDescription="@string/content_description_transfer"
-					android:padding="15dp"
+					android:padding="10dp"
 					android:src="@drawable/options_transfer_call_button"
 					android:visibility="invisible"/>
 
@@ -472,7 +476,7 @@
 					android:background="#aeaeae"
 					android:contentDescription="@string/content_description_conference"
 					android:padding="10dp"
-					android:src="@drawable/options_start_conference_button"
+					android:src="@drawable/conference_default"
 					android:visibility="invisible"/>
 
 			</LinearLayout>

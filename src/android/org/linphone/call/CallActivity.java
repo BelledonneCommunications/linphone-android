@@ -611,8 +611,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		}
 
 		//Enabled transfer button
-		if(isTransferAllowed  && !LinphoneManager.getLc().soundResourcesLocked())
+		if(isTransferAllowed  && !LinphoneManager.getLc().soundResourcesLocked()) {
 			enabledTransferButton(true);
+		} else {
+			enabledTransferButton(false);
+		}
 
 		//Enable conference button
 		if(LinphoneManager.getLc().getCallsNb() > 1 && LinphoneManager.getLc().getCallsNb() > confsize && !LinphoneManager.getLc().soundResourcesLocked()) {
@@ -638,7 +641,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		if(!isTablet()){
 			speaker.setEnabled(true);
 		}
-		transfer.setEnabled(true);
 		pause.setEnabled(true);
 		dialer.setEnabled(true);
 	}
@@ -779,16 +781,20 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void enabledTransferButton(boolean enabled){
 		if(enabled) {
 			transfer.setEnabled(true);
+			transfer.setAlpha(1f);
 		} else {
 			transfer.setEnabled(false);
+			transfer.setAlpha(0.4f);
 		}
 	}
 
 	private void enabledConferenceButton(boolean enabled){
 		if (enabled) {
 			conference.setEnabled(true);
+			conference.setAlpha(1f);
 		} else {
 			conference.setEnabled(false);
+			conference.setAlpha(0.4f);
 		}
 	}
 
@@ -1042,7 +1048,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 					displayVideoCall(false);
 					numpad.setVisibility(View.GONE);
 					//options.setImageResource(R.drawable.options_default);
-					options.setImageAlpha(125);
+					options.setImageAlpha(255);
 				}
 			}, SECONDS_BEFORE_HIDING_CONTROLS);
 		}
@@ -1093,7 +1099,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		//Hide options
 		if (addCall.getVisibility() == View.VISIBLE) {
 			//options.setImageResource(R.drawable.options_disabled);
-			options.setImageAlpha(125);
+			options.setImageAlpha(255);
 			if (isTransferAllowed) {
 				transfer.setVisibility(View.INVISIBLE);
 			}
@@ -1106,7 +1112,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			addCall.setVisibility(View.VISIBLE);
 			conference.setVisibility(View.VISIBLE);
 			//options.setImageResource(R.drawable.options_default);
-			options.setImageAlpha(255);
+			options.setImageAlpha(100);
 			transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
 		}
 	}

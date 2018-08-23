@@ -1055,7 +1055,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		AddressType address = new AddressText(this, null);
 		address.setDisplayedName(name);
 		address.setText(number);
-		LinphoneManager.getInstance().newOutgoingCall(address);
+		if (isCallTransfer()) {
+			Core lc = LinphoneManager.getLc();
+			if (lc.getCurrentCall() == null) {
+				return;
+			}
+			lc.transferCall(lc.getCurrentCall(), address.getText().toString());
+		} else {
+			LinphoneManager.getInstance().newOutgoingCall(address);
+		}
 	}
 
 	public void startIncallActivity(Call currentCall) {
@@ -1118,11 +1126,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	private void initInCallMenuLayout(final boolean callTransfer) {
+		/*goToDialerFragment();
 		selectMenu(FragmentsAvailable.DIALER);
 		DialerFragment dialerFragment = DialerFragment.instance();
 		if (dialerFragment != null) {
 			((DialerFragment) dialerFragment).resetLayout(callTransfer);
-		}
+		}*/
+		// Obiane Spec
+		displayContacts(false);
 	}
 
 	public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {

@@ -12,9 +12,10 @@
 
 	<ImageView
 		android:id="@+id/contactPicture"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:src="@drawable/avatar" />
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:layout_marginLeft="10dp"
+		android:src="@drawable/avatar_small_secure1"/>
 
 
 	<LinearLayout
@@ -39,21 +40,22 @@
 			style="@style/font2"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:paddingLeft="10dp"
-			android:paddingRight="20dp"
-			android:gravity="center_vertical|right"/>
+			android:gravity="center_vertical|right"
+			android:paddingLeft="20dp"
+			/>
 
 	</LinearLayout>
 
 
 	<ImageView
 		android:id="@+id/quitConference"
-		android:src="@drawable/conference_exit_default"
+		android:layout_width="25dp"
+		android:layout_height="25dp"
+		android:layout_marginRight="15dp"
+		android:adjustViewBounds="true"
 		android:contentDescription="@string/content_description_exit_conference"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:gravity="center_vertical"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true" />
+		android:gravity="center_vertical"
+		android:scaleType="fitCenter"
+		android:src="@drawable/conference_exit_default"/>
 
 </LinearLayout>
