@@ -65,23 +65,23 @@
 
 			<ImageView
 				android:id="@+id/contact_call"
-				android:src="@drawable/call_start_body_default"
-				android:contentDescription="@string/content_description_call"
-				android:layout_width="60dp"
-				android:layout_height="60dp"
+				android:layout_width="50dp"
+				android:layout_height="50dp"
+				android:layout_centerInParent="true"
 				android:layout_margin="10dp"
 				android:adjustViewBounds="true"
-				android:layout_centerInParent="true"/>
+				android:contentDescription="@string/content_description_call"
+				android:src="@drawable/call_start_body_default"/>
 
 			<ImageView
 				android:id="@+id/contact_chat"
-				android:src="@drawable/chat_start_body_default"
-				android:contentDescription="@string/content_description_chat"
-				android:layout_width="60dp"
-				android:layout_height="60dp"
+				android:layout_width="50dp"
+				android:layout_height="50dp"
+				android:layout_centerInParent="true"
 				android:layout_margin="10dp"
 				android:adjustViewBounds="true"
-				android:layout_centerInParent="true" />
+				android:contentDescription="@string/content_description_chat"
+				android:src="@drawable/chat_start_body_default"/>
 
 		</LinearLayout>
 	</LinearLayout>
