@@ -74,16 +74,9 @@ public class CallManager {
 		}
 
 
-//		TelecomManager telecomManager = (TelecomManager) LinphoneManager.getInstance().getContext().getSystemService(Context.TELECOM_SERVICE);
-
 
 		lc.inviteAddressWithParams(lAddress, params);
-//		LinphonePreferences mPrefs = LinphonePreferences.instance();
-//		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
-//			Bundle extras = new Bundle();
-//			extras.putString("callId", mCall.getCallLog().getCallId());
-//			telecomManager.addNewIncomingCall(LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler(), extras);
-//		}
+
 	}
 
 	/**

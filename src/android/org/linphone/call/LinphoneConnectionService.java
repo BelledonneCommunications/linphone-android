@@ -19,13 +19,19 @@ import android.telecom.Connection;
 import android.telecom.ConnectionRequest;
 import android.telecom.ConnectionService;
 import android.telecom.DisconnectCause;
+import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.RemoteConference;
 import android.telecom.TelecomManager;
 import android.util.Log;
 
 import org.linphone.LinphoneManager;
+import org.linphone.activities.LinphoneActivity;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.core.Core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +111,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
             switch (action){
                 case EXT_TO_CS_END_CALL:
-                    connection.setDisconnected(new DisconnectCause(DisconnectCause.MISSED));
+                    connection.setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
                     destroyCall(connection);
                     connection.destroy();
                     break;
@@ -115,7 +121,8 @@ public class LinphoneConnectionService extends ConnectionService {
                     if (holdState) {
                         connection.setOnHold();
                     } else {
-                        connection.setActive();
+                        setAsActive(connection);
+//                        connection.setActive();
                     }
                     break;
 
@@ -194,7 +201,8 @@ public class LinphoneConnectionService extends ConnectionService {
                 holdInActiveCalls(this);
             }
 
-            setActive();
+            setAsActive(this);
+//            setActive();
             sendLocalBroadcast(CS_TO_EXT_ANSWER);
         }
 
@@ -219,9 +227,10 @@ public class LinphoneConnectionService extends ConnectionService {
 //            log("Disconnected: "+getAddress().getSchemeSpecificPart());
             sendLocalBroadcast(CS_TO_EXT_DISCONNECT);
 
-            setDisconnected(new DisconnectCause(DisconnectCause.REMOTE));
-            destroyCall(this);
-            destroy();
+//            setDisconnected(new DisconnectCause(DisconnectCause.REMOTE));
+//            destroyCall(this);
+//            destroy();
+
 
         }
 
@@ -232,7 +241,7 @@ public class LinphoneConnectionService extends ConnectionService {
             if (mCalls.size() > 1){
                 performSwitchCall(this);
             }else {
-//            setOnHold();
+                setOnHold();
                 sendLocalBroadcast(CS_TO_EXT_HOLD);
             }
         }
@@ -252,7 +261,7 @@ public class LinphoneConnectionService extends ConnectionService {
         @Override
         public void onUnhold() {
             log("Unhold Call: "+getAddress().getSchemeSpecificPart());
-//            setActive();
+            setActive();
             sendLocalBroadcast(CS_TO_EXT_UNHOLD);
         }
 
@@ -458,18 +467,44 @@ public class LinphoneConnectionService extends ConnectionService {
 //        Log.d(TAG, "onCreateOutgoingConnection initiationType: "+extras.getInt(Messages.TAG_CALL_INITIATION_TYPE, -1));
         if (accountHandle != null && componentName.equals(accountHandle.getComponentName())) {
 
-
-
-
             // Get the stashed intent extra that determines if this is a video sipAudioCall or audio sipAudioCall.
+
             Uri providedHandle = request.getAddress();
-            final MyConnection connection = new MyConnection(false);
+//            String providedHandleStr = providedHandle.toString();
+//            providedHandle = Uri.fromParts(PhoneAccount.SCHEME_SIP, providedHandleStr, null);
             log("set address: "+request.getAddress());
+
+            String callerName = null;
+//            if (LinphoneManager.getLc().getCurrentCall() == null){
+//
+//                String strPrevAddress = providedHandle.toString().replace("%40","@");
+//                Address previousAddress = LinphoneManager.getLc().interpretUrl(strPrevAddress);
+//                String test = previousAddress.asStringUriOnly();
+//
+//                LinphoneManager.getInstance().newOutgoingCall(test,test );
+//            }
+            final MyConnection connection = new MyConnection(false);
+
+
+
+
+            Address address = LinphoneManager.getLc().getCurrentCall().getRemoteAddress();
+            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+            if (contact != null) {
+                callerName = contact.getFullName();
+            }
+            if (callerName != null) {
+                connection.setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED);
+            }
+//            setAddress(connection, providedHandle);
             setAddress(connection, providedHandle);
-            String tempId = extras.getString(LinphoneConnectionService.EXT_TO_CS_CALL_ID);
-            connection.setCallId(tempId);
+            String callId = LinphoneManager.getLc().getCurrentCall().getCallLog().getCallId();
+            connection.setCallId(callId);
             connection.setAudioModeIsVoip(true);
-//            connection.setAudioRoute(CallAudioState.ROUTE_EARPIECE);
+
+
+
+            //            connection.setAudioRoute(CallAudioState.ROUTE_EARPIECE);
             connection.setDialing();
 
             addCall(connection);
@@ -504,6 +539,7 @@ public class LinphoneConnectionService extends ConnectionService {
             final MyConnection connection = new MyConnection(false);
             // Get the stashed intent extra that determines if this is a video sipAudioCall or audio sipAudioCall.
             Uri providedHandle = request.getAddress();
+            Bundle b = extras.getBundle(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS);
 
             log("set address: "+request.getAddress());
             setAddress(connection, providedHandle);
@@ -532,10 +568,17 @@ public class LinphoneConnectionService extends ConnectionService {
             final MyConnection connection = new MyConnection(true);
             // Get the stashed intent extra that determines if this is a video sipAudioCall or audio sipAudioCall.
             Bundle extras = request.getExtras();
-            Uri providedHandle = extras.getParcelable(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS);
             String callId = extras.getString(EXT_TO_CS_CALL_ID);
-
             connection.setCallId(callId);
+
+            Uri providedHandle = Uri.parse(extras.getString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS));
+
+            Bundle b = extras.getBundle(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS);
+            if (b != null) {
+                String callerName = b.getString(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS);
+                connection.setCallerDisplayName(callerName, TelecomManager.PRESENTATION_ALLOWED);
+            }
+
             log("request.getAddress: "+request.getAddress());
             log("request.setCallId: "+callId);
             setAddress(connection, providedHandle);
@@ -634,6 +677,7 @@ public class LinphoneConnectionService extends ConnectionService {
     private void holdInActiveCalls(MyConnection activeCall){
         for (MyConnection con : mCalls){
             if (!Objects.equals(con, activeCall)){
+                con.setOnHold();
                 con.sendLocalBroadcast(CS_TO_EXT_HOLD);
             }
         }

@@ -283,7 +283,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 					if (state == State.IncomingReceived) {
 						telecomHelper.startIncall();
-					} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+					} else if (state == State.OutgoingInit) {
 						telecomHelper.startOutgoingCall();
 					} else if (state == State.End || state == State.Error || state == State.Released) {
 						telecomHelper.stopCall();
@@ -301,7 +301,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				//If user choose Linphone call UI mode
 					if (state == State.IncomingReceived) {
 						startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
-					} else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
+					} else if (state == State.OutgoingInit) {
 						startActivity(new Intent(LinphoneActivity.instance(), CallOutgoingActivity.class));
 					} else if (state == State.End || state == State.Error || state == State.Released) {
 						resetClassicMenuLayoutAndGoBackToCallIfStillRunning();

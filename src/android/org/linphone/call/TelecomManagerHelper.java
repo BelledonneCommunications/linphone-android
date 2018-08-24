@@ -29,6 +29,9 @@ import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
@@ -39,12 +42,11 @@ import org.linphone.mediastream.Log;
 import java.util.List;
 
 import static org.linphone.call.LinphoneConnectionService.CS_TO_EXT_ACTION;
+import static org.linphone.call.LinphoneConnectionService.EXT_TO_CS_END_CALL;
 
 public class TelecomManagerHelper {
-
     private Call mCall = null;
     private TelecomManager telecomManager;
-    //    private CoreListenerStub mListener;
     private boolean alreadyAcceptedOrDeniedCall;
     private PhoneAccountHandle phoneAccountHandle;
     private final int INCALL = 1;
@@ -53,9 +55,9 @@ public class TelecomManagerHelper {
     private final int CURRENT = 4;
     private CoreListenerStub mListener;
     public static String TAG = "TelecomManagerHelper";
+
+
     //Initiates the telecomManager and dependencies which are needed to handle calls.
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public TelecomManagerHelper() {
         telecomManager = (TelecomManager) LinphoneManager.getInstance().getContext().getSystemService(Context.TELECOM_SERVICE);
@@ -80,8 +82,28 @@ public class TelecomManagerHelper {
             return;
         }
         setListenerIncall(mCall);
+
+        String strContact=null;
+        Address address = mCall.getRemoteAddress();
+        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+        if (contact != null) {
+            strContact = contact.getFullName();
+        }
+        String strAddress = address.asStringUriOnly();
+
         Bundle extras = new Bundle();
+        final Bundle b = new Bundle();
+
+
         extras.putString(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
+        extras.putString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS, strAddress);
+
+        if (strContact != null) {
+            b.putString(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS, strContact);
+            extras.putBundle(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS, b);
+        }
+
+
         telecomManager.addNewIncomingCall(phoneAccountHandle, extras);
         registerCallScreenReceiver();
 
@@ -89,10 +111,10 @@ public class TelecomManagerHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startOutgoingCall() {
-        alreadyAcceptedOrDeniedCall = false;
 
 
         lookupCall(OUTGOING);
+
         if (mCall == null) {
             //The incoming call no longer exists.
             Log.d("Couldn't find incoming call");
@@ -100,17 +122,11 @@ public class TelecomManagerHelper {
         }
         setListenerOutgoing(mCall);
 
-
         Bundle extras = new Bundle();
-        final Bundle b = new Bundle();
-
         extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
-//                    b.putString(TelecomManager.EXTRA_CALL_BACK_NUMBER, "lule@sip.linphone.org");
-//                    b.putString(TelecomManager.GATEWAY_ORIGINAL_ADDRESS, "lule@sip.linphone.org");
-//                    b.putInt(TelecomManager.PRESENTATION_ALLOWED, getCallId());
-        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
-        b.putString(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
-        extras.putBundle(TelecomManager.EXTRA_OUTGOING_CALL_EXTRAS, b);
+        //                    b.putString(TelecomManager.EXTRA_CALL_BACK_NUMBER, "lule@sip.linphone.org");
+        //                    b.putString(TelecomManager.GATEWAY_ORIGINAL_ADDRESS, "lule@sip.linphone.org");
+        //                    b.putInt(TelecomManager.PRESENTATION_ALLOWED, getCallId());
         if (phoneAccountHandle != null) {
             extras.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandle);
         }
@@ -125,10 +141,17 @@ public class TelecomManagerHelper {
             return;
         }
 
-        telecomManager.placeCall(Uri.fromParts(PhoneAccount.SCHEME_SIP, mCall.getRemoteAddressAsString(), null), extras);
-        registerCallScreenReceiver();
+        Address address = mCall.getRemoteAddress();
+        String strAddress = address.asStringUriOnly();
 
+
+        telecomManager.placeCall(Uri.parse(strAddress), extras);
+
+        registerCallScreenReceiver();
     }
+
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void stopCall (){
         lookupCall(END);
@@ -156,7 +179,11 @@ public class TelecomManagerHelper {
                 if (state == Call.State.StreamsRunning) {
                     Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = " + LinphoneManager.getInstance().isSpeakerEnabled());
                     // The following should not be needed except some devices need it (e.g. Galaxy S).
-                    LinphoneManager.getInstance().enableSpeaker(LinphoneManager.getInstance().isSpeakerEnabled());
+//                    LinphoneManager.getInstance().enableSpeaker(LinphoneManager.getInstance().isSpeakerEnabled());
+                }
+                if (call == mCall && (Call.State.PausedByRemote == state) ) {
+//                    mCall= call;
+                    Toast.makeText(LinphoneManager.getInstance().getContext(),"Vous êtes en attente",Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -177,31 +204,38 @@ public class TelecomManagerHelper {
                         return;
                     }
                     LinphoneActivity.instance().startIncallActivity(mCall);
+                    sendToCS(LinphoneConnectionService.EXT_TO_CS_ESTABLISHED);
                     return;
                 } else if (state == Call.State.Error) {
+
+
                     // Convert Core message for internalization
                     if (call.getErrorInfo().getReason() == Reason.Declined) {
                         displayCustomToast(LinphoneManager.getInstance().getContext().getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-                        LinphoneManager.getLc().terminateCall(mCall);
+                        stopCall();
                     } else if (call.getErrorInfo().getReason() == Reason.NotFound) {
                         displayCustomToast(LinphoneManager.getInstance().getContext().getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
-                        LinphoneManager.getLc().terminateCall(mCall);
+                        stopCall();
                     } else if (call.getErrorInfo().getReason() == Reason.NotAcceptable) {
                         displayCustomToast(LinphoneManager.getInstance().getContext().getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
-                        LinphoneManager.getLc().terminateCall(mCall);
+                        stopCall();
                     } else if (call.getErrorInfo().getReason() == Reason.Busy) {
                         displayCustomToast(LinphoneManager.getInstance().getContext().getString(R.string.error_user_busy), Toast.LENGTH_SHORT);
-                        LinphoneManager.getLc().terminateCall(mCall);
+                        stopCall();
                     } else if (message != null) {
                         displayCustomToast((R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
-                        LinphoneManager.getLc().terminateCall(mCall);
+                        stopCall();
                     }
                 }else if (state == Call.State.End) {
+                    stopCall();
                     // Convert Core message for internalization
                     if (call.getErrorInfo().getReason() == Reason.Declined) {
                         displayCustomToast(LinphoneManager.getInstance().getContext().getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-                        LinphoneManager.getLc().terminateCall(mCall);
+
                     }
+                } else if (call == mCall && (Call.State.PausedByRemote == state) ) {
+//                    mCall= call;
+                    Toast.makeText(LinphoneManager.getInstance().getContext(),"Vous êtes en attente",Toast.LENGTH_LONG).show();
                 }
 
                 if (LinphoneManager.getLc().getCallsNb() == 0) {
@@ -223,14 +257,17 @@ public class TelecomManagerHelper {
         Intent intent = new Intent(LinphoneConnectionService.EXT_TO_CS_BROADCAST);
         intent.putExtra(LinphoneConnectionService.EXT_TO_CS_ACTION, action);
         intent.putExtra(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
-
+//        if(action == LinphoneConnectionService.EXT_TO_CS_HOLD_CALL ){
+//            intent.putExtra(LinphoneConnectionService.EXT_TO_CS_HOLD_STATE, true);
+//        }
         LocalBroadcastManager.getInstance(LinphoneManager.getInstance().getContext()).sendBroadcast(intent);
-
     }
 
     public void lookupCall(int type) {
+
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             List<Call> calls = LinphoneUtils.getCalls(LinphoneManager.getLc());
+
             for (Call call : calls) {
                 switch (type) {
                     case INCALL:
@@ -245,7 +282,7 @@ public class TelecomManagerHelper {
                             break;
                         }
                     case OUTGOING:
-                        if ((Call.State.OutgoingInit == call.getState()) || (Call.State.OutgoingProgress == call.getState())) {
+                        if ((Call.State.OutgoingInit == call.getState()) || (Call.State.OutgoingProgress == call.getState())|| (Call.State.OutgoingRinging == call.getState())) {
                             mCall = call;
                             break;
                         }
@@ -278,13 +315,19 @@ public class TelecomManagerHelper {
                     answer();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_REJECT:
-                    LinphoneManager.getLc().terminateCall(mCall);
+                    stopCall();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_DISCONNECT:
-                    LinphoneManager.getLc().terminateCall(mCall);
+                    stopCall();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_ABORT:
-                    LinphoneManager.getLc().terminateCall(mCall);
+                    stopCall();
+                    break;
+                case LinphoneConnectionService.CS_TO_EXT_HOLD:
+                    pauseOrResumeCall(mCall);
+                    break;
+                case LinphoneConnectionService.CS_TO_EXT_UNHOLD:
+                    pauseOrResumeCall(mCall);
                     break;
             }
         }
@@ -357,6 +400,25 @@ public class TelecomManagerHelper {
         toast.setDuration(duration);
         toast.setView(layout);
         toast.show();
+    }
+
+    public void pauseOrResumeCall(Call call) {
+        Core lc = LinphoneManager.getLc();
+        if (call != null && LinphoneManager.getLc().getCurrentCall() == call) {
+            lc.pauseCall(call);
+//            if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
+//                isVideoCallPaused = true;
+//            }
+//            pause.setImageResource(R.drawable.pause_big_over_selected);
+        } else if (call != null) {
+            if (call.getState() == Call.State.Paused) {
+                lc.resumeCall(call);
+//                if (isVideoCallPaused) {
+//                    isVideoCallPaused = false;
+//                }
+//                pause.setImageResource(R.drawable.pause_big_default);
+            }
+        }
     }
 
 }
