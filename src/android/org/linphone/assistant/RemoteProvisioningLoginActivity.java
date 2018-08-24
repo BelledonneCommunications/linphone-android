@@ -378,7 +378,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 			byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
 
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEwithSHA256AND256BITAES-CBC-BC");
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2withHmacSHA256");
 			KeySpec keySpec = new PBEKeySpec(code_sms.getText().toString().toCharArray(), saltByte, 10000, 128);
 			SecretKey tmpSecretKey = factory.generateSecret(keySpec);
 			SecretKeySpec secretKeySpec = new SecretKeySpec(tmpSecretKey.getEncoded(), "AES");

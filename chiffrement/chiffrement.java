@@ -62,7 +62,7 @@ public class chiffrement {
 					byte[] saltByte = removeUselessByte(saltHex.toByteArray(), 8);
 					byte[] ivByte = removeUselessByte(ivHex.toByteArray(), 16);
 
-					SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEwithSHA256AND256BITAES-CBC-BC");
+					SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2withHmacSHA256");
 					KeySpec keySpec = new PBEKeySpec(password.toCharArray(), saltByte, 10000, 128);
 					SecretKey tmpSecretKey = factory.generateSecret(keySpec);
 					SecretKeySpec secretKeySpec = new SecretKeySpec(tmpSecretKey.getEncoded(), "AES");
@@ -87,7 +87,7 @@ public class chiffrement {
 					byte[] salt = removeUselessByte(saltHex.toByteArray(), 8);
 					byte[] iv = removeUselessByte(ivHex.toByteArray(), 16);
 
-					SecretKeyFactory factory = SecretKeyFactory.getInstance("PBEwithSHA256AND256BITAES-CBC-BC");
+					SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2withHmacSHA256");
 					KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 10000, 128);
 					SecretKey tmp = factory.generateSecret(spec);
 					SecretKeySpec secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
