@@ -1012,9 +1012,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private Vibrator mVibrator;
 
 	public void onNewSubscriptionRequested(Core lc, Friend lf, String url) {}
-	public void onNotifyPresenceReceived(Core lc, Friend lf) {
-		ContactsManager.getInstance().refreshSipContact(lf);
-	}
+	public void onNotifyPresenceReceived(Core lc, Friend lf) {}
 
 	@Override
 	public void onEcCalibrationAudioInit(Core lc) {
@@ -1659,12 +1657,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	@Override
 	public void onFriendListCreated(Core lc, FriendList list) {
-		// TODO Auto-generated method stub
+		list.setListener(ContactsManager.getInstance());
 	}
 
 	@Override
 	public void onFriendListRemoved(Core lc, FriendList list) {
-		// TODO Auto-generated method stub
+		list.setListener(null);
 	}
 
 	@Override
