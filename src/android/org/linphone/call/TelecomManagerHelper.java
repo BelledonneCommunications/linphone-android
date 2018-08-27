@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
+import org.linphone.core.Conference;
+import org.linphone.core.ConferenceParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
@@ -53,8 +56,11 @@ public class TelecomManagerHelper {
     private final int OUTGOING = 2;
     private final int END = 3;
     private final int CURRENT = 4;
+    private final boolean PAUSE = false;
+    private final boolean RESUME = true;
     private CoreListenerStub mListener;
     public static String TAG = "TelecomManagerHelper";
+    private Conference mConference = null;
 
 
     //Initiates the telecomManager and dependencies which are needed to handle calls.
@@ -168,7 +174,7 @@ public class TelecomManagerHelper {
     }
 
 
-    public void setListenerIncall (Call call){
+    private void setListenerIncall (Call call){
         mListener = new CoreListenerStub() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -194,7 +200,7 @@ public class TelecomManagerHelper {
         }
     }
 
-    public void setListenerOutgoing (Call call){
+    private void setListenerOutgoing (Call call){
         mListener = new CoreListenerStub() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -253,7 +259,7 @@ public class TelecomManagerHelper {
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void sendToCS(int action){
+    private void sendToCS(int action){
         Intent intent = new Intent(LinphoneConnectionService.EXT_TO_CS_BROADCAST);
         intent.putExtra(LinphoneConnectionService.EXT_TO_CS_ACTION, action);
         intent.putExtra(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
@@ -263,7 +269,7 @@ public class TelecomManagerHelper {
         LocalBroadcastManager.getInstance(LinphoneManager.getInstance().getContext()).sendBroadcast(intent);
     }
 
-    public void lookupCall(int type) {
+    private void lookupCall(int type) {
 
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             List<Call> calls = LinphoneUtils.getCalls(LinphoneManager.getLc());
@@ -305,7 +311,11 @@ public class TelecomManagerHelper {
         public void onReceive(Context context, Intent intent) {
             int action = intent.getIntExtra(LinphoneConnectionService.CS_TO_EXT_ACTION, -1);
             String callId = intent.getStringExtra(LinphoneConnectionService.CS_TO_EXT_CALL_ID);
-            mCall = getCallById(callId);
+            boolean isConference = intent.getBooleanExtra(LinphoneConnectionService.CS_TO_EXT_IS_CONFERENCE, false);
+
+            if(!isConference){
+                mCall = getCallById(callId);
+            }
             android.util.Log.d(TAG, "callScreenEventsReceiver: action: "+action+" | callId: "+callId);
             if (mCall == null){
                 return;
@@ -324,10 +334,34 @@ public class TelecomManagerHelper {
                     stopCall();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_HOLD:
-                    pauseOrResumeCall(mCall);
+                    if (isConference){
+                        pauseOrResumeConference(PAUSE);
+                    }else{
+                        pauseOrResumeCall(mCall, PAUSE);
+                    }
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_UNHOLD:
-                    pauseOrResumeCall(mCall);
+                    if (isConference){
+                        pauseOrResumeConference(RESUME);
+                    }else{
+                        pauseOrResumeCall(mCall, RESUME);
+                    }
+                    break;
+                case LinphoneConnectionService.CS_TO_EXT_ADD_TO_CONF:
+                    if (mConference == null){
+                        startConference();
+                    }
+                    LinphoneManager.getLc().addToConference(getCallById(callId));
+                    int temp = LinphoneManager.getLc().getConferenceSize();
+                    break;
+                case LinphoneConnectionService.CS_TO_EXT_REMOVE_FROM_CONF:
+                    int temp1 = LinphoneManager.getLc().getConferenceSize();
+                    LinphoneManager.getLc().removeFromConference(getCallById(callId));
+                    if (LinphoneManager.getLc().getConferenceSize() < 2) {
+                        LinphoneManager.getLc().terminateConference();
+                        mConference = null;
+                    }
+
                     break;
             }
         }
@@ -402,16 +436,17 @@ public class TelecomManagerHelper {
         toast.show();
     }
 
-    public void pauseOrResumeCall(Call call) {
+    private void pauseOrResumeCall(Call call, Boolean resume) {
         Core lc = LinphoneManager.getLc();
-        if (call != null && LinphoneManager.getLc().getCurrentCall() == call) {
+
+        if (call != null && LinphoneManager.getLc().getCurrentCall() == call && !resume) {
             lc.pauseCall(call);
 //            if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
 //                isVideoCallPaused = true;
 //            }
 //            pause.setImageResource(R.drawable.pause_big_over_selected);
         } else if (call != null) {
-            if (call.getState() == Call.State.Paused) {
+            if (call.getState() == Call.State.Paused && resume) {
                 lc.resumeCall(call);
 //                if (isVideoCallPaused) {
 //                    isVideoCallPaused = false;
@@ -419,6 +454,24 @@ public class TelecomManagerHelper {
 //                pause.setImageResource(R.drawable.pause_big_default);
             }
         }
+    }
+
+    public void startConference(){
+        ConferenceParams mConfParams= LinphoneManager.getLc().createConferenceParams();
+        mConference= LinphoneManager.getLc().createConferenceWithParams(mConfParams);
+    }
+
+
+
+
+    public void pauseOrResumeConference(boolean resume) {
+        Core lc = LinphoneManager.getLc();
+            if (lc.isInConference() && !resume) {
+                lc.leaveConference();
+            } else if (resume){
+                lc.enterConference();
+            }
+//        refreshCallList(getResources());
     }
 
 }

@@ -31,6 +31,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.core.ConferenceParams;
 import org.linphone.core.Core;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class LinphoneConnectionService extends ConnectionService {
     public static final String EXT_TO_CS_ACTION = "EXT_TO_CS_ACTION";
     public static final String EXT_TO_CS_CALL_ID = "EXT_TO_CS_CALL_ID";
     public static final String EXT_TO_CS_HOLD_STATE = "EXT_TO_CS_HOLD_STATE";
+
     public static final int EXT_TO_CS_END_CALL = 1;
     public static final int EXT_TO_CS_HOLD_CALL = 2;
     public static final int EXT_TO_CS_ESTABLISHED = 3;
@@ -57,14 +59,18 @@ public class LinphoneConnectionService extends ConnectionService {
     //tel to sip
     //Broadcast (or extras for CS_TO_EXT_CALL_ID) values used to communicate from this ConnectionService implementation to other components
     public static final String CS_TO_EXT_BROADCAST = "CS_TO_EXT_BROADCAST";
-    public static final String CS_TO_EXT_ACTION = "CS_TO_EXT_ACTION";
     public static final String CS_TO_EXT_CALL_ID = "CS_TO_EXT_CALL_ID";
+    public static final String CS_TO_EXT_ACTION = "CS_TO_EXT_ACTION";
+    public static final String CS_TO_EXT_IS_CONFERENCE = "CS_TO_EXT_IS_CONFERENCE"; //true if conference
+
     public static final int CS_TO_EXT_REJECT = 1; //reject by me
     public static final int CS_TO_EXT_DISCONNECT = 2; //remote disconnect
     public static final int CS_TO_EXT_ANSWER = 3; //answer call
     public static final int CS_TO_EXT_ABORT = 4; //abort call
     public static final int CS_TO_EXT_HOLD = 5; //hold call
     public static final int CS_TO_EXT_UNHOLD = 6; //unhold call
+    public static final int CS_TO_EXT_ADD_TO_CONF = 7; //add call to conference
+    public static final int CS_TO_EXT_REMOVE_FROM_CONF = 8; //remove call from conference
 
     /**
      * Intent extra used to pass along the video state for a new test sipAudioCall.
@@ -238,9 +244,13 @@ public class LinphoneConnectionService extends ConnectionService {
         @Override
         public void onHold() {
             log("Hold Call: "+getAddress().getSchemeSpecificPart());
-            if (mCalls.size() > 1){
+//            if (mCalls.size() > 1 && mCallConference != null){
+//                sendLocalBroadcast(CS_TO_EXT_HOLD);
+//            }else
+             if(mCalls.size() > 1){
                 performSwitchCall(this);
-            }else {
+
+            }else{
                 setOnHold();
                 sendLocalBroadcast(CS_TO_EXT_HOLD);
             }
@@ -281,9 +291,13 @@ public class LinphoneConnectionService extends ConnectionService {
 
     }
 
+
+
+    //Conference part
+
     private final class CallConference extends Conference {
 
-        public CallConference(Connection a, Connection b) {
+        public CallConference(MyConnection a, MyConnection b) {
             super(mPhoneAccountHandle);
             log("conference: CallConference("+a.getAddress()+", "+b.getAddress()+")");
             updateConnectionCapabilities();
@@ -291,7 +305,8 @@ public class LinphoneConnectionService extends ConnectionService {
 
             addConnection(a);
             addConnection(b);
-
+            a.sendLocalBroadcast(CS_TO_EXT_ADD_TO_CONF);
+            b.sendLocalBroadcast(CS_TO_EXT_ADD_TO_CONF);
             Bundle extra = new Bundle();
             extra.putBoolean("android.telecom.extra.DISABLE_ADD_CALL", true);
             setExtras(extra);
@@ -322,47 +337,60 @@ public class LinphoneConnectionService extends ConnectionService {
             setDisconnected(new DisconnectCause(DisconnectCause.LOCAL));
             for (Connection c : getConnections()) {
                 MyConnection call = (MyConnection) c;
+
                 if (call.equals(connection)) {
                     log("conference: onSeparate-> active->["+call.getCallId()+"] "+call.getAddress());
                     //create the connection active
                     call.setActive();
-                } else {
-                    log("conference: onSeparate-> holding->["+call.getCallId()+"] "+call.getAddress());
-                    //other connection set hold
-                    call.setOnHold();
+                    call.sendLocalBroadcast(CS_TO_EXT_REMOVE_FROM_CONF);
+                }
+//                else {
+//                    log("conference: onSeparate-> holding->["+call.getCallId()+"] "+call.getAddress());
+//                    //other connection set hold
+//                    call.setOnHold();
+//                }
+                //Set conference on Hold if 2 or more people remains
+                //destroy conference if not
+                if(mCallConference.getConnections().size() <2){
+                    mCallConference.setOnHold();
+                    mCallConference.sendLocalBroadcast(CS_TO_EXT_HOLD);
+                }else{
+                    destroy();
+                    mCallConference = null;
                 }
             }
-
-            //destroy conference
-            destroy();
-            mCallConference = null;
         }
 
         @Override
         public void onHold() {
             log("conference: onHold()");
 //            for (Connection c : getConnections()) {
-//                CallConnection call = (CallConnection) c;
+//                MyConnection call = (MyConnection) c;
+                sendLocalBroadcast(CS_TO_EXT_HOLD);
+//                call.sendLocalBroadcast(CS_TO_EXT_HOLD);
 //                call.onHold();
 //            }
-//            setOnHold();
-//            sendLocalBroadcast(Messages.TEL_TO_SIP_HOLD);
+            setOnHold();
+//            sendLocalBroadcast(CS_TO_EXT_HOLD);
         }
 
         @Override
         public void onUnhold() {
             log("conference: onUnhold()");
 //            for (Connection c : getConnections()) {
-//                CallConnection call = (CallConnection) c;
+//                MyConnection call = (MyConnection) c;
+                sendLocalBroadcast(CS_TO_EXT_UNHOLD);
 //                call.onUnhold();
 //            }
-//            setActive();
+            setActive();
 //            sendLocalBroadcast(Messages.TEL_TO_SIP_UNHOLD);
         }
 
         @Override
         public void onMerge(Connection connection) {
             log("conference: onMerge("+connection.getAddress()+")");
+//            connection.setActive();
+            connection.onUnhold();
 //            super.onMerge(connection);
         }
 
@@ -391,18 +419,25 @@ public class LinphoneConnectionService extends ConnectionService {
             updateConnectionCapabilities();
         }
 
+        private void sendLocalBroadcast(int action){
+            Intent intent = new Intent(CS_TO_EXT_BROADCAST);
+            intent.putExtra(CS_TO_EXT_ACTION, action);
+            intent.putExtra(CS_TO_EXT_IS_CONFERENCE, true);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        }
+//
+
 //        private void sendLocalBroadcast(int action){
-//            Intent intent = new Intent(Protocol.INFO_BROADCAST_TEL_TO_SIP);
-//            intent.putExtra(Messages.TAG_TEL_TO_SIP_CALL_TYPE, Messages.TEL_TO_SIP_CONFERENCE_CALL);
-//            intent.putExtra(Messages.TAG_TEL_TO_SIP_ACTION, action);
+//            Intent intent = new Intent(CS_TO_EXT_BROADCAST );
+//            intent.putExtra(CS_TO_EXT_ACTION, CS_TO_EXT_UNHOLD);
+//            intent.putExtra(CS_TO_EXT_CALL_ID, mCallId );
 //            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 //        }
-//
-//        private void sendLocalBroadcast(int action, int activeCallId){
-//            Intent intent = new Intent(Protocol.INFO_BROADCAST_TEL_TO_SIP);
-//            intent.putExtra(Messages.TAG_TEL_TO_SIP_CALL_TYPE, Messages.TEL_TO_SIP_CONFERENCE_CALL);
-//            intent.putExtra(Messages.TAG_TEL_TO_SIP_ACTION, action);
-//            intent.putExtra(Messages.TAG_TEL_TO_SIP_CALL_ID, activeCallId);
+
+//        private void sendLocalBroadcast(int action){
+//            Intent intent = new Intent(CS_TO_EXT_BROADCAST);
+//            intent.putExtra(CS_TO_EXT_CALL_TYPE, Messages.TEL_TO_SIP_CONFERENCE_CALL);
+//            intent.putExtra(CS_TO_EXT_ACTION, action);
 //            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 //        }
 
@@ -595,7 +630,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
     @Override
     public void onConference(Connection a, Connection b) {
-        mCallConference = new CallConference(a, b);
+        mCallConference = new CallConference((MyConnection) a, (MyConnection) b);
         addConference(mCallConference);
     }
 
@@ -690,6 +725,7 @@ public class LinphoneConnectionService extends ConnectionService {
                 con.setActive();
             } else {
                 con.setLocalActive(false);
+                con.setOnHold();
             }
         }
     }
