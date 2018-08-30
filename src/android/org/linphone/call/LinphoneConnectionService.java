@@ -334,31 +334,44 @@ public class LinphoneConnectionService extends ConnectionService {
 //            MyConnection activeCall = (MyConnection) connection;
 //            sendLocalBroadcast(Messages.TEL_TO_SIP_SPLIT, activeCall.getCallId());
 //
-            setDisconnected(new DisconnectCause(DisconnectCause.LOCAL));
+//            setDisconnected(new DisconnectCause(DisconnectCause.LOCAL));
+
+
+            int temp = getConnections().size();
             for (Connection c : getConnections()) {
                 MyConnection call = (MyConnection) c;
+
 
                 if (call.equals(connection)) {
                     log("conference: onSeparate-> active->["+call.getCallId()+"] "+call.getAddress());
                     //create the connection active
-                    call.setActive();
+                    removeConnection(call);
                     call.sendLocalBroadcast(CS_TO_EXT_REMOVE_FROM_CONF);
-                }
-//                else {
-//                    log("conference: onSeparate-> holding->["+call.getCallId()+"] "+call.getAddress());
-//                    //other connection set hold
-//                    call.setOnHold();
-//                }
-                //Set conference on Hold if 2 or more people remains
-                //destroy conference if not
-                if(mCallConference.getConnections().size() <2){
-                    mCallConference.setOnHold();
-                    mCallConference.sendLocalBroadcast(CS_TO_EXT_HOLD);
-                }else{
-                    destroy();
-                    mCallConference = null;
+                    //Particular case, when Conference will be deleted, the other call must be hold
+
+                    if (mCallConference.getConnections().size() <2){
+                        setAsActive(call);
+                        mCallConference.destroy();
+//                        mCallConference = null;
+
+                    }else{
+                        mCallConference.setOnHold();
+                        mCallConference.sendLocalBroadcast(CS_TO_EXT_HOLD);
+                        call.setActive();
+                    }
                 }
             }
+
+            //Set conference on Hold if 2 or more people remains
+            //destroy conference if not
+
+//            if(mCallConference != null && mCallConference.getConnections().size() >1){
+//                mCallConference.setOnHold();
+//                mCallConference.sendLocalBroadcast(CS_TO_EXT_HOLD);
+//            }else{
+//                destroy();
+//                mCallConference = null;
+//            }
         }
 
         @Override

@@ -62,7 +62,6 @@ public class TelecomManagerHelper {
     public static String TAG = "TelecomManagerHelper";
     private Conference mConference = null;
 
-
     //Initiates the telecomManager and dependencies which are needed to handle calls.
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public TelecomManagerHelper() {
@@ -352,15 +351,32 @@ public class TelecomManagerHelper {
                         startConference();
                     }
                     LinphoneManager.getLc().addToConference(getCallById(callId));
-                    int temp = LinphoneManager.getLc().getConferenceSize();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_REMOVE_FROM_CONF:
-                    int temp1 = LinphoneManager.getLc().getConferenceSize();
-                    LinphoneManager.getLc().removeFromConference(getCallById(callId));
-                    if (LinphoneManager.getLc().getConferenceSize() < 2) {
-                        LinphoneManager.getLc().terminateConference();
+
+                    Call temp = getCallById(callId);
+                    LinphoneManager.getLc().removeFromConference(temp);
+
+                    Call[] calls = LinphoneManager.getLc().getCalls();
+
+
+////                    LinphoneManager.getLc().pauseAllCalls();
+//
+//                    pauseOrResumeCall(temp, RESUME);
+//                    temp1 = LinphoneManager.getLc().getConferenceSize();
+                    if (LinphoneManager.getLc().getConferenceSize() == 1) {
+                        for (Call x:calls){
+                            if(!(x.getCallLog().getCallId().equals(callId))){
+                                Call.State etat = x.getState();
+                                String test = x.getCallLog().getCallId();
+                                Conference tempconf = x.getConference();
+                                pauseOrResumeCall(x, PAUSE);
+                                pauseOrResumeConference(PAUSE);
+                            }
+                        }
                         mConference = null;
                     }
+                    pauseOrResumeCall(temp, RESUME);
 
                     break;
             }
@@ -446,7 +462,8 @@ public class TelecomManagerHelper {
 //            }
 //            pause.setImageResource(R.drawable.pause_big_over_selected);
         } else if (call != null) {
-            if (call.getState() == Call.State.Paused && resume) {
+            Call.State test = call.getState();
+            if ((call.getState() == Call.State.Paused || call.getState() == Call.State.Pausing || call.getState() == Call.State.Updating)&& resume) {
                 lc.resumeCall(call);
 //                if (isVideoCallPaused) {
 //                    isVideoCallPaused = false;
