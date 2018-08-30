@@ -148,7 +148,6 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
 		contactsFetchInProgress.setVisibility(View.VISIBLE);
-		ContactsManager.getInstance().fetchContactsAsync();
 
 		return view;
     }
@@ -394,8 +393,8 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 
 	@Override
 	public void onResume() {
-		ContactsManager.addContactsListener(this);
 		super.onResume();
+		ContactsManager.addContactsListener(this);
 
 		if (editConsumed) {
 			editOnClick = false;
