@@ -75,6 +75,8 @@ import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
 import org.linphone.contacts.ContactsUpdatedListener;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.Reason;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
@@ -542,7 +544,17 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 				} else if (level == ChatRoomSecurityLevel.Safe) {
 					avatarTop.setImageResource(R.drawable.avatar_small_secure2);
 				} else {
-					avatarTop.setImageResource(R.drawable.avatar_small_unsecure);
+					LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mChatRoom.getParticipants()[0].getAddress());
+					if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
+						PresenceModel presenceModel = c.getFriend().getPresenceModel();
+						if (presenceModel != null) {
+							avatarTop.setImageResource(R.drawable.avatar_medium_secure1);
+						} else {
+							avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
+						}
+					} else {
+						avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
 				}
 			} else {
 				mCallButton.setVisibility(View.GONE);

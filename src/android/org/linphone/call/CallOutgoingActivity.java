@@ -36,6 +36,8 @@ import org.linphone.core.Call.State;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
@@ -194,7 +196,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		if (contact != null) {
 			LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
 			name.setText(contact.getFullName());
-
 			ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
 			Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
 			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getFriend().getAddress());
@@ -205,7 +206,16 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
 			} else {
-				contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact.getFriend() != null) {
+					PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				} else {
+					contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
 			}
 		} else {
 			name.setText(LinphoneUtils.getAddressDisplayName(address));

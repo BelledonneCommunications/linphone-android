@@ -49,6 +49,8 @@ import org.linphone.core.CallParams;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
@@ -252,7 +254,17 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
 			} else {
-				contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact.getFriend() != null) {
+					PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				}
+				else {
+					contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
 			}
 		} else {
 			name.setText(LinphoneUtils.getAddressDisplayName(address));

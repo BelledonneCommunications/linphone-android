@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.app.Fragment;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spanned;
@@ -47,8 +46,9 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
-import org.linphone.fragments.FragmentsAvailable;
 
 import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
@@ -161,7 +161,7 @@ public class ImdnFragment extends Fragment {
 		refreshInfo();
 	}
 
-	private void setPictureForContact(ImageView img, Address sipUri) {
+	private void setPictureForContact(ImageView img, Address sipUri, LinphoneContact contact) {
 		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
 		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
 		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, sipUri);
@@ -172,7 +172,16 @@ public class ImdnFragment extends Fragment {
 		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 			img.setImageResource(R.drawable.avatar_big_secure1);
 		} else {
-			img.setImageResource(R.drawable.avatar_medium_unregistered);
+			if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact != null && contact.getFriend() != null) {
+				PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+				if (presenceModel != null) {
+					img.setImageResource(R.drawable.avatar_medium_secure1);
+				} else {
+					img.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
+			} else {
+				img.setImageResource(R.drawable.avatar_medium_unregistered);
+			}
 		}
 	}
 
@@ -236,7 +245,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address, participantContact);
 
 			mRead.addView(v);
 			first = false;
@@ -260,7 +269,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address, participantContact);
 
 			mDelivered.addView(v);
 			first = false;
@@ -284,7 +293,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address, participantContact);
 
 			mSent.addView(v);
 			first = false;
@@ -307,7 +316,7 @@ public class ImdnFragment extends Fragment {
 			} else {
 				((ImageView)v.findViewById(R.id.contact_picture)).setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			}*/
-			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address);
+			setPictureForContact(((ImageView)v.findViewById(R.id.contact_picture)), address, participantContact);
 
 			mUndelivered.addView(v);
 			first = false;

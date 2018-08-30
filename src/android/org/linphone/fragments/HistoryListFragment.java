@@ -37,6 +37,8 @@ import org.linphone.core.Address;
 import org.linphone.core.CallLog;
 import org.linphone.core.Call.Status;
 import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 
 import android.annotation.SuppressLint;
@@ -503,7 +505,16 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure1);
 			} else {
-				holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
+					PresenceModel presenceModel = c.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				} else {
+					holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
 			}
 
 			displayName = (c != null) ? c.getFullName() : null;

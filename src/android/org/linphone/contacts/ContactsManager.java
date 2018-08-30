@@ -64,7 +64,7 @@ public class ContactsManager extends ContentObserver {
 
 	private List<LinphoneContact> contacts, sipContacts;
 	private MagicSearch magicSearch;
-	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = true;
+	private boolean preferLinphoneContacts = false, isContactPresenceDisabled = false;
 	private ContentResolver contentResolver;
 	private Context context;
 	private HashMap<String, LinphoneContact> androidContactsCache;

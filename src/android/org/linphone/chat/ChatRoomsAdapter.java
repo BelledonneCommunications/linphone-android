@@ -45,6 +45,8 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.EventLog;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
 
@@ -260,7 +262,16 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				} else if (level == ChatRoomSecurityLevel.Encrypted) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure1);
 				} else {
-					holder.contactPicture.setImageResource(R.drawable.avatar_small_unregistered);
+					if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact != null && contact.getFriend() != null) {
+						PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+						if (presenceModel != null) {
+							holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+						} else {
+							holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+						}
+					} else {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
 				}
 			}
 		} else {

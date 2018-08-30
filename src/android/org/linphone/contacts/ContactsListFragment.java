@@ -48,6 +48,8 @@ import android.widget.TextView;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.FriendList;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.LinphoneManager;
@@ -624,34 +626,26 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 				holder.delete.setVisibility(View.INVISIBLE);
 			}
 
-			/*Friend[] friends = LinphoneManager.getLc().getFriendsLists();
-			if (!ContactsManager.getInstance().isContactPresenceDisabled() && friends != null) {
-				holder.friendStatus.setVisibility(View.VISIBLE);
-				PresenceActivityType presenceActivity = friends[0].getPresenceModel().getActivity().getType();
-				if (presenceActivity == PresenceActivityType.Online) {
-					holder.friendStatus.setImageResource(R.drawable.led_connected);
-				} else if (presenceActivity == PresenceActivityType.Busy) {
-					holder.friendStatus.setImageResource(R.drawable.led_error);
-				} else if (presenceActivity == PresenceActivityType.Away) {
-					holder.friendStatus.setImageResource(R.drawable.led_inprogress);
-				} else if (presenceActivity == PresenceActivityType.Offline) {
-					holder.friendStatus.setImageResource(R.drawable.led_disconnected);
-				} else {
-					holder.friendStatus.setImageResource(R.drawable.call_quality_indicator_0);
-				}
-			}*/
-
 			ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
 			Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
 			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getFriend().getAddress());
 			if (securityLevel == ChatRoomSecurityLevel.Safe) {
-				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+				holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
 			} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
-				holder.contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+				holder.contactPicture.setImageResource(R.drawable.avatar_medium_unsecure);
 			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
-				holder.contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+				holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
 			} else {
-				holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact != null && contact.getFriend() != null) {
+					PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				} else {
+					holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
 			}
 
 			return view;

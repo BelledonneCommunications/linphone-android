@@ -32,11 +32,14 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
+import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
+import org.linphone.core.PresenceActivity;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 
 import java.util.ArrayList;
@@ -109,7 +112,16 @@ public class GroupInfoAdapter extends BaseAdapter {
 	    } else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 		    avatar.setImageResource(R.drawable.avatar_big_secure1);
 	    } else {
-		    avatar.setImageResource(R.drawable.avatar_medium_unregistered);
+		    if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
+			    PresenceModel presenceModel = c.getFriend().getPresenceModel();
+			    if (presenceModel != null) {
+				    avatar.setImageResource(R.drawable.avatar_medium_secure1);
+			    } else {
+				    avatar.setImageResource(R.drawable.avatar_medium_unregistered);
+			    }
+		    } else {
+			    avatar.setImageResource(R.drawable.avatar_medium_unregistered);
+		    }
 	    }
 
         delete.setOnClickListener(new View.OnClickListener() {
