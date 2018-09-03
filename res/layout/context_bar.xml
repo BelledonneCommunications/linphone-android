@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/context_bar"
+	android:background="@color/colorA"
+	android:layout_width="match_parent"
+	android:layout_height="100dp"
+	android:orientation="horizontal">
+
+	<!--<RelativeLayout-->
+		<!--android:id="@+id/status_bar"-->
+		<!--android:layout_width="match_parent"-->
+		<!--android:layout_height="40dp"-->
+		<!--android:layout_alignParentTop="true">-->
+
+		<!--<ImageView-->
+			<!--android:id="@+id/side_menu_button"-->
+			<!--android:src="@drawable/menu_burger"-->
+			<!--android:contentDescription="@string/content_description_menu"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:padding="10dp"-->
+			<!--android:layout_centerInParent="true"-->
+			<!--android:layout_alignParentLeft="true"/>-->
+
+		<!--<ImageView-->
+			<!--android:id="@+id/call_quality"-->
+			<!--android:src="@drawable/call_quality_indicator_0"-->
+			<!--android:contentDescription="@string/content_description_call_quality"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:padding="10dp"-->
+			<!--android:layout_centerInParent="true"-->
+			<!--android:layout_alignParentLeft="true"-->
+			<!--android:visibility="invisible" />-->
+
+		<!--<ImageView-->
+			<!--android:id="@+id/status_led"-->
+			<!--android:src="@drawable/led_disconnected"-->
+			<!--android:paddingLeft="5dp"-->
+			<!--android:adjustViewBounds="true"-->
+			<!--android:layout_width="20dp"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:layout_centerInParent="true"-->
+			<!--android:layout_toRightOf="@id/side_menu_button"/>-->
+
+		<!--<TextView-->
+			<!--android:id="@+id/status_text"-->
+			<!--android:text="@string/status_not_connected"-->
+			<!--style="@style/font16"-->
+			<!--android:paddingLeft="5dp"-->
+			<!--android:layout_centerVertical="true"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="match_parent"-->
+			<!--android:gravity="center_vertical"-->
+			<!--android:layout_toRightOf="@id/status_led" />-->
+
+		<!--<ImageView-->
+			<!--android:id="@+id/voicemail"-->
+			<!--android:src="@drawable/voicemail"-->
+			<!--android:layout_centerVertical="true"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="match_parent"-->
+			<!--android:gravity="center_vertical"-->
+			<!--android:visibility="gone" />-->
+
+		<!--<TextView-->
+			<!--android:id="@+id/voicemail_count"-->
+			<!--style="@style/font16"-->
+			<!--android:layout_alignParentRight="true"-->
+			<!--android:paddingLeft="5dp"-->
+			<!--android:paddingRight="10dp"-->
+			<!--android:layout_centerVertical="true"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="match_parent"-->
+			<!--android:visibility="gone" />-->
+
+		<!--<ImageView-->
+			<!--android:id="@+id/encryption"-->
+			<!--android:src="@drawable/security_ko"-->
+			<!--android:contentDescription="@string/content_description_encryption"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:adjustViewBounds="true"-->
+			<!--android:padding="5dp"-->
+			<!--android:layout_centerInParent="true"-->
+			<!--android:visibility="gone"-->
+			<!--android:layout_alignParentRight="true" />-->
+	<!--</RelativeLayout>-->
+	<LinearLayout
+		android:id="@+id/top_bar"
+		android:orientation="horizontal"
+		android:background="@color/colorF"
+		android:layout_width="match_parent"
+		android:layout_height="60dp"
+		android:layout_alignParentBottom="true"
+		>
+
+		<ImageView
+			android:id="@+id/new_discussion"
+			android:src="@drawable/chat_add"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_new_discussion"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<ImageView
+			android:id="@+id/back_in_call"
+			android:src="@drawable/call_back"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_back_call"
+			android:visibility="invisible"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.4"/>
+
+		<ImageView
+			android:id="@+id/edit"
+			android:src="@drawable/edit_list_button"
+			android:background="@drawable/toolbar_button"
+			android:contentDescription="@string/content_description_edit_list"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.2"
+			android:padding="15dp"/>
+		<include layout="@layout/edit_list"/>
+	</LinearLayout>
+</android.support.v7.widget.Toolbar>

@@ -1630,6 +1630,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		menu.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
+
 				if(sideMenu.isDrawerVisible(Gravity.LEFT)){
 					sideMenu.closeDrawer(sideMenuContent);
 				} else {

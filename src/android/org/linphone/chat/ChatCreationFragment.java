@@ -21,48 +21,46 @@ package org.linphone.chat;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
-import org.linphone.contacts.LinphoneNumberOrAddress;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactSelectView;
-import org.linphone.contacts.ContactsUpdatedListener;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class ChatCreationFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, ContactsUpdatedListener {
-	private LayoutInflater mInflater;
-	private ListView mContactsList;
+public class ChatCreationFragment extends Fragment implements View.OnClickListener ,SearchContactsListAdapter.ViewHolder.ClickListener, ContactsUpdatedListener {
+	private RecyclerView mContactsList;
 	private LinearLayout mContactsSelectedLayout;
 	private HorizontalScrollView mContactsSelectLayout;
 	private ArrayList<ContactAddress> mContactsSelected;
@@ -80,7 +78,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mInflater = inflater;
+		super.onCreate(savedInstanceState);
 		View view = inflater.inflate(R.layout.chat_create, container, false);
 
 		mContactsSelected = new ArrayList<>();
@@ -124,7 +122,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
 		mContactsFetchInProgress.setVisibility(View.VISIBLE);
 
-		mSearchAdapter = new SearchContactsListAdapter(null, mInflater, mContactsFetchInProgress);
+		mSearchAdapter = new SearchContactsListAdapter(null, mContactsFetchInProgress, this);
 
 		mSearchField = view.findViewById(R.id.searchField);
 		mSearchField.addTextChangedListener(new TextWatcher() {
@@ -146,8 +144,23 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			}
 		});
 
+		//Declares the layout manager, allowing customization of RecyclerView displaying
+		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+
+
+
 		mContactsList.setAdapter(mSearchAdapter);
-		mContactsList.setOnItemClickListener(this);
+
+		//Divider between items + binds layout manager to our RecyclerView
+		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContactsList.getContext(),
+				layoutManager.getOrientation());
+		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
+		mContactsList.addItemDecoration(dividerItemDecoration);
+
+		mContactsList.setLayoutManager(layoutManager);
+
+
+
 		if (savedInstanceState != null && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
 			mContactsSelectedLayout.removeAllViews();
 			// We need to get all contacts not only sip
@@ -329,7 +342,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
 	private void removeContactFromSelection(ContactAddress ca) {
 		updateContactsClick(ca, mSearchAdapter.getContactsSelectedList());
-		mSearchAdapter.notifyDataSetInvalidated();
+		mSearchAdapter.notifyDataSetChanged();
 		updateListSelected();
 	}
 
@@ -348,6 +361,8 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		super.onSaveInstanceState(outState);
 	}
 
+
+	//Removed all selection mode related code, as it is now located into SelectableHelper.
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();
@@ -412,8 +427,8 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-		ContactAddress ca = mSearchAdapter.getContacts().get(i);
+	public void onItemClicked(int position) {
+		ContactAddress ca = mSearchAdapter.getContacts().get(position);
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		ProxyConfig lpc = lc.getDefaultProxyConfig();
 		if (lpc == null || lpc.getConferenceFactoryUri() == null) {

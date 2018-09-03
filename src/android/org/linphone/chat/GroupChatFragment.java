@@ -34,6 +34,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -45,12 +47,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -61,6 +61,7 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
@@ -73,10 +74,9 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
-import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.ListSelectionHelper;
+import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ import java.util.List;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
-public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
+public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ChatBubbleViewHolder.ClickListener ,SelectableHelper.DeleteListener {
 	private static final int ADD_PHOTO = 1337;
 
 	private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
@@ -93,10 +93,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
 	private EditText mMessageTextToSend;
 	private LayoutInflater mInflater;
-	private ListView mChatEventsList;
+	private RecyclerView mChatEventsList;
 	private LinearLayout mFilesUploadLayout;
-	private ListSelectionHelper mSelectionHelper;
-
+	private SelectableHelper mSelectionHelper;
+	private Context mContext;
 	private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
 	private Uri mImageToUploadUri;
 	private ChatEventsAdapter mEventsAdapter;
@@ -104,7 +104,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private Address mRemoteSipAddress, mRemoteParticipantAddress;
 	private ChatRoom mChatRoom;
 	private ArrayList<LinphoneContact> mParticipants;
-
+	private LinearLayoutManager layoutManager;
+	private int mContextMenuMessagePosition;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -116,10 +117,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
 		}
 
-		mInflater = inflater;
+		this.mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chat, container, false);
 
-		mSelectionHelper = new ListSelectionHelper(view, this);
 
 		mBackButton = view.findViewById(R.id.back);
 		mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -213,7 +213,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		mRemoteComposing = view.findViewById(R.id.remote_composing);
 
 		mChatEventsList = view.findViewById(R.id.chat_message_list);
-		registerForContextMenu(mChatEventsList);
+		mSelectionHelper = new SelectableHelper(view, this);
+		layoutManager = new LinearLayoutManager(mContext);
+		mChatEventsList.setLayoutManager(layoutManager);
 
 		if (getArguments() != null) {
 			String fileSharedUri = getArguments().getString("fileSharedUri");
@@ -233,7 +235,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			if (getArguments().getString("messageDraft") != null)
 				mMessageTextToSend.setText(getArguments().getString("messageDraft"));
 		}
-
 		return view;
 	}
 
@@ -257,7 +258,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
-
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
 	}
 
@@ -347,12 +347,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 	}
 
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		ChatBubbleViewHolder holder = (ChatBubbleViewHolder) v.getTag();
+		mContextMenuMessagePosition = holder.getAdapterPosition();
+
+		EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
 		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
 			return;
 		}
@@ -365,8 +368,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			inflater.inflate(R.menu.chat_bubble_menu, menu);
 		}
 
-		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-			// Do not show messages' IDMN state in 1 to 1 chat room as it is already visible in the lower corner of the bubble
+		if (!message.isOutgoing() && mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			// Do not show incoming messages IDMN state in 1 to 1 chat room as we don't receive IMDN for them
 			menu.removeItem(R.id.imdn_infos);
 		}
 		if (!message.hasTextContent()) {
@@ -377,9 +380,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-		EventLog event = (EventLog) mEventsAdapter.getItem(info.position);
+		EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
+
 		if (event.getType() != EventLog.Type.ConferenceChatMessage) {
 			return super.onContextItemSelected(item);
 		}
@@ -388,7 +391,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		String messageId = message.getMessageId();
 
 		if (item.getItemId() == R.id.resend) {
-			mEventsAdapter.removeItem(info.position);
+			mEventsAdapter.removeItem(mContextMenuMessagePosition);
 			message.resend();
 			return true;
 		}
@@ -406,7 +409,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 		if (item.getItemId() == R.id.delete_message) {
 			mChatRoom.deleteMessage(message);
-			mEventsAdapter.removeItem(info.position);
+			mEventsAdapter.removeItem(mContextMenuMessagePosition);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -548,24 +551,31 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	private void displayChatRoomHistory() {
+
 		if (mChatRoom == null) return;
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryMessageEvents(0), mParticipants);
+			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mChatRoom.getHistoryMessageEvents(0), mParticipants, this);
 		} else {
-			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryEvents(0), mParticipants);
+			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mChatRoom.getHistoryEvents(0), mParticipants, this);
 		}
 		mSelectionHelper.setAdapter(mEventsAdapter);
 		mChatEventsList.setAdapter(mEventsAdapter);
-	}
+		scrollToBottom();
+    }
 
 	public void scrollToBottom() {
-		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
-			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
-		}
+			mChatEventsList.getLayoutManager().scrollToPosition(mEventsAdapter.getCount() - 1);
 	}
 
 	public String getRemoteSipUri() {
 		return mRemoteSipUri;
+	}
+
+	@Override
+	public void onItemClicked(int position) {
+		if (mEventsAdapter.isEditionEnabled()) {
+			mEventsAdapter.toggleSelection(position);
+		}
 	}
 
 	/**

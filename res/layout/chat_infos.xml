@@ -99,7 +99,7 @@
 
         </RelativeLayout>
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_room_participants"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -107,7 +107,7 @@
             android:divider="@color/colorE"
             android:dividerHeight="1dp">
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
 
         <LinearLayout
             android:id="@+id/leaveGroupLayout"

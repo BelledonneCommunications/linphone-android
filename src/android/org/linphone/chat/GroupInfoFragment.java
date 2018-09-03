@@ -21,7 +21,11 @@ package org.linphone.chat;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -32,7 +36,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
@@ -61,7 +64,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private Address mGroupChatRoomAddress;
 	private EditText mSubjectField;
 	private LayoutInflater mInflater;
-	private ListView mParticipantsList;
+
+	private RecyclerView mParticipantsList;
+
 	private LinearLayout mLeaveGroupButton;
 	private RelativeLayout mWaitLayout;
 	private GroupInfoAdapter mAdapter;
@@ -73,6 +78,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	private Dialog mAdminStateChangedDialog;
 	private ChatRoomListenerStub mChatRoomCreationListener;
 	private Bundle mShareInfos;
+	private Context mContext;
+	private LinearLayoutManager layoutManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +89,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		if (getArguments() == null || getArguments().isEmpty()) {
 			return null;
 		}
+		this.mContext = getActivity().getApplicationContext();
+
 		mParticipants = (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 
 		mGroupChatRoomAddress = null;
@@ -105,7 +114,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		}
 
 		mParticipantsList = view.findViewById(R.id.chat_room_participants);
-		mAdapter = new GroupInfoAdapter(mInflater, mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
+		mAdapter = new GroupInfoAdapter(mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
 		mAdapter.setOnDeleteClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -118,6 +127,15 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		});
 		mParticipantsList.setAdapter(mAdapter);
 		mAdapter.setChatRoom(mChatRoom);
+		layoutManager = new LinearLayoutManager(mContext);
+		mParticipantsList.setLayoutManager(layoutManager);
+
+		//Divider between items
+		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mParticipantsList.getContext(),
+				layoutManager.getOrientation());
+		dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
+		mParticipantsList.addItemDecoration(dividerItemDecoration);
+
 
 		String fileSharedUri = getArguments().getString("fileSharedUri");
 		String messageDraft = getArguments().getString("messageDraft");

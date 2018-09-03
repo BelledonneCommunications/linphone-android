@@ -20,68 +20,82 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import org.linphone.contacts.ContactsManager;
-import org.linphone.core.ChatRoomListenerStub;
-import org.linphone.core.EventLog;
-import org.linphone.mediastream.Log;
-import org.linphone.ui.ListSelectionHelper;
-import org.linphone.contacts.ContactsUpdatedListener;
-import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.activities.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.EventLog;
+import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.ui.SelectableHelper;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
-	private LayoutInflater mInflater;
-	private ListView mChatRoomsList;
-	private TextView mNoChatHistory;
+public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomsAdapter.ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
+
+	private RecyclerView mChatRoomsList;
 	private ImageView mNewDiscussionButton, mBackToCallButton;
 	private ChatRoomsAdapter mChatRoomsAdapter;
 	private CoreListenerStub mListener;
-	private ListSelectionHelper mSelectionHelper;
 	private RelativeLayout mWaitLayout;
 	private int mChatRoomDeletionPendingCount;
 	private ChatRoomListenerStub mChatRoomListener;
+	private Context mContext;
+	public List<ChatRoom> mRooms;
+	private SelectableHelper mSelectionHelper;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mInflater = inflater;
+	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+		super.onCreate(savedInstanceState);
+		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
+
+		this.mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chatlist, container, false);
-		mSelectionHelper = new ListSelectionHelper(view, this);
-		mChatRoomsAdapter = new ChatRoomsAdapter(getActivity(), mSelectionHelper, mInflater);
+
+		mChatRoomsList = view.findViewById(R.id.chatList);
+		mWaitLayout = view.findViewById(R.id.waitScreen);
+		mNewDiscussionButton = view.findViewById(R.id.new_discussion);
+		mBackToCallButton = view.findViewById(R.id.back_in_call);
+
+		mSelectionHelper = new SelectableHelper(view, this);
+        mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
+
+		mChatRoomsList.setAdapter(mChatRoomsAdapter);
 		mSelectionHelper.setAdapter(mChatRoomsAdapter);
 		mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
-		mWaitLayout = view.findViewById(R.id.waitScreen);
+		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+		mChatRoomsList.setLayoutManager(layoutManager);
+
+		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mChatRoomsList.getContext(),
+				((LinearLayoutManager) layoutManager).getOrientation());
+		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
+		mChatRoomsList.addItemDecoration(dividerItemDecoration);
+
 		mWaitLayout.setVisibility(View.GONE);
 
-		mChatRoomsList = view.findViewById(R.id.chatList);
-		mChatRoomsList.setAdapter(mChatRoomsAdapter);
-
-		mNoChatHistory = view.findViewById(R.id.noChatHistory);
-		mNoChatHistory.setVisibility(View.GONE);
-
-		mNewDiscussionButton = view.findViewById(R.id.new_discussion);
 		mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -89,7 +103,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			}
 		});
 
-		mBackToCallButton = view.findViewById(R.id.back_in_call);
 		mBackToCallButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -129,18 +142,36 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 				}
 			}
 		};
-
 		return view;
+	}
+
+	@Override
+	public void onItemClicked(int position) {
+		if (mChatRoomsAdapter.isEditionEnabled()) {
+			mChatRoomsAdapter.toggleSelection(position);
+		} else {
+			ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
+			LinphoneActivity.instance().goToChat(room.getPeerAddress().asString(),null);
+		}
+	}
+
+	@Override
+	public boolean onItemLongClicked(int position) {
+		if (!mChatRoomsAdapter.isEditionEnabled()) {
+			mSelectionHelper.enterEditionMode();
+		}
+		mChatRoomsAdapter.toggleSelection(position);
+		return true;
 	}
 
 	private void refreshChatRoomsList() {
 		mChatRoomsAdapter.refresh();
-		mNoChatHistory.setVisibility(mChatRoomsAdapter.getCount() == 0 ? View.VISIBLE : View.GONE);
+		//mNoChatHistory.setVisibility(mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	public void displayFirstChat() {
 		ChatRoomsAdapter adapter = (ChatRoomsAdapter)mChatRoomsList.getAdapter();
-		if (adapter != null && adapter.getCount() > 0) {
+		if (adapter != null && adapter.getItemCount() > 0) {
 			ChatRoom room = (ChatRoom) adapter.getItem(0);
 			LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
 		} else {
@@ -156,7 +187,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		if (LinphoneManager.getLc().getCallsNb() > 0) {
 			mBackToCallButton.setVisibility(View.VISIBLE);
 		} else {
-			mBackToCallButton.setVisibility(View.INVISIBLE);
+			mBackToCallButton.setVisibility(View.GONE);
 		}
 
 		if (LinphoneActivity.isInstanciated()) {
@@ -181,6 +212,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		ContactsManager.removeContactsListener(this);
 		mChatRoomsAdapter.clear();
 		super.onPause();
+
 	}
 
 	@Override
@@ -208,7 +240,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		if (mChatRoomDeletionPendingCount > 0) {
 			mWaitLayout.setVisibility(View.VISIBLE);
 		}
-		LinphoneActivity.instance().refreshMissedChatCountDisplay();
 	}
 
 	@Override
@@ -218,9 +249,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 		ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
 		if (adapter != null) {
-			adapter.notifyDataSetInvalidated();
+			adapter.notifyDataSetChanged();
 		}
 	}
 }
-
-

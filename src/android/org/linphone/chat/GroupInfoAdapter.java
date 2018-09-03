@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,35 +34,126 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupInfoAdapter extends BaseAdapter {
-    private LayoutInflater mInflater;
+public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.ViewHolder> {
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        public TextView name;
+        public ImageView avatar;
+        public ImageView delete;
+        public LinearLayout isAdmin;
+        public LinearLayout isNotAdmin;
+
+
+        public ViewHolder(View view) {
+            super(view);
+            name = view.findViewById(R.id.name);
+            avatar = view.findViewById(R.id.contact_picture);
+            delete = view.findViewById(R.id.delete);
+            isAdmin = view.findViewById(R.id.isAdminLayout);
+            isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
+        }
+
+   }
+
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
     private ChatRoom mChatRoom;
+    public ImageView avatar;
 
-    public GroupInfoAdapter(LayoutInflater inflater, List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
-        mInflater = inflater;
+    public GroupInfoAdapter(List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures || isCreation;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_infos_cell, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final ContactAddress ca = (ContactAddress)getItem(position);
+        LinphoneContact c = ca.getContact();
+        this.avatar=holder.avatar;
+        holder.name.setText((c.getFullName() != null) ? c.getFullName() :
+                (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
+        if (c.hasPhoto()) {
+            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
+        }
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mDeleteListener != null) {
+                    mDeleteListener.onClick(view);
+                }
+            }
+        });
+        holder.delete.setTag(ca);
+
+        holder.isAdmin.setVisibility(ca.isAdmin() ? View.VISIBLE : View.GONE);
+        holder.isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.VISIBLE);
+
+        holder.isAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.isNotAdmin.setVisibility(View.VISIBLE);
+                holder.isAdmin.setVisibility(View.GONE);
+                ca.setAdmin(false);
+            }
+        });
+
+        holder.isNotAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.isNotAdmin.setVisibility(View.GONE);
+                holder.isAdmin.setVisibility(View.VISIBLE);
+                ca.setAdmin(true);
+            }
+        });
+
+        holder.delete.setVisibility(View.VISIBLE);
+        if (mHideAdminFeatures) {
+            holder.delete.setVisibility(View.INVISIBLE);
+            holder.isAdmin.setOnClickListener(null); // Do not allow not admin to remove it's rights but display admins
+            holder.isNotAdmin.setVisibility(View.GONE); // Hide not admin button for not admin participants
+        } else if (mChatRoom != null) {
+            boolean found = false;
+            for (Participant p : mChatRoom.getParticipants()) {
+                if (p.getAddress().weakEqual(ca.getAddress())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                holder.isNotAdmin.setVisibility(View.GONE); // Hide not admin button for participant not yet added so even if user click it it won't have any effect
+            }
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mItems.size();
     }
 
     public void setChatRoom(ChatRoom room) {
     	mChatRoom = room;
     }
 
-    @Override
     public int getCount() {
         return mItems.size();
     }
 
-    @Override
     public Object getItem(int i) {
         return mItems.get(i);
     }
@@ -68,79 +161,6 @@ public class GroupInfoAdapter extends BaseAdapter {
     @Override
     public long getItemId(int i) {
         return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        if (view == null) {
-            view = mInflater.inflate(R.layout.chat_infos_cell, null);
-        }
-
-        final ContactAddress ca = (ContactAddress)getItem(i);
-        LinphoneContact c = ca.getContact();
-
-        TextView name = view.findViewById(R.id.name);
-        ImageView avatar = view.findViewById(R.id.contact_picture);
-        ImageView delete = view.findViewById(R.id.delete);
-        final LinearLayout isAdmin = view.findViewById(R.id.isAdminLayout);
-        final LinearLayout isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
-
-        name.setText((c.getFullName() != null) ? c.getFullName() :
-		        (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
-        if (c.hasPhoto()) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
-        }
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-	            if (mDeleteListener != null) {
-	                mDeleteListener.onClick(view);
-	            }
-            }
-        });
-        delete.setTag(ca);
-
-        isAdmin.setVisibility(ca.isAdmin() ? View.VISIBLE : View.GONE);
-        isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.VISIBLE);
-
-        isAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-	            isNotAdmin.setVisibility(View.VISIBLE);
-	            isAdmin.setVisibility(View.GONE);
-	            ca.setAdmin(false);
-            }
-        });
-
-        isNotAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-	            isNotAdmin.setVisibility(View.GONE);
-	            isAdmin.setVisibility(View.VISIBLE);
-	            ca.setAdmin(true);
-            }
-        });
-
-	    delete.setVisibility(View.VISIBLE);
-        if (mHideAdminFeatures) {
-            delete.setVisibility(View.INVISIBLE);
-            isAdmin.setOnClickListener(null); // Do not allow not admin to remove it's rights but display admins
-            isNotAdmin.setVisibility(View.GONE); // Hide not admin button for not admin participants
-        } else if (mChatRoom != null) {
-	        boolean found = false;
-	        for (Participant p : mChatRoom.getParticipants()) {
-		        if (p.getAddress().weakEqual(ca.getAddress())) {
-			        found = true;
-			        break;
-		        }
-	        }
-	        if (!found) {
-		        isNotAdmin.setVisibility(View.GONE); // Hide not admin button for participant not yet added so even if user click it it won't have any effect
-	        }
-        }
-
-        return view;
     }
 
     public void setOnDeleteClickListener(View.OnClickListener onClickListener) {
@@ -154,6 +174,6 @@ public class GroupInfoAdapter extends BaseAdapter {
 
     public void setAdminFeaturesVisible(boolean visible) {
 	    mHideAdminFeatures = !visible;
-	    notifyDataSetInvalidated();
+	    notifyDataSetChanged();
     }
 }
