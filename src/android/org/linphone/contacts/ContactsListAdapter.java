@@ -1,5 +1,24 @@
 package org.linphone.contacts;
 
+/*
+ ContactsListAdapter.java
+ Copyright (C) 2018  Belledonne Communications, Grenoble, France
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -52,7 +71,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             this.listener= listener;
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
-
         }
 
         @Override
@@ -60,7 +78,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             if (listener != null) {
                 listener.onItemClicked(getAdapterPosition());
             }
-
         }
 
         public boolean onLongClick(View v) {
@@ -74,7 +91,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             void onItemClicked(int position);
             boolean onItemLongClicked(int position);
         }
-
     }
 
     private List<LinphoneContact> contacts;
@@ -91,8 +107,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         updateDataSet(contactsList);
         this.clickListener = clickListener;
     }
-
-
 
     @NonNull
     @Override
@@ -140,8 +154,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         return contacts.size();
     }
 
-
-
     public Object getItem(int position) {
         if (position >= getItemCount()) return null;
         return contacts.get(position);
@@ -153,8 +165,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     public long getItemId(int position) {
         return position;
     }
-
-
 
     public void updateDataSet(List<LinphoneContact> contactsList) {
         contacts = contactsList;

@@ -114,8 +114,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 			}
 		});
 
-
-
 		newContact.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -163,17 +161,11 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		layoutManager = new LinearLayoutManager(mContext);
 		contactsList.setLayoutManager(layoutManager);
 
-
-
 		//Divider between items
 		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(contactsList.getContext(),
 				layoutManager.getOrientation());
-		dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.divider));
+		dividerItemDecoration.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
 		contactsList.addItemDecoration(dividerItemDecoration);
-
-
-
-
 
 		ContactsManager.getInstance().fetchContactsAsync();
 
@@ -249,7 +241,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 			isEditionEnabled=true;
 		}
 
-
 		mContactAdapter = new ContactsListAdapter(mContext, listContact, this, mSelectionHelper);
 
 		mSelectionHelper.setAdapter(mContactAdapter);
@@ -301,7 +292,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		if (mContactAdapter.isEditionEnabled()) {
 			mContactAdapter.toggleSelection(position);
 
-		}else if (editOnClick) {
+		} else if (editOnClick) {
 			editConsumed = true;
 			LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
 		} else {
@@ -387,7 +378,4 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		}
 		ContactsManager.getInstance().deleteMultipleContactsAtOnce(ids);
 	}
-
-
-
 }

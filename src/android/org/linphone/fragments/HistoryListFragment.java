@@ -74,8 +74,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 		historyList = (RecyclerView) view.findViewById(R.id.history_list);
 
-
-
 		layoutManager = new LinearLayoutManager(mContext);
 		historyList.setLayoutManager(layoutManager);
 		//Divider between items
@@ -228,8 +226,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		}
 	}
 
-
-
 	@Override
 	public void onDeleteSelection(Object[] objectsToDelete) {
 		int size = mhistoryAdapter.getSelectedItemCount();
@@ -240,12 +236,11 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		}
 	}
 
-	//ClickListeners bound to items
 	@Override
 	public void onItemClicked(int position) {
 		if (mhistoryAdapter.isEditionEnabled()) {
 			mhistoryAdapter.toggleSelection(position);
-		}else{
+		} else {
 			if (LinphoneActivity.isInstanciated()) {
 				CallLog log = mLogs.get(position);
 				Address address;

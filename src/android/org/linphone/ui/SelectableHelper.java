@@ -30,7 +30,6 @@ import android.widget.LinearLayout;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 
-
 public class SelectableHelper {
     private ImageView mEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton, mCancelButton;
     private LinearLayout mEditTopBar, mTopBar;
@@ -132,10 +131,7 @@ public class SelectableHelper {
         mAdapter=adapter;
     }
 
-
-
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
-
         //Delete button availability
         if (isSelectionEmpty) {
             mDeleteSelectionButton.setEnabled(false);

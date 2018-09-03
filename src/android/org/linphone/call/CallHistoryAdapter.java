@@ -1,5 +1,24 @@
 package org.linphone.call;
 
+/*
+ CallHistoryAdapter.java
+ Copyright (C) 2018  Belledonne Communications, Grenoble, France
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -57,10 +76,8 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
             this.listener = listener;
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
-
         }
 
-        //Thoses methods are caught up by the fragment
         @Override
         public void onClick(View view) {
             if (listener != null) {
@@ -80,7 +97,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
             void onItemClicked(int position);
             boolean onItemLongClicked(int position);
         }
-
     }
 
     private List<CallLog> mLogs;
@@ -110,8 +126,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
 
     }
 
-    //Links datas, visibility and listeners of inner items from the adapter to the ViewHolder
-
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final CallLog log= mLogs.get(position);
@@ -124,7 +138,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         holder.separatorText.setText(timestampToHumanDate(logTime));
         holder.select.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
         holder.select.setChecked(isSelected(position));
-
 
         if (position > 0) {
             CallLog previousLog = mLogs.get(position-1);
@@ -140,7 +153,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         } else {
             holder.separator.setVisibility(View.VISIBLE);
         }
-
 
         if (log.getDir() == Call.Dir.Incoming) {
             address = log.getFromAddress();
@@ -169,8 +181,6 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         } else {
             holder.contact.setText(displayName);
         }
-
-
 
         holder.detail.setVisibility(isEditionEnabled() ? View.INVISIBLE : View.VISIBLE);
         holder.detail.setOnClickListener(!isEditionEnabled() ?

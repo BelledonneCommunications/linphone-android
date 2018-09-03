@@ -52,10 +52,6 @@ import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-/*
-* Main sources: Linphone + https://enoent.fr/blog/2015/01/18/recyclerview-basics/
-* */
-
 public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomsAdapter.ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
 
 	private RecyclerView mChatRoomsList;
@@ -97,55 +93,13 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
 		mChatRoomsList.setLayoutManager(layoutManager);
 
-
 		//Divider between items
 		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mChatRoomsList.getContext(),
 				((LinearLayoutManager) layoutManager).getOrientation());
 		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
 		mChatRoomsList.addItemDecoration(dividerItemDecoration);
 
-
 		mWaitLayout.setVisibility(View.GONE);
-
-
-
-
-
-			//All commentend code below, from line 123 to line 148, have to be uncommented to allow swipe actions.
-
-			//Actions allowed by swipe buttons
-
-//		final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
-////			@Override
-////			public void onLeftClicked(int position) {
-////				super.onLeftClicked(position);
-////			}
-//
-//			@Override
-//			public void onRightClicked(int position) {
-//				mChatRoomsAdapter.removeItem(position);
-//				mChatRoomsAdapter.notifyDataSetChanged();
-//			}
-//		});
-//
-//			//Initialize swipe detection
-//
-//
-//		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
-//		itemTouchHelper.attachToRecyclerView(mChatRoomsList);
-//
-//			//Add swipe buttons
-//		mChatRoomsList.addItemDecoration(new RecyclerView.ItemDecoration() {
-//			@Override
-//			public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-//				swipeController.onDraw(c);
-//			}
-//		});
-
-
-			// Buttons onClickListeners definitions
-
-
 
 		mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -160,7 +114,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 				LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
 			}
 		});
-
 
 		//Update ChatRoomsList on change
 		mListener = new CoreListenerStub() {
@@ -203,8 +156,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 	public void onItemClicked(int position) {
 		if (mChatRoomsAdapter.isEditionEnabled()) {
 			mChatRoomsAdapter.toggleSelection(position);
-
-		}else{
+		} else {
 			ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
 			LinphoneActivity.instance().goToChat(room.getPeerAddress().asString(),null);
 		}
@@ -212,17 +164,13 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
 	@Override
 	public boolean onItemLongClicked(int position) {
-		if (mChatRoomsAdapter.isEditionEnabled()!=true) {
+		if (!mChatRoomsAdapter.isEditionEnabled()) {
 			//Start selection mode
 			mSelectionHelper.enterEditionMode();
 		}
 		mChatRoomsAdapter.toggleSelection(position);
 		return true;
 	}
-
-
-
-	//Existing functions before RecyclerView conversion
 
 	private void refreshChatRoomsList() {
 		mChatRoomsAdapter.refresh();
@@ -303,7 +251,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 	}
 
 
-		@Override
+	@Override
 	public void onContactsUpdated() {
 		if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST)
 			return;
@@ -313,8 +261,4 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			adapter.notifyDataSetChanged();
 		}
 	}
-
-
-
 }
-
