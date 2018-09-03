@@ -45,6 +45,7 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
+import org.linphone.core.FriendListListener;
 import org.linphone.core.MagicSearch;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
@@ -59,7 +60,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class ContactsManager extends ContentObserver {
+public class ContactsManager extends ContentObserver implements FriendListListener {
 	private static ContactsManager instance;
 
 	private List<LinphoneContact> contacts, sipContacts;
@@ -93,6 +94,12 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public void destroy() {
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			for (FriendList list : lc.getFriendsLists()) {
+				list.setListener(null);
+			}
+		}
 		defaultAvatar.recycle();
 		instance = null;
 	}
@@ -293,10 +300,6 @@ public class ContactsManager extends ContentObserver {
 		LinphoneContact contact = (LinphoneContact)lf.getUserData();
 		if (contact != null && !sipContacts.contains(contact)) {
 			sipContacts.add(contact);
-			Collections.sort(sipContacts);
-			for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
-				listener.onContactsUpdated();
-			}
 		}
 	}
 
@@ -589,5 +592,37 @@ public class ContactsManager extends ContentObserver {
 		String[] projection = new String[] { ContactsContract.Data.CONTACT_ID, ContactsContract.CommonDataKinds.Organization.COMPANY };
 		Cursor c = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{ ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE }, null);
 		return c;
+	}
+
+	@Override
+	public void onContactCreated(FriendList list, Friend lf) {
+
+	}
+
+	@Override
+	public void onContactDeleted(FriendList list, Friend lf) {
+
+	}
+
+	@Override
+	public void onContactUpdated(FriendList list, Friend newFriend, Friend oldFriend) {
+
+	}
+
+	@Override
+	public void onSyncStatusChanged(FriendList list, FriendList.SyncStatus status, String msg) {
+
+	}
+
+	@Override
+	public void onPresenceReceived(FriendList list, Friend[] friends) {
+		for (Friend lf : friends) {
+			ContactsManager.getInstance().refreshSipContact(lf);
+		}
+
+		Collections.sort(sipContacts);
+		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+			listener.onContactsUpdated();
+		}
 	}
 }

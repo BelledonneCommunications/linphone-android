@@ -167,7 +167,8 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		dividerItemDecoration.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
 		contactsList.addItemDecoration(dividerItemDecoration);
 
-		ContactsManager.getInstance().fetchContactsAsync();
+		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
+		contactsFetchInProgress.setVisibility(View.VISIBLE);
 
 		return view;
     }
@@ -312,8 +313,8 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
 	@Override
 	public void onResume() {
-		ContactsManager.addContactsListener(this);
 		super.onResume();
+		ContactsManager.addContactsListener(this);
 
 		if (editConsumed) {
 			editOnClick = false;

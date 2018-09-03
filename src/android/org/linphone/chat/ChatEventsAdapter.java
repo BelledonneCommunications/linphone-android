@@ -163,10 +163,23 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 			holder.delete.setTag(position);
 		}
 
-		if (event.getType() == EventLog.Type.ConferenceChatMessage) {
-			holder.bubbleLayout.setVisibility(View.VISIBLE);
+	    if (event.getType() == EventLog.Type.ConferenceChatMessage) {
+		    holder.bubbleLayout.setVisibility(View.VISIBLE);
+		    final ChatMessage message = event.getChatMessage();
 
-			final ChatMessage message = event.getChatMessage();
+		    if (position > 0 && mContext.getResources().getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
+			    EventLog previousEvent = (EventLog)getItem(position-1);
+			    if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
+				    ChatMessage previousMessage = previousEvent.getChatMessage();
+				    if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
+					    holder.separatorLayout.setVisibility(View.GONE);
+				    }
+			    } else {
+			    	// No separator if previous event is not a message
+				    holder.separatorLayout.setVisibility(View.GONE);
+			    }
+		    }
+
 			holder.messageId = message.getMessageId();
 			message.setUserData(holder);
 
@@ -237,7 +250,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 						break;
 					}
 				}
-
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
