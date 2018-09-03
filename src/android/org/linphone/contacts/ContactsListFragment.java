@@ -188,7 +188,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 			return;
 		}
 		changeContactsToggle();
-		mContactAdapter.setSearchMode(true);
+		mContactAdapter.setmIsSearchMode(true);
 
 		List<LinphoneContact> listContact;
 

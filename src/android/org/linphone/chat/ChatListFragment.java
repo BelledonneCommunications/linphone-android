@@ -69,19 +69,16 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 	public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		//We get back all ChatRooms from the LinphoneManager and store them
 		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
 
 		this.mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chatlist, container, false);
 
-		//Views definition
 		mChatRoomsList = view.findViewById(R.id.chatList);
 		mWaitLayout = view.findViewById(R.id.waitScreen);
 		mNewDiscussionButton = view.findViewById(R.id.new_discussion);
 		mBackToCallButton = view.findViewById(R.id.back_in_call);
 
-		//Creation and affectation of adapter to the RecyclerView and SelectionHelper
 		mSelectionHelper = new SelectableHelper(view, this);
         mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms,this, mSelectionHelper);
 
@@ -89,11 +86,9 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		mSelectionHelper.setAdapter(mChatRoomsAdapter);
 		mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
-		//Initialize the LayoutManager
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
 		mChatRoomsList.setLayoutManager(layoutManager);
 
-		//Divider between items
 		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mChatRoomsList.getContext(),
 				((LinearLayoutManager) layoutManager).getOrientation());
 		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
@@ -115,7 +110,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			}
 		});
 
-		//Update ChatRoomsList on change
 		mListener = new CoreListenerStub() {
 			@Override
 			public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
@@ -151,7 +145,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		return view;
 	}
 
-	//On a click on an item, go to the selected ChatRoom if no SelectionMode chosen, select the item if it does
 	@Override
 	public void onItemClicked(int position) {
 		if (mChatRoomsAdapter.isEditionEnabled()) {
@@ -165,7 +158,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 	@Override
 	public boolean onItemLongClicked(int position) {
 		if (!mChatRoomsAdapter.isEditionEnabled()) {
-			//Start selection mode
 			mSelectionHelper.enterEditionMode();
 		}
 		mChatRoomsAdapter.toggleSelection(position);
@@ -249,7 +241,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			mWaitLayout.setVisibility(View.VISIBLE);
 		}
 	}
-
 
 	@Override
 	public void onContactsUpdated() {

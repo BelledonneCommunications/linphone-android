@@ -137,8 +137,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		mParticipantsList.addItemDecoration(dividerItemDecoration);
 
 
-
-
 		String fileSharedUri = getArguments().getString("fileSharedUri");
 		String messageDraft = getArguments().getString("messageDraft");
 

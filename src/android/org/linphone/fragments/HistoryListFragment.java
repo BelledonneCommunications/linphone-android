@@ -53,15 +53,15 @@ import java.util.List;
 public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, CallHistoryAdapter.ViewHolder.ClickListener  ,ContactsUpdatedListener,SelectableHelper.DeleteListener{
 	private RecyclerView historyList;
 	private TextView noCallHistory, noMissedCallHistory;
-	private ImageView missedCalls, allCalls, edit, selectAll, deselectAll, delete, cancel;
+	private ImageView missedCalls, allCalls, edit;
 	private View allCallsSelected, missedCallsSelected;
-	private LinearLayout editList, topBar;
-	private boolean onlyDisplayMissedCalls, isEditMode;
+	private boolean mOnlyDisplayMissedCalls, mIsEditMode;
 	private List<CallLog> mLogs;
-	private CallHistoryAdapter mhistoryAdapter;
-	private LinearLayoutManager layoutManager;
+	private CallHistoryAdapter mHistoryAdapter;
+	private LinearLayoutManager mLayoutManager;
 	private Context mContext;
 	private SelectableHelper mSelectionHelper;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -74,11 +74,11 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 		historyList = (RecyclerView) view.findViewById(R.id.history_list);
 
-		layoutManager = new LinearLayoutManager(mContext);
-		historyList.setLayoutManager(layoutManager);
+		mLayoutManager = new LinearLayoutManager(mContext);
+		historyList.setLayoutManager(mLayoutManager);
 		//Divider between items
 		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(historyList.getContext(),
-				layoutManager.getOrientation());
+				mLayoutManager.getOrientation());
 		dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
 		historyList.addItemDecoration(dividerItemDecoration);
 
@@ -93,7 +93,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		missedCallsSelected = view.findViewById(R.id.missed_calls_select);
 
 		allCalls.setEnabled(false);
-		onlyDisplayMissedCalls = false;
+		mOnlyDisplayMissedCalls = false;
 
 		edit = (ImageView) view.findViewById(R.id.edit);
 
@@ -103,7 +103,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	public void refresh() {
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 	}
-
 
 	public void displayFirstLog(){
 		if (mLogs != null && mLogs.size() > 0) {
@@ -121,7 +120,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	}
 
 	private void removeNotMissedCallsFromLogs() {
-		if (onlyDisplayMissedCalls) {
+		if (mOnlyDisplayMissedCalls) {
 			List<CallLog> missedCalls = new ArrayList<CallLog>();
 			for (CallLog log : mLogs) {
 				if (log.getStatus() == Call.Status.Missed) {
@@ -135,7 +134,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private boolean hideHistoryListAndDisplayMessageIfEmpty() {
 		removeNotMissedCallsFromLogs();
 		if (mLogs.isEmpty()) {
-			if (onlyDisplayMissedCalls) {
+			if (mOnlyDisplayMissedCalls) {
 				noMissedCallHistory.setVisibility(View.VISIBLE);
 			} else {
 				noCallHistory.setVisibility(View.VISIBLE);
@@ -165,9 +164,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 		mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
-            mhistoryAdapter= new CallHistoryAdapter(getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
-			historyList.setAdapter(mhistoryAdapter);
-			mSelectionHelper.setAdapter(mhistoryAdapter);
+            mHistoryAdapter = new CallHistoryAdapter(getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
+			historyList.setAdapter(mHistoryAdapter);
+			mSelectionHelper.setAdapter(mHistoryAdapter);
 			mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 		}
 	}
@@ -197,7 +196,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			allCallsSelected.setVisibility(View.VISIBLE);
 			missedCallsSelected.setVisibility(View.INVISIBLE);
 			missedCalls.setEnabled(true);
-			onlyDisplayMissedCalls = false;
+			mOnlyDisplayMissedCalls = false;
 			refresh();
 		}
 		if (id == R.id.missed_calls) {
@@ -205,13 +204,13 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 			allCallsSelected.setVisibility(View.INVISIBLE);
 			missedCallsSelected.setVisibility(View.VISIBLE);
 			missedCalls.setEnabled(false);
-			onlyDisplayMissedCalls = true;
+			mOnlyDisplayMissedCalls = true;
 		}
 		if (!hideHistoryListAndDisplayMessageIfEmpty()) {
 //			historyList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-            mhistoryAdapter = new CallHistoryAdapter(mContext, mLogs, this ,mSelectionHelper);
-			historyList.setAdapter(mhistoryAdapter);
-			mSelectionHelper.setAdapter(mhistoryAdapter);
+            mHistoryAdapter = new CallHistoryAdapter(mContext, mLogs, this ,mSelectionHelper);
+			historyList.setAdapter(mHistoryAdapter);
+			mSelectionHelper.setAdapter(mHistoryAdapter);
 			mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 		}
 
@@ -219,7 +218,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	@Override
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-		if (mhistoryAdapter.isEditionEnabled()) {
+		if (mHistoryAdapter.isEditionEnabled()) {
 			CallLog log = mLogs.get(position);
 			LinphoneManager.getLc().removeCallLog(log);
 			mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
@@ -228,7 +227,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	@Override
 	public void onDeleteSelection(Object[] objectsToDelete) {
-		int size = mhistoryAdapter.getSelectedItemCount();
+		int size = mHistoryAdapter.getSelectedItemCount();
 		for(int i=0; i<size; i++) {
 			CallLog log = (CallLog) objectsToDelete[i];
 			LinphoneManager.getLc().removeCallLog(log);
@@ -238,8 +237,8 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	@Override
 	public void onItemClicked(int position) {
-		if (mhistoryAdapter.isEditionEnabled()) {
-			mhistoryAdapter.toggleSelection(position);
+		if (mHistoryAdapter.isEditionEnabled()) {
+			mHistoryAdapter.toggleSelection(position);
 		} else {
 			if (LinphoneActivity.isInstanciated()) {
 				CallLog log = mLogs.get(position);
@@ -256,10 +255,10 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
 	@Override
 	public boolean onItemLongClicked(int position) {
-		if (!mhistoryAdapter.isEditionEnabled()) {
+		if (!mHistoryAdapter.isEditionEnabled()) {
 			mSelectionHelper.enterEditionMode();
 		}
-		mhistoryAdapter.toggleSelection(position);
+		mHistoryAdapter.toggleSelection(position);
 		return true;
 	}
 }

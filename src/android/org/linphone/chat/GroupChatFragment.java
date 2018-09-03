@@ -212,9 +212,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mRemoteComposing = view.findViewById(R.id.remote_composing);
 
-
-
-
 		mChatEventsList = view.findViewById(R.id.chat_message_list);
 		mSelectionHelper = new SelectableHelper(view, this);
 		layoutManager = new LinearLayoutManager(mContext);
@@ -380,8 +377,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			menu.removeItem(R.id.copy_text);
 		}
 	}
-
-
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -576,19 +571,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		return mRemoteSipUri;
 	}
 
-
-	/*
-	*if isEditionEnabled() true, select the message
-	* */
-
-
 	@Override
 	public void onItemClicked(int position) {
 		if (mEventsAdapter.isEditionEnabled()) {
 			mEventsAdapter.toggleSelection(position);
 		}
 	}
-
 
 	/**
 	 * File transfer related

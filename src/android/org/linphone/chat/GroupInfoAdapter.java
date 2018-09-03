@@ -62,21 +62,15 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
 
    }
 
-
-
-
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
     private ChatRoom mChatRoom;
     public ImageView avatar;
 
-
-
     public GroupInfoAdapter(List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures || isCreation;
-
     }
 
     @NonNull
@@ -84,7 +78,6 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_infos_cell, parent, false);
         return new ViewHolder(v);
-
     }
 
     @Override
@@ -157,8 +150,6 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     	mChatRoom = room;
     }
 
-
-
     public int getCount() {
         return mItems.size();
     }
@@ -166,8 +157,6 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     public Object getItem(int i) {
         return mItems.get(i);
     }
-
-
 
     @Override
     public long getItemId(int i) {

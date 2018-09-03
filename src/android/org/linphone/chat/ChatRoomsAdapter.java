@@ -48,11 +48,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
 public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoomViewHolder> {
 
 	public static class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
-
 		public TextView lastMessageSenderView;
 		public TextView lastMessageView;
 		public TextView date;
@@ -79,9 +77,8 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 			itemView.setOnClickListener(this);
 			itemView.setOnLongClickListener(this);
 		}
-		public void bindChatRoom(ChatRoom room) {
 
-			//Bind the data to the ViewHolder
+		public void bindChatRoom(ChatRoom room) {
 			this.mRoom = room;
 			this.lastMessageSenderView.setText(getSender(mRoom));
 			this.lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent(): "");
@@ -91,7 +88,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 			getAvatar(mRoom);
 		}
 
-		//Handle the onClick/onLongClick event for the ViewHolder
 		public void onClick(View v) {
 			if (listener != null) {
 				listener.onItemClicked(getAdapterPosition());
@@ -105,23 +101,18 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 			return false;
 		}
 
-		//Functions to get messages datas
-
 		public String getSender(ChatRoom mRoom){
 			if (mRoom.getLastMessageInHistory() != null) {
 				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getLastMessageInHistory().getFromAddress());
 				if (contact != null) {
 					return (contact.getFullName() + mContext.getString(R.string.separator));
-				} else {
-					return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress())  + ":");
 				}
-			}else{
-				return "" ;
+				return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress())  + ":");
 			}
+			return null;
 		}
 
 		public String getContact(ChatRoom mRoom) {
-
 			Address contactAddress = mRoom.getPeerAddress();
 			if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mRoom.getParticipants().length > 0) {
 				contactAddress = mRoom.getParticipants()[0].getAddress();
@@ -133,20 +124,17 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 					contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getParticipants()[0].getAddress());
 					if (contact != null) {
 						return (contact.getFullName());
-					} else {
-						return (LinphoneUtils.getAddressDisplayName(mRoom.getParticipants()[0].getAddress()));
 					}
+					return (LinphoneUtils.getAddressDisplayName(mRoom.getParticipants()[0].getAddress()));
 				} else {
 					contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
 					if (contact != null) {
 						return (contact.getFullName());
-					} else {
-						return (LinphoneUtils.getAddressDisplayName(contactAddress));
 					}
+					return (LinphoneUtils.getAddressDisplayName(contactAddress));
 				}
-			} else {
-				return (mRoom.getSubject());
 			}
+			return (mRoom.getSubject());
 		}
 
 		public void getAvatar(ChatRoom mRoom) {
@@ -159,20 +147,11 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 			}
 		}
 
-
-
 		public interface ClickListener {
 			void onItemClicked(int position);
 			boolean onItemLongClicked(int position);
 		}
-
-
-
-
-
-	}						//Holder ending
-
-	//Adapter beginning
+	}
 
 	private Context mContext;
 	public List<ChatRoom> mRooms;
@@ -183,7 +162,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 	private ChatRoomViewHolder.ClickListener clickListener;
 
 	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper helper) {
-
 		super(helper);
 		this.clickListener = clickListener;
 		this.mRooms = mRooms;
@@ -193,30 +171,19 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		//mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
 	}
 
-
-
-
 	@Override
 	public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-		// Inflate the view and return the new ViewHolder
 		View view = LayoutInflater.from(parent.getContext())
 				.inflate(this.itemResource, parent, false);
-
 		return new ChatRoomViewHolder(this.mContext, view, clickListener);
-
 	}
 
 	@Override
 	public void onBindViewHolder(ChatRoomViewHolder holder, int position) {
-		//Bind datas to the ViewHolder
 		ChatRoom room = this.mRooms.get(position);
-		//Shows checkboxes when ActionMode enabled
 		holder.delete.setVisibility(this.isEditionEnabled() == true ? View.VISIBLE : View.INVISIBLE);
 		holder.unreadMessages.setVisibility(this.isEditionEnabled() == false ? View.VISIBLE : View.INVISIBLE);
-		//Set checkbox checked if item selected
 		holder.delete.setChecked(isSelected(position) ? true : false);
-		//Bind the chatroom object to the holder
 		holder.bindChatRoom(room);
 	}
 
@@ -241,11 +208,9 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		notifyDataSetChanged();
 	}
 
-
 	/**
 	 * Adapter's methods
 	 */
-
 
 	@Override
 	public int getItemCount() {
@@ -260,6 +225,5 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 	@Override
 	public long getItemId(int position) {
 		return position;
-
 	}
 }

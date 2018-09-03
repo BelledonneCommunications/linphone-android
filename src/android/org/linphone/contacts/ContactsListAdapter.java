@@ -93,26 +93,26 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         }
     }
 
-    private List<LinphoneContact> contacts;
-    String[] sections;
-    ArrayList<String> sectionsList;
-    Map<String, Integer> map = new LinkedHashMap<String, Integer>();
-    private ViewHolder.ClickListener clickListener;
+    private List<LinphoneContact> mContacts;
+    private String[] mSections;
+    private ArrayList<String> mSectionsList;
+    private Map<String, Integer> mMap = new LinkedHashMap<String, Integer>();
+    private ViewHolder.ClickListener mClickListener;
     private Context mContext;
-    private boolean isSearchMode;
+    private boolean mIsSearchMode;
 
     ContactsListAdapter(Context context, List<LinphoneContact> contactsList, ViewHolder.ClickListener clickListener, SelectableHelper helper) {
         super(helper);
-        this.mContext=context;
+        mContext = context;
         updateDataSet(contactsList);
-        this.clickListener = clickListener;
+        mClickListener = clickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_cell, parent, false);
-        return new ViewHolder(v, clickListener);
+        return new ViewHolder(v, mClickListener);
 
     }
 
@@ -122,13 +122,13 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 
         holder.name.setText(contact.getFullName());
 
-        if (!isSearchMode) {
+        if (!mIsSearchMode) {
                 String fullName = contact.getFullName();
                 if (fullName != null && !fullName.isEmpty()) {
                     holder.separatorText.setText(String.valueOf(fullName.charAt(0)));
                 }
         }
-        holder.separator.setVisibility(isSearchMode || (!isSearchMode && getPositionForSection(getSectionForPosition(position)) != position ) ? View.GONE:View.VISIBLE);
+        holder.separator.setVisibility(mIsSearchMode || (!mIsSearchMode && getPositionForSection(getSectionForPosition(position)) != position ) ? View.GONE:View.VISIBLE);
         holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE:View.GONE);
 
         holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
@@ -151,28 +151,28 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     }
     @Override
     public int getItemCount() {
-        return contacts.size();
+        return mContacts.size();
     }
 
     public Object getItem(int position) {
         if (position >= getItemCount()) return null;
-        return contacts.get(position);
+        return mContacts.get(position);
     }
 
-    public void setSearchMode(boolean set){
-        isSearchMode = set;
+    public void setmIsSearchMode(boolean set){
+        mIsSearchMode = set;
     }
     public long getItemId(int position) {
         return position;
     }
 
     public void updateDataSet(List<LinphoneContact> contactsList) {
-        contacts = contactsList;
+        mContacts = contactsList;
 
-        map = new LinkedHashMap<String, Integer>();
+        mMap = new LinkedHashMap<String, Integer>();
         String prevLetter = null;
-        for (int i = 0; i < contacts.size(); i++) {
-            LinphoneContact contact = contacts.get(i);
+        for (int i = 0; i < mContacts.size(); i++) {
+            LinphoneContact contact = mContacts.get(i);
             String fullName = contact.getFullName();
             if (fullName == null || fullName.isEmpty()) {
                 continue;
@@ -180,40 +180,40 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             String firstLetter = fullName.substring(0, 1).toUpperCase(Locale.getDefault());
             if (!firstLetter.equals(prevLetter)) {
                 prevLetter = firstLetter;
-                map.put(firstLetter, i);
+                mMap.put(firstLetter, i);
             }
         }
-        sectionsList = new ArrayList<String>(map.keySet());
-        sections = new String[sectionsList.size()];
-        sectionsList.toArray(sections);
+        mSectionsList = new ArrayList<String>(mMap.keySet());
+        mSections = new String[mSectionsList.size()];
+        mSectionsList.toArray(mSections);
 
         notifyDataSetChanged();
     }
 
     @Override
     public Object[] getSections() {
-        return sections;
+        return mSections;
     }
 
     @Override
     public int getPositionForSection(int sectionIndex) {
-        if (sectionIndex >= sections.length || sectionIndex < 0) {
+        if (sectionIndex >= mSections.length || sectionIndex < 0) {
             return 0;
         }
-        return map.get(sections[sectionIndex]);
+        return mMap.get(mSections[sectionIndex]);
     }
 
     @Override
     public int getSectionForPosition(int position) {
-        if (position >= contacts.size() || position < 0) {
+        if (position >= mContacts.size() || position < 0) {
             return 0;
         }
-        LinphoneContact contact = contacts.get(position);
+        LinphoneContact contact = mContacts.get(position);
         String fullName = contact.getFullName();
         if (fullName == null || fullName.isEmpty()) {
             return 0;
         }
         String letter = fullName.substring(0, 1).toUpperCase(Locale.getDefault());
-        return sectionsList.indexOf(letter);
+        return mSectionsList.indexOf(letter);
     }
 }

@@ -81,22 +81,21 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 	private Context mContext;
     private List<EventLog> mHistory;
 	private List<LinphoneContact> mParticipants;
-	private int itemResource;
+	private int mItemResource;
 	private Bitmap mDefaultBitmap;
 	private GroupChatFragment mFragment;
 	private ChatMessageListenerStub mListener;
 
-	private ChatBubbleViewHolder.ClickListener clickListener;
+	private ChatBubbleViewHolder.ClickListener mClickListener;
 
     public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
-
 		super(helper);
-		this.mFragment=fragment;
-	    this.mContext = mFragment.getActivity();
-		this.itemResource = itemResource;
+		mFragment = fragment;
+	    mContext = mFragment.getActivity();
+		mItemResource = itemResource;
 		mHistory = new ArrayList<>(Arrays.asList(history));
-	    this.mParticipants = participants;
-		this.clickListener = clickListener;
+	    mParticipants = participants;
+		mClickListener = clickListener;
 	    mListener = new ChatMessageListenerStub() {
 		    @Override
 		    public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
@@ -131,8 +130,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     @Override
     public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-				.inflate(this.itemResource, parent, false);
-		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(this.mContext,v, clickListener);
+				.inflate(this.mItemResource, parent, false);
+		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(this.mContext,v, mClickListener);
 
 		//Allows onLongClick ContextMenu on bubbles
 		mFragment.registerForContextMenu(v);
@@ -157,7 +156,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 		holder.messageSendingInProgress.setVisibility(View.GONE);
 		holder.imdmLayout.setVisibility(View.INVISIBLE);
 		holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-		//Apply generic bindings
 
 		if (isEditionEnabled()) {
 			holder.delete.setOnCheckedChangeListener(null);
@@ -165,8 +163,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 			holder.delete.setTag(position);
 		}
 
-		//If event is Chat Message
-		if(event.getType() == EventLog.Type.ConferenceChatMessage) {
+		if (event.getType() == EventLog.Type.ConferenceChatMessage) {
 			holder.bubbleLayout.setVisibility(View.VISIBLE);
 
 			final ChatMessage message = event.getChatMessage();
@@ -342,7 +339,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
 			holder.bubbleLayout.setLayoutParams(layoutParams);
 		} else { // Event is not chat message
-
 			holder.eventLayout.setVisibility(View.VISIBLE);
 
 			Address address = event.getParticipantAddress();
@@ -389,9 +385,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 					//TODO
 					break;
 			}
-
-
-
 		}
     }
 
@@ -436,7 +429,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     	mHistory.remove(i);
     	notifyDataSetChanged();
     }
-
 
 	private void loadBitmap(String path, ImageView imageView) {
 		if (cancelPotentialWork(path, imageView)) {
