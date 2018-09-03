@@ -27,52 +27,52 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 
-public class EraseButton extends ImageView implements AddressAware, OnClickListener, OnLongClickListener, TextWatcher{
+public class EraseButton extends ImageView implements AddressAware, OnClickListener, OnLongClickListener, TextWatcher {
 
-	private AddressText address;
+    private AddressText address;
 
-	public EraseButton(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		setOnClickListener(this);
-		setOnLongClickListener(this);
-	}
+    public EraseButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setOnClickListener(this);
+        setOnLongClickListener(this);
+    }
 
-	public void onClick(View v) {
-		if (address.getText().length() >0) {
-			int lBegin = address.getSelectionStart();
-			if (lBegin == -1) {
-				lBegin = address.getEditableText().length()-1;
-			}
-			if (lBegin >0) {
-				address.getEditableText().delete(lBegin-1,lBegin);
-			}
-		}
-	}
+    public void onClick(View v) {
+        if (address.getText().length() > 0) {
+            int lBegin = address.getSelectionStart();
+            if (lBegin == -1) {
+                lBegin = address.getEditableText().length() - 1;
+            }
+            if (lBegin > 0) {
+                address.getEditableText().delete(lBegin - 1, lBegin);
+            }
+        }
+    }
 
-	public boolean onLongClick(View v) {
-		address.getEditableText().clear();
-		return true;
-	}
+    public boolean onLongClick(View v) {
+        address.getEditableText().clear();
+        return true;
+    }
 
-	public void setAddressWidget(AddressText view) {
-		address = view;
-		view.addTextChangedListener(this);
-	}
+    public void setAddressWidget(AddressText view) {
+        address = view;
+        view.addTextChangedListener(this);
+    }
 
-	
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		
-	}
 
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {		
-	}
-	
-	@Override
-	public void afterTextChanged(Editable s) {
-		setEnabled(s.length() > 0);
-	}
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count,
+                                  int after) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        setEnabled(s.length() > 0);
+    }
 
 }

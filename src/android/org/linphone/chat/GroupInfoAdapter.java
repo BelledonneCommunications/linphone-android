@@ -56,7 +56,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
             isAdmin = view.findViewById(R.id.isAdminLayout);
             isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
         }
-   }
+    }
 
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
@@ -77,7 +77,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final ContactAddress ca = (ContactAddress)getItem(position);
+        final ContactAddress ca = (ContactAddress) getItem(position);
         LinphoneContact c = ca.getContact();
         ImageView avatar = holder.avatar;
         holder.name.setText((c.getFullName() != null) ? c.getFullName() :
@@ -142,7 +142,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     }
 
     public void setChatRoom(ChatRoom room) {
-    	mChatRoom = room;
+        mChatRoom = room;
     }
 
     public int getCount() {
@@ -168,7 +168,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     }
 
     public void setAdminFeaturesVisible(boolean visible) {
-	    mHideAdminFeatures = !visible;
-	    notifyDataSetChanged();
+        mHideAdminFeatures = !visible;
+        notifyDataSetChanged();
     }
 }

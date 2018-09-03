@@ -124,7 +124,7 @@ public class SelectableHelper {
     }
 
     public void setAdapter(SelectableAdapter adapter) {
-        mAdapter=adapter;
+        mAdapter = adapter;
     }
 
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {

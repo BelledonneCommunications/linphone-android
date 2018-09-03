@@ -36,69 +36,69 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
-	private Context mContext;
-	public List<ChatRoom> mRooms;
-	private int mItemResource;
-	private ChatRoomViewHolder.ClickListener mClickListener;
+    private Context mContext;
+    public List<ChatRoom> mRooms;
+    private int mItemResource;
+    private ChatRoomViewHolder.ClickListener mClickListener;
 
-	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> rooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper helper) {
-		super(helper);
-		mClickListener = clickListener;
-		mRooms = rooms;
-		mContext = context;
-		mItemResource = itemResource;
-	}
+    public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> rooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper helper) {
+        super(helper);
+        mClickListener = clickListener;
+        mRooms = rooms;
+        mContext = context;
+        mItemResource = itemResource;
+    }
 
-	@Override
-	public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View view = LayoutInflater.from(parent.getContext())
-				.inflate(mItemResource, parent, false);
-		return new ChatRoomViewHolder(mContext, view, mClickListener);
-	}
+    @Override
+    public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(mItemResource, parent, false);
+        return new ChatRoomViewHolder(mContext, view, mClickListener);
+    }
 
-	@Override
-	public void onBindViewHolder(ChatRoomViewHolder holder, int position) {
-		ChatRoom room = mRooms.get(position);
-		holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
-		holder.unreadMessages.setVisibility(isEditionEnabled() ? View.INVISIBLE : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
-		holder.delete.setChecked(isSelected(position));
-		holder.bindChatRoom(room);
-	}
+    @Override
+    public void onBindViewHolder(ChatRoomViewHolder holder, int position) {
+        ChatRoom room = mRooms.get(position);
+        holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
+        holder.unreadMessages.setVisibility(isEditionEnabled() ? View.INVISIBLE : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
+        holder.delete.setChecked(isSelected(position));
+        holder.bindChatRoom(room);
+    }
 
-	public void refresh() {
-		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
-		Collections.sort(mRooms, new Comparator<ChatRoom>() {
-			public int compare(ChatRoom cr1, ChatRoom cr2) {
-				long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
-				if (timeDiff > 0) return -1;
-				else if (timeDiff == 0) return 0;
-				return 1;
-			}
-		});
-		notifyDataSetChanged();
-	}
+    public void refresh() {
+        mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
+        Collections.sort(mRooms, new Comparator<ChatRoom>() {
+            public int compare(ChatRoom cr1, ChatRoom cr2) {
+                long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
+                if (timeDiff > 0) return -1;
+                else if (timeDiff == 0) return 0;
+                return 1;
+            }
+        });
+        notifyDataSetChanged();
+    }
 
-	public void clear() {
-		mRooms.clear();
-		notifyDataSetChanged();
-	}
+    public void clear() {
+        mRooms.clear();
+        notifyDataSetChanged();
+    }
 
-	/**
-	 * Adapter's methods
-	 */
+    /**
+     * Adapter's methods
+     */
 
-	@Override
-	public int getItemCount() {
-		return mRooms.size();
-	}
+    @Override
+    public int getItemCount() {
+        return mRooms.size();
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return mRooms.get(position);
-	}
+    @Override
+    public Object getItem(int position) {
+        return mRooms.get(position);
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 }

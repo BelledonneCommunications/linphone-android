@@ -22,56 +22,56 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import java.io.Serializable;
 
 public class LinphoneNumberOrAddress implements Serializable, Comparable<LinphoneNumberOrAddress> {
-	private static final long serialVersionUID = -2301689469730072896L;
+    private static final long serialVersionUID = -2301689469730072896L;
 
-	private boolean isSIPAddress;
-	private String value, oldValueForUpdatePurpose;
+    private boolean isSIPAddress;
+    private String value, oldValueForUpdatePurpose;
 
-	public LinphoneNumberOrAddress(String v, boolean isSIP) {
-		value = v;
-		isSIPAddress = isSIP;
-		oldValueForUpdatePurpose = null;
-	}
+    public LinphoneNumberOrAddress(String v, boolean isSIP) {
+        value = v;
+        isSIPAddress = isSIP;
+        oldValueForUpdatePurpose = null;
+    }
 
-	public LinphoneNumberOrAddress(String v, boolean isSip, String old) {
-		this(v, isSip);
-		oldValueForUpdatePurpose = old;
-	}
+    public LinphoneNumberOrAddress(String v, boolean isSip, String old) {
+        this(v, isSip);
+        oldValueForUpdatePurpose = old;
+    }
 
-	@Override
-	public int compareTo(LinphoneNumberOrAddress noa) {
-		String value = noa.getValue();
-		if (noa.isSIPAddress() == isSIPAddress() && value != null) {
-			return value.compareTo(getValue());
-		} else {
-			return isSIPAddress() ? -1 : 1;
-		}
-	}
+    @Override
+    public int compareTo(LinphoneNumberOrAddress noa) {
+        String value = noa.getValue();
+        if (noa.isSIPAddress() == isSIPAddress() && value != null) {
+            return value.compareTo(getValue());
+        } else {
+            return isSIPAddress() ? -1 : 1;
+        }
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj.getClass() != LinphoneNumberOrAddress.class) return false;
-		LinphoneNumberOrAddress noa = (LinphoneNumberOrAddress) obj;
-		return (this != null && this.compareTo(noa) == 0);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != LinphoneNumberOrAddress.class) return false;
+        LinphoneNumberOrAddress noa = (LinphoneNumberOrAddress) obj;
+        return (this != null && this.compareTo(noa) == 0);
+    }
 
-	public boolean isSIPAddress() {
-		return isSIPAddress;
-	}
+    public boolean isSIPAddress() {
+        return isSIPAddress;
+    }
 
-	public String getOldValue() {
-		return oldValueForUpdatePurpose;
-	}
+    public String getOldValue() {
+        return oldValueForUpdatePurpose;
+    }
 
-	public void setOldValue(String v) {
-		oldValueForUpdatePurpose = v;
-	}
+    public void setOldValue(String v) {
+        oldValueForUpdatePurpose = v;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String v) {
-		value = v;
-	}
+    public void setValue(String v) {
+        value = v;
+    }
 }

@@ -19,12 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
-import org.linphone.R;
-import org.linphone.mediastream.Log;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ListFragment;
@@ -44,6 +38,12 @@ import android.view.ViewParent;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import org.linphone.R;
+import org.linphone.mediastream.Log;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+
 @SuppressLint("ValidFragment")
 public class PreferencesListFragment extends ListFragment {
     private PreferenceManager mPreferenceManager;
@@ -58,9 +58,9 @@ public class PreferencesListFragment extends ListFragment {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MSG_BIND_PREFERENCES:
-                bindPreferences();
-                break;
+                case MSG_BIND_PREFERENCES:
+                    bindPreferences();
+                    break;
             }
         }
     };
@@ -78,27 +78,27 @@ public class PreferencesListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
-    	// Hack to correctly display preferences
-    	View view = inflater.inflate(R.layout.settings, null);
+        // Hack to correctly display preferences
+        View view = inflater.inflate(R.layout.settings, null);
 
-    	ViewParent p = preferencesList.getParent();
+        ViewParent p = preferencesList.getParent();
         if (p != null) {
-            ((ViewGroup)p).removeView(preferencesList);
+            ((ViewGroup) p).removeView(preferencesList);
         }
 
-    	RelativeLayout layout = view.findViewById(R.id.topLayout);
-    	layout.addView(preferencesList);
+        RelativeLayout layout = view.findViewById(R.id.topLayout);
+        layout.addView(preferencesList);
 
         postBindPreferences();
         return view;
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         super.onDestroyView();
         ViewParent p = preferencesList.getParent();
         if (p != null) {
-            ((ViewGroup)p).removeView(preferencesList);
+            ((ViewGroup) p).removeView(preferencesList);
         }
     }
 
@@ -118,13 +118,13 @@ public class PreferencesListFragment extends ListFragment {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         try {
             Method m = PreferenceManager.class.getDeclaredMethod("dispatchActivityStop");
             m.setAccessible(true);
             m.invoke(mPreferenceManager);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("[PreferencesListFragment] onStop " + e);
         }
     }
@@ -134,11 +134,11 @@ public class PreferencesListFragment extends ListFragment {
         super.onDestroy();
         preferencesList = null;
         try {
-	        Method m = PreferenceManager.class.getDeclaredMethod("dispatchActivityDestroy");
-	        m.setAccessible(true);
-	        m.invoke(mPreferenceManager);
-        } catch(Exception e) {
-        	Log.e("[PreferencesListFragment] onDestroy " + e);
+            Method m = PreferenceManager.class.getDeclaredMethod("dispatchActivityDestroy");
+            m.setAccessible(true);
+            m.invoke(mPreferenceManager);
+        } catch (Exception e) {
+            Log.e("[PreferencesListFragment] onDestroy " + e);
         }
     }
 
@@ -155,7 +155,7 @@ public class PreferencesListFragment extends ListFragment {
             Method m = PreferenceManager.class.getDeclaredMethod("dispatchActivityResult", int.class, int.class, Intent.class);
             m.setAccessible(true);
             m.invoke(mPreferenceManager, requestCode, resultCode, data);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("[PreferencesListFragment] onActivityResult " + e);
         }
     }
@@ -166,7 +166,7 @@ public class PreferencesListFragment extends ListFragment {
      * Binding late is preferred as any custom preference types created in
      * {@link #onCreate(Bundle)} are able to have their views recycled.
      */
-	private void postBindPreferences() {
+    private void postBindPreferences() {
         if (mHandler.hasMessages(MSG_BIND_PREFERENCES)) return;
         mHandler.obtainMessage(MSG_BIND_PREFERENCES).sendToTarget();
     }
@@ -189,7 +189,7 @@ public class PreferencesListFragment extends ListFragment {
             c.setAccessible(true);
             PreferenceManager preferenceManager = c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
             return preferenceManager;
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("[PreferencesListFragment] onCreatePreferenceManager " + e);
             return null;
         }
@@ -197,6 +197,7 @@ public class PreferencesListFragment extends ListFragment {
 
     /**
      * Returns the {@link PreferenceManager} used by this activity.
+     *
      * @return The {@link PreferenceManager}.
      */
     public PreferenceManager getPreferenceManager() {
@@ -216,7 +217,7 @@ public class PreferencesListFragment extends ListFragment {
             if (result && preferenceScreen != null) {
                 postBindPreferences();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.e("[PreferencesListFragment] setPreferenceScreen " + e);
         }
     }
@@ -225,14 +226,14 @@ public class PreferencesListFragment extends ListFragment {
      * Gets the root of the preference hierarchy that this activity is showing.
      *
      * @return The {@link PreferenceScreen} that is the root of the preference
-     *         hierarchy.
+     * hierarchy.
      */
     public PreferenceScreen getPreferenceScreen() {
         try {
             Method m = PreferenceManager.class.getDeclaredMethod("getPreferenceScreen");
             m.setAccessible(true);
             return (PreferenceScreen) m.invoke(mPreferenceManager);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("[PreferencesListFragment] getPreferenceScreen " + e);
         }
 
@@ -251,7 +252,7 @@ public class PreferencesListFragment extends ListFragment {
             m.setAccessible(true);
             PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(mPreferenceManager, getActivity(), preferencesResId, getPreferenceScreen());
             setPreferenceScreen(prefScreen);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e("[PreferencesListFragment] addPreferencesFromResource " + e);
         }
     }
@@ -265,7 +266,7 @@ public class PreferencesListFragment extends ListFragment {
      */
     public Preference findPreference(CharSequence key) {
         if (mPreferenceManager == null) {
-        	Log.e("[PreferencesListFragment] PreferenceManager is null !");
+            Log.e("[PreferencesListFragment] PreferenceManager is null !");
             return null;
         }
         return mPreferenceManager.findPreference(key);

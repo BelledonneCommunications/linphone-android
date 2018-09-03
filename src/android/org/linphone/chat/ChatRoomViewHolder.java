@@ -53,7 +53,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public ChatRoom mRoom;
     private ClickListener mListener;
 
-    public ChatRoomViewHolder(Context context,View itemView, ClickListener listener) {
+    public ChatRoomViewHolder(Context context, View itemView, ClickListener listener) {
         super(itemView);
 
         mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
@@ -76,7 +76,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public void bindChatRoom(ChatRoom room) {
         mRoom = room;
         lastMessageSenderView.setText(getSender(mRoom));
-        lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent(): "");
+        lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent() : "");
         date.setText(mRoom.getLastMessageInHistory() != null ? LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
         displayName.setText(getContact(mRoom));
         unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
@@ -96,13 +96,13 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         return false;
     }
 
-    public String getSender(ChatRoom mRoom){
+    public String getSender(ChatRoom mRoom) {
         if (mRoom.getLastMessageInHistory() != null) {
             LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getLastMessageInHistory().getFromAddress());
             if (contact != null) {
                 return (contact.getFullName() + mContext.getString(R.string.separator));
             }
-            return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress())  + mContext.getString(R.string.separator));
+            return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress()) + mContext.getString(R.string.separator));
         }
         return null;
     }
@@ -146,6 +146,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
 
     public interface ClickListener {
         void onItemClicked(int position);
+
         boolean onItemLongClicked(int position);
     }
 }

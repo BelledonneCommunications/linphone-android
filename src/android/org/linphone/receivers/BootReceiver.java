@@ -30,21 +30,21 @@ import org.linphone.compatibility.Compatibility;
 
 public class BootReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		LinphonePreferences.instance().setContext(context);
-		if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
-			android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying Core to unregister");
-			LinphoneManager.destroy();
-		} else {
-			boolean autostart = LinphonePreferences.instance().isAutoStartEnabled();
-			android.util.Log.i("LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
-			if (autostart) {
-				Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
-				lLinphoneServiceIntent.setClass(context, LinphoneService.class);
-				lLinphoneServiceIntent.putExtra("ForceStartForeground", true);
-				Compatibility.startService(context, lLinphoneServiceIntent);
-			}
-		}
-	}
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        LinphonePreferences.instance().setContext(context);
+        if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
+            android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying Core to unregister");
+            LinphoneManager.destroy();
+        } else {
+            boolean autostart = LinphonePreferences.instance().isAutoStartEnabled();
+            android.util.Log.i("LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
+            if (autostart) {
+                Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
+                lLinphoneServiceIntent.setClass(context, LinphoneService.class);
+                lLinphoneServiceIntent.putExtra("ForceStartForeground", true);
+                Compatibility.startService(context, lLinphoneServiceIntent);
+            }
+        }
+    }
 }

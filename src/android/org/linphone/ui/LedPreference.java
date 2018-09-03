@@ -19,18 +19,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.R;
-
 import android.content.Context;
 import android.preference.Preference;
 import android.view.View;
 import android.widget.ImageView;
 
-public class LedPreference extends Preference
-{
-	private int ledDrawable;
+import org.linphone.R;
 
-	public LedPreference(Context context) {
+public class LedPreference extends Preference {
+    private int ledDrawable;
+
+    public LedPreference(Context context) {
         super(context);
         ledDrawable = R.drawable.led_disconnected;
         this.setWidgetLayoutResource(R.layout.preference_led);
@@ -47,7 +46,7 @@ public class LedPreference extends Preference
     }
 
     public void setLed(int led) {
-    	ledDrawable = led;
+        ledDrawable = led;
         notifyChanged();
     }
 }

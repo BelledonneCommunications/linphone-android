@@ -49,7 +49,7 @@ import java.util.List;
 
 public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnLongClickListener{
+            View.OnLongClickListener {
         public TextView contact;
         public ImageView detail;
         public CheckBox select;
@@ -92,6 +92,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
 
         public interface ClickListener {
             void onItemClicked(int position);
+
             boolean onItemLongClicked(int position);
         }
     }
@@ -100,7 +101,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
     private Context mContext;
     private CallHistoryAdapter.ViewHolder.ClickListener clickListener;
 
-    public CallHistoryAdapter(Context aContext, List<CallLog> logs,CallHistoryAdapter.ViewHolder.ClickListener listener ,SelectableHelper helper) {
+    public CallHistoryAdapter(Context aContext, List<CallLog> logs, CallHistoryAdapter.ViewHolder.ClickListener listener, SelectableHelper helper) {
         super(helper);
         this.mLogs = logs;
         this.mContext = aContext;
@@ -125,7 +126,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final CallLog log= mLogs.get(position);
+        final CallLog log = mLogs.get(position);
         long timestamp = log.getStartDate() * 1000;
         Address address;
 
@@ -137,7 +138,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         holder.select.setChecked(isSelected(position));
 
         if (position > 0) {
-            CallLog previousLog = mLogs.get(position-1);
+            CallLog previousLog = mLogs.get(position - 1);
             long previousTimestamp = previousLog.getStartDate() * 1000;
             Calendar previousLogTime = Calendar.getInstance();
             previousLogTime.setTimeInMillis(previousTimestamp);

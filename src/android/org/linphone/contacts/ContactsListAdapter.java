@@ -87,6 +87,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 
         public interface ClickListener {
             void onItemClicked(int position);
+
             boolean onItemLongClicked(int position);
         }
     }
@@ -121,13 +122,13 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         holder.name.setText(contact.getFullName());
 
         if (!mIsSearchMode) {
-                String fullName = contact.getFullName();
-                if (fullName != null && !fullName.isEmpty()) {
-                    holder.separatorText.setText(String.valueOf(fullName.charAt(0)));
-                }
+            String fullName = contact.getFullName();
+            if (fullName != null && !fullName.isEmpty()) {
+                holder.separatorText.setText(String.valueOf(fullName.charAt(0)));
+            }
         }
-        holder.separator.setVisibility(mIsSearchMode || (!mIsSearchMode && getPositionForSection(getSectionForPosition(position)) != position ) ? View.GONE:View.VISIBLE);
-        holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE:View.GONE);
+        holder.separator.setVisibility(mIsSearchMode || (!mIsSearchMode && getPositionForSection(getSectionForPosition(position)) != position) ? View.GONE : View.VISIBLE);
+        holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE : View.GONE);
 
         holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         if (contact.hasPhoto()) {
@@ -147,6 +148,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         holder.delete.setChecked(isSelected(position));
 
     }
+
     @Override
     public int getItemCount() {
         return mContacts.size();
@@ -157,9 +159,10 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         return mContacts.get(position);
     }
 
-    public void setmIsSearchMode(boolean set){
+    public void setmIsSearchMode(boolean set) {
         mIsSearchMode = set;
     }
+
     public long getItemId(int position) {
         return position;
     }
