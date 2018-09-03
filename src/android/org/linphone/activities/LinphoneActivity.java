@@ -114,9 +114,6 @@ import org.linphone.ui.AddressText;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -125,9 +122,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-
 public class LinphoneActivity extends LinphoneGenericActivity implements OnClickListener, ContactPicked, ActivityCompat.OnRequestPermissionsResultCallback {
-	public static final String PREF_FIRST_LAUNCH = "pref_first_launch";
 	private static final int SETTINGS_ACTIVITY = 123;
 	private static final int CALL_ACTIVITY = 19;
 	private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
@@ -313,19 +308,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 	private void initButtons() {
-		mTabBar = (LinearLayout)  findViewById(R.id.footer);
-		mTopBar = (RelativeLayout) findViewById(R.id.top_bar);
+		mTabBar =  findViewById(R.id.footer);
+		mTopBar = findViewById(R.id.top_bar);
 
-		cancel = (ImageView) findViewById(R.id.cancel);
+		cancel = findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
-		history = (RelativeLayout) findViewById(R.id.history);
+		history = findViewById(R.id.history);
 		history.setOnClickListener(this);
-		contacts = (RelativeLayout) findViewById(R.id.contacts);
+		contacts = findViewById(R.id.contacts);
 		contacts.setOnClickListener(this);
-		dialer = (RelativeLayout) findViewById(R.id.dialer);
+		dialer = findViewById(R.id.dialer);
 		dialer.setOnClickListener(this);
-		chat = (RelativeLayout) findViewById(R.id.chat);
+		chat = findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 
 		history_selected = findViewById(R.id.history_select);
@@ -333,8 +328,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		dialer_selected = findViewById(R.id.dialer_select);
 		chat_selected = findViewById(R.id.chat_select);
 
-		missedCalls = (TextView) findViewById(R.id.missed_calls);
-		missedChats = (TextView) findViewById(R.id.missed_chats);
+		missedCalls = findViewById(R.id.missed_calls);
+		missedChats = findViewById(R.id.missed_chats);
 	}
 
 	public boolean isTablet() {

@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
 import org.linphone.R;
 
 import android.app.Fragment;
@@ -35,24 +36,24 @@ public class WelcomeFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_welcome, container, false);
 
-		createAccount = (Button) view.findViewById(R.id.create_account);
+		createAccount = view.findViewById(R.id.create_account);
 		createAccount.setOnClickListener(this);
 
-		logLinphoneAccount = (Button) view.findViewById(R.id.login_linphone);
+		logLinphoneAccount = view.findViewById(R.id.login_linphone);
 		if (getResources().getBoolean(R.bool.hide_linphone_accounts_in_assistant)) {
 			logLinphoneAccount.setVisibility(View.GONE);
 		} else {
 			logLinphoneAccount.setOnClickListener(this);
 		}
 
-		logGenericAccount = (Button) view.findViewById(R.id.login_generic);
+		logGenericAccount = view.findViewById(R.id.login_generic);
 		if (getResources().getBoolean(R.bool.hide_generic_accounts_in_assistant)) {
 			logGenericAccount.setVisibility(View.GONE);
 		} else {
 			logGenericAccount.setOnClickListener(this);
 		}
 
-		remoteProvisioning = (Button) view.findViewById(R.id.remote_provisioning);
+		remoteProvisioning = view.findViewById(R.id.remote_provisioning);
 		if (getResources().getBoolean(R.bool.hide_remote_provisioning_in_assistant)) {
 			remoteProvisioning.setVisibility(View.GONE);
 		} else {

@@ -144,22 +144,16 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 			}
 		});
 
-		//Declares the layout manager, allowing customization of RecyclerView displaying
 		LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-
-
 
 		mContactsList.setAdapter(mSearchAdapter);
 
-		//Divider between items + binds layout manager to our RecyclerView
 		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContactsList.getContext(),
 				layoutManager.getOrientation());
 		dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
 		mContactsList.addItemDecoration(dividerItemDecoration);
 
 		mContactsList.setLayoutManager(layoutManager);
-
-
 
 		if (savedInstanceState != null && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
 			mContactsSelectedLayout.removeAllViews();
@@ -361,8 +355,6 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 		super.onSaveInstanceState(outState);
 	}
 
-
-	//Removed all selection mode related code, as it is now located into SelectableHelper.
 	@Override
 	public void onClick(View view) {
 		int id = view.getId();

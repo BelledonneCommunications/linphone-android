@@ -318,8 +318,6 @@ public class SlidingDrawer extends ViewGroup {
 		}
 	}
 
-	public static final String LOG_TAG = "Sliding";
-
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		if (mTracking) {

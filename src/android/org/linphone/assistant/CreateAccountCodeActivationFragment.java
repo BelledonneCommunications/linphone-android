@@ -23,7 +23,6 @@ import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
-import org.linphone.core.Factory;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -67,21 +66,21 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
 		accountCreator.setUsername(username);
 		accountCreator.setPhoneNumber(phone, dialcode);
 
-		back = (ImageView) view.findViewById(R.id.back);
+		back = view.findViewById(R.id.back);
 		if (back != null)
 			back.setVisibility(Button.INVISIBLE);
 
-		title = (TextView) view.findViewById(R.id.title_account_activation);
+		title = view.findViewById(R.id.title_account_activation);
 		if (linkAccount) {
 			title.setText(getString(R.string.assistant_link_account));
 		} else if (recoverAccount) {
 			title.setText(getString(R.string.assistant_linphone_account));
 		}
 
-		phonenumber = (TextView) view.findViewById(R.id.send_phone_number);
+		phonenumber = view.findViewById(R.id.send_phone_number);
 		phonenumber.setText(accountCreator.getPhoneNumber());
 
-		code = (EditText) view.findViewById(R.id.assistant_code);
+		code = view.findViewById(R.id.assistant_code);
 		code.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -99,7 +98,7 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
 			}
 		});
 
-		checkAccount = (Button) view.findViewById(R.id.assistant_check);
+		checkAccount = view.findViewById(R.id.assistant_check);
 		checkAccount.setEnabled(false);
 		checkAccount.setOnClickListener(new OnClickListener() {
 			@Override

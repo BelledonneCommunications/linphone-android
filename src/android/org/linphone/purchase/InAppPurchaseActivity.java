@@ -56,13 +56,13 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 		inAppPurchaseHelper = new InAppPurchaseHelper(this, this);
 		setContentView(R.layout.in_app);
 
-		inProgress = (ProgressBar) findViewById(R.id.purchaseItemsFetchInProgress);
+		inProgress = findViewById(R.id.purchaseItemsFetchInProgress);
 		inProgress.setVisibility(View.VISIBLE);
 
-		back = (ImageView) findViewById(R.id.back);
+		back = findViewById(R.id.back);
 		back.setOnClickListener(this);
 		back.setVisibility(View.INVISIBLE);
-		cancel = (ImageView) findViewById(R.id.cancel);
+		cancel = findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
 		instance = this;
@@ -139,7 +139,7 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 	public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
 		//purchasableItemsLayout.removeAllViews();
 		inProgress.setVisibility(View.GONE);
-		purchasedItems = new ArrayList<Purchasable>();
+		purchasedItems = new ArrayList<>();
 		for (Purchasable item : items) {
 			purchasedItems.add(item);
 		}

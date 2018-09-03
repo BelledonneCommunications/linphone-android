@@ -44,9 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.ViewHolder> implements SectionIndexer {
-
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public CheckBox delete;
         public ImageView linphoneFriend;
         public TextView name;
@@ -60,14 +58,14 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         private ViewHolder(View view, ClickListener listener) {
             super(view);
 
-            delete = (CheckBox) view.findViewById(R.id.delete);
-            linphoneFriend = (ImageView) view.findViewById(R.id.friendLinphone);
-            name = (TextView) view.findViewById(R.id.name);
-            separator = (LinearLayout) view.findViewById(R.id.separator);
-            separatorText = (TextView) view.findViewById(R.id.separator_text);
-            contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-            organization = (TextView) view.findViewById(R.id.contactOrganization);
-            //friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
+            delete = view.findViewById(R.id.delete);
+            linphoneFriend = view.findViewById(R.id.friendLinphone);
+            name = view.findViewById(R.id.name);
+            separator = view.findViewById(R.id.separator);
+            separatorText = view.findViewById(R.id.separator_text);
+            contactPicture = view.findViewById(R.id.contact_picture);
+            organization = view.findViewById(R.id.contactOrganization);
+            //friendStatus = view.findViewById(R.id.friendStatus);
             mListener = listener;
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
@@ -96,7 +94,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     private List<LinphoneContact> mContacts;
     private String[] mSections;
     private ArrayList<String> mSectionsList;
-    private Map<String, Integer> mMap = new LinkedHashMap<String, Integer>();
+    private Map<String, Integer> mMap = new LinkedHashMap<>();
     private ViewHolder.ClickListener mClickListener;
     private Context mContext;
     private boolean mIsSearchMode;
@@ -169,7 +167,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     public void updateDataSet(List<LinphoneContact> contactsList) {
         mContacts = contactsList;
 
-        mMap = new LinkedHashMap<String, Integer>();
+        mMap = new LinkedHashMap<>();
         String prevLetter = null;
         for (int i = 0; i < mContacts.size(); i++) {
             LinphoneContact contact = mContacts.get(i);
@@ -183,7 +181,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
                 mMap.put(firstLetter, i);
             }
         }
-        mSectionsList = new ArrayList<String>(mMap.keySet());
+        mSectionsList = new ArrayList<>(mMap.keySet());
         mSections = new String[mSectionsList.size()];
         mSectionsList.toArray(mSections);
 

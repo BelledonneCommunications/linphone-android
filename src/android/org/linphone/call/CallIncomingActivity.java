@@ -49,12 +49,11 @@ import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CallIncomingActivity extends LinphoneGenericActivity implements LinphoneSliderTriggered {
+public class CallIncomingActivity extends LinphoneGenericActivity {
 	private static CallIncomingActivity instance;
 
 	private TextView name, number;
@@ -86,9 +85,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_incoming);
 
-		name = (TextView) findViewById(R.id.contact_name);
-		number = (TextView) findViewById(R.id.contact_number);
-		contactPicture = (ImageView) findViewById(R.id.contact_picture);
+		name = findViewById(R.id.contact_name);
+		number = findViewById(R.id.contact_number);
+		contactPicture = findViewById(R.id.contact_picture);
 
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
@@ -96,18 +95,18 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 		final int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-		acceptUnlock = (LinearLayout) findViewById(R.id.acceptUnlock);
-		declineUnlock = (LinearLayout) findViewById(R.id.declineUnlock);
+		acceptUnlock = findViewById(R.id.acceptUnlock);
+		declineUnlock = findViewById(R.id.declineUnlock);
 
-		accept = (ImageView) findViewById(R.id.accept);
+		accept = findViewById(R.id.accept);
 		lookupCurrentCall();
 		if (LinphonePreferences.instance() != null && mCall != null && mCall.getRemoteParams() != null &&
 				LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests() &&
 				mCall.getRemoteParams().videoEnabled()) {
 			accept.setImageResource(R.drawable.call_video_start);
 		}
-		decline = (ImageView) findViewById(R.id.decline);
-		arrow = (ImageView) findViewById(R.id.arrow_hangup);
+		decline = findViewById(R.id.decline);
+		arrow = findViewById(R.id.arrow_hangup);
 		accept.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -117,7 +116,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 
 			}
 		});
-
 
 		accept.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -320,16 +318,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 			LinphoneManager.getInstance().routeAudioToReceiver();
 			LinphoneActivity.instance().startIncallActivity(mCall);
 		}
-	}
-
-	@Override
-	public void onLeftHandleTriggered() {
-
-	}
-
-	@Override
-	public void onRightHandleTriggered() {
-
 	}
 
 	private void checkAndRequestCallPermissions() {

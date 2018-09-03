@@ -28,7 +28,6 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreException;
 import org.linphone.mediastream.Log;
 
-
 /**
  * Handle call updating, reinvites.
  */
@@ -95,23 +94,6 @@ public class CallManager {
 		// Not yet in video call: try to re-invite with video
 		lc.updateCall(lCall, params);
 		return true;
-	}
-
-
-
-	/**
-	 * Re-invite with parameters updated from profile.
-	 */
-	public void reinvite() {
-		Core lc = LinphoneManager.getLc();
-		Call lCall = lc.getCurrentCall();
-		if (lCall == null) {
-			Log.e("Trying to reinvite while not in call: doing nothing");
-			return;
-		}
-		CallParams params = lc.createCallParams(lCall);
-		bm().updateWithProfileSettings(lc, params);
-		lc.updateCall(lCall, params);
 	}
 
 	/**

@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -34,7 +33,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.telephony.TelephonyManager;
@@ -42,7 +40,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -66,9 +63,6 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -324,11 +318,11 @@ public final class LinphoneUtils {
 
 	public static final List<Call> getCalls(Core lc) {
 		// return a modifiable list
-		return new ArrayList<Call>(Arrays.asList(lc.getCalls()));
+		return new ArrayList<>(Arrays.asList(lc.getCalls()));
 	}
 
 	public static final List<Call> getCallsInState(Core lc, Collection<State> states) {
-		List<Call> foundCalls = new ArrayList<Call>();
+		List<Call> foundCalls = new ArrayList<>();
 		for (Call call : getCalls(lc)) {
 			if (states.contains(call.getState())) {
 				foundCalls.add(call);

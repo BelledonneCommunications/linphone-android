@@ -246,9 +246,9 @@ private static AssistantActivity instance;
 	}
 
 	private void initUI() {
-		back = (ImageView) findViewById(R.id.back);
+		back = findViewById(R.id.back);
 		back.setOnClickListener(this);
-		cancel = (ImageView) findViewById(R.id.assistant_cancel);
+		cancel = findViewById(R.id.assistant_cancel);
 		cancel.setOnClickListener(this);
 	}
 
@@ -369,7 +369,6 @@ private static AssistantActivity instance;
 	public void configureProxyConfig(AccountCreator accountCreator) {
 		Core lc = LinphoneManager.getLc();
 		ProxyConfig proxyConfig = lc.createProxyConfig();
-		Address addr;
 		AuthInfo authInfo;
 
 		String identity = proxyConfig.getIdentityAddress().asStringUriOnly();
@@ -378,7 +377,7 @@ private static AssistantActivity instance;
 			return;
 		}
 		identity = identity.replace("?", accountCreator.getUsername());
-		addr = Factory.instance().createAddress(identity);
+		Address addr = Factory.instance().createAddress(identity);
 		addr.setDisplayName(accountCreator.getUsername());
 		address = addr;
 		proxyConfig.edit();

@@ -21,12 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 
-import org.linphone.call.CallActivity;
 import org.linphone.R;
 
 public class CallAudioFragment extends Fragment {
@@ -52,49 +49,5 @@ public class CallAudioFragment extends Fragment {
 		if (incallActvityInstance != null) {
 			incallActvityInstance.removeCallbacks();
 		}
-	}
-
-	class SwipeGestureDetector implements OnTouchListener {
-	    static final int MIN_DISTANCE = 100;
-	    private float downX, upX;
-	    private boolean lock;
-
-		private SwipeListener listener;
-
-		public SwipeGestureDetector(SwipeListener swipeListener) {
-			super();
-			listener = swipeListener;
-		}
-
-        @Override
-    	public boolean onTouch(View v, MotionEvent event) {
-            switch(event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-            	lock = false;
-                downX = event.getX();
-                return true;
-
-            case MotionEvent.ACTION_MOVE:
-            	if (lock) {
-            		return false;
-            	}
-                upX = event.getX();
-
-                float deltaX = downX - upX;
-
-                if (Math.abs(deltaX) > MIN_DISTANCE) {
-                    lock = true;
-                    if (deltaX < 0) { listener.onLeftToRightSwipe(); return true; }
-                    if (deltaX > 0) { listener.onRightToLeftSwipe(); return true; }
-                }
-                break;
-            }
-            return false;
-        }
-    }
-
-	interface SwipeListener {
-		void onRightToLeftSwipe();
-		void onLeftToRightSwipe();
 	}
 }

@@ -73,7 +73,6 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-
 public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
 	private static int MARGIN_BETWEEN_MESSAGES = 10;
@@ -606,7 +605,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
 		public AsyncBitmap(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
 			super(res, bitmap);
-			bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+			bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
 		}
 
 		public BitmapWorkerTask getBitmapWorkerTask() {

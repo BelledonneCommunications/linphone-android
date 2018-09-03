@@ -168,7 +168,7 @@ public class InAppPurchaseHelper {
 	}
 
 	private ArrayList<Purchasable> getAvailableItemsForPurchase() {
-		ArrayList<Purchasable> products = new ArrayList<Purchasable>();
+		ArrayList<Purchasable> products = new ArrayList<>();
 		ArrayList<String> skuList = LinphonePreferences.instance().getInAppPurchasables();
 		Bundle querySkus = new Bundle();
 		querySkus.putStringArrayList(SKU_DETAILS_ITEM_LIST, skuList);
@@ -216,55 +216,6 @@ public class InAppPurchaseHelper {
             		mHandler.post(new Runnable() {
                         public void run() {
                         	mListener.onAvailableItemsForPurchaseQueryFinished(items);
-                        }
-                    });
-            	}
-            }
-		}).start();
-	}
-
-	public void getPurchasedItemsAsync() {
-		new Thread(new Runnable() {
-            public void run() {
-
-            	final ArrayList<Purchasable> items = new ArrayList<Purchasable>();
-            	String continuationToken = null;
-        		do {
-        			Bundle purchasedItems = null;
-        			try {
-        				purchasedItems = mService.getPurchases(API_VERSION, mContext.getPackageName(), ITEM_TYPE_SUBS, continuationToken);
-        			} catch (RemoteException e) {
-        				Log.e(e);
-        			}
-
-        			if (purchasedItems != null) {
-        				int response = purchasedItems.getInt(RESPONSE_CODE);
-        				if (response == RESPONSE_RESULT_OK) {
-        					ArrayList<String>  purchaseDataList = purchasedItems.getStringArrayList(RESPONSE_INAPP_PURCHASE_DATA_LIST);
-        					ArrayList<String>  signatureList = purchasedItems.getStringArrayList(RESPONSE_INAPP_SIGNATURE_LIST);
-        					continuationToken = purchasedItems.getString(RESPONSE_INAPP_CONTINUATION_TOKEN);
-
-				   			for (int i = 0; i < purchaseDataList.size(); ++i) {
-				   				String purchaseData = purchaseDataList.get(i);
-    				   			String signature = signatureList.get(i);
-    							Log.d("[In-app purchase] " + purchaseData);
-
-    				   			Purchasable item = verifySignature(purchaseData, signature);
-    				   			if (item != null) {
-    				   				items.add(item);
-    				   			}
-    				   		}
-        				} else {
-        					Log.e("[In-app purchase] Error: responde code is not ok: " + responseCodeToErrorMessage(response));
-        		    		mListener.onError(responseCodeToErrorMessage(response));
-        				}
-        			}
-        		} while (continuationToken != null);
-
-            	if (mHandler != null && mListener != null) {
-            		mHandler.post(new Runnable() {
-                        public void run() {
-                        	mListener.onPurchasedItemsQueryFinished(items);
                         }
                     });
             	}

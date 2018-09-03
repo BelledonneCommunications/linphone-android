@@ -119,7 +119,6 @@ public class ContactEditorFragment extends Fragment {
 			sipAddressesSection.setVisibility(View.GONE);
 		}
 
-
 		deleteContact = (ImageView) view.findViewById(R.id.delete_contact);
 
 		cancel = (ImageView) view.findViewById(R.id.cancel);

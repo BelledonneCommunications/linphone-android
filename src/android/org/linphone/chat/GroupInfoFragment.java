@@ -414,6 +414,22 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     }
 
 	@Override
+	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event_log) {
+		if (mChatRoom.getMe().isAdmin() != mIsEditionEnabled) {
+			// Either we weren't admin and we are now or the other way around
+			mIsEditionEnabled = mChatRoom.getMe().isAdmin();
+			displayMeAdminStatusUpdated();
+			refreshAdminRights();
+		}
+		refreshParticipantsList();
+	}
+
+	@Override
+	public void onSubjectChanged(ChatRoom cr, EventLog event_log) {
+		mSubjectField.setText(event_log.getSubject());
+	}
+
+	@Override
 	public void onConferenceJoined(ChatRoom cr, EventLog event_log) {
 	}
 
@@ -439,22 +455,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	@Override
 	public void onParticipantsCapabilitiesChecked(ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {
 
-	}
-
-	@Override
-	public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event_log) {
-		if (mChatRoom.getMe().isAdmin() != mIsEditionEnabled) {
-			// Either we weren't admin and we are now or the other way around
-			mIsEditionEnabled = mChatRoom.getMe().isAdmin();
-			displayMeAdminStatusUpdated();
-			refreshAdminRights();
-		}
-		refreshParticipantsList();
-	}
-
-	@Override
-	public void onSubjectChanged(ChatRoom cr, EventLog event_log) {
-		mSubjectField.setText(event_log.getSubject());
 	}
 
 	@Override

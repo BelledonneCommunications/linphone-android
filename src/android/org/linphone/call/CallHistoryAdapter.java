@@ -48,9 +48,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.ViewHolder> {
-
-    //This ViewHolder links fields from the xml to variables that will display values provided by the adapter
-
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener{
         public TextView contact;
@@ -61,34 +58,34 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         public RelativeLayout CallContact;
         public LinearLayout separator;
         public TextView separatorText;
-        private CallHistoryAdapter.ViewHolder.ClickListener listener;
+        private CallHistoryAdapter.ViewHolder.ClickListener mListener;
 
         public ViewHolder(View view, CallHistoryAdapter.ViewHolder.ClickListener listener) {
             super(view);
-            contact = (TextView) view.findViewById(R.id.sip_uri);
-            detail = (ImageView) view.findViewById(R.id.detail);
-            select = (CheckBox) view.findViewById(R.id.delete);
-            callDirection = (ImageView) view.findViewById(R.id.icon);
-            contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
-            CallContact = (RelativeLayout) view.findViewById(R.id.history_click);
-            separator = (LinearLayout) view.findViewById(R.id.separator);
-            separatorText = (TextView) view.findViewById(R.id.separator_text);
-            this.listener = listener;
+            contact = view.findViewById(R.id.sip_uri);
+            detail = view.findViewById(R.id.detail);
+            select = view.findViewById(R.id.delete);
+            callDirection = view.findViewById(R.id.icon);
+            contactPicture = view.findViewById(R.id.contact_picture);
+            CallContact = view.findViewById(R.id.history_click);
+            separator = view.findViewById(R.id.separator);
+            separatorText = view.findViewById(R.id.separator_text);
+            mListener = listener;
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (listener != null) {
-                listener.onItemClicked(getAdapterPosition());
+            if (mListener != null) {
+                mListener.onItemClicked(getAdapterPosition());
             }
         }
 
         @Override
         public boolean onLongClick(View view) {
-            if (listener != null) {
-                return listener.onItemLongClicked(getAdapterPosition());
+            if (mListener != null) {
+                return mListener.onItemLongClicked(getAdapterPosition());
             }
             return false;
         }

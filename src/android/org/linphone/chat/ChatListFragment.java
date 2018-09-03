@@ -52,7 +52,7 @@ import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomsAdapter.ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
 
 	private RecyclerView mChatRoomsList;
 	private ImageView mNewDiscussionButton, mBackToCallButton;
@@ -212,7 +212,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		ContactsManager.removeContactsListener(this);
 		mChatRoomsAdapter.clear();
 		super.onPause();
-
 	}
 
 	@Override

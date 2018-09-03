@@ -37,10 +37,6 @@ public class ListSelectionHelper {
 	private Context mContext;
 	private int mDialogDeleteMessageResourceId;
 
-	public void setDialogMessage(int id) {
-		mDialogDeleteMessageResourceId = id;
-	}
-
 	public interface DeleteListener {
 		void onDeleteSelection(Object[] objectsToDelete);
 	}

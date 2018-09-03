@@ -78,17 +78,17 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 			onlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
         }
 
-        noSipContact = (TextView) view.findViewById(R.id.noSipContact);
-        noContact = (TextView) view.findViewById(R.id.noContact);
+        noSipContact = view.findViewById(R.id.noSipContact);
+        noContact = view.findViewById(R.id.noContact);
         contactsList = view.findViewById(R.id.contactsList);
 
-        allContacts = (ImageView) view.findViewById(R.id.all_contacts);
-		linphoneContacts = (ImageView) view.findViewById(R.id.linphone_contacts);
+        allContacts = view.findViewById(R.id.all_contacts);
+		linphoneContacts = view.findViewById(R.id.linphone_contacts);
 		allContactsSelected = view.findViewById(R.id.all_contacts_select);
 		linphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
-		edit = (ImageView) view.findViewById(R.id.edit);
-		contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
-		newContact = (ImageView) view.findViewById(R.id.newContact);
+		edit = view.findViewById(R.id.edit);
+		contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
+		newContact = view.findViewById(R.id.newContact);
 
 		allContacts.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -131,7 +131,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		contactsFetchInProgress.setVisibility(View.VISIBLE);
 
 
-		clearSearchField = (ImageView) view.findViewById(R.id.clearSearchField);
+		clearSearchField = view.findViewById(R.id.clearSearchField);
 		clearSearchField.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -139,7 +139,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 			}
 		});
 
-		searchField = (EditText) view.findViewById(R.id.searchField);
+		searchField = view.findViewById(R.id.searchField);
 		searchField.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -161,7 +161,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		layoutManager = new LinearLayoutManager(mContext);
 		contactsList.setLayoutManager(layoutManager);
 
-		//Divider between items
 		DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(contactsList.getContext(),
 				layoutManager.getOrientation());
 		dividerItemDecoration.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
@@ -201,7 +200,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 		if(mContactAdapter != null && mContactAdapter.isEditionEnabled()) {
 			isEditionEnabled=true;
 		}
-
 
 		mContactAdapter = new ContactsListAdapter(mContext, listContact, this, mSelectionHelper);
 

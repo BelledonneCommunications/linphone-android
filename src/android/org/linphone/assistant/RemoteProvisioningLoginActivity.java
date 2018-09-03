@@ -45,11 +45,11 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.assistant_remote_provisioning_login);
 
-		login = (EditText) findViewById(R.id.assistant_username);
-		password = (EditText) findViewById(R.id.assistant_password);
-		domain = (EditText) findViewById(R.id.assistant_domain);
+		login = findViewById(R.id.assistant_username);
+		password = findViewById(R.id.assistant_password);
+		domain = findViewById(R.id.assistant_domain);
 
-		connect = (Button) findViewById(R.id.assistant_connect);
+		connect = findViewById(R.id.assistant_connect);
 		connect.setOnClickListener(this);
 
 		String defaultDomain = getIntent().getStringExtra("Domain");
@@ -91,22 +91,6 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		LinphonePreferences.instance().firstLaunchSuccessful();
 		setResult(Activity.RESULT_OK);
 		finish();
-		/*String identity = "sip:" + username + "@" + domain;
-		ProxyConfig prxCfg = lc.createProxyConfig();
-		try {
-			prxCfg.setIdentityAddress(identity);
-			lc.addProxyConfig(prxCfg);
-		} catch (CoreException e) {
-			Log.e(e);
-			return false;
-		}
-
-		AuthInfo authInfo = Factory.instance().createAuthInfo(username, null, password, null, null, domain);
-		lc.addAuthInfo(authInfo);
-
-		if (LinphonePreferences.instance().getAccountCount() == 1)
-			lc.setDefaultProxyConfig(prxCfg);
-		*/
 		return true;
 	}
 

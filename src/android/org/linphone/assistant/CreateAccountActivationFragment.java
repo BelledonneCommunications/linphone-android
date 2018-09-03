@@ -32,7 +32,6 @@ import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
-import org.linphone.core.Factory;
 
 public class CreateAccountActivationFragment extends Fragment implements OnClickListener, AccountCreatorListener {
 	private String username, password;
@@ -54,10 +53,10 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
 		accountCreator.setUsername(username);
 		accountCreator.setPassword(password);
 
-		email = (TextView) view.findViewById(R.id.send_email);
+		email = view.findViewById(R.id.send_email);
 		email.setText(getArguments().getString("Email"));
 
-		checkAccount = (Button) view.findViewById(R.id.assistant_check);
+		checkAccount = view.findViewById(R.id.assistant_check);
 		checkAccount.setOnClickListener(this);
 		return view;
 	}

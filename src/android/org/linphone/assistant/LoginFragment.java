@@ -43,18 +43,18 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_login, container, false);
 
-		login = (EditText) view.findViewById(R.id.assistant_username);
+		login = view.findViewById(R.id.assistant_username);
 		login.addTextChangedListener(this);
-		displayName = (EditText) view.findViewById(R.id.assistant_display_name);
+		displayName = view.findViewById(R.id.assistant_display_name);
 		displayName.addTextChangedListener(this);
-		userid = (EditText) view.findViewById(R.id.assistant_userid);
+		userid = view.findViewById(R.id.assistant_userid);
 		userid.addTextChangedListener(this);
-		password = (EditText) view.findViewById(R.id.assistant_password);
+		password = view.findViewById(R.id.assistant_password);
 		password.addTextChangedListener(this);
-		domain = (EditText) view.findViewById(R.id.assistant_domain);
+		domain = view.findViewById(R.id.assistant_domain);
 		domain.addTextChangedListener(this);
-		transports = (RadioGroup) view.findViewById(R.id.assistant_transports);
-		apply = (Button) view.findViewById(R.id.assistant_apply);
+		transports = view.findViewById(R.id.assistant_transports);
+		apply = view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
 

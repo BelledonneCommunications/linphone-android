@@ -57,8 +57,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.about, container, false);
 
-		TextView aboutVersion = (TextView) view.findViewById(R.id.about_android_version);
-		TextView aboutLiblinphoneVersion = (TextView) view.findViewById(R.id.about_liblinphone_version);
+		TextView aboutVersion = view.findViewById(R.id.about_android_version);
+		TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
 		aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
 		try {
 			aboutVersion.setText(String.format(getString(R.string.about_version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
@@ -66,7 +66,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
 			Log.e(e, "cannot get version name");
 		}
 
-		cancel = (ImageView) view.findViewById(R.id.cancel);
+		cancel = view.findViewById(R.id.cancel);
 		cancel.setOnClickListener(this);
 
 		sendLogButton = view.findViewById(R.id.send_log);

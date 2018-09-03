@@ -68,13 +68,13 @@ public class StatusFragment extends Fragment {
         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.status, container, false);
 
-		statusText = (TextView) view.findViewById(R.id.status_text);
-		statusLed = (ImageView) view.findViewById(R.id.status_led);
-		callQuality = (ImageView) view.findViewById(R.id.call_quality);
-		encryption = (ImageView) view.findViewById(R.id.encryption);
-		menu = (ImageView) view.findViewById(R.id.side_menu_button);
-		voicemail = (ImageView) view.findViewById(R.id.voicemail);
-		voicemailCount = (TextView) view.findViewById(R.id.voicemail_count);
+		statusText = view.findViewById(R.id.status_text);
+		statusLed = view.findViewById(R.id.status_led);
+		callQuality = view.findViewById(R.id.call_quality);
+		encryption = view.findViewById(R.id.encryption);
+		menu = view.findViewById(R.id.side_menu_button);
+		voicemail = view.findViewById(R.id.voicemail);
+		voicemailCount = view.findViewById(R.id.voicemail_count);
 
 		// We create it once to not delay the first display
 		populateSliderContent();
@@ -427,13 +427,13 @@ public class StatusFragment extends Fragment {
 				//Screen is locked
 				LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
 			}
-			TextView customText = (TextView) ZRTPdialog.findViewById(R.id.customText);
+			TextView customText = ZRTPdialog.findViewById(R.id.customText);
 			String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
 					+ getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
 			customText.setText(newText);
-			Button delete = (Button) ZRTPdialog.findViewById(R.id.delete_button);
+			Button delete = ZRTPdialog.findViewById(R.id.delete_button);
 			delete.setText(R.string.accept);
-			Button cancel = (Button) ZRTPdialog.findViewById(R.id.cancel);
+			Button cancel = ZRTPdialog.findViewById(R.id.cancel);
 			cancel.setText(R.string.deny);
 
 			delete.setOnClickListener(new OnClickListener() {

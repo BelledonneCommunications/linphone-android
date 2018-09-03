@@ -27,7 +27,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.DialPlan;
 import org.linphone.core.AccountCreator;
-import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 
 import android.app.AlertDialog;
@@ -73,29 +72,29 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 
 		String url = "http://linphone.org/free-sip-service.html&action=recover";
 
-		login = (EditText) view.findViewById(R.id.assistant_username);
+		login = view.findViewById(R.id.assistant_username);
 		login.addTextChangedListener(this);
 
 		recoverAccount = true;
 
-		dialCode = (EditText) view.findViewById(R.id.dial_code);
+		dialCode = view.findViewById(R.id.dial_code);
 
-		phoneNumberEdit = (EditText) view.findViewById(R.id.phone_number);
-		phoneNumberLayout = (LinearLayout) view.findViewById(R.id.phone_number_layout);
-		phoneNumberError = (TextView) view.findViewById(R.id.phone_number_error_2);
+		phoneNumberEdit = view.findViewById(R.id.phone_number);
+		phoneNumberLayout = view.findViewById(R.id.phone_number_layout);
+		phoneNumberError = view.findViewById(R.id.phone_number_error_2);
 
-		phoneNumberInfo = (ImageView) view.findViewById(R.id.info_phone_number);
+		phoneNumberInfo = view.findViewById(R.id.info_phone_number);
 
-		useUsername = (CheckBox) view.findViewById(R.id.use_username);
-		usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
-		passwordLayout = (LinearLayout) view.findViewById(R.id.password_layout);
-		password = (EditText) view.findViewById(R.id.assistant_password);
-		messagePhoneNumber = (TextView) view.findViewById(R.id.message_phone_number);
+		useUsername = view.findViewById(R.id.use_username);
+		usernameLayout = view.findViewById(R.id.username_layout);
+		passwordLayout = view.findViewById(R.id.password_layout);
+		password = view.findViewById(R.id.assistant_password);
+		messagePhoneNumber = view.findViewById(R.id.message_phone_number);
 
-		forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
-		selectCountry = (Button) view.findViewById(R.id.select_country);
+		forgotPassword = view.findViewById(R.id.forgot_password);
+		selectCountry = view.findViewById(R.id.select_country);
 
-		apply = (Button) view.findViewById(R.id.assistant_apply);
+		apply = view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(true);
 		apply.setOnClickListener(this);
 
@@ -111,7 +110,6 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
 					(TelephonyManager) getActivity().getApplicationContext().getSystemService(
 							Context.TELEPHONY_SERVICE);
 			String countryIso = tm.getNetworkCountryIso();
-			ProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
 			countryCode = org.linphone.core.Utils.getCccFromIso(countryIso.toUpperCase());
 
 

@@ -64,7 +64,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	public Button openFileButton;
 
 	public CheckBox delete;
-	private ClickListener listener;
+	private ClickListener mListener;
 
 	public ChatBubbleViewHolder(Context context, View view, ClickListener listener) {
 		super(view);
@@ -99,7 +99,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 
 		delete = view.findViewById(R.id.delete_message);
 
-		listener = listener;
+		mListener = listener;
 
 		view.setOnClickListener(this);
 	}
@@ -136,8 +136,8 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 	}
 	@Override
 	public void onClick(View v) {
-		if (listener != null) {
-			listener.onItemClicked(getAdapterPosition());
+		if (mListener != null) {
+			mListener.onItemClicked(getAdapterPosition());
 		}
 	}
 

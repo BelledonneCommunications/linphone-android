@@ -31,7 +31,6 @@ public class BandwidthManager {
 	private static BandwidthManager instance;
 
 	private int currentProfile = HIGH_RESOLUTION;
-	public int getCurrentProfile() {return currentProfile;}
 
 	public static final synchronized BandwidthManager getInstance() {
 		if (instance == null) instance = new BandwidthManager();

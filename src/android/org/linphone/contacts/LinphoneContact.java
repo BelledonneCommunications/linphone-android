@@ -57,12 +57,12 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	private boolean hasSipAddress;
 
 	public LinphoneContact() {
-		addresses = new ArrayList<LinphoneNumberOrAddress>();
+		addresses = new ArrayList<>();
 		androidId = null;
 		thumbnailUri = null;
 		photoUri = null;
-		changesToCommit = new ArrayList<ContentProviderOperation>();
-		changesToCommit2 = new ArrayList<ContentProviderOperation>();
+		changesToCommit = new ArrayList<>();
+		changesToCommit2 = new ArrayList<>();
 		hasSipAddress = false;
 	}
 
@@ -70,8 +70,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	public int compareTo(LinphoneContact contact) {
 		String fullName = getFullName() != null ? getFullName().toUpperCase(Locale.getDefault()) : "";
 		String contactFullName = contact.getFullName() != null ? contact.getFullName().toUpperCase(Locale.getDefault()) : "";
-		/*String firstLetter = fullName == null || fullName.isEmpty() ? "" : fullName.substring(0, 1).toUpperCase(Locale.getDefault());
-		String contactfirstLetter = contactFullName == null || contactFullName.isEmpty() ? "" : contactFullName.substring(0, 1).toUpperCase(Locale.getDefault());*/
 		return fullName.compareTo(contactFullName);
 	}
 
@@ -474,8 +472,8 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 			} catch (Exception e) {
 				Log.e(e);
 			} finally {
-				changesToCommit = new ArrayList<ContentProviderOperation>();
-				changesToCommit2 = new ArrayList<ContentProviderOperation>();
+				changesToCommit = new ArrayList<>();
+				changesToCommit2 = new ArrayList<>();
 			}
 		}
 
@@ -509,7 +507,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	public void refresh() {
-		addresses = new ArrayList<LinphoneNumberOrAddress>();
+		addresses = new ArrayList<>();
 		if (isAndroidContact()) {
 			getContactNames();
 			getNativeContactOrganization();
@@ -741,7 +739,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 	}
 
 	private void createLinphoneContactTag() {
-		ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+		ArrayList<ContentProviderOperation> batch = new ArrayList<>();
 
 		batch.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
 			.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, ContactsManager.getInstance().getString(R.string.sync_account_type))

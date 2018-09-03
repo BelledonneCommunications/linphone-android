@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.app.Fragment;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spanned;

@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    @SuppressWarnings("unused")
-    private static final String TAG = SelectableAdapter.class.getSimpleName();
     private SparseBooleanArray mSelectedItems;
     private boolean mIsEditionEnabled=false;
     private SelectableHelper mListHelper;

@@ -22,8 +22,6 @@ package org.linphone.ui;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 
-import org.linphone.mediastream.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +50,6 @@ public abstract class ListSelectionAdapter extends BaseAdapter {
 
 	public boolean isEditionEnabled() {
 		return mIsEditionEnabled;
-	}
-
-	public CompoundButton.OnCheckedChangeListener getDeleteListener() {
-		return mDeleteCheckboxListener;
 	}
 
 	public void selectAll() {

@@ -19,15 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.LinphoneUtils;
 import org.linphone.call.CallActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.app.AlertDialog;

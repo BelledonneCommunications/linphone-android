@@ -71,7 +71,7 @@ public class Numpad extends LinearLayout implements AddressAware {
 
 
 	private final <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
-		final Collection<T> views = new ArrayList<T>();
+		final Collection<T> views = new ArrayList<>();
 
 		for (int i = 0; i < viewGroup.getChildCount(); i++) {
 			View v = viewGroup.getChildAt(i);

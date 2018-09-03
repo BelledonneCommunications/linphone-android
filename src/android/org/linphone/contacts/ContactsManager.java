@@ -42,7 +42,6 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.FriendListListener;
@@ -84,10 +83,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 		super(handler);
 		this.handler = handler;
 		defaultAvatar = BitmapFactory.decodeResource(LinphoneService.instance().getResources(), R.drawable.avatar);
-		androidContactsCache = new HashMap<String, LinphoneContact>();
-		contactsUpdatedListeners = new ArrayList<ContactsUpdatedListener>();
-		contacts = new ArrayList<LinphoneContact>();
-		sipContacts = new ArrayList<LinphoneContact>();
+		androidContactsCache = new HashMap<>();
+		contactsUpdatedListeners = new ArrayList<>();
+		contacts = new ArrayList<>();
+		sipContacts = new ArrayList<>();
 		if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
 			magicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
 		}
@@ -313,8 +312,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 	}
 
 	private synchronized void fetchContactsSync() {
-		List<LinphoneContact> contacts = new ArrayList<LinphoneContact>();
-		List<LinphoneContact> sipContacts = new ArrayList<LinphoneContact>();
+		List<LinphoneContact> contacts = new ArrayList<>();
+		List<LinphoneContact> sipContacts = new ArrayList<>();
 		Date contactsTime = new Date();
 		androidContactsCache.clear();
 
@@ -521,7 +520,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
 	public void deleteMultipleContactsAtOnce(List<String> ids) {
 		String select = ContactsContract.Data.CONTACT_ID + " = ?";
-		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+		ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
 		for (String id : ids) {
 			String[] args = new String[] { id };

@@ -33,17 +33,8 @@ import android.widget.EditText;
 public class AddressText extends EditText implements AddressType {
 
 	private String displayedName;
-	private Uri pictureUri;
 	private Paint mTestPaint;
 	private DialerFragment dialer;
-
-	public void setPictureUri(Uri uri) {
-		pictureUri = uri;
-	}
-
-	public Uri getPictureUri() {
-		return pictureUri;
-	}
 
 	public AddressText(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -58,11 +49,6 @@ public class AddressText extends EditText implements AddressType {
 
 	public String getDisplayedName() {
 		return displayedName;
-	}
-
-	public void setContactAddress(String uri, String displayedName) {
-		setText(uri);
-		this.displayedName = displayedName;
 	}
 
 	public void setDisplayedName(String displayedName) {
@@ -81,7 +67,6 @@ public class AddressText extends EditText implements AddressType {
 	protected void onTextChanged(CharSequence text, int start, int before,
 			int after) {
 		clearDisplayedName();
-		pictureUri = null;
 
 		refitText(getWidth(), getHeight());
 

@@ -45,7 +45,7 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
 		View view = inflater.inflate(R.layout.in_app_list, container, false);
 
 		mPurchasableItems = InAppPurchaseActivity.instance().getPurchasedItems();
-		inappList = (ListView) view.findViewById(R.id.inapp_list);
+		inappList = view.findViewById(R.id.inapp_list);
 
 		if(mPurchasableItems != null){
 			inappList.setAdapter(new InAppListAdapter());
@@ -70,7 +70,7 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
-			View view = null;
+			View view;
 			if (convertView != null) {
 				view = convertView;
 			} else {
@@ -79,9 +79,9 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
 
 			final Purchasable item = mPurchasableItems.get(position);
 
-			TextView itemTitle = (TextView) view.findViewById(R.id.purchase_title);
-			TextView itemDesc = (TextView) view.findViewById(R.id.purchase_description);
-			TextView itemPrice = (TextView) view.findViewById(R.id.purchase_price);
+			TextView itemTitle = view.findViewById(R.id.purchase_title);
+			TextView itemDesc = view.findViewById(R.id.purchase_description);
+			TextView itemPrice = view.findViewById(R.id.purchase_price);
 
 			itemTitle.setText(item.getTitle());
 			itemDesc.setText(item.getDescription());

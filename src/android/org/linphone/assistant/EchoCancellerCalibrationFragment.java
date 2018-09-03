@@ -29,9 +29,7 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.XmlRpcArgType;
 import org.linphone.core.XmlRpcRequest;
 import org.linphone.core.XmlRpcRequestListener;
-//import org.linphone.core.XmlRpcRequestImpl;
 import org.linphone.core.XmlRpcSession;
-//import org.linphone.core.XmlRpcSessionImpl;
 import org.linphone.mediastream.Log;
 
 import android.app.Fragment;

@@ -37,7 +37,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 public class InAppPurchaseFragment extends Fragment implements View.OnClickListener {
 	private LinearLayout usernameLayout;
 	private EditText username, email;
@@ -45,7 +44,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
 	private boolean usernameOk = false, emailOk = false;
 	private String defaultUsername, defaultEmail;
-	private Button buyItemButton, recoverAccountButton;
+	private Button buyItemButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,15 +56,15 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
 		String id = getArguments().getString("item_id");
 		Purchasable item = InAppPurchaseActivity.instance().getPurchasedItem(id);
-		buyItemButton = (Button) view.findViewById(R.id.inapp_button);
+		buyItemButton = view.findViewById(R.id.inapp_button);
 
 		displayBuySubscriptionButton(item);
 
 		defaultEmail = InAppPurchaseActivity.instance().getGmailAccount();
 		defaultUsername = LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex());
 
-		usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
-		username = (EditText) view.findViewById(R.id.username);
+		usernameLayout = view.findViewById(R.id.username_layout);
+		username = view.findViewById(R.id.username);
 		if(!getResources().getBoolean(R.bool.hide_username_in_inapp)){
 			usernameLayout.setVisibility(View.VISIBLE);
 			username.setText(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
@@ -78,14 +77,14 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 			}
 		}
 
-		email = (EditText) view.findViewById(R.id.email);
+		email = view.findViewById(R.id.email);
 		if(defaultEmail != null){
 			email.setText(defaultEmail);
 			emailOk = true;
 		}
 
 		buyItemButton.setEnabled(emailOk && usernameOk);
-		errorMessage = (TextView) view.findViewById(R.id.username_error);
+		errorMessage = view.findViewById(R.id.username_error);
 
 		return view;
 	}
@@ -110,7 +109,6 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 					errorMessage.setText(R.string.wizard_username_incorrect);
 				}
 				if (buyItemButton != null) buyItemButton.setEnabled(usernameOk);
-				if (recoverAccountButton != null) recoverAccountButton.setEnabled(usernameOk);
 			}
 		});
 	}
@@ -130,11 +128,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 	@Override
 	public void onClick(View v) {
 		Purchasable item = (Purchasable) v.getTag();
-		if (v.equals(recoverAccountButton)) {
-			//TODO
-		} else {
-			InAppPurchaseActivity.instance().buyInapp(getUsername(), item);
-		}
+		InAppPurchaseActivity.instance().buyInapp(getUsername(), item);
 	}
 
 	private String getUsername() {

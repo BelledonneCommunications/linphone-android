@@ -26,8 +26,6 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
 
 import android.app.AlarmManager;

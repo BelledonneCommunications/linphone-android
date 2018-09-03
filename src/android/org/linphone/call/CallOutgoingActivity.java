@@ -82,23 +82,23 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.call_outgoing);
 
-		name = (TextView) findViewById(R.id.contact_name);
-		number = (TextView) findViewById(R.id.contact_number);
-		contactPicture = (ImageView) findViewById(R.id.contact_picture);
+		name = findViewById(R.id.contact_name);
+		number = findViewById(R.id.contact_number);
+		contactPicture = findViewById(R.id.contact_picture);
 
 		isMicMuted = false;
 		isSpeakerEnabled = false;
 
-		micro = (ImageView) findViewById(R.id.micro);
+		micro = findViewById(R.id.micro);
 		micro.setOnClickListener(this);
-		speaker = (ImageView) findViewById(R.id.speaker);
+		speaker = findViewById(R.id.speaker);
 		speaker.setOnClickListener(this);
 
 		// set this flag so this activity will stay in front of the keyguard
 		int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 		getWindow().addFlags(flags);
 
-		hangUp = (ImageView) findViewById(R.id.outgoing_hang_up);
+		hangUp = findViewById(R.id.outgoing_hang_up);
 		hangUp.setOnClickListener(this);
 
 		mListener = new CoreListenerStub(){
@@ -255,7 +255,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 		LayoutInflater inflater = getLayoutInflater();
 		View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
 
-		TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+		TextView toastText = layout.findViewById(R.id.toastMessage);
 		toastText.setText(message);
 
 		final Toast toast = new Toast(getApplicationContext());

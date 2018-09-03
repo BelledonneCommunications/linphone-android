@@ -34,7 +34,6 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
@@ -71,8 +70,8 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
         	view = inflater.inflate(R.layout.video, container, false);
 		}
 
-		mVideoView = (SurfaceView) view.findViewById(R.id.videoSurface);
-		mCaptureView = (SurfaceView) view.findViewById(R.id.videoCaptureSurface);
+		mVideoView = view.findViewById(R.id.videoSurface);
+		mCaptureView = view.findViewById(R.id.videoCaptureSurface);
 		mCaptureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Warning useless because value is ignored and automatically set by new APIs.
 
 		fixZOrder(mVideoView, mCaptureView);

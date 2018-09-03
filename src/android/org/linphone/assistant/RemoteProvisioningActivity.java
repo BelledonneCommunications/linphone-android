@@ -18,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -53,7 +52,7 @@ public class RemoteProvisioningActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.remote_provisioning);
-		spinner = (ProgressBar) findViewById(R.id.spinner);
+		spinner = findViewById(R.id.spinner);
 
 		mListener = new CoreListenerStub(){
 			@Override

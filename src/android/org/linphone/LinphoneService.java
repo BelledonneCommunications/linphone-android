@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
@@ -34,12 +33,8 @@ import org.linphone.core.Call;
 import org.linphone.core.Call.State;
 import org.linphone.core.Core;
 import org.linphone.core.GlobalState;
-import org.linphone.core.LogLevel;
-import org.linphone.core.LoggingService;
-import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
@@ -69,7 +64,6 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.util.ArrayMap;
 import android.view.WindowManager;
 
 /**
@@ -157,7 +151,7 @@ public final class LinphoneService extends Service {
 	After two days of hard work I ended with the following class, that does the job more or less reliabily.
 	*/
 	class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
-		private ArrayList<Activity> activities = new ArrayList<Activity>();
+		private ArrayList<Activity> activities = new ArrayList<>();
 		private boolean mActive = false;
 		private int mRunningActivities = 0;
 

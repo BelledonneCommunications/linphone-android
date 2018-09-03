@@ -23,7 +23,6 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.Call;
-import org.linphone.core.Call.Dir;
 import org.linphone.core.CallLog;
 import org.linphone.core.CoreException;
 import org.linphone.core.ProxyConfig;

@@ -24,7 +24,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +33,6 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
-import org.linphone.contacts.SearchContactsListAdapter;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
 
@@ -43,13 +41,12 @@ import java.util.List;
 
 public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public ImageView avatar;
         public ImageView delete;
         public LinearLayout isAdmin;
         public LinearLayout isNotAdmin;
-
 
         public ViewHolder(View view) {
             super(view);
@@ -59,14 +56,12 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
             isAdmin = view.findViewById(R.id.isAdminLayout);
             isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
         }
-
    }
 
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
     private ChatRoom mChatRoom;
-    private ImageView mAavatar;
 
     public GroupInfoAdapter(List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mItems = items;
@@ -84,11 +79,11 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final ContactAddress ca = (ContactAddress)getItem(position);
         LinphoneContact c = ca.getContact();
-        mAavatar = holder.avatar;
+        ImageView avatar = holder.avatar;
         holder.name.setText((c.getFullName() != null) ? c.getFullName() :
                 (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
         if (c.hasPhoto()) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), mAavatar, c.getThumbnailUri());
+            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
         }
 
         holder.delete.setOnClickListener(new View.OnClickListener() {

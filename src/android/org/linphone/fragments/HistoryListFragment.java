@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -55,7 +54,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 	private TextView noCallHistory, noMissedCallHistory;
 	private ImageView missedCalls, allCalls, edit;
 	private View allCallsSelected, missedCallsSelected;
-	private boolean mOnlyDisplayMissedCalls, mIsEditMode;
+	private boolean mOnlyDisplayMissedCalls;
 	private List<CallLog> mLogs;
 	private CallHistoryAdapter mHistoryAdapter;
 	private LinearLayoutManager mLayoutManager;
@@ -69,10 +68,10 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
         mContext = getActivity().getApplicationContext();
 		mSelectionHelper = new SelectableHelper(view, this);
 
-		noCallHistory = (TextView) view.findViewById(R.id.no_call_history);
-		noMissedCallHistory = (TextView) view.findViewById(R.id.no_missed_call_history);
+		noCallHistory = view.findViewById(R.id.no_call_history);
+		noMissedCallHistory = view.findViewById(R.id.no_missed_call_history);
 
-		historyList = (RecyclerView) view.findViewById(R.id.history_list);
+		historyList = view.findViewById(R.id.history_list);
 
 		mLayoutManager = new LinearLayoutManager(mContext);
 		historyList.setLayoutManager(mLayoutManager);
@@ -82,12 +81,12 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
 		historyList.addItemDecoration(dividerItemDecoration);
 
-		allCalls = (ImageView) view.findViewById(R.id.all_calls);
+		allCalls = view.findViewById(R.id.all_calls);
 		allCalls.setOnClickListener(this);
 
 		allCallsSelected = view.findViewById(R.id.all_calls_select);
 
-		missedCalls = (ImageView) view.findViewById(R.id.missed_calls);
+		missedCalls = view.findViewById(R.id.missed_calls);
 		missedCalls.setOnClickListener(this);
 
 		missedCallsSelected = view.findViewById(R.id.missed_calls_select);
@@ -95,7 +94,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 		allCalls.setEnabled(false);
 		mOnlyDisplayMissedCalls = false;
 
-		edit = (ImageView) view.findViewById(R.id.edit);
+		edit = view.findViewById(R.id.edit);
 
 		return view;
 	}

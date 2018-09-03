@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-
 public class CountryListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 	private ListView list;
 	private EditText search;
@@ -49,11 +48,11 @@ public class CountryListFragment extends Fragment implements AdapterView.OnItemC
 		adapter = AssistantActivity.instance().getCountryListAdapter();
 		adapter.setInflater(inflater);
 
-		search = (EditText)view.findViewById(R.id.search_country);
-		clearSearchField = (ImageView) view.findViewById(R.id.clearSearchField);
+		search = view.findViewById(R.id.search_country);
+		clearSearchField = view.findViewById(R.id.clearSearchField);
 		clearSearchField.setOnClickListener(this);
 
-		list = (ListView)view.findViewById(R.id.countryList);
+		list = view.findViewById(R.id.countryList);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 

@@ -86,7 +86,7 @@ public class PreferencesListFragment extends ListFragment {
             ((ViewGroup)p).removeView(preferencesList);
         }
 
-    	RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.topLayout);
+    	RelativeLayout layout = view.findViewById(R.id.topLayout);
     	layout.addView(preferencesList);
 
         postBindPreferences();

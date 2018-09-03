@@ -71,36 +71,36 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		mWaitLayout = view.findViewById(R.id.waitScreen);
 		mWaitLayout.setVisibility(View.GONE);
 
-		dialBack = (ImageView) view.findViewById(R.id.call);
+		dialBack = view.findViewById(R.id.call);
 		dialBack.setOnClickListener(this);
 
-		back = (ImageView) view.findViewById(R.id.back);
+		back = view.findViewById(R.id.back);
 		if(getResources().getBoolean(R.bool.isTablet)){
 			back.setVisibility(View.INVISIBLE);
 		} else {
 			back.setOnClickListener(this);
 		}
 
-		chat = (ImageView) view.findViewById(R.id.chat);
+		chat = view.findViewById(R.id.chat);
 		chat.setOnClickListener(this);
 		if (getResources().getBoolean(R.bool.disable_chat))
 			view.findViewById(R.id.chat).setVisibility(View.GONE);
 
-		addToContacts = (ImageView) view.findViewById(R.id.add_contact);
+		addToContacts = view.findViewById(R.id.add_contact);
 		addToContacts.setOnClickListener(this);
 
-		goToContact = (ImageView) view.findViewById(R.id.goto_contact);
+		goToContact = view.findViewById(R.id.goto_contact);
 		goToContact.setOnClickListener(this);
 
-		contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
+		contactPicture = view.findViewById(R.id.contact_picture);
 
-		contactName = (TextView) view.findViewById(R.id.contact_name);
-		contactAddress = (TextView) view.findViewById(R.id.contact_address);
+		contactName = view.findViewById(R.id.contact_name);
+		contactAddress = view.findViewById(R.id.contact_address);
 
-		callDirection = (ImageView) view.findViewById(R.id.direction);
+		callDirection = view.findViewById(R.id.direction);
 
-		time = (TextView) view.findViewById(R.id.time);
-		date = (TextView) view.findViewById(R.id.date);
+		time = view.findViewById(R.id.time);
+		date = view.findViewById(R.id.date);
 
 		displayHistory(status, callTime, callDate);
 
@@ -142,8 +142,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 		Long longDate = Long.parseLong(callDate);
 		date.setText(LinphoneUtils.timestampToHumanDate(getActivity(),longDate,getString(R.string.history_detail_date_format)));
 
-		Address lAddress = null;
-		lAddress = Factory.instance().createAddress(sipUri);
+		Address lAddress = Factory.instance().createAddress(sipUri);
 
 		if (lAddress != null) {
 			contactAddress.setText(lAddress.asStringUriOnly());

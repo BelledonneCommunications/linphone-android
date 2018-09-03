@@ -36,12 +36,8 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.PreferencesListFragment;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -51,11 +47,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 
 public class AccountPreferencesFragment extends PreferencesListFragment implements AccountCreatorListener {
 	private int n;
@@ -484,71 +476,12 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 				return true;
 			}
 		});
-		if(!isNewAccount){
+		if (!isNewAccount){
 			mainAccount.setEnabled(!mainAccount.isChecked());
 		}
 
-		//final AccountCreatorListener fragment = this;
-
 		final Preference changePassword = manage.getPreference(2);
-		/*if (mPrefs.getAccountDomain(n).compareTo(getString(R.string.default_domain)) == 0) {
-			changePassword.setEnabled(!isNewAccount);
-			changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-				public boolean onPreferenceClick(Preference preference) {
-					final AlertDialog.Builder alert = new AlertDialog.Builder(LinphoneActivity.instance());
-					LayoutInflater inflater = LinphoneActivity.instance().getLayoutInflater();
-					View layout = inflater.inflate(R.layout.new_password, null);
-					final EditText pass1 = (EditText) layout.findViewById(R.id.password1);
-					final EditText pass2 = (EditText) layout.findViewById(R.id.password2);
-					alert.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					});
-
-					alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							AccountCreator.PasswordStatus status = accountCreator.setPassword(pass1.getText().toString());
-							if (status.equals(AccountCreator.PasswordStatus.Ok)) {
-								if (pass1.getText().toString().compareTo(pass2.getText().toString()) == 0) {
-									accountCreator.setUsername(mPrefs.getAccountUsername(n));
-									accountCreator.setDomain(mPrefs.getAccountDomain(n));
-									accountCreator.setHa1(mPrefs.getAccountHa1(n));
-									accountCreator.setListener(fragment);
-									accountCreator.setPassword(pass1.getText().toString());
-									AccountCreator.Status req_status = accountCreator.updateAccount();
-									if (!req_status.equals(AccountCreator.Status.RequestOk)) {
-										LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(req_status)
-												, LinphoneActivity.instance());
-									} else {
-										progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
-										Drawable d = new ColorDrawable(ContextCompat.getColor(LinphoneActivity.instance(), R.color.colorE));
-										d.setAlpha(200);
-										progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-										progress.getWindow().setBackgroundDrawable(d);
-										progress.setContentView(R.layout.progress_dialog);
-										progress.show();
-									}
-								} else {
-									LinphoneUtils.displayErrorAlert(getString(R.string.wizard_passwords_unmatched)
-											, LinphoneActivity.instance());
-								}
-								return;
-							}
-							LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForPasswordStatus(status), LinphoneActivity.instance());
-						}
-					});*/ // TODO FIXME
-
-					/*alert.setView(layout);
-					alert.show();
-					return true;
-				}
-			});
-		} else {*/
-			changePassword.setEnabled(false);
-		//}
+		changePassword.setEnabled(false);
 
 		final Preference delete = manage.getPreference(3);
     	delete.setEnabled(!isNewAccount);
@@ -624,6 +557,19 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 	}
 
 	@Override
+	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+		if (progress != null) progress.dismiss();
+		if (status.equals(AccountCreator.Status.RequestOk)) {
+			mPrefs.setAccountPassword(n, accountCreator.getPassword());
+			PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
+			((EditTextPreference) account.getPreference(2)).setText(mPrefs.getAccountPassword(n));
+			LinphoneUtils.displayErrorAlert(getString(R.string.pref_password_changed), LinphoneActivity.instance());
+		} else {
+			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
+		}
+	}
+
+	@Override
 	public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
 	}
 
@@ -664,18 +610,5 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
 
 	@Override
 	public void onIsAliasUsed(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-	}
-
-	@Override
-	public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-		if (progress != null) progress.dismiss();
-		if (status.equals(AccountCreator.Status.RequestOk)) {
-			mPrefs.setAccountPassword(n, accountCreator.getPassword());
-			PreferenceCategory account = (PreferenceCategory) getPreferenceScreen().findPreference(getString(R.string.pref_sipaccount_key));
-			((EditTextPreference) account.getPreference(2)).setText(mPrefs.getAccountPassword(n));
-			LinphoneUtils.displayErrorAlert(getString(R.string.pref_password_changed), LinphoneActivity.instance());
-		} else {
-			LinphoneUtils.displayErrorAlert(LinphoneUtils.errorForStatus(status), LinphoneActivity.instance());
-		}
 	}
 }

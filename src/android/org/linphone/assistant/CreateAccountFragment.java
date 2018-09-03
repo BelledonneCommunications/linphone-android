@@ -22,7 +22,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.linphone.activities.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
@@ -38,7 +37,6 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -85,41 +83,41 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 		accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
 		accountCreator.setListener(this);
 
-		instruction = (TextView) view.findViewById(R.id.message_create_account);
+		instruction = view.findViewById(R.id.message_create_account);
 
-		createAccount = (Button) view.findViewById(R.id.assistant_create);
+		createAccount = view.findViewById(R.id.assistant_create);
 
-		phoneNumberLayout = (LinearLayout) view.findViewById(R.id.phone_number_layout);
-		usernameLayout = (LinearLayout) view.findViewById(R.id.username_layout);
-		emailLayout = (LinearLayout) view.findViewById(R.id.email_layout);
-		passwordLayout = (LinearLayout) view.findViewById(R.id.password_layout);
-		passwordConfirmLayout = (LinearLayout) view.findViewById(R.id.password_confirm_layout);
+		phoneNumberLayout = view.findViewById(R.id.phone_number_layout);
+		usernameLayout = view.findViewById(R.id.username_layout);
+		emailLayout = view.findViewById(R.id.email_layout);
+		passwordLayout = view.findViewById(R.id.password_layout);
+		passwordConfirmLayout = view.findViewById(R.id.password_confirm_layout);
 
-		useUsername = (CheckBox) view.findViewById(R.id.use_username);
-		useEmail = (CheckBox) view.findViewById(R.id.use_email);
+		useUsername = view.findViewById(R.id.use_username);
+		useEmail = view.findViewById(R.id.use_email);
 
-		usernameEdit = (EditText) view.findViewById(R.id.username);
+		usernameEdit = view.findViewById(R.id.username);
 
-		phoneNumberError = (TextView) view.findViewById(R.id.phone_number_error);
-		phoneNumberEdit = (EditText) view.findViewById(R.id.phone_number);
-		sipUri = (TextView) view.findViewById(R.id.sip_uri);
+		phoneNumberError = view.findViewById(R.id.phone_number_error);
+		phoneNumberEdit = view.findViewById(R.id.phone_number);
+		sipUri = view.findViewById(R.id.sip_uri);
 
-		phoneNumberInfo = (ImageView) view.findViewById(R.id.info_phone_number);
+		phoneNumberInfo = view.findViewById(R.id.info_phone_number);
 
-		selectCountry = (Button) view.findViewById(R.id.select_country);
-		dialCode = (EditText) view.findViewById(R.id.dial_code);
-		assisstantTitle = (TextView) view.findViewById(R.id.assistant_title);
+		selectCountry = view.findViewById(R.id.select_country);
+		dialCode = view.findViewById(R.id.dial_code);
+		assisstantTitle = view.findViewById(R.id.assistant_title);
 
-		passwordError = (TextView) view.findViewById(R.id.password_error);
-		passwordEdit = (EditText) view.findViewById(R.id.password);
+		passwordError = view.findViewById(R.id.password_error);
+		passwordEdit = view.findViewById(R.id.password);
 
-		passwordConfirmError = (TextView) view.findViewById(R.id.confirm_password_error);
-		passwordConfirmEdit = (EditText) view.findViewById(R.id.confirm_password);
+		passwordConfirmError = view.findViewById(R.id.confirm_password_error);
+		passwordConfirmEdit = view.findViewById(R.id.confirm_password);
 
-		emailError = (TextView) view.findViewById(R.id.email_error);
-		emailEdit = (EditText) view.findViewById(R.id.email);
+		emailError = view.findViewById(R.id.email_error);
+		emailEdit = view.findViewById(R.id.email);
 
-		skip = (TextView) view.findViewById(R.id.assistant_skip);
+		skip = view.findViewById(R.id.assistant_skip);
 
 		//Phone number
 		if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
@@ -129,7 +127,6 @@ public class CreateAccountFragment extends Fragment implements CompoundButton.On
 					(TelephonyManager) getActivity().getApplicationContext().getSystemService(
 							Context.TELEPHONY_SERVICE);
 			String countryIso = tm.getNetworkCountryIso();
-			ProxyConfig proxyConfig = LinphoneManager.getLc().createProxyConfig();
 			countryCode = org.linphone.core.Utils.getCccFromIso(countryIso.toUpperCase());
 
 			phoneNumberLayout.setVisibility(View.VISIBLE);

@@ -18,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
@@ -43,9 +42,9 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.assistant_remote_provisioning, container, false);
 
-		remoteProvisioningUrl = (EditText) view.findViewById(R.id.assistant_remote_provisioning_url);
+		remoteProvisioningUrl = view.findViewById(R.id.assistant_remote_provisioning_url);
 		remoteProvisioningUrl.addTextChangedListener(this);
-		apply = (Button) view.findViewById(R.id.assistant_apply);
+		apply = view.findViewById(R.id.assistant_apply);
 		apply.setEnabled(false);
 		apply.setOnClickListener(this);
 
