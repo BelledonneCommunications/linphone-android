@@ -117,7 +117,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
 		}
 
-		this.mContext = getActivity().getApplicationContext();
+		mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chat, container, false);
 
 
@@ -224,7 +224,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					addImageToPendingList(fileSharedUri);
 				} else {
 					if (fileSharedUri.startsWith("content://") || fileSharedUri.startsWith("file://")) {
-						fileSharedUri = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
+						fileSharedUri = LinphoneUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
 					} else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
 						fileSharedUri = LinphoneUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
 					}
@@ -309,7 +309,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 					addImageToPendingList(fileToUploadPath);
 				} else {
 					if (fileToUploadPath.startsWith("content://") || fileToUploadPath.startsWith("file://")) {
-						fileToUploadPath = LinphoneUtils.getFilePath(this.getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
+						fileToUploadPath = LinphoneUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
 					} else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
 						fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
 					}

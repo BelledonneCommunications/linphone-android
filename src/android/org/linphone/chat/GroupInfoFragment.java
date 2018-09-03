@@ -89,7 +89,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 		if (getArguments() == null || getArguments().isEmpty()) {
 			return null;
 		}
-		this.mContext = getActivity().getApplicationContext();
+		mContext = getActivity().getApplicationContext();
 
 		mParticipants = (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 

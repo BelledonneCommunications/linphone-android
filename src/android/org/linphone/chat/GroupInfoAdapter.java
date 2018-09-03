@@ -66,7 +66,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
     private ChatRoom mChatRoom;
-    public ImageView avatar;
+    private ImageView mAavatar;
 
     public GroupInfoAdapter(List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mItems = items;
@@ -84,11 +84,11 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final ContactAddress ca = (ContactAddress)getItem(position);
         LinphoneContact c = ca.getContact();
-        this.avatar=holder.avatar;
+        mAavatar = holder.avatar;
         holder.name.setText((c.getFullName() != null) ? c.getFullName() :
                 (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
         if (c.hasPhoto()) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
+            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), mAavatar, c.getThumbnailUri());
         }
 
         holder.delete.setOnClickListener(new View.OnClickListener() {

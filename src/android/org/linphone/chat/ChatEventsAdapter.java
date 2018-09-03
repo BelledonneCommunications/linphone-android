@@ -130,8 +130,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     @Override
     public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-				.inflate(this.mItemResource, parent, false);
-		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(this.mContext,v, mClickListener);
+				.inflate(mItemResource, parent, false);
+		ChatBubbleViewHolder VH = new ChatBubbleViewHolder(mContext,v, mClickListener);
 
 		//Allows onLongClick ContextMenu on bubbles
 		mFragment.registerForContextMenu(v);
@@ -141,7 +141,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
-		final EventLog event = this.mHistory.get(position);
+		final EventLog event = mHistory.get(position);
 		holder.eventLayout.setVisibility(View.GONE);
 		holder.bubbleLayout.setVisibility(View.GONE);
 		holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
@@ -402,7 +402,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     @Override
     public int getItemCount() {
-		return this.mHistory.size();
+		return mHistory.size();
     }
 
     public void addToHistory(EventLog log) {
@@ -430,7 +430,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     public int getCount() {
-        return this.mHistory.size();
+        return mHistory.size();
     }
 
     public Object getItem(int i) {

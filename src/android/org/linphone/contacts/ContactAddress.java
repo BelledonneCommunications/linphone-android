@@ -118,10 +118,10 @@ public class ContactAddress implements Serializable {
 	}
 
 	private void init(LinphoneContact c, String a, String pn, boolean isLC) {
-		this.contact = c;
-		this.address = a;
-		this.phoneNumber = pn;
-		this.isLinphoneContact = isLC;
+		contact = c;
+		address = a;
+		phoneNumber = pn;
+		isLinphoneContact = isLC;
 	}
 
 	public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {

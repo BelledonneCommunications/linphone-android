@@ -55,7 +55,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         public ImageView contactPicture;
         public TextView organization;
         //public ImageView friendStatus;
-        private ClickListener listener;
+        private ClickListener mListener;
 
         private ViewHolder(View view, ClickListener listener) {
             super(view);
@@ -68,21 +68,21 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             contactPicture = (ImageView) view.findViewById(R.id.contact_picture);
             organization = (TextView) view.findViewById(R.id.contactOrganization);
             //friendStatus = (ImageView) view.findViewById(R.id.friendStatus);
-            this.listener= listener;
+            mListener = listener;
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (listener != null) {
-                listener.onItemClicked(getAdapterPosition());
+            if (mListener != null) {
+                mListener.onItemClicked(getAdapterPosition());
             }
         }
 
         public boolean onLongClick(View v) {
-            if (listener != null) {
-                return listener.onItemLongClicked(getAdapterPosition());
+            if (mListener != null) {
+                return mListener.onItemLongClicked(getAdapterPosition());
             }
             return false;
         }
@@ -145,7 +145,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             holder.organization.setVisibility(View.GONE);
         }
 
-        holder.delete.setVisibility(this.isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
+        holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
         holder.delete.setChecked(isSelected(position));
 
     }

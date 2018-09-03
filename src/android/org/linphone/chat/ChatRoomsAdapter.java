@@ -21,6 +21,7 @@ package org.linphone.chat;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,6 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
-import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
@@ -60,43 +60,43 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		public ImageView contactPicture;
 		public Context mContext;
 		public ChatRoom mRoom;
-		public ClickListener listener;
+		private ClickListener mListener;
 
 		public ChatRoomViewHolder(Context context,View itemView, ClickListener listener) {
 			super(itemView);
-			this.mContext= context;
-			this.lastMessageSenderView = itemView.findViewById(R.id.lastMessageSender);
-			this.lastMessageView = itemView.findViewById(R.id.lastMessage);
-			this.date = itemView.findViewById(R.id.date);
-			this.displayName = itemView.findViewById(R.id.sipUri);
-			this.unreadMessages = itemView.findViewById(R.id.unreadMessages);
-			this.delete = itemView.findViewById(R.id.delete_chatroom);
-			this.contactPicture = itemView.findViewById(R.id.contact_picture);
-			this.listener = listener;
+			mContext = context;
+			lastMessageSenderView = itemView.findViewById(R.id.lastMessageSender);
+			lastMessageView = itemView.findViewById(R.id.lastMessage);
+			date = itemView.findViewById(R.id.date);
+			displayName = itemView.findViewById(R.id.sipUri);
+			unreadMessages = itemView.findViewById(R.id.unreadMessages);
+			delete = itemView.findViewById(R.id.delete_chatroom);
+			contactPicture = itemView.findViewById(R.id.contact_picture);
+			mListener = listener;
 
 			itemView.setOnClickListener(this);
 			itemView.setOnLongClickListener(this);
 		}
 
 		public void bindChatRoom(ChatRoom room) {
-			this.mRoom = room;
-			this.lastMessageSenderView.setText(getSender(mRoom));
-			this.lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent(): "");
-			this.date.setText(mRoom.getLastMessageInHistory()!=null ? LinphoneUtils.timestampToHumanDate(this.mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
-			this.displayName.setText(getContact(mRoom));
-			this.unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
+			mRoom = room;
+			lastMessageSenderView.setText(getSender(mRoom));
+			lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent(): "");
+			date.setText(mRoom.getLastMessageInHistory() != null ? LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
+			displayName.setText(getContact(mRoom));
+			unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
 			getAvatar(mRoom);
 		}
 
 		public void onClick(View v) {
-			if (listener != null) {
-				listener.onItemClicked(getAdapterPosition());
+			if (mListener != null) {
+				mListener.onItemClicked(getAdapterPosition());
 			}
 		}
 
 		public boolean onLongClick(View v) {
-			if (listener != null) {
-				return listener.onItemLongClicked(getAdapterPosition());
+			if (mListener != null) {
+				return mListener.onItemLongClicked(getAdapterPosition());
 			}
 			return false;
 		}
@@ -107,7 +107,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 				if (contact != null) {
 					return (contact.getFullName() + mContext.getString(R.string.separator));
 				}
-				return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress())  + ":");
+				return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress())  + mContext.getString(R.string.separator));
 			}
 			return null;
 		}
@@ -138,12 +138,14 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 		}
 
 		public void getAvatar(ChatRoom mRoom) {
-			mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
 			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
 			if (contact != null) {
-				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), this.contactPicture, ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress()).getThumbnailUri());
+				LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), contactPicture, ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress()).getThumbnailUri());
 			} else {
-				this.contactPicture.setImageBitmap(mDefaultBitmap);
+				if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()))
+					contactPicture.setImageBitmap(mDefaultBitmap);
+				else
+					contactPicture.setImageBitmap(mDefaultGroupBitmap);
 			}
 		}
 
@@ -156,34 +158,33 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 	private Context mContext;
 	public List<ChatRoom> mRooms;
 	private static Bitmap mDefaultBitmap;
-	//private Bitmap mDefaultGroupBitmap;
-	private ChatRoomListenerStub mListener;
-	private int itemResource;
-	private ChatRoomViewHolder.ClickListener clickListener;
+	private static Bitmap mDefaultGroupBitmap;
+	private int mItemResource;
+	private ChatRoomViewHolder.ClickListener mClickListener;
 
-	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> mRooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper helper) {
+	public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> rooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper helper) {
 		super(helper);
-		this.clickListener = clickListener;
-		this.mRooms = mRooms;
-		this.mContext = context;
-		this.itemResource = itemResource;
+		mClickListener = clickListener;
+		mRooms = rooms;
+		mContext = context;
+		mItemResource = itemResource;
 		mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
-		//mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
+		mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
 	}
 
 	@Override
 	public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext())
-				.inflate(this.itemResource, parent, false);
-		return new ChatRoomViewHolder(this.mContext, view, clickListener);
+				.inflate(mItemResource, parent, false);
+		return new ChatRoomViewHolder(mContext, view, mClickListener);
 	}
 
 	@Override
 	public void onBindViewHolder(ChatRoomViewHolder holder, int position) {
-		ChatRoom room = this.mRooms.get(position);
-		holder.delete.setVisibility(this.isEditionEnabled() == true ? View.VISIBLE : View.INVISIBLE);
-		holder.unreadMessages.setVisibility(this.isEditionEnabled() == false ? View.VISIBLE : View.INVISIBLE);
-		holder.delete.setChecked(isSelected(position) ? true : false);
+		ChatRoom room = mRooms.get(position);
+		holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
+		holder.unreadMessages.setVisibility(isEditionEnabled() ? View.INVISIBLE : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
+		holder.delete.setChecked(isSelected(position));
 		holder.bindChatRoom(room);
 	}
 
@@ -201,9 +202,6 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 	}
 
 	public void clear() {
-		for (ChatRoom room : mRooms) {
-			room.removeListener(mListener);
-		}
 		mRooms.clear();
 		notifyDataSetChanged();
 	}
@@ -214,7 +212,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomsAdapter.ChatRoo
 
 	@Override
 	public int getItemCount() {
-		return this.mRooms.size();
+		return mRooms.size();
 	}
 
 	@Override

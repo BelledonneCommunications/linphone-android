@@ -71,7 +71,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 		super.onCreate(savedInstanceState);
 		mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
 
-		this.mContext = getActivity().getApplicationContext();
+		mContext = getActivity().getApplicationContext();
 		View view = inflater.inflate(R.layout.chatlist, container, false);
 
 		mChatRoomsList = view.findViewById(R.id.chatList);

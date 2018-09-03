@@ -51,7 +51,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 		public ImageView isSelect;
 		public ImageView avatar;
 
-		private ClickListener listener;
+		private ClickListener mListener;
 
 		public ViewHolder(View view, ClickListener listener) {
 			super(view);
@@ -60,28 +60,27 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 			linphoneContact = view.findViewById(R.id.contact_linphone);
 			isSelect = view.findViewById(R.id.contact_is_select);
 			avatar = view.findViewById(R.id.contact_picture);
-			this.listener=listener;
+			mListener = listener;
 			view.setOnClickListener(this);
 		}
 
 		@Override
 		public void onClick(View view) {
-			if (listener != null) {
-				listener.onItemClicked(getAdapterPosition());
+			if (mListener != null) {
+				mListener.onItemClicked(getAdapterPosition());
 			}
 
 		}
 		public interface ClickListener {
 			void onItemClicked(int position);
 		}
-
 	}
 
 	private List<ContactAddress> contacts;
 	private List<ContactAddress> contactsSelected;
 	private ProgressBar progressBar;
 	private boolean mOnlySipContact = false;
-	private ViewHolder.ClickListener listener;
+	private ViewHolder.ClickListener mListener;
 
 	public List<ContactAddress> getContacts() {
 		return contacts;
@@ -92,11 +91,11 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 	}
 
 	public void setListener(ViewHolder.ClickListener listener) {
-		this.listener = listener;
+		mListener = listener;
 	}
 
 	public SearchContactsListAdapter(List<ContactAddress> contactsList, ProgressBar pB, ViewHolder.ClickListener clickListener) {
-		this.listener=clickListener;
+		mListener = clickListener;
 		progressBar = pB;
 		setContactsSelectedList(null);
 		setContactsList(contactsList);
@@ -106,8 +105,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_contact_cell, parent, false);
-		return new ViewHolder(v, listener);
-
+		return new ViewHolder(v, mListener);
 	}
 
 	@Override
@@ -285,7 +283,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 
 		contacts = result;
 		resultContactsSearch.setAdapter(this);
-		this.notifyDataSetChanged();
+		notifyDataSetChanged();
 	}
 }
 
