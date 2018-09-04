@@ -50,6 +50,7 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.support.annotation.RequiresApi;
+import android.telecom.ConnectionService;
 import android.telecom.PhoneAccount;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -62,6 +63,7 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallManager;
 import org.linphone.call.LinPhoneAccount;
+import org.linphone.call.LinphoneConnectionService;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreatorListener;
@@ -122,6 +124,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -1797,4 +1800,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	public void setLinPhoneAccount (){
 		mPhoneAccount = new LinPhoneAccount(getContext());
 	}
+
+
+
 }

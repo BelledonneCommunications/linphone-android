@@ -167,10 +167,29 @@ public class TelecomManagerHelper {
             return;
         }
         sendToCS(LinphoneConnectionService.EXT_TO_CS_END_CALL);
-        unRegisterCallScreenReceiver();
+        if (LinphoneManager.getLc().getCalls().length == 0) {
+            unRegisterCallScreenReceiver();
+        }
         LinphoneManager.getLc().terminateCall(mCall);
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void stopCallById (String callId){
+        mCall = getCallById(callId);
+        if (mCall == null) {
+            //The call no longer exists.
+            Log.d("Couldn't find call");
+            return;
+        }
+        sendToCS(LinphoneConnectionService.EXT_TO_CS_END_CALL);
+        if (LinphoneManager.getLc().getCalls().length == 0) {
+            unRegisterCallScreenReceiver();
+        }
+        LinphoneManager.getLc().terminateCall(mCall);
+
+    }
+
 
 
     private void setListenerIncall (Call call){
@@ -327,7 +346,7 @@ public class TelecomManagerHelper {
                     stopCall();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_DISCONNECT:
-                    stopCall();
+                    stopCallById(callId);
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_ABORT:
                     stopCall();
@@ -357,26 +376,26 @@ public class TelecomManagerHelper {
                     Call temp = getCallById(callId);
                     LinphoneManager.getLc().removeFromConference(temp);
 
-                    Call[] calls = LinphoneManager.getLc().getCalls();
+//                    Call[] calls = LinphoneManager.getLc().getCalls();
 
 
 ////                    LinphoneManager.getLc().pauseAllCalls();
 //
 //                    pauseOrResumeCall(temp, RESUME);
 //                    temp1 = LinphoneManager.getLc().getConferenceSize();
-                    if (LinphoneManager.getLc().getConferenceSize() == 1) {
-                        for (Call x:calls){
-                            if(!(x.getCallLog().getCallId().equals(callId))){
-                                Call.State etat = x.getState();
-                                String test = x.getCallLog().getCallId();
-                                Conference tempconf = x.getConference();
-                                pauseOrResumeCall(x, PAUSE);
-                                pauseOrResumeConference(PAUSE);
-                            }
-                        }
-                        mConference = null;
-                    }
-                    pauseOrResumeCall(temp, RESUME);
+//                    if (LinphoneManager.getLc().getConferenceSize() == 1) {
+//                        for (Call x:calls){
+//                            if(!(x.getCallLog().getCallId().equals(callId))){
+//                                Call.State etat = x.getState();
+//                                String test = x.getCallLog().getCallId();
+//                                Conference tempconf = x.getConference();
+//                                pauseOrResumeCall(x, PAUSE);
+//                                pauseOrResumeConference(PAUSE);
+//                            }
+//                        }
+//                        mConference = null;
+//                    }
+                    pauseOrResumeCall(temp, PAUSE);
 
                     break;
             }
@@ -463,7 +482,8 @@ public class TelecomManagerHelper {
 //            pause.setImageResource(R.drawable.pause_big_over_selected);
         } else if (call != null) {
             Call.State test = call.getState();
-            if ((call.getState() == Call.State.Paused || call.getState() == Call.State.Pausing || call.getState() == Call.State.Updating)&& resume) {
+            if ((call.getState() == Call.State.Paused)&& resume) {
+//            if ((call.getState() == Call.State.Paused || call.getState() == Call.State.Pausing || call.getState() == Call.State.Updating)&& resume) {
                 lc.resumeCall(call);
 //                if (isVideoCallPaused) {
 //                    isVideoCallPaused = false;
