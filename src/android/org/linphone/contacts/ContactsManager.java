@@ -92,6 +92,13 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             magicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
         }
+
+        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (lc != null) {
+            for (FriendList list : lc.getFriendsLists()) {
+                list.setListener(this);
+            }
+        }
     }
 
     public void destroy() {
