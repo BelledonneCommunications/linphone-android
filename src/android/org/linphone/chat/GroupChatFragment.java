@@ -723,6 +723,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     @Override
     public void onChatMessageSent(ChatRoom cr, EventLog event) {
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
@@ -809,6 +810,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         }
 
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
@@ -876,16 +878,19 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         displayChatRoomHeader();
 
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
     public void onConferenceLeft(ChatRoom cr, EventLog event) {
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
     public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
@@ -897,6 +902,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     public void onParticipantRemoved(ChatRoom cr, EventLog event) {
         getContactsForParticipants();
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
@@ -925,12 +931,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     public void onParticipantAdded(ChatRoom cr, EventLog event) {
         getContactsForParticipants();
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override
     public void onSubjectChanged(ChatRoom cr, EventLog event) {
         mRoomLabel.setText(event.getSubject());
         mEventsAdapter.addToHistory(event);
+        scrollToBottom();
     }
 
     @Override

@@ -407,6 +407,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     public void addToHistory(EventLog log) {
         mHistory.add(log);
         notifyDataSetChanged();
+
     }
 
     public void setContacts(ArrayList<LinphoneContact> participants) {
