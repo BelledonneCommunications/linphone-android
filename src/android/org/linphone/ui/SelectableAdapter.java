@@ -99,7 +99,6 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
             mSelectedItems.put(i, true);
             notifyDataSetChanged();
         }
-
         mListHelper.updateSelectionButtons(false, true);
     }
 
@@ -108,7 +107,6 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder> exte
         mListHelper.updateSelectionButtons(true, false);
         notifyDataSetChanged();
     }
-
 
     public abstract Object getItem(int position);
 }

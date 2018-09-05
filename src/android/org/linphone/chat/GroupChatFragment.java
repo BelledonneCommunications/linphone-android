@@ -119,6 +119,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         }
 
         mContext = getActivity().getApplicationContext();
+        mInflater = inflater;
         View view = inflater.inflate(R.layout.chat, container, false);
 
 
