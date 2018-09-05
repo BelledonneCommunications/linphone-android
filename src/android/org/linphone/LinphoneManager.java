@@ -193,6 +193,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mCallLogDatabaseFile = basePath + "/linphone-log-history.db";
         mFriendsDatabaseFile = basePath + "/linphone-friends.db";
         mRingSoundFile = basePath + "/ringtone.mkv";
+        mUserCertsPath = basePath + "/user-certs";
 
         mPrefs = LinphonePreferences.instance();
         mAudioManager = ((AudioManager) c.getSystemService(Context.AUDIO_SERVICE));
@@ -202,6 +203,13 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mR = c.getResources();
+        
+        File f=new File(mUserCertsPath);
+        if(!f.exists()){
+            if(!f.mkdir()){
+                       Log.e(mUserCertsPath+" can't be created."); 
+            }
+        }
     }
 
     private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -217,6 +225,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final String mRingSoundFile;
     private final String mCallLogDatabaseFile;
     private final String mFriendsDatabaseFile;
+    private final String mUserCertsPath;
     private Timer mTimer;
     private Map<String, Integer> mUnreadChatsPerRoom;
 
@@ -702,10 +711,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             Log.e(e, "cannot get version name");
         }
 
-
         mLc.setChatDatabasePath(mChatDatabaseFile);
         mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);
         mLc.setFriendsDatabasePath(mFriendsDatabaseFile);
+        mLc.setUserCertificatesPath(mUserCertsPath);
         //mLc.setCallErrorTone(Reason.NotFound, mErrorToneFile);
         enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 
