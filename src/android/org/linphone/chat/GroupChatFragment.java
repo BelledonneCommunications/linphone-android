@@ -580,11 +580,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	private void displayChatRoomHistory() {
 		if (mChatRoom == null) return;
-		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryMessageEvents(0), mParticipants, true);
-		} else {
-			mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryEvents(0), mParticipants, false);
-		}
+		mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, mInflater, mChatRoom.getHistoryEvents(0), mParticipants, mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()));
 		mSelectionHelper.setAdapter(mEventsAdapter);
 		mChatEventsList.setAdapter(mEventsAdapter);
 	}
@@ -946,7 +942,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	@Override
-	public void onSecurityAlert(ChatRoom cr, EventLog event) {
+	public void onSecurityEvent(ChatRoom cr, EventLog event) {
 		mEventsAdapter.addToHistory(event);
 	}
 

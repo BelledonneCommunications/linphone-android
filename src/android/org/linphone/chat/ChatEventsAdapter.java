@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -399,61 +400,83 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    holder.bubbleLayout.setLayoutParams(layoutParams);
 	    } else if (!isOneToOne) { // Event is not chat message
 		    holder.eventLayout.setVisibility(View.VISIBLE);
-
-		    Address address = event.getParticipantAddress();
-		    String displayName = null;
-		    if (address != null) {
-			    LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
-			    if (contact != null) {
-				    displayName = contact.getFullName();
-			    } else {
-				    displayName = LinphoneUtils.getAddressDisplayName(address);
-			    }
-		    }
-
-			switch (event.getType()) {
-				case ConferenceCreated:
-				    holder.eventMessage.setText(mContext.getString(R.string.conference_created));
-			    	break;
-			    case ConferenceTerminated:
-				    holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
-			    	break;
-			    case ConferenceParticipantAdded:
-				    holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
-			    	break;
-			    case ConferenceParticipantRemoved:
-				    holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
-			    	break;
-			    case ConferenceSubjectChanged:
-				    holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
-			    	break;
-			    case ConferenceParticipantSetAdmin:
-				    holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
-			    	break;
-			    case ConferenceParticipantUnsetAdmin:
-				    holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
-			    	break;
-			    case ConferenceParticipantDeviceAdded:
-				    holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
-				    break;
-			    case ConferenceParticipantDeviceRemoved:
-				    holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
-				    break;
-			    case ConferenceSecurityAlert:
-					String message;
-					if (event.getSecurityAlertFaultyDevice() != null && event.getSecurityAlertFaultyDevice().getUsername() != null ) {
-						message = mContext.getString(R.string.security_alert_address).replace("%s", event.getSecurityAlertFaultyDevice().asStringUriOnly());
-					} else {
-						message = mContext.getString(R.string.security_alert);
-					}
-					holder.eventMessage.setText(message);
-					break;
-			    case None:
-			    default:
-			    	//TODO
-			    	break;
-		    }
 	    }
+
+		Address address = event.getParticipantAddress();
+		String displayName = null;
+		if (address != null) {
+			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+			if (contact != null) {
+			    displayName = contact.getFullName();
+			} else {
+			    displayName = LinphoneUtils.getAddressDisplayName(address);
+			}
+		}
+
+		holder.eventMessage.setTextColor(Color.BLACK);
+		switch (event.getType()) {
+			case ConferenceCreated:
+				holder.eventMessage.setText(mContext.getString(R.string.conference_created));
+				break;
+			case ConferenceTerminated:
+				holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
+				break;
+			case ConferenceParticipantAdded:
+				holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
+				break;
+			case ConferenceParticipantRemoved:
+				holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
+				break;
+			case ConferenceSubjectChanged:
+				holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
+				break;
+			case ConferenceParticipantSetAdmin:
+				holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
+				break;
+			case ConferenceParticipantUnsetAdmin:
+				holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
+				break;
+			case ConferenceParticipantDeviceAdded:
+				holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
+				break;
+			case ConferenceParticipantDeviceRemoved:
+				holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
+				break;
+			case ConferenceSecurityEvent:
+				String message;
+				holder.eventLayout.setVisibility(View.VISIBLE);
+				switch (event.getSecurityEventType()) {
+					case SecurityLevelDowngraded:
+						message = mContext.getString(R.string.security_level_degraded);
+						break;
+					case MultideviceParticipantDetected:
+						holder.eventMessage.setTextColor(Color.RED);
+						if (event.getSecurityEventFaultyDevice() != null) {
+							message = mContext.getString(R.string.security_alert_multidevice_from).replace("%s", event.getSecurityEventFaultyDevice().getUsername());
+						} else {
+							message = mContext.getString(R.string.security_alert_multidevice);
+						}
+						break;
+					case ManInTheMiddleDetected:
+					case LimeIdentityKeyChanged:
+						holder.eventMessage.setTextColor(Color.RED);
+						if (event.getSecurityEventFaultyDevice() != null) {
+							message = mContext.getString(R.string.security_alert_from).replace("%s", event.getSecurityEventFaultyDevice().getUsername());
+						} else {
+							message = mContext.getString(R.string.security_alert);
+						}
+						break;
+					default:
+						message = "";
+						holder.eventLayout.setVisibility(View.GONE);
+				}
+				holder.eventMessage.setText(message);
+				break;
+			case None:
+			default:
+				//TODO
+				break;
+		}
 
         return view;
     }

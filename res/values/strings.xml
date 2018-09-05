@@ -214,8 +214,12 @@
     <string name="participant_removed">%s has left</string>
     <string name="device_added">new device for %s</string>
     <string name="device_removed">device for %s removed</string>
-    <string name="security_alert_address">Security of chatroom have been compromised by %s</string>
-    <string name="security_alert">Security of chatroom have been compromised</string>
+    <string name="security_level_degraded">Degradation of security level</string>
+    <string name="security_level_degraded_from">Degradation of security level from %s</string>
+    <string name="security_alert_multidevice">Multidevice detected</string>
+    <string name="security_alert_multidevice_from">Multidevice detected from %s</string>
+    <string name="security_alert">Security alert</string>
+    <string name="security_alert_from">Security alert from %s</string>
     <string name="subject_changed">new subject: %s</string>
     <string name="admin_set">%s is admin</string>
     <string name="admin_unset">%s is no longer admin</string>

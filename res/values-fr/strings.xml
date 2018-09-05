@@ -356,6 +356,12 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="lime_encryption_entry_disabled">Désactivé</string>
   <string name="lime_encryption_entry_mandatory">Obligatoire</string>
   <string name="lime_encryption_entry_preferred">Préferré</string>
+  <string name="security_level_degraded">Dégradation du niveau de sécurité</string>
+  <string name="security_level_degraded_from">Dégradation du niveau de sécurité par %s</string>
+  <string name="security_alert_multidevice">Multiples instances détectées</string>
+  <string name="security_alert_multidevice_from">Multiples instances de %s</string>
+  <string name="security_alert">Alerte de sécurité</string>
+  <string name="security_alert_from">Alerte de sécurité par %s</string>
   <!--Network settings-->
   <string name="pref_network_title">Réseau</string>
   <string name="pref_wifi_only">Utiliser WiFi uniquement</string>

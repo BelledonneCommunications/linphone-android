@@ -502,7 +502,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 	}
 
 	@Override
-	public void onSecurityAlert(ChatRoom cr, EventLog eventLog) {
+	public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
 
 	}
 
