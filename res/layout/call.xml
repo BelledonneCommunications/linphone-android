@@ -82,9 +82,10 @@
 						android:id="@+id/avatar_layout"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_below="@id/action_menu"
+						android:layout_above="@+id/active_call_info"
 						android:layout_margin="5dp"
 						android:gravity="center_horizontal"
+						android:paddingBottom="10dp"
 						android:paddingTop="10dp">
 
 						<ImageView
@@ -154,8 +155,8 @@
 						android:id="@+id/active_call_info"
 						android:layout_width="match_parent"
 						android:layout_height="80dp"
+						android:layout_above="@+id/help_space"
 						android:layout_alignParentBottom="true"
-						android:layout_below="@+id/avatar_layout"
 						android:layout_marginTop="5dp"
 						android:alpha="0.8"
 						android:background="@color/colorH"
@@ -178,6 +179,7 @@
 							android:layout_gravity="center"
 							/>
 					</LinearLayout>
+
 				</RelativeLayout>
 
 				<LinearLayout

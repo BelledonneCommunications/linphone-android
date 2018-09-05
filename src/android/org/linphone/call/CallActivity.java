@@ -893,7 +893,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void displayCallPaused(boolean display){
 		if(display){
 			mCallPaused.setVisibility(View.VISIBLE);
-			avatar_layout.setVisibility(View.GONE);
+			avatar_layout.setVisibility(View.INVISIBLE);
 			action_bar.setVisibility(View.GONE);
 		} else {
 			mCallPaused.setVisibility(View.GONE);
@@ -1007,7 +1007,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			mControlsLayout.setVisibility(View.VISIBLE);
 			mActiveCallHeader.setVisibility(View.VISIBLE);
 			callInfo.setVisibility(View.VISIBLE);
-			avatar_layout.setVisibility(View.GONE);
+			avatar_layout.setVisibility(View.INVISIBLE);
 			callsList.setVisibility(View.VISIBLE);
 			if (cameraNumber > 1) {
 				switchCamera.setVisibility(View.VISIBLE);
