@@ -296,11 +296,20 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
             String externalBodyUrl = message.getExternalBodyUrl();
             Content fileTransferContent = message.getFileTransferInformation();
 
-            if (message.getAppdata() != null) { // Something to display
+            boolean hasFile = message.getAppdata() != null;
+            boolean hasFileTransfer = externalBodyUrl != null;
+            for (Content c : message.getContents()) {
+                if (c.isFile()) {
+                    hasFile = true;
+                } else if (c.isFileTransfer()) {
+                    hasFileTransfer = true;
+                }
+            }
+            if (hasFile) { // Something to display
                 displayAttachedFile(message, holder);
             }
 
-            if (externalBodyUrl != null) { // Incoming file transfer not yet downloaded
+            if (hasFileTransfer) { // Incoming file transfer not yet downloaded
                 holder.fileName.setVisibility(View.VISIBLE);
                 holder.fileName.setText(fileTransferContent.getName());
 
@@ -493,6 +502,14 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         holder.fileName.setVisibility(View.VISIBLE);
 
         String appData = message.getAppdata();
+        if (appData == null) {
+            for (Content c : message.getContents()) {
+                if (c.isFile()) {
+                    appData = c.getFilePath();
+                }
+            }
+        }
+
         if (appData != null) {
             holder.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
             if (LinphoneUtils.isExtensionImage(appData)) {
