@@ -223,7 +223,8 @@ public class TelecomManagerHelper {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
-                if (call == mCall && Call.State.Connected == state) {
+                if (call == mCall && Call.State.Connected == state && call.getDir() == Call.Dir.Outgoing) {
+//                if (call == mCall && Call.State.Connected == state) {
                     if (!LinphoneActivity.isInstanciated()) {
                         return;
                     }
