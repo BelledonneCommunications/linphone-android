@@ -35,8 +35,10 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
+import org.linphone.core.Content;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     private Bitmap mDefaultBitmap;
@@ -49,6 +51,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public TextView unreadMessages;
     public CheckBox delete;
     public ImageView contactPicture;
+    public ImageView lastMessageFileTransfer;
     public Context mContext;
     public ChatRoom mRoom;
     private ClickListener mListener;
@@ -67,6 +70,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         unreadMessages = itemView.findViewById(R.id.unreadMessages);
         delete = itemView.findViewById(R.id.delete_chatroom);
         contactPicture = itemView.findViewById(R.id.contact_picture);
+        lastMessageFileTransfer = itemView.findViewById(R.id.lastMessageFileTransfer);
         mListener = listener;
 
         itemView.setOnClickListener(this);
@@ -75,9 +79,25 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
 
     public void bindChatRoom(ChatRoom room) {
         mRoom = room;
+        ChatMessage lastMessage = mRoom.getLastMessageInHistory();
+        lastMessageView.setVisibility(View.GONE);
+        lastMessageFileTransfer.setVisibility(View.GONE);
+
+        if (lastMessage != null) {
+            String text = lastMessage.getTextContent();
+            if (text != null && text.length() > 0) {
+                lastMessageView.setVisibility(View.VISIBLE);
+                lastMessageView.setText(text);
+            }
+            date.setText(LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format));
+            for (Content c : lastMessage.getContents()) {
+                if (c.isFile() || c.isFileTransfer()) {
+                    lastMessageFileTransfer.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
         lastMessageSenderView.setText(getSender(mRoom));
-        lastMessageView.setText(mRoom.getLastMessageInHistory() != null ? mRoom.getLastMessageInHistory().getTextContent() : "");
-        date.setText(mRoom.getLastMessageInHistory() != null ? LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format) : "");
         displayName.setText(getContact(mRoom));
         unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
         getAvatar(mRoom);

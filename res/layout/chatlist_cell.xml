@@ -118,6 +118,14 @@
                     android:layout_marginRight="30dp"
                     style="@style/font11"/>
 
+				<ImageView
+					android:id="@+id/lastMessageFileTransfer"
+					android:src="@drawable/chat_file_message"
+					android:layout_marginLeft="5dp"
+					android:visibility="gone"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
+
             </LinearLayout>
 
 		</RelativeLayout>
