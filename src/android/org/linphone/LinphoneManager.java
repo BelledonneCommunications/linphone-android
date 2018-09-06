@@ -1674,7 +1674,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onFriendListCreated(Core lc, FriendList list) {
-        list.setListener(ContactsManager.getInstance());
+        if (LinphoneService.isReady()) {
+            list.setListener(ContactsManager.getInstance());
+        }
     }
 
     @Override
