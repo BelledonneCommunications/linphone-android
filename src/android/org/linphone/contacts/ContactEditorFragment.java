@@ -339,9 +339,9 @@ public class ContactEditorFragment extends Fragment {
 
     private void pickImage() {
         pickedPhotoForContactUri = null;
-        final List<Intent> cameraIntents = new ArrayList<Intent>();
+        final List<Intent> cameraIntents = new ArrayList<>();
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
+        File file = new File(LinphoneUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
         pickedPhotoForContactUri = Uri.fromFile(file);
         captureIntent.putExtra("outputX", PHOTO_SIZE);
         captureIntent.putExtra("outputY", PHOTO_SIZE);
@@ -381,7 +381,7 @@ public class ContactEditorFragment extends Fragment {
                 String filePath = pickedPhotoForContactUri.getPath();
                 editContactPicture(filePath, null);
             } else {
-                File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name));
+                File file = new File(LinphoneUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
                 if (file.exists()) {
                     pickedPhotoForContactUri = Uri.fromFile(file);
                     String filePath = pickedPhotoForContactUri.getPath();

@@ -757,5 +757,9 @@ public final class LinphoneUtils {
         }
         return null;
     }
+
+    public static String getStorageDirectory(Context mContext) {
+        return Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName()));
+    }
 }
 

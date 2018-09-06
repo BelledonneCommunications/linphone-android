@@ -589,7 +589,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     private void pickFile() {
         List<Intent> cameraIntents = new ArrayList<>();
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file = new File(Environment.getExternalStorageDirectory(), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()) + ".jpeg"));
+        File file = new File(LinphoneUtils.getStorageDirectory(mContext), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()) + ".jpeg"));
         mImageToUploadUri = Uri.fromFile(file);
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageToUploadUri);
         cameraIntents.add(captureIntent);

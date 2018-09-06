@@ -325,10 +325,10 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                             if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
                                 v.setEnabled(false);
                                 String filename = message.getFileTransferInformation().getName();
-                                File file = new File(Environment.getExternalStorageDirectory(), filename);
+                                File file = new File(LinphoneUtils.getStorageDirectory(mContext), filename);
                                 int prefix = 1;
                                 while (file.exists()) {
-                                    file = new File(Environment.getExternalStorageDirectory(), prefix + "_" + filename);
+                                    file = new File(LinphoneUtils.getStorageDirectory(mContext), prefix + "_" + filename);
                                     Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
                                     prefix += 1;
                                 }
@@ -468,8 +468,8 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     private void openFile(String path) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        File file = null;
-        Uri contentUri = null;
+        File file;
+        Uri contentUri;
         if (path.startsWith("file://")) {
             path = path.substring("file://".length());
             file = new File(path);
