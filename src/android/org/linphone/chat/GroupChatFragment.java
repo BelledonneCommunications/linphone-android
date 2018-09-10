@@ -239,6 +239,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             if (getArguments().getString("messageDraft") != null)
                 mMessageTextToSend.setText(getArguments().getString("messageDraft"));
         }
+
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState);
+        }
+
         return view;
     }
 
@@ -585,6 +590,31 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     /**
      * File transfer related
      */
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        String files[] = new String[mFilesUploadLayout.getChildCount()];
+        for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
+            View child = mFilesUploadLayout.getChildAt(i);
+            String path = (String) child.getTag();
+            files[i] = path;
+        }
+        outState.putStringArray("Files", files);
+        super.onSaveInstanceState(outState);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        String files[] = savedInstanceState.getStringArray("Files");
+        if (files.length > 0) {
+            for (String file : files) {
+                if (LinphoneUtils.isExtensionImage(file)) {
+                    addImageToPendingList(file);
+                } else {
+                    addFileToPendingList(file);
+                }
+            }
+        }
+    }
 
     private void pickFile() {
         List<Intent> cameraIntents = new ArrayList<>();
