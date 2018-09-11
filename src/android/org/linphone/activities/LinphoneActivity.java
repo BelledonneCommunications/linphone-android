@@ -202,16 +202,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 checkSyncPermission();
             } else {
                 if (LinphoneService.isReady())
-                    ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+                    ContactsManager.getInstance().initializeSyncAccount(this);
             }
         } else {
             if (LinphoneService.isReady())
-                ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
+                ContactsManager.getInstance().initializeContactManager(this);
         }
 
         setContentView(R.layout.main);
         instance = this;
-        fragmentsHistory = new ArrayList<FragmentsAvailable>();
+        fragmentsHistory = new ArrayList<>();
         pendingFragmentTransaction = FragmentsAvailable.UNKNOW;
 
         initButtons();
@@ -1282,9 +1282,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         switch (requestCode) {
             case PERMISSIONS_REQUEST_SYNC:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ContactsManager.getInstance().initializeSyncAccount(getApplicationContext(), getContentResolver());
+                    ContactsManager.getInstance().initializeSyncAccount(this);
                 } else {
-                    ContactsManager.getInstance().initializeContactManager(getApplicationContext(), getContentResolver());
+                    ContactsManager.getInstance().initializeContactManager(this);
                 }
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
