@@ -445,6 +445,14 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			case ConferenceSecurityEvent:
 				String message;
 				holder.eventLayout.setVisibility(View.VISIBLE);
+				if (event.getSecurityEventFaultyDevice() != null) {
+					LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(event.getSecurityEventFaultyDevice());
+					if (contact != null) {
+						displayName = contact.getFullName();
+					} else {
+						displayName = LinphoneUtils.getAddressDisplayName(event.getSecurityEventFaultyDevice());
+					}
+				}
 				switch (event.getSecurityEventType()) {
 					case SecurityLevelDowngraded:
 						message = mContext.getString(R.string.security_level_degraded);
@@ -452,7 +460,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 					case MultideviceParticipantDetected:
 						holder.eventMessage.setTextColor(Color.RED);
 						if (event.getSecurityEventFaultyDevice() != null) {
-							message = mContext.getString(R.string.security_alert_multidevice_from).replace("%s", event.getSecurityEventFaultyDevice().getUsername());
+							message = mContext.getString(R.string.security_alert_multidevice_from).replace("%s", displayName);
 						} else {
 							message = mContext.getString(R.string.security_alert_multidevice);
 						}
@@ -461,7 +469,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 					case LimeIdentityKeyChanged:
 						holder.eventMessage.setTextColor(Color.RED);
 						if (event.getSecurityEventFaultyDevice() != null) {
-							message = mContext.getString(R.string.security_alert_from).replace("%s", event.getSecurityEventFaultyDevice().getUsername());
+							message = mContext.getString(R.string.security_alert_from).replace("%s", displayName);
 						} else {
 							message = mContext.getString(R.string.security_alert);
 						}
