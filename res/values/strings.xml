@@ -222,7 +222,9 @@
     <string name="security_alert_from">Security alert from %s</string>
     <string name="subject_changed">new subject: %s</string>
     <string name="admin_set">%s is admin</string>
+    <string name="admin_set_us">Now, you are admin</string>
     <string name="admin_unset">%s is no longer admin</string>
+    <string name="admin_unset_us">You are no longer admin</string>
     <string name="group_chat_notif" formatted="false">%1: %2</string>
     <string name="chat_room_you_are_now_admin">You are now admin</string>
     <string name="chat_room_you_are_no_longer_admin">You are no longer admin</string>

@@ -195,6 +195,8 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="participant_removed">%s a quitté le groupe</string>
   <string name="subject_changed">Nouveau sujet : %s</string>
   <string name="admin_set">%s est devenu(e) admin</string>
+  <string name="admin_set_us">Vous etes devenu(e) admin</string>
+  <string name="admin_unset_us">Vous n\'êtes plus admin</string>
   <string name="admin_unset">%s n\'est plus admin</string>
   <string name="chat_room_you_are_now_admin">Vous êtes maintenant admin</string>
   <string name="chat_room_you_are_no_longer_admin">Vous n\'êtes plus admin</string>

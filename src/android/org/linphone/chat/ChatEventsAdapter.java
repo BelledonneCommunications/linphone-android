@@ -73,6 +73,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static org.linphone.LinphoneUtils.isUs;
 
 public class ChatEventsAdapter extends ListSelectionAdapter {
 	private static int MARGIN_BETWEEN_MESSAGES = 10;
@@ -431,10 +432,18 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
 				break;
 			case ConferenceParticipantSetAdmin:
-				holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
+				if (isUs(LinphoneManager.getLc().getDefaultProxyConfig(), address.getUsername())) {
+					holder.eventMessage.setText(mContext.getString(R.string.admin_set_us));
+				} else {
+					holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
+				}
 				break;
 			case ConferenceParticipantUnsetAdmin:
-				holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
+				if (isUs(LinphoneManager.getLc().getDefaultProxyConfig(), address.getUsername())) {
+					holder.eventMessage.setText(mContext.getString(R.string.admin_unset_us));
+				} else {
+					holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
+				}
 				break;
 			case ConferenceParticipantDeviceAdded:
 				holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));

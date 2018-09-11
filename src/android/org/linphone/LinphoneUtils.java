@@ -829,5 +829,11 @@ public final class LinphoneUtils {
 		}
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
+
+	public static boolean isUs(ProxyConfig proxy, String username) {
+		if (proxy == null || username == null || username.isEmpty()) return false;
+		Address proxyConfigContact = proxy.getContact();
+		return proxyConfigContact.getUsername().equalsIgnoreCase(username);
+	}
 }
 
