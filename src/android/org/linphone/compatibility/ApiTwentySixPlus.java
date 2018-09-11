@@ -57,7 +57,6 @@ public class ApiTwentySixPlus {
 		importance = NotificationManager.IMPORTANCE_HIGH;
 		mChannel = new NotificationChannel(id, name, importance);
 		mChannel.setDescription(description);
-		mChannel.enableLights(true);
 		mChannel.setLightColor(context.getColor(R.color.notification_color_led));
 		mChannel.enableLights(true);
 		notificationManager.createNotificationChannel(mChannel);
@@ -89,7 +88,6 @@ public class ApiTwentySixPlus {
 					.setNumber(msgCount)
 					.setWhen(System.currentTimeMillis())
 					.setShowWhen(true)
-					.setColorized(true)
 					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 
@@ -112,7 +110,6 @@ public class ApiTwentySixPlus {
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
 				.setShowWhen(true)
-				.setColorized(true)
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
@@ -134,7 +131,6 @@ public class ApiTwentySixPlus {
 					.setPriority(priority)
 					.setWhen(System.currentTimeMillis())
 					.setShowWhen(true)
-					.setColorized(true)
 					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 		} else {
@@ -148,7 +144,6 @@ public class ApiTwentySixPlus {
 					.setPriority(priority)
 					.setWhen(System.currentTimeMillis())
 					.setShowWhen(true)
-					.setColorized(true)
 					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 		}
@@ -174,7 +169,6 @@ public class ApiTwentySixPlus {
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
 				.setShowWhen(true)
-				.setColorized(true)
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
@@ -195,7 +189,6 @@ public class ApiTwentySixPlus {
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
 				.setShowWhen(true)
-				.setColorized(true)
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
