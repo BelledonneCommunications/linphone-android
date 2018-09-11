@@ -36,176 +36,170 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @TargetApi(26)
 public class ApiTwentySixPlus {
 
-    public static void CreateChannel(Context context) {
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // Create service/call notification channel
-        String id = context.getString(R.string.notification_service_channel_id);
-        CharSequence name = context.getString(R.string.content_title_notification_service);
-        String description = context.getString(R.string.content_title_notification_service);
-        int importance = NotificationManager.IMPORTANCE_NONE;
-        NotificationChannel mChannel = new NotificationChannel(id, name, importance);
-        mChannel.setDescription(description);
-        mChannel.enableVibration(false);
-        mChannel.enableLights(false);
-        notificationManager.createNotificationChannel(mChannel);
-        // Create message notification channel
-        id = context.getString(R.string.notification_channel_id);
-        name = context.getString(R.string.content_title_notification);
-        description = context.getString(R.string.content_title_notification);
-        importance = NotificationManager.IMPORTANCE_HIGH;
-        mChannel = new NotificationChannel(id, name, importance);
-        mChannel.setDescription(description);
-        mChannel.enableLights(true);
-        mChannel.setLightColor(context.getColor(R.color.notification_color_led));
-        mChannel.enableLights(true);
-        notificationManager.createNotificationChannel(mChannel);
-    }
+	public static void CreateChannel(Context context) {
+		NotificationManager notificationManager =
+				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		// Create service/call notification channel
+		String id = context.getString(R.string.notification_service_channel_id);
+		CharSequence name = context.getString(R.string.content_title_notification_service);
+		String description = context.getString(R.string.content_title_notification_service);
+		int importance = NotificationManager.IMPORTANCE_NONE;
+		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+		mChannel.setDescription(description);
+		mChannel.enableVibration(false);
+		mChannel.enableLights(false);
+		notificationManager.createNotificationChannel(mChannel);
+		// Create message notification channel
+		id = context.getString(R.string.notification_channel_id);
+		name = context.getString(R.string.content_title_notification);
+		description = context.getString(R.string.content_title_notification);
+		importance = NotificationManager.IMPORTANCE_HIGH;
+		mChannel = new NotificationChannel(id, name, importance);
+		mChannel.setDescription(description);
+		mChannel.setLightColor(context.getColor(R.color.notification_color_led));
+		mChannel.enableLights(true);
+		notificationManager.createNotificationChannel(mChannel);
+	}
 
-    public static Notification createMessageNotification(Context context,
-                                                         int msgCount, String msgSender, String msg, Bitmap contactIcon,
-                                                         PendingIntent intent) {
-        String title;
-        if (msgCount == 1) {
-            title = msgSender;
-        } else {
-            title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
-        }
+	public static Notification createMessageNotification(Context context,
+	                                                     int msgCount, String msgSender, String msg, Bitmap contactIcon,
+	                                                     PendingIntent intent) {
+		String title;
+		if (msgCount == 1) {
+			title = msgSender;
+		} else {
+			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
+		}
 
-        Notification notif = null;
-        notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-                .setContentTitle(title)
-                .setContentText(msg)
-                .setSmallIcon(R.drawable.topbar_chat_notification)
-                .setAutoCancel(true)
-                .setContentIntent(intent)
-                .setDefaults(Notification.DEFAULT_SOUND
-                        | Notification.DEFAULT_VIBRATE)
-                .setLargeIcon(contactIcon)
-                .setCategory(Notification.CATEGORY_MESSAGE)
-                .setVisibility(Notification.VISIBILITY_PRIVATE)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setNumber(msgCount)
-                .setWhen(System.currentTimeMillis())
-                .setShowWhen(true)
-                .setColorized(true)
-                .setColor(context.getColor(R.color.notification_color_led))
-                .build();
+		Notification notif = null;
+		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+					.setContentTitle(title)
+					.setContentText(msg)
+					.setSmallIcon(R.drawable.topbar_chat_notification)
+					.setAutoCancel(true)
+					.setContentIntent(intent)
+					.setDefaults(Notification.DEFAULT_SOUND
+							| Notification.DEFAULT_VIBRATE)
+					.setLargeIcon(contactIcon)
+					.setCategory(Notification.CATEGORY_MESSAGE)
+					.setVisibility(Notification.VISIBILITY_PRIVATE)
+					.setPriority(Notification.PRIORITY_HIGH)
+					.setNumber(msgCount)
+					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
+					.setColor(context.getColor(R.color.notification_color_led))
+					.build();
 
-        return notif;
-    }
+		return notif;
+	}
 
-    public static Notification createInCallNotification(Context context,
-                                                        String title, String msg, int iconID, Bitmap contactIcon,
-                                                        String contactName, PendingIntent intent) {
+	public static Notification createInCallNotification(Context context,
+	                                                    String title, String msg, int iconID, Bitmap contactIcon,
+	                                                    String contactName, PendingIntent intent) {
 
-        Notification notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
-                .setContentTitle(contactName)
-                .setContentText(msg)
-                .setSmallIcon(iconID)
-                .setAutoCancel(false)
-                .setContentIntent(intent)
-                .setLargeIcon(contactIcon)
-                .setCategory(Notification.CATEGORY_CALL)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setWhen(System.currentTimeMillis())
-                .setShowWhen(true)
-                .setColorized(true)
-                .setColor(context.getColor(R.color.notification_color_led))
-                .build();
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
+				.setContentTitle(contactName)
+				.setContentText(msg)
+				.setSmallIcon(iconID)
+				.setAutoCancel(false)
+				.setContentIntent(intent)
+				.setLargeIcon(contactIcon)
+				.setCategory(Notification.CATEGORY_CALL)
+				.setVisibility(Notification.VISIBILITY_PUBLIC)
+				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColor(context.getColor(R.color.notification_color_led))
+				.build();
 
-        return notif;
-    }
+		return notif;
+	}
 
-    public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent, int priority) {
-        Notification notif;
+	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
+		Notification notif;
 
-        if (largeIcon != null) {
-            notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setSmallIcon(icon, level)
-                    .setLargeIcon(largeIcon)
-                    .setContentIntent(intent)
-                    .setCategory(Notification.CATEGORY_SERVICE)
-                    .setVisibility(Notification.VISIBILITY_SECRET)
-                    .setPriority(priority)
-                    .setWhen(System.currentTimeMillis())
-                    .setShowWhen(true)
-                    .setColorized(true)
-                    .setColor(context.getColor(R.color.notification_color_led))
-                    .build();
-        } else {
-            notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setSmallIcon(icon, level)
-                    .setContentIntent(intent)
-                    .setCategory(Notification.CATEGORY_SERVICE)
-                    .setVisibility(Notification.VISIBILITY_SECRET)
-                    .setPriority(priority)
-                    .setWhen(System.currentTimeMillis())
-                    .setShowWhen(true)
-                    .setColorized(true)
-                    .setColor(context.getColor(R.color.notification_color_led))
-                    .build();
-        }
+		if (largeIcon != null) {
+			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
+					.setContentTitle(title)
+					.setContentText(message)
+					.setSmallIcon(icon, level)
+					.setLargeIcon(largeIcon)
+					.setContentIntent(intent)
+					.setCategory(Notification.CATEGORY_SERVICE)
+					.setVisibility(Notification.VISIBILITY_SECRET)
+					.setPriority(priority)
+					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
+					.setColor(context.getColor(R.color.notification_color_led))
+					.build();
+		} else {
+			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
+					.setContentTitle(title)
+					.setContentText(message)
+					.setSmallIcon(icon, level)
+					.setContentIntent(intent)
+					.setCategory(Notification.CATEGORY_SERVICE)
+					.setVisibility(Notification.VISIBILITY_SECRET)
+					.setPriority(priority)
+					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
+					.setColor(context.getColor(R.color.notification_color_led))
+					.build();
+		}
 
-        return notif;
-    }
+		return notif;
+	}
 
-    public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, ViewTreeObserver.OnGlobalLayoutListener keyboardListener) {
-        viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
-    }
+	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, ViewTreeObserver.OnGlobalLayoutListener keyboardListener) {
+		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
+	}
 
-    public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
-        Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(R.drawable.call_status_missed)
-                .setAutoCancel(true)
-                .setContentIntent(intent)
-                .setDefaults(Notification.DEFAULT_SOUND
-                        | Notification.DEFAULT_VIBRATE)
-                .setCategory(Notification.CATEGORY_MESSAGE)
-                .setVisibility(Notification.VISIBILITY_PRIVATE)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setWhen(System.currentTimeMillis())
-                .setShowWhen(true)
-                .setColorized(true)
-                .setColor(context.getColor(R.color.notification_color_led))
-                .build();
+	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+				.setContentTitle(title)
+				.setContentText(text)
+				.setSmallIcon(R.drawable.call_status_missed)
+				.setAutoCancel(true)
+				.setContentIntent(intent)
+				.setDefaults(Notification.DEFAULT_SOUND
+						| Notification.DEFAULT_VIBRATE)
+				.setCategory(Notification.CATEGORY_MESSAGE)
+				.setVisibility(Notification.VISIBILITY_PRIVATE)
+				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColor(context.getColor(R.color.notification_color_led))
+				.build();
 
-        return notif;
-    }
+		return notif;
+	}
 
-    public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
-        Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(R.drawable.linphone_logo)
-                .setAutoCancel(true)
-                .setContentIntent(intent)
-                .setDefaults(Notification.DEFAULT_SOUND
-                        | Notification.DEFAULT_VIBRATE)
-                .setCategory(Notification.CATEGORY_MESSAGE)
-                .setVisibility(Notification.VISIBILITY_PRIVATE)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setWhen(System.currentTimeMillis())
-                .setShowWhen(true)
-                .setColorized(true)
-                .setColor(context.getColor(R.color.notification_color_led))
-                .build();
+	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+				.setContentTitle(title)
+				.setContentText(text)
+				.setSmallIcon(R.drawable.linphone_logo)
+				.setAutoCancel(true)
+				.setContentIntent(intent)
+				.setDefaults(Notification.DEFAULT_SOUND
+						| Notification.DEFAULT_VIBRATE)
+				.setCategory(Notification.CATEGORY_MESSAGE)
+				.setVisibility(Notification.VISIBILITY_PRIVATE)
+				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColorized(true)
+				.setColor(context.getColor(R.color.notification_color_led))
+				.build();
 
-        return notif;
-    }
+		return notif;
+	}
 
-    public static void startService(Context context, Intent intent) {
-        context.startForegroundService(intent);
-    }
+	public static void startService(Context context, Intent intent) {
+		context.startForegroundService(intent);
+	}
 
-    public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
-        transaction.setReorderingAllowed(allowed);
-    }
+	public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
+		transaction.setReorderingAllowed(allowed);
+	}
 }
