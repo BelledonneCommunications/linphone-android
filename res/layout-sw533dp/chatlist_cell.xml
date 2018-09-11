@@ -116,6 +116,15 @@
                     android:layout_height="wrap_content"
                     style="@style/font11"/>
 
+				<ImageView
+					android:id="@+id/filesharing"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical|center_horizontal|center"
+					android:foregroundGravity="center"
+					android:src="@drawable/chat_file_message"
+					android:visibility="gone"/>
+
                 <TextView
                     android:id="@+id/lastMessage"
                     android:maxLines="3"

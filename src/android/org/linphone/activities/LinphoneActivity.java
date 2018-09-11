@@ -465,6 +465,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				changeFragment(fragment, newFragmentType, withoutAnimation);
 			}
 		}
+		LinphoneUtils.hideKeyboard(this);
 	}
 
 	private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
