@@ -70,6 +70,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		public CheckBox delete;
 		public ImageView contactPicture;
 		public ImageView messageStatus;
+		public ImageView filesharing;
 
 		public ChatRoomViewHolder(View view) {
 			lastMessageSenderView = view.findViewById(R.id.lastMessageSender);
@@ -80,6 +81,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			delete = view.findViewById(R.id.delete_chatroom);
 			contactPicture = view.findViewById(R.id.contact_picture);
 			messageStatus = view.findViewById(R.id.lastMessageStatus);
+			filesharing = view.findViewById(R.id.filesharing);
 		}
 	}
 
@@ -193,11 +195,11 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 
 		if (lastMessage != null) {
 			boolean hasContent = hasContentFileSharing(lastMessage.getContents());
+			holder.lastMessageView.setText(lastMessage.getTextContent());
 			if (lastMessage.getFileTransferInformation() != null || lastMessage.getExternalBodyUrl() != null || hasContent) {
-				holder.lastMessageView.setBackgroundResource(R.drawable.chat_file_message);
+				holder.filesharing.setVisibility(View.VISIBLE);
 			} else if (lastMessage.getTextContent() != null && lastMessage.getTextContent().length() > 0) {
-				holder.lastMessageView.setBackgroundResource(0);
-				holder.lastMessageView.setText(lastMessage.getTextContent());
+				holder.filesharing.setVisibility(View.GONE);
 			}
 
 			if (lastMessage.isOutgoing()) {
