@@ -126,12 +126,14 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
         firstName = fn;
         lastName = ln;
-        if (firstName != null && lastName != null && firstName.length() > 0 && lastName.length() > 0) {
-            fullName = firstName + " " + lastName;
-        } else if (firstName != null && firstName.length() > 0) {
-            fullName = firstName;
-        } else if (lastName != null && lastName.length() > 0) {
-            fullName = lastName;
+        if (fullName == null) {
+            if (firstName != null && lastName != null && firstName.length() > 0 && lastName.length() > 0) {
+                fullName = firstName + " " + lastName;
+            } else if (firstName != null && firstName.length() > 0) {
+                fullName = firstName;
+            } else if (lastName != null && lastName.length() > 0) {
+                fullName = lastName;
+            }
         }
     }
 
