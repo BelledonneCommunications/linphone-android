@@ -522,54 +522,55 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		if (core.getCallsNb() > 0) {
 			mBackToCallButton.setVisibility(View.VISIBLE);
+			mCallButton.setVisibility(View.GONE);
 		} else {
 			mBackToCallButton.setVisibility(View.GONE);
-			ChatRoomSecurityLevel level = mChatRoom.getSecurityLevel();
-			if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-				mCallButton.setVisibility(View.VISIBLE);
-				mGroupInfosButton.setVisibility(View.GONE);
-				mParticipantsLabel.setVisibility(View.GONE);
+			mCallButton.setVisibility(View.VISIBLE);
+		}
+		ChatRoomSecurityLevel level = mChatRoom.getSecurityLevel();
+		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+			mGroupInfosButton.setVisibility(View.GONE);
+			mParticipantsLabel.setVisibility(View.GONE);
 
-				if (mParticipants.size() == 0) {
-					// Contact not found
-					String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
-					mRoomLabel.setText(displayName);
-				} else {
-					mRoomLabel.setText(mParticipants.get(0).getFullName());
-				}
-				if (level == ChatRoomSecurityLevel.ClearText) {
-					avatarTop.setImageResource(R.drawable.avatar_small_unregistered);
-				} else if (level == ChatRoomSecurityLevel.Encrypted) {
-					avatarTop.setImageResource(R.drawable.avatar_small_secure1);
-				} else if (level == ChatRoomSecurityLevel.Safe) {
-					avatarTop.setImageResource(R.drawable.avatar_small_secure2);
-				} else {
-					LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mChatRoom.getParticipants()[0].getAddress());
-					if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
-						PresenceModel presenceModel = c.getFriend().getPresenceModel();
-						if (presenceModel != null) {
-							avatarTop.setImageResource(R.drawable.avatar_medium_secure1);
-						} else {
-							avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
-						}
+			if (mParticipants.size() == 0) {
+				// Contact not found
+				String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
+				mRoomLabel.setText(displayName);
+			} else {
+				mRoomLabel.setText(mParticipants.get(0).getFullName());
+			}
+			if (level == ChatRoomSecurityLevel.ClearText) {
+				avatarTop.setImageResource(R.drawable.avatar_small_unregistered);
+			} else if (level == ChatRoomSecurityLevel.Encrypted) {
+				avatarTop.setImageResource(R.drawable.avatar_small_secure1);
+			} else if (level == ChatRoomSecurityLevel.Safe) {
+				avatarTop.setImageResource(R.drawable.avatar_small_secure2);
+			} else {
+				LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mChatRoom.getParticipants()[0].getAddress());
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
+					PresenceModel presenceModel = c.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						avatarTop.setImageResource(R.drawable.avatar_medium_secure1);
 					} else {
 						avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
 					}
-				}
-			} else {
-				mCallButton.setVisibility(View.GONE);
-				mGroupInfosButton.setVisibility(View.VISIBLE);
-				mRoomLabel.setText(mChatRoom.getSubject());
-				mParticipantsLabel.setVisibility(View.VISIBLE);
-				if (level == ChatRoomSecurityLevel.ClearText) {
-					avatarTop.setImageResource(R.drawable.avatar_group_small_unregistered);
-				} else if (level == ChatRoomSecurityLevel.Encrypted) {
-					avatarTop.setImageResource(R.drawable.avatar_group_small_secure1);
-				} else if (level == ChatRoomSecurityLevel.Safe) {
-					avatarTop.setImageResource(R.drawable.avatar_group_small_secure2);
 				} else {
-					avatarTop.setImageResource(R.drawable.avatar_group_small_unsecure);
+					avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
 				}
+			}
+		} else {
+			mCallButton.setVisibility(View.GONE);
+			mGroupInfosButton.setVisibility(View.VISIBLE);
+			mRoomLabel.setText(mChatRoom.getSubject());
+			mParticipantsLabel.setVisibility(View.VISIBLE);
+			if (level == ChatRoomSecurityLevel.ClearText) {
+				avatarTop.setImageResource(R.drawable.avatar_group_small_unregistered);
+			} else if (level == ChatRoomSecurityLevel.Encrypted) {
+				avatarTop.setImageResource(R.drawable.avatar_group_small_secure1);
+			} else if (level == ChatRoomSecurityLevel.Safe) {
+				avatarTop.setImageResource(R.drawable.avatar_group_small_secure2);
+			} else {
+				avatarTop.setImageResource(R.drawable.avatar_group_small_unsecure);
 			}
 		}
 
@@ -943,6 +944,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onSecurityEvent(ChatRoom cr, EventLog event) {
+		displayChatRoomHeader();
 		mEventsAdapter.addToHistory(event);
 	}
 
