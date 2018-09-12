@@ -466,9 +466,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                         sipContacts.add(contact);
                     }
                 } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
-                    contact.setOrganization(data1);
+                    contact.setOrganization(data1, false);
                 } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(mime)) {
-                    contact.setFirstNameAndLastName(data2, data3);
+                    contact.setFirstNameAndLastName(data2, data3, false);
                 }
 
                 if (created && !contacts.contains(contact)) {

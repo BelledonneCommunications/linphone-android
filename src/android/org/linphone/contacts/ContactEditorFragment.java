@@ -148,7 +148,7 @@ public class ContactEditorFragment extends Fragment {
                     }
                     contact = LinphoneContact.createContact();
                 }
-                contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString());
+                contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString(), true);
                 if (photoToAdd != null) {
                     contact.setPhoto(photoToAdd);
                 }
@@ -158,7 +158,7 @@ public class ContactEditorFragment extends Fragment {
                     }
                     contact.addOrUpdateNumberOrAddress(noa);
                 }
-                contact.setOrganization(organization.getText().toString());
+                contact.setOrganization(organization.getText().toString(), true);
                 contact.save();
                 getFragmentManager().popBackStackImmediate();
             }
@@ -282,7 +282,7 @@ public class ContactEditorFragment extends Fragment {
             }
         });
 
-        numbersAndAddresses = new ArrayList<LinphoneNumberOrAddress>();
+        numbersAndAddresses = new ArrayList<>();
         sipAddresses = initSipAddressFields(contact);
         numbers = initNumbersFields(contact);
 
