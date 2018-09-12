@@ -146,7 +146,6 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 
         holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
         holder.delete.setChecked(isSelected(position));
-
     }
 
     @Override

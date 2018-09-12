@@ -97,13 +97,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             magicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
         }
-
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            for (FriendList list : lc.getFriendsLists()) {
-                list.setListener(this);
-            }
-        }
     }
 
     public void destroy() {
@@ -267,11 +260,14 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         return null;
     }
 
-    public synchronized void refreshSipContact(Friend lf) {
+    public synchronized boolean refreshSipContact(Friend lf) {
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
         if (contact != null && !mSipContacts.contains(contact)) {
             mSipContacts.add(contact);
+            Collections.sort(mSipContacts);
+            return true;
         }
+        return false;
     }
 
     public static String getAddressOrNumberForAndroidContact(ContentResolver resolver, Uri contactUri) {
@@ -352,12 +348,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     @Override
     public void onPresenceReceived(FriendList list, Friend[] friends) {
         for (Friend lf : friends) {
-            ContactsManager.getInstance().refreshSipContact(lf);
-        }
-
-        Collections.sort(mSipContacts);
-        for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
-            listener.onContactsUpdated();
+            boolean newContact = ContactsManager.getInstance().refreshSipContact(lf);
+            if (newContact) {
+                for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+                    listener.onContactsUpdated();
+                }
+            }
         }
     }
 
@@ -504,10 +500,14 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         setSipContacts(sipContacts);
 
         if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            if (mActivity.getString(R.string.rls_uri) != null) {
-                LinphoneManager.getLc().getFriendsLists()[0].setRlsUri(mActivity.getString(R.string.rls_uri));
+            String rls = mActivity.getString(R.string.rls_uri);
+            for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
+                if (rls != null && rls.equals(list.getRlsAddress().asStringUriOnly())) {
+                    list.setRlsUri(mActivity.getString(R.string.rls_uri));
+                }
+                list.setListener(this);
+                list.updateSubscriptions();
             }
-            LinphoneManager.getLc().getFriendsLists()[0].updateSubscriptions();
         }
 
         long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
@@ -516,6 +516,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
         Log.i("[ContactsManager] For " + contacts.size() + " contacts: " + time + " elapsed since starting");
+
+        for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+            listener.onContactsUpdated();
+        }
     }
 
     @Override

@@ -243,21 +243,21 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
     public void removeNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa != null && noa.getOldValue() != null) {
             if (isAndroidContact()) {
-                String select;
-                if (noa.isSIPAddress()) {
-                    select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
-                } else {
-                    select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
-                }
-                String[] args = new String[]{getAndroidId(), noa.getOldValue()};
-
-                changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
-                        .withSelection(select, args)
-                        .build());
-
                 if (androidTagId != null && noa.isSIPAddress()) {
-                    select = ContactsContract.Data.RAW_CONTACT_ID + "=? AND " + ContactsContract.Data.DATA1 + "=?";
-                    args = new String[]{androidTagId, noa.getOldValue()};
+                    String select = ContactsContract.Data.RAW_CONTACT_ID + "=? AND " + ContactsContract.Data.DATA1 + "=?";
+                    String[] args = new String[]{androidTagId, noa.getOldValue()};
+
+                    changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(select, args)
+                            .build());
+                } else {
+                    String select;
+                    if (noa.isSIPAddress()) {
+                        select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
+                    } else {
+                        select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
+                    }
+                    String[] args = new String[]{getAndroidId(), noa.getOldValue()};
 
                     changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
                             .withSelection(select, args)
@@ -289,30 +289,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         if (noa != null && noa.getValue() != null) {
             if (isAndroidContact()) {
                 if (noa.getOldValue() == null) {
-                    ContentValues values = new ContentValues();
-                    if (noa.isSIPAddress()) {
-                        values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
-                        values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
-                        values.put(CommonDataKinds.SipAddress.TYPE, CommonDataKinds.SipAddress.TYPE_CUSTOM);
-                        values.put(CommonDataKinds.SipAddress.LABEL, ContactsManager.getInstance().getString(R.string.addressbook_label));
-                    } else {
-                        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-                        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
-                        values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM);
-                        values.put(ContactsContract.CommonDataKinds.Phone.LABEL, ContactsManager.getInstance().getString(R.string.addressbook_label));
-                    }
-                    if (androidRawId != null) {
-                        changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                                .withValue(ContactsContract.Data.RAW_CONTACT_ID, androidRawId)
-                                .withValues(values)
-                                .build());
-                    } else {
-                        changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                                .withValues(values)
-                                .build());
-                    }
-
                     if (noa.isSIPAddress() && LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
                         if (androidTagId != null) {
                             changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
@@ -331,26 +307,32 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                                     .withValue(ContactsContract.Data.DATA3, noa.getValue())
                                     .build());
                         }
+                    } else {
+                        ContentValues values = new ContentValues();
+                        if (noa.isSIPAddress()) {
+                            values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
+                            values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
+                            values.put(CommonDataKinds.SipAddress.TYPE, CommonDataKinds.SipAddress.TYPE_CUSTOM);
+                            values.put(CommonDataKinds.SipAddress.LABEL, ContactsManager.getInstance().getString(R.string.addressbook_label));
+                        } else {
+                            values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                            values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
+                            values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM);
+                            values.put(ContactsContract.CommonDataKinds.Phone.LABEL, ContactsManager.getInstance().getString(R.string.addressbook_label));
+                        }
+                        if (androidRawId != null) {
+                            changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValue(ContactsContract.Data.RAW_CONTACT_ID, androidRawId)
+                                    .withValues(values)
+                                    .build());
+                        } else {
+                            changesToCommit.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                                    .withValues(values)
+                                    .build());
+                        }
                     }
                 } else {
-                    ContentValues values = new ContentValues();
-                    String select;
-                    String[] args = new String[]{getAndroidId(), noa.getOldValue()};
-
-                    if (noa.isSIPAddress()) {
-                        select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
-                        values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
-                        values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
-                    } else {
-                        select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
-                        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-                        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
-                    }
-                    changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
-                            .withSelection(select, args)
-                            .withValues(values)
-                            .build());
-
                     if (noa.isSIPAddress() && LinphoneManager.getInstance().getContext().getResources().getBoolean(R.bool.use_linphone_tag)) {
                         if (androidTagId != null) {
                             changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
@@ -368,6 +350,24 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                                     .withValue(ContactsContract.Data.DATA3, noa.getValue())
                                     .build());
                         }
+                    } else {
+                        ContentValues values = new ContentValues();
+                        String select;
+                        String[] args = new String[]{getAndroidId(), noa.getOldValue()};
+
+                        if (noa.isSIPAddress()) {
+                            select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.SipAddress.SIP_ADDRESS + "=?";
+                            values.put(ContactsContract.Data.MIMETYPE, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE);
+                            values.put(ContactsContract.CommonDataKinds.SipAddress.DATA, noa.getValue());
+                        } else {
+                            select = ContactsContract.Data.CONTACT_ID + "=? AND " + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + "=?";
+                            values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                            values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, noa.getValue());
+                        }
+                        changesToCommit.add(ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                                .withSelection(select, args)
+                                .withValues(values)
+                                .build());
                     }
                 }
             }
@@ -483,10 +483,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
 
     public void delete() {
         if (isAndroidContact()) {
-            String select = ContactsContract.Data.CONTACT_ID + " = ?";
-            String[] args = new String[]{getAndroidId()};
-            changesToCommit.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(select, args).build());
-            save();
             ContactsManager.getInstance().delete(getAndroidId());
         }
         if (isFriend()) {

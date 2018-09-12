@@ -342,14 +342,9 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
     public void onContactsUpdated() {
         if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != FragmentsAvailable.CONTACTS_LIST)
             return;
-        ContactsListAdapter adapter = (ContactsListAdapter) contactsList.getAdapter();
-        if (adapter != null) {
-            if (onlyDisplayLinphoneContacts) {
-                adapter.updateDataSet(ContactsManager.getInstance().getSIPContacts());
-            } else {
-                adapter.updateDataSet(ContactsManager.getInstance().getContacts());
-            }
-            contactsFetchInProgress.setVisibility(View.GONE);
+        if (mContactAdapter != null) {
+            mContactAdapter.updateDataSet(onlyDisplayLinphoneContacts ? ContactsManager.getInstance().getSIPContacts() : ContactsManager.getInstance().getContacts());
+            mContactAdapter.notifyDataSetChanged();
         }
     }
 

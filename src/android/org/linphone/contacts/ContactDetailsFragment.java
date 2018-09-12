@@ -43,6 +43,8 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
@@ -205,11 +207,15 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 }
             }
 
-            String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
-            if (contactAddress != null) {
-                v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
+            v.findViewById(R.id.friendLinphone).setVisibility(View.GONE);
+            if (contact.getFriend() != null) {
+                PresenceModel pm = contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
+                if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                    v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
+                }
             }
 
+            String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
             if (!displayChatAddressOnly) {
                 v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
                 if (contactAddress != null) {
