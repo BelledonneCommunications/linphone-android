@@ -377,6 +377,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     "data1", //Company, Phone or SIP Address
                     "data2", //ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
                     "data3", //ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
+                    "data4", //Normalized phone number
             };
 
     private static final String SELECTION = ContactsContract.Data.DISPLAY_NAME_PRIMARY + " IS NOT NULL AND ("
@@ -446,6 +447,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 String data1 = c.getString(c.getColumnIndex("data1"));
                 String data2 = c.getString(c.getColumnIndex("data2"));
                 String data3 = c.getString(c.getColumnIndex("data3"));
+                String data4 = c.getString(c.getColumnIndex("data4"));
 
                 nativeIds.add(id);
                 boolean created = false;
@@ -459,7 +461,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 }
 
                 if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
-                    contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, false));
+                    contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
                 } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime) || getInstance().getString(R.string.sync_mimetype).equals(mime)) {
                     contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
                     if (!sipContacts.contains(contact)) {

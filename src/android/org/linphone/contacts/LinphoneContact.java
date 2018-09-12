@@ -235,8 +235,20 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         if (noa == null) return;
         if (noa.isSIPAddress()) {
             hasSipAddress = true;
+            addresses.add(noa);
+        } else {
+            boolean found = false;
+            // Check for duplicated phone numbers but with different formats
+            for (LinphoneNumberOrAddress number : addresses) {
+                if (!number.isSIPAddress() && noa.getNormalizedPhone().equals(number.getNormalizedPhone())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                addresses.add(noa);
+            }
         }
-        addresses.add(noa);
     }
 
     public List<LinphoneNumberOrAddress> getNumbersOrAddresses() {
@@ -680,32 +692,25 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         ContentResolver resolver = LinphoneService.instance().getContentResolver();
 
         String select = ContactsContract.Data.CONTACT_ID + " =? AND (" + ContactsContract.Data.MIMETYPE + "=? OR " + ContactsContract.Data.MIMETYPE + "=? OR " + ContactsContract.Data.MIMETYPE + "=?)";
-        String[] projection = new String[]{"data1", ContactsContract.Data.MIMETYPE}; // PHONE_NUMBER == SIP_ADDRESS == "data1"...
+        String[] projection = new String[]{"data1", "data4", ContactsContract.Data.MIMETYPE}; // PHONE_NUMBER == SIP_ADDRESS == "data1"...
         Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, projection, select, new String[]{getAndroidId(), ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE, ContactsManager.getInstance().getString(R.string.sync_mimetype)}, null);
         if (c != null) {
             while (c.moveToNext()) {
                 String mime = c.getString(c.getColumnIndex(ContactsContract.Data.MIMETYPE));
                 if (mime != null && mime.length() > 0) {
-                    boolean found = false;
-                    boolean isSIP = false;
                     if (mime.equals(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE) || mime.equals(ContactsManager.getInstance().getString(R.string.sync_mimetype))) {
-                        found = true;
-                        isSIP = true;
-                    } else if (mime.equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
-                        found = true;
-                    }
-
-                    if (found) {
-                        String number = c.getString(c.getColumnIndex("data1")); // PHONE_NUMBER == SIP_ADDRESS == "data1"...
-                        if (number != null && number.length() > 0) {
-                            if (isSIP && !number.startsWith("sip:")) {
-                                number = "sip:" + number;
-                            }
-                            if (isSIP && !number.contains("@")) {
-                                number = number + "@" + ContactsManager.getInstance().getString(R.string.default_domain);
-                            }
-                            result.add(new LinphoneNumberOrAddress(number, isSIP));
+                        String number = c.getString(c.getColumnIndex("data1")); // SIP_ADDRESS
+                        if (!number.startsWith("sip:")) {
+                            number = "sip:" + number;
                         }
+                        if (!number.contains("@")) {
+                            number = number + "@" + ContactsManager.getInstance().getString(R.string.default_domain);
+                        }
+                        result.add(new LinphoneNumberOrAddress(number, true));
+                    } else if (mime.equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
+                        String number = c.getString(c.getColumnIndex("data1")); // PHONE_NUMBER
+                        String normalized_number = c.getString(c.getColumnIndex("data4")); // NORMALIZED_PHONE_NUMBER
+                        result.add(new LinphoneNumberOrAddress(number, normalized_number));
                     }
                 }
             }

@@ -26,10 +26,19 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 
     private boolean isSIPAddress;
     private String value, oldValueForUpdatePurpose;
+    private String normalizedPhone;
 
     public LinphoneNumberOrAddress(String v, boolean isSIP) {
         value = v;
         isSIPAddress = isSIP;
+        oldValueForUpdatePurpose = null;
+        normalizedPhone = null;
+    }
+
+    public LinphoneNumberOrAddress(String v, String normalizedV) {
+        value = v;
+        normalizedPhone = normalizedV != null ? normalizedV : v;
+        isSIPAddress = false;
         oldValueForUpdatePurpose = null;
     }
 
@@ -74,4 +83,6 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
     public void setValue(String v) {
         value = v;
     }
+
+    public String getNormalizedPhone() { return normalizedPhone; }
 }
