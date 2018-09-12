@@ -414,8 +414,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     LinphoneContact contact = (LinphoneContact) friend.getUserData();
                     if (contact != null) {
                         contact.clearAddresses();
-                        contacts.add(contact);
                         if (contact.getAndroidId() != null) {
+                            contacts.add(contact);
                             mAndroidContactsCache.put(contact.getAndroidId(), contact);
                         }
                     } else {
@@ -428,10 +428,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                             contact.setFriend(friend);
                             contact.refresh();
                             contacts.add(contact);
+                            if (contact.hasAddress()) {
+                                sipContacts.add(contact);
+                            }
                         }
-                    }
-                    if (contact != null && contact.hasAddress()) {
-                        sipContacts.add(contact);
                     }
                 }
             }
@@ -447,14 +447,13 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 String data2 = c.getString(c.getColumnIndex("data2"));
                 String data3 = c.getString(c.getColumnIndex("data3"));
 
-
+                nativeIds.add(id);
                 boolean created = false;
                 LinphoneContact contact = mAndroidContactsCache.get(id);
                 if (contact == null) {
                     created = true;
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
-                    nativeIds.add(id);
                     contact.setFullName(displayName);
                     mAndroidContactsCache.put(id, contact);
                 }
@@ -477,14 +476,16 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 }
             }
 
-            for (LinphoneContact contact : mAndroidContactsCache.values()) {
-                String id = contact.getAndroidId();
-                if (id != null && !nativeIds.contains(id)) {
-                    // Has been removed since last fetch
-                    for (FriendList list : lc.getFriendsLists()) {
-                        list.removeFriend(contact.getFriend());
+            for (FriendList list : lc.getFriendsLists()) {
+                for (Friend friend : list.getFriends()) {
+                    LinphoneContact contact = (LinphoneContact) friend.getUserData();
+                    if (contact != null && contact.isAndroidContact()) {
+                        String id = contact.getAndroidId();
+                        if (id != null && !nativeIds.contains(id)) {
+                            // Has been removed since last fetch
+                            contacts.remove(contact);
+                        }
                     }
-                    contacts.remove(contact);
                 }
             }
             nativeIds.clear();
