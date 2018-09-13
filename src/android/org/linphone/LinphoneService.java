@@ -33,11 +33,13 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.GlobalState;
 import org.linphone.core.LogLevel;
 import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
@@ -72,6 +74,9 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.ArrayMap;
 import android.view.WindowManager;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForChatRoom;
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 
 /**
  * Linphone service, reacting to Incoming calls, ...<br />
@@ -639,16 +644,18 @@ public final class LinphoneService extends Service {
 			mChatNotifMap.put(conferenceAddress, notif);
 		}
 
-		Bitmap bm = null;
-		if (fromPictureUri != null) {
-			try {
-				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
-			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_secure1);
-			}
-		} else {
+		Bitmap bm;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForChatRoom(LinphoneManager.getLc(), conferenceAddress);
+		if (securityLevel == ChatRoomSecurityLevel.Safe) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_secure2);
+		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_unsecure);
+		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_secure1);
+		} else {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_group_small_unregistered);
 		}
+
 		Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, subject,
 				getString(R.string.group_chat_notif).replace("%1", fromName).replace("%2", message), bm, notifContentIntent);
 
@@ -677,15 +684,16 @@ public final class LinphoneService extends Service {
 			mChatNotifMap.put(fromSipUri, notif);
 		}
 
-		Bitmap bm = null;
-		if (fromPictureUri != null) {
-			try {
-				bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
-			} catch (Exception e) {
-				bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
-			}
-		} else {
+		Bitmap bm;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForChatRoom(LinphoneManager.getLc(), fromSipUri);
+		if (securityLevel == ChatRoomSecurityLevel.Safe) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure2);
+		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_unsecure);
+		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
+		} else {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_unregistered);
 		}
 		Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, fromName, message, bm, notifContentIntent);
 

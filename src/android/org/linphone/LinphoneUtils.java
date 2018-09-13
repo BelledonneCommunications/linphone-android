@@ -809,6 +809,18 @@ public final class LinphoneUtils {
 		return ChatRoomSecurityLevel.ClearText;
 	}
 
+	public static ChatRoomSecurityLevel getSecurityLevelForChatRoom(Core lc, String chatUri) {
+		if (chatUri == null) return ChatRoomSecurityLevel.ClearText;
+
+		for (ChatRoom cr : lc.getChatRooms()) {
+			if (cr != null && cr.getConferenceAddress().asStringUriOnly().equalsIgnoreCase(chatUri)) {
+				return cr.getSecurityLevel();
+			}
+		}
+
+		return ChatRoomSecurityLevel.ClearText;
+	}
+
 	public static boolean hasContentFileSharing(Content[] contents) {
 		if (contents == null) return false;
 
