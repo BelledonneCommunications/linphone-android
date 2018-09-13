@@ -183,6 +183,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
             view.setTag(holder);
         }
 
+	    view.setOnLongClickListener(new View.OnLongClickListener() {
+		    @Override
+		    public boolean onLongClick(View view) {
+			    return false;
+		    }
+	    });
+
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
 	    holder.separatorLayout.setVisibility(i == 0 ? View.GONE : View.VISIBLE); // Hide separator if first item in list
