@@ -71,6 +71,17 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
     public int compareTo(LinphoneContact contact) {
         String fullName = getFullName() != null ? getFullName().toUpperCase(Locale.getDefault()) : "";
         String contactFullName = contact.getFullName() != null ? contact.getFullName().toUpperCase(Locale.getDefault()) : "";
+
+        if (fullName.equals(contactFullName)) {
+            if (getAndroidId() != null) {
+                if (contact.getAndroidId() != null) {
+                    return getAndroidId().compareTo(contact.getAndroidId());
+                }
+                return -1;
+            }
+            if (contact.getAndroidId() != null) return 1;
+            return 0;
+        }
         return fullName.compareTo(contactFullName);
     }
 
@@ -700,12 +711,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                 if (mime != null && mime.length() > 0) {
                     if (mime.equals(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE) || mime.equals(ContactsManager.getInstance().getString(R.string.sync_mimetype))) {
                         String number = c.getString(c.getColumnIndex("data1")); // SIP_ADDRESS
-                        if (!number.startsWith("sip:")) {
-                            number = "sip:" + number;
-                        }
-                        if (!number.contains("@")) {
-                            number = number + "@" + ContactsManager.getInstance().getString(R.string.default_domain);
-                        }
                         result.add(new LinphoneNumberOrAddress(number, true));
                     } else if (mime.equals(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
                         String number = c.getString(c.getColumnIndex("data1")); // PHONE_NUMBER

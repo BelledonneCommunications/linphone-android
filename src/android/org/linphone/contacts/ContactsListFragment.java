@@ -130,7 +130,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         linphoneContacts.setEnabled(!allContacts.isEnabled());
         contactsFetchInProgress.setVisibility(View.VISIBLE);
 
-
         clearSearchField = view.findViewById(R.id.clearSearchField);
         clearSearchField.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +165,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         dividerItemDecoration.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
         contactsList.addItemDecoration(dividerItemDecoration);
 
-        contactsFetchInProgress = (ProgressBar) view.findViewById(R.id.contactsFetchInProgress);
+        contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         contactsFetchInProgress.setVisibility(View.VISIBLE);
 
         return view;
@@ -226,8 +225,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             } else {
                 listContact = ContactsManager.getInstance().getContacts();
             }
-
-
         } else {
             if (onlyDisplayLinphoneContacts) {
                 listContact = ContactsManager.getInstance().getSIPContacts(searchField.getText().toString());
