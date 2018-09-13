@@ -175,6 +175,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
             view.setTag(holder);
         }
 
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				return false;
+			}
+		});
+
 	    holder.eventLayout.setVisibility(View.GONE);
 	    holder.bubbleLayout.setVisibility(View.GONE);
 	    holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.GONE);
