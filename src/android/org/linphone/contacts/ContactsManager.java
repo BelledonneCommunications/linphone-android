@@ -206,8 +206,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public void initializeContactManager(Activity activity) {
-        mActivity = activity;
-        mActivity.getLoaderManager().initLoader(CONTACTS_LOADER, null, this);
+        if (mActivity == null) {
+            mActivity = activity;
+            mActivity.getLoaderManager().initLoader(CONTACTS_LOADER, null, this);
+        } else if (mActivity != activity){
+            mActivity = activity;
+        }
     }
 
     public void initializeSyncAccount(Activity activity) {
