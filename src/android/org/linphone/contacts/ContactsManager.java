@@ -505,8 +505,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             String rls = mActivity.getString(R.string.rls_uri);
             for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
-                if (rls != null && rls.equals(list.getRlsAddress().asStringUriOnly())) {
-                    list.setRlsUri(mActivity.getString(R.string.rls_uri));
+                if (rls != null && (list.getRlsAddress() == null || !list.getRlsAddress().asStringUriOnly().equals(rls))) {
+                    list.setRlsUri(rls);
                 }
                 list.setListener(this);
                 list.updateSubscriptions();
