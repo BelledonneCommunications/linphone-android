@@ -104,17 +104,17 @@
 						android:contentDescription="@string/content_description_history"
 						android:src="@drawable/footer_history"/>
 
-                    <TextView
-                        android:id="@+id/missed_calls"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="55dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/history_chat_indicator"
-                        android:gravity="center"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
-                        android:visibility="gone"/>
+					<TextView
+						android:id="@+id/missed_calls"
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_marginLeft="55dp"
+						android:layout_marginTop="20dp"
+						android:background="@drawable/history_chat_indicator"
+						android:gravity="center"
+						android:textColor="#000000"
+						android:textSize="17sp"
+						android:visibility="invisible"/>
 
 				</RelativeLayout>
 
@@ -198,18 +198,18 @@
 						android:background="@drawable/footer_button"
 						android:src="@drawable/footer_chat"/>
 
-                    <TextView
-                        android:id="@+id/missed_chats"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginLeft="55dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/history_chat_indicator"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
-                        android:visibility="gone"/>
+					<TextView
+						android:id="@+id/missed_chats"
+						android:layout_width="25dp"
+						android:layout_height="25dp"
+						android:layout_marginLeft="55dp"
+						android:layout_marginTop="20dp"
+						android:background="@drawable/history_chat_indicator"
+						android:gravity="center"
+						android:textAlignment="center"
+						android:textColor="#000000"
+						android:textSize="17sp"
+						android:visibility="gone"/>
 
 				</RelativeLayout>
 			</LinearLayout>

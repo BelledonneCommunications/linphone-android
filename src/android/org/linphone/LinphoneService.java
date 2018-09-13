@@ -563,7 +563,12 @@ public final class LinphoneService extends Service {
 		} catch (Exception e) {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
 		}
-		String name = address.getDisplayName() == null ? address.getUsername() : address.getDisplayName();
+		String name;
+		if (contact != null) {
+			name = contact.getFullName() == null ? address.getUsername() : contact.getFullName();
+		} else {
+			name = address.getDisplayName() == null ? address.getUsername() : address.getDisplayName();
+		}
 		Intent notifIntent = new Intent(this, incomingReceivedActivity);
 		notifIntent.putExtra("Notification", true);
 		mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);

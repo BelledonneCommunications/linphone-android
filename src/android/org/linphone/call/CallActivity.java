@@ -781,20 +781,16 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void enabledTransferButton(boolean enabled){
 		if(enabled) {
 			transfer.setEnabled(true);
-			transfer.setAlpha(1f);
 		} else {
 			transfer.setEnabled(false);
-			transfer.setAlpha(0.4f);
 		}
 	}
 
 	private void enabledConferenceButton(boolean enabled){
 		if (enabled) {
 			conference.setEnabled(true);
-			conference.setAlpha(1f);
 		} else {
 			conference.setEnabled(false);
-			conference.setAlpha(0.4f);
 		}
 	}
 

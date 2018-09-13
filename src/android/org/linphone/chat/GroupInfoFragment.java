@@ -503,7 +503,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 
 	@Override
 	public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
-
+		refreshParticipantsList();
 	}
 
 	@Override

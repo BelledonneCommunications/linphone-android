@@ -41,6 +41,9 @@
 					android:id="@+id/active_call"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:layout_centerHorizontal="false"
+					android:layout_centerInParent="false"
+					android:layout_centerVertical="false"
 					android:visibility="visible">
 
 					<RelativeLayout
@@ -82,9 +85,9 @@
 						android:id="@+id/avatar_layout"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_above="@+id/active_call_info"
-						android:layout_margin="5dp"
-						android:gravity="center_horizontal"
+						android:layout_alignParentStart="true"
+						android:layout_centerVertical="true"
+						android:gravity="center_vertical|center_horizontal"
 						android:paddingBottom="10dp"
 						android:paddingTop="10dp">
 
@@ -155,9 +158,8 @@
 						android:id="@+id/active_call_info"
 						android:layout_width="match_parent"
 						android:layout_height="80dp"
-						android:layout_above="@+id/help_space"
-						android:layout_alignParentBottom="true"
-						android:layout_marginTop="5dp"
+						android:layout_above="@+id/calls_list"
+						android:layout_alignParentBottom="false"
 						android:alpha="0.8"
 						android:background="@color/colorH"
 						android:orientation="vertical">
@@ -180,24 +182,22 @@
 							/>
 					</LinearLayout>
 
-				</RelativeLayout>
+					<LinearLayout
+						android:id="@+id/calls_list"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_alignParentBottom="true"
+						android:layout_gravity="bottom"
+						android:background="@color/colorH"
+						android:orientation="vertical">
+					</LinearLayout>
 
-				<LinearLayout
-					android:id="@+id/calls_list"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_above="@+id/active_call"
-					android:layout_alignParentBottom="true"
-					android:layout_gravity="bottom"
-					android:background="@color/colorH"
-					android:orientation="vertical">
-				</LinearLayout>
+				</RelativeLayout>
 
 				<LinearLayout
 					android:id="@+id/no_current_call"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:layout_above="@id/calls_list"
 					android:alpha="0"
 					android:background="#e6ff6600"
 					android:gravity="center_vertical"
