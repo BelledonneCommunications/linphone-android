@@ -286,7 +286,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 					} else if (state == State.OutgoingInit) {
 						telecomHelper.startOutgoingCall();
 					} else if (state == State.End || state == State.Error || state == State.Released) {
-						telecomHelper.stopCall();
+						telecomHelper.stopCallById(call.getCallLog().getCallId());
 
 						if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
 							call = LinphoneManager.getLc().getCalls()[0];
