@@ -47,6 +47,7 @@ import android.support.annotation.Nullable;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
@@ -463,6 +464,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     contact.setFullName(displayName);
                     mAndroidContactsCache.put(id, contact);
                 }
+                if (contact.getFullName() == null && displayName != null) {
+                    contact.setFullName(displayName);
+                }
 
                 if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
                     contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
@@ -499,6 +503,21 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
         for (LinphoneContact contact : contacts) {
             // Create the Friends matching the native contacts
+            if (contact.getFullName() == null) {
+                if (contact.hasAddress()) {
+                    for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                        if (noa.isSIPAddress()) {
+                            contact.setFullName(LinphoneUtils.getAddressDisplayName(noa.getValue()));
+                            Log.w("Couldn't find a display name for contact " + contact.getFullName() + ", used SIP address display name / username instead...");
+                            break;
+                        }
+                    }
+                }
+                if (contact.getFullName() == null) {
+                    Log.e("Couldn't find a display name for contact " + contact);
+                    continue;
+                }
+            }
             contact.createOrUpdateFriendFromNativeContact();
         }
         mAndroidContactsCache.clear();
