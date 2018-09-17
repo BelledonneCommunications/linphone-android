@@ -789,8 +789,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	private void enabledConferenceButton(boolean enabled){
 		if (enabled) {
 			conference.setEnabled(true);
+			conference.setImageAlpha(255);
 		} else {
 			conference.setEnabled(false);
+			conference.setImageAlpha(102);
 		}
 	}
 

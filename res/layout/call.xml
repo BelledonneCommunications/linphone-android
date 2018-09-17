@@ -477,8 +477,8 @@
 					android:layout_weight="0.5"
 					android:background="#aeaeae"
 					android:contentDescription="@string/content_description_conference"
-					android:padding="10dp"
-					android:src="@drawable/conference_default"
+					android:padding="5dp"
+					android:src="@drawable/options_start_conference_over"
 					android:visibility="invisible"/>
 
 			</LinearLayout>
