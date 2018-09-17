@@ -759,7 +759,13 @@ public final class LinphoneUtils {
     }
 
     public static String getStorageDirectory(Context mContext) {
-        return Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName()));
+        String storageDir = Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName()));
+        File file = new File(storageDir);
+        if (!file.isDirectory() || !file.exists()) {
+            Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
+            file.mkdirs();
+        }
+        return storageDir;
     }
 
     public static void hideKeyboard(Activity activity) {
