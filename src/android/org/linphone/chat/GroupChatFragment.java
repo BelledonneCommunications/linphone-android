@@ -259,6 +259,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
+		displayRemoteComposing(null);
 
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
 	}
@@ -270,6 +271,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		initChatRoom();
 		displayChatRoomHeader();
 		displayChatRoomHistory();
+		displayRemoteComposing(null);
 
 		LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
 	}
@@ -527,6 +529,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			mBackToCallButton.setVisibility(View.GONE);
 			mCallButton.setVisibility(View.VISIBLE);
 		}
+
 		ChatRoomSecurityLevel level = mChatRoom.getSecurityLevel();
 		if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
 			mGroupInfosButton.setVisibility(View.GONE);
@@ -576,6 +579,55 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		if (mChatRoom.hasBeenLeft()) {
 			setReadOnly();
+		}
+
+	}
+
+	public void displayRemoteComposing(Address remoteAddr) {
+		ArrayList<String> composing = new ArrayList<>();
+		for (Address a : mChatRoom.getComposingAddresses()) {
+			boolean found = false;
+			for (LinphoneContact c : mParticipants) {
+				if (c.hasAddress(a.asStringUriOnly())) {
+					composing.add(c.getFullName());
+					found = true;
+					break;
+				}
+			}
+			if (!found && remoteAddr != null) {
+				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteAddr);
+				String displayName;
+				if (contact != null) {
+					if (contact.getFullName() != null) {
+						displayName = contact.getFullName();
+					} else {
+						displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
+					}
+				} else {
+					displayName = LinphoneUtils.getAddressDisplayName(a);
+				}
+				composing.add(displayName);
+			}
+		}
+
+		mRemoteComposing.setVisibility(View.VISIBLE);
+		mParticipantsLabel.setVisibility(View.GONE);
+		if (composing.size() == 0) {
+			mRemoteComposing.setVisibility(View.GONE);
+			if (!mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) mParticipantsLabel.setVisibility(View.VISIBLE);
+		} else if (composing.size() == 1) {
+			mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", composing.get(0)));
+		} else {
+			StringBuilder remotes = new StringBuilder();
+			int i = 0;
+			for (String remote : composing) {
+				remotes.append(remote);
+				i++;
+				if (i != composing.size()) {
+					remotes.append(", ");
+				}
+			}
+			mRemoteComposing.setText(getString(R.string.remote_composing_multiple).replace("%s", remotes.toString()));
 		}
 	}
 
@@ -832,51 +884,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	@Override
 	public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-		ArrayList<String> composing = new ArrayList<>();
-		for (Address a : cr.getComposingAddresses()) {
-			boolean found = false;
-			for (LinphoneContact c : mParticipants) {
-				if (c.hasAddress(a.asStringUriOnly())) {
-					composing.add(c.getFullName());
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteAddr);
-				String displayName;
-				if (contact != null) {
-					if (contact.getFullName() != null) {
-						displayName = contact.getFullName();
-					} else {
-						displayName = LinphoneUtils.getAddressDisplayName(remoteAddr);
-					}
-				} else {
-					displayName = LinphoneUtils.getAddressDisplayName(a);
-				}
-				composing.add(displayName);
-			}
-		}
-
-		mRemoteComposing.setVisibility(View.VISIBLE);
-		mParticipantsLabel.setVisibility(View.GONE);
-		if (composing.size() == 0) {
-			mRemoteComposing.setVisibility(View.GONE);
-			if (!mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) mParticipantsLabel.setVisibility(View.VISIBLE);
-		} else if (composing.size() == 1) {
-			mRemoteComposing.setText(getString(R.string.remote_composing_single).replace("%s", composing.get(0)));
-		} else {
-			StringBuilder remotes = new StringBuilder();
-			int i = 0;
-			for (String remote : composing) {
-				remotes.append(remote);
-				i++;
-				if (i != composing.size()) {
-					remotes.append(", ");
-				}
-			}
-			mRemoteComposing.setText(getString(R.string.remote_composing_multiple).replace("%s", remotes.toString()));
-		}
+		displayRemoteComposing(remoteAddr);
 	}
 
 	@Override
