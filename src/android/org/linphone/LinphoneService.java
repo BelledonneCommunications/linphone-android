@@ -327,7 +327,8 @@ public final class LinphoneService extends Service {
 
 				if (state == Call.State.IncomingReceived) {
 					if(! LinphoneManager.getInstance().getCallGsmON())
-						onIncomingReceived();
+//						if(! LinphoneManager.getInstance().getCallGsmON() && mPrefs.getConfig() != null && !mPrefs.getNativeUICall())
+							onIncomingReceived();
 				}
 
 				if (state == State.End || state == State.Released || state == State.Error) {

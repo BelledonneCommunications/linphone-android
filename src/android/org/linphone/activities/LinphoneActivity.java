@@ -170,6 +170,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private List<String> sideMenuItems;
 	private boolean callTransfer = false;
 	private boolean isOnBackground = false;
+	private boolean hasNativeCall = false;
 
 	public String mAddressWaitingToBeCalled;
 
@@ -283,8 +284,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 					if (state == State.IncomingReceived) {
 						telecomHelper.startIncall();
+						hasNativeCall = true;
 					} else if (state == State.OutgoingInit) {
 						telecomHelper.startOutgoingCall();
+						hasNativeCall = true;
 					} else if (state == State.End || state == State.Error || state == State.Released) {
 						telecomHelper.stopCallById(call.getCallLog().getCallId());
 
@@ -292,9 +295,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 							call = LinphoneManager.getLc().getCalls()[0];
 							if (call.getState() == Call.State.IncomingReceived) {
 								telecomHelper.startIncall();
+								hasNativeCall = true;
 							} else {
 								startIncallActivity(call);
 							}
+						} else {
+							hasNativeCall=false;
 						}
 					}
 				}else {
@@ -1066,6 +1072,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
 			TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
 			telecomHelper.startIncall();
+//			this.moveTaskToBack(false);
 		}else {
 			Intent intent = new Intent(this, CallActivity.class);
 			startOrientationSensor();
@@ -1428,40 +1435,43 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	@Override
 	protected void onResume() {
-		super.onResume();
-		if (!LinphoneService.isReady()) {
-			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
-		}
 
-		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(mListener);
-			if (!LinphoneService.instance().displayServiceNotification()) {
-				lc.refreshRegisters();
+		if (true) {
+			super.onResume();
+			if (!LinphoneService.isReady()) {
+				startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 			}
-		}
 
-		if (isTablet()) {
-			// Prevent fragmentContainer2 to be visible when rotating the device
-			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-			if (currentFragment == FragmentsAvailable.DIALER
-					|| currentFragment == FragmentsAvailable.ABOUT
-					|| currentFragment == FragmentsAvailable.SETTINGS
-					|| currentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {
-				ll.setVisibility(View.GONE);
+			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+			if (lc != null) {
+				lc.addListener(mListener);
+				if (!LinphoneService.instance().displayServiceNotification()) {
+					lc.refreshRegisters();
+				}
 			}
+
+			if (isTablet()) {
+				// Prevent fragmentContainer2 to be visible when rotating the device
+				LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+				if (currentFragment == FragmentsAvailable.DIALER
+						|| currentFragment == FragmentsAvailable.ABOUT
+						|| currentFragment == FragmentsAvailable.SETTINGS
+						|| currentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {
+					ll.setVisibility(View.GONE);
+				}
+			}
+
+			refreshAccounts();
+
+			if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
+				isTrialAccount();
+			}
+
+			displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+			displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
+
+			LinphoneManager.getInstance().changeStatusToOnline();
 		}
-
-		refreshAccounts();
-
-		if(getResources().getBoolean(R.bool.enable_in_app_purchase)){
-			isTrialAccount();
-		}
-
-		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
-		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
-
-		LinphoneManager.getInstance().changeStatusToOnline();
 
 		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {

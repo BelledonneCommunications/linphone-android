@@ -1,6 +1,8 @@
 package org.linphone.call;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -42,10 +44,12 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import static org.linphone.call.LinphoneConnectionService.CS_TO_EXT_ACTION;
 import static org.linphone.call.LinphoneConnectionService.EXT_TO_CS_END_CALL;
+import static org.linphone.call.LinphoneConnectionService.EXT_TO_CS_HOLD_CALL;
 
 public class TelecomManagerHelper {
     private Call mCall = null;
@@ -57,6 +61,7 @@ public class TelecomManagerHelper {
     private final int OUTGOING = 2;
     private final int END = 3;
     private final int CURRENT = 4;
+    private final int HELD = 5;
     private final boolean PAUSE = false;
     private final boolean RESUME = true;
     private CoreListenerStub mListener;
@@ -71,7 +76,6 @@ public class TelecomManagerHelper {
             LinphoneManager.getInstance().setLinPhoneAccount();
         }
         phoneAccountHandle = LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler();
-
     }
 
 
@@ -110,6 +114,20 @@ public class TelecomManagerHelper {
         }
 
 
+        if (LinphoneManager.getLc().getCalls().length == 2) {
+            Call nextCall = mCall;
+            //At this point, mCall gets the current paused call if it is
+            lookupCall(HELD);
+            if (nextCall != mCall) {
+                //If mCall differs from nextCall, 1st call is held
+                mCallId=mCall.getCallLog().getCallId();
+
+                //Unhold current call to allow ConnectionService to handle the 2nd call and stay beyond LinphoneActivity
+                sendToCS(EXT_TO_CS_HOLD_CALL);
+                pauseOrResumeCall(mCall, RESUME);
+            }
+
+        }
         telecomManager.addNewIncomingCall(phoneAccountHandle, extras);
         registerCallScreenReceiver();
 
@@ -129,7 +147,8 @@ public class TelecomManagerHelper {
         setListenerOutgoing(mCall);
 
         Bundle extras = new Bundle();
-        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
+        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
+//        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
         //                    b.putString(TelecomManager.EXTRA_CALL_BACK_NUMBER, "lule@sip.linphone.org");
         //                    b.putString(TelecomManager.GATEWAY_ORIGINAL_ADDRESS, "lule@sip.linphone.org");
         //                    b.putInt(TelecomManager.PRESENTATION_ALLOWED, getCallId());
@@ -186,6 +205,7 @@ public class TelecomManagerHelper {
         sendToCS(LinphoneConnectionService.EXT_TO_CS_END_CALL);
         if (LinphoneManager.getLc().getCalls().length == 0) {
             unRegisterCallScreenReceiver();
+            LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
         }
         LinphoneManager.getLc().terminateCall(mCall);
 
@@ -288,7 +308,7 @@ public class TelecomManagerHelper {
         intent.putExtra(LinphoneConnectionService.EXT_TO_CS_ACTION, action);
         intent.putExtra(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCallId);
 //        intent.putExtra(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
-//        if(action == LinphoneConnectionService.EXT_TO_CS_HOLD_CALL ){
+//        if(action == LinphoneConnectionService.EXT_TO_CS_HOLD_CALL && getCallById(mCallId).getState()== Call.State.Paused){
 //            intent.putExtra(LinphoneConnectionService.EXT_TO_CS_HOLD_STATE, true);
 //        }
         LocalBroadcastManager.getInstance(LinphoneManager.getInstance().getContext()).sendBroadcast(intent);
@@ -320,6 +340,11 @@ public class TelecomManagerHelper {
                         }
                     case CURRENT:
                         if (Call.State.StreamsRunning == call.getState()) {
+                            mCall = call;
+                            break;
+                        }
+                    case HELD:
+                        if (Call.State.Paused == call.getState()) {
                             mCall = call;
                             break;
                         }

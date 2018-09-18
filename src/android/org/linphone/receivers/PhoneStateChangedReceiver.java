@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 
 import org.linphone.LinphonePreferences;
-import org.linphone.call.TelecomManagerHelper;
 import org.linphone.core.Core;
 
 import org.linphone.LinphoneManager;

@@ -163,6 +163,7 @@ public class LinphoneConnectionService extends ConnectionService {
             capabilities |= CAPABILITY_MUTE;
             capabilities |= CAPABILITY_SUPPORT_HOLD;
             capabilities |= CAPABILITY_HOLD;
+            capabilities |= CAPABILITY_CAN_UPGRADE_TO_VIDEO;
             setConnectionCapabilities(capabilities);
 
         }
