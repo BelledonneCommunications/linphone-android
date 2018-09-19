@@ -393,7 +393,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        if (id == CONTACTS_LOADER) {
+        if (id == CONTACTS_LOADER && hasContactsAccess()) {
             return new CursorLoader(
                     mActivity,
                     ContactsContract.Data.CONTENT_URI,
