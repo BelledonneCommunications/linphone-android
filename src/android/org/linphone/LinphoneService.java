@@ -426,7 +426,7 @@ public final class LinphoneService extends Service {
         AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
         Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
 
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     @SuppressWarnings("unchecked")
