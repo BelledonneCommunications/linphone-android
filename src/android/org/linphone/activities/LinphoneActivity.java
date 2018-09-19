@@ -1227,7 +1227,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     public void checkAndRequestPermissionsToSendImage() {
-        ArrayList<String> permissionsList = new ArrayList<String>();
+        ArrayList<String> permissionsList = new ArrayList<>();
 
         int readExternalStorage = getPackageManager().checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName());
         Log.i("[Permission] Read external storage permission is " + (readExternalStorage == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
@@ -1309,7 +1309,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
             ContactsManager.getInstance().enableContactsAccess();
             if (!ContactsManager.getInstance().contactsFetchedOnce()) {
-                ContactsManager.getInstance().enableContactsAccess();
                 ContactsManager.getInstance().fetchContactsAsync();
             }
         }
@@ -1318,7 +1317,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     @Override
     protected void onStart() {
         super.onStart();
-        ArrayList<String> permissionsList = new ArrayList<String>();
+        ArrayList<String> permissionsList = new ArrayList<>();
 
         int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
         Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
@@ -1392,7 +1391,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
         if (isTablet()) {
             // Prevent fragmentContainer2 to be visible when rotating the device
-            LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+            LinearLayout ll = findViewById(R.id.fragmentContainer2);
             if (currentFragment == FragmentsAvailable.DIALER
                     || currentFragment == FragmentsAvailable.ABOUT
                     || currentFragment == FragmentsAvailable.SETTINGS
