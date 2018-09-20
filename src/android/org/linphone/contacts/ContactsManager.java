@@ -209,9 +209,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     public void initializeContactManager(Activity activity) {
         if (mActivity == null) {
             mActivity = activity;
-            mActivity.getLoaderManager().initLoader(CONTACTS_LOADER, null, this);
-        } else if (mActivity != activity){
+        } else if (mActivity != activity) {
             mActivity = activity;
+        }
+        if (mContacts.size() == 0 && hasContactsAccess()) {
+            mActivity.getLoaderManager().initLoader(CONTACTS_LOADER, null, this);
         }
     }
 
@@ -393,7 +395,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        if (id == CONTACTS_LOADER && hasContactsAccess()) {
+        if (id == CONTACTS_LOADER) {
+            if (!hasContactsAccess()) {
+                Log.w("[ContactsManager] Read contacts permission was denied");
+                return null;
+            }
             return new CursorLoader(
                     mActivity,
                     ContactsContract.Data.CONTENT_URI,

@@ -363,10 +363,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
-        changeCurrentFragment(newFragmentType, extras, false);
-    }
-
-    private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras, boolean withoutAnimation) {
         if (newFragmentType == currentFragment && newFragmentType != FragmentsAvailable.CHAT
                 && newFragmentType != FragmentsAvailable.GROUP_CHAT) {
             return;
@@ -440,7 +436,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (fragment != null) {
             fragment.setArguments(extras);
             if (isTablet()) {
-                changeFragmentForTablets(fragment, newFragmentType, withoutAnimation);
+                changeFragmentForTablets(fragment, newFragmentType);
                 switch (newFragmentType) {
                     case HISTORY_LIST:
                         ((HistoryListFragment) fragment).displayFirstLog();
@@ -453,29 +449,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                         break;
                 }
             } else {
-                changeFragment(fragment, newFragmentType, withoutAnimation);
+                changeFragment(fragment, newFragmentType);
             }
             LinphoneUtils.hideKeyboard(this);
         }
     }
 
-    private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
+    private void changeFragment(Fragment newFragment, FragmentsAvailable newFragmentType) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-
-		/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
-			if (newFragmentType.isRightOf(currentFragment)) {
-				transaction.setCustomAnimations(R.anim.slide_in_right_to_left,
-						R.anim.slide_out_right_to_left,
-						R.anim.slide_in_left_to_right,
-						R.anim.slide_out_left_to_right);
-			} else {
-				transaction.setCustomAnimations(R.anim.slide_in_left_to_right,
-						R.anim.slide_out_left_to_right,
-						R.anim.slide_in_right_to_left,
-						R.anim.slide_out_right_to_left);
-			}
-		}*/
 
         if (newFragmentType != FragmentsAvailable.DIALER
                 && newFragmentType != FragmentsAvailable.CONTACTS_LIST
@@ -496,7 +478,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         currentFragment = newFragmentType;
     }
 
-    private void changeFragmentForTablets(Fragment newFragment, FragmentsAvailable newFragmentType, boolean withoutAnimation) {
+    private void changeFragmentForTablets(Fragment newFragment, FragmentsAvailable newFragmentType) {
         if (getResources().getBoolean(R.bool.show_statusbar_only_on_dialer)) {
             if (newFragmentType == FragmentsAvailable.DIALER) {
                 showStatusBar();
@@ -505,7 +487,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             }
         }
         emptyFragment = false;
-        LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+        LinearLayout ll = findViewById(R.id.fragmentContainer2);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -1138,7 +1120,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     protected void onPostResume() {
         super.onPostResume();
         if (pendingFragmentTransaction != FragmentsAvailable.UNKNOW) {
-            changeCurrentFragment(pendingFragmentTransaction, null, true);
+            changeCurrentFragment(pendingFragmentTransaction, null);
             selectMenu(pendingFragmentTransaction);
             pendingFragmentTransaction = FragmentsAvailable.UNKNOW;
         }
@@ -1309,7 +1291,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (readContactsI >= 0 && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
             ContactsManager.getInstance().enableContactsAccess();
             if (!ContactsManager.getInstance().contactsFetchedOnce()) {
-                ContactsManager.getInstance().fetchContactsAsync();
+                ContactsManager.getInstance().initializeContactManager(this);
             }
         }
     }
@@ -1580,19 +1562,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     public void initSideMenu() {
-        sideMenu = (DrawerLayout) findViewById(R.id.side_menu);
-        sideMenuItems = new ArrayList<String>();
+        sideMenu = findViewById(R.id.side_menu);
+        sideMenuItems = new ArrayList<>();
         sideMenuItems.add(getResources().getString(R.string.menu_assistant));
         sideMenuItems.add(getResources().getString(R.string.menu_settings));
         if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
             sideMenuItems.add(getResources().getString(R.string.inapp));
         }
         sideMenuItems.add(getResources().getString(R.string.menu_about));
-        sideMenuContent = (RelativeLayout) findViewById(R.id.side_menu_content);
-        sideMenuItemList = (ListView) findViewById(R.id.item_list);
-        menu = (ImageView) findViewById(R.id.side_menu_button);
+        sideMenuContent = findViewById(R.id.side_menu_content);
+        sideMenuItemList = findViewById(R.id.item_list);
+        menu = findViewById(R.id.side_menu_button);
 
-        sideMenuItemList.setAdapter(new ArrayAdapter<String>(this, R.layout.side_menu_item_cell, sideMenuItems));
+        sideMenuItemList.setAdapter(new ArrayAdapter<>(this, R.layout.side_menu_item_cell, sideMenuItems));
         sideMenuItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -1628,7 +1610,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             }
         });
 
-        quitLayout = (RelativeLayout) findViewById(R.id.side_menu_quit);
+        quitLayout = findViewById(R.id.side_menu_quit);
         quitLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1657,9 +1639,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
     private void displayMainAccount() {
         defaultAccount.setVisibility(View.VISIBLE);
-        ImageView status = (ImageView) defaultAccount.findViewById(R.id.main_account_status);
-        TextView address = (TextView) defaultAccount.findViewById(R.id.main_account_address);
-        TextView displayName = (TextView) defaultAccount.findViewById(R.id.main_account_display_name);
+        ImageView status = defaultAccount.findViewById(R.id.main_account_status);
+        TextView address = defaultAccount.findViewById(R.id.main_account_address);
+        TextView displayName = defaultAccount.findViewById(R.id.main_account_display_name);
 
 
         ProxyConfig proxy = LinphoneManager.getLc().getDefaultProxyConfig();
@@ -1709,20 +1691,20 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     private void initAccounts() {
-        accountsList = (ListView) findViewById(R.id.accounts_list);
-        defaultAccount = (RelativeLayout) findViewById(R.id.default_account);
+        accountsList = findViewById(R.id.accounts_list);
+        defaultAccount = findViewById(R.id.default_account);
     }
 
     class AccountsListAdapter extends BaseAdapter {
         List<ProxyConfig> proxy_list;
 
         AccountsListAdapter() {
-            proxy_list = new ArrayList<ProxyConfig>();
+            proxy_list = new ArrayList<>();
             refresh();
         }
 
         public void refresh() {
-            proxy_list = new ArrayList<ProxyConfig>();
+            proxy_list = new ArrayList<>();
             for (ProxyConfig proxyConfig : LinphoneManager.getLc().getProxyConfigList()) {
                 if (proxyConfig != LinphoneManager.getLc().getDefaultProxyConfig()) {
                     proxy_list.add(proxyConfig);
@@ -1747,7 +1729,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
 
         public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = null;
+            View view;
             ProxyConfig lpc = (ProxyConfig) getItem(position);
             if (convertView != null) {
                 view = convertView;
@@ -1755,8 +1737,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 view = getLayoutInflater().inflate(R.layout.side_menu_account_cell, parent, false);
             }
 
-            ImageView status = (ImageView) view.findViewById(R.id.account_status);
-            TextView address = (TextView) view.findViewById(R.id.account_address);
+            ImageView status = view.findViewById(R.id.account_status);
+            TextView address = view.findViewById(R.id.account_address);
             String sipAddress = lpc.getIdentityAddress().asStringUriOnly();
 
             address.setText(sipAddress);
