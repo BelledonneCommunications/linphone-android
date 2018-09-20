@@ -3,6 +3,7 @@ package org.linphone.call;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -107,6 +108,9 @@ public class TelecomManagerHelper {
 
         extras.putString(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
         extras.putString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS, strAddress);
+//        extras.putInt(TelecomManager.EXTRA_INCOMING_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
+        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
+
 
         if (strContact != null) {
             b.putString(TelecomManager.EXTRA_INCOMING_CALL_EXTRAS, strContact);
@@ -475,7 +479,7 @@ public class TelecomManagerHelper {
 
         if (params != null) {
             params.enableLowBandwidth(isLowBandwidthConnection);
-        }else {
+        } else {
             Log.e("Could not create call params for call");
         }
 
@@ -488,9 +492,50 @@ public class TelecomManagerHelper {
             }
             LinphoneManager.getInstance().routeAudioToReceiver();
             LinphoneManager.getLc().acceptCall(mCall);
-
         }
     }
+
+        //Video
+
+        private void switchVideo(final boolean displayVideo) {
+            final Call call = LinphoneManager.getLc().getCurrentCall();
+            if (call == null) {
+                return;
+            }
+
+            //Check if the call is not terminated
+//            if(call.getState() == State.End || call.getState() == State.Released) return;
+//
+//            if (!displayVideo) {
+//                showAudioView();
+//            } else {
+                if (!call.getRemoteParams().lowBandwidthEnabled()) {
+                    LinphoneManager.getInstance().addVideo();
+//                    if (videoCallFragment == null || !videoCallFragment.isVisible())
+                    LinphoneManager.getInstance().enableProximitySensing(false);
+                    replaceFragmentAudioByVideo();
+                }
+//                else {
+//                    displayCustomToast(getString(R.string.error_low_bandwidth), Toast.LENGTH_LONG);
+//                }
+//            }
+        }
+
+
+
+    private void replaceFragmentAudioByVideo() {
+//		Hiding controls to let displayVideoCallControlsIfHidden add them plus the callback
+        CallVideoFragment videoCallFragment = new CallVideoFragment();
+
+        FragmentTransaction transaction = CallActivity.instance().getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, videoCallFragment);
+        try {
+            transaction.commitAllowingStateLoss();
+        } catch (Exception e) {
+        }
+    }
+
+
     public void displayCustomToast(final String message, final int duration) {
         LayoutInflater inflater = LinphoneActivity.instance().getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast, (ViewGroup) LinphoneActivity.instance().findViewById(R.id.toastRoot));

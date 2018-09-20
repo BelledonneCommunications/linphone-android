@@ -25,7 +25,9 @@ import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.RemoteConference;
 import android.telecom.TelecomManager;
+import android.telecom.VideoProfile;
 import android.util.Log;
+import android.view.Surface;
 
 import org.linphone.LinphoneManager;
 import org.linphone.activities.LinphoneActivity;
@@ -164,8 +166,8 @@ public class LinphoneConnectionService extends ConnectionService {
             capabilities |= CAPABILITY_SUPPORT_HOLD;
             capabilities |= CAPABILITY_HOLD;
             capabilities |= CAPABILITY_CAN_UPGRADE_TO_VIDEO;
+            capabilities |= CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL;
             setConnectionCapabilities(capabilities);
-
         }
 
         public String getCallId() {
@@ -449,7 +451,61 @@ public class LinphoneConnectionService extends ConnectionService {
 
     //End conference part
 
+    //VideoProvider Implementation
 
+    final class MyVideoProvider extends Connection.VideoProvider {
+
+
+        @Override
+        public void onSetCamera(String cameraId) {
+
+        }
+
+        @Override
+        public void onSetPreviewSurface(Surface surface) {
+
+        }
+
+        @Override
+        public void onSetDisplaySurface(Surface surface) {
+
+        }
+
+        @Override
+        public void onSetDeviceOrientation(int rotation) {
+
+        }
+
+        @Override
+        public void onSetZoom(float value) {
+
+        }
+
+        @Override
+        public void onSendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {
+
+        }
+
+        @Override
+        public void onSendSessionModifyResponse(VideoProfile responseProfile) {
+
+        }
+
+        @Override
+        public void onRequestCameraCapabilities() {
+
+        }
+
+        @Override
+        public void onRequestConnectionDataUsage() {
+
+        }
+
+        @Override
+        public void onSetPauseImage(Uri uri) {
+
+        }
+    }
 
 
 
@@ -581,6 +637,8 @@ public class LinphoneConnectionService extends ConnectionService {
             setAddress(connection, providedHandle);
             connection.setAudioModeIsVoip(true);
             connection.setRinging();
+            connection.setVideoState(VideoProfile.STATE_BIDIRECTIONAL);
+            connection.setVideoProvider(new MyVideoProvider());
             addCall(connection);
 
             return connection;

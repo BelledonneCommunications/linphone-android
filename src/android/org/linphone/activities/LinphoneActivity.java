@@ -170,7 +170,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private List<String> sideMenuItems;
 	private boolean callTransfer = false;
 	private boolean isOnBackground = false;
-	private boolean hasNativeCall = false;
+	private boolean mPreventNative = false;
 
 	public String mAddressWaitingToBeCalled;
 
@@ -278,16 +278,27 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 				//If user choose native call UI mode
 				LinphonePreferences mPrefs = LinphonePreferences.instance();
-				if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+
+//				(mPrefs.shouldAutomaticallyAcceptVideoRequests() && call.getRemoteParams().videoEnabled())
+//				||  (mPrefs.shouldInitiateVideoCall() && call.getDir() == Call.Dir.Outgoing)
+//				&& call.getRemoteParams() != null
+				if (call != null &&
+						((mPrefs.shouldInitiateVideoCall() && call.getDir() == Call.Dir.Outgoing) ||
+						 (call.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && call.getRemoteParams().videoEnabled()))
+					){
+					mPreventNative=true;
+				}else{
+					mPreventNative=false;
+				}
+
+                if ( mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
 
 					TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
 
 					if (state == State.IncomingReceived) {
 						telecomHelper.startIncall();
-						hasNativeCall = true;
 					} else if (state == State.OutgoingInit) {
 						telecomHelper.startOutgoingCall();
-						hasNativeCall = true;
 					} else if (state == State.End || state == State.Error || state == State.Released) {
 						telecomHelper.stopCallById(call.getCallLog().getCallId());
 
@@ -295,15 +306,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 							call = LinphoneManager.getLc().getCalls()[0];
 							if (call.getState() == Call.State.IncomingReceived) {
 								telecomHelper.startIncall();
-								hasNativeCall = true;
 							} else {
 								startIncallActivity(call);
 							}
-						} else {
-							hasNativeCall=false;
 						}
 					}
-				}else {
+				} else {
 				//If user choose Linphone call UI mode
 					if (state == State.IncomingReceived) {
 						startActivity(new Intent(LinphoneActivity.instance(), CallIncomingActivity.class));
@@ -1069,10 +1077,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	//Start Call_Activity
 	public void startIncallActivity(Call currentCall) {
 		LinphonePreferences mPrefs = LinphonePreferences.instance();
-		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
+		if (currentCall != null &&
+				((mPrefs.shouldInitiateVideoCall() && currentCall.getDir() == Call.Dir.Outgoing) ||
+						(currentCall.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && currentCall.getRemoteParams().videoEnabled()))
+				){
+			mPreventNative=true;
+		}else{
+			mPreventNative=false;
+		}
+		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
 			TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
 			telecomHelper.startIncall();
-//			this.moveTaskToBack(false);
 		}else {
 			Intent intent = new Intent(this, CallActivity.class);
 			startOrientationSensor();
@@ -1436,42 +1451,41 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	@Override
 	protected void onResume() {
 
-		if (true) {
-			super.onResume();
-			if (!LinphoneService.isReady()) {
-				startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
-			}
-
-			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (lc != null) {
-				lc.addListener(mListener);
-				if (!LinphoneService.instance().displayServiceNotification()) {
-					lc.refreshRegisters();
-				}
-			}
-
-			if (isTablet()) {
-				// Prevent fragmentContainer2 to be visible when rotating the device
-				LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
-				if (currentFragment == FragmentsAvailable.DIALER
-						|| currentFragment == FragmentsAvailable.ABOUT
-						|| currentFragment == FragmentsAvailable.SETTINGS
-						|| currentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {
-					ll.setVisibility(View.GONE);
-				}
-			}
-
-			refreshAccounts();
-
-			if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
-				isTrialAccount();
-			}
-
-			displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
-			displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
-
-			LinphoneManager.getInstance().changeStatusToOnline();
+		super.onResume();
+		if (!LinphoneService.isReady()) {
+			startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
 		}
+
+		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (lc != null) {
+			lc.addListener(mListener);
+			if (!LinphoneService.instance().displayServiceNotification()) {
+				lc.refreshRegisters();
+			}
+		}
+
+		if (isTablet()) {
+			// Prevent fragmentContainer2 to be visible when rotating the device
+			LinearLayout ll = (LinearLayout) findViewById(R.id.fragmentContainer2);
+			if (currentFragment == FragmentsAvailable.DIALER
+					|| currentFragment == FragmentsAvailable.ABOUT
+					|| currentFragment == FragmentsAvailable.SETTINGS
+					|| currentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {
+				ll.setVisibility(View.GONE);
+			}
+		}
+
+		refreshAccounts();
+
+		if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
+			isTrialAccount();
+		}
+
+		displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+		displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
+
+		LinphoneManager.getInstance().changeStatusToOnline();
+
 
 		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {

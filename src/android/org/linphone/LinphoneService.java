@@ -117,7 +117,7 @@ public final class LinphoneService extends Service {
 //	private boolean mTestDelayElapsed; // add a timer for testing
 	private boolean mTestDelayElapsed = true; // no timer
 	private NotificationManager mNM;
-
+	private boolean mPreventNative = false;
 	private Notification mNotif;
 	private Notification mIncallNotif;
 	private Notification mCustomNotif;
@@ -342,7 +342,17 @@ public final class LinphoneService extends Service {
 				}
                 //Use only if not in native UI mode
                 LinphonePreferences mPrefs = LinphonePreferences.instance();
-                if (mPrefs.getConfig() != null && !mPrefs.getNativeUICall()) {
+
+				if (call != null &&
+						((mPrefs.shouldInitiateVideoCall() && call.getDir() == Call.Dir.Outgoing) ||
+								(call.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && call.getRemoteParams().videoEnabled()))
+						){
+					mPreventNative=true;
+				}else{
+					mPreventNative=false;
+				}
+
+                if (mPrefs.getConfig() != null && (!mPrefs.getNativeUICall() || mPreventNative) ) {
 
                     if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
                         int missedCallCount = LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
