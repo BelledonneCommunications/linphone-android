@@ -27,9 +27,12 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 
@@ -47,6 +50,9 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 
 public class ContactDetailsFragment extends Fragment implements OnClickListener {
 	private LinphoneContact contact;
@@ -169,11 +175,34 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
 	@SuppressLint("InflateParams")
 	private void displayContact(LayoutInflater inflater, View view) {
 		ImageView contactPicture = view.findViewById(R.id.contact_picture);
-		if (contact.hasPhoto()) {
-			LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-        } else {
-        	contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-        }
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getFriend().getAddress());
+		if (securityLevel == ChatRoomSecurityLevel.Safe) {
+			contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
+		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+			contactPicture.setImageResource(R.drawable.avatar_medium_unsecure);
+		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+			contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+		} else {
+			ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), contact.getFriend().getAddress().asStringUriOnly());
+			if (zrtpStatus == ZrtpPeerStatus.Valid) {
+				contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
+			} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+				contactPicture.setImageResource(R.drawable.avatar_medium_unsecure);
+			} else {
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact != null && contact.getFriend() != null) {
+					PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				} else {
+					contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
+			}
+		}
 
 		TextView contactName = view.findViewById(R.id.contact_name);
 		contactName.setText(contact.getFullName());

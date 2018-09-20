@@ -22,9 +22,11 @@ import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.core.AuthInfo;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
@@ -396,7 +398,21 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	}
 
 	private boolean storeAccount(String url) {
+
+		int usernameIndex = url.indexOf("username=") + "username=".length();
+		int domainIndex = url.indexOf("=", usernameIndex+1);
+		int ha1Index = url.indexOf("=", domainIndex+1);
+
+		String username = url.substring(usernameIndex, url.indexOf("&"));
+		String domain = url.substring(domainIndex+1, url.indexOf("&", domainIndex+1));
+		String ha1 = url.substring(ha1Index+1);
+
+		AuthInfo auth = Factory.instance().createAuthInfo(username, null, null, ha1, domain, domain);
+		LinphoneManager.getLc().clearAllAuthInfo();
+		LinphoneManager.getLc().addAuthInfo(auth);
+
 		LinphonePreferences.instance().setRemoteProvisioningUrl(url);
+
 		//TODO
 		LinphoneManager.getLc().iterate();
 		sleep(1000);

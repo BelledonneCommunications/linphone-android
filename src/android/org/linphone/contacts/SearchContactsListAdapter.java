@@ -39,11 +39,13 @@ import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
+import org.linphone.core.ZrtpPeerStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 
 public class SearchContactsListAdapter extends BaseAdapter {
 
@@ -282,15 +284,22 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 			holder.avatar.setImageResource(R.drawable.avatar_big_secure1);
 		} else {
-			if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
-				PresenceModel presenceModel = c.getFriend().getPresenceModel();
-				if (presenceModel != null) {
-					holder.avatar.setImageResource(R.drawable.avatar_medium_secure1);
+			ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), contact.getAddress().asStringUriOnly());
+			if (zrtpStatus == ZrtpPeerStatus.Valid) {
+				holder.avatar.setImageResource(R.drawable.avatar_medium_secure2);
+			} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+				holder.avatar.setImageResource(R.drawable.avatar_medium_unsecure);
+			} else {
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
+					PresenceModel presenceModel = c.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						holder.avatar.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						holder.avatar.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
 				} else {
 					holder.avatar.setImageResource(R.drawable.avatar_medium_unregistered);
 				}
-			} else {
-				holder.avatar.setImageResource(R.drawable.avatar_medium_unregistered);
 			}
 		}
 		view.setTag(R.id.contact_search_name, address != null ? address : a);

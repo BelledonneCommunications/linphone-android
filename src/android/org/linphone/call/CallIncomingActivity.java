@@ -52,6 +52,7 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.LinphoneSliders.LinphoneSliderTriggered;
 
@@ -59,6 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 
 public class CallIncomingActivity extends LinphoneGenericActivity implements LinphoneSliderTriggered {
 	private static CallIncomingActivity instance;
@@ -254,16 +256,22 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
 			} else {
-				if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact.getFriend() != null) {
-					PresenceModel presenceModel = contact.getFriend().getPresenceModel();
-					if (presenceModel != null) {
-						contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+				ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), contact.getFriend().getAddress().asStringUriOnly());
+				if (zrtpStatus == ZrtpPeerStatus.Valid) {
+					contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
+				} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+					contactPicture.setImageResource(R.drawable.avatar_medium_unsecure);
+				} else {
+					if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact.getFriend() != null) {
+						PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+						if (presenceModel != null) {
+							contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+						} else {
+							contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+						}
 					} else {
 						contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
 					}
-				}
-				else {
-					contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
 				}
 			}
 		} else {

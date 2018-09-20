@@ -45,6 +45,7 @@ import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.receivers.KeepAliveReceiver;
@@ -77,6 +78,7 @@ import android.view.WindowManager;
 
 import static org.linphone.LinphoneUtils.getSecurityLevelForChatRoom;
 import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 
 /**
  * Linphone service, reacting to Incoming calls, ...<br />
@@ -562,10 +564,13 @@ public final class LinphoneService extends Service {
 
 		LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
 		Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
-		Bitmap bm = null;
-		try {
-			bm = MediaStore.Images.Media.getBitmap(getContentResolver(), pictureUri);
-		} catch (Exception e) {
+		Bitmap bm;
+		ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), address.asStringUriOnly());
+		if (zrtpStatus == ZrtpPeerStatus.Valid) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure2);
+		} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_unsecure);
+		} else {
 			bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar_small_secure1);
 		}
 		String name;

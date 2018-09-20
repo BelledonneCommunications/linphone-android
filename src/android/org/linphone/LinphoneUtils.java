@@ -68,6 +68,7 @@ import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.Participant;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 
@@ -846,6 +847,10 @@ public final class LinphoneUtils {
 		if (proxy == null || username == null || username.isEmpty()) return false;
 		Address proxyConfigContact = proxy.getContact();
 		return proxyConfigContact.getUsername().equalsIgnoreCase(username);
+	}
+
+	public static ZrtpPeerStatus getZrtpStatus(Core lc, String uri) {
+		return (uri != null) ? lc.getZrtpStatus(uri) : ZrtpPeerStatus.Unknown;
 	}
 }
 
