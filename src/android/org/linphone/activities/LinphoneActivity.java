@@ -1095,6 +1095,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 	}
 
+
+
+	public void startCallActivity(Call currentCall) {
+
+			Intent intent = new Intent(this, CallActivity.class);
+			startOrientationSensor();
+			startActivityForResult(intent, CALL_ACTIVITY);
+
+	}
 	/**
 	 * Register a sensor to track phoneOrientation changes
 	 */

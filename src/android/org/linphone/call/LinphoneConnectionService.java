@@ -1,18 +1,25 @@
 package org.linphone.call;
 
 import java.util.Collections;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telecom.CallAudioState;
 import android.telecom.Conference;
@@ -28,8 +35,14 @@ import android.telecom.TelecomManager;
 import android.telecom.VideoProfile;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -81,6 +94,11 @@ public class LinphoneConnectionService extends ConnectionService {
     public static final int CS_TO_EXT_ADD_TO_CONF = 7; //add call to conference
     public static final int CS_TO_EXT_REMOVE_FROM_CONF = 8; //remove call from conference
 
+    private static final int PERMISSIONS_REQUEST_CAMERA = 202;
+
+    private Dialog dialog = null;
+    private boolean isVideoAsk;
+
     /**
      * Intent extra used to pass along the video state for a new test sipAudioCall.
      */
@@ -101,6 +119,7 @@ public class LinphoneConnectionService extends ConnectionService {
                 mSipEventReceiver, new IntentFilter(EXT_TO_CS_BROADCAST));
         Log.d(TAG, "mSipEventReceiver: registered!");
     }
+
 
 
     private BroadcastReceiver mSipEventReceiver = new BroadcastReceiver() {
@@ -451,66 +470,6 @@ public class LinphoneConnectionService extends ConnectionService {
 
     //End conference part
 
-    //VideoProvider Implementation
-
-    final class MyVideoProvider extends Connection.VideoProvider {
-
-
-        @Override
-        public void onSetCamera(String cameraId) {
-
-        }
-
-        @Override
-        public void onSetPreviewSurface(Surface surface) {
-
-        }
-
-        @Override
-        public void onSetDisplaySurface(Surface surface) {
-
-        }
-
-        @Override
-        public void onSetDeviceOrientation(int rotation) {
-
-        }
-
-        @Override
-        public void onSetZoom(float value) {
-
-        }
-
-        @Override
-        public void onSendSessionModifyRequest(VideoProfile fromProfile, VideoProfile toProfile) {
-
-        }
-
-        @Override
-        public void onSendSessionModifyResponse(VideoProfile responseProfile) {
-
-        }
-
-        @Override
-        public void onRequestCameraCapabilities() {
-
-        }
-
-        @Override
-        public void onRequestConnectionDataUsage() {
-
-        }
-
-        @Override
-        public void onSetPauseImage(Uri uri) {
-
-        }
-    }
-
-
-
-
-
 
     @SuppressLint("LongLogTag")
     static void log(String msg) {
@@ -637,8 +596,8 @@ public class LinphoneConnectionService extends ConnectionService {
             setAddress(connection, providedHandle);
             connection.setAudioModeIsVoip(true);
             connection.setRinging();
-            connection.setVideoState(VideoProfile.STATE_BIDIRECTIONAL);
-            connection.setVideoProvider(new MyVideoProvider());
+//            connection.setVideoState(VideoProfile.STATE_BIDIRECTIONAL);
+//            connection.setVideoProvider(new MyVideoProvider());
             addCall(connection);
 
             return connection;

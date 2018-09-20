@@ -1,20 +1,27 @@
 package org.linphone.call;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telecom.Connection;
+import android.telecom.ConnectionService;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
@@ -24,11 +31,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
@@ -68,6 +79,8 @@ public class TelecomManagerHelper {
     private CoreListenerStub mListener;
     public static String TAG = "TelecomManagerHelper";
     private Conference mConference = null;
+
+
 
     //Initiates the telecomManager and dependencies which are needed to handle calls.
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -151,8 +164,8 @@ public class TelecomManagerHelper {
         setListenerOutgoing(mCall);
 
         Bundle extras = new Bundle();
-        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
-//        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
+//        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
+        extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_AUDIO_ONLY);
         //                    b.putString(TelecomManager.EXTRA_CALL_BACK_NUMBER, "lule@sip.linphone.org");
         //                    b.putString(TelecomManager.GATEWAY_ORIGINAL_ADDRESS, "lule@sip.linphone.org");
         //                    b.putInt(TelecomManager.PRESENTATION_ALLOWED, getCallId());
@@ -219,6 +232,7 @@ public class TelecomManagerHelper {
 
     private void setListenerIncall (Call call){
         mListener = new CoreListenerStub() {
+            @TargetApi(Build.VERSION_CODES.P)
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
@@ -226,15 +240,27 @@ public class TelecomManagerHelper {
 //                    stopCall();
                     stopCallById(call.getCallLog().getCallId());
 
-                }
+                }else
                 if (state == Call.State.StreamsRunning) {
                     Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = " + LinphoneManager.getInstance().isSpeakerEnabled());
                     // The following should not be needed except some devices need it (e.g. Galaxy S).
 //                    LinphoneManager.getInstance().enableSpeaker(LinphoneManager.getInstance().isSpeakerEnabled());
-                }
+                }else
                 if (call == mCall && (Call.State.PausedByRemote == state) ) {
 //                    mCall= call;
                     Toast.makeText(LinphoneManager.getInstance().getContext(),"Vous êtes en attente",Toast.LENGTH_LONG).show();
+                }else
+                if (state == Call.State.UpdatedByRemote) {
+                    // If the correspondent proposes video while audio call
+                    mCallId=call.getCallLog().getCallId();
+                    boolean remoteVideo = call.getRemoteParams().videoEnabled();
+                    boolean localVideo = call.getCurrentParams().videoEnabled();
+                    boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+                    if (remoteVideo && localVideo && autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+//                    if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+
+                        sendToCS(EXT_TO_CS_END_CALL);
+                    }
                 }
             }
         };
@@ -290,6 +316,18 @@ public class TelecomManagerHelper {
                 } else if (call == mCall && (Call.State.PausedByRemote == state) ) {
 //                    mCall= call;
                     Toast.makeText(LinphoneManager.getInstance().getContext(),"Vous êtes en attente",Toast.LENGTH_LONG).show();
+                } else if (state == Call.State.UpdatedByRemote) {
+                    // If the correspondent proposes video while audio call
+                    mCallId=call.getCallLog().getCallId();
+                    boolean remoteVideo = call.getRemoteParams().videoEnabled();
+                    boolean localVideo = call.getCurrentParams().videoEnabled();
+                    boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+                    if (remoteVideo && autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+
+//                    if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
+
+                        sendToCS(EXT_TO_CS_END_CALL);
+                    }
                 }
 
                 if (LinphoneManager.getLc().getCallsNb() == 0) {
