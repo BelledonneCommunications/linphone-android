@@ -310,6 +310,11 @@ public final class LinphoneService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
+        if (instance != null) {
+            Log.w("Attempt to start the LinphoneService but it is already running !");
+            return START_REDELIVER_INTENT;
+        }
+
         LinphoneManager.createAndStart(LinphoneService.this);
 
         instance = this; // instance is ready once linphone manager has been created

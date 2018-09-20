@@ -995,9 +995,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     public static synchronized void destroy() {
         if (instance == null) return;
-        getInstance().changeStatusToOffline();
+        instance.changeStatusToOffline();
         sExited = true;
         instance.destroyCore();
+        instance = null;
     }
 
     private String getString(int key) {

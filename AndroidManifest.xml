@@ -200,8 +200,7 @@
 
         <service
             android:name=".LinphoneService"
-            android:label="@string/service_name"
-            android:stopWithTask="false"/>
+            android:label="@string/service_name"/>
         <service
             android:name=".sync.SyncService"
             android:exported="true">
