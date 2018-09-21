@@ -47,6 +47,7 @@ import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.EventLog;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceModel;
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.ui.ListSelectionAdapter;
 import org.linphone.ui.ListSelectionHelper;
 
@@ -57,6 +58,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static android.text.format.DateUtils.isToday;
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 import static org.linphone.LinphoneUtils.hasContentFileSharing;
 
 public class ChatRoomsAdapter extends ListSelectionAdapter {
@@ -264,15 +266,22 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				} else if (level == ChatRoomSecurityLevel.Encrypted) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure1);
 				} else {
-					if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact != null && contact.getFriend() != null) {
-						PresenceModel presenceModel = contact.getFriend().getPresenceModel();
-						if (presenceModel != null) {
-							holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), contactAddress.asStringUriOnly());
+					if (zrtpStatus == ZrtpPeerStatus.Valid) {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
+					} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+						holder.contactPicture.setImageResource(R.drawable.avatar_medium_unsecure);
+					} else {
+						if (!ContactsManager.getInstance().isContactPresenceDisabled() && contact != null && contact.getFriend() != null) {
+							PresenceModel presenceModel = contact.getFriend().getPresenceModel();
+							if (presenceModel != null) {
+								holder.contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+							} else {
+								holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+							}
 						} else {
 							holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
 						}
-					} else {
-						holder.contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
 					}
 				}
 			}

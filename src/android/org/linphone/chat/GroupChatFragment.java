@@ -78,6 +78,7 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.PresenceActivity;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.Reason;
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
@@ -87,6 +88,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
 public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ListSelectionHelper.DeleteListener {
@@ -542,23 +544,30 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 			} else {
 				mRoomLabel.setText(mParticipants.get(0).getFullName());
 			}
-			if (level == ChatRoomSecurityLevel.ClearText) {
-				avatarTop.setImageResource(R.drawable.avatar_small_unregistered);
+			if (level == ChatRoomSecurityLevel.Unsafe) {
+				avatarTop.setImageResource(R.drawable.avatar_small_unsecure);
 			} else if (level == ChatRoomSecurityLevel.Encrypted) {
 				avatarTop.setImageResource(R.drawable.avatar_small_secure1);
 			} else if (level == ChatRoomSecurityLevel.Safe) {
 				avatarTop.setImageResource(R.drawable.avatar_small_secure2);
 			} else {
-				LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mChatRoom.getParticipants()[0].getAddress());
-				if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
-					PresenceModel presenceModel = c.getFriend().getPresenceModel();
-					if (presenceModel != null) {
-						avatarTop.setImageResource(R.drawable.avatar_medium_secure1);
+				ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), mRemoteParticipantAddress.asStringUriOnly());
+				if (zrtpStatus == ZrtpPeerStatus.Valid) {
+					avatarTop.setImageResource(R.drawable.avatar_medium_secure2);
+				} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+					avatarTop.setImageResource(R.drawable.avatar_medium_unsecure);
+				} else {
+					LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(mChatRoom.getParticipants()[0].getAddress());
+					if (!ContactsManager.getInstance().isContactPresenceDisabled() && c != null && c.getFriend() != null) {
+						PresenceModel presenceModel = c.getFriend().getPresenceModel();
+						if (presenceModel != null) {
+							avatarTop.setImageResource(R.drawable.avatar_medium_secure1);
+						} else {
+							avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
+						}
 					} else {
 						avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
 					}
-				} else {
-					avatarTop.setImageResource(R.drawable.avatar_medium_unregistered);
 				}
 			}
 		} else {

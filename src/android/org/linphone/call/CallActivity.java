@@ -60,6 +60,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -96,6 +97,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static org.linphone.LinphoneUtils.getZrtpStatus;
 
 public class CallActivity extends LinphoneGenericActivity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
 	private final static int SECONDS_BEFORE_HIDING_CONTROLS = 4000;
@@ -1364,15 +1367,16 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				//background.setVisibility(View.VISIBLE);
 			}
 
-			if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
+			ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), call.getRemoteAddress().asStringUriOnly());
+			if (zrtpStatus == ZrtpPeerStatus.Valid) {
 				encryption.setImageResource(R.drawable.security_button_default);
 				contactPicture.setImageResource(R.drawable.avatar_big_secure2);
-			} else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
-				encryption.setImageResource(R.drawable.security_button1_default);
-				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
-			} else {
+			} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
 				encryption.setImageResource(R.drawable.security_button1_over);
 				contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+			} else {
+				encryption.setImageResource(R.drawable.security_button1_default);
+				contactPicture.setImageResource(R.drawable.avatar_big_secure1);
 			}
 
 			if (mediaEncryption == MediaEncryption.ZRTP) {
