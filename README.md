@@ -6,11 +6,11 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 ## To build liblinphone for Android, you must:
 
-1. Download the Android sdk (API 28.0.0 at max) with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
+1. Download the latest Android sdk with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
 
-2. Download the Android NDK 17 from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
+2. Download the latest Android NDK from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
 
-3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_ and _cmake(>=3.12)_.
+3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_, _doxygen_, _graphviz_ and _cmake(>=3.12)_.
   * On 64 bits linux systems you'll need the _ia32-libs_ package.
   * With the latest Debian (multiarch), you need this:
     * `dpkg --add-architecture i386`
@@ -36,14 +36,6 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
   If you don't, the passwords will be asked at the signing phase.
 
 10. _(optional)_ Once you compiled the libraries succesfully with 'make', you can reduce the compilation time using 'make quick': it will only generate a new APK from java files.
-
-## To run the tutorials:
-
-1. Open the _res/values/non_localizable_custom.xml_ file and change the *show_tutorials_instead_of_app* to true.
-
-2. Compile again using `make` and `make install`.
-
-3. **Don't forget to put it back to false to run the linphone application normally.**
 
 ## To create an apk with a different package name
 
