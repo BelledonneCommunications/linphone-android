@@ -327,7 +327,6 @@ public final class LinphoneService extends Service {
 
 				if (state == Call.State.IncomingReceived) {
 					if(! LinphoneManager.getInstance().getCallGsmON())
-//						if(! LinphoneManager.getInstance().getCallGsmON() && mPrefs.getConfig() != null && !mPrefs.getNativeUICall())
 							onIncomingReceived();
 				}
 
@@ -346,7 +345,7 @@ public final class LinphoneService extends Service {
 				if (call != null &&
 						((mPrefs.shouldInitiateVideoCall() && call.getDir() == Call.Dir.Outgoing) ||
 								(call.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && call.getRemoteParams().videoEnabled()))
-						){
+					){
 					mPreventNative=true;
 				}else{
 					mPreventNative=false;

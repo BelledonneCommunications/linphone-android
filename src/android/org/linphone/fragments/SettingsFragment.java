@@ -1084,9 +1084,9 @@ public class SettingsFragment extends PreferencesListFragment {
 				@Override
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean use = (Boolean) newValue;
-					LinphoneManager mLinManager = LinphoneManager.getInstance();
+					LinphoneManager linManager = LinphoneManager.getInstance();
 					if (use){
-						mLinManager.setLinPhoneAccount();
+						linManager.setLinPhoneAccount();
 //						LinPhoneAccount account = new LinPhoneAccount(LinphoneManager.getInstance().getContext());
 //						account.registerPhoneAccount();
 
@@ -1100,7 +1100,7 @@ public class SettingsFragment extends PreferencesListFragment {
 						startActivity(phoneAccountEnable);
 
 					}else{
-						LinPhoneAccount account = mLinManager.getLinPhoneAccount();
+						LinPhoneAccount account = linManager.getLinPhoneAccount();
 						if (account != null){
 //						if (account.getAccountHandler() != null){
 							account.unregisterPhoneAccount();

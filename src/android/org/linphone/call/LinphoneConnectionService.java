@@ -391,8 +391,14 @@ public class LinphoneConnectionService extends ConnectionService {
 
         @Override
         public void onHold() {
-
-            performSwitchCall(((MyConnection)this.getConnections().get(0)));
+            //All calls are in conference, no other call to unpause after hold
+            if (mCallConference.getConnections().size() == mCalls.size()) {
+                mCallConference.setLocalActive(false);
+                mCallConference.setOnHold();
+                mCallConference.sendLocalBroadcast(CS_TO_EXT_HOLD);
+            } else {
+                performSwitchCall(((MyConnection)this.getConnections().get(0)));
+            }
         }
 
         @Override

@@ -1799,6 +1799,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	public void setLinPhoneAccount (){
 		mPhoneAccount = new LinPhoneAccount(getContext());
+		mPhoneAccount.registerPhoneAccount();
 	}
 
 

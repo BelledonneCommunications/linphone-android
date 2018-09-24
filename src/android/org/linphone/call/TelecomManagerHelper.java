@@ -121,8 +121,21 @@ public class TelecomManagerHelper {
 
         extras.putString(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
         extras.putString(TelecomManager.EXTRA_INCOMING_CALL_ADDRESS, strAddress);
-//        extras.putInt(TelecomManager.EXTRA_INCOMING_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
+        extras.putInt(TelecomManager.EXTRA_INCOMING_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
         extras.putInt(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, VideoProfile.STATE_BIDIRECTIONAL);
+
+        boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
+        if (!autoAcceptCameraPolicy) {
+            //Refuse video
+
+
+        }
+
+
+
+
+
+
 
 
         if (strContact != null) {
@@ -260,6 +273,15 @@ public class TelecomManagerHelper {
 //                    if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
 
                         sendToCS(EXT_TO_CS_END_CALL);
+                    } else if (!autoAcceptCameraPolicy) {
+                        //Refuse video
+
+                        if (call == null) {
+                            return;
+                        }
+
+                        CallParams params = LinphoneManager.getLc().createCallParams(call);
+                        LinphoneManager.getLc().acceptCallUpdate(call, params);
                     }
                 }
             }
@@ -314,24 +336,27 @@ public class TelecomManagerHelper {
 
                     }
                 } else if (call == mCall && (Call.State.PausedByRemote == state) ) {
-//                    mCall= call;
                     Toast.makeText(LinphoneManager.getInstance().getContext(),"Vous êtes en attente",Toast.LENGTH_LONG).show();
                 } else if (state == Call.State.UpdatedByRemote) {
                     // If the correspondent proposes video while audio call
                     mCallId=call.getCallLog().getCallId();
                     boolean remoteVideo = call.getRemoteParams().videoEnabled();
-                    boolean localVideo = call.getCurrentParams().videoEnabled();
                     boolean autoAcceptCameraPolicy = LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests();
                     if (remoteVideo && autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-
-//                    if (remoteVideo && !localVideo && !autoAcceptCameraPolicy && !LinphoneManager.getLc().isInConference()) {
-
                         sendToCS(EXT_TO_CS_END_CALL);
-                    }
+                    } else if (!autoAcceptCameraPolicy) {
+                        //Refuse video
+
+                        if (call == null) {
+                            return;
+                        }
+
+                        CallParams params = LinphoneManager.getLc().createCallParams(call);
+                        LinphoneManager.getLc().acceptCallUpdate(call, params);
+                   }
                 }
 
                 if (LinphoneManager.getLc().getCallsNb() == 0) {
-//                    finish();
                     return;
                 }
             }
@@ -419,7 +444,6 @@ public class TelecomManagerHelper {
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_REJECT:
                     stopCallById(callId);
-//                    stopCall();
                     break;
                 case LinphoneConnectionService.CS_TO_EXT_DISCONNECT:
                     stopCallById(callId);
@@ -451,26 +475,6 @@ public class TelecomManagerHelper {
 
                     Call temp = getCallById(callId);
                     LinphoneManager.getLc().removeFromConference(temp);
-
-//                    Call[] calls = LinphoneManager.getLc().getCalls();
-
-
-////                    LinphoneManager.getLc().pauseAllCalls();
-//
-//                    pauseOrResumeCall(temp, RESUME);
-//                    temp1 = LinphoneManager.getLc().getConferenceSize();
-//                    if (LinphoneManager.getLc().getConferenceSize() == 1) {
-//                        for (Call x:calls){
-//                            if(!(x.getCallLog().getCallId().equals(callId))){
-//                                Call.State etat = x.getState();
-//                                String test = x.getCallLog().getCallId();
-//                                Conference tempconf = x.getConference();
-//                                pauseOrResumeCall(x, PAUSE);
-//                                pauseOrResumeConference(PAUSE);
-//                            }
-//                        }
-//                        mConference = null;
-//                    }
                     pauseOrResumeCall(temp, PAUSE);
 
                     break;
