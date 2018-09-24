@@ -426,10 +426,13 @@ public final class LinphoneService extends Service {
         }
 
         //make sure the application will at least wakes up every 10 mn
-        Intent keepAliveIntent = new Intent(this, KeepAliveReceiver.class);
-        PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, keepAliveIntent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
-        Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+        if (LinphonePreferences.instance().isBackgroundModeEnabled() &&
+                (!LinphonePreferences.instance().isPushNotificationEnabled() || !LinphoneManager.getInstance().hasLinphoneAccount())) {
+            Intent keepAliveIntent = new Intent(this, KeepAliveReceiver.class);
+            PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, keepAliveIntent, PendingIntent.FLAG_ONE_SHOT);
+            AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
+            Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+        }
 
         return START_REDELIVER_INTENT;
     }

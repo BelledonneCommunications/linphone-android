@@ -1358,7 +1358,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mAudioManager.setMode(MODE_RINGTONE);
 
         try {
-            if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) && mVibrator != null) {
+            if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL)
+                    && mVibrator != null) {
                 long[] patern = {0, 1000, 1000};
                 mVibrator.vibrate(patern, 1);
             }
@@ -1418,6 +1419,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
     }
 
+    public boolean hasLinphoneAccount() {
+        for (ProxyConfig proxyConfig : mLc.getProxyConfigList()) {
+            if (getString(R.string.default_domain).equals(proxyConfig.getIdentityAddress().getDomain())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static String extractADisplayName(Resources r, Address address) {
         if (address == null) return r.getString(R.string.unknown_incoming_call_name);

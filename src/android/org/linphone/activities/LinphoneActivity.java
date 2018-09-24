@@ -996,8 +996,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 //		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
 
         AddressType address = new AddressText(this, null);
-        address.setDisplayedName(name);
         address.setText(number);
+        address.setDisplayedName(name);
         LinphoneManager.getInstance().newOutgoingCall(address);
     }
 

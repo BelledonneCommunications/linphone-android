@@ -73,6 +73,8 @@ public class LinphoneLauncherActivity extends Activity {
                     addressToCall = addressToCall.replace("%3A", ":");
                     if (addressToCall.startsWith("sip:")) {
                         addressToCall = addressToCall.substring("sip:".length());
+                    } else if (addressToCall.startsWith("tel:")) {
+                        addressToCall = addressToCall.substring("tel:".length());
                     }
                 }
             } else if (Intent.ACTION_VIEW.equals(action)) {
