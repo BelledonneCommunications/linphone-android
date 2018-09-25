@@ -78,6 +78,7 @@ public class LinphoneConnectionService extends ConnectionService {
     public static final int EXT_TO_CS_END_CALL = 1;
     public static final int EXT_TO_CS_HOLD_CALL = 2;
     public static final int EXT_TO_CS_ESTABLISHED = 3;
+    public static final int EXT_TO_CS_HOLD_CONFERENCE = 4;
 
     //Broadcast (or extras for CS_TO_EXT_CALL_ID) values used to communicate from this ConnectionService implementation to other components
     public static final String CS_TO_EXT_BROADCAST = "CS_TO_EXT_BROADCAST";
@@ -96,8 +97,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
     private static final int PERMISSIONS_REQUEST_CAMERA = 202;
 
-    private Dialog dialog = null;
-    private boolean isVideoAsk;
+    private MyConnection lastHeld;
 
     /**
      * Intent extra used to pass along the video state for a new test sipAudioCall.
@@ -123,31 +123,43 @@ public class LinphoneConnectionService extends ConnectionService {
 
 
     private BroadcastReceiver mSipEventReceiver = new BroadcastReceiver() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @SuppressLint("LongLogTag")
         @Override
         public void onReceive(Context context, Intent intent) {
 
             int action = intent.getIntExtra(EXT_TO_CS_ACTION, -1);
-            String callId = intent.getStringExtra(EXT_TO_CS_CALL_ID);
-
-            Log.d(TAG, "mSipEventReceiver: callId:"+callId);
             MyConnection connection = null;
-            for (MyConnection con : mCalls){
-                if (callId.equalsIgnoreCase(con.getCallId())){
-                    connection = con;
-                    break;
-                }
-            }
+            if (action != EXT_TO_CS_HOLD_CONFERENCE) {
+                String callId = intent.getStringExtra(EXT_TO_CS_CALL_ID);
 
-            if (connection == null){
-                return;
+                Log.d(TAG, "mSipEventReceiver: callId:" + callId);
+
+                for (MyConnection con : mCalls) {
+                    if (callId.equalsIgnoreCase(con.getCallId())) {
+                        connection = con;
+                        break;
+                    }
+                }
+
+                if (connection == null) {
+                    return;
+                }
             }
 
             switch (action){
                 case EXT_TO_CS_END_CALL:
+
+                    if (connection.getConference() != null && mCallConference != null) {
+                        mCallConference.removeConnection(connection);
+                        checkConference();
+                    }
                     connection.setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
                     destroyCall(connection);
                     connection.destroy();
+
+                    updateCallCapabilities();
+                    updateConferenceable();
                     break;
 
                 case EXT_TO_CS_HOLD_CALL:
@@ -165,12 +177,52 @@ public class LinphoneConnectionService extends ConnectionService {
                     }
                     break;
 
+                case EXT_TO_CS_HOLD_CONFERENCE:
+                    holdState = intent.getBooleanExtra(EXT_TO_CS_HOLD_STATE, false);
+                    if (holdState) {
+                        getConference().setOnHold();
+                        getConference().setLocalActive(false);
+                    } else {
+                        getConference().setLocalActive(true);
+                        getConference().setActive();
+                    }
+                    break;
+
             }
 
         }
     };
 
+    //Check if conference must be deleted
+    private void checkConference() {
 
+        if (mCallConference != null && mCallConference.getConnections().size() <2){
+            List<Connection> listConnection = mCallConference.getConnections();
+            for(Connection con : listConnection){
+                if(con ==  listConnection.get(0) ){
+                    mCallConference.removeConnection(con);
+                    MyConnection call = (MyConnection)con;
+                    ((MyConnection)con).sendLocalBroadcast(CS_TO_EXT_REMOVE_FROM_CONF);
+                    setAsActive(call);
+
+                }else{
+                    mCallConference.removeConnection(con);
+                    MyConnection call = (MyConnection)con;
+                    ((MyConnection)con).sendLocalBroadcast(CS_TO_EXT_REMOVE_FROM_CONF);
+                    call.setOnHold();
+                    call.sendLocalBroadcast(CS_TO_EXT_HOLD);
+                }
+
+            }
+            mCallConference.destroy();
+            mCallConference = null;
+
+        } else {
+            mCallConference.setActive();
+            mCallConference.setLocalActive(true);
+        }
+
+    }
 
     final class MyConnection extends Connection {
         private final boolean mIsIncoming;
@@ -186,6 +238,7 @@ public class LinphoneConnectionService extends ConnectionService {
             capabilities |= CAPABILITY_HOLD;
             capabilities |= CAPABILITY_CAN_UPGRADE_TO_VIDEO;
             capabilities |= CAPABILITY_SUPPORTS_VT_LOCAL_BIDIRECTIONAL;
+            capabilities |= CAPABILITY_DISCONNECT_FROM_CONFERENCE;
             setConnectionCapabilities(capabilities);
         }
 
@@ -287,7 +340,6 @@ public class LinphoneConnectionService extends ConnectionService {
         }
 
 
-
     }
 
 
@@ -309,9 +361,8 @@ public class LinphoneConnectionService extends ConnectionService {
             setLocalActive(true);
             a.sendLocalBroadcast(CS_TO_EXT_ADD_TO_CONF);
             b.sendLocalBroadcast(CS_TO_EXT_ADD_TO_CONF);
-            Bundle extra = new Bundle();
-            extra.putBoolean("android.telecom.extra.DISABLE_ADD_CALL", true);
-
+//            Bundle extra = new Bundle();
+//            extra.putBoolean("android.telecom.extra.DISABLE_ADD_CALL", true);
         }
 
         public void setLocalActive(boolean isActive){
@@ -333,6 +384,10 @@ public class LinphoneConnectionService extends ConnectionService {
             }
             mCallConference = null;
         }
+
+
+
+
 
         @Override
         public void onSeparate(Connection connection) {
@@ -358,31 +413,7 @@ public class LinphoneConnectionService extends ConnectionService {
             //Set conference on Hold if 2 or more people remains
             //destroy conference if not
 
-            if (mCallConference != null && mCallConference.getConnections().size() <2){
-                List<Connection> listConnection = mCallConference.getConnections();
-                for(Connection con : listConnection){
-                    if(con ==  listConnection.get(0) ){
-                        mCallConference.removeConnection(con);
-                        MyConnection call = (MyConnection)con;
-                        ((MyConnection)con).sendLocalBroadcast(CS_TO_EXT_REMOVE_FROM_CONF);
-                        setAsActive(call);
-
-                    }else{
-                        mCallConference.removeConnection(con);
-                        MyConnection call = (MyConnection)con;
-                        ((MyConnection)con).sendLocalBroadcast(CS_TO_EXT_REMOVE_FROM_CONF);
-                        call.setOnHold();
-                        call.sendLocalBroadcast(CS_TO_EXT_HOLD);
-                    }
-
-                }
-                mCallConference.destroy();
-                mCallConference = null;
-
-            }else{
-                mCallConference.setActive();
-                mCallConference.setLocalActive(true);
-            }
+            checkConference();
 
             updateConnectionCapabilities();
             updateCallCapabilities();
@@ -633,7 +664,7 @@ public class LinphoneConnectionService extends ConnectionService {
 
     @Override
     public void onRemoteConferenceAdded(RemoteConference remoteConference) {
-
+        int i = 0;
     }
 
     private PhoneAccountHandle mPhoneAccountHandle = null;
@@ -650,6 +681,10 @@ public class LinphoneConnectionService extends ConnectionService {
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(
                 mSipEventReceiver);
         return super.onUnbind(intent);
+    }
+
+    public CallConference getConference() {
+        return mCallConference;
     }
 
     private void addCall(MyConnection connection) {
@@ -723,6 +758,10 @@ public class LinphoneConnectionService extends ConnectionService {
                     con.sendLocalBroadcast(CS_TO_EXT_HOLD);
                 }else if (((CallConference) con.getConference()).isLocalActive()){
                     mCallConference = (CallConference) con.getConference();
+
+
+
+
                     mCallConference.setLocalActive(false);
                     mCallConference.setOnHold();
                     mCallConference.sendLocalBroadcast(CS_TO_EXT_HOLD);

@@ -172,7 +172,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private boolean callTransfer = false;
 	private boolean isOnBackground = false;
 	private boolean mPreventNative = false;
-	private TelecomManagerHelper telecomHelper;
+//	private TelecomManagerHelper telecomHelper;
 	public String mAddressWaitingToBeCalled;
 
 	static public final boolean isInstanciated() {
@@ -289,7 +289,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
                 if ( mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
 
-					telecomHelper = new TelecomManagerHelper();
+					TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
 
 					if (state == State.IncomingReceived) {
 						telecomHelper.startIncall();
@@ -1097,7 +1097,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			mPreventNative=false;
 		}
 		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
-			telecomHelper = new TelecomManagerHelper();
+			TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
 			telecomHelper.startIncall();
 		}else {
 			Intent intent = new Intent(this, CallActivity.class);
@@ -1969,23 +1969,4 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		return -1;
 	}
-
-
-
-
-
-
-//	private void startIncallTelecomManager(){
-//		final Call mCall = lookupCurrentCall();
-//
-//
-//		TelecomManager telecomManager = (TelecomManager) LinphoneManager.getInstance().getContext().getSystemService(Context.TELECOM_SERVICE);
-//
-//		Bundle extras = new Bundle();
-//		extras.putString(LinphoneConnectionService.EXT_TO_CS_CALL_ID, mCall.getCallLog().getCallId());
-//		telecomManager.addNewIncomingCall(LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler(), extras);
-//	}
-
-
-
 }
