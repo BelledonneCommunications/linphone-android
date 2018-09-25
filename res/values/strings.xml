@@ -533,8 +533,8 @@
     <string name="content_description_call_options">Call options</string>
     <string name="content_description_audio_route">Audio route</string>
     <string name="content_description_exit_conference">Exit conference</string>
-    <string name="content_title_notification_service">Linphone Service</string>
-    <string name="content_title_notification">Linphone Notification</string>
+    <string name="content_title_notification_service">Mobile Security Intense Service</string>
+    <string name="content_title_notification">Mobile Security Intense Notification</string>
     <string name="content_description_conversation_subject">Group chat room subject</string>
     <string name="content_description_conversation_infos">Group chat room info</string>
 </resources>
