@@ -1,7 +1,7 @@
 package org.linphone.compatibility;
 
-import android.widget.TextView;
 import android.annotation.TargetApi;
+import android.widget.TextView;
 
 /*
 ApiTwentyThreePlus.java
@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 @TargetApi(23)
 public class ApiTwentyThreePlus {
-	public static void setTextAppearance(TextView textview, int style) {
-		textview.setTextAppearance(style);
-	}
+    public static void setTextAppearance(TextView textview, int style) {
+        textview.setTextAppearance(style);
+    }
 }

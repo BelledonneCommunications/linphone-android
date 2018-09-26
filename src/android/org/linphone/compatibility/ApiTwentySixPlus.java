@@ -10,7 +10,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioAttributes;
 import android.view.ViewTreeObserver;
 
 import org.linphone.R;
@@ -57,7 +56,6 @@ public class ApiTwentySixPlus {
 		importance = NotificationManager.IMPORTANCE_HIGH;
 		mChannel = new NotificationChannel(id, name, importance);
 		mChannel.setDescription(description);
-		mChannel.enableLights(true);
 		mChannel.setLightColor(context.getColor(R.color.notification_color_led));
 		mChannel.enableLights(true);
 		notificationManager.createNotificationChannel(mChannel);
@@ -87,6 +85,9 @@ public class ApiTwentySixPlus {
 					.setVisibility(Notification.VISIBILITY_PRIVATE)
 					.setPriority(Notification.PRIORITY_HIGH)
 					.setNumber(msgCount)
+					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
+					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 
 		return notif;
@@ -106,6 +107,9 @@ public class ApiTwentySixPlus {
 				.setCategory(Notification.CATEGORY_CALL)
 				.setVisibility(Notification.VISIBILITY_PUBLIC)
 				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
 		return notif;
@@ -124,6 +128,9 @@ public class ApiTwentySixPlus {
 					.setCategory(Notification.CATEGORY_SERVICE)
 					.setVisibility(Notification.VISIBILITY_SECRET)
 					.setPriority(priority)
+					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
+					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 		} else {
 			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
@@ -134,6 +141,9 @@ public class ApiTwentySixPlus {
 					.setCategory(Notification.CATEGORY_SERVICE)
 					.setVisibility(Notification.VISIBILITY_SECRET)
 					.setPriority(priority)
+					.setWhen(System.currentTimeMillis())
+					.setShowWhen(true)
+					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 		}
 
@@ -156,6 +166,9 @@ public class ApiTwentySixPlus {
 				.setCategory(Notification.CATEGORY_MESSAGE)
 				.setVisibility(Notification.VISIBILITY_PRIVATE)
 				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
 		return notif;
@@ -173,6 +186,10 @@ public class ApiTwentySixPlus {
 				.setCategory(Notification.CATEGORY_MESSAGE)
 				.setVisibility(Notification.VISIBILITY_PRIVATE)
 				.setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColorized(true)
+				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
 		return notif;

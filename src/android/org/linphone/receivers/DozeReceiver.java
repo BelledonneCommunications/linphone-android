@@ -19,20 +19,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.PowerManager;
+
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
-
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.PowerManager;
 
 /*
  * Purpose of this receiver is to disable keep alives when device is on idle

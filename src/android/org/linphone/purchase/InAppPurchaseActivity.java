@@ -18,15 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.linphone.LinphonePreferences;
-import org.linphone.R;
-import org.linphone.mediastream.Log;
-import org.linphone.xmlrpc.XmlRpcHelper;
-import org.linphone.xmlrpc.XmlRpcListenerBase;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -39,179 +30,188 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.linphone.LinphonePreferences;
+import org.linphone.R;
+import org.linphone.mediastream.Log;
+import org.linphone.xmlrpc.XmlRpcHelper;
+import org.linphone.xmlrpc.XmlRpcListenerBase;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class InAppPurchaseActivity extends Activity implements InAppPurchaseListener, OnClickListener {
-	private static InAppPurchaseActivity instance;
-	private InAppPurchaseHelper inAppPurchaseHelper;
-	private ImageView cancel, back;
-	private ProgressBar inProgress;
+    private static InAppPurchaseActivity instance;
+    private InAppPurchaseHelper inAppPurchaseHelper;
+    private ImageView cancel, back;
+    private ProgressBar inProgress;
 
-	private List<Purchasable> purchasedItems;
-	private Fragment fragment;
-	private Handler mHandler = new Handler();
+    private List<Purchasable> purchasedItems;
+    private Fragment fragment;
+    private Handler mHandler = new Handler();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		inAppPurchaseHelper = new InAppPurchaseHelper(this, this);
-		setContentView(R.layout.in_app);
+        inAppPurchaseHelper = new InAppPurchaseHelper(this, this);
+        setContentView(R.layout.in_app);
 
-		inProgress = (ProgressBar) findViewById(R.id.purchaseItemsFetchInProgress);
-		inProgress.setVisibility(View.VISIBLE);
+        inProgress = findViewById(R.id.purchaseItemsFetchInProgress);
+        inProgress.setVisibility(View.VISIBLE);
 
-		back = (ImageView) findViewById(R.id.back);
-		back.setOnClickListener(this);
-		back.setVisibility(View.INVISIBLE);
-		cancel = (ImageView) findViewById(R.id.cancel);
-		cancel.setOnClickListener(this);
+        back = findViewById(R.id.back);
+        back.setOnClickListener(this);
+        back.setVisibility(View.INVISIBLE);
+        cancel = findViewById(R.id.cancel);
+        cancel.setOnClickListener(this);
 
-		instance = this;
-	}
+        instance = this;
+    }
 
-	private void changeFragment(Fragment newFragment) {
-		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		transaction.replace(R.id.fragment_container, newFragment);
-		transaction.commitAllowingStateLoss();
-	}
+    private void changeFragment(Fragment newFragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.commitAllowingStateLoss();
+    }
 
-	public void displayInappList() {
-		fragment = new InAppPurchaseListFragment();
-		changeFragment(fragment);
-	}
+    public void displayInappList() {
+        fragment = new InAppPurchaseListFragment();
+        changeFragment(fragment);
+    }
 
-	public void displayPurchase(Purchasable item) {
-		Bundle extra = new Bundle();
-		extra.putString("item_id",item.getId());
-		fragment = new InAppPurchaseFragment();
-		fragment.setArguments(extra);
-		changeFragment(fragment);
-	}
+    public void displayPurchase(Purchasable item) {
+        Bundle extra = new Bundle();
+        extra.putString("item_id", item.getId());
+        fragment = new InAppPurchaseFragment();
+        fragment.setArguments(extra);
+        changeFragment(fragment);
+    }
 
-	public void buyInapp(String username, Purchasable item){
-		LinphonePreferences.instance().setInAppPurchasedItem(item);
-		inAppPurchaseHelper.purchaseItemAsync(item.getId(), username);
-	}
-
-
-	public String getGmailAccount() {
-		return inAppPurchaseHelper.getGmailAccount();
-	}
+    public void buyInapp(String username, Purchasable item) {
+        LinphonePreferences.instance().setInAppPurchasedItem(item);
+        inAppPurchaseHelper.purchaseItemAsync(item.getId(), username);
+    }
 
 
-	@Override
-	protected void onDestroy() {
-		instance = null;
-		inAppPurchaseHelper.destroy();
-		super.onDestroy();
-	}
+    public String getGmailAccount() {
+        return inAppPurchaseHelper.getGmailAccount();
+    }
 
-	public List<Purchasable> getPurchasedItems() {
 
-		if (purchasedItems == null || purchasedItems.size() == 0) {
-			Log.w("nul");
-		}
-		return purchasedItems;
-	}
+    @Override
+    protected void onDestroy() {
+        instance = null;
+        inAppPurchaseHelper.destroy();
+        super.onDestroy();
+    }
 
-	public Purchasable getPurchasedItem(String id) {
-		for(Purchasable item : purchasedItems){
-			if (item.getId().equals(id)){
-				return item;
-			}
-		}
-		return null;
-	}
+    public List<Purchasable> getPurchasedItems() {
 
-	public static InAppPurchaseActivity instance() {
-		return instance;
-	}
+        if (purchasedItems == null || purchasedItems.size() == 0) {
+            Log.w("nul");
+        }
+        return purchasedItems;
+    }
 
-	@Override
-	public void onServiceAvailableForQueries() {
-		//email.setText(inAppPurchaseHelper.getGmailAccount());
-		//email.setEnabled(false);
+    public Purchasable getPurchasedItem(String id) {
+        for (Purchasable item : purchasedItems) {
+            if (item.getId().equals(id)) {
+                return item;
+            }
+        }
+        return null;
+    }
 
-		//inAppPurchaseHelper.getPurchasedItemsAsync();
-		inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
-	}
+    public static InAppPurchaseActivity instance() {
+        return instance;
+    }
 
-	@Override
-	public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
-		//purchasableItemsLayout.removeAllViews();
-		inProgress.setVisibility(View.GONE);
-		purchasedItems = new ArrayList<Purchasable>();
-		for (Purchasable item : items) {
-			purchasedItems.add(item);
-		}
-		displayInappList();
-	}
+    @Override
+    public void onServiceAvailableForQueries() {
+        //email.setText(inAppPurchaseHelper.getGmailAccount());
+        //email.setEnabled(false);
 
-	@Override
-	public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
-		purchasedItems = items;
+        //inAppPurchaseHelper.getPurchasedItemsAsync();
+        inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
+    }
 
-		if (items == null || items.size() == 0) {
-			inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
-		} else {
-			for (Purchasable purchasedItem : purchasedItems) {
-				Log.d("[In-app purchase] Found already bought item, expires " + purchasedItem.getExpireDate());
-				//displayRecoverAccountButton(purchasedItem);
-			}
-		}
-	}
+    @Override
+    public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
+        //purchasableItemsLayout.removeAllViews();
+        inProgress.setVisibility(View.GONE);
+        purchasedItems = new ArrayList<>();
+        for (Purchasable item : items) {
+            purchasedItems.add(item);
+        }
+        displayInappList();
+    }
 
-	@Override
-	public void onPurchasedItemConfirmationQueryFinished(boolean success) {
-		if (success) {
-			XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
+    @Override
+    public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
+        purchasedItems = items;
 
-			Purchasable item = LinphonePreferences.instance().getInAppPurchasedItem();
+        if (items == null || items.size() == 0) {
+            inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
+        } else {
+            for (Purchasable purchasedItem : purchasedItems) {
+                Log.d("[In-app purchase] Found already bought item, expires " + purchasedItem.getExpireDate());
+                //displayRecoverAccountButton(purchasedItem);
+            }
+        }
+    }
 
-			xmlRpcHelper.updateAccountExpireAsync(new XmlRpcListenerBase() {
-				@Override
-				public void onAccountExpireUpdated(String result) {
-					//TODO
-				}
-			}, LinphonePreferences.instance().getAccountUsername(0), LinphonePreferences.instance().getAccountHa1(0), getString(R.string.default_domain), item.getPayload(), item.getPayloadSignature());
-		}
-	}
+    @Override
+    public void onPurchasedItemConfirmationQueryFinished(boolean success) {
+        if (success) {
+            XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
 
-	@Override
-	public void onClick(View v) {
-		int id = v.getId();
+            Purchasable item = LinphonePreferences.instance().getInAppPurchasedItem();
 
-		if (id == R.id.cancel) {
-			finish();
-		} else if (id == R.id.back) {
-			onBackPressed();
-		}
-	}
+            xmlRpcHelper.updateAccountExpireAsync(new XmlRpcListenerBase() {
+                @Override
+                public void onAccountExpireUpdated(String result) {
+                    //TODO
+                }
+            }, LinphonePreferences.instance().getAccountUsername(0), LinphonePreferences.instance().getAccountHa1(0), getString(R.string.default_domain), item.getPayload(), item.getPayloadSignature());
+        }
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data);
-	}
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
 
-	@Override
-	public void onRecoverAccountSuccessful(boolean success) {
-	}
+        if (id == R.id.cancel) {
+            finish();
+        } else if (id == R.id.back) {
+            onBackPressed();
+        }
+    }
 
-	@Override
-	public void onError(final String error) {
-		Log.e(error);
-		mHandler.post(new Runnable() {
-			@Override
-			public void run() {
-				inProgress.setVisibility(View.GONE);
-				Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();
-			}
-		});
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data);
+    }
 
-	@Override
-	public void onActivateAccountSuccessful(boolean success) {
-		if (success) {
-			Log.d("[In-app purchase] Account activated");
-		}
-	}
+    @Override
+    public void onRecoverAccountSuccessful(boolean success) {
+    }
+
+    @Override
+    public void onError(final String error) {
+        Log.e(error);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                inProgress.setVisibility(View.GONE);
+                Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void onActivateAccountSuccessful(boolean success) {
+        if (success) {
+            Log.d("[In-app purchase] Account activated");
+        }
+    }
 }

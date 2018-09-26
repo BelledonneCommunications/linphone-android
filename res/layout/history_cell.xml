@@ -28,6 +28,7 @@
 
 
 	<RelativeLayout
+		android:id="@+id/history_whole"
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
 		android:layout_margin="5dp"
@@ -53,6 +54,7 @@
 			android:layout_alignParentRight="true"
 			android:layout_centerInParent="true"
 			android:visibility="gone"
+			android:clickable="false"
 			android:padding="5dp" />
 
 		<RelativeLayout

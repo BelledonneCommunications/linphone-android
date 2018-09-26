@@ -22,63 +22,57 @@ package org.linphone.ui;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 
-import org.linphone.mediastream.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ListSelectionAdapter extends BaseAdapter {
-	private ListSelectionHelper mListHelper;
-	private List<Integer> mSelectedItems;
-	private boolean mIsEditionEnabled;
+    private ListSelectionHelper mListHelper;
+    private List<Integer> mSelectedItems;
+    private boolean mIsEditionEnabled;
 
-	private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-			Integer position = (Integer)compoundButton.getTag();
-			if (checked) {
-				mSelectedItems.add(position);
-			} else {
-				mSelectedItems.remove(position);
-			}
-			mListHelper.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == getCount());
-		}
-	};
+    private CompoundButton.OnCheckedChangeListener mDeleteCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+            Integer position = (Integer) compoundButton.getTag();
+            if (checked) {
+                mSelectedItems.add(position);
+            } else {
+                mSelectedItems.remove(position);
+            }
+            mListHelper.updateSelectionButtons(mSelectedItems.size() == 0, mSelectedItems.size() == getCount());
+        }
+    };
 
-	public ListSelectionAdapter(ListSelectionHelper helper) {
-		mListHelper = helper;
-		mSelectedItems = new ArrayList<>();
-	}
+    public ListSelectionAdapter(ListSelectionHelper helper) {
+        mListHelper = helper;
+        mSelectedItems = new ArrayList<>();
+    }
 
-	public boolean isEditionEnabled() {
-		return mIsEditionEnabled;
-	}
+    public boolean isEditionEnabled() {
+        return mIsEditionEnabled;
+    }
 
-	public CompoundButton.OnCheckedChangeListener getDeleteListener() {
-		return mDeleteCheckboxListener;
-	}
+    public void selectAll() {
+        for (Integer i = 0; i < getCount(); i++) {
+            mSelectedItems.add(i);
+        }
+        mListHelper.updateSelectionButtons(false, true);
+        notifyDataSetInvalidated();
+    }
 
-	public void selectAll() {
-		for (Integer i = 0; i < getCount(); i++) {
-			mSelectedItems.add(i);
-		}
-		mListHelper.updateSelectionButtons(false, true);
-		notifyDataSetInvalidated();
-	}
+    public void deselectAll() {
+        mSelectedItems.clear();
+        mListHelper.updateSelectionButtons(true, false);
+        notifyDataSetInvalidated();
+    }
 
-	public void deselectAll() {
-		mSelectedItems.clear();
-		mListHelper.updateSelectionButtons(true, false);
-		notifyDataSetInvalidated();
-	}
+    public void enableEdition(boolean enable) {
+        mIsEditionEnabled = enable;
+        notifyDataSetInvalidated();
+        mSelectedItems.clear();
+    }
 
-	public void enableEdition(boolean enable) {
-		mIsEditionEnabled = enable;
-		notifyDataSetInvalidated();
-		mSelectedItems.clear();
-	}
-
-	public List<Integer> getSelectedItemsPosition() {
-		return mSelectedItems;
-	}
+    public List<Integer> getSelectedItemsPosition() {
+        return mSelectedItems;
+    }
 }

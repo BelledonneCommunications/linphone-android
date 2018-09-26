@@ -18,16 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneService;
-import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.core.Core;
-import org.linphone.core.Core.LogCollectionUploadState;
-import org.linphone.core.CoreListenerStub;
-import org.linphone.mediastream.Log;
-
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -45,135 +35,145 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
+import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
+import org.linphone.core.Core;
+import org.linphone.core.Core.LogCollectionUploadState;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.mediastream.Log;
+
 public class AboutFragment extends Fragment implements OnClickListener {
-	View sendLogButton = null;
-	View resetLogButton = null;
-	ImageView cancel;
-	CoreListenerStub mListener;
-	private ProgressDialog progress;
-	private boolean uploadInProgress;
+    View sendLogButton = null;
+    View resetLogButton = null;
+    ImageView cancel;
+    CoreListenerStub mListener;
+    private ProgressDialog progress;
+    private boolean uploadInProgress;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.about, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.about, container, false);
 
-		TextView aboutVersion = (TextView) view.findViewById(R.id.about_android_version);
-		TextView aboutLiblinphoneVersion = (TextView) view.findViewById(R.id.about_liblinphone_version);
-		aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
-		try {
-			aboutVersion.setText(String.format(getString(R.string.about_version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
-		} catch (NameNotFoundException e) {
-			Log.e(e, "cannot get version name");
-		}
+        TextView aboutVersion = view.findViewById(R.id.about_android_version);
+        TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
+        aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
+        try {
+            aboutVersion.setText(String.format(getString(R.string.about_version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
+        } catch (NameNotFoundException e) {
+            Log.e(e, "cannot get version name");
+        }
 
-		cancel = (ImageView) view.findViewById(R.id.cancel);
-		cancel.setOnClickListener(this);
+        cancel = view.findViewById(R.id.cancel);
+        cancel.setOnClickListener(this);
 
-		sendLogButton = view.findViewById(R.id.send_log);
-		sendLogButton.setOnClickListener(this);
-		sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+        sendLogButton = view.findViewById(R.id.send_log);
+        sendLogButton.setOnClickListener(this);
+        sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-		resetLogButton = view.findViewById(R.id.reset_log);
-		resetLogButton.setOnClickListener(this);
-		resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+        resetLogButton = view.findViewById(R.id.reset_log);
+        resetLogButton.setOnClickListener(this);
+        resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-		mListener = new CoreListenerStub() {
-			@Override
-			public void onLogCollectionUploadProgressIndication(Core lc, int offset, int total) {
-			}
+        mListener = new CoreListenerStub() {
+            @Override
+            public void onLogCollectionUploadProgressIndication(Core lc, int offset, int total) {
+            }
 
-			@Override
-			public void onLogCollectionUploadStateChanged(Core lc, LogCollectionUploadState state, String info) {
-				if (state == LogCollectionUploadState.InProgress) {
-					displayUploadLogsInProgress();
-				} else if (state == LogCollectionUploadState.Delivered || state == LogCollectionUploadState.NotDelivered) {
-					uploadInProgress = false;
-					if (progress != null) progress.dismiss();
-					if (state == LogCollectionUploadState.Delivered) {
-						sendLogs(LinphoneService.instance().getApplicationContext(), info);
-					}
-				}
-			}
-		};
+            @Override
+            public void onLogCollectionUploadStateChanged(Core lc, LogCollectionUploadState state, String info) {
+                if (state == LogCollectionUploadState.InProgress) {
+                    displayUploadLogsInProgress();
+                } else if (state == LogCollectionUploadState.Delivered || state == LogCollectionUploadState.NotDelivered) {
+                    uploadInProgress = false;
+                    if (progress != null) progress.dismiss();
+                    if (state == LogCollectionUploadState.Delivered) {
+                        sendLogs(LinphoneService.instance().getApplicationContext(), info);
+                    }
+                }
+            }
+        };
 
-		return view;
-	}
+        return view;
+    }
 
-	private void displayUploadLogsInProgress() {
-		if (uploadInProgress) {
-			return;
-		}
-		uploadInProgress = true;
+    private void displayUploadLogsInProgress() {
+        if (uploadInProgress) {
+            return;
+        }
+        uploadInProgress = true;
 
-		progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
-		Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorE));
-		d.setAlpha(200);
-		progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-		progress.getWindow().setBackgroundDrawable(d);
-		progress.setContentView(R.layout.progress_dialog);
-		progress.show();
-	}
+        progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorE));
+        d.setAlpha(200);
+        progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        progress.getWindow().setBackgroundDrawable(d);
+        progress.setContentView(R.layout.progress_dialog);
+        progress.show();
+    }
 
-	private void sendLogs(Context context, String info){
-		final String appName = context.getString(R.string.app_name);
+    private void sendLogs(Context context, String info) {
+        final String appName = context.getString(R.string.app_name);
 
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.putExtra(Intent.EXTRA_EMAIL, new String[]{ context.getString(R.string.about_bugreport_email) });
-		i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-		i.putExtra(Intent.EXTRA_TEXT, info);
-		i.setType("application/zip");
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.about_bugreport_email)});
+        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+        i.putExtra(Intent.EXTRA_TEXT, info);
+        i.setType("application/zip");
 
-		try {
-			startActivity(Intent.createChooser(i, "Send mail..."));
-		} catch (android.content.ActivityNotFoundException ex) {
-			Log.e(ex);
-		}
-	}
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(ex);
+        }
+    }
 
-	@Override
-	public void onPause() {
-		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.removeListener(mListener);
-		}
+    @Override
+    public void onPause() {
+        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (lc != null) {
+            lc.removeListener(mListener);
+        }
 
-		super.onPause();
-	}
+        super.onPause();
+    }
 
-	@Override
-	public void onResume() {
-		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-		if (lc != null) {
-			lc.addListener(mListener);
-		}
+    @Override
+    public void onResume() {
+        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (lc != null) {
+            lc.addListener(mListener);
+        }
 
-		if (LinphoneActivity.isInstanciated()) {
-			LinphoneActivity.instance().selectMenu(FragmentsAvailable.ABOUT);
-		}
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().selectMenu(FragmentsAvailable.ABOUT);
+        }
 
-		super.onResume();
-	}
+        super.onResume();
+    }
 
-	@Override
-	public void onClick(View v) {
-		if (LinphoneActivity.isInstanciated()) {
-			Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-			if (v == sendLogButton) {
-				if (lc != null) {
-					lc.uploadLogCollection();
-				}
-			} else if (v == resetLogButton) {
-				if (lc != null) {
-					lc.resetLogCollection();
-				}
-			} else if (v == cancel) {
-				LinphoneActivity.instance().goToDialerFragment();
-			}
-		}
-	}
+    @Override
+    public void onClick(View v) {
+        if (LinphoneActivity.isInstanciated()) {
+            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            if (v == sendLogButton) {
+                if (lc != null) {
+                    lc.uploadLogCollection();
+                }
+            } else if (v == resetLogButton) {
+                if (lc != null) {
+                    lc.resetLogCollection();
+                }
+            } else if (v == cancel) {
+                LinphoneActivity.instance().goToDialerFragment();
+            }
+        }
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

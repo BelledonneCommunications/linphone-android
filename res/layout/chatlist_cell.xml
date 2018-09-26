@@ -6,7 +6,8 @@
     android:paddingLeft="10dp"
 	android:paddingRight="10dp"
 	android:paddingTop="5dp"
-    android:background="@drawable/list_selector">
+	android:foreground="?android:attr/selectableItemBackground"
+	android:background="@drawable/list_selector">
 
 	<CheckBox
 		android:id="@+id/delete_chatroom"
@@ -14,6 +15,7 @@
 		android:contentDescription="@string/content_description_delete"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:clickable="false"
 		android:adjustViewBounds="true"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
@@ -116,10 +118,24 @@
                     android:layout_marginRight="30dp"
                     style="@style/font11"/>
 
+				<ImageView
+					android:id="@+id/lastMessageFileTransfer"
+					android:src="@drawable/chat_file_message"
+					android:layout_marginLeft="5dp"
+					android:visibility="gone"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content" />
+
             </LinearLayout>
 
 		</RelativeLayout>
 
 	</LinearLayout>
+	<View
+		android:id="@+id/selected_overlay"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@color/notification_color_led"
+		android:visibility="invisible" />
 
 </RelativeLayout>

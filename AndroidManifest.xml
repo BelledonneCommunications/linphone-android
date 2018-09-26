@@ -64,7 +64,9 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:largeHeap="true">
+        android:largeHeap="true"
+        >
+
         <activity
             android:name=".activities.LinphoneLauncherActivity"
             android:exported="true"
@@ -198,8 +200,7 @@
 
         <service
             android:name=".LinphoneService"
-            android:label="@string/service_name"
-            android:stopWithTask="false"/>
+            android:label="@string/service_name"/>
         <service
             android:name=".sync.SyncService"
             android:exported="true">

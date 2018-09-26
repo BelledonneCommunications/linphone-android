@@ -25,36 +25,36 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.linphone.contacts.ContactAddress;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.contacts.ContactAddress;
 
 public class ContactSelectView extends View {
-	private TextView contactName;
-	private ImageView deleteContact;
+    private TextView contactName;
+    private ImageView deleteContact;
 
-	public ContactSelectView(Context context) {
-		super(context);
+    public ContactSelectView(Context context) {
+        super(context);
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE );
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View view = inflater.inflate(R.layout.contact_selected, null);
+        View view = inflater.inflate(R.layout.contact_selected, null);
 
-		contactName = view.findViewById(R.id.sipUri);
-		deleteContact = view.findViewById(R.id.contactChatDelete);
+        contactName = view.findViewById(R.id.sipUri);
+        deleteContact = view.findViewById(R.id.contactChatDelete);
 
-	}
+    }
 
-	public void setContactName(ContactAddress ca) {
-		if (ca.getContact() != null) {
-			contactName.setText(ca.getContact().getFirstName());
-		} else {
-			LinphoneManager.getLc().createFriendWithAddress(ca.getAddressAsDisplayableString()).getName();
-			contactName.setText(ca.getAddressAsDisplayableString());
-		}
-	}
+    public void setContactName(ContactAddress ca) {
+        if (ca.getContact() != null) {
+            contactName.setText(ca.getContact().getFirstName());
+        } else {
+            LinphoneManager.getLc().createFriendWithAddress(ca.getAddressAsDisplayableString()).getName();
+            contactName.setText(ca.getAddressAsDisplayableString());
+        }
+    }
 
-	public void setListener(OnClickListener listener) {
-		deleteContact.setOnClickListener(listener);
-	}
+    public void setListener(OnClickListener listener) {
+        deleteContact.setOnClickListener(listener);
+    }
 }

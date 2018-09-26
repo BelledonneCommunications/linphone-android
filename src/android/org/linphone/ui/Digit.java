@@ -19,17 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import org.linphone.LinphoneUtils;
-import org.linphone.call.CallActivity;
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneService;
-import org.linphone.R;
-import org.linphone.core.Core;
-import org.linphone.core.Factory;
-import org.linphone.core.LogCollectionState;
-import org.linphone.mediastream.Log;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,184 +28,194 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
+import org.linphone.R;
+import org.linphone.call.CallActivity;
+import org.linphone.core.Core;
+import org.linphone.mediastream.Log;
+
 public class Digit extends Button implements AddressAware {
 
-	private AddressText mAddress;
-	public void setAddressWidget(AddressText address) {
-		mAddress = address;
-	}
+    private AddressText mAddress;
 
-	private boolean mPlayDtmf;
-	public void setPlayDtmf(boolean play) {
-		mPlayDtmf = play;
-	}
+    public void setAddressWidget(AddressText address) {
+        mAddress = address;
+    }
 
-	@Override
-	protected void onTextChanged(CharSequence text, int start, int before,
-			int after) {
-		super.onTextChanged(text, start, before, after);
+    private boolean mPlayDtmf;
 
-		if (text == null || text.length() < 1) {
-			return;
-		}
+    public void setPlayDtmf(boolean play) {
+        mPlayDtmf = play;
+    }
 
-		DialKeyListener lListener = new DialKeyListener();
-		setOnClickListener(lListener);
-		setOnTouchListener(lListener);
+    @Override
+    protected void onTextChanged(CharSequence text, int start, int before,
+                                 int after) {
+        super.onTextChanged(text, start, before, after);
 
-		if ("0+".equals(text)) {
-			setOnLongClickListener(lListener);
-		}
+        if (text == null || text.length() < 1) {
+            return;
+        }
 
-		if ("1".equals(text)) {
-			setOnLongClickListener(lListener);
-		}
-	}
+        DialKeyListener lListener = new DialKeyListener();
+        setOnClickListener(lListener);
+        setOnTouchListener(lListener);
 
-	public Digit(Context context, AttributeSet attrs, int style) {
-		super(context, attrs, style);
-		setLongClickable(true);
-	}
+        if ("0+".equals(text)) {
+            setOnLongClickListener(lListener);
+        }
 
-	public Digit(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		setLongClickable(true);
-	}
+        if ("1".equals(text)) {
+            setOnLongClickListener(lListener);
+        }
+    }
 
-	public Digit(Context context) {
-		super(context);
-		setLongClickable(true);
-	}
+    public Digit(Context context, AttributeSet attrs, int style) {
+        super(context, attrs, style);
+        setLongClickable(true);
+    }
 
-	private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
-		final char mKeyCode;
-		boolean mIsDtmfStarted;
+    public Digit(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setLongClickable(true);
+    }
 
-		DialKeyListener() {
-			mKeyCode = Digit.this.getText().subSequence(0, 1).charAt(0);
-		}
+    public Digit(Context context) {
+        super(context);
+        setLongClickable(true);
+    }
 
-		private boolean linphoneServiceReady() {
-			if (!LinphoneService.isReady()) {
-				Log.w("Service is not ready while pressing digit");
-				Toast.makeText(getContext(), getContext().getString(R.string.skipable_error_service_not_ready), Toast.LENGTH_SHORT).show();
-				return false;
-			}
-			return true;
-		}
+    private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
+        final char mKeyCode;
+        boolean mIsDtmfStarted;
 
-		public void onClick(View v) {
-			if (mPlayDtmf) {
-				if (!linphoneServiceReady()) return;
-				Core lc = LinphoneManager.getLc();
-				lc.stopDtmf();
-				mIsDtmfStarted =false;
-				if (lc.inCall()) {
-					lc.getCurrentCall().sendDtmf(mKeyCode);
-				}
-			}
+        DialKeyListener() {
+            mKeyCode = Digit.this.getText().subSequence(0, 1).charAt(0);
+        }
 
-			if (mAddress != null) {
-				int lBegin = mAddress.getSelectionStart();
-				if (lBegin == -1) {
-					lBegin = mAddress.length();
-				}
-				if (lBegin >= 0) {
-					mAddress.getEditableText().insert(lBegin,String.valueOf(mKeyCode));
-				}
+        private boolean linphoneServiceReady() {
+            if (!LinphoneService.isReady()) {
+                Log.w("Service is not ready while pressing digit");
+                Toast.makeText(getContext(), getContext().getString(R.string.skipable_error_service_not_ready), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            return true;
+        }
 
-				if(LinphonePreferences.instance().getDebugPopupAddress() != null
-						&& mAddress.getText().toString().equals(LinphonePreferences.instance().getDebugPopupAddress())){
-					displayDebugPopup();
-				}
-			}
-		}
+        public void onClick(View v) {
+            if (mPlayDtmf) {
+                if (!linphoneServiceReady()) return;
+                Core lc = LinphoneManager.getLc();
+                lc.stopDtmf();
+                mIsDtmfStarted = false;
+                if (lc.inCall()) {
+                    lc.getCurrentCall().sendDtmf(mKeyCode);
+                }
+            }
 
-		public void displayDebugPopup(){
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-			alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
-			if(LinphonePreferences.instance().isDebugEnabled()) {
-				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						if(which == 0){
-							LinphonePreferences.instance().setDebugEnabled(false);
-						}
-						if(which == 1) {
-							Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-							if (lc != null) {
-								lc.uploadLogCollection();
-							}
-						}
-					}
-				});
+            if (mAddress != null) {
+                int lBegin = mAddress.getSelectionStart();
+                if (lBegin == -1) {
+                    lBegin = mAddress.length();
+                }
+                if (lBegin >= 0) {
+                    mAddress.getEditableText().insert(lBegin, String.valueOf(mKeyCode));
+                }
 
-			} else {
-				alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						if(which == 0) {
-							LinphonePreferences.instance().setDebugEnabled(true);
-						}
-					}
-				});
-			}
-			alertDialog.show();
-			mAddress.getEditableText().clear();
-		}
+                if (LinphonePreferences.instance().getDebugPopupAddress() != null
+                        && mAddress.getText().toString().equals(LinphonePreferences.instance().getDebugPopupAddress())) {
+                    displayDebugPopup();
+                }
+            }
+        }
 
-		public boolean onTouch(View v, MotionEvent event) {
-			if (!mPlayDtmf) return false;
-			if (!linphoneServiceReady()) return true;
+        public void displayDebugPopup() {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+            alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
+            if (LinphonePreferences.instance().isDebugEnabled()) {
+                alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            LinphonePreferences.instance().setDebugEnabled(false);
+                        }
+                        if (which == 1) {
+                            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            if (lc != null) {
+                                lc.uploadLogCollection();
+                            }
+                        }
+                    }
+                });
 
-			if (CallActivity.isInstanciated()) {
-				CallActivity.instance().resetControlsHidingCallBack();
-			}
+            } else {
+                alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            LinphonePreferences.instance().setDebugEnabled(true);
+                        }
+                    }
+                });
+            }
+            alertDialog.show();
+            mAddress.getEditableText().clear();
+        }
 
-			Core lc = LinphoneManager.getLc();
-			if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
-				LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
-				mIsDtmfStarted = true;
-			} else {
-				if (event.getAction() == MotionEvent.ACTION_UP) {
-					lc.stopDtmf();
-					mIsDtmfStarted = false;
-				}
-			}
-			return false;
-		}
+        public boolean onTouch(View v, MotionEvent event) {
+            if (!mPlayDtmf) return false;
+            if (!linphoneServiceReady()) return true;
 
-		public boolean onLongClick(View v) {
-			int id = v.getId();
-			Core lc = LinphoneManager.getLc();
+            if (CallActivity.isInstanciated()) {
+                CallActivity.instance().resetControlsHidingCallBack();
+            }
 
-			if (mPlayDtmf) {
-				if (!linphoneServiceReady()) return true;
-				// Called if "0+" dtmf
-				lc.stopDtmf();
-			}
+            Core lc = LinphoneManager.getLc();
+            if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
+                LinphoneManager.getInstance().playDtmf(getContext().getContentResolver(), mKeyCode);
+                mIsDtmfStarted = true;
+            } else {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    lc.stopDtmf();
+                    mIsDtmfStarted = false;
+                }
+            }
+            return false;
+        }
 
-			if(id == R.id.Digit1 && lc.getCalls().length == 0){
-				String voiceMail = LinphonePreferences.instance().getVoiceMailUri();
-				mAddress.getEditableText().clear();
-				if(voiceMail != null){
-					mAddress.getEditableText().append(voiceMail);
-					LinphoneManager.getInstance().newOutgoingCall(mAddress);
-				}
-				return true;
-			}
+        public boolean onLongClick(View v) {
+            int id = v.getId();
+            Core lc = LinphoneManager.getLc();
+
+            if (mPlayDtmf) {
+                if (!linphoneServiceReady()) return true;
+                // Called if "0+" dtmf
+                lc.stopDtmf();
+            }
+
+            if (id == R.id.Digit1 && lc.getCalls().length == 0) {
+                String voiceMail = LinphonePreferences.instance().getVoiceMailUri();
+                mAddress.getEditableText().clear();
+                if (voiceMail != null) {
+                    mAddress.getEditableText().append(voiceMail);
+                    LinphoneManager.getInstance().newOutgoingCall(mAddress);
+                }
+                return true;
+            }
 
 
-			if (mAddress == null) return true;
+            if (mAddress == null) return true;
 
-			int lBegin = mAddress.getSelectionStart();
-			if (lBegin == -1) {
-				lBegin = mAddress.getEditableText().length();
-			}
-			if (lBegin >= 0) {
-			mAddress.getEditableText().insert(lBegin,"+");
-			}
-			return true;
-		}
-	}
+            int lBegin = mAddress.getSelectionStart();
+            if (lBegin == -1) {
+                lBegin = mAddress.getEditableText().length();
+            }
+            if (lBegin >= 0) {
+                mAddress.getEditableText().insert(lBegin, "+");
+            }
+            return true;
+        }
+    }
 
 
 }

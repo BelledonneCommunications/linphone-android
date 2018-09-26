@@ -30,19 +30,19 @@ import org.linphone.mediastream.Log;
 public class HookReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(isOrderedBroadcast())
+        if (isOrderedBroadcast())
             abortBroadcast();
         Bundle extras = intent.getExtras();
         boolean b = extras.getBoolean("hookoff");
-        if(b){
+        if (b) {
             //handset on
             Log.i(" ======>>>>>> HookReceiver - handset ON");
             LinphoneManager.getInstance().enableSpeaker(false);
-            if(!LinphoneManager.getInstance().isHansetModeOn())
+            if (!LinphoneManager.getInstance().isHansetModeOn())
                 LinphoneManager.getInstance().setHandsetMode(true);
 
 
-        }else{
+        } else {
             //handset off
             Log.i(" ======>>>>>> HookReceiver - handset OFF");
             LinphoneManager.getInstance().enableSpeaker(true);

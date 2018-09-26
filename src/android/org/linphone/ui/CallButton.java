@@ -19,15 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.R;
-import org.linphone.core.Call;
-import org.linphone.core.Call.Dir;
-import org.linphone.core.CallLog;
-import org.linphone.core.CoreException;
-import org.linphone.core.ProxyConfig;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -35,58 +26,74 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
+import org.linphone.R;
+import org.linphone.core.Call;
+import org.linphone.core.CallLog;
+import org.linphone.core.CoreException;
+import org.linphone.core.ProxyConfig;
+
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
 
-	private AddressText mAddress;
-	public void setAddressWidget(AddressText a) { mAddress = a; }
+    private AddressText mAddress;
 
-	public void setExternalClickListener(OnClickListener e) { setOnClickListener(e); }
-	public void resetClickListener() { setOnClickListener(this); }
+    public void setAddressWidget(AddressText a) {
+        mAddress = a;
+    }
 
-	public CallButton(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		setOnClickListener(this);
-	}
+    public void setExternalClickListener(OnClickListener e) {
+        setOnClickListener(e);
+    }
 
-	public void onClick(View v) {
-		try {
-			if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
-				if (mAddress.getText().length() > 0) {
-					LinphoneManager.getInstance().newOutgoingCall(mAddress);
-				} else {
-					if (LinphonePreferences.instance().isBisFeatureEnabled()) {
-						CallLog[] logs = LinphoneManager.getLc().getCallLogs();
-						CallLog log = null;
-						for (CallLog l : logs) {
-							if (l.getDir() == Call.Dir.Outgoing) {
-								log = l;
-								break;
-							}
-						}
-						if (log == null) {
-							return;
-						}
+    public void resetClickListener() {
+        setOnClickListener(this);
+    }
 
-						ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-						if (lpc != null && log.getToAddress().getDomain().equals(lpc.getDomain())) {
-							mAddress.setText(log.getToAddress().getUsername());
-						} else {
-							mAddress.setText(log.getToAddress().asStringUriOnly());
-						}
-						mAddress.setSelection(mAddress.getText().toString().length());
-						mAddress.setDisplayedName(log.getToAddress().getDisplayName());
-					}
-				}
-			}
-		} catch (CoreException e) {
-			LinphoneManager.getInstance().terminateCall();
-			onWrongDestinationAddress();
-		}
-	}
+    public CallButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setOnClickListener(this);
+    }
 
-	protected void onWrongDestinationAddress() {
-		Toast.makeText(getContext()
-				,String.format(getResources().getString(R.string.warning_wrong_destination_address),mAddress.getText().toString())
-				,Toast.LENGTH_LONG).show();
-	}
+    public void onClick(View v) {
+        try {
+            if (!LinphoneManager.getInstance().acceptCallIfIncomingPending()) {
+                if (mAddress.getText().length() > 0) {
+                    LinphoneManager.getInstance().newOutgoingCall(mAddress);
+                } else {
+                    if (LinphonePreferences.instance().isBisFeatureEnabled()) {
+                        CallLog[] logs = LinphoneManager.getLc().getCallLogs();
+                        CallLog log = null;
+                        for (CallLog l : logs) {
+                            if (l.getDir() == Call.Dir.Outgoing) {
+                                log = l;
+                                break;
+                            }
+                        }
+                        if (log == null) {
+                            return;
+                        }
+
+                        ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+                        if (lpc != null && log.getToAddress().getDomain().equals(lpc.getDomain())) {
+                            mAddress.setText(log.getToAddress().getUsername());
+                        } else {
+                            mAddress.setText(log.getToAddress().asStringUriOnly());
+                        }
+                        mAddress.setSelection(mAddress.getText().toString().length());
+                        mAddress.setDisplayedName(log.getToAddress().getDisplayName());
+                    }
+                }
+            }
+        } catch (CoreException e) {
+            LinphoneManager.getInstance().terminateCall();
+            onWrongDestinationAddress();
+        }
+    }
+
+    protected void onWrongDestinationAddress() {
+        Toast.makeText(getContext()
+                , String.format(getResources().getString(R.string.warning_wrong_destination_address), mAddress.getText().toString())
+                , Toast.LENGTH_LONG).show();
+    }
 }

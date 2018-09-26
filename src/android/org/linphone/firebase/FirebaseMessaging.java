@@ -36,16 +36,16 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        android.util.Log.i("FirebaseMessaging","[Push Notification] Received");
+        android.util.Log.i("FirebaseMessaging", "[Push Notification] Received");
 
         if (!LinphoneService.isReady()) {
-            android.util.Log.i("FirebaseMessaging","[Push Notification] Starting Service");
+            android.util.Log.i("FirebaseMessaging", "[Push Notification] Starting Service");
             startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
         } else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-            LinphoneUtils.dispatchOnUIThread(new Runnable(){
+            LinphoneUtils.dispatchOnUIThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0){
+                    if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
                         LinphoneManager.getLc().setNetworkReachable(false);
                         LinphoneManager.getLc().setNetworkReachable(true);
                     }

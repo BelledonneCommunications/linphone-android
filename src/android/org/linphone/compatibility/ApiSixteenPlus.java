@@ -1,7 +1,5 @@
 package org.linphone.compatibility;
 
-import org.linphone.R;
-
 import android.annotation.TargetApi;
 import android.app.FragmentTransaction;
 import android.app.Notification;
@@ -11,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+
+import org.linphone.R;
 /*
 ApiSixteenPlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -33,118 +33,118 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @TargetApi(16)
 public class ApiSixteenPlus {
 
-	@SuppressWarnings("deprecation")
-	public static Notification createMessageNotification(Context context,
-			int msgCount, String msgSender, String msg, Bitmap contactIcon,
-			PendingIntent intent) {
-		String title;
-		if (msgCount == 1) {
-			title = msgSender;
-		} else {
-			title = context.getString(R.string.unread_messages)
-					.replace("%i", String.valueOf(msgCount));
-		}
+    @SuppressWarnings("deprecation")
+    public static Notification createMessageNotification(Context context,
+                                                         int msgCount, String msgSender, String msg, Bitmap contactIcon,
+                                                         PendingIntent intent) {
+        String title;
+        if (msgCount == 1) {
+            title = msgSender;
+        } else {
+            title = context.getString(R.string.unread_messages)
+                    .replace("%i", String.valueOf(msgCount));
+        }
 
-		Notification notif = new Notification.Builder(context)
-						.setContentTitle(title)
-						.setContentText(msg)
-						.setSmallIcon(R.drawable.topbar_chat_notification)
-						.setAutoCancel(true)
-						.setContentIntent(intent)
-						.setDefaults(
-								Notification.DEFAULT_LIGHTS
-										| Notification.DEFAULT_SOUND
-										| Notification.DEFAULT_VIBRATE)
-						.setWhen(System.currentTimeMillis())
-						.setLargeIcon(contactIcon)
-						.setNumber(msgCount)
-				.build();
+        Notification notif = new Notification.Builder(context)
+                .setContentTitle(title)
+                .setContentText(msg)
+                .setSmallIcon(R.drawable.topbar_chat_notification)
+                .setAutoCancel(true)
+                .setContentIntent(intent)
+                .setDefaults(
+                        Notification.DEFAULT_LIGHTS
+                                | Notification.DEFAULT_SOUND
+                                | Notification.DEFAULT_VIBRATE)
+                .setWhen(System.currentTimeMillis())
+                .setLargeIcon(contactIcon)
+                .setNumber(msgCount)
+                .build();
 
-		return notif;
-	}
+        return notif;
+    }
 
-	public static Notification createInCallNotification(Context context,
-			String title, String msg, int iconID, Bitmap contactIcon,
-			String contactName, PendingIntent intent) {
+    public static Notification createInCallNotification(Context context,
+                                                        String title, String msg, int iconID, Bitmap contactIcon,
+                                                        String contactName, PendingIntent intent) {
 
-		Notification notif = new Notification.Builder(context).setContentTitle(contactName)
-						.setContentText(msg).setSmallIcon(iconID)
-						.setAutoCancel(false)
-						.setContentIntent(intent)
-						.setWhen(System.currentTimeMillis())
-						.setLargeIcon(contactIcon).build();
-		notif.flags |= Notification.FLAG_ONGOING_EVENT;
+        Notification notif = new Notification.Builder(context).setContentTitle(contactName)
+                .setContentText(msg).setSmallIcon(iconID)
+                .setAutoCancel(false)
+                .setContentIntent(intent)
+                .setWhen(System.currentTimeMillis())
+                .setLargeIcon(contactIcon).build();
+        notif.flags |= Notification.FLAG_ONGOING_EVENT;
 
-		return notif;
-	}
+        return notif;
+    }
 
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
-		Notification notif;
+    public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent, int priority) {
+        Notification notif;
 
-		if (largeIcon != null) {
-			notif = new Notification.Builder(context)
-	        .setContentTitle(title)
-	        .setContentText(message)
-	        .setSmallIcon(icon, level)
-	        .setLargeIcon(largeIcon)
-	        .setContentIntent(intent)
-	        .setWhen(System.currentTimeMillis())
-	        .setPriority(priority)
-	        .build();
-		} else {
-			notif = new Notification.Builder(context)
-	        .setContentTitle(title)
-	        .setContentText(message)
-	        .setSmallIcon(icon, level)
-	        .setContentIntent(intent)
-	        .setWhen(System.currentTimeMillis())
-	        .setPriority(priority)
-	        .build();
-		}
-		if (isOngoingEvent) {
-			notif.flags |= Notification.FLAG_ONGOING_EVENT;
-		}
+        if (largeIcon != null) {
+            notif = new Notification.Builder(context)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setSmallIcon(icon, level)
+                    .setLargeIcon(largeIcon)
+                    .setContentIntent(intent)
+                    .setWhen(System.currentTimeMillis())
+                    .setPriority(priority)
+                    .build();
+        } else {
+            notif = new Notification.Builder(context)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setSmallIcon(icon, level)
+                    .setContentIntent(intent)
+                    .setWhen(System.currentTimeMillis())
+                    .setPriority(priority)
+                    .build();
+        }
+        if (isOngoingEvent) {
+            notif.flags |= Notification.FLAG_ONGOING_EVENT;
+        }
 
-		return notif;
-	}
+        return notif;
+    }
 
-	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
-		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
-	}
+    public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
+        viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
+    }
 
-	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
-		Notification notif = new Notification.Builder(context)
-		.setContentTitle(title)
-		.setContentText(text)
-		.setSmallIcon(R.drawable.call_status_missed)
-		.setAutoCancel(true)
-		.setContentIntent(intent)
-		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-		.setWhen(System.currentTimeMillis())
-		.build();
+    public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+        Notification notif = new Notification.Builder(context)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.call_status_missed)
+                .setAutoCancel(true)
+                .setContentIntent(intent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setWhen(System.currentTimeMillis())
+                .build();
 
-		return notif;
-	}
+        return notif;
+    }
 
-	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
-		Notification notif = new Notification.Builder(context)
-		.setContentTitle(title)
-		.setContentText(text)
-		.setSmallIcon(R.drawable.linphone_logo)
-		.setAutoCancel(true)
-		.setContentIntent(intent)
-		.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-		.setWhen(System.currentTimeMillis())
-		.build();
+    public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+        Notification notif = new Notification.Builder(context)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.linphone_logo)
+                .setAutoCancel(true)
+                .setContentIntent(intent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setWhen(System.currentTimeMillis())
+                .build();
 
-		return notif;
-	}
+        return notif;
+    }
 
-	public static void startService(Context context, Intent intent) {
-		context.startService(intent);
-	}
+    public static void startService(Context context, Intent intent) {
+        context.startService(intent);
+    }
 
-	public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
+    public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
 
-	}
+    }
 }

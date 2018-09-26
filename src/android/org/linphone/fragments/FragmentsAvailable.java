@@ -20,46 +20,46 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 public enum FragmentsAvailable {
-	UNKNOW,
-	DIALER,
-	EMPTY,
-	HISTORY_LIST,
-	HISTORY_DETAIL,
-	CONTACTS_LIST,
-	CONTACT_DETAIL,
-	CONTACT_EDITOR,
-	ABOUT,
-	ACCOUNT_SETTINGS,
-	SETTINGS,
-	CHAT_LIST,
-	CHAT,
-	CREATE_CHAT,
-	INFO_GROUP_CHAT,
-	GROUP_CHAT,
-	MESSAGE_IMDN;
+    UNKNOW,
+    DIALER,
+    EMPTY,
+    HISTORY_LIST,
+    HISTORY_DETAIL,
+    CONTACTS_LIST,
+    CONTACT_DETAIL,
+    CONTACT_EDITOR,
+    ABOUT,
+    ACCOUNT_SETTINGS,
+    SETTINGS,
+    CHAT_LIST,
+    CHAT,
+    CREATE_CHAT,
+    INFO_GROUP_CHAT,
+    GROUP_CHAT,
+    MESSAGE_IMDN;
 
-	public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
-		switch (this) {
-		case HISTORY_DETAIL:
-			return fragment == HISTORY_LIST || fragment == HISTORY_DETAIL;
+    public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
+        switch (this) {
+            case HISTORY_DETAIL:
+                return fragment == HISTORY_LIST || fragment == HISTORY_DETAIL;
 
-		case CONTACT_DETAIL:
-			return fragment == CONTACTS_LIST || fragment == CONTACT_EDITOR|| fragment == CONTACT_DETAIL;
+            case CONTACT_DETAIL:
+                return fragment == CONTACTS_LIST || fragment == CONTACT_EDITOR || fragment == CONTACT_DETAIL;
 
-		case CONTACT_EDITOR:
-			return fragment == CONTACTS_LIST || fragment == CONTACT_DETAIL || fragment == CONTACT_EDITOR;
+            case CONTACT_EDITOR:
+                return fragment == CONTACTS_LIST || fragment == CONTACT_DETAIL || fragment == CONTACT_EDITOR;
 
-		case CHAT:
-			return fragment == CHAT_LIST || fragment == CHAT;
+            case CHAT:
+                return fragment == CHAT_LIST || fragment == CHAT;
 
-		case GROUP_CHAT:
-			return fragment == CHAT_LIST || fragment == GROUP_CHAT;
+            case GROUP_CHAT:
+                return fragment == CHAT_LIST || fragment == GROUP_CHAT;
 
-		case MESSAGE_IMDN:
-			return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;
+            case MESSAGE_IMDN:
+                return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;
 
-			default:
-			return false;
-		}
-	}
+            default:
+                return false;
+        }
+    }
 }

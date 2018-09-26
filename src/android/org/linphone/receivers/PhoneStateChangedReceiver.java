@@ -23,33 +23,32 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
-
 import org.linphone.LinphonePreferences;
 import org.linphone.core.Core;
-
 import org.linphone.LinphoneManager;
+import org.linphone.core.Core;
 
 /**
  * Pause current SIP calls when GSM phone rings or is active.
  */
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
-		if (!LinphoneManager.isInstanciated())
-			return;
+        if (!LinphoneManager.isInstanciated())
+            return;
 
-		if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState) || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
-			//Use only if not in native UI mode, as in this mode all calls are considered GSM by Linphone
-			LinphonePreferences mPrefs = LinphonePreferences.instance();
-			if (mPrefs.getConfig() != null && !mPrefs.getNativeUICall()) {
-				LinphoneManager.getInstance().setCallGsmON(true);
-				Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-				lc.pauseAllCalls();
-			}
+        if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState) || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
+            //Use only if not in native UI mode, as in this mode all calls are considered GSM by Linphone
+            LinphonePreferences mPrefs = LinphonePreferences.instance();
+            if (mPrefs.getConfig() != null && !mPrefs.getNativeUICall()) {
+                LinphoneManager.getInstance().setCallGsmON(true);
+                Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                lc.pauseAllCalls();
+            }
         } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(extraState)) {
-			LinphoneManager.getInstance().setCallGsmON(false);
+            LinphoneManager.getInstance().setCallGsmON(false);
         }
-	}
+    }
 }
