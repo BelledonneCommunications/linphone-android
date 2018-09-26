@@ -39,30 +39,17 @@ ec_calibrator_cool_tones=1
 [misc]
 max_calls=10
 history_max_size=100
-enable_basic_to_client_group_chat_room_migration=0
-enable_simple_group_chat_message_state=0
-aggregate_imdn=1
 store_friends=0
-debug=1
 
 [app]
 activation_code_length=4
-prefer_basic_chat_room=0
 show_login_view=1
-debug_popup_magic=#1234
-debug=1
-server_url=http://85.233.205.218:443/xmlrpc
-
-[in-app-purchase]
-server_url=https://subscribe.linphone.org:444/inapp.php
-purchasable_items_ids=test_account_subscription
+friendlist_subscription_enabled=1
 
 [assistant]
-domain=sip.linphone.org
 password_max_length=-1
 password_min_length=1
 username_length=-1
 username_max_length=64
 username_min_length=1
 username_regex=^[a-z0-9_.\-]*$
-xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
