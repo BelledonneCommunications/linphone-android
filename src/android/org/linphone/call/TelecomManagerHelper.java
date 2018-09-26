@@ -8,6 +8,7 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -86,12 +87,18 @@ public class TelecomManagerHelper {
 
 
     //Initiates the telecomManager and dependencies which are needed to handle calls.
+    @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public TelecomManagerHelper() {
+
+
         telecomManager = (TelecomManager) LinphoneManager.getInstance().getContext().getSystemService(Context.TELECOM_SERVICE);
+
         if (LinphoneManager.getInstance().getLinPhoneAccount() == null) {
             LinphoneManager.getInstance().setLinPhoneAccount();
+
         }
+
         phoneAccountHandle = LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler();
     }
 

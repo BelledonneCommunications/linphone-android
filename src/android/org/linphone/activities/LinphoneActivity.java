@@ -43,6 +43,8 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.telecom.PhoneAccount;
+import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -1092,17 +1094,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			mPreventNative=false;
 		}
 
-
-
-
 		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
 			if (ContextCompat.checkSelfPermission(LinphoneActivity.instance().getBaseContext(), Manifest.permission.RECORD_AUDIO)
 					!= PackageManager.PERMISSION_GRANTED) {
 				checkAndRequestRecordAudioPermissions();
 			}
 			TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
-
-			if ((telecomHelper.getTelecomManager().getPhoneAccount(telecomHelper.getPhoneAccountHandle()).isEnabled())) {
+			PhoneAccountHandle phoneAccountHandle = telecomHelper.getPhoneAccountHandle();
+			PhoneAccount phoneAccount = telecomHelper.getTelecomManager().getPhoneAccount(phoneAccountHandle);
+			if (phoneAccount.isEnabled()) {
 				telecomHelper.startIncall();
 			}
 			else {
@@ -1309,6 +1309,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	public void checkAndRequestCameraPermission() {
 		checkAndRequestPermission(Manifest.permission.CAMERA, 0);
+	}
+
+	public void checkAndRequestReadPhoneStatePermission() {
+		checkAndRequestPermission(Manifest.permission.READ_PHONE_STATE, 0);
 	}
 
 	public void checkAndRequestWriteContactsPermission() {

@@ -1,13 +1,16 @@
 package org.linphone.call;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
@@ -15,8 +18,10 @@ import android.util.Log;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class LinPhoneAccount {
@@ -32,28 +37,49 @@ public class LinPhoneAccount {
         mContext=context;
         telecomManager = (TelecomManager) mContext.getSystemService(Context.TELECOM_SERVICE);
 
-        accountHandle = new PhoneAccountHandle(
-                new ComponentName(mContext, LinphoneConnectionService.class),
-                mContext.getPackageName());
+        if (ContextCompat.checkSelfPermission(LinphoneActivity.instance().getBaseContext(), Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            LinphoneActivity.instance().checkAndRequestReadPhoneStatePermission();
+        }
 
-        String uriAdress = LinphoneManager.getLc().getIdentity();
+        List<PhoneAccountHandle> phoneAccountHandleList = telecomManager.getCallCapablePhoneAccounts();
+        PhoneAccount phoneAccount = null;
+        ComponentName linphoneConnectionService = new ComponentName(LinphoneManager.getInstance().getContext(), LinphoneConnectionService.class);
+        for (PhoneAccountHandle phoneAccountHandle : phoneAccountHandleList) {
+            phoneAccount = telecomManager.getPhoneAccount(phoneAccountHandle);
+            if (phoneAccountHandle.getComponentName().equals(linphoneConnectionService)) {
+                break;
+            }
+            phoneAccount = null;
+        }
 
-        account= PhoneAccount.builder(accountHandle,"Linphone")
+        if (phoneAccount == null) {
+            accountHandle = new PhoneAccountHandle(
+                    new ComponentName(mContext, LinphoneConnectionService.class),
+                    mContext.getPackageName());
+
+            String uriAdress = LinphoneManager.getLc().getIdentity();
+
+            account = PhoneAccount.builder(accountHandle, "Linphone")
 //                .setAddress(Uri.parse("sip.linphone.org"))
-                .setAddress(Uri.fromParts(PhoneAccount.SCHEME_SIP, uriAdress, null))
-                .setIcon(Icon.createWithResource(mContext, R.drawable.linphone_logo))
-                .setSubscriptionAddress(null)
-                .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER |
-                                PhoneAccount.CAPABILITY_VIDEO_CALLING |
-                                PhoneAccount.CAPABILITY_CONNECTION_MANAGER
-                )
-                .setHighlightColor(Color.GREEN)
-                .setShortDescription("Enable to allow Linphone integration and set it as default Phone Account in the next panel.")
+                    .setAddress(Uri.fromParts(PhoneAccount.SCHEME_SIP, uriAdress, null))
+                    .setIcon(Icon.createWithResource(mContext, R.drawable.linphone_logo))
+                    .setSubscriptionAddress(null)
+                    .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER |
+                            PhoneAccount.CAPABILITY_VIDEO_CALLING |
+                            PhoneAccount.CAPABILITY_CONNECTION_MANAGER
+                    )
+                    .setHighlightColor(Color.GREEN)
+                    .setShortDescription("Enable to allow Linphone integration and set it as default Phone Account in the next panel.")
 //                .setSupportedUriSchemes(Arrays.asList("tel, sip"))
-                .setSupportedUriSchemes(Arrays.asList(PhoneAccount.SCHEME_SIP, "tel, sip"))
-                .build();
+                    .setSupportedUriSchemes(Arrays.asList(PhoneAccount.SCHEME_SIP, "tel, sip"))
+                    .build();
 
-                registerPhoneAccount();
+            registerPhoneAccount();
+        } else {
+            account = phoneAccount;
+            accountHandle = account.getAccountHandle();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
