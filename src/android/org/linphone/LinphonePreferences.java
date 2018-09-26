@@ -1044,7 +1044,7 @@ public class LinphonePreferences {
 		return getConfig().getBool("app", "native_ui_call", false);
 	}
 
-	public void setNativeUICall(boolean use) {
+	public void setNativeUICall( boolean use ) {
 		getConfig().setBool("app", "native_ui_call", use);
 	}
 

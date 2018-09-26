@@ -172,7 +172,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private boolean callTransfer = false;
 	private boolean isOnBackground = false;
 	private boolean mPreventNative = false;
-//	private TelecomManagerHelper telecomHelper;
 	public String mAddressWaitingToBeCalled;
 
 	static public final boolean isInstanciated() {
@@ -271,13 +270,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				}
 			}
 
-			@TargetApi(Build.VERSION_CODES.M)
+			@TargetApi(Build.VERSION_CODES.O)
 			@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 			@Override
 			public void onCallStateChanged(Core lc, Call call, State state, String message) {
 
 				LinphonePreferences mPrefs = LinphonePreferences.instance();
 
+				//Prevents native UI call even if activated in a case of straight video call
 				if (call != null &&
 						((mPrefs.shouldInitiateVideoCall() && call.getDir() == Call.Dir.Outgoing) ||
 						 (call.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && call.getRemoteParams().videoEnabled()))
@@ -287,12 +287,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 					mPreventNative=false;
 				}
 
+				//If native mode enabled, launch methods to get/send a call
                 if ( mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
+					//Check permission RECORD_AUDIO
+					if (ContextCompat.checkSelfPermission(LinphoneActivity.instance().getBaseContext(), Manifest.permission.RECORD_AUDIO)
+							!= PackageManager.PERMISSION_GRANTED) {
+						checkAndRequestRecordAudioPermissions();
+					}
 
 					TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
 
 					if (state == State.IncomingReceived) {
-						telecomHelper.startIncall();
+						startIncallActivity(call);
+
 					} else if (state == State.OutgoingInit) {
 						telecomHelper.startOutgoingCall();
 					} else if (state == State.End || state == State.Error || state == State.Released) {
@@ -307,6 +314,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 							}
 						}
 					}
+
+
 				} else {
 				//If user choose Linphone call UI mode
 					if (state == State.IncomingReceived) {
@@ -353,21 +362,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			onNewIntent(getIntent());
 		}
-
-		//If user has choosen native call UI mode before, register the existing PhoneAccount
-
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//			if (LinphonePreferences.instance().getNativeUICall()) {
-//				LinPhoneAccount linPhoneAccount = LinphoneManager.getInstance().getLinPhoneAccount();
-//				if (linPhoneAccount != null) {
-//					linPhoneAccount.registerPhoneAccount();
-//				}
-//			}
-//		}
-
-
-
-
 	}
 
 	private void initButtons() {
@@ -1085,36 +1079,45 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	}
 
 
-	//Start Call_Activity
+	//Start CallActivity if native UI call mode deactivated or if straight video call
 	public void startIncallActivity(Call currentCall) {
+
 		LinphonePreferences mPrefs = LinphonePreferences.instance();
 		if (currentCall != null &&
 				((mPrefs.shouldInitiateVideoCall() && currentCall.getDir() == Call.Dir.Outgoing) ||
 						(currentCall.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && currentCall.getRemoteParams().videoEnabled()))
 				){
 			mPreventNative=true;
-		}else{
+		}else {
 			mPreventNative=false;
 		}
+
+
+
+
 		if (mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
+			if (ContextCompat.checkSelfPermission(LinphoneActivity.instance().getBaseContext(), Manifest.permission.RECORD_AUDIO)
+					!= PackageManager.PERMISSION_GRANTED) {
+				checkAndRequestRecordAudioPermissions();
+			}
 			TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
-			telecomHelper.startIncall();
-		}else {
+
+			if ((telecomHelper.getTelecomManager().getPhoneAccount(telecomHelper.getPhoneAccountHandle()).isEnabled())) {
+				telecomHelper.startIncall();
+			}
+			else {
+				Toast.makeText(LinphoneActivity.instance(), "Please reactivate native call UI option and follow the instructions", Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(this, CallActivity.class);
+				startOrientationSensor();
+				startActivityForResult(intent, CALL_ACTIVITY);
+			}
+		} else {
 			Intent intent = new Intent(this, CallActivity.class);
 			startOrientationSensor();
 			startActivityForResult(intent, CALL_ACTIVITY);
 		}
 	}
 
-
-
-	public void startCallActivity(Call currentCall) {
-
-			Intent intent = new Intent(this, CallActivity.class);
-			startOrientationSensor();
-			startActivityForResult(intent, CALL_ACTIVITY);
-
-	}
 	/**
 	 * Register a sensor to track phoneOrientation changes
 	 */
@@ -1282,6 +1285,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		isOnBackground = true;
 
 		super.onPause();
+	}
+
+
+	public void checkAndRequestRecordAudioPermissions() {
+		checkAndRequestPermission(Manifest.permission.RECORD_AUDIO, 0);
 	}
 
 	public boolean checkAndRequestOverlayPermission() {
@@ -1511,24 +1519,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				Call call = LinphoneManager.getLc().getCalls()[0];
 				Call.State onCallStateChanged = call.getState();
-
-
+				LinphonePreferences mPrefs = LinphonePreferences.instance();
 				if (onCallStateChanged == State.IncomingReceived) {
-
-
-
-					LinphonePreferences mPrefs = LinphonePreferences.instance();
-					if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
-//						TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
-//						telecomHelper.startIncall();
-					}else {
+					if ( (mPrefs.getConfig() != null && !mPrefs.getNativeUICall() )  || mPreventNative) {
 						startActivity(new Intent(this, CallIncomingActivity.class));
 					}
-
-
-
-
 				} else if (onCallStateChanged == State.OutgoingInit || onCallStateChanged == State.OutgoingProgress || onCallStateChanged == State.OutgoingRinging) {
+					if ( mPrefs.getConfig() != null && mPrefs.getNativeUICall() ){
+						Toast.makeText(LinphoneActivity.instance(), "Please reactivate native call UI option and follow the instructions", Toast.LENGTH_LONG).show();
+					}
 					startActivity(new Intent(this, CallOutgoingActivity.class));
 				} else {
 					startIncallActivity(call);
@@ -1642,10 +1641,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				incoming.add(Call.State.IncomingReceived);
 				if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
 					LinphonePreferences mPrefs = LinphonePreferences.instance();
-					if (mPrefs.getConfig() != null && mPrefs.getNativeUICall()) {
-//						TelecomManagerHelper telecomHelper = new TelecomManagerHelper();
-//						telecomHelper.startIncall();
-					}else {
+					if ((mPrefs.getConfig() != null && !mPrefs.getNativeUICall()) || mPreventNative) {
 						if (CallActivity.isInstanciated()) {
 							CallActivity.instance().startIncomingCallActivity();
 						} else {

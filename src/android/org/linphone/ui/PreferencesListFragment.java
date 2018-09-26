@@ -45,7 +45,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 @SuppressLint("ValidFragment")
-public class PreferencesListFragment extends ListFragment {
+public abstract class PreferencesListFragment extends ListFragment {
     private PreferenceManager mPreferenceManager;
 
     /**
@@ -270,4 +270,5 @@ public class PreferencesListFragment extends ListFragment {
         }
         return mPreferenceManager.findPreference(key);
     }
+
 }

@@ -75,11 +75,13 @@ import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.PermissionChecker;
 import android.telecom.TelecomManager;
+import android.widget.Toast;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class SettingsFragment extends PreferencesListFragment {
+	private static final int REQUEST_ENABLE_PHONE_ACCOUNT = 999;
 	private LinphonePreferences mPrefs;
 	private Handler mHandler = new Handler();
 	private CoreListenerStub mListener;
@@ -1087,22 +1089,18 @@ public class SettingsFragment extends PreferencesListFragment {
 					LinphoneManager linManager = LinphoneManager.getInstance();
 					if (use){
 						linManager.setLinPhoneAccount();
-//						LinPhoneAccount account = new LinPhoneAccount(LinphoneManager.getInstance().getContext());
-//						account.registerPhoneAccount();
 
-
-						Intent phoneAccountSelect = new Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS);
-						startActivity(phoneAccountSelect);
+						Toast.makeText(LinphoneActivity.instance(), "Please enable Linphone PhoneAccount", Toast.LENGTH_LONG).show();
 
 						Intent phoneAccountEnable = new Intent();
 						phoneAccountEnable.setComponent(new ComponentName("com.android.server.telecom", "com.android.server.telecom.settings.EnableAccountPreferenceActivity"));
 						phoneAccountEnable.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(phoneAccountEnable);
+//
+						startActivityForResult(phoneAccountEnable, REQUEST_ENABLE_PHONE_ACCOUNT);
 
 					}else{
 						LinPhoneAccount account = linManager.getLinPhoneAccount();
 						if (account != null){
-//						if (account.getAccountHandler() != null){
 							account.unregisterPhoneAccount();
 						}
 					}
@@ -1143,6 +1141,15 @@ public class SettingsFragment extends PreferencesListFragment {
 				return true;
 			}
 		});
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_ENABLE_PHONE_ACCOUNT) {
+			Toast.makeText(LinphoneActivity.instance(), "In Call account (first choice), set Linphone as default", Toast.LENGTH_LONG).show();
+			Intent phoneAccountSelect = new Intent(TelecomManager.ACTION_CHANGE_PHONE_ACCOUNTS);
+			startActivity(phoneAccountSelect);
+		}
 	}
 
 	private void setEncryptionZrtp() {

@@ -1,6 +1,7 @@
 package org.linphone.call;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -78,11 +79,10 @@ public class TelecomManagerHelper {
     private final int HELD = 5;
     private final boolean PAUSE = false;
     private final boolean RESUME = true;
-    private boolean mBroadcastHold=false;
+    private boolean mBroadcastHold = false;
     private CoreListenerStub mListener;
     public static String TAG = "TelecomManagerHelper";
     private Conference mConference = null;
-
 
 
     //Initiates the telecomManager and dependencies which are needed to handle calls.
@@ -95,10 +95,18 @@ public class TelecomManagerHelper {
         phoneAccountHandle = LinphoneManager.getInstance().getLinPhoneAccount().getAccountHandler();
     }
 
+    public TelecomManager getTelecomManager() {
+        return telecomManager;
+    }
+
+    public PhoneAccountHandle getPhoneAccountHandle() {
+        return phoneAccountHandle;
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startIncall() {
-        mBroadcastHold=false;
+        mBroadcastHold = false;
         alreadyAcceptedOrDeniedCall = false;
 
         lookupCall(INCALL);
@@ -111,7 +119,7 @@ public class TelecomManagerHelper {
         }
         setListenerIncall(mCall);
 
-        String strContact=null;
+        String strContact = null;
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
@@ -135,14 +143,14 @@ public class TelecomManagerHelper {
         }
 
 
-        if (LinphoneManager.getLc().getCalls().length == 2 ) {
+        if (LinphoneManager.getLc().getCalls().length == 2) {
             Call nextCall = mCall;
             //At this point, mCall gets the current paused call if it is
             lookupCall(HELD);
             if (nextCall != mCall) {
                 //If mCall differs from nextCall, 1st call is held
-                mCallId=mCall.getCallLog().getCallId();
-                mBroadcastHold=false;
+                mCallId = mCall.getCallLog().getCallId();
+                mBroadcastHold = false;
                 //Unhold current call to allow ConnectionService to handle the 2nd call and stay beyond LinphoneActivity
                 sendToCS(EXT_TO_CS_HOLD_CALL);
 //                pauseOrResumeCall(mCall, RESUME);
@@ -153,14 +161,17 @@ public class TelecomManagerHelper {
             sendToCS(EXT_TO_CS_HOLD_CONFERENCE);
         }
         telecomManager.addNewIncomingCall(phoneAccountHandle, extras);
+
+
         registerCallScreenReceiver();
 
     }
 
+    @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void startOutgoingCall() {
 
-        mBroadcastHold=false;
+        mBroadcastHold = false;
         lookupCall(OUTGOING);
 
         if (mCall == null) {
@@ -179,19 +190,11 @@ public class TelecomManagerHelper {
         if (phoneAccountHandle != null) {
             extras.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandle);
         }
-        if (ActivityCompat.checkSelfPermission(LinphoneManager.getInstance().getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+
 
         Address address = mCall.getRemoteAddress();
         String strAddress = address.asStringUriOnly();
+
 
         telecomManager.placeCall(Uri.parse(strAddress), extras);
 
