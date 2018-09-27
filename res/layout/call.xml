@@ -93,8 +93,8 @@
 
 						<ImageView
 							android:id="@+id/contact_picture"
-							android:layout_width="180dp"
-							android:layout_height="180dp"
+							android:layout_width="225dp"
+							android:layout_height="wrap_content"
 							android:adjustViewBounds="true"
 							android:contentDescription="@string/content_description_contact_picture"
 							android:src="@drawable/avatar_big_secure1"/>

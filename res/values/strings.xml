@@ -53,6 +53,7 @@
     <string name="yes">Yes</string>
     <string name="link_account">Link your account</string>
     <string name="update_available">An update is available</string>
+    <string name="you">You</string>
 
     <!-- Launch screen -->
     <string name="app_description"></string>

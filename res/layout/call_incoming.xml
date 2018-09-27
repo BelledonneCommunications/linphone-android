@@ -47,9 +47,10 @@
 		android:id="@+id/contact_detail"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_above="@+id/menu"
 		android:layout_below="@id/top_bar"
-		android:paddingTop="10dp"
-		android:layout_above="@+id/menu">
+		android:gravity="center"
+		android:paddingTop="10dp">
 
 		<TextView
 			android:id="@+id/contact_name"
@@ -68,8 +69,8 @@
 			android:layout_height="wrap_content"
 			android:layout_below="@id/contact_name"
 			android:layout_centerHorizontal="true"
-			android:paddingBottom="10dp"
-			android:layout_gravity="center_vertical|center_horizontal" />
+			android:layout_gravity="center_vertical|center_horizontal"
+			android:paddingBottom="10dp"/>
 
 		<RelativeLayout
 			android:id="@+id/avatar_layout"

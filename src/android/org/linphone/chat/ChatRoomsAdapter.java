@@ -60,6 +60,7 @@ import java.util.List;
 import static android.text.format.DateUtils.isToday;
 import static org.linphone.LinphoneUtils.getZrtpStatus;
 import static org.linphone.LinphoneUtils.hasContentFileSharing;
+import static org.linphone.LinphoneUtils.isUs;
 
 public class ChatRoomsAdapter extends ListSelectionAdapter {
 
@@ -230,7 +231,11 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				if (contact != null) {
 					holder.lastMessageSenderView.setText(contact.getFullName() + mContext.getString(R.string.separator));
 				} else {
-					holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) + mContext.getString(R.string.separator));
+					if (isUs(LinphoneManager.getLc().getDefaultProxyConfig(), lastMessage.getFromAddress().getUsername())) {
+						holder.lastMessageSenderView.setText(mContext.getString(R.string.you) + mContext.getString(R.string.separator));
+					} else {
+						holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) + mContext.getString(R.string.separator));
+					}
 				}
 			}
 		}
