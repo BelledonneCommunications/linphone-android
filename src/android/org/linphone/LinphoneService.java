@@ -265,6 +265,8 @@ public final class LinphoneService extends Service {
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
         }
+        //Allows receiving incalls with Linphone in background
+        LinphoneActivity.instance().setmCallFromBackground(true);
     }
 
     protected void onForegroundMode() {

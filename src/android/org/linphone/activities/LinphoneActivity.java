@@ -167,6 +167,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private boolean callTransfer = false;
     private boolean isOnBackground = false;
     private boolean mPreventNative = false;
+    private boolean mCallFromBackground = false;
+
     public String mAddressWaitingToBeCalled;
 
     static public final boolean isInstanciated() {
@@ -272,7 +274,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             public void onCallStateChanged(Core lc, Call call, State state, String message) {
 
                     LinphonePreferences mPrefs = LinphonePreferences.instance();
-
                     //Prevents native UI call even if activated in a case of straight video call
                     if (call != null &&
                         ((mPrefs.shouldInitiateVideoCall() && call.getDir() == Call.Dir.Outgoing) ||
@@ -359,6 +360,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (extras != null && extras.getBoolean("GoToChat", false)) {
             onNewIntent(getIntent());
         }
+    }
+
+    public void setmCallFromBackground(boolean state){
+        mCallFromBackground = state;
     }
 
     private void initButtons() {
@@ -1059,7 +1064,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
     //Start CallActivity if native UI call mode deactivated or if straight video call
     public void startIncallActivity(Call currentCall) {
-
         LinphonePreferences mPrefs = LinphonePreferences.instance();
         if (currentCall != null &&
                 ((mPrefs.shouldInitiateVideoCall() && currentCall.getDir() == Call.Dir.Outgoing) ||
@@ -1256,7 +1260,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
         callTransfer = false;
         isOnBackground = true;
-
         super.onPause();
     }
 
@@ -1457,7 +1460,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (!LinphoneService.isReady()) {
             startService(new Intent(Intent.ACTION_MAIN).setClass(this, LinphoneService.class));
         }
-
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.addListener(mListener);
@@ -1502,8 +1504,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                         Toast.makeText(LinphoneActivity.instance(), "Please reactivate native call UI option and follow the instructions", Toast.LENGTH_LONG).show();
                     }
                     startActivity(new Intent(this, CallOutgoingActivity.class));
-                } else {
-                    startIncallActivity(call);
                 }
             }
         }
@@ -1620,6 +1620,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                         } else {
                             startActivity(new Intent(this, CallIncomingActivity.class));
                         }
+                    } else if (mCallFromBackground) {
+                        startIncallActivity(null);
+                        mCallFromBackground = false;
                     }
                 }
             }
