@@ -265,7 +265,7 @@ public final class LinphoneService extends Service {
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
         }
-        //Allows receiving incalls with Linphone in background
+        //Allows receiving incalls with Linphone in background while native UI call mode
         LinphoneActivity.instance().setmCallFromBackground(true);
     }
 
@@ -345,7 +345,7 @@ public final class LinphoneService extends Service {
                     destroyOverlay();
                 }
 
-                //Use only if not in native UI mode
+                //Use only if straight video call
                 LinphonePreferences mPrefs = LinphonePreferences.instance();
 
                 if (call != null &&

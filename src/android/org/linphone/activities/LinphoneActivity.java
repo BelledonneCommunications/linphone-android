@@ -44,7 +44,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
-import android.telecom.TelecomManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,9 +64,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.linphone.call.LinPhoneAccount;
-import org.linphone.call.LinphoneConnectionService;
-import org.linphone.call.TelecomManagerHelper;
+
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.LinphonePreferences;
@@ -79,6 +76,7 @@ import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.call.TelecomManagerHelper;
 import org.linphone.chat.ChatCreationFragment;
 import org.linphone.chat.ChatListFragment;
 import org.linphone.chat.GroupChatFragment;
@@ -183,7 +181,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //This must be done before calling super.onCreate().
         super.onCreate(savedInstanceState);
 
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
@@ -1065,6 +1062,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     //Start CallActivity if native UI call mode deactivated or if straight video call
     public void startIncallActivity(Call currentCall) {
         LinphonePreferences mPrefs = LinphonePreferences.instance();
+
+        //Prevent native UI call if straight video call
         if (currentCall != null &&
                 ((mPrefs.shouldInitiateVideoCall() && currentCall.getDir() == Call.Dir.Outgoing) ||
                         (currentCall.getRemoteParams() != null && mPrefs.shouldAutomaticallyAcceptVideoRequests() && currentCall.getRemoteParams().videoEnabled()))
@@ -1074,7 +1073,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             mPreventNative=false;
         }
 
+
         if (mPrefs.getConfig() != null && mPrefs.getNativeUICall() && !mPreventNative) {
+            //Check permissions
             if (ContextCompat.checkSelfPermission(LinphoneActivity.instance().getBaseContext(), Manifest.permission.RECORD_AUDIO)
                     != PackageManager.PERMISSION_GRANTED) {
                 checkAndRequestRecordAudioPermissions();
@@ -1621,6 +1622,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                             startActivity(new Intent(this, CallIncomingActivity.class));
                         }
                     } else if (mCallFromBackground) {
+                        //Should launch only if in background mode and in native UI call mode
                         startIncallActivity(null);
                         mCallFromBackground = false;
                     }

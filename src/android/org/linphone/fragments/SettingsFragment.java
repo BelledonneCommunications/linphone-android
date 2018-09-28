@@ -949,6 +949,7 @@ public class SettingsFragment extends PreferencesListFragment {
         CheckBoxPreference rfc2833 = (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
         CheckBoxPreference sipInfo = (CheckBoxPreference) findPreference(getString(R.string.pref_sipinfo_dtmf_key));
         CheckBoxPreference dialerCall = (CheckBoxPreference) findPreference(getString(R.string.pref_dialer_call_key));
+        //New checkbox for native UI call option
 		CheckBoxPreference nativeCall = (CheckBoxPreference) findPreference(getString(R.string.pref_native_call_key));
 		EditTextPreference incTimeout = (EditTextPreference) findPreference(getString(R.string.pref_incoming_call_timeout_key));
         EditTextPreference autoAnswerTime = (EditTextPreference) findPreference(getString(R.string.pref_auto_answer_time_key));
@@ -1088,13 +1089,14 @@ public class SettingsFragment extends PreferencesListFragment {
 
 						Toast.makeText(LinphoneActivity.instance(), "Please enable Linphone PhoneAccount", Toast.LENGTH_LONG).show();
 
+						//Intent to enable Linphone PhoneAccount
 						Intent phoneAccountEnable = new Intent();
 						phoneAccountEnable.setComponent(new ComponentName("com.android.server.telecom", "com.android.server.telecom.settings.EnableAccountPreferenceActivity"));
 						phoneAccountEnable.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
+
 						startActivityForResult(phoneAccountEnable, REQUEST_ENABLE_PHONE_ACCOUNT);
 
-					}else{
+					} else {
 						LinPhoneAccount account = linManager.getLinPhoneAccount();
 						if (account != null){
 							account.unregisterPhoneAccount();
@@ -1105,7 +1107,7 @@ public class SettingsFragment extends PreferencesListFragment {
 					return true;
 				}
 			});
-		}else{
+		} else {
 			mPrefs.setNativeUICall(false);
 		}
 
@@ -1135,6 +1137,7 @@ public class SettingsFragment extends PreferencesListFragment {
         });
     }
 
+    //Opens PhoneAccountSelect Activity once PhoneAccount activation is left.
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_ENABLE_PHONE_ACCOUNT) {

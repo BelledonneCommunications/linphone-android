@@ -40,7 +40,6 @@ import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.telecom.TelecomManager;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.KeyEvent;
