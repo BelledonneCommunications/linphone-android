@@ -124,6 +124,10 @@ public class AssistantActivity extends Activity implements OnClickListener, Acti
             displayCreateAccount();
         } else {
             firstFragment = getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment) ? AssistantFragmentsEnum.LINPHONE_LOGIN : AssistantFragmentsEnum.WELCOME;
+            if (firstFragment == AssistantFragmentsEnum.WELCOME) {
+                firstFragment = getResources().getBoolean(R.bool.assistant_use_create_linphone_account_as_first_fragment) ? AssistantFragmentsEnum.CREATE_ACCOUNT : AssistantFragmentsEnum.WELCOME;
+            }
+
             if (findViewById(R.id.fragment_container) != null) {
                 if (savedInstanceState == null) {
                     display(firstFragment);
@@ -438,6 +442,9 @@ public class AssistantActivity extends Activity implements OnClickListener, Acti
                 break;
             case LINPHONE_LOGIN:
                 displayLoginLinphone(null, null);
+                break;
+            case CREATE_ACCOUNT:
+                displayCreateAccount();
                 break;
             default:
                 throw new IllegalStateException("Can't handle " + fragment);

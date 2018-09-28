@@ -27,7 +27,10 @@
 
 	<!-- Assistant -->
 	<bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
+
+	<!-- Only on should be set to true at a time! If not the first one will be used -->
 	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool><!-- Start assistant in loginFragment view instead of menu -->
+	<bool name="assistant_use_create_linphone_account_as_first_fragment">false</bool><!-- Start Linphone creation account in loginFragment view instead of menu -->
 
 	<bool name="replace_assistant_with_old_interface">false</bool>
 	<bool name="hide_assistant">false</bool>
@@ -90,6 +93,10 @@
 	<bool name="allow_only_one_phone_number">false</bool>
 	<bool name="allow_only_one_sip_address">false</bool>
 	<bool name="display_contact_organization">true</bool>
+
+	<!-- Side Menu -->
+	<bool name="hide_assistant_from_side_menu">false</bool>
+	<bool name="hide_settings_from_side_menu">false</bool>
 
 	<!-- Others Parameters-->
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
