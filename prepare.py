@@ -96,7 +96,7 @@ android_targets = {
 }
 
 android_virtual_targets = {
-    'all': ['arm', 'armv7', 'arm64', 'x86', 'x86_64']
+    'all': ['armv7', 'arm64', 'x86', 'x86_64']
 }
 
 class AndroidPreparator(prepare.Preparator):
