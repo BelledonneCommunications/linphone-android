@@ -58,6 +58,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
+import org.linphone.receivers.BluetoothManager;
 import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.ui.LinphoneOverlay;
 
@@ -432,6 +433,11 @@ public final class LinphoneService extends Service {
             PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(this, 0, keepAliveIntent, PendingIntent.FLAG_ONE_SHOT);
             AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
             Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+        }
+
+        // We need LinphoneService to start bluetoothManager
+        if (Version.sdkAboveOrEqual(Version.API11_HONEYCOMB_30)) {
+            BluetoothManager.getInstance().initBluetooth();
         }
 
         return START_REDELIVER_INTENT;
