@@ -36,6 +36,7 @@ import android.widget.TextView;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.EventLog;
+import org.linphone.core.Participant;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.ListSelectionHelper;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -62,7 +63,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 	private ListSelectionHelper mSelectionHelper;
 	private RelativeLayout mWaitLayout;
 	private int mChatRoomDeletionPendingCount;
-	private ChatRoomListenerStub mChatRoomListener;
+	private ChatRoomListenerStub mChatRoomListener, mChatRoomRefresher;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,8 +109,17 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			@Override
 			public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
 				if (state == ChatRoom.State.Created) {
+					if (cr != null) cr.addListener(mChatRoomRefresher);
 					refreshChatRoomsList();
 				}
+			}
+		};
+
+		mChatRoomRefresher = new ChatRoomListenerStub() {
+			@Override
+			public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
+				refreshChatRoomsList();
+				cr.removeListener(mChatRoomRefresher);
 			}
 		};
 
@@ -129,6 +139,12 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 						refreshChatRoomsList();
 					}
 				}
+			}
+
+			@Override
+			public void onParticipantDeviceAdded(ChatRoom cr, EventLog eventLog) {
+				super.onParticipantDeviceAdded(cr, eventLog);
+				refreshChatRoomsList();
 			}
 		};
 

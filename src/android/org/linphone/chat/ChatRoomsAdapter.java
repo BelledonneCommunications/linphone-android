@@ -108,6 +108,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 			public void onSubjectChanged(ChatRoom cr, EventLog eventLog) {
 				ChatRoomViewHolder holder = (ChatRoomViewHolder) cr.getUserData();
 				holder.displayName.setText(cr.getSubject());
+				refresh();
 			}
 		};
 
@@ -231,7 +232,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				if (contact != null) {
 					holder.lastMessageSenderView.setText(contact.getFullName() + mContext.getString(R.string.separator));
 				} else {
-					if (isUs(LinphoneManager.getLc().getDefaultProxyConfig(), lastMessage.getFromAddress().getUsername())) {
+					if (lastMessage.getFromAddress() != null && isUs(LinphoneManager.getLc().getDefaultProxyConfig(), lastMessage.getFromAddress().getUsername())) {
 						holder.lastMessageSenderView.setText(mContext.getString(R.string.you) + mContext.getString(R.string.separator));
 					} else {
 						holder.lastMessageSenderView.setText(LinphoneUtils.getAddressDisplayName(lastMessageSenderAddress) + mContext.getString(R.string.separator));
