@@ -846,7 +846,7 @@ public final class LinphoneUtils {
 	public static boolean isUs(ProxyConfig proxy, String username) {
 		if (proxy == null || username == null || username.isEmpty()) return false;
 		Address proxyConfigContact = proxy.getContact();
-		return proxyConfigContact.getUsername().equalsIgnoreCase(username);
+		return (proxyConfigContact != null) && proxyConfigContact.getUsername().equalsIgnoreCase(username);
 	}
 
 	public static ZrtpPeerStatus getZrtpStatus(Core lc, String uri) {

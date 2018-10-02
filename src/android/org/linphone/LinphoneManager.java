@@ -1649,7 +1649,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				@Override
 				public void run() {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-					builder.setMessage(getString(R.string.update_available) + ": " + versionAv);
+					builder.setMessage(getString(R.string.update_available).replace("%s", versionAv));
 					builder.setCancelable(false);
 					builder.setNeutralButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 						@Override

@@ -48,6 +48,7 @@
   <string name="yes">Oui</string>
   <string name="link_account">Associer votre compte</string>
   <string name="you">Vous</string>
+  <string name="update_available">Mobile Security Intense - Mise à jour\nUne nouvelle version MSI %s est disponible.\nPour continuer de fonctionner la mise à jour est nécessaire.</string>
   <!--Launch screen-->
   <string name="app_description">le client SIP <i>libre</i></string>
   <!--Assistant-->
