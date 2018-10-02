@@ -294,18 +294,14 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 		} else {
 			holder.displayName.setText(chatRoom.getSubject());
 			ChatRoomSecurityLevel level = chatRoom.getSecurityLevel();
-			if (LinphoneManager.getLc().limeV2Enabled()) {
-				if (level == ChatRoomSecurityLevel.Safe) {
-					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
-				} else if (level == ChatRoomSecurityLevel.Unsafe) {
-					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unsecure);
-				} else if (level == ChatRoomSecurityLevel.Encrypted) {
-					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure1);
-				} else {
-					holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unregistered);
-				}
+			if (level == ChatRoomSecurityLevel.Safe) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure2);
+			} else if (level == ChatRoomSecurityLevel.Unsafe) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unsecure);
+			} else if (level == ChatRoomSecurityLevel.Encrypted) {
+				holder.contactPicture.setImageResource(R.drawable.avatar_group_small_secure1);
 			} else {
-				holder.contactPicture.setImageBitmap(mDefaultGroupBitmap);
+				holder.contactPicture.setImageResource(R.drawable.avatar_group_small_unregistered);
 			}
 		}
 

@@ -119,7 +119,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 			@Override
 			public void onConferenceJoined(ChatRoom cr, EventLog eventLog) {
 				refreshChatRoomsList();
-				cr.removeListener(mChatRoomRefresher);
 			}
 		};
 
