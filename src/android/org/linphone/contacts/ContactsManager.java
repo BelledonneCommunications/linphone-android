@@ -547,10 +547,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
 
         long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-        String time = String.format("%02d:%02d",
+        String time = String.format("%02d:%02d:%03d",
                 TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
                 TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)));
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)),
+                TimeUnit.MILLISECONDS.toMillis(timeElapsed) -
+                        TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(timeElapsed)));
         Log.i("[ContactsManager] For " + contacts.size() + " contacts: " + time + " elapsed since starting");
 
         for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
