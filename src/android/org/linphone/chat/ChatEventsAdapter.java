@@ -69,6 +69,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
@@ -93,6 +94,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         mContext = mFragment.getActivity();
         mItemResource = itemResource;
         mHistory = new ArrayList<>(Arrays.asList(history));
+        Collections.reverse(mHistory);
         mParticipants = participants;
         mClickListener = clickListener;
         mListener = new ChatMessageListenerStub() {
@@ -414,9 +416,16 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     public void addToHistory(EventLog log) {
-        mHistory.add(log);
-        notifyDataSetChanged();
+        notifyItemChanged(0);
+        mHistory.add(0, log);
+        notifyItemInserted(0);
+    }
 
+    public void addAllToHistory(ArrayList<EventLog> logs) {
+        int currentSize = mHistory.size() - 1;
+        Collections.reverse(logs);
+        mHistory.addAll(logs);
+        notifyItemRangeInserted(currentSize + 1, logs.size());
     }
 
     public void setContacts(ArrayList<LinphoneContact> participants) {
@@ -425,6 +434,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     public void refresh(EventLog[] history) {
         mHistory = new ArrayList<>(Arrays.asList(history));
+        Collections.reverse(mHistory);
         notifyDataSetChanged();
     }
 
