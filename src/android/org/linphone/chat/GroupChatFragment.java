@@ -31,7 +31,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
@@ -83,7 +82,6 @@ import org.linphone.ui.SelectableHelper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -392,7 +390,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             inflater.inflate(R.menu.chat_bubble_menu, menu);
         }
 
-        if (!message.isOutgoing() && mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+        if (!message.isOutgoing() || mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             // Do not show incoming messages IDMN state in 1 to 1 chat room as we don't receive IMDN for them
             menu.removeItem(R.id.imdn_infos);
         }
