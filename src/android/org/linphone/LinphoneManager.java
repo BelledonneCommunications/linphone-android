@@ -323,8 +323,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     public synchronized static final LinphoneManager createAndStart(Context c) {
-        if (instance != null)
-            throw new RuntimeException("Linphone Manager is already initialized");
+        if (instance != null) {
+            Log.e("Linphone Manager is already initialized ! Destroying it and creating a new one...");
+            destroy();
+        }
 
         instance = new LinphoneManager(c);
         instance.startLibLinphone(c);

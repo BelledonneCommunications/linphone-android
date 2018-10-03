@@ -1640,10 +1640,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             if (isVideo) {
                 formatText(videoResolutionSent,
                         getString(R.string.call_stats_video_resolution_sent),
-                        "\u2191 " + params.getSentVideoDefinition().getName());
+                        "\u2191 " + params.getSentVideoDefinition() != null ? params.getSentVideoDefinition().getName() : "");
                 formatText(videoResolutionReceived,
                         getString(R.string.call_stats_video_resolution_received),
-                        "\u2193 " + params.getReceivedVideoDefinition().getName());
+                        "\u2193 " + params.getReceivedVideoDefinition() != null ? params.getReceivedVideoDefinition().getName() : "");
                 formatText(videoFpsSent,
                         getString(R.string.call_stats_video_fps_sent),
                         "\u2191 " + params.getSentFramerate());
