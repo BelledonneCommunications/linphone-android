@@ -178,7 +178,6 @@
 		android:id="@+id/chat_message_list"
 		android:divider="@android:color/transparent"
 		android:choiceMode="multipleChoice"
-		android:stackFromBottom="true"
 		android:transcriptMode="normal"
 		android:cacheColorHint="@color/transparent"
     	android:listSelector="@color/transparent"
