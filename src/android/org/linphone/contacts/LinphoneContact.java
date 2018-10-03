@@ -75,7 +75,17 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         if (fullName.equals(contactFullName)) {
             if (getAndroidId() != null) {
                 if (contact.getAndroidId() != null) {
-                    return getAndroidId().compareTo(contact.getAndroidId());
+                    int idComp = getAndroidId().compareTo(contact.getAndroidId());
+                    if (idComp == 0) return 0;
+                    List<LinphoneNumberOrAddress> noas1 = getNumbersOrAddresses();
+                    List<LinphoneNumberOrAddress> noas2 = contact.getNumbersOrAddresses();
+                    if (noas1.size() == noas2.size()) {
+                        if (noas1.containsAll(noas2) && noas2.containsAll(noas1)) {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    return ((Integer)noas1.size()).compareTo(noas2.size());
                 }
                 return -1;
             }

@@ -445,7 +445,7 @@ public final class LinphoneService extends Service {
     public void onCreate() {
         super.onCreate();
         mLastNotificationId = 8; // To not interfere with other notifs ids
-        mChatNotifMap = new HashMap<String, Notified>();
+        mChatNotifMap = new HashMap<>();
 
         setupActivityMonitor();
         // In case restart after a crash. Main in LinphoneActivity

@@ -49,12 +49,14 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
 
     @Override
     public int compareTo(LinphoneNumberOrAddress noa) {
-        String value = noa.getValue();
-        if (noa.isSIPAddress() == isSIPAddress() && value != null) {
-            return value.compareTo(getValue());
-        } else {
-            return isSIPAddress() ? -1 : 1;
+        if (value != null) {
+            if (noa.isSIPAddress() && isSIPAddress()) {
+                return value.compareTo(noa.getValue());
+            } else if (!noa.isSIPAddress() && !isSIPAddress()) {
+                return getNormalizedPhone().compareTo(noa.getNormalizedPhone());
+            }
         }
+        return -1;
     }
 
     @Override
