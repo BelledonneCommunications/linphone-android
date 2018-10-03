@@ -123,7 +123,14 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     }
                     message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
                 }
-                notifyDataSetChanged();
+                for (int i = 0; i < mHistory.size(); i++) {
+                    EventLog log = mHistory.get(i);
+                    if (log.getType() == EventLog.Type.ConferenceChatMessage && log.getChatMessage() == message) {
+                        notifyItemChanged(i);
+                        break;
+                    }
+                }
+
             }
         };
     }
@@ -141,7 +148,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, final int position) {
         final EventLog event = mHistory.get(position);
         holder.eventLayout.setVisibility(View.GONE);
         holder.bubbleLayout.setVisibility(View.GONE);
@@ -354,7 +361,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     @Override
                     public void onClick(View v) {
                         message.cancelFileTransfer();
-                        notifyDataSetChanged();
+                        notifyItemChanged(position);
                     }
                 });
             }
@@ -416,7 +423,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     public void addToHistory(EventLog log) {
-        notifyItemChanged(0);
         mHistory.add(0, log);
         notifyItemInserted(0);
     }
@@ -458,7 +464,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     public void removeItem(int i) {
         mHistory.remove(i);
-        notifyDataSetChanged();
+        notifyItemRemoved(i);
     }
 
     private void loadBitmap(String path, ImageView imageView) {
