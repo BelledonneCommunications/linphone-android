@@ -427,7 +427,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     if (contact != null) {
                         contact.clearAddresses();
                         if (contact.getAndroidId() != null) {
-                            contacts.add(contact);
                             mAndroidContactsCache.put(contact.getAndroidId(), contact);
                         }
                     } else {
@@ -461,10 +460,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 String data4 = c.getString(c.getColumnIndex("data4"));
 
                 nativeIds.add(id);
-                boolean created = false;
                 LinphoneContact contact = mAndroidContactsCache.get(id);
                 if (contact == null) {
-                    created = true;
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
                     contact.setFullName(displayName);
@@ -478,17 +475,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
                 } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime) || getInstance().getString(R.string.sync_mimetype).equals(mime)) {
                     contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
-                    if (!sipContacts.contains(contact)) {
-                        sipContacts.add(contact);
-                    }
                 } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
                     contact.setOrganization(data1, false);
                 } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(mime)) {
                     contact.setFirstNameAndLastName(data2, data3, false);
-                }
-
-                if (created && !contacts.contains(contact)) {
-                    contacts.add(contact);
                 }
             }
 
@@ -499,12 +489,26 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                         String id = contact.getAndroidId();
                         if (id != null && !nativeIds.contains(id)) {
                             // Has been removed since last fetch
-                            contacts.remove(contact);
+                            mAndroidContactsCache.remove(id);
                         }
                     }
                 }
             }
             nativeIds.clear();
+
+            for (LinphoneContact contact : mAndroidContactsCache.values()) {
+                // Only add contact to contacts list once we are finished with it, helps prevent duplicates
+                int indexOf = contacts.indexOf(contact);
+                if (indexOf < 0) {
+                    contacts.add(contact);
+                    if (contact.hasAddress()) {
+                        sipContacts.add(contact);
+                    }
+                } else {
+                    Log.w("Contact " + contact.getFullName() + " (" + contact.getAndroidId() +
+                            ") is an exact duplicate of " + contacts.get(indexOf).getAndroidId());
+                }
+            }
         }
 
         for (LinphoneContact contact : contacts) {
