@@ -35,6 +35,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.linphone.BuildConfig;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
@@ -60,11 +61,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
         TextView aboutVersion = view.findViewById(R.id.about_android_version);
         TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
         aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
-        try {
-            aboutVersion.setText(String.format(getString(R.string.about_version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
-        } catch (NameNotFoundException e) {
-            Log.e(e, "cannot get version name");
-        }
+        aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
 
         cancel = view.findViewById(R.id.cancel);
         cancel.setOnClickListener(this);
