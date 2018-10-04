@@ -110,6 +110,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	private Address mRemoteSipAddress, mRemoteParticipantAddress;
 	private ChatRoom mChatRoom;
 	private ArrayList<LinphoneContact> mParticipants;
+	private LinearLayout mTopBar;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,6 +125,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		mInflater = inflater;
 		View view = inflater.inflate(R.layout.chat, container, false);
+
+		mTopBar = view.findViewById(R.id.top_bar);
 
 		LinphoneActivity.instance().hideTabBar(true);
 
@@ -252,7 +255,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 		addVirtualKeyboardVisiblityListener();
 		// Force hide keyboard
-		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 		InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
 		if (getActivity().getCurrentFocus() != null) {
 			inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
@@ -446,10 +449,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
 	public void showKeyboardVisibleMode() {
 		LinphoneActivity.instance().hideTabBar(true);
+		LinphoneActivity.instance().hideStatusBar();
+		mTopBar.setVisibility(View.GONE);
 	}
 
 	public void hideKeyboardVisibleMode() {
 		LinphoneActivity.instance().hideTabBar(false);
+		LinphoneActivity.instance().showStatusBar();
+		mTopBar.setVisibility(View.VISIBLE);
 	}
 
 	/**
