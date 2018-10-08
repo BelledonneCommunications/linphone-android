@@ -204,6 +204,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    holder.messageStatus.setVisibility(View.GONE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
 	    holder.imdmLayout.setVisibility(View.GONE);
+	    holder.imdmIcon.setVisibility(View.GONE);
 	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
@@ -574,6 +575,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				});
 			}
 		}
+		notifyDataSetChanged();
 	}
 
 	/*

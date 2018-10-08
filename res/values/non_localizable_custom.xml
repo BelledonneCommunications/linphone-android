@@ -79,8 +79,8 @@
 	<bool name="disable_chat">false</bool>
 	<bool name="disable_chat_message_notification">false</bool>
 	<bool name="disable_chat_send_file">false</bool>
-	<string name="temp_photo_name">linphone-android-photo-temp</string>
-	<string name="temp_photo_name_with_date">linphone-android-photo-%s</string>
+	<string name="temp_photo_name">msi-android-photo-temp</string>
+	<string name="temp_photo_name_with_date">msi-android-photo-%s</string>
 	<bool name="lower_space_between_chat_bubbles_if_same_person">true</bool>
 
 	<!-- Contacts -->

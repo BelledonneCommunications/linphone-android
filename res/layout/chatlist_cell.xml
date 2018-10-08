@@ -108,7 +108,8 @@
 				android:contentDescription="@string/content_description_unread_chat_message"
 				android:gravity="center"
 				android:maxLines="1"
-				android:textSize="18sp"/>
+				android:textAlignment="center"
+				android:textSize="16sp"/>
 
 			<LinearLayout
 				android:id="@id/lastMessageLayout"

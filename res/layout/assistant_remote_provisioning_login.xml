@@ -134,7 +134,8 @@ Mobile Security Intense"
 						android:layout_width="250dp"
 						android:layout_height="250dp"
 						android:background="@color/transparent"
-						android:src="@drawable/avatar_mask_border"/>
+						android:src="@drawable/avatar_mask_border"
+						android:visibility="visible"/>
 
 					<RelativeLayout
 						android:id="@+id/layout_button"
@@ -151,7 +152,7 @@ Mobile Security Intense"
 							android:background="#595959"
 							android:text="retour"
 							android:textColor="#ffffff"
-							android:visibility="gone"/>
+							android:visibility="visible"/>
 
 						<Button
 							android:id="@+id/valider"
@@ -162,18 +163,19 @@ Mobile Security Intense"
 							android:background="#ff6600"
 							android:text="valider"
 							android:textColor="#ffffff"
-							android:visibility="gone"/>
+							android:visibility="visible"/>
 
 						<EditText
 							android:id="@+id/code_sms"
 							android:layout_width="match_parent"
 							android:layout_height="40dp"
 							android:layout_marginBottom="15dp"
-							android:background="#c4c4c4"
+							android:background="#f3f3f3"
 							android:inputType="number"
 							android:maxLines="1"
+							android:textAlignment="center"
 							android:textColor="@color/colorB"
-							android:visibility="gone"/>
+							android:visibility="visible"/>
 					</RelativeLayout>
 
 					<View

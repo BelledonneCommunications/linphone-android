@@ -192,7 +192,7 @@ public class GroupInfoAdapter extends BaseAdapter {
         if (mHideAdminFeatures) {
             delete.setVisibility(View.INVISIBLE);
             isAdmin.setOnClickListener(null); // Do not allow not admin to remove it's rights but display admins
-            isNotAdmin.setVisibility(View.GONE); // Hide not admin button for not admin participants
+            isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.INVISIBLE); // Hide not admin button for not admin participants
         } else if (mChatRoom != null) {
 	        boolean found = false;
 	        for (Participant p : mChatRoom.getParticipants()) {
@@ -202,7 +202,7 @@ public class GroupInfoAdapter extends BaseAdapter {
 		        }
 	        }
 	        if (!found) {
-		        isNotAdmin.setVisibility(View.GONE); // Hide not admin button for participant not yet added so even if user click it it won't have any effect
+		        isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.INVISIBLE); // Hide not admin button for participant not yet added so even if user click it it won't have any effect
 	        }
         }
 
