@@ -112,8 +112,9 @@
 						android:layout_marginTop="20dp"
 						android:background="@drawable/history_chat_indicator"
 						android:gravity="center"
+						android:textAlignment="center"
 						android:textColor="#000000"
-						android:textSize="17sp"
+						android:textSize="15sp"
 						android:visibility="invisible"/>
 
 				</RelativeLayout>
@@ -208,7 +209,7 @@
 						android:gravity="center"
 						android:textAlignment="center"
 						android:textColor="#000000"
-						android:textSize="17sp"
+						android:textSize="15sp"
 						android:visibility="gone"/>
 
 				</RelativeLayout>

@@ -203,8 +203,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    holder.openFileButton.setVisibility(View.GONE);
 	    holder.messageStatus.setVisibility(View.GONE);
 	    holder.messageSendingInProgress.setVisibility(View.GONE);
-	    holder.imdmLayout.setVisibility(View.GONE);
-	    holder.imdmIcon.setVisibility(View.GONE);
+	    holder.imdmLayout.setVisibility(View.INVISIBLE);
+	    holder.imdmIcon.setVisibility(View.INVISIBLE);
+	    holder.imdmLabel.setVisibility(View.INVISIBLE);
 	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
@@ -258,25 +259,35 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    /*holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setText(R.string.sent);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
+				    holder.imdmIcon.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));*/
 			    } else if (status == ChatMessage.State.DeliveredToUser) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
+				    holder.imdmIcon.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setText(R.string.delivered);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
 			    } else if (status == ChatMessage.State.Displayed) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_read);
+				    holder.imdmIcon.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setText(R.string.displayed);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorK));
 			    } else if (status == ChatMessage.State.NotDelivered) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
+				    holder.imdmIcon.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setText(R.string.error);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 			    } else if (status == ChatMessage.State.FileTransferError) {
 				    holder.imdmLayout.setVisibility(View.VISIBLE);
 				    holder.imdmIcon.setImageResource(R.drawable.chat_error);
+				    holder.imdmIcon.setVisibility(View.VISIBLE);
+				    holder.imdmLabel.setVisibility(View.VISIBLE);
 				    holder.imdmLabel.setText(R.string.file_transfer_error);
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
 			    }
@@ -474,7 +485,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 					case SecurityLevelDowngraded:
 						message = mContext.getString(R.string.security_level_degraded);
 						break;
-					case MultideviceParticipantDetected:
+					case ParticipantMaxDeviceCountExceeded:
 						holder.eventMessage.setTextColor(Color.RED);
 						if (event.getSecurityEventFaultyDevice() != null) {
 							message = mContext.getString(R.string.security_alert_multidevice_from).replace("%s", displayName);

@@ -97,7 +97,6 @@
 
 			<TextView
 				android:id="@+id/unreadMessages"
-				style="@style/font18"
 				android:layout_width="25dp"
 				android:layout_height="25dp"
 				android:layout_alignBottom="@+id/sipUri"
@@ -109,7 +108,8 @@
 				android:gravity="center"
 				android:maxLines="1"
 				android:textAlignment="center"
-				android:textSize="16sp"/>
+				android:textColor="@color/colorH"
+				android:textSize="15sp"/>
 
 			<LinearLayout
 				android:id="@id/lastMessageLayout"

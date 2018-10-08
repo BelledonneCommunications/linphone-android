@@ -264,7 +264,7 @@ public class ChatRoomsAdapter extends ListSelectionAdapter {
 				}
 			}
 			ChatRoomSecurityLevel level = chatRoom.getSecurityLevel();
-			if (LinphoneManager.getLc().limeV2Enabled()) {
+			if (LinphoneManager.getLc().limeX3DhEnabled()) {
 				if (level == ChatRoomSecurityLevel.Safe) {
 					holder.contactPicture.setImageResource(R.drawable.avatar_small_secure2);
 				} else if (level == ChatRoomSecurityLevel.Unsafe) {
