@@ -655,9 +655,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 	}
 
 	public void scrollToBottom() {
-		if (((mChatEventsList.getLastVisiblePosition() >= (mEventsAdapter.getCount() - 1)) && (mChatEventsList.getFirstVisiblePosition() <= (mEventsAdapter.getCount() - 1)))) {
-			mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
-		}
+		mChatEventsList.setSelection(mEventsAdapter.getCount() - 1);
 	}
 
 	public String getRemoteSipUri() {
@@ -896,6 +894,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 		}
 
 		mEventsAdapter.addToHistory(event);
+		this.scrollToBottom();
 	}
 
 	@Override

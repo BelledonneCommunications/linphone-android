@@ -587,6 +587,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			}
 		}
 		notifyDataSetChanged();
+		mFragment.scrollToBottom();
 	}
 
 	/*
