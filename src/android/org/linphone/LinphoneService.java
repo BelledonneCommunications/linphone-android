@@ -827,7 +827,7 @@ public final class LinphoneService extends Service {
 			bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 		} catch (Exception e) {
 		}
-		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.status_level, 0, bm, mNotifContentIntent, true,notifcationsPriority);
+		mNotif = Compatibility.createNotification(this, mNotificationTitle, text, R.drawable.linphone_notification_icon, 0, bm, mNotifContentIntent, true,notifcationsPriority);
 		notifyWrapper(NOTIF_ID, mNotif);
 	}
 

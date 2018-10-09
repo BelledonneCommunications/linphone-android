@@ -76,7 +76,7 @@ public class ApiTwentySixPlus {
 		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 					.setContentTitle(title)
 					.setContentText(msg)
-					.setSmallIcon(R.drawable.logo_secure_phone_small)
+					.setSmallIcon(R.drawable.topbar_chat_notification)
 					.setAutoCancel(true)
 					.setContentIntent(intent)
 					.setDefaults(Notification.DEFAULT_SOUND
@@ -110,6 +110,7 @@ public class ApiTwentySixPlus {
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
 				.setShowWhen(true)
+				.setSmallIcon(R.drawable.topbar_call_notification)
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
@@ -131,6 +132,7 @@ public class ApiTwentySixPlus {
 					.setPriority(priority)
 					.setWhen(System.currentTimeMillis())
 					.setShowWhen(true)
+					.setSmallIcon(R.drawable.linphone_notification_icon)
 					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 		} else {
@@ -144,6 +146,7 @@ public class ApiTwentySixPlus {
 					.setPriority(priority)
 					.setWhen(System.currentTimeMillis())
 					.setShowWhen(true)
+					.setSmallIcon(R.drawable.linphone_notification_icon)
 					.setColor(context.getColor(R.color.notification_color_led))
 					.build();
 		}
@@ -159,7 +162,6 @@ public class ApiTwentySixPlus {
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 				.setContentTitle(title)
 				.setContentText(text)
-				.setSmallIcon(R.drawable.logo_secure_phone_small)
 				.setAutoCancel(true)
 				.setContentIntent(intent)
 				.setDefaults(Notification.DEFAULT_SOUND
@@ -169,6 +171,7 @@ public class ApiTwentySixPlus {
 				.setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis())
 				.setShowWhen(true)
+				.setSmallIcon(R.drawable.topbar_call_notification)
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 
@@ -179,7 +182,7 @@ public class ApiTwentySixPlus {
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 				.setContentTitle(title)
 				.setContentText(text)
-				.setSmallIcon(R.drawable.logo_secure_phone_small)
+				.setSmallIcon(R.drawable.linphone_notification_icon)
 				.setAutoCancel(true)
 				.setContentIntent(intent)
 				.setDefaults(Notification.DEFAULT_SOUND
