@@ -489,13 +489,13 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         if (path.startsWith("file://")) {
             path = path.substring("file://".length());
             file = new File(path);
-            contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+            contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
         } else if (path.startsWith("content://")) {
             contentUri = Uri.parse(path);
         } else {
             file = new File(path);
             try {
-                contentUri = FileProvider.getUriForFile(mContext, "org.linphone.provider", file);
+                contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
             } catch (Exception e) {
                 contentUri = Uri.parse(path);
             }
