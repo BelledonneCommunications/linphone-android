@@ -115,7 +115,7 @@ public class LinphoneTestManager implements LinphoneCoreListener{
 				if (versionName == null) {
 					versionName = String.valueOf(c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionCode);
 				}
-				mLc.setUserAgent("LinphoneAndroid", versionName);
+				mLc.setUserAgent(mIContext.getResources().getString(R.string.user_agent), versionName);
 			} catch (NameNotFoundException e) {
 				Log.e(e, "cannot get version name");
 			}

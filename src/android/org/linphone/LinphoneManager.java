@@ -708,7 +708,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 //Api to check version can't use version code
                 mLc.checkForUpdate(versionName);
             }
-            mLc.setUserAgent("LinphoneAndroid", versionName);
+            mLc.setUserAgent(mServiceContext.getResources().getString(R.string.user_agent), versionName);
         } catch (NameNotFoundException e) {
             Log.e(e, "cannot get version name");
         }
