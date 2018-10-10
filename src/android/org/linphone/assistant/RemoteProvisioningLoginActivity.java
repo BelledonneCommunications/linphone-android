@@ -399,6 +399,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
 	private boolean storeAccount(String url) {
 
+		url = url.trim();
 		int usernameIndex = url.indexOf("username=") + "username=".length();
 		int domainIndex = url.indexOf("=", usernameIndex+1);
 		int ha1Index = url.indexOf("=", domainIndex+1);
@@ -406,6 +407,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		String username = url.substring(usernameIndex, url.indexOf("&"));
 		String domain = url.substring(domainIndex+1, url.indexOf("&", domainIndex+1));
 		String ha1 = url.substring(ha1Index+1);
+		url = url.substring(0,url.indexOf("ha1=")-1);
 
 		AuthInfo auth = Factory.instance().createAuthInfo(username, null, null, ha1, domain, domain);
 		LinphoneManager.getLc().clearAllAuthInfo();

@@ -477,12 +477,12 @@ public class ContactsManager extends ContentObserver {
 		setContacts(contacts);
 		setSipContacts(sipContacts);
 
-		if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-			if (getString(R.string.rls_uri) != null) {
-				LinphoneManager.getLc().getFriendsLists()[0].setRlsUri(getString(R.string.rls_uri));
-			}
-			LinphoneManager.getLc().getFriendsLists()[0].updateSubscriptions();
-		}
+//		if (LinphonePreferences.instance() != null && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
+//			if (getString(R.string.rls_uri) != null) {
+//				LinphoneManager.getLc().getFriendsLists()[0].setRlsUri(getString(R.string.rls_uri));
+//			}
+//			LinphoneManager.getLc().getFriendsLists()[0].updateSubscriptions();
+//		}
 		for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
 			listener.onContactsUpdated();
 		}
