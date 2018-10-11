@@ -49,6 +49,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
@@ -212,7 +213,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         } else if (mActivity != activity) {
             mActivity = activity;
         }
-        if (mContacts.size() == 0 && hasContactsAccess()) {
+        if (mActivity == null && LinphoneActivity.isInstanciated()) {
+            mActivity = LinphoneActivity.instance();
+        }
+        if (mActivity != null && mContacts.size() == 0 && hasContactsAccess()) {
             mActivity.getLoaderManager().initLoader(CONTACTS_LOADER, null, this);
         }
     }
@@ -365,6 +369,13 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public void fetchContactsSync() {
+        if (mActivity == null && LinphoneActivity.isInstanciated()) {
+            mActivity = LinphoneActivity.instance();
+        }
+        if (mActivity == null) {
+            Log.w("Can't fetch contacts right now, activity is null...");
+            return;
+        }
         mActivity.getLoaderManager().initLoader(CONTACTS_LOADER, null, this);
     }
 
