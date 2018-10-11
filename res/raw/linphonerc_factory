@@ -46,7 +46,6 @@ activation_code_length=4
 show_login_view=1
 friendlist_subscription_enabled=1
 debug_popup_magic=#1234
-debug=1
 
 [assistant]
 password_max_length=-1

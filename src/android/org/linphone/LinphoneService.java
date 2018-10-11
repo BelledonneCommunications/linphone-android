@@ -84,7 +84,7 @@ import static org.linphone.LinphoneUtils.getZrtpStatus;
  * Linphone service, reacting to Incoming calls, ...<br />
  *
  * Roles include:<ul>
- * <li>Initializing LinphoneManager</li>
+ * <li>Initializing LinphoneManager</li>F
  * <li>Starting C libLinphone through LinphoneManager</li>
  * <li>Reacting to LinphoneManager state changes</li>
  * <li>Delegating GUI state change actions to GUI listener</li>
@@ -322,8 +322,12 @@ public final class LinphoneService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 
-		if (!LinphoneManager.isInstanciated())
-			LinphoneManager.createAndStart(LinphoneService.this);
+		if (instance != null) {
+			Log.w("Attempt to start the LinphoneService but it is already running !");
+			return START_REDELIVER_INTENT;
+		}
+
+		LinphoneManager.createAndStart(LinphoneService.this);
 
 		instance = this; // instance is ready once linphone manager has been created
 		LinphoneManager.getLc().addListener(mListener = new CoreListenerStub() {
@@ -438,7 +442,7 @@ public final class LinphoneService extends Service {
 		AlarmManager alarmManager = ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
 		Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
 
-		return START_STICKY;
+		return START_REDELIVER_INTENT;
 	}
 
 	@SuppressWarnings("unchecked")
