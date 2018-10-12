@@ -154,6 +154,15 @@ task copyAssets(type: Sync) {
 }
 project.tasks['preBuild'].dependsOn 'copyAssets'
 
+def gitversion = new ByteArrayOutputStream()
+
+task getGitVersion {
+    exec {
+      commandLine 'git', 'describe', '--abbrev=0', '--always'
+      standardOutput = gitversion
+    }
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -164,9 +173,10 @@ uploadArchives {
             pom.project {
                 groupId 'org.linphone'
                 artifactId 'liblinphone-sdk'
-                version '3.4.1'
+                version project.hasProperty("debug") ? gitversion + "-DEBUG" : gitversion
             }
         }
     }
 }
 
+project.tasks['uploadArchives'].dependsOn 'getGitVersion'
