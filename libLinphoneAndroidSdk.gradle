@@ -18,18 +18,22 @@ allprojects {
         mavenCentral()
         mavenLocal()
         google()
+        maven { url "https://raw.github.com/synergian/wagon-git/releases"}
     }
 }
 
 configurations {
     javadocDeps
+    deployerJars
 }
 
+apply plugin: 'maven'
 apply plugin: 'com.android.library'
 
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-compress', version: '+'
     javadocDeps group: 'org.apache.commons', name: 'commons-compress', version: '+'
+    deployerJars "ar.com.synergian:wagon-git:0.2.5"
 }
 
 def submoduleDir = ['submodules/mediastreamer2/java/src',
@@ -149,3 +153,20 @@ task copyAssets(type: Sync) {
 
 }
 project.tasks['preBuild'].dependsOn 'copyAssets'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            configuration = configurations.deployerJars
+            repository(url: 'git:master://git@gitlab.linphone.org:BC/public/maven_repository.git'){
+                authentication(privateKey: '/home/jenkins/maven.key')
+            }
+            pom.project {
+                groupId 'org.linphone'
+                artifactId 'liblinphone-sdk'
+                version '3.4.1'
+            }
+        }
+    }
+}
+
