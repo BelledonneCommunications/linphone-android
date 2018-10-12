@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.view.ViewTreeObserver;
 
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 
 /*
 ApiTwentyOnePlus.java
@@ -36,30 +37,36 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @TargetApi(26)
 public class ApiTwentySixPlus {
 
-	public static void CreateChannel(Context context) {
+	public static void createServiceChannel(Context context) {
 		NotificationManager notificationManager =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		// Create service/call notification channel
 		String id = context.getString(R.string.notification_service_channel_id);
 		CharSequence name = context.getString(R.string.content_title_notification_service);
 		String description = context.getString(R.string.content_title_notification_service);
-		int importance = NotificationManager.IMPORTANCE_NONE;
-		NotificationChannel mChannel = new NotificationChannel(id, name, importance);
-		mChannel.setDescription(description);
-		mChannel.enableVibration(false);
-		mChannel.enableLights(false);
-		notificationManager.createNotificationChannel(mChannel);
-		// Create message notification channel
-		id = context.getString(R.string.notification_channel_id);
-		name = context.getString(R.string.content_title_notification);
-		description = context.getString(R.string.content_title_notification);
-		importance = NotificationManager.IMPORTANCE_HIGH;
-		mChannel = new NotificationChannel(id, name, importance);
-		mChannel.setDescription(description);
-		mChannel.setLightColor(context.getColor(R.color.notification_color_led));
-		mChannel.enableLights(true);
-		notificationManager.createNotificationChannel(mChannel);
+		NotificationChannel channel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_NONE);
+		channel.setDescription(description);
+		channel.enableVibration(false);
+		channel.enableLights(false);
+        channel.setShowBadge(false);
+		notificationManager.createNotificationChannel(channel);
 	}
+
+    public static void createMessageChannel(Context context) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // Create message notification channel
+        String id = context.getString(R.string.notification_channel_id);
+        String name = context.getString(R.string.content_title_notification);
+        String description = context.getString(R.string.content_title_notification);
+        NotificationChannel channel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(description);
+        channel.setLightColor(context.getColor(R.color.notification_color_led));
+        channel.enableLights(true);
+        channel.enableVibration(true);
+        channel.setShowBadge(true);
+        notificationManager.createNotificationChannel(channel);
+    }
 
 	public static Notification createMessageNotification(Context context,
 	                                                     int msgCount, String msgSender, String msg, Bitmap contactIcon,

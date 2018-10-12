@@ -37,9 +37,10 @@ import android.widget.TextView;
 import org.linphone.mediastream.Version;
 
 public class Compatibility {
-    public static void CreateChannel(Context context) {
+    public static void createNotificationChannels(Context context) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            ApiTwentySixPlus.CreateChannel(context);
+            ApiTwentySixPlus.createServiceChannel(context);
+            ApiTwentySixPlus.createMessageChannel(context);
         }
     }
 

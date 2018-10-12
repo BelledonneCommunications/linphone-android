@@ -470,7 +470,7 @@ public final class LinphoneService extends Service {
 
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNM.cancel(INCALL_NOTIF_ID); // in case of crash the icon is not removed
-        Compatibility.CreateChannel(this);
+        Compatibility.createNotificationChannels(this);
 
         Intent notifIntent = new Intent(this, incomingReceivedActivity);
         notifIntent.putExtra("Notification", true);
