@@ -1407,6 +1407,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		//}
 
+		// This one is to allow floating notifications
+		permissionsList.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
+
 		if (permissionsList.size() > 0) {
 			String[] permissions = new String[permissionsList.size()];
 			permissions = permissionsList.toArray(permissions);

@@ -48,7 +48,7 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
     <!-- Needed for in-app purchase -->
     <!-- <uses-permission android:name="com.android.vending.BILLING"/> -->
-    <!-- Needed for overlay widget -->
+    <!-- Needed for overlay widget and floating notifications -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <!-- Needed for kill application yourself -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
