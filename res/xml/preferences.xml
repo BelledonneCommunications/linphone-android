@@ -254,6 +254,11 @@
 					android:inputType="textUri"
 					android:persistent="false"/>
 
+				<Preference
+					android:title="@string/pref_android_app_notif_settings_title"
+					android:key="@string/pref_android_app_notif_settings_key"
+					android:persistent="false"/>
+
 			</PreferenceCategory>
 
 		</PreferenceScreen>

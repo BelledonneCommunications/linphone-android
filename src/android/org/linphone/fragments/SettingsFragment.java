@@ -1095,6 +1095,9 @@ public class SettingsFragment extends PreferencesListFragment {
     private void initChatSettings() {
         setPreferenceDefaultValueAndSummary(R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
         initLimeEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_use_lime_encryption_key)));
+        if (Version.sdkStrictlyBelow(Version.API26_O_80)) {
+            findPreference(getString(R.string.pref_android_app_notif_settings_key)).setLayoutResource(R.layout.hidden);
+        }
     }
 
     private void setChatPreferencesListener() {
@@ -1130,6 +1133,25 @@ public class SettingsFragment extends PreferencesListFragment {
                     preference.setSummary(getString(R.string.lime_encryption_entry_preferred));
                 }
 
+                return true;
+            }
+        });
+
+        findPreference(getString(R.string.pref_android_app_notif_settings_key)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                synchronized (SettingsFragment.this) {
+                    Context context = SettingsFragment.this.getActivity();
+                    Intent i = new Intent();
+                    i.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                    i.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+                    i.putExtra(Settings.EXTRA_CHANNEL_ID, context.getString(R.string.notification_channel_id));
+                    i.addCategory(Intent.CATEGORY_DEFAULT);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                    context.startActivity(i);
+                }
                 return true;
             }
         });
