@@ -56,6 +56,8 @@ import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.FriendListListener;
 import org.linphone.core.MagicSearch;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 
@@ -516,7 +518,19 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 if (indexOf < 0) {
                     contacts.add(contact);
                     if (contact.hasAddress()) {
-                        sipContacts.add(contact);
+                        if (mActivity.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
+                            if (contact.getFriend() != null) {
+                                for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                                    PresenceModel pm = contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
+                                    if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                                        sipContacts.add(contact);
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            sipContacts.add(contact);
+                        }
                     }
                 } else {
                     Log.w("Contact " + contact.getFullName() + " (" + contact.getAndroidId() +

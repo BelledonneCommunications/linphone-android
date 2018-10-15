@@ -96,6 +96,7 @@
 	<bool name="allow_only_one_sip_address">false</bool>
 	<bool name="display_contact_organization">true</bool>
 	<bool name="hide_numbers_and_addresses_without_presence">false</bool>
+	<bool name="hide_sip_contacts_without_presence">false</bool>
 	<bool name="hide_non_linphone_contacts">false</bool>
 
 	<!-- Side Menu -->
