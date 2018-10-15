@@ -125,9 +125,19 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             }
         });
 
+        if (getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
+            allContacts.setEnabled(false);
+            linphoneContacts.setEnabled(false);
+            onlyDisplayLinphoneContacts = true;
+            allContacts.setOnClickListener(null);
+            linphoneContacts.setOnClickListener(null);
+            linphoneContacts.setVisibility(View.INVISIBLE);
+            linphoneContactsSelected.setVisibility(View.INVISIBLE);
+        } else {
+            allContacts.setEnabled(onlyDisplayLinphoneContacts);
+            linphoneContacts.setEnabled(!allContacts.isEnabled());
+        }
         newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
-        allContacts.setEnabled(onlyDisplayLinphoneContacts);
-        linphoneContacts.setEnabled(!allContacts.isEnabled());
 
         if (!ContactsManager.getInstance().contactsFetchedOnce()) {
             contactsFetchInProgress.setVisibility(View.VISIBLE);
@@ -151,13 +161,10 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
@@ -265,7 +272,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
     }
 
     private void changeContactsToggle() {
-        if (onlyDisplayLinphoneContacts) {
+        if (onlyDisplayLinphoneContacts && !getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
             allContacts.setEnabled(true);
             allContactsSelected.setVisibility(View.INVISIBLE);
             linphoneContacts.setEnabled(false);
@@ -328,7 +335,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS_LIST);
             LinphoneActivity.instance().hideTabBar(false);
-            onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered();
+            onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered() || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
         }
         changeContactsToggle();
         invalidate();
@@ -362,7 +369,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onDeleteSelection(Object[] objectsToDelete) {
-        ArrayList<String> ids = new ArrayList<String>();
+        ArrayList<String> ids = new ArrayList<>();
         int size = mContactAdapter.getSelectedItemCount();
         for (int i = size - 1; i >= 0; i--) {
             LinphoneContact contact = (LinphoneContact) objectsToDelete[i];

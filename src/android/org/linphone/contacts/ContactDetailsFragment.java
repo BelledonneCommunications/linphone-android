@@ -212,6 +212,10 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 PresenceModel pm = contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
                 if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
                     v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
+                } else {
+                    if (getResources().getBoolean(R.bool.hide_numbers_and_addresses_without_presence)) {
+                        skip = true;
+                    }
                 }
             }
 
