@@ -354,8 +354,14 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         if (mContactAdapter != null) {
             mContactAdapter.updateDataSet(onlyDisplayLinphoneContacts ? ContactsManager.getInstance().getSIPContacts() : ContactsManager.getInstance().getContacts());
             mContactAdapter.notifyDataSetChanged();
+
+            if (mContactAdapter.getItemCount() > 0) {
+                noContact.setVisibility(View.GONE);
+                noSipContact.setVisibility(View.GONE);
+            }
         }
         contactsFetchInProgress.setVisibility(View.GONE);
+
     }
 
     public void invalidate() {
