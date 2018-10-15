@@ -78,6 +78,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private Activity mActivity;
     private HashMap<String, LinphoneContact> mAndroidContactsCache;
     private Bitmap defaultAvatar;
+    private boolean mContactsFetchedOnce = false;
 
     private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
 
@@ -117,7 +118,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public boolean contactsFetchedOnce() {
-        return mContacts.size() > 0;
+        return mContactsFetchedOnce;
     }
 
     public Bitmap getDefaultAvatarBitmap() {
@@ -425,6 +426,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor c) {
+        mContactsFetchedOnce = true;
+
         Date contactsTime = new Date();
         List<LinphoneContact> contacts = new ArrayList<>();
         List<LinphoneContact> sipContacts = new ArrayList<>();

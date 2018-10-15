@@ -128,7 +128,16 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         newContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
         allContacts.setEnabled(onlyDisplayLinphoneContacts);
         linphoneContacts.setEnabled(!allContacts.isEnabled());
-        contactsFetchInProgress.setVisibility(View.VISIBLE);
+
+        if (!ContactsManager.getInstance().contactsFetchedOnce()) {
+            contactsFetchInProgress.setVisibility(View.VISIBLE);
+        } else {
+            if (!onlyDisplayLinphoneContacts && ContactsManager.getInstance().getContacts().size() == 0) {
+                noContact.setVisibility(View.VISIBLE);
+            } else if (onlyDisplayLinphoneContacts && ContactsManager.getInstance().getSIPContacts().size() == 0) {
+                noSipContact.setVisibility(View.VISIBLE);
+            }
+        }
 
         clearSearchField = view.findViewById(R.id.clearSearchField);
         clearSearchField.setOnClickListener(new View.OnClickListener() {
@@ -164,9 +173,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
                 layoutManager.getOrientation());
         dividerItemDecoration.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
         contactsList.addItemDecoration(dividerItemDecoration);
-
-        contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
-        contactsFetchInProgress.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -249,9 +255,12 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
         mContactAdapter.notifyDataSetChanged();
 
-        if (mContactAdapter.getItemCount() > 0) {
-            contactsFetchInProgress.setVisibility(View.GONE);
+        if (!onlyDisplayLinphoneContacts && mContactAdapter.getItemCount() == 0) {
+            noContact.setVisibility(View.VISIBLE);
+        } else if (onlyDisplayLinphoneContacts && mContactAdapter.getItemCount() == 0) {
+            noSipContact.setVisibility(View.VISIBLE);
         }
+
         ContactsManager.getInstance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
     }
 
@@ -314,10 +323,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         if (editConsumed) {
             editOnClick = false;
             sipAddressToAdd = null;
-        }
-
-        if (searchField != null && searchField.getText().toString().length() > 0) {
-            if (contactsFetchInProgress != null) contactsFetchInProgress.setVisibility(View.GONE);
         }
 
         if (LinphoneActivity.isInstanciated()) {
