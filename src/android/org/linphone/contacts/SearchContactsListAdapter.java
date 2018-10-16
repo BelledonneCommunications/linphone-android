@@ -254,7 +254,6 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         String domain = "";
         ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
         if (prx != null) domain = prx.getDomain();
-        Log.i("mOnlySipContact: " + mOnlySipContact + ", domain: " + domain);
         SearchResult[] results = ContactsManager.getInstance().getMagicSearch().getContactListFromFilter(search, mOnlySipContact ? domain : "");
         for (SearchResult sr : results) {
             boolean found = false;
@@ -297,10 +296,6 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
                             (sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
                             sr.getPhoneNumber(),
                             contact.isFriend()));
-                }
-                Log.i("AJOUT CONTACT: " + contact.getFirstName());
-                for(LinphoneNumberOrAddress a : contact.getNumbersOrAddresses()) {
-                    Log.i("\t" + a.getValue() + "(" + a.getNormalizedPhone() + ")");
                 }
             }
         }
