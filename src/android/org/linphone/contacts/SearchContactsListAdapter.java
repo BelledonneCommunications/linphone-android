@@ -34,8 +34,11 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
+import org.linphone.core.PresenceBasicStatus;
+import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
+import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -251,6 +254,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         String domain = "";
         ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
         if (prx != null) domain = prx.getDomain();
+        Log.i("mOnlySipContact: " + mOnlySipContact + ", domain: " + domain);
         SearchResult[] results = ContactsManager.getInstance().getMagicSearch().getContactListFromFilter(search, mOnlySipContact ? domain : "");
         for (SearchResult sr : results) {
             boolean found = false;
@@ -275,10 +279,29 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
                 }
             }
             if (!found) {
-                result.add(new ContactAddress(contact,
-                        (sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
-                        sr.getPhoneNumber(),
-                        contact.isFriend()));
+                if (LinphoneActivity.instance().getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
+                    if (contact.getFriend() != null) {
+                        for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                            PresenceModel pm = contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
+                            if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                                result.add(new ContactAddress(contact,
+                                        (sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
+                                        sr.getPhoneNumber(),
+                                        contact.isFriend()));
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    result.add(new ContactAddress(contact,
+                            (sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
+                            sr.getPhoneNumber(),
+                            contact.isFriend()));
+                }
+                Log.i("AJOUT CONTACT: " + contact.getFirstName());
+                for(LinphoneNumberOrAddress a : contact.getNumbersOrAddresses()) {
+                    Log.i("\t" + a.getValue() + "(" + a.getNormalizedPhone() + ")");
+                }
             }
         }
 

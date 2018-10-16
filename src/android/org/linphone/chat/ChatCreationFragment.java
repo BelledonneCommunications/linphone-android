@@ -239,18 +239,35 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
         mContactsList.setVisibility(View.VISIBLE);
         mSearchLayout.setVisibility(View.VISIBLE);
-        mAllContactsButton.setVisibility(View.VISIBLE);
-        mLinphoneContactsButton.setVisibility(View.VISIBLE);
-        if (mOnlyDisplayLinphoneContacts) {
-            mAllContactsSelected.setVisibility(View.INVISIBLE);
-            mLinphoneContactsSelected.setVisibility(View.VISIBLE);
-        } else {
-            mAllContactsSelected.setVisibility(View.VISIBLE);
-            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
-        }
 
-        mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
-        mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
+        if (getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
+            mLinphoneContactsButton.setVisibility(View.INVISIBLE);
+
+            mAllContactsButton.setEnabled(false);
+            mLinphoneContactsButton.setEnabled(false);
+
+            mOnlyDisplayLinphoneContacts = true;
+
+            mAllContactsButton.setOnClickListener(null);
+            mLinphoneContactsButton.setOnClickListener(null);
+
+            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
+            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
+        } else {
+            mAllContactsButton.setVisibility(View.VISIBLE);
+            mLinphoneContactsButton.setVisibility(View.VISIBLE);
+
+            if (mOnlyDisplayLinphoneContacts) {
+                mAllContactsSelected.setVisibility(View.INVISIBLE);
+                mLinphoneContactsSelected.setVisibility(View.VISIBLE);
+            } else {
+                mAllContactsSelected.setVisibility(View.VISIBLE);
+                mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
+            }
+
+            mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
+            mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
+        }
 
         mContactsSelectedLayout.removeAllViews();
         if (mContactsSelected.size() > 0) {
