@@ -32,9 +32,11 @@ playback_dev_id=
 ringer_dev_id=
 capture_dev_id=
 dtmf_player_amp=0.1
-
 #remove this property for any application that is not Linphone public version itself
 ec_calibrator_cool_tones=1
+
+[video]
+displaytype=MSAndroidTextureDisplay
 
 [misc]
 max_calls=10

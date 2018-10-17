@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
@@ -27,8 +28,8 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -46,12 +47,11 @@ import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.VideoDefinition;
 import org.linphone.mediastream.Log;
-import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 public class CallVideoFragment extends Fragment implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
-    private SurfaceView mVideoView;
-    private SurfaceView mCaptureView;
-    private AndroidVideoWindowImpl androidVideoWindowImpl;
+    private TextureView mVideoView;
+    private TextureView mCaptureView;
+    private Surface mSurface;
     private GestureDetector mGestureDetector;
     private float mZoomFactor = 1.f;
     private float mZoomCenterX, mZoomCenterY;
@@ -73,30 +73,62 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
         mVideoView = view.findViewById(R.id.videoSurface);
         mCaptureView = view.findViewById(R.id.videoCaptureSurface);
-        mCaptureView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Warning useless because value is ignored and automatically set by new APIs.
 
-        fixZOrder(mVideoView, mCaptureView);
-
-        androidVideoWindowImpl = new AndroidVideoWindowImpl(mVideoView, mCaptureView, new AndroidVideoWindowImpl.VideoWindowListener() {
-            public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-                mVideoView = surface;
-                LinphoneManager.getLc().setNativeVideoWindowId(vw);
-            }
-
-            public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-
-            }
-
-            public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-                mCaptureView = surface;
+        mCaptureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                // It is also possible to give the SurfaceTexture
                 LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
-                resizePreview();
             }
 
-            public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                LinphoneManager.getLc().setNativePreviewWindowId(null);
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 
             }
         });
+        if (mCaptureView.isAvailable()) {
+            // It is also possible to give the SurfaceTexture
+            LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
+        }
+
+        mVideoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                mSurface = new Surface(surface);
+                LinphoneManager.getLc().setNativeVideoWindowId(mSurface);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                LinphoneManager.getLc().setNativeVideoWindowId(null);
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+            }
+        });
+        if (mVideoView.isAvailable()) {
+            mSurface = new Surface(mVideoView.getSurfaceTexture());
+            LinphoneManager.getLc().setNativeVideoWindowId(mSurface);
+        }
 
         mVideoView.setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -178,15 +210,13 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
                 Log.e("mCaptureView is null !");
                 return;
             }
-            mCaptureView.getHolder().setFixedSize(width, height);
+
+            RelativeLayout.LayoutParams newLp = new RelativeLayout.LayoutParams(width, height);
+            newLp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1); // Clears the rule, as there is no removeRule until API 17.
+            newLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
+            mCaptureView.setLayoutParams(newLp);
             Log.d("Video preview size set to " + width + "x" + height);
         }
-    }
-
-    private void fixZOrder(SurfaceView video, SurfaceView preview) {
-        video.setZOrderOnTop(false);
-        preview.setZOrderOnTop(true);
-        preview.setZOrderMediaOverlay(true); // Needed to be able to display control layout over
     }
 
     public void switchCamera() {
@@ -223,11 +253,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
         if (LinphonePreferences.instance().isOverlayEnabled()) {
             LinphoneService.instance().destroyOverlay();
         }
-        if (androidVideoWindowImpl != null) {
-            synchronized (androidVideoWindowImpl) {
-                LinphoneManager.getLc().setNativeVideoWindowId(androidVideoWindowImpl);
-            }
-        }
 
         mGestureDetector = new GestureDetector(inCallActivity, this);
         mScaleDetector = Compatibility.getScaleGestureDetector(inCallActivity, this);
@@ -237,15 +262,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
     @Override
     public void onPause() {
-        if (androidVideoWindowImpl != null) {
-            synchronized (androidVideoWindowImpl) {
-                /*
-                 * this call will destroy native opengl renderer which is used by
-                 * androidVideoWindowImpl
-                 */
-                LinphoneManager.getLc().setNativeVideoWindowId(null);
-            }
-        }
         if (LinphonePreferences.instance().isOverlayEnabled()) {
             LinphoneService.instance().createOverlay();
         }
@@ -337,11 +353,6 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
         if (mVideoView != null) {
             mVideoView.setOnTouchListener(null);
             mVideoView = null;
-        }
-        if (androidVideoWindowImpl != null) {
-            // Prevent linphone from crashing if correspondent hang up while you are rotating
-            androidVideoWindowImpl.release();
-            androidVideoWindowImpl = null;
         }
         if (mGestureDetector != null) {
             mGestureDetector.setOnDoubleTapListener(null);
