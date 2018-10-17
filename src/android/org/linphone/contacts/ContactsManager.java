@@ -575,7 +575,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
 
         long timeElapsed = (new Date()).getTime() - contactsTime.getTime();
-        String time = String.format("%02d:%02d:%03d",
+        String time = String.format(Locale.getDefault(), "%02d:%02d:%03d",
                 TimeUnit.MILLISECONDS.toMinutes(timeElapsed),
                 TimeUnit.MILLISECONDS.toSeconds(timeElapsed) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(timeElapsed)),
