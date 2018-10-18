@@ -111,6 +111,7 @@ import org.linphone.receivers.HookReceiver;
 import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.receivers.NetworkManager;
 import org.linphone.receivers.OutgoingCallReceiver;
+import org.linphone.ui.LinphoneMediaScanner;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -210,6 +211,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                        Log.e(mUserCertsPath+" can't be created."); 
             }
         }
+
+        mMediaScanner = new LinphoneMediaScanner(c);
     }
 
     private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
@@ -228,6 +231,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final String mUserCertsPath;
     private Timer mTimer;
     private Map<String, Integer> mUnreadChatsPerRoom;
+    private LinphoneMediaScanner mMediaScanner;
 
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
         Log.w("Routing audio to " + (speakerOn ? "speaker" : "earpiece") + ", disabling bluetooth audio route");
@@ -998,9 +1002,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public static synchronized void destroy() {
         if (instance == null) return;
         instance.changeStatusToOffline();
+        instance.mMediaScanner.destroy();
         sExited = true;
         instance.destroyCore();
         instance = null;
+    }
+
+    public LinphoneMediaScanner getMediaScanner() {
+        return mMediaScanner;
     }
 
     private String getString(int key) {

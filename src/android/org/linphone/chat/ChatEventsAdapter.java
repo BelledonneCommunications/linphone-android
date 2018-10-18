@@ -33,7 +33,6 @@ import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
@@ -527,6 +526,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         }
 
         if (appData != null) {
+            LinphoneUtils.scanFile(message);
             holder.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
             if (LinphoneUtils.isExtensionImage(appData)) {
                 holder.messageImage.setVisibility(View.VISIBLE);

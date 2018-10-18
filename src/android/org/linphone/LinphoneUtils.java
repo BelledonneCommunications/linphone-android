@@ -51,6 +51,8 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Friend;
@@ -62,6 +64,7 @@ import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.ui.LinphoneMediaScanner;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -764,6 +767,7 @@ public final class LinphoneUtils {
         if (!file.isDirectory() || !file.exists()) {
             Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
             file.mkdirs();
+            LinphoneManager.getInstance().getMediaScanner().scanFile(file);
         }
         return storageDir;
     }
@@ -775,6 +779,18 @@ public final class LinphoneUtils {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static void scanFile(ChatMessage message) {
+        String appData = message.getAppdata();
+        if (appData == null) {
+            for (Content c : message.getContents()) {
+                if (c.isFile()) {
+                    appData = c.getFilePath();
+                }
+            }
+        }
+        LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData));
     }
 }
 
