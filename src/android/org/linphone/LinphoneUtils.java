@@ -54,6 +54,7 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
+import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Content;
@@ -71,6 +72,7 @@ import org.linphone.core.RegistrationState;
 import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
+import org.linphone.ui.LinphoneMediaScanner;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -735,6 +737,7 @@ public final class LinphoneUtils {
     public static Uri createCvsFromString(String vcardString){
 		String contactName = getContactNameFromVcard(vcardString);
         File vcfFile = new File(Environment.getExternalStorageDirectory(), contactName+".cvs");
+	    LinphoneManager.getInstance().getMediaScanner().scanFile(vcfFile);
         try {
             FileWriter fw = new FileWriter(vcfFile);
             fw.write(vcardString);
@@ -851,6 +854,18 @@ public final class LinphoneUtils {
 
 	public static ZrtpPeerStatus getZrtpStatus(Core lc, String uri) {
 		return (uri != null) ? lc.getZrtpStatus(uri) : ZrtpPeerStatus.Unknown;
+	}
+
+	public static void scanFile(ChatMessage message) {
+		String appData = message.getAppdata();
+		if (appData == null) {
+			for (Content c : message.getContents()) {
+				if (c.isFile()) {
+					appData = c.getFilePath();
+				}
+			}
+		}
+		LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData));
 	}
 }
 

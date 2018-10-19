@@ -393,7 +393,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 							    message.setListener(mListener);
 							    message.setFileTransferFilepath(file.getPath());
 							    message.downloadFile();
-
+							    LinphoneManager.getInstance().getMediaScanner().scanFile(file);
 						    } else {
 							    Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
 							    LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
@@ -570,6 +570,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		Content fileContent = message.getFileTransferInformation();
 		String appData = fileContent.getFilePath();
 		if (fileContent != null && fileContent.isFile() && appData != null) {
+			LinphoneUtils.scanFile(message);
 			holder.fileName.setText(fileContent.getName());
 			if (LinphoneUtils.isExtensionImage(appData)) {
 				holder.messageImage.setVisibility(View.VISIBLE);
