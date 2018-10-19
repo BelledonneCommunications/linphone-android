@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
@@ -51,7 +50,6 @@ import org.linphone.mediastream.Log;
 public class CallVideoFragment extends Fragment implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
     private TextureView mVideoView;
     private TextureView mCaptureView;
-    private Surface mSurface;
     private GestureDetector mGestureDetector;
     private float mZoomFactor = 1.f;
     private float mZoomCenterX, mZoomCenterY;
@@ -73,62 +71,9 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
         mVideoView = view.findViewById(R.id.videoSurface);
         mCaptureView = view.findViewById(R.id.videoCaptureSurface);
-
-        mCaptureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                // It is also possible to give the SurfaceTexture
-                LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                LinphoneManager.getLc().setNativePreviewWindowId(null);
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-        });
-        if (mCaptureView.isAvailable()) {
-            // It is also possible to give the SurfaceTexture
-            LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
-        }
-
-        mVideoView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                mSurface = new Surface(surface);
-                LinphoneManager.getLc().setNativeVideoWindowId(mSurface);
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                LinphoneManager.getLc().setNativeVideoWindowId(null);
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-            }
-        });
-        if (mVideoView.isAvailable()) {
-            mSurface = new Surface(mVideoView.getSurfaceTexture());
-            LinphoneManager.getLc().setNativeVideoWindowId(mSurface);
-        }
+        
+        LinphoneManager.getLc().setNativeVideoWindowId(mVideoView);
+        LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
 
         mVideoView.setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
