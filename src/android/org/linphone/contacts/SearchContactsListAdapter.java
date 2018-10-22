@@ -85,6 +85,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
     private ProgressBar progressBar;
     private boolean mOnlySipContact = false;
     private ViewHolder.ClickListener mListener;
+    private boolean mHideSelectionMark = false;
 
     public List<ContactAddress> getContacts() {
         return contacts;
@@ -98,7 +99,8 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         mListener = listener;
     }
 
-    public SearchContactsListAdapter(List<ContactAddress> contactsList, ProgressBar pB, ViewHolder.ClickListener clickListener) {
+    public SearchContactsListAdapter(List<ContactAddress> contactsList, ProgressBar pB, ViewHolder.ClickListener clickListener, boolean hideSelectionMark) {
+        mHideSelectionMark = hideSelectionMark;
         mListener = clickListener;
         progressBar = pB;
         setContactsSelectedList(null);
@@ -157,6 +159,9 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
                 holder.isSelect.setVisibility(View.VISIBLE);
             } else {
                 holder.isSelect.setVisibility(View.INVISIBLE);
+            }
+            if (mHideSelectionMark) {
+                holder.isSelect.setVisibility(View.GONE);
             }
         }
     }

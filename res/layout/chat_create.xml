@@ -22,16 +22,52 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
-                android:layout_weight="0.2"
+                android:layout_weight="1"
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
                 android:src="@drawable/back"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2">
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/security_toogle_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/security_toogle_icon_grey"/>
+
+                <Switch
+                    android:id="@+id/security_toogle"
+                    android:layout_width="50dp"
+                    android:switchMinWidth="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="match_parent"
+                    android:track="@drawable/security_switch_track"
+                    android:thumb="@drawable/security_switch_thumb"
+                    android:textOff=""
+                    android:textOn=""/>
+
+                <ImageView
+                    android:id="@+id/security_toogle_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/security_toogle_icon_green"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_all_contacts"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <ImageView
                     android:id="@+id/all_contacts"
@@ -51,9 +87,10 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/layout_linphone_contacts"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2">
+                android:layout_weight="1">
 
                 <ImageView
                     android:id="@+id/linphone_contacts"
@@ -76,10 +113,11 @@
 
             <ImageView
                 android:id="@+id/next"
+                android:visibility="gone"
                 android:src="@drawable/chat_room_creation_next"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.2"
+                android:layout_weight="1"
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_valid"
                 android:padding="18dp"
@@ -89,6 +127,7 @@
 
         <RelativeLayout
             android:id="@+id/layoutSearchField"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">

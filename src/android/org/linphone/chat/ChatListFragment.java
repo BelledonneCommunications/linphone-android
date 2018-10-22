@@ -55,7 +55,7 @@ import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
 
     private RecyclerView mChatRoomsList;
-    private ImageView mNewDiscussionButton, mBackToCallButton;
+    private ImageView mNewDiscussionButton, mNewGroupDiscussionButton, mBackToCallButton;
     private ChatRoomsAdapter mChatRoomsAdapter;
     private CoreListenerStub mListener;
     private RelativeLayout mWaitLayout;
@@ -77,6 +77,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
         mChatRoomsList = view.findViewById(R.id.chatList);
         mWaitLayout = view.findViewById(R.id.waitScreen);
         mNewDiscussionButton = view.findViewById(R.id.new_discussion);
+        mNewGroupDiscussionButton = view.findViewById(R.id.new_group_discussion);
         mBackToCallButton = view.findViewById(R.id.back_in_call);
 
         mSelectionHelper = new SelectableHelper(view, this);
@@ -99,7 +100,14 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
         mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null);
+                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, false);
+            }
+        });
+
+        mNewGroupDiscussionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, true);
             }
         });
 

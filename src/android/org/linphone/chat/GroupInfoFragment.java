@@ -160,7 +160,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                         getFragmentManager().popBackStack();
                     }
                 } else {
-                    LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos);
+                    LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos, true);
                 }
             }
         });
@@ -205,7 +205,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             @Override
             public void onClick(View view) {
                 if (mIsEditionEnabled) {
-                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null);
+                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true);
                 }
             }
         });
@@ -213,7 +213,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null);
+                LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true);
             }
         });
 

@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -67,7 +68,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
     private ImageView mAllContactsButton, mLinphoneContactsButton, mClearSearchFieldButton, mBackButton, mNextButton;
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
-    private RelativeLayout mSearchLayout, mWaitLayout;
+    private RelativeLayout mSearchLayout, mWaitLayout, mLinphoneContactsToggle, mAllContactsToggle;
     private EditText mSearchField;
     private ProgressBar mContactsFetchInProgress;
     private SearchContactsListAdapter mSearchAdapter;
@@ -75,6 +76,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
     private Bundle mShareInfos;
+    private ImageView mSecurityToggleOff, mSecurityToggleOn;
+    private Switch mSecurityToggle;
+    private boolean mCreateGroupChatRoom;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,12 +88,15 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         mContactsSelected = new ArrayList<>();
         mChatRoomSubject = null;
         mChatRoomAddress = null;
+        mCreateGroupChatRoom = false;
+
         if (getArguments() != null) {
             if (getArguments().getSerializable("selectedContacts") != null) {
                 mContactsSelected = (ArrayList<ContactAddress>) getArguments().getSerializable("selectedContacts");
             }
             mChatRoomSubject = getArguments().getString("subject");
             mChatRoomAddress = getArguments().getString("groupChatRoomAddress");
+            mCreateGroupChatRoom = getArguments().getBoolean("createGroupChatRoom", false);
         }
 
         mWaitLayout = view.findViewById(R.id.waitScreen);
@@ -122,7 +129,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         mContactsFetchInProgress.setVisibility(View.VISIBLE);
 
-        mSearchAdapter = new SearchContactsListAdapter(null, mContactsFetchInProgress, this);
+        mSearchAdapter = new SearchContactsListAdapter(null, mContactsFetchInProgress, this, mCreateGroupChatRoom == false);
 
         mSearchField = view.findViewById(R.id.searchField);
         mSearchField.addTextChangedListener(new TextWatcher() {
@@ -141,6 +148,25 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {
                 mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
+            }
+        });
+
+        mLinphoneContactsToggle = view.findViewById(R.id.layout_linphone_contacts);
+        mAllContactsToggle = view.findViewById(R.id.layout_all_contacts);
+
+        mSecurityToggle = view.findViewById(R.id.security_toogle);
+        mSecurityToggleOn = view.findViewById(R.id.security_toogle_on);
+        mSecurityToggleOff = view.findViewById(R.id.security_toogle_off);
+        mSecurityToggleOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSecurityToggle.setChecked(true);
+            }
+        });
+        mSecurityToggleOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSecurityToggle.setChecked(false);
             }
         });
 
@@ -267,6 +293,18 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
             mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
             mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
+        }
+
+        if (mCreateGroupChatRoom) {
+            mLinphoneContactsToggle.setVisibility(View.GONE);
+            mAllContactsToggle.setVisibility(View.GONE);
+            mContactsSelectLayout.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
+        } else {
+            mLinphoneContactsToggle.setVisibility(View.VISIBLE);
+            mAllContactsToggle.setVisibility(View.VISIBLE);
+            mContactsSelectLayout.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.GONE);
         }
 
         mContactsSelectedLayout.removeAllViews();
@@ -440,7 +478,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         ContactAddress ca = mSearchAdapter.getContacts().get(position);
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         ProxyConfig lpc = lc.getDefaultProxyConfig();
-        if (lpc == null || lpc.getConferenceFactoryUri() == null) {
+        if (lpc == null || lpc.getConferenceFactoryUri() == null || mCreateGroupChatRoom == false) {
             ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
             LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
         } else {

@@ -18,7 +18,17 @@
 
             <ImageView
                 android:id="@+id/new_discussion"
-                android:src="@drawable/chat_add"
+                android:src="@drawable/chat_new"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_new_discussion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:padding="15dp"/>
+
+            <ImageView
+                android:id="@+id/new_group_discussion"
+                android:src="@drawable/chat_group_new"
                 android:background="@drawable/toolbar_button"
                 android:contentDescription="@string/content_description_new_discussion"
                 android:layout_width="0dp"
@@ -40,7 +50,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.4"/>
+                android:layout_weight="0.2"/>
 
             <ImageView
                 android:id="@+id/edit"

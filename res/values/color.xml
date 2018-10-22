@@ -13,6 +13,9 @@
     <color name="colorK">#3eb5c0</color>
     <color name="colorL">#96c11f</color>
     <color name="notification_color_led">#FF8000</color>
+    <color name="security_green">#96c11f</color>
+    <color name="security_gray">#c2c2c2</color>
+    <color name="security_thumb">#ffffff</color>
 
     <color name="transparent">#00000000</color>
 </resources>

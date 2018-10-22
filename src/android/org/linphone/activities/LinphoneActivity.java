@@ -683,7 +683,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
     }
 
-    public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack, Bundle shareInfos) {
+    public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack, Bundle shareInfos, boolean createGroupChat) {
         if (currentFragment == FragmentsAvailable.INFO_GROUP_CHAT && isGoBack) {
             getFragmentManager().popBackStackImmediate();
             getFragmentManager().popBackStackImmediate();
@@ -692,6 +692,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         extras.putSerializable("selectedContacts", selectedContacts);
         extras.putString("subject", subject);
         extras.putString("groupChatRoomAddress", address);
+        extras.putBoolean("createGroupChatRoom", createGroupChat);
 
         if (shareInfos != null) {
             if (shareInfos.getString("fileSharedUri") != null)

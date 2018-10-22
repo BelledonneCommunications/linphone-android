@@ -41,7 +41,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="center_vertical"
 		android:orientation="vertical"
-		android:layout_toLeftOf="@+id/contact_linphone"
+		android:layout_marginRight="70dp"
 		android:layout_toRightOf="@id/avatar_layout"
 		android:layout_marginLeft="5dp"
 		android:layout_alignParentTop="true"
@@ -68,16 +68,22 @@
 
 	</LinearLayout>
 
-	<ImageView
-		android:id="@id/contact_linphone"
-		android:layout_width="30dp"
-		android:layout_height="30dp"
-		android:layout_gravity="right"
-		android:paddingRight="10dp"
-		android:src="@drawable/linphone_user"
-		android:layout_centerVertical="true"
-		android:layout_toLeftOf="@+id/contact_is_select"
-		android:layout_toStartOf="@+id/contact_is_select"/>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_toLeftOf="@+id/contact_is_select">
+
+		<ImageView
+			android:id="@+id/contact_linphone"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:layout_gravity="right"
+			android:paddingRight="10dp"
+			android:src="@drawable/linphone_user"
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"/>
+
+	</RelativeLayout>
 
 	<ImageView
 		android:id="@+id/contact_is_select"
@@ -89,4 +95,5 @@
 		android:visibility="invisible"
 		android:paddingRight="20dp"
 		android:src="@drawable/check_selected"/>
+
 </RelativeLayout>

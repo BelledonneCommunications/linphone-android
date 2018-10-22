@@ -216,22 +216,22 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));*/
                 } else if (status == ChatMessage.State.DeliveredToUser) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
-                    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
+                    holder.imdmIcon.setImageResource(R.drawable.imdn_received);
                     holder.imdmLabel.setText(R.string.delivered);
                     holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
                 } else if (status == ChatMessage.State.Displayed) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
-                    holder.imdmIcon.setImageResource(R.drawable.chat_read);
+                    holder.imdmIcon.setImageResource(R.drawable.imdn_read);
                     holder.imdmLabel.setText(R.string.displayed);
                     holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorK));
                 } else if (status == ChatMessage.State.NotDelivered) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
-                    holder.imdmIcon.setImageResource(R.drawable.chat_error);
+                    holder.imdmIcon.setImageResource(R.drawable.imdn_error);
                     holder.imdmLabel.setText(R.string.error);
                     holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
                 } else if (status == ChatMessage.State.FileTransferError) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
-                    holder.imdmIcon.setImageResource(R.drawable.chat_error);
+                    holder.imdmIcon.setImageResource(R.drawable.imdn_error);
                     holder.imdmLabel.setText(R.string.file_transfer_error);
                     holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
                 }
