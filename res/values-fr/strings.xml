@@ -226,10 +226,11 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="call_stats_upload">Bande passante envoi :</string>
   <string name="call_stats_download">Bande passante réception :</string>
   <string name="call_stats_ice">Connexion ICE :</string>
-  <string name="call_stats_video_resolution_sent">Résolution vidéo envoyée</string>
-  <string name="call_stats_video_resolution_received">Résolution vidéo reçu</string>
+  <string name="call_stats_video_resolution_sent">Résolution vidéo envoyée :</string>
+  <string name="call_stats_video_resolution_received">Résolution vidéo reçue :</string>
   <string name="call_stats_encoder_name">Encodeur :</string>
   <string name="call_stats_decoder_name">Décodeur :</string>
+  <string name="call_stats_display_filter">Filtre d\'affichage :</string>
   <string name="call">Appel</string>
   <!--About-->
   <string name="menu_send_log">Envoyer les logs</string>

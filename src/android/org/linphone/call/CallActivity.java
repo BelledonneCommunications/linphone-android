@@ -1680,6 +1680,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         final TextView decoderAudio = view.findViewById(R.id.decoder_audio);
         final TextView encoderVideo = view.findViewById(R.id.encoder_video);
         final TextView decoderVideo = view.findViewById(R.id.decoder_video);
+        final TextView displayFilter = view.findViewById(R.id.display_filter);
         final TextView dlAudio = view.findViewById(R.id.downloadBandwith_audio);
         final TextView ulAudio = view.findViewById(R.id.uploadBandwith_audio);
         final TextView dlVideo = view.findViewById(R.id.downloadBandwith_video);
@@ -1746,6 +1747,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
                                     PayloadType payloadAudio = params.getUsedAudioPayloadType();
                                     PayloadType payloadVideo = params.getUsedVideoPayloadType();
+
+                                    formatText(displayFilter, getString(R.string.call_stats_display_filter), call.getCore().getVideoDisplayFilter());
 
                                     displayMediaStats(params, audioStats, payloadAudio, audioLayout
                                             , titleAudio, codecAudio, dlAudio, ulAudio, null, iceAudio

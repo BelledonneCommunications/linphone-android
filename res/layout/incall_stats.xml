@@ -188,6 +188,16 @@
 				android:textSize="12sp"/>
 
 			<TextView
+				android:id="@+id/display_filter"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:text="@string/call_stats_decoder_name"
+				android:gravity="center"
+				android:textColor="@color/colorB"
+				android:textSize="12sp" />
+
+			<TextView
 				android:id="@+id/uploadBandwith_video"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

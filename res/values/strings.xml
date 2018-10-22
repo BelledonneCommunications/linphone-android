@@ -265,6 +265,7 @@
     <string name="call_stats_jitter_buffer">Jitter buffer:</string>
     <string name="call_stats_encoder_name">Encoder:</string>
     <string name="call_stats_decoder_name">Decoder:</string>
+    <string name="call_stats_display_filter">Display filter:</string>
     <string name="call">Call</string>
 
     <!-- About -->
