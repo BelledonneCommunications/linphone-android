@@ -12,6 +12,7 @@ Group changes to describe their impact on the project, as follows:
 
 ## [Incomming]
 - feature: support of H265 codec.
+- feature: use TextureView instead of GL2JNIView, easier to use and will fix issues
 
 ## [4.0.1] - 2018-06-26
 
