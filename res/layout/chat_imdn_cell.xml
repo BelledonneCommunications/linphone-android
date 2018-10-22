@@ -32,24 +32,7 @@
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <ImageView
-                android:id="@+id/contact_picture"
-                android:src="@drawable/avatar"
-                android:contentDescription="@string/content_description_contact_picture"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:adjustViewBounds="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"/>
-
-            <ImageView
-                android:id="@+id/mask"
-                android:src="@drawable/avatar_mask"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:adjustViewBounds="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"/>
+            <include layout="@layout/contact_avatar"/>
 
         </RelativeLayout>
 

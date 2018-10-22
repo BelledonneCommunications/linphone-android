@@ -35,6 +35,7 @@ import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
+import org.linphone.ui.ContactAvatar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public ImageView avatar;
+        public TextView generatedAvatar;
         public ImageView delete;
         public LinearLayout isAdmin;
         public LinearLayout isNotAdmin;
@@ -52,6 +54,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
             super(view);
             name = view.findViewById(R.id.name);
             avatar = view.findViewById(R.id.contact_picture);
+            generatedAvatar = view.findViewById(R.id.generated_avatar);
             delete = view.findViewById(R.id.delete);
             isAdmin = view.findViewById(R.id.isAdminLayout);
             isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
@@ -79,11 +82,14 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final ContactAddress ca = (ContactAddress) getItem(position);
         LinphoneContact c = ca.getContact();
-        ImageView avatar = holder.avatar;
+
         holder.name.setText((c.getFullName() != null) ? c.getFullName() :
                 (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
-        if (c.hasPhoto()) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), avatar, c.getThumbnailUri());
+
+        if (c != null) {
+            ContactAvatar.displayAvatar(c, holder.avatar, holder.generatedAvatar);
+        } else {
+            ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.generatedAvatar);
         }
 
         holder.delete.setOnClickListener(new View.OnClickListener() {

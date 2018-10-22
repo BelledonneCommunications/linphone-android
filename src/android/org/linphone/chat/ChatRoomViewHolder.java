@@ -39,6 +39,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
+import org.linphone.ui.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     private Bitmap mDefaultBitmap;
@@ -51,6 +52,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public TextView unreadMessages;
     public CheckBox delete;
     public ImageView contactPicture;
+    public TextView generatedAvatar;
     public ImageView lastMessageFileTransfer;
     public Context mContext;
     public ChatRoom mRoom;
@@ -70,6 +72,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         unreadMessages = itemView.findViewById(R.id.unreadMessages);
         delete = itemView.findViewById(R.id.delete_chatroom);
         contactPicture = itemView.findViewById(R.id.contact_picture);
+        generatedAvatar = itemView.findViewById(R.id.generated_avatar);
         lastMessageFileTransfer = itemView.findViewById(R.id.lastMessageFileTransfer);
         mListener = listener;
 
@@ -153,14 +156,20 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public void getAvatar(ChatRoom mRoom) {
-        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
-        if (contact != null) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), contactPicture, ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress()).getThumbnailUri());
+        if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
+            if (contact != null) {
+                ContactAvatar.displayAvatar(contact, contactPicture, generatedAvatar);
+            } else {
+                String username = mRoom.getPeerAddress().getDisplayName();
+                if (username == null) {
+                    username = mRoom.getPeerAddress().getUsername();
+                }
+                ContactAvatar.displayAvatar(username, generatedAvatar);
+            }
         } else {
-            if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()))
-                contactPicture.setImageBitmap(mDefaultBitmap);
-            else
-                contactPicture.setImageBitmap(mDefaultGroupBitmap);
+            contactPicture.setImageBitmap(mDefaultGroupBitmap);
+            generatedAvatar.setVisibility(View.GONE);
         }
     }
 

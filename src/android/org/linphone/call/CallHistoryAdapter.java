@@ -40,6 +40,7 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
+import org.linphone.ui.ContactAvatar;
 import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
@@ -55,6 +56,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         public CheckBox select;
         public ImageView callDirection;
         public ImageView contactPicture;
+        public TextView generatedAvatar;
         public RelativeLayout CallContact;
         public LinearLayout separator;
         public TextView separatorText;
@@ -67,6 +69,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
             select = view.findViewById(R.id.delete);
             callDirection = view.findViewById(R.id.icon);
             contactPicture = view.findViewById(R.id.contact_picture);
+            generatedAvatar = view.findViewById(R.id.generated_avatar);
             CallContact = view.findViewById(R.id.history_click);
             separator = view.findViewById(R.id.separator);
             separatorText = view.findViewById(R.id.separator_text);
@@ -167,17 +170,20 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
         String displayName = null;
         final String sipUri = (address != null) ? address.asString() : "";
+
         if (c != null) {
             displayName = c.getFullName();
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, c.getThumbnailUri());
-        } else {
-            holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         }
-
         if (displayName == null) {
             holder.contact.setText(LinphoneUtils.getAddressDisplayName(sipUri));
         } else {
             holder.contact.setText(displayName);
+        }
+
+        if (c != null) {
+            ContactAvatar.displayAvatar(c, holder.contactPicture, holder.generatedAvatar);
+        } else {
+            ContactAvatar.displayAvatar(displayName, holder.generatedAvatar);
         }
 
         holder.detail.setVisibility(isEditionEnabled() ? View.INVISIBLE : View.VISIBLE);

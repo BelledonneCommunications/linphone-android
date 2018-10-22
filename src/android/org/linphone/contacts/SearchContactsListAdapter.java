@@ -39,6 +39,7 @@ import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.ContactAvatar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         public ImageView linphoneContact;
         public ImageView isSelect;
         public ImageView avatar;
+        public TextView generatedAvatar;
 
         private ClickListener mListener;
 
@@ -63,6 +65,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
             linphoneContact = view.findViewById(R.id.contact_linphone);
             isSelect = view.findViewById(R.id.contact_is_select);
             avatar = view.findViewById(R.id.contact_picture);
+            generatedAvatar = view.findViewById(R.id.generated_avatar);
             mListener = listener;
             view.setOnClickListener(this);
         }
@@ -120,11 +123,6 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         final String a = (contact.getAddressAsDisplayableString().isEmpty()) ? contact.getPhoneNumber() : contact.getAddressAsDisplayableString();
         LinphoneContact c = contact.getContact();
 
-        holder.avatar.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-        if (c != null && c.hasPhoto()) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.avatar, c.getThumbnailUri());
-        }
-
         String address = contact.getAddressAsDisplayableString();
         if (c != null && c.getFullName() != null) {
             if (address == null)
@@ -146,6 +144,13 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         } else {
             holder.name.setVisibility(View.GONE);
         }
+
+        if (c != null) {
+            ContactAvatar.displayAvatar(c, holder.avatar, holder.generatedAvatar);
+        } else {
+            ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.generatedAvatar);
+        }
+
         holder.address.setText(a);
         if (holder.linphoneContact != null) {
             if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {

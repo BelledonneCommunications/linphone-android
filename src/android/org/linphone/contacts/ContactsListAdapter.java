@@ -35,6 +35,7 @@ import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.ContactAvatar;
 import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
@@ -52,6 +53,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         public LinearLayout separator;
         public TextView separatorText;
         public ImageView contactPicture;
+        public TextView generatedAvatar;
         public TextView organization;
         //public ImageView friendStatus;
         private ClickListener mListener;
@@ -65,6 +67,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             separator = view.findViewById(R.id.separator);
             separatorText = view.findViewById(R.id.separator_text);
             contactPicture = view.findViewById(R.id.contact_picture);
+            generatedAvatar = view.findViewById(R.id.generated_avatar);
             organization = view.findViewById(R.id.contactOrganization);
             //friendStatus = view.findViewById(R.id.friendStatus);
             mListener = listener;
@@ -130,10 +133,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         holder.separator.setVisibility(mIsSearchMode || (!mIsSearchMode && getPositionForSection(getSectionForPosition(position)) != position) ? View.GONE : View.VISIBLE);
         holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE : View.GONE);
 
-        holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-        if (contact.hasPhoto()) {
-            LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-        }
+        ContactAvatar.displayAvatar(contact, holder.contactPicture, holder.generatedAvatar);
 
         boolean isOrgVisible = mContext.getResources().getBoolean(R.bool.display_contact_organization);
         String org = contact.getOrganization();
