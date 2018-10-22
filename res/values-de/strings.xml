@@ -28,6 +28,7 @@
   <string name="retry">Erneut versuchen</string>
   <string name="cancel">Abbrechen</string>
   <string name="accept">Annehmen</string>
+  <string name="open">Öffnen</string>
   <string name="continue_text">Fortsetzen</string>
   <string name="about">Über</string>
   <string name="deny">Verweigern</string>
@@ -156,6 +157,8 @@
   <string name="delete_conversation">Möchten Sie das ausgewählte Gespräch löschen?</string>
   <string name="delete_message">Möchten Sie die ausgewählte Nachricht löschen?</string>
   <string name="remote_composing">Partner schreibt...</string>
+  <string name="remote_composing_single">%s schreibt...</string>
+  <string name="remote_composing_multiple">%s schreiben...</string>
   <string name="share_picture_size_small">Klein</string>
   <string name="share_picture_size_medium">Mittel</string>
   <string name="share_picture_size_large">Groß</string>
@@ -172,7 +175,35 @@
   <string name="processing_image">Bild wird verarbeitet. Je nach Größe der Datei kann dies mehrere Sekunden in Anspruch nehmen</string>
   <string name="displayed">Lesen</string>
   <string name="delivered">Ausgeliefert</string>
+  <string name="undelivered">Nicht zugestellt</string>
+  <string name="sent">Gesendet</string>
   <string name="resend">Erneut senden</string>
+  <string name="conversation_information">Info</string>
+  <string name="administrator">Admin</string>
+  <string name="conversation_subject_hint">Name der Gruppe</string>
+  <string name="chat_room_infos_title">Info</string>
+  <string name="chat_room_infos_admin">Admin</string>
+  <string name="chat_room_participants">Teilnehmer</string>
+  <string name="chat_room_leave_group">Gruppe verlassen</string>
+  <string name="chat_room_creation_filter_hint">Kontakt suchen</string>
+  <string name="conference_created">Sie sind der Gruppe beigetreten</string>
+  <string name="conference_destroyed">Sie haben die Gruppe verlassen</string>
+  <string name="participant_added">%s ist beigetreten</string>
+  <string name="participant_removed">%s ist gegangen</string>
+  <string name="device_added">neues Gerät für %s</string>
+  <string name="device_removed">Gerät für %s entfernt</string>
+  <string name="subject_changed">neues Thema: %s</string>
+  <string name="admin_set">%s ist Admin</string>
+  <string name="admin_unset">%s ist nicht länger Admin</string>
+  <string name="group_chat_notif" formatted="false">%1: %2</string>
+  <string name="chat_room_you_are_now_admin">Sie sind jetzt Admin</string>
+  <string name="chat_room_you_are_no_longer_admin">Sie sind nicht länger Admin</string>
+  <string name="chat_room_creation_failed">Chatraum-Erstellung fehlgeschlagen</string>
+  <string name="chat_room_leave_dialog">Möchten Sie dieses Gespräch wirklich verlassen?</string>
+  <string name="chat_room_leave_button">Verlassen</string>
+  <string name="chat_room_delete_dialog">Möchten Sie die ausgewählten Gespräche wirklich löschen und verlassen?</string>
+  <string name="separator">: </string>
+  <string name="imdn_info">Zustellstatus</string>
   <!--Status Bar-->
   <string name="status_connected">Registriert</string>
   <string name="status_not_connected">Nicht registriert</string>
@@ -201,9 +232,12 @@
   <string name="call_stats_ip">IP-Familie:</string>
   <string name="call_stats_upload">Upload-Bandbreite:</string>
   <string name="call_stats_download">Download-Bandbreite:</string>
+  <string name="call_stats_estimated_download">Geschätze Download-Bandbreite:</string>
   <string name="call_stats_ice">ICE-Konnektivität:</string>
   <string name="call_stats_video_resolution_sent">Gesendete Videoauflösung:</string>
   <string name="call_stats_video_resolution_received">Empfangene Videoauflösung:</string>
+  <string name="call_stats_video_fps_sent">BpS des gesendeten Videos:</string>
+  <string name="call_stats_video_fps_received">BpS des empfangenen Videos:</string>
   <string name="call_stats_sender_loss_rate">Senderverlustrate:</string>
   <string name="call_stats_receiver_loss_rate">Empfängerverlustrate:</string>
   <string name="call_stats_jitter_buffer">Jitterpuffer:</string>
@@ -224,6 +258,7 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Warnung: Dienst ist nicht bereit</string>
   <string name="error">Fehler</string>
+  <string name="file_transfer_error">Dateiübertragungsfehler</string>
   <string name="warning_wrong_destination_address">Kann Zieladresse aus %s nicht bauen</string>
   <string name="error_unknown">Unbekannter Fehler</string>
   <string name="error_call_declined">Anruf abgelehnt</string>
@@ -271,6 +306,7 @@
   <string name="pref_change_password">Passwort ändern</string>
   <string name="pref_default_account">Als Standard benutzen</string>
   <string name="pref_password_changed">Passwort geändert</string>
+  <string name="pref_proxy_push_notif">Push-Benachrichtigung erlauben</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP-Konten</string>
   <string name="default_account_flag">Standardkonto</string>
@@ -321,7 +357,12 @@
   <string name="pref_call_title">Anruf</string>
   <string name="pref_device_ringtone">Geräteklingelton verwenden</string>
   <string name="pref_auto_answer">Eingehende Anrufe automatisch beantworten</string>
+  <string name="pref_auto_answer_time">Automatische Antwortzeit (in Millisekunden)</string>
+  <string name="pref_rfc2833_dtmf">Sende in-band DTMFs(RFC2833)</string>
+  <string name="pref_sipinfo_dtmf">Sende out-band DTMFs(SIP INFO)</string>
+  <string name="pref_call_timeout_title">Anruf-Zeitüberschreitung (in Sekunden)</string>
   <string name="pref_voice_mail">Sprachnachricht-URI</string>
+  <string name="pref_dialer_call">Linphone als Standard-Telefon-App verwenden</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Nachrichten</string>
   <string name="pref_image_sharing_server_title">Gemeinsamer Server</string>
@@ -354,6 +395,7 @@
   <string name="pref_advanced_title">Erweitert</string>
   <string name="pref_debug_title">Debug</string>
   <string name="pref_debug">Debug</string>
+  <string name="pref_java_debug">Benutze Java logger</string>
   <string name="pref_friendlist_subscribe">Freundesliste abonnieren</string>
   <string name="pref_background_mode">Hintergrundmodus</string>
   <string name="pref_animation_enable_title">Animationen aktivieren</string>
@@ -443,6 +485,6 @@
   <string name="content_description_call_options">Anrufoptionen</string>
   <string name="content_description_audio_route">Audioroute</string>
   <string name="content_description_exit_conference">Konferenz beenden</string>
-  <string name="content_title_notification_service">Linphone-Dienst</string>
-  <string name="content_title_notification">Linphone-Benachrichtigung</string>
+  <string name="content_description_conversation_subject">Gruppenchatraumthema</string>
+  <string name="content_description_conversation_infos">Gruppenchatrauminfo</string>
 </resources>

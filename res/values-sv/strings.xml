@@ -28,6 +28,7 @@
   <string name="retry">Försök igen</string>
   <string name="cancel">Avbryt</string>
   <string name="accept">Acceptera</string>
+  <string name="open">Öppna</string>
   <string name="continue_text">Fortsätt</string>
   <string name="about">Om</string>
   <string name="deny">Neka</string>
@@ -159,6 +160,8 @@
   <string name="delete_conversation">Vill du ta bort vald konversation?</string>
   <string name="delete_message">Vill du ta bort valt meddelande?</string>
   <string name="remote_composing">Fjärr skriver...</string>
+  <string name="remote_composing_single">%s skriver...</string>
+  <string name="remote_composing_multiple">%s skriver...</string>
   <string name="share_picture_size_small">Liten</string>
   <string name="share_picture_size_medium">Mellan</string>
   <string name="share_picture_size_large">Stor</string>
@@ -177,8 +180,35 @@
   <string name="processing_image">Bearbetning av bild kan ta upp till några sekunder beroende på filens storlek</string>
   <string name="displayed">Läs</string>
   <string name="delivered">Levererades</string>
+  <string name="undelivered">Olevererat</string>
+  <string name="sent">Skickat</string>
   <string name="resend">Skicka igen</string>
-  <string name="error_opening_file">Ett fel uppstår när filen öppnas.</string>
+  <string name="conversation_information">Info</string>
+  <string name="administrator">Administratör</string>
+  <string name="conversation_subject_hint">Namnge gruppen</string>
+  <string name="chat_room_infos_title">Info</string>
+  <string name="chat_room_infos_admin">Administratör</string>
+  <string name="chat_room_participants">Deltagare</string>
+  <string name="chat_room_leave_group">Lämna gruppen</string>
+  <string name="chat_room_creation_filter_hint">Sök en kontakt</string>
+  <string name="conference_created">Du har gått med i gruppen</string>
+  <string name="conference_destroyed">Du har lämnat gruppen</string>
+  <string name="participant_added">%s har gått med</string>
+  <string name="participant_removed">%s har lämnat</string>
+  <string name="device_added">ny enhet för %s</string>
+  <string name="device_removed">enhet för %s borttagen</string>
+  <string name="subject_changed">nytt ämne: %s</string>
+  <string name="admin_set">%s är adminstratör</string>
+  <string name="admin_unset">%s är inte längre administratör</string>
+  <string name="group_chat_notif" formatted="false">%1: %2</string>
+  <string name="chat_room_you_are_now_admin">Du är nu administratör</string>
+  <string name="chat_room_you_are_no_longer_admin">Du är inte längre administratör</string>
+  <string name="chat_room_creation_failed">Upprättning av chattrum misslyckades</string>
+  <string name="chat_room_leave_dialog">Vill du verkligen lämna den här konversationen?</string>
+  <string name="chat_room_leave_button">Lämna</string>
+  <string name="chat_room_delete_dialog">Vill du verkligen ta bort och lämna de valda konversationerna?</string>
+  <string name="separator">: </string>
+  <string name="imdn_info">Leveransstatus</string>
   <!--Status Bar-->
   <string name="status_connected">Registrerad</string>
   <string name="status_not_connected">Inte registrerad</string>
@@ -234,6 +264,7 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Varning: tjänst inte redo</string>
   <string name="error">Fel</string>
+  <string name="file_transfer_error">Filöverföringsfel</string>
   <string name="warning_wrong_destination_address">Kan inte bygga destinationsadress från %s</string>
   <string name="error_unknown">Okänt fel</string>
   <string name="error_call_declined">Samtal avvisat</string>
@@ -281,6 +312,7 @@
   <string name="pref_change_password">Ändra lösenord</string>
   <string name="pref_default_account">Använd som standard</string>
   <string name="pref_password_changed">Lösenordet ändrat</string>
+  <string name="pref_proxy_push_notif">Tillåt push-avisering</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP-konton</string>
   <string name="default_account_flag">Standardkonto</string>
@@ -455,6 +487,6 @@
   <string name="content_description_call_options">Samtalsalternativ</string>
   <string name="content_description_audio_route">Ljudväg</string>
   <string name="content_description_exit_conference">Avsluta konferens</string>
-  <string name="content_title_notification_service">Linphone-tjänst</string>
-  <string name="content_title_notification">Linphone-avisering</string>
+  <string name="content_description_conversation_subject">Ämne för gruppchattrum</string>
+  <string name="content_description_conversation_infos">Info för gruppchattrum</string>
 </resources>

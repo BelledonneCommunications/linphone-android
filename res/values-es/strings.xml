@@ -207,5 +207,4 @@
   <string name="content_description_contact_last_name">Apellido</string>
   <string name="content_description_transfer">Transferir</string>
   <string name="content_description_bluetooth">Bluetooth</string>
-  <string name="content_title_notification_service">Linphone Service</string>
 </resources>

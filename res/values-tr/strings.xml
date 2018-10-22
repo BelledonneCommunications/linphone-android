@@ -11,6 +11,7 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Çekirdeği %s</string>
+  <string name="about_text">GNU Genel Kamu Lisansı Sürüm 2\n © 2010-2018 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone bağlantıları</string>
   <!--Common-->
@@ -49,6 +50,7 @@
   <string name="ok">Tamam</string>
   <string name="yes">Evet</string>
   <string name="link_account">Hesabını bağla</string>
+  <string name="update_available">Güncelleme var</string>
   <!--Launch screen-->
   <string name="app_description"><i>özgür</i> SIP istemcisi</string>
   <!--Assistant-->
@@ -180,13 +182,21 @@
   <string name="processing_image">Görüntü işleniyor, dosyanın boyutuna bağlı olarak bir kaç saniye sürebilir</string>
   <string name="displayed">Okundu</string>
   <string name="delivered">Ulaştırıldı</string>
+  <string name="undelivered">Teslim edilmedi</string>
   <string name="sent">Gönderildi</string>
   <string name="resend">Yeniden gönder</string>
-  <string name="error_opening_file">Bu dosya açılırken bir hata oluştu.</string>
+  <string name="conversation_information">Bilgi</string>
   <string name="administrator">Yönetici</string>
+  <string name="conversation_subject_hint">Kümeyi adlandır</string>
+  <string name="chat_room_infos_title">Bilgi</string>
   <string name="chat_room_infos_admin">Yönetici</string>
   <string name="chat_room_participants">Katılımcılar</string>
   <string name="chat_room_leave_group">Kümeden ayrıl</string>
+  <string name="chat_room_creation_filter_hint">Bağlantı ara</string>
+  <string name="conference_created">Kümeye katıldınız</string>
+  <string name="conference_destroyed">Kümeden ayrıldınız</string>
+  <string name="participant_added">%s katıldı</string>
+  <string name="participant_removed">%s ayrıldı</string>
   <string name="device_added">%s için yeni aygıt</string>
   <string name="device_removed">%s için aygıt kaldırıldı</string>
   <string name="subject_changed">yeni konu: %s</string>
@@ -196,8 +206,11 @@
   <string name="chat_room_you_are_now_admin">Şimdi yöneticisiniz</string>
   <string name="chat_room_you_are_no_longer_admin">Artık yönetici değilsiniz</string>
   <string name="chat_room_creation_failed">Konuşma odası oluşturma başarısız</string>
+  <string name="chat_room_leave_dialog">Bu konuşmadan ayrılmayı gerçekten istiyor musunuz?</string>
   <string name="chat_room_leave_button">Ayrıl</string>
+  <string name="chat_room_delete_dialog">Seçilen konuşmaları silmeyi ve ayrılmayı gerçekten istiyor musunuz?</string>
   <string name="separator">: </string>
+  <string name="imdn_info">Teslim durumu</string>
   <!--Status Bar-->
   <string name="status_connected">Kayıtlı</string>
   <string name="status_not_connected">Kayıtsız</string>
@@ -301,6 +314,7 @@
   <string name="pref_change_password">Parola değiştir</string>
   <string name="pref_default_account">Öntanımlıyı kullan</string>
   <string name="pref_password_changed">Parola değiştirildi</string>
+  <string name="pref_proxy_push_notif">Anlık bildirime izin ver</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP Hesabı</string>
   <string name="default_account_flag">Öntanımlı hesap</string>
@@ -389,6 +403,7 @@
   <string name="pref_advanced_title">Gelişmiş</string>
   <string name="pref_debug_title">Hata ayıklama</string>
   <string name="pref_debug">Hata ayıklama</string>
+  <string name="pref_java_debug">Java günlükleyici kullan</string>
   <string name="pref_friendlist_subscribe">Arkadaş listesi aboneliği</string>
   <string name="pref_background_mode">Artalan kipi</string>
   <string name="pref_animation_enable_title">Animasyonlar etkin</string>
@@ -478,7 +493,6 @@
   <string name="content_description_call_options">Çağrı seçenekleri</string>
   <string name="content_description_audio_route">Ses yolu</string>
   <string name="content_description_exit_conference">Görüşmeden çık</string>
-  <string name="content_title_notification_service">Linphone Hizmeti</string>
-  <string name="content_title_notification">Linphone Bildirimi</string>
   <string name="content_description_conversation_subject">Küme konuşma odası konusu</string>
+  <string name="content_description_conversation_infos">Küme konuşma odası bilgisi</string>
 </resources>

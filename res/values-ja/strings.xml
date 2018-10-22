@@ -438,5 +438,4 @@
   <string name="content_description_call_options">発信オプション</string>
   <string name="content_description_audio_route">オーディオルート</string>
   <string name="content_description_exit_conference">会議を終了する</string>
-  <string name="content_title_notification_service">サービス</string>
 </resources>

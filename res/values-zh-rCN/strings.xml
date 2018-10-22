@@ -433,5 +433,4 @@
   <string name="content_description_call_options">通话选项</string>
   <string name="content_description_audio_route">音频路由</string>
   <string name="content_description_exit_conference">退出会话</string>
-  <string name="content_title_notification_service">Linphone服务</string>
 </resources>

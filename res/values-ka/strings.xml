@@ -11,6 +11,7 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ბირთვი %s</string>
+  <string name="about_text">GNU ზოგადი საჯარო ლიცენზია V2\n © 2010-2018 Belledonne Communications</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">linphone კონტაქტები</string>
   <!--Common-->
@@ -28,6 +29,7 @@
   <string name="retry">თავიდან სცდა</string>
   <string name="cancel">გაუქმება</string>
   <string name="accept">მიღება</string>
+  <string name="open">გახსნა</string>
   <string name="continue_text">გაგრძელება</string>
   <string name="about">შესახებ</string>
   <string name="deny">უარყოფა</string>
@@ -48,6 +50,7 @@
   <string name="ok">OK</string>
   <string name="yes">დიახ</string>
   <string name="link_account">ანგარიშის მიბმა</string>
+  <string name="update_available">ხელმისაწვდომია განახლება</string>
   <!--Launch screen-->
   <string name="app_description"><i>თავისუფალი</i> SIP კლიენტი</string>
   <!--Assistant-->
@@ -110,6 +113,7 @@
   <string name="use_email_for_validation">ელფოსტის მისამართის გამოყენება ანგარიშის დასადატურებლად</string>
   <string name="login_with_username">თქვენი მომხმარებლის სახელის და პაროლის გამოყენება თქვენი ტელეფონის ნომრის მაგივრად</string>
   <string name="phone_number_info_title">რისთვის იქნება გამოყენებული ჩემი ტელეფონის ნომერი?</string>
+  <string name="phone_number_info_content">\nთქვენი ტელეფონის ნომრის დახმარებით, თქვენი მეგობრები შეძლებენ გიპოვონ უფრო მარტივად.\n\nთქვენ დაინახავთ თქვენს მისამართები წიგნში ვინ იყენებს Linphone-ს და თქვენს მეგობრებს ეცოდინებათ, რომ შეუძლიათ ასევე დაგიკავშირდნენ Linphone-ით.\n</string>
   <string name="phone_number_link_info_content">\nთქვენი მეგობრები გიპოვიან უფრო მარტივად, თუ მიაბამთ თქვენს ანგარიშს თქვენს ტელფონის ნომერზე.\n\nთქვენ დაინახავთ თქვენს მისამართები წიგნში ვინ იყენებს Linphone-ს და თქვენს მეგობრებს ეცოდინებათ, რომ შეუძლიათ ასევე დაგიკავშირდნენ Linphone-ით.\n</string>
   <string name="phone_number_link_info_content_already_account">თქვენ შეგიძლიათ გამოიყენოთ თქვენი ტელეფონის ნომერი მხოლოდ ერთ Linphone ანგარიშთან.\n\nთუ უკვე მიბმული გაქვთ თქვენი ნომერი სხვა ანგარიშზე, მაგრამ გსურთ ამის გამოყენება, უბრალოდ მიაბით იგი ახლა და თქვენი ნომერი იქნება ავტომატურად გადმოტანილი ამ ანგარიშზე.</string>
   <!--Status-->
@@ -158,6 +162,8 @@
   <string name="delete_conversation">გსურთ არჩეული მიმოწერის წაშლა?</string>
   <string name="delete_message">გსურთ არჩეული შეტყობინების წაშლა?</string>
   <string name="remote_composing">დაშორებული წერს...</string>
+  <string name="remote_composing_single">%s წერს...</string>
+  <string name="remote_composing_multiple">%s წერენ...</string>
   <string name="share_picture_size_small">პატარა</string>
   <string name="share_picture_size_medium">საშუალო</string>
   <string name="share_picture_size_large">დიდი</string>
@@ -176,7 +182,35 @@
   <string name="processing_image">მიმდინარეობს სურათის დამუშავება, შეიძლება დაიკავოს რამოდენიმე წამი, ფაილის ზომის მიხედვით</string>
   <string name="displayed">წაკითხულია</string>
   <string name="delivered">მიღებულია</string>
+  <string name="undelivered">არა მისული</string>
+  <string name="sent">გაგზავნილი</string>
   <string name="resend">თავიდან გაგზავნა</string>
+  <string name="conversation_information">ინფო</string>
+  <string name="administrator">ადმინი</string>
+  <string name="conversation_subject_hint">დაარქვით სახელი ჯგუფს</string>
+  <string name="chat_room_infos_title">ინფო</string>
+  <string name="chat_room_infos_admin">ადმინი</string>
+  <string name="chat_room_participants">მონაწილეები</string>
+  <string name="chat_room_leave_group">ჯგუფის დატოვება</string>
+  <string name="chat_room_creation_filter_hint">კონტაქტის ძიება</string>
+  <string name="conference_created">თქვენ შეუერთდით ჯგუფს</string>
+  <string name="conference_destroyed">თქვენ დატოვეთ ჯგუფი</string>
+  <string name="participant_added">%s შემოგიერთდათ</string>
+  <string name="participant_removed">%s-მ დატოვა</string>
+  <string name="device_added">ახალი მოწყობილობა %s-სთვის</string>
+  <string name="device_removed">მოწყობილობა %s-სთვის წაშლილია</string>
+  <string name="subject_changed">ახალი თემა: %s</string>
+  <string name="admin_set">%s არის ადმინი</string>
+  <string name="admin_unset">%s აღარ არის ადმინი</string>
+  <string name="group_chat_notif" formatted="false">%1: %2</string>
+  <string name="chat_room_you_are_now_admin">თქვენ აწი ადმინი ხართ</string>
+  <string name="chat_room_you_are_no_longer_admin">თქვენ აღარ ხართ ადმინი</string>
+  <string name="chat_room_creation_failed">ჩატის ოთახის შექმნა ვერ მოხერხდა</string>
+  <string name="chat_room_leave_dialog">მართლა გსურთ ამ საუბრის დატოვება?</string>
+  <string name="chat_room_leave_button">დატოვება</string>
+  <string name="chat_room_delete_dialog">მართლა გსურთ არჩეული საუბრის წაშლა და დატოვება?</string>
+  <string name="separator">: </string>
+  <string name="imdn_info">მიწოდების სტატუსი</string>
   <!--Status Bar-->
   <string name="status_connected">რეგისტრირებული</string>
   <string name="status_not_connected">არ არის რეგისტრირებული</string>
@@ -206,6 +240,7 @@
   <string name="call_stats_ip">IP ოჯახი:</string>
   <string name="call_stats_upload">ატვირთვის გამტარი უნარი:</string>
   <string name="call_stats_download">გადმოტვირთვის გამტარი უნარი:</string>
+  <string name="call_stats_estimated_download">დაახლოებითი გადმოტვირთვის გამტარი უნარი:</string>
   <string name="call_stats_ice">ICE კავშირი:</string>
   <string name="call_stats_video_resolution_sent">გაგზავნილი ვიდეოს გაფართოება:</string>
   <string name="call_stats_video_resolution_received">მიღებული ვიდეოს გაფართოება:</string>
@@ -231,6 +266,7 @@
   <!--Errors-->
   <string name="skipable_error_service_not_ready">ყურადღება: სერვისი არ არის მზად</string>
   <string name="error">შეცდომა</string>
+  <string name="file_transfer_error">ფაილის გზავნის შეცდომა</string>
   <string name="warning_wrong_destination_address">%s-დან დანიშნულების მისამართის შექმნა ვერ მოხერხდა</string>
   <string name="error_unknown">უცნობი შეცდომა</string>
   <string name="error_call_declined">ზარი უარყოფილია</string>
@@ -278,6 +314,7 @@
   <string name="pref_change_password">პაროლის შეცვლა</string>
   <string name="pref_default_account">გამოყენება ნაგულისხმევად</string>
   <string name="pref_password_changed">პაროლი შეიცვალა</string>
+  <string name="pref_proxy_push_notif">მომენტალური შეტყობინებებზე ნების დართვა</string>
   <!--Settings-->
   <string name="pref_sipaccounts">SIP ანგარიშები</string>
   <string name="default_account_flag">ნაგულისხმევი ანგარიში</string>
@@ -333,6 +370,7 @@
   <string name="pref_sipinfo_dtmf">არხის-გარე DTMF-ების გაგზავნა(SIP INFO)</string>
   <string name="pref_call_timeout_title">ზარის ტაიმაუტი (წამებში)</string>
   <string name="pref_voice_mail">ხმოვანი ფოსტის URI</string>
+  <string name="pref_dialer_call">Linphone-ის გამოყენება ნაგულისხმევი ტელეფონის აპლიკაციად</string>
   <!--Chat settings-->
   <string name="pref_chat_title">ჩატი</string>
   <string name="pref_image_sharing_server_title">მიმდინარეობს სერვერის გაზიარება</string>
@@ -365,6 +403,7 @@
   <string name="pref_advanced_title">გაფართოებული</string>
   <string name="pref_debug_title">დებაგი</string>
   <string name="pref_debug">დებაგი</string>
+  <string name="pref_java_debug">Java-ს ჟურნალის გამოყენება</string>
   <string name="pref_friendlist_subscribe">მეგობრების სიის გამოწერა</string>
   <string name="pref_background_mode">ფონის რეჟიმი</string>
   <string name="pref_animation_enable_title">ანიმაციების ჩართვა</string>
@@ -454,6 +493,6 @@
   <string name="content_description_call_options">ზარის პარამეტრები</string>
   <string name="content_description_audio_route">ხმის მარშრუტი</string>
   <string name="content_description_exit_conference">კონფერენციიდან გამოსვლა</string>
-  <string name="content_title_notification_service">Linphone სერვისი</string>
-  <string name="content_title_notification">Linphone-ის შეტყობინება</string>
+  <string name="content_description_conversation_subject">ჯგუფური ჩატის ოთახის თემა</string>
+  <string name="content_description_conversation_infos">ჯგუფური ჩატის ოთახის ინფო</string>
 </resources>

@@ -15,6 +15,7 @@
   <string name="sync_account_name">contacts linphone</string>
   <!--Common-->
   <string name="username">Nom d\'utilisateur</string>
+  <string name="userid">Identifiant utilisateur (optionnel)</string>
   <string name="phone_number">Numéro de téléphone</string>
   <string name="display_name">Nom d\'affichage</string>
   <string name="password">Mot de passe</string>
@@ -27,6 +28,7 @@
   <string name="retry">Renvoyer</string>
   <string name="cancel">Annuler</string>
   <string name="accept">Accepter</string>
+  <string name="open">Ouvrir</string>
   <string name="continue_text">Continuer</string>
   <string name="about">A propos</string>
   <string name="deny">Refuser</string>
@@ -40,12 +42,14 @@
   <string name="decline">Refuser</string>
   <string name="conference">Conférence</string>
   <string name="link">Associer</string>
-  <string name="link_account_popup">Voulez vous associer le compte %s avec votre numéro de téléphone ?</string>
+  <string name="link_account_popup">Voulez-vous associer le compte %s avec votre numéro de téléphone ?</string>
   <string name="maybe_later">Plus tard</string>
   <string name="later">Plus tard</string>
   <string name="no">Non</string>
+  <string name="ok">OK</string>
   <string name="yes">Oui</string>
   <string name="link_account">Associer votre compte</string>
+  <string name="update_available">Une mise à jour est disponible</string>
   <!--Launch screen-->
   <string name="app_description">le client SIP <i>libre</i></string>
   <!--Assistant-->
@@ -108,6 +112,7 @@
   <string name="use_email_for_validation">Utiliser une adresse mail pour créer un compte</string>
   <string name="login_with_username">Utiliser votre nom d\'utilisateur et votre mot de passe plutôt que votre numéro</string>
   <string name="phone_number_info_title">Comment mon numéro de téléphone sera-t-il utilisé ?</string>
+  <string name="phone_number_info_content">\nGrâce à votre numéro de téléphone, vos amis vous trouverons plus facilement.\n\nVous verrez dans votre carnet d\'adresses qui utilise Linphone and vos amis verront également qu\'ils peuvent vous contacter via Linphone.\n</string>
   <string name="phone_number_link_info_content">
 Vos amis pourront vous joindre plus facilement si vous associez votre compte à votre numéro de téléphone\n\nVous verrez dans votre carnet d\'adresses les contacts qui utilisent Linphone et vos amis sauront qu\'ils peuvent vous contacter.\n</string>
   <string name="phone_number_link_info_content_already_account">Vous ne pouvez associer votre numéro qu\'à un seul compte Linphone.\n\nSi vous avez déjà associé votre numéro à un autre compte mais préférez utiliser ce compte-ci, suivez la procédure d\'association et votre numéro sera automatiquement transféré à ce compte.</string>
@@ -180,6 +185,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="undelivered">Reçu</string>
   <string name="sent">Envoyé</string>
   <string name="resend">Renvoyer</string>
+  <string name="error_opening_file">Une erreur est survenue lors de l\'ouverture de ce fichier.</string>
   <string name="conversation_information">Infos</string>
   <string name="administrator">Admin</string>
   <string name="conversation_subject_hint">Nommer le groupe</string>
@@ -192,13 +198,19 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="conference_destroyed">Vous avez quitté le groupe</string>
   <string name="participant_added">%s a rejoint le groupe</string>
   <string name="participant_removed">%s a quitté le groupe</string>
+  <string name="device_added">nouvel appareil pour %s </string>
+  <string name="device_removed">appareil pour %s supprimé</string>
   <string name="subject_changed">Nouveau sujet : %s</string>
   <string name="admin_set">%s est devenu(e) admin</string>
   <string name="admin_unset">%s n\'est plus admin</string>
+  <string name="group_chat_notif" formatted="false">%1 : %2</string>
   <string name="chat_room_you_are_now_admin">Vous êtes maintenant admin</string>
+  <string name="chat_room_you_are_no_longer_admin">Vous n\'êtes plus administrateur</string>
+  <string name="chat_room_creation_failed">Échec de création de la conversation</string>
   <string name="chat_room_leave_dialog">Voulez vous vraiment quitter cette conversation ?</string>
   <string name="chat_room_leave_button">Quitter</string>
   <string name="chat_room_delete_dialog">Voulez vous vraiment quitter et supprimer les conversations selectionnées ?</string>
+  <string name="separator"> : </string>
   <string name="imdn_info">Etat du message</string>
   <!--Status Bar-->
   <string name="status_connected">Enregistré</string>
@@ -214,9 +226,14 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <!--Call-->
   <string name="incoming_call">appel entrant</string>
   <string name="outgoing_call">appel sortant</string>
+  <string name="add_video_dialog">Votre correspondant voudrait démarrer la vidéo</string>
   <string name="no_current_call">Aucun appel en cours</string>
+  <string name="call_paused_by_remote">Votre correspondant a mis l\'appel en pause</string>
   <string name="couldnt_accept_call">Une erreur est survenue pendant l\'acceptation de l\'appel</string>
   <string name="zrtp_dialog1">Indiquez le code SAS suivant à votre interlocuteur:\nDites: %s</string>
+  <string name="zrtp_dialog2">\nVotre correspondant devrait dire : %s</string>
+  <string name="zrtp_notification_title">SAS</string>
+  <string name="zrtp_notification_message">Confirmez le précédent code SAS avec votre correspondant</string>
   <string name="unknown_incoming_call_name">Inconnu</string>
   <string name="call_stats_audio">Audio</string>
   <string name="call_stats_video">Vidéo</string>
@@ -224,9 +241,15 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="call_stats_ip">Type d\'IP :</string>
   <string name="call_stats_upload">Bande passante envoi :</string>
   <string name="call_stats_download">Bande passante réception :</string>
+  <string name="call_stats_estimated_download">Bande passant en réception estimée :</string>
   <string name="call_stats_ice">Connexion ICE :</string>
   <string name="call_stats_video_resolution_sent">Résolution vidéo envoyée :</string>
   <string name="call_stats_video_resolution_received">Résolution vidéo reçue :</string>
+  <string name="call_stats_video_fps_sent">FPS vidéo envoyés :</string>
+  <string name="call_stats_video_fps_received">FPS vidéo reçus :</string>
+  <string name="call_stats_sender_loss_rate">Taux de perte de l\'expéditeur :</string>
+  <string name="call_stats_receiver_loss_rate">Taux de perte du destinataire :</string>
+  <string name="call_stats_jitter_buffer">Tampon de jigue :</string>
   <string name="call_stats_encoder_name">Encodeur :</string>
   <string name="call_stats_decoder_name">Décodeur :</string>
   <string name="call_stats_display_filter">Filtre d\'affichage :</string>
@@ -245,12 +268,14 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <!--Errors-->
   <string name="skipable_error_service_not_ready">Attention : le service n\'est pas prêt</string>
   <string name="error">Erreur</string>
+  <string name="file_transfer_error">Erreur de transfert</string>
   <string name="warning_wrong_destination_address">Impossible d\'utiliser l\'adresse %s</string>
   <string name="error_unknown">Erreur inconnue</string>
   <string name="error_call_declined">Appel rejeté</string>
   <string name="error_user_busy">Utilisateur occupé</string>
   <string name="error_user_not_found">Utilisateur non trouvé</string>
   <string name="error_incompatible_media">Paramètres média incompatibles</string>
+  <string name="error_low_bandwidth">Votre correspondant n\'a pas beaucoup de bande passante, la vidéo ne peut pas être démarrée</string>
   <string name="error_network_unreachable">Le réseau n\'est pas joignable</string>
   <string name="error_bad_credentials">Nom d\'utilisateur ou mot de passe incorrect.</string>
   <string name="error_unauthorized">Non autorisé</string>
@@ -291,6 +316,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_change_password">Changer de mot de passe</string>
   <string name="pref_default_account">Utiliser par défaut</string>
   <string name="pref_password_changed">Mot de passe changé</string>
+  <string name="pref_proxy_push_notif">Autoriser les notifications poussées</string>
   <!--Settings-->
   <string name="pref_sipaccounts">Comptes SIP</string>
   <string name="default_account_flag">Compte par défaut</string>
@@ -341,9 +367,12 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_call_title">Appel</string>
   <string name="pref_device_ringtone">Utiliser la sonnerie du téléphone</string>
   <string name="pref_auto_answer">Décrocher automatiquement appels entrants</string>
+  <string name="pref_auto_answer_time">Décrocher automatiquement les appels après (temps en millisecondes)</string>
   <string name="pref_rfc2833_dtmf">Envoyer des DTMF\'s dans le flux(RFC2833)</string>
   <string name="pref_sipinfo_dtmf">Envoyer des DTMFs en SIP INFO</string>
+  <string name="pref_call_timeout_title">Raccrocher automatiquement l\'appel après (temps en secondes)</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
+  <string name="pref_dialer_call">Utiliser Linphone comme application de téléphonie par défaut</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>
@@ -352,6 +381,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="lime_encryption_entry_disabled">Désactivé</string>
   <string name="lime_encryption_entry_mandatory">Obligatoire</string>
   <string name="lime_encryption_entry_preferred">Préferré</string>
+  <string name="lime_encryption_enable_zrtp">LIME nécessite l\'encryption ZRTP.\nEn activant LIME l\'encryption ZRTP sera automatiquement activée.</string>
   <!--Network settings-->
   <string name="pref_network_title">Réseau</string>
   <string name="pref_wifi_only">Utiliser WiFi uniquement</string>
@@ -375,6 +405,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_advanced_title">Avancé</string>
   <string name="pref_debug_title">Activer les traces de débogage</string>
   <string name="pref_debug">Activer les traces de débogage</string>
+  <string name="pref_java_debug">Utiliser le logger Java</string>
   <string name="pref_friendlist_subscribe">Souscrire à la liste d\'amis</string>
   <string name="pref_background_mode">Actif en arrière plan</string>
   <string name="pref_animation_enable_title">Activer les animations</string>
@@ -383,6 +414,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="pref_incoming_call_timeout_title">Ignorer les appels entrants après (en secondes)</string>
   <string name="pref_remote_provisioning_title">Configuration distante</string>
   <string name="pref_android_app_settings_title">Infos appli Android</string>
+  <string name="pref_android_app_notif_settings_title">Paramètres des notifications Android</string>
   <string name="pref_primary_account_title">Compte principal</string>
   <string name="pref_display_name_title">Nom d\'affichage</string>
   <string name="pref_user_name_title">Nom d\'utilisateur</string>
@@ -464,6 +496,8 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="content_description_call_options">Options d\'appel</string>
   <string name="content_description_audio_route">Route audio</string>
   <string name="content_description_exit_conference">Quitter la conférence</string>
-  <string name="content_title_notification_service">Linphone service notification</string>
-  <string name="content_title_notification">Linphone instant messages notifications</string>
+  <string name="content_title_notification_service">Notification de service Linphone</string>
+  <string name="content_title_notification">Notifications des messages Linphone</string>
+  <string name="content_description_conversation_subject">Sujet de la conversation de groupe</string>
+  <string name="content_description_conversation_infos">Informations de la conversation de groupe</string>
 </resources>

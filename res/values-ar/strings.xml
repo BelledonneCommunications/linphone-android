@@ -179,7 +179,6 @@
   <string name="displayed">قُرِأ</string>
   <string name="delivered">سُلِّم</string>
   <string name="resend">أعد اﻹرسال</string>
-  <string name="error_opening_file">حدث خطأ خلال فتح هذا الملف.</string>
   <!--Status Bar-->
   <string name="status_connected">مُسجَّل</string>
   <string name="status_not_connected">غير مُسجَّل</string>
@@ -459,6 +458,4 @@
   <string name="content_description_call_options">خيارات المكالمة</string>
   <string name="content_description_audio_route">توجيه الصوت</string>
   <string name="content_description_exit_conference">مغادرة الاجتماع</string>
-  <string name="content_title_notification_service">خدمة لِنْفُونْ</string>
-  <string name="content_title_notification">إشعارات لِنْفُونْ</string>
 </resources>
