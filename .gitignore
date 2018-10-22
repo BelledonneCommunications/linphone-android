@@ -57,3 +57,4 @@ liblinphone_tester/res/raw/
 **/*.kdev4
 liblinphone-sdk/res/
 **/.vscode
+res/value-hi_IN
