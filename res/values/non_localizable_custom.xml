@@ -104,6 +104,7 @@
 	<bool name="hide_settings_from_side_menu">false</bool>
 
 	<!-- Others Parameters-->
+	<string name="about_text">GNU General Public License V2\n © 2010-2018 Belledonne Communications</string>
 	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
 	<bool name="enable_call_notification">true</bool>
 	<bool name="kill_service_with_task_manager">true</bool>
