@@ -174,7 +174,6 @@
 		android:layout_above="@id/footer"/>
 
 	<android.support.v7.widget.RecyclerView
-
 		android:id="@+id/chat_message_list"
 		android:divider="@android:color/transparent"
 		android:choiceMode="multipleChoice"
@@ -187,5 +186,14 @@
 		android:layout_marginRight="10dp"
 		android:layout_marginLeft="10dp"
 		android:layout_below="@+id/top"/>
+
+	<ImageView
+		android:id="@+id/room_security_level"
+		android:layout_width="33dp"
+		android:layout_height="wrap_content"
+		android:src="@drawable/security_alert_button"
+		android:layout_alignParentRight="true"
+		android:layout_below="@id/top"
+		android:layout_marginRight="6dp"/>
 
 </RelativeLayout>
