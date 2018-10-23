@@ -112,6 +112,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     private int mContextMenuMessagePosition;
     private ChatScrollListener mChatScrollListener;
     private LinearLayout mTopBar;
+    private ImageView mChatRoomSecurityLevel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -129,6 +130,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         View view = inflater.inflate(R.layout.chat, container, false);
 
         mTopBar = view.findViewById(R.id.top_bar);
+
+        mChatRoomSecurityLevel = view.findViewById(R.id.room_security_level);
+        mChatRoomSecurityLevel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinphoneActivity.instance().goToContactDevicesInfos(getRemoteSipUri());
+            }
+        });
 
         mBackButton = view.findViewById(R.id.back);
         mBackButton.setOnClickListener(new View.OnClickListener() {

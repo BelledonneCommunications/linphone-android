@@ -73,6 +73,7 @@ import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
 import org.linphone.chat.ChatCreationFragment;
 import org.linphone.chat.ChatListFragment;
+import org.linphone.chat.DevicesFragment;
 import org.linphone.chat.GroupChatFragment;
 import org.linphone.chat.GroupInfoFragment;
 import org.linphone.chat.ImdnFragment;
@@ -429,6 +430,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             case MESSAGE_IMDN:
                 fragment = new ImdnFragment();
                 break;
+            case CONTACT_DEVICES:
+                fragment = new DevicesFragment();
+                break;
             default:
                 break;
         }
@@ -752,6 +756,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
     }
 
+    public void goToContactDevicesInfos(String sipUri) {
+        Bundle extras = new Bundle();
+        extras.putSerializable("SipUri", sipUri);
+        changeCurrentFragment(FragmentsAvailable.CONTACT_DEVICES, extras);
+    }
+
     public void goToChatMessageImdnInfos(String sipUri, String messageId) {
         Bundle extras = new Bundle();
         extras.putSerializable("SipUri", sipUri);
@@ -880,6 +890,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             case GROUP_CHAT:
             case INFO_GROUP_CHAT:
             case MESSAGE_IMDN:
+            case CONTACT_DEVICES:
             case CHAT:
                 chat_selected.setVisibility(View.VISIBLE);
                 break;

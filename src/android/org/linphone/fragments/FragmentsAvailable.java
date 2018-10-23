@@ -36,7 +36,8 @@ public enum FragmentsAvailable {
     CREATE_CHAT,
     INFO_GROUP_CHAT,
     GROUP_CHAT,
-    MESSAGE_IMDN;
+    MESSAGE_IMDN,
+    CONTACT_DEVICES;
 
     public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
         switch (this) {
@@ -57,6 +58,9 @@ public enum FragmentsAvailable {
 
             case MESSAGE_IMDN:
                 return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;
+
+            case CONTACT_DEVICES:
+                return fragment == GROUP_CHAT || fragment == CONTACT_DEVICES;
 
             default:
                 return false;
