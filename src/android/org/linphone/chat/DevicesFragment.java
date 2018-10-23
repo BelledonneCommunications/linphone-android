@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,11 +39,16 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
+import org.linphone.mediastream.Log;
+
+import java.util.Arrays;
 
 public class DevicesFragment extends Fragment {
     private LayoutInflater mInflater;
     private ImageView mBackButton;
     private TextView mTitle;
+    private ExpandableListView mExpandableList;
+    private DeviceAdapter mAdapter;
 
     private String mRoomUri;
     private Address mRoomAddr;
@@ -60,6 +66,20 @@ public class DevicesFragment extends Fragment {
 
         mInflater = inflater;
         View view = mInflater.inflate(R.layout.chat_devices, container, false);
+
+        mExpandableList = view.findViewById(R.id.devices_list);
+        mExpandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+                return false;
+            }
+        });
+        mExpandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+                return false;
+            }
+        });
 
         initChatRoom();
 
@@ -79,6 +99,12 @@ public class DevicesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initValues();
     }
 
     private void initChatRoom() {
@@ -106,6 +132,23 @@ public class DevicesFragment extends Fragment {
                 displayName = LinphoneUtils.getAddressDisplayName(remoteParticipantAddr);
             }
             mTitle.setText(getString(R.string.chat_room_devices).replace("%s", displayName));
+        }
+    }
+
+    private void initValues() {
+        if (mAdapter == null) {
+            mAdapter = new DeviceAdapter(getActivity());
+            mExpandableList.setAdapter(mAdapter);
+        }
+        if (mRoom == null) {
+            initChatRoom();
+        }
+
+        boolean onlyDisplayChilds = mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt());
+
+        //TODO get list of participants and devices
+        if (mRoom != null && mRoom.getNbParticipants() > 0) {
+            mAdapter.updateListItems(Arrays.asList(mRoom.getParticipants()), onlyDisplayChilds);
         }
     }
 }

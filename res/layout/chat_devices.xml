@@ -30,6 +30,7 @@
                 android:id="@+id/title"
                 android:text="@string/group_chat_room_devices"
                 style="@style/font6"
+                android:ellipsize="marquee"
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -47,15 +48,11 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <ExpandableListView
+        android:id="@+id/devices_list"
+        android:groupIndicator="@null"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_below="@id/top">
-
-
-
-    </LinearLayout>
+        android:layout_below="@id/top"/>
 
 </RelativeLayout>

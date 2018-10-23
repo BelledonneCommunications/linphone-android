@@ -52,7 +52,7 @@
 
 	<style name="font6" parent="@android:style/TextAppearance.Medium">
 		<item name="android:textColor">@color/colorC</item>
-		<item name="android:textSize">20sp</item>
+		<item name="android:textSize">18sp</item>
 	</style>
 
 	<style name="font7" parent="@android:style/TextAppearance.Medium">
