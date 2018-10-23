@@ -43,8 +43,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
     public RelativeLayout bubbleLayout;
     public LinearLayout separatorLayout;
     public LinearLayout background;
-    public ImageView contactPicture;
-    public ImageView contactPictureMask;
+    public RelativeLayout avatarLayout;
     public TextView contactName;
 
     public ImageView messageStatus;
@@ -67,40 +66,9 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
     private ClickListener mListener;
 
     public ChatBubbleViewHolder(Context context, View view, ClickListener listener) {
-        super(view);
+        this(view);
         mContext = context;
-
-        eventLayout = view.findViewById(R.id.event);
-        //eventTime = view.findViewById(R.id.event_date);
-        eventMessage = view.findViewById(R.id.event_text);
-
-        bubbleLayout = view.findViewById(R.id.bubble);
-        background = view.findViewById(R.id.background);
-        contactPicture = view.findViewById(R.id.contact_picture);
-        contactPictureMask = view.findViewById(R.id.mask);
-        contactName = view.findViewById(R.id.contact_header);
-
-        messageStatus = view.findViewById(R.id.status);
-        messageSendingInProgress = view.findViewById(R.id.inprogress);
-        imdmLayout = view.findViewById(R.id.imdmLayout);
-        imdmIcon = view.findViewById(R.id.imdmIcon);
-        imdmLabel = view.findViewById(R.id.imdmText);
-
-        messageText = view.findViewById(R.id.message);
-        messageImage = view.findViewById(R.id.image);
-        separatorLayout = view.findViewById(R.id.separator);
-
-        fileTransferLayout = view.findViewById(R.id.file_transfer_layout);
-        fileTransferProgressBar = view.findViewById(R.id.progress_bar);
-        fileTransferAction = view.findViewById(R.id.file_transfer_action);
-
-        fileName = view.findViewById(R.id.file_name);
-        openFileButton = view.findViewById(R.id.open_file);
-
-        delete = view.findViewById(R.id.delete_message);
-
         mListener = listener;
-
         view.setOnClickListener(this);
     }
 
@@ -112,8 +80,7 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
 
         bubbleLayout = view.findViewById(R.id.bubble);
         background = view.findViewById(R.id.background);
-        contactPicture = view.findViewById(R.id.contact_picture);
-        contactPictureMask = view.findViewById(R.id.mask);
+        avatarLayout = view.findViewById(R.id.avatar_layout);
         contactName = view.findViewById(R.id.contact_header);
 
         messageStatus = view.findViewById(R.id.status);

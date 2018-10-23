@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -52,8 +53,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         public TextView name;
         public LinearLayout separator;
         public TextView separatorText;
-        public ImageView contactPicture;
-        public TextView generatedAvatar;
+        public RelativeLayout avatarLayout;
         public TextView organization;
         //public ImageView friendStatus;
         private ClickListener mListener;
@@ -66,8 +66,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
             name = view.findViewById(R.id.name);
             separator = view.findViewById(R.id.separator);
             separatorText = view.findViewById(R.id.separator_text);
-            contactPicture = view.findViewById(R.id.contact_picture);
-            generatedAvatar = view.findViewById(R.id.generated_avatar);
+            avatarLayout = view.findViewById(R.id.avatar_layout);
             organization = view.findViewById(R.id.contactOrganization);
             //friendStatus = view.findViewById(R.id.friendStatus);
             mListener = listener;
@@ -133,7 +132,7 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         holder.separator.setVisibility(mIsSearchMode || (!mIsSearchMode && getPositionForSection(getSectionForPosition(position)) != position) ? View.GONE : View.VISIBLE);
         holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE : View.GONE);
 
-        ContactAvatar.displayAvatar(contact, holder.contactPicture, holder.generatedAvatar);
+        ContactAvatar.displayAvatar(contact, holder.avatarLayout);
 
         boolean isOrgVisible = mContext.getResources().getBoolean(R.bool.display_contact_organization);
         String org = contact.getOrganization();

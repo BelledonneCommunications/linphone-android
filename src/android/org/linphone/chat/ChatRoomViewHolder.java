@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -51,8 +52,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public TextView displayName;
     public TextView unreadMessages;
     public CheckBox delete;
-    public ImageView contactPicture;
-    public TextView generatedAvatar;
+    public RelativeLayout avatarLayout;
     public ImageView lastMessageFileTransfer;
     public Context mContext;
     public ChatRoom mRoom;
@@ -71,8 +71,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         displayName = itemView.findViewById(R.id.sipUri);
         unreadMessages = itemView.findViewById(R.id.unreadMessages);
         delete = itemView.findViewById(R.id.delete_chatroom);
-        contactPicture = itemView.findViewById(R.id.contact_picture);
-        generatedAvatar = itemView.findViewById(R.id.generated_avatar);
+        avatarLayout = itemView.findViewById(R.id.avatar_layout);
         lastMessageFileTransfer = itemView.findViewById(R.id.lastMessageFileTransfer);
         mListener = listener;
 
@@ -159,17 +158,17 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
             if (contact != null) {
-                ContactAvatar.displayAvatar(contact, contactPicture, generatedAvatar);
+                ContactAvatar.displayAvatar(contact, avatarLayout);
             } else {
                 String username = mRoom.getPeerAddress().getDisplayName();
                 if (username == null) {
                     username = mRoom.getPeerAddress().getUsername();
                 }
-                ContactAvatar.displayAvatar(username, generatedAvatar);
+                ContactAvatar.displayAvatar(username, avatarLayout);
             }
         } else {
-            contactPicture.setImageBitmap(mDefaultGroupBitmap);
-            generatedAvatar.setVisibility(View.GONE);
+            ((ImageView)avatarLayout.findViewById(R.id.contact_picture)).setImageBitmap(mDefaultGroupBitmap);
+            avatarLayout.findViewById(R.id.generated_avatar).setVisibility(View.GONE);
         }
     }
 

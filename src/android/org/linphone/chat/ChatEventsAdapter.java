@@ -59,6 +59,7 @@ import org.linphone.core.Content;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.ContactAvatar;
 import org.linphone.ui.SelectableAdapter;
 import org.linphone.ui.SelectableHelper;
 
@@ -162,7 +163,6 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         holder.messageStatus.setVisibility(View.INVISIBLE);
         holder.messageSendingInProgress.setVisibility(View.GONE);
         holder.imdmLayout.setVisibility(View.INVISIBLE);
-        holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
         if (isEditionEnabled()) {
             holder.delete.setOnCheckedChangeListener(null);
@@ -249,7 +249,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                 Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
                 Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
                 holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
-                holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
+                ContactAvatar.setAvatarMask(holder.avatarLayout, R.drawable.avatar_chat_mask_outgoing);
             } else {
                 for (LinphoneContact c : mParticipants) {
                     if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
@@ -270,7 +270,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                 Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
                 Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
                 holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
-                holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
+                ContactAvatar.setAvatarMask(holder.avatarLayout, R.drawable.avatar_chat_mask);
             }
 
             if (contact == null) {
@@ -282,14 +282,10 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                 } else {
                     displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
                 }
-
-                holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-                if (contact.hasPhoto()) {
-                    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-                }
+                ContactAvatar.displayAvatar(contact, holder.avatarLayout);
             } else {
                 displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-                holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+                ContactAvatar.displayAvatar(displayName, holder.avatarLayout);
             }
             holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
 

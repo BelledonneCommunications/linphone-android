@@ -77,29 +77,13 @@
 			android:layout_below="@id/separator"
 			android:orientation="horizontal">
 
-		    <RelativeLayout
-				android:id="@+id/avatar_layout"
+			<RelativeLayout
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content">
+				android:layout_height="wrap_content"
+				android:paddingLeft="10dp"
+				android:paddingTop="10dp">
 
-				<ImageView
-					android:id="@+id/contact_picture"
-					android:src="@drawable/avatar"
-					android:contentDescription="@string/content_description_contact_picture"
-					android:paddingLeft="10dp"
-					android:paddingTop="10dp"
-					android:layout_width="45dp"
-					android:layout_height="45dp"
-					android:adjustViewBounds="true"/>
-
-				<ImageView
-					android:id="@+id/mask"
-					android:src="@drawable/avatar_chat_mask"
-					android:paddingLeft="10dp"
-					android:paddingTop="10dp"
-					android:layout_width="45dp"
-					android:layout_height="45dp"
-					android:adjustViewBounds="true"/>
+				<include layout="@layout/contact_avatar"/>
 
 			</RelativeLayout>
 

@@ -55,8 +55,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         public ImageView detail;
         public CheckBox select;
         public ImageView callDirection;
-        public ImageView contactPicture;
-        public TextView generatedAvatar;
+        public RelativeLayout avatarLayout;
         public RelativeLayout CallContact;
         public LinearLayout separator;
         public TextView separatorText;
@@ -68,8 +67,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
             detail = view.findViewById(R.id.detail);
             select = view.findViewById(R.id.delete);
             callDirection = view.findViewById(R.id.icon);
-            contactPicture = view.findViewById(R.id.contact_picture);
-            generatedAvatar = view.findViewById(R.id.generated_avatar);
+            avatarLayout = view.findViewById(R.id.avatar_layout);
             CallContact = view.findViewById(R.id.history_click);
             separator = view.findViewById(R.id.separator);
             separatorText = view.findViewById(R.id.separator_text);
@@ -181,9 +179,9 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         }
 
         if (c != null) {
-            ContactAvatar.displayAvatar(c, holder.contactPicture, holder.generatedAvatar);
+            ContactAvatar.displayAvatar(c, holder.avatarLayout);
         } else {
-            ContactAvatar.displayAvatar(displayName, holder.generatedAvatar);
+            ContactAvatar.displayAvatar(displayName, holder.avatarLayout);
         }
 
         holder.detail.setVisibility(isEditionEnabled() ? View.INVISIBLE : View.VISIBLE);

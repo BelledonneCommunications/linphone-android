@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneUtils;
@@ -44,8 +45,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public ImageView avatar;
-        public TextView generatedAvatar;
+        public RelativeLayout avatarLayout;
         public ImageView delete;
         public LinearLayout isAdmin;
         public LinearLayout isNotAdmin;
@@ -53,8 +53,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
         public ViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.name);
-            avatar = view.findViewById(R.id.contact_picture);
-            generatedAvatar = view.findViewById(R.id.generated_avatar);
+            avatarLayout = view.findViewById(R.id.avatar_layout);
             delete = view.findViewById(R.id.delete);
             isAdmin = view.findViewById(R.id.isAdminLayout);
             isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
@@ -87,9 +86,9 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
                 (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
 
         if (c != null) {
-            ContactAvatar.displayAvatar(c, holder.avatar, holder.generatedAvatar);
+            ContactAvatar.displayAvatar(c, holder.avatarLayout);
         } else {
-            ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.generatedAvatar);
+            ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
         }
 
         holder.delete.setOnClickListener(new View.OnClickListener() {

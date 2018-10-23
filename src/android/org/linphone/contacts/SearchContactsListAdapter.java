@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -53,8 +54,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         public TextView address;
         public ImageView linphoneContact;
         public ImageView isSelect;
-        public ImageView avatar;
-        public TextView generatedAvatar;
+        public RelativeLayout avatarLayout;
 
         private ClickListener mListener;
 
@@ -64,8 +64,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
             address = view.findViewById(R.id.contact_address);
             linphoneContact = view.findViewById(R.id.contact_linphone);
             isSelect = view.findViewById(R.id.contact_is_select);
-            avatar = view.findViewById(R.id.contact_picture);
-            generatedAvatar = view.findViewById(R.id.generated_avatar);
+            avatarLayout = view.findViewById(R.id.avatar_layout);
             mListener = listener;
             view.setOnClickListener(this);
         }
@@ -146,9 +145,9 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         }
 
         if (c != null) {
-            ContactAvatar.displayAvatar(c, holder.avatar, holder.generatedAvatar);
+            ContactAvatar.displayAvatar(c, holder.avatarLayout);
         } else {
-            ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.generatedAvatar);
+            ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
         }
 
         holder.address.setText(a);

@@ -34,7 +34,7 @@
 		android:gravity="center_vertical">
 
 		<RelativeLayout
-			android:id="@+id/avatar_layout"
+			android:id="@+id/avatar"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:gravity="center">
@@ -83,7 +83,7 @@
 		<RelativeLayout
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:layout_toRightOf="@id/avatar_layout"
+		    android:layout_toRightOf="@id/avatar"
 		    android:layout_centerVertical="true"
 			android:layout_toLeftOf="@id/friendLinphone"
 		    android:layout_marginLeft="10dp">
