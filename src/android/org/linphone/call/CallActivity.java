@@ -1065,15 +1065,17 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
     private void goBackToDialerAndDisplayTransferButton() {
         Intent intent = new Intent();
+        intent.setClass(this, LinphoneActivity.class);
         intent.putExtra("Transfer", true);
-        setResult(Activity.RESULT_FIRST_USER, intent);
+        startActivity(intent);
         finish();
     }
 
     private void goToChatList() {
         Intent intent = new Intent();
-        intent.putExtra("chat", true);
-        setResult(Activity.RESULT_FIRST_USER, intent);
+        intent.setClass(this, LinphoneActivity.class);
+        intent.putExtra("GoToChat", true);
+        startActivity(intent);
         finish();
     }
 
