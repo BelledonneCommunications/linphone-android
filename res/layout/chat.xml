@@ -195,6 +195,6 @@
 		android:src="@drawable/security_alert_button"
 		android:layout_alignParentRight="true"
 		android:layout_below="@id/top"
-		android:layout_marginRight="6dp"/>
+		android:layout_marginRight="12dp"/>
 
 </RelativeLayout>

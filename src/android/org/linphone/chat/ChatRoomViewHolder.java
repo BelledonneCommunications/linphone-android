@@ -46,7 +46,6 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     private Bitmap mDefaultBitmap;
     private Bitmap mDefaultGroupBitmap;
 
-    public TextView lastMessageSenderView;
     public TextView lastMessageView;
     public TextView date;
     public TextView displayName;
@@ -65,7 +64,6 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
 
         mContext = context;
-        lastMessageSenderView = itemView.findViewById(R.id.lastMessageSender);
         lastMessageView = itemView.findViewById(R.id.lastMessage);
         date = itemView.findViewById(R.id.date);
         displayName = itemView.findViewById(R.id.sipUri);
@@ -82,24 +80,22 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public void bindChatRoom(ChatRoom room) {
         mRoom = room;
         ChatMessage lastMessage = mRoom.getLastMessageInHistory();
-        lastMessageView.setVisibility(View.GONE);
         lastMessageFileTransfer.setVisibility(View.GONE);
 
         if (lastMessage != null) {
             String text = lastMessage.getTextContent();
             if (text != null && text.length() > 0) {
-                lastMessageView.setVisibility(View.VISIBLE);
-                lastMessageView.setText(text);
+                lastMessageView.setText(getSender(mRoom) + text);
             }
             date.setText(LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format));
             for (Content c : lastMessage.getContents()) {
                 if (c.isFile() || c.isFileTransfer()) {
+                    lastMessageView.setText(getSender(mRoom));
                     lastMessageFileTransfer.setVisibility(View.VISIBLE);
                 }
             }
         }
 
-        lastMessageSenderView.setText(getSender(mRoom));
         displayName.setText(getContact(mRoom));
         unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
         getAvatar(mRoom);

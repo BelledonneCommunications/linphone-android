@@ -61,9 +61,9 @@
 
 			<TextView
 				android:id="@+id/unreadMessages"
-				android:layout_width="20dp"
-				android:layout_height="20dp"
-				android:background="@drawable/chat_list_indicator"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@drawable/unread_message_count_bg"
 				android:contentDescription="@string/content_description_unread_chat_message"
 				style="@style/font18"
 				android:gravity="center"
