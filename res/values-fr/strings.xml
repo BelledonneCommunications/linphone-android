@@ -210,7 +210,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="chat_room_leave_dialog">Voulez vous vraiment quitter cette conversation ?</string>
   <string name="chat_room_leave_button">Quitter</string>
   <string name="chat_room_delete_dialog">Voulez vous vraiment quitter et supprimer les conversations selectionnées ?</string>
-  <string name="separator"> : </string>
+  <string name="separator"> : </string>
   <string name="imdn_info">Etat du message</string>
   <!--Status Bar-->
   <string name="status_connected">Enregistré</string>
