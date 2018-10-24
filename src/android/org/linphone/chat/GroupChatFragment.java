@@ -338,14 +338,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
                     fileToUploadPath = mImageToUploadUri.getPath();
                 }
 
+                if (fileToUploadPath.startsWith("content://") || fileToUploadPath.startsWith("file://")) {
+                    fileToUploadPath = LinphoneUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
+                } else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
+                    fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
+                }
+
                 if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
                     addImageToPendingList(fileToUploadPath);
                 } else {
-                    if (fileToUploadPath.startsWith("content://") || fileToUploadPath.startsWith("file://")) {
-                        fileToUploadPath = LinphoneUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
-                    } else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
-                        fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
-                    }
                     addFileToPendingList(fileToUploadPath);
                 }
             } else {
