@@ -44,6 +44,12 @@ class ContactAvatarHolder {
         securityLevel = v.findViewById(R.id.security_level);
         generatedAvatar = v.findViewById(R.id.generated_avatar);
     }
+
+    public void init() {
+        contactPicture.setVisibility(View.VISIBLE);
+        generatedAvatar.setVisibility(View.VISIBLE);
+        securityLevel.setVisibility(View.GONE);
+    }
 }
 
 public class ContactAvatar {
@@ -66,6 +72,7 @@ public class ContactAvatar {
         if (displayName == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
+        holder.init();
 
         if (displayName.startsWith("+")) {
             // If display name is a phone number, use default avatar because generated one will be +...
@@ -82,6 +89,7 @@ public class ContactAvatar {
 
         Bitmap bm = null;
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
+        holder.init();
 
         if (contact.getThumbnailUri() != null && contact.getThumbnailUri().getScheme().startsWith("http")) {
             bm = LinphoneUtils.downloadBitmap(contact.getThumbnailUri());

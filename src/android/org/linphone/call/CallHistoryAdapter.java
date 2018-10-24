@@ -181,7 +181,7 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         if (c != null) {
             ContactAvatar.displayAvatar(c, holder.avatarLayout);
         } else {
-            ContactAvatar.displayAvatar(displayName, holder.avatarLayout);
+            ContactAvatar.displayAvatar(holder.contact.getText().toString(), holder.avatarLayout);
         }
 
         holder.detail.setVisibility(isEditionEnabled() ? View.INVISIBLE : View.VISIBLE);
