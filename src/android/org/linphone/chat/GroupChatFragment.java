@@ -594,28 +594,29 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core == null || mChatRoom == null) return;
 
+        mBackToCallButton.setVisibility(View.GONE);
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            mCallButton.setVisibility(View.VISIBLE);
+            mGroupInfosButton.setVisibility(View.GONE);
+            mParticipantsLabel.setVisibility(View.GONE);
+
+            if (mParticipants.size() == 0) {
+                // Contact not found
+                String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
+                mRoomLabel.setText(displayName);
+            } else {
+                mRoomLabel.setText(mParticipants.get(0).getFullName());
+            }
+        } else {
+            mCallButton.setVisibility(View.GONE);
+            mGroupInfosButton.setVisibility(View.VISIBLE);
+            mRoomLabel.setText(mChatRoom.getSubject());
+            mParticipantsLabel.setVisibility(View.VISIBLE);
+        }
+
         if (core.getCallsNb() > 0) {
             mBackToCallButton.setVisibility(View.VISIBLE);
-        } else {
-            mBackToCallButton.setVisibility(View.GONE);
-            if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-                mCallButton.setVisibility(View.VISIBLE);
-                mGroupInfosButton.setVisibility(View.GONE);
-                mParticipantsLabel.setVisibility(View.GONE);
-
-                if (mParticipants.size() == 0) {
-                    // Contact not found
-                    String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
-                    mRoomLabel.setText(displayName);
-                } else {
-                    mRoomLabel.setText(mParticipants.get(0).getFullName());
-                }
-            } else {
-                mCallButton.setVisibility(View.GONE);
-                mGroupInfosButton.setVisibility(View.VISIBLE);
-                mRoomLabel.setText(mChatRoom.getSubject());
-                mParticipantsLabel.setVisibility(View.VISIBLE);
-            }
+            mCallButton.setVisibility(View.GONE);
         }
 
         if (mChatRoom.hasBeenLeft()) {
