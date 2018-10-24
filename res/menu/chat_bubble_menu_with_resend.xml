@@ -14,4 +14,7 @@
     <item android:id="@+id/delete_message"
           android:title="@string/delete" />
 
+    <item android:id="@+id/add_to_contacts"
+        android:title="@string/add_to_contacts" />
+
 </menu>

@@ -410,6 +410,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             // Do not show copy text option if message doesn't have any text
             menu.removeItem(R.id.copy_text);
         }
+
+        if (!message.isOutgoing()) {
+            Address address = message.getFromAddress();
+            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+            if (contact != null) {
+                menu.removeItem(R.id.add_to_contacts);
+            }
+        }
     }
 
     @Override
@@ -444,6 +452,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         if (item.getItemId() == R.id.delete_message) {
             mChatRoom.deleteMessage(message);
             mEventsAdapter.removeItem(mContextMenuMessagePosition);
+            return true;
+        }
+        if (item.getItemId() == R.id.add_to_contacts) {
+            Address address = message.getFromAddress();
+            String uri = address.asStringUriOnly();
+            if (address != null && address.getDisplayName() != null)
+                LinphoneActivity.instance().displayContactsForEdition(address.asStringUriOnly(), address.getDisplayName());
+            else
+                LinphoneActivity.instance().displayContactsForEdition(uri);
             return true;
         }
         return super.onContextItemSelected(item);

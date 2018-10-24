@@ -223,6 +223,7 @@
     <string name="imdn_info">Delivery status</string>
     <string name="chat_room_devices">%s\'s devices</string>
     <string name="group_chat_room_devices">Conversation\'s devices</string>
+    <string name="add_to_contacts">Add to contacts</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>
