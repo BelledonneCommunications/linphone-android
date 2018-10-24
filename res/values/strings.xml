@@ -44,7 +44,7 @@
     <string name="decline">Decline</string>
     <string name="conference">Conference</string>
     <string name="link">Link</string>
-    <string name="link_account_popup">Do you want to link the account %s with your phone number ?</string>
+    <string name="link_account_popup">Do you want to link the account %s with your phone number?</string>
     <string name="maybe_later">Maybe later</string>
     <string name="later">Later</string>
     <string name="no">No</string>
@@ -94,13 +94,13 @@
     <string name="assistant_codec_down_question">Do you agree to download OpenH264 Video Codec provided by Cisco Systems, Inc.?</string>
     <string name="assistant_codec_downloading">Downloading OpenH264 Video Codec provided by Cisco Systems, Inc.</string>
     <string name="assistant_openh264_downloading">Downloading OpenH264</string>
-    <string name="assistant_openh264_restart">Before use OpenH264 codec you must restart %s.</string>
+    <string name="assistant_openh264_restart">Before you can use OpenH264 codec you must restart %s.</string>
     <string name="assistant_openh264_error">Sorry an error has occurred.</string>
     <string name="assistant_codec_downloaded">OpenH264 Video Codec provided by Cisco Systems, Inc. downloaded.</string>
     <string name="wizard_failed">An error occurred, try again later.</string>
     <string name="wizard_server_unavailable">Server unreachable, verify your network connection.</string>
-    <string name="wizard_username_unavailable">This username is already in use.</string>
-    <string name="assistant_phone_number_unavailable">This phone number is already in used.\r\nPlease type a different number.\r\nYou can delete your existing account if you want to reuse your phone number.</string>
+    <string name="wizard_username_unavailable">This username is already taken.</string>
+    <string name="assistant_phone_number_unavailable">This phone number is already used.\r\nPlease type a different number.\r\nYou can delete your existing account if you want to reuse your phone number.</string>
     <string name="wizard_username_incorrect">Your username is invalid.</string>
     <string name="assistant_phone_number_incorrect">Your phone number is invalid.</string>
     <string name="wizard_email_incorrect">Your email is invalid.</string>
@@ -143,7 +143,7 @@
     <!-- In-app -->
     <string name="inapp">In-app</string>
     <string name="inapp_notification_title">In-app purchase</string>
-    <string name="inapp_notification_trial_expire">The trail period expires on %s</string>
+    <string name="inapp_notification_trial_expire">The trial period expires on %s</string>
     <string name="inapp_notification_account_expire">The subscription period expires on %s</string>
 
     <!-- Dailer -->
@@ -388,10 +388,10 @@
     <string name="pref_call_title">Call</string>
     <string name="pref_device_ringtone">Use device ringtone</string>
     <string name="pref_auto_answer">Auto answer incoming calls</string>
-    <string name="pref_auto_answer_time">Auto answer time(in milliseconds)</string>
-    <string name="pref_rfc2833_dtmf">Send in-band DTMFs(RFC2833)</string>
-    <string name="pref_sipinfo_dtmf">Send out-band DTMFs(SIP INFO)</string>
-    <string name="pref_call_timeout_title">Call timeout(in seconds)</string>
+    <string name="pref_auto_answer_time">Auto answer time (in milliseconds)</string>
+    <string name="pref_rfc2833_dtmf">Send in-band DTMFs (RFC2833)</string>
+    <string name="pref_sipinfo_dtmf">Send out-band DTMFs (SIP INFO)</string>
+    <string name="pref_call_timeout_title">Call timeout (in seconds)</string>
     <string name="pref_voice_mail">Voice mail URI</string>
     <string name="pref_dialer_call">Use Linphone as default phone app</string>
 
