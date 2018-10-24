@@ -594,7 +594,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core == null || mChatRoom == null) return;
 
-        mBackToCallButton.setVisibility(View.GONE);
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             mCallButton.setVisibility(View.VISIBLE);
             mGroupInfosButton.setVisibility(View.GONE);
@@ -614,9 +613,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             mParticipantsLabel.setVisibility(View.VISIBLE);
         }
 
+        mBackToCallButton.setVisibility(View.GONE);
         if (core.getCallsNb() > 0) {
             mBackToCallButton.setVisibility(View.VISIBLE);
-            mCallButton.setVisibility(View.GONE);
         }
 
         if (mChatRoom.hasBeenLeft()) {
