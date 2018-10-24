@@ -109,6 +109,7 @@
 
         <HorizontalScrollView
             android:orientation="horizontal"
+            android:background="@color/colorC"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
