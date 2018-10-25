@@ -102,7 +102,7 @@
 
 		<ImageView
 			android:id="@+id/micro"
-			android:src="@drawable/micro_default"
+			android:src="@drawable/micro"
 			android:background="@drawable/button_background"
 			android:contentDescription="@string/content_description_toggle_micro"
 			android:layout_width="match_parent"
@@ -112,7 +112,7 @@
 
 		<ImageView
 			android:id="@+id/speaker"
-			android:src="@drawable/speaker_default"
+			android:src="@drawable/speaker"
 			android:background="@drawable/button_background"
 			android:contentDescription="@string/content_description_toggle_speaker"
 			android:layout_width="match_parent"

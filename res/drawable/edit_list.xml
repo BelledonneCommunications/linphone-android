@@ -3,5 +3,5 @@
     <item android:state_enabled="false"
         android:drawable="@drawable/edit_list_disabled" />
     <item
-         android:drawable="@drawable/edit_list" />
+         android:drawable="@drawable/edit_list_default" />
 </selector>

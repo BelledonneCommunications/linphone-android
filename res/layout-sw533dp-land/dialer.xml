@@ -79,7 +79,7 @@
 
 				<ImageView
 					android:id="@+id/add_contact"
-					android:src="@drawable/contact_add_button"
+					android:src="@drawable/contact_add"
 					android:contentDescription="@string/content_description_add_contact"
 					android:background="@drawable/toolbar_button"
 					android:layout_width="match_parent"

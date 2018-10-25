@@ -541,50 +541,42 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         } else {
             if (video.isEnabled()) {
                 if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
-                    video.setImageResource(R.drawable.camera_selected);
+                    video.setSelected(true);
                     videoProgress.setVisibility(View.INVISIBLE);
                 } else {
-                    video.setImageResource(R.drawable.camera_button);
+                    video.setSelected(false);
                 }
             } else {
-                video.setImageResource(R.drawable.camera_button);
+                video.setSelected(false);
             }
         }
         if (getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
-            video.setImageResource(R.drawable.camera_button);
+            video.setSelected(false);
         }
 
-        if (isSpeakerEnabled) {
-            speaker.setImageResource(R.drawable.speaker_selected);
-        } else {
-            speaker.setImageResource(R.drawable.speaker_default);
-        }
+        speaker.setSelected(isSpeakerEnabled);
 
         if (getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName()) != PackageManager.PERMISSION_GRANTED) {
             isMicMuted = true;
         }
-        if (isMicMuted) {
-            micro.setImageResource(R.drawable.micro_selected);
-        } else {
-            micro.setImageResource(R.drawable.micro_default);
-        }
+        micro.setSelected(isMicMuted);
 
         try {
-            routeSpeaker.setImageResource(R.drawable.route_speaker);
+            routeSpeaker.setSelected(false);
             if (BluetoothManager.getInstance().isUsingBluetoothAudioRoute()) {
                 isSpeakerEnabled = false; // We need this if isSpeakerEnabled wasn't set correctly
-                routeEarpiece.setImageResource(R.drawable.route_earpiece);
-                routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
+                routeEarpiece.setSelected(false);
+                routeBluetooth.setSelected(true);
                 return;
             } else {
-                routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
-                routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+                routeEarpiece.setSelected(true);
+                routeBluetooth.setSelected(false);
             }
 
             if (isSpeakerEnabled) {
-                routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
-                routeEarpiece.setImageResource(R.drawable.route_earpiece);
-                routeBluetooth.setImageResource(R.drawable.route_bluetooth);
+                routeSpeaker.setSelected(true);
+                routeEarpiece.setSelected(false);
+                routeBluetooth.setSelected(false);
             }
         } catch (NullPointerException npe) {
             Log.e("Bluetooth: Audio routes menu disabled on tablets for now (4)");
@@ -690,24 +682,24 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         } else if (id == R.id.route_bluetooth) {
             if (BluetoothManager.getInstance().routeAudioToBluetooth()) {
                 isSpeakerEnabled = false;
-                routeBluetooth.setImageResource(R.drawable.route_bluetooth_selected);
-                routeSpeaker.setImageResource(R.drawable.route_speaker);
-                routeEarpiece.setImageResource(R.drawable.route_earpiece);
+                routeBluetooth.setSelected(true);
+                routeSpeaker.setSelected(false);
+                routeEarpiece.setSelected(false);
             }
             hideOrDisplayAudioRoutes();
         } else if (id == R.id.route_earpiece) {
             LinphoneManager.getInstance().routeAudioToReceiver();
             isSpeakerEnabled = false;
-            routeBluetooth.setImageResource(R.drawable.route_bluetooth);
-            routeSpeaker.setImageResource(R.drawable.route_speaker);
-            routeEarpiece.setImageResource(R.drawable.route_earpiece_selected);
+            routeBluetooth.setSelected(false);
+            routeSpeaker.setSelected(false);
+            routeEarpiece.setSelected(true);
             hideOrDisplayAudioRoutes();
         } else if (id == R.id.route_speaker) {
             LinphoneManager.getInstance().routeAudioToSpeaker();
             isSpeakerEnabled = true;
-            routeBluetooth.setImageResource(R.drawable.route_bluetooth);
-            routeSpeaker.setImageResource(R.drawable.route_speaker_selected);
-            routeEarpiece.setImageResource(R.drawable.route_earpiece);
+            routeBluetooth.setSelected(false);
+            routeSpeaker.setSelected(true);
+            routeEarpiece.setSelected(false);
             hideOrDisplayAudioRoutes();
         } else if (id == R.id.call_pause) {
             Call call = (Call) v.getTag();
@@ -883,11 +875,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         Core lc = LinphoneManager.getLc();
         isMicMuted = !isMicMuted;
         lc.enableMic(!isMicMuted);
-        if (isMicMuted) {
-            micro.setImageResource(R.drawable.micro_selected);
-        } else {
-            micro.setImageResource(R.drawable.micro_default);
-        }
+        micro.setSelected(isMicMuted);
     }
 
     protected void toggleSpeaker() {
@@ -898,14 +886,13 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             else
                 LinphoneManager.getInstance().enableProximitySensing(!isSpeakerEnabled);
         }
+        speaker.setSelected(isSpeakerEnabled);
         if (isSpeakerEnabled) {
             LinphoneManager.getInstance().routeAudioToSpeaker();
-            speaker.setImageResource(R.drawable.speaker_selected);
             LinphoneManager.getInstance().enableSpeaker(isSpeakerEnabled);
         } else {
             Log.d("Toggle speaker off, routing back to earpiece");
             LinphoneManager.getInstance().routeAudioToReceiver();
-            speaker.setImageResource(R.drawable.speaker_default);
         }
     }
 
@@ -987,7 +974,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
                     conference.setVisibility(View.INVISIBLE);
                     displayVideoCall(false);
                     numpad.setVisibility(View.GONE);
-                    options.setImageResource(R.drawable.options_default);
+                    options.setSelected(false);
                 }
             }, SECONDS_BEFORE_HIDING_CONTROLS);
         }
@@ -1037,7 +1024,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
     private void hideOrDisplayCallOptions() {
         //Hide options
         if (addCall.getVisibility() == View.VISIBLE) {
-            options.setImageResource(R.drawable.options_default);
+            options.setSelected(false);
             if (isTransferAllowed) {
                 transfer.setVisibility(View.INVISIBLE);
             }
@@ -1049,7 +1036,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             }
             addCall.setVisibility(View.VISIBLE);
             conference.setVisibility(View.VISIBLE);
-            options.setImageResource(R.drawable.options_selected);
+            options.setSelected(true);
             transfer.setEnabled(LinphoneManager.getLc().getCurrentCall() != null);
         }
     }
@@ -1363,7 +1350,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         onCallStateChanged.setOnClickListener(this);
 
         if (call.getState() == State.Paused || call.getState() == State.PausedByRemote || call.getState() == State.Pausing) {
-            onCallStateChanged.setImageResource(R.drawable.pause);
+            onCallStateChanged.setSelected(false);
             isCallPaused = true;
             isInConference = false;
         } else if (call.getState() == State.OutgoingInit || call.getState() == State.OutgoingProgress || call.getState() == State.OutgoingRinging) {

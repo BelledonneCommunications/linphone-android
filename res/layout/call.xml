@@ -199,7 +199,7 @@
 
 						<ImageView
 							android:id="@+id/video"
-							android:src="@drawable/camera_button"
+							android:src="@drawable/camera"
 							android:background="@drawable/button_background"
 							android:contentDescription="@string/content_description_switch_video"
 							android:padding="20dp"
@@ -219,7 +219,7 @@
 
 					<ImageView
 						android:id="@+id/micro"
-						android:src="@drawable/micro_default"
+						android:src="@drawable/micro"
 						android:background="@drawable/button_background"
 						android:contentDescription="@string/content_description_toggle_micro"
 						android:padding="10dp"
@@ -229,7 +229,7 @@
 
 					<ImageView
 						android:id="@+id/speaker"
-						android:src="@drawable/speaker_default"
+						android:src="@drawable/speaker"
 						android:background="@drawable/button_background"
 						android:contentDescription="@string/content_description_toggle_speaker"
 						android:padding="15dp"
@@ -250,7 +250,7 @@
 
 					<ImageView
 						android:id="@+id/options"
-						android:src="@drawable/options_default"
+						android:src="@drawable/options"
 						android:background="@drawable/button_background"
 						android:contentDescription="@string/content_description_call_options"
 						android:padding="15dp"
@@ -350,7 +350,7 @@
 
 				<ImageView
 					android:id="@+id/add_call"
-					android:src="@drawable/options_add_call_button"
+					android:src="@drawable/options_add_call"
 					android:background="@drawable/button_background"
 					android:contentDescription="@string/content_description_add_call"
 					android:padding="15dp"
@@ -393,7 +393,7 @@
 
 				<ImageView
 					android:id="@+id/transfer"
-					android:src="@drawable/options_transfer_call_button"
+					android:src="@drawable/options_transfer_call"
 					android:background="@drawable/button_background"
 					android:contentDescription="@string/content_description_transfer"
 					android:padding="15dp"
@@ -435,7 +435,7 @@
 
 				<ImageView
 					android:id="@+id/conference"
-					android:src="@drawable/options_start_conference_button"
+					android:src="@drawable/options_start_conference"
 					android:background="@drawable/button_background"
 					android:contentDescription="@string/content_description_conference"
 					android:visibility="invisible"

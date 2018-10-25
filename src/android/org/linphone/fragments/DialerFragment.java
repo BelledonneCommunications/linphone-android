@@ -209,7 +209,7 @@ public class DialerFragment extends Fragment {
                 mCall.setImageResource(R.drawable.call_audio_start);
             }
             mAddContact.setEnabled(false);
-            mAddContact.setImageResource(R.drawable.contact_add_button);
+            mAddContact.setImageResource(R.drawable.contact_add);
             mAddContact.setOnClickListener(addContactListener);
             enableDisableAddContact();
         }

@@ -45,7 +45,7 @@
 
 	<ImageView
 		android:id="@+id/delete"
-		android:src="@drawable/delete_button"
+		android:src="@drawable/delete"
 		android:background="@drawable/toolbar_button"
 		android:contentDescription="@string/content_description_delete_selection"
 		android:layout_width="0dp"

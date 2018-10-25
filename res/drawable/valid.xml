@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:state_enabled="false"
-		  android:drawable="@drawable/menu_disabled" />
+		  android:drawable="@drawable/valid_disabled" />
 	<item
-		android:drawable="@drawable/menu" />
+		android:drawable="@drawable/valid_default" />
 </selector>
