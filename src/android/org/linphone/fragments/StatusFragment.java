@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
@@ -319,7 +320,6 @@ public class StatusFragment extends Fragment {
                     refreshStatusItems(call, call.getCurrentParams().videoEnabled());
                 }
                 menu.setVisibility(View.INVISIBLE);
-                encryption.setVisibility(View.VISIBLE);
                 callQuality.setVisibility(View.VISIBLE);
 
                 // We are obviously connected
@@ -363,12 +363,17 @@ public class StatusFragment extends Fragment {
                 //background.setVisibility(View.VISIBLE);
             }
 
+            encryption.setVisibility(View.VISIBLE);
             if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
                 encryption.setImageResource(R.drawable.security_ok);
             } else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
                 encryption.setImageResource(R.drawable.security_pending);
             } else {
                 encryption.setImageResource(R.drawable.security_ko);
+                // Do not show the unsecure icon if user doesn't want to do call encryption
+                if (LinphonePreferences.instance().getMediaEncryption() == MediaEncryption.None) {
+                    encryption.setVisibility(View.GONE);
+                }
             }
 
             if (mediaEncryption == MediaEncryption.ZRTP) {
