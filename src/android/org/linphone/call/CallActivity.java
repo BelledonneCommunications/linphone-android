@@ -728,10 +728,8 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
     private void enabledPauseButton(boolean enabled) {
         if (enabled) {
             pause.setEnabled(true);
-            pause.setImageResource(R.drawable.pause_big_default);
         } else {
             pause.setEnabled(false);
-            pause.setImageResource(R.drawable.pause_big_disabled);
         }
     }
 
@@ -918,14 +916,14 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             if (isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
                 isVideoCallPaused = true;
             }
-            pause.setImageResource(R.drawable.pause_big_over_selected);
+            pause.setSelected(true);
         } else if (call != null) {
             if (call.getState() == State.Paused) {
                 lc.resumeCall(call);
                 if (isVideoCallPaused) {
                     isVideoCallPaused = false;
                 }
-                pause.setImageResource(R.drawable.pause_big_default);
+                pause.setSelected(false);
             }
         }
     }
@@ -1496,10 +1494,10 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         conferenceStatus = findViewById(R.id.conference_pause);
         if (conferenceStatus != null) {
             if (lc.isInConference()) {
-                conferenceStatus.setImageResource(R.drawable.pause_big_over_selected);
+                conferenceStatus.setSelected(true);
                 lc.leaveConference();
             } else {
-                conferenceStatus.setImageResource(R.drawable.pause_big_default);
+                conferenceStatus.setSelected(false);
                 lc.enterConference();
             }
         }

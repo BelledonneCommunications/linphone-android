@@ -4,7 +4,6 @@
 	android:alpha="0.5"
 	android:layout_height="50dp"
 	android:layout_width="match_parent"
-	android:layout_margin="2dp"
 	android:gravity="center_vertical"
 	android:orientation="horizontal"
 	android:padding="5dp">
@@ -37,7 +36,7 @@
 
     <ImageView
 		android:id="@+id/call_pause"
-		android:src="@drawable/pause_small_over_selected"
+		android:src="@drawable/pause"
 		android:contentDescription="@string/content_description_pause"
         android:layout_width="40dp"
         android:layout_height="40dp"

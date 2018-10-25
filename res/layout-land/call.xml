@@ -127,7 +127,7 @@
 
 						<ImageView
 							android:id="@+id/pause"
-							android:src="@drawable/pause_big_default"
+							android:src="@drawable/pause"
 							android:contentDescription="@string/content_description_pause"
 							android:layout_width="80dp"
 							android:layout_height="80dp"
