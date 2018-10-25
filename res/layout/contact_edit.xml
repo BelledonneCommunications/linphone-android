@@ -181,11 +181,12 @@
 					<ImageView
 						android:id="@+id/add_address_field"
 						android:src="@drawable/add_field_default"
+						android:background="@drawable/round_orange_button_background"
 						android:contentDescription="@string/content_description_add"
 						android:layout_alignParentRight="true"
 						android:layout_width="30dp"
 						android:layout_height="30dp"
-						android:paddingLeft="5dp"/>
+                        android:layout_marginLeft="5dp"/>
 				</RelativeLayout>
 
 				<LinearLayout
@@ -221,11 +222,12 @@
 					<ImageView
 						android:id="@+id/add_number_field"
 						android:src="@drawable/add_field_default"
+						android:background="@drawable/round_orange_button_background"
 						android:contentDescription="@string/content_description_add"
 						android:layout_alignParentRight="true"
 						android:layout_width="30dp"
 						android:layout_height="30dp"
-						android:paddingLeft="5dp"/>
+						android:layout_marginLeft="5dp"/>
 				</RelativeLayout>
 
 				<LinearLayout

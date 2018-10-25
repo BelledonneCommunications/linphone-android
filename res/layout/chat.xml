@@ -132,7 +132,8 @@
 
 			<ImageView
 				android:id="@+id/send_picture"
-				android:src="@drawable/chat_send_file"
+				android:src="@drawable/chat_file"
+				android:background="@drawable/round_button_background"
 				android:contentDescription="@string/content_description_send_file"
                 android:padding="5dp"
 				android:layout_width="wrap_content"
@@ -157,6 +158,7 @@
 			<ImageView
 				android:id="@+id/send_message"
 				android:src="@drawable/chat_send_message"
+                android:background="@drawable/round_button_background"
 				android:contentDescription="@string/content_description_send_message"
                 android:padding="5dp"
 				android:layout_width="wrap_content"

@@ -464,12 +464,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
 
     private void loadBitmap(String path, ImageView imageView) {
         if (cancelPotentialWork(path, imageView)) {
-            if (LinphoneUtils.isExtensionImage(path)) {
-                mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_attachment_over);
-            } else {
-                mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_attachment);
-            }
-
+            mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
             BitmapWorkerTask task = new BitmapWorkerTask(imageView);
             final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), mDefaultBitmap, task);
             imageView.setImageDrawable(asyncBitmap);

@@ -106,7 +106,8 @@
 
                     <ImageView
                         android:id="@+id/call"
-                        android:src="@drawable/call_start_body_default"
+                        android:src="@drawable/call_start_default"
+                        android:background="@drawable/round_orange_button_background"
                         android:contentDescription="@string/content_description_call"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
@@ -114,7 +115,8 @@
 
                     <ImageView
                         android:id="@+id/chat"
-                        android:src="@drawable/chat_start_body_default"
+                        android:src="@drawable/chat_start_default"
+                        android:background="@drawable/round_orange_button_background"
                         android:contentDescription="@string/content_description_chat"
                         android:layout_width="60dp"
                         android:layout_height="60dp"

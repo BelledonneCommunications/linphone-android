@@ -642,12 +642,12 @@ public final class LinphoneService extends Service {
             mChatNotifMap.put(conferenceAddress, notif);
         }
 
-        Bitmap bm = null;
+        Bitmap bm;
         if (fromPictureUri != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);
             } catch (Exception e) {
-                bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
+                bm = BitmapFactory.decodeResource(getResources(), R.drawable.chat_group_avatar);
             }
         } else {
             bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
@@ -680,7 +680,7 @@ public final class LinphoneService extends Service {
             mChatNotifMap.put(fromSipUri, notif);
         }
 
-        Bitmap bm = null;
+        Bitmap bm;
         if (fromPictureUri != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getContentResolver(), fromPictureUri);

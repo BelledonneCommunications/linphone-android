@@ -16,7 +16,7 @@
 
 	<ImageView
 		android:id="@+id/account_status"
-		android:src="@drawable/status_available"
+		android:src="@drawable/led_connected"
 		android:layout_width="25dp"
 		android:layout_height="25dp"
 		android:padding="5dp"
