@@ -108,7 +108,8 @@ public class ContactAvatar {
             holder.contactPicture.setVisibility(View.VISIBLE);
             holder.generatedAvatar.setVisibility(View.GONE);
         } else {
-            holder.generatedAvatar.setText(generateAvatar(contact.getFullName()));
+            holder.generatedAvatar.setText(generateAvatar(contact.getFullName() == null ?
+                    contact.getFirstName() + " " + contact.getLastName() : contact.getFullName()));
             holder.generatedAvatar.setVisibility(View.VISIBLE);
         }
 

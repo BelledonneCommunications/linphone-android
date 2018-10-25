@@ -94,6 +94,7 @@
 
 		<EditText
             android:contentDescription="@string/content_description_search_contact"
+			android:hint="@string/chat_room_creation_filter_hint"
 			android:textCursorDrawable="@null"
 			android:id="@+id/searchField"
 			android:layout_width="match_parent"
