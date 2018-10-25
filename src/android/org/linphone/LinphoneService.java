@@ -624,10 +624,11 @@ public final class LinphoneService extends Service {
         notifyWrapper(CUSTOM_NOTIF_ID, mCustomNotif);
     }
 
-    public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message) {
+    public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message, String localIdentity) {
         Intent notifIntent = new Intent(this, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
+        notifIntent.putExtra("LocalIdentity", localIdentity);
 
         PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -658,11 +659,11 @@ public final class LinphoneService extends Service {
         notifyWrapper(notif.notificationId, notification);
     }
 
-    public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message) {
+    public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message, String localIdentity) {
         Intent notifIntent = new Intent(this, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", fromSipUri);
-
+        notifIntent.putExtra("LocalIdentity", localIdentity);
         PendingIntent notifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (fromName == null) {

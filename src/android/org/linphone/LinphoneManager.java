@@ -1079,16 +1079,16 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification) && !message.isOutgoing()) {
             if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
                 if (contact != null) {
-                    LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
+                    LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress().asString());
                 } else {
-                    LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage);
+                    LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress().asString());
                 }
             } else {
                 String subject = cr.getSubject();
                 if (contact != null) {
-                    LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage);
+                    LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress().asString());
                 } else {
-                    LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage);
+                    LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress().asString());
                 }
             }
         }

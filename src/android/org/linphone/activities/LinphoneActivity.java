@@ -126,7 +126,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private static final int CALL_ACTIVITY = 19;
     private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
     private static final int PERMISSIONS_REQUEST_SYNC = 207;
-    private static final int PERMISSIONS_REQUEST_CONTACTS = 208;
     private static final int PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER = 209;
     private static final int PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE = 210;
     private static final int PERMISSIONS_RECORD_AUDIO_ECHO_TESTER = 211;
@@ -704,9 +703,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
     }
 
-    public void goToChat(String sipUri, Bundle shareInfos) {
+    public void goToChat(String sipUri, Bundle shareInfos, String localIdentity) {
         Bundle extras = new Bundle();
         extras.putString("SipUri", sipUri);
+        extras.putString("LocalIdentity", localIdentity);
 
         if (shareInfos != null) {
             if (shareInfos.getString("fileSharedUri") != null)
@@ -1467,11 +1467,12 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         Bundle extras = intent.getExtras();
         if (extras != null && extras.getBoolean("GoToChat", false)) {
             String sipUri = extras.getString("ChatContactSipUri");
+            String localIdentity = extras.getString("LocalIdentity");
             intent.putExtra("DoNotGoToCallActivity", true);
             if (sipUri == null) {
                 goToChatList();
             } else {
-                displayChat(sipUri, null, null);
+                goToChat(sipUri, extras, localIdentity);
             }
         } else if (extras != null && extras.getBoolean("GoToHistory", false)) {
             intent.putExtra("DoNotGoToCallActivity", true);
