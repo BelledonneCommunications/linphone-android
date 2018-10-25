@@ -155,7 +155,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             public void onClick(View view) {
                 if (mIsAlreadyCreatedGroup) {
                     if (LinphoneActivity.instance().isTablet()) {
-                        LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly(), mShareInfos);
+                        LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly(), mShareInfos, mChatRoom.getLocalAddress().asString());
                     } else {
                         getFragmentManager().popBackStack();
                     }
@@ -181,7 +181,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     public void onClick(View view) {
                         if (mChatRoom != null) {
                             mChatRoom.leave();
-                            LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null);
+                            LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null, mChatRoom.getLocalAddress().asString());
                         } else {
                             Log.e("Can't leave, chatRoom for address " + mGroupChatRoomAddress.asString() + " is null...");
                         }
@@ -244,7 +244,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     // This will remove both the creation fragment and the group info fragment from the back stack
                     getFragmentManager().popBackStack();
                     getFragmentManager().popBackStack();
-                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
+                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos, cr.getLocalAddress().asString());
                 } else if (newState == ChatRoom.State.CreationFailed) {
                     mWaitLayout.setVisibility(View.GONE);
                     LinphoneActivity.instance().displayChatRoomError();
@@ -320,7 +320,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     toAdd.toArray(participantsToAdd);
                     mChatRoom.addParticipants(participantsToAdd);
 
-                    LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null);
+                    LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null, mChatRoom.getLocalAddress().asString());
                 }
             }
         });

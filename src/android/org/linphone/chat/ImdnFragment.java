@@ -87,7 +87,7 @@ public class ImdnFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (LinphoneActivity.instance().isTablet()) {
-                    LinphoneActivity.instance().goToChat(mRoomUri, null);
+                    LinphoneActivity.instance().goToChat(mRoomUri, null, mRoom.getLocalAddress().asString());
                 } else {
                     LinphoneActivity.instance().onBackPressed();
                 }

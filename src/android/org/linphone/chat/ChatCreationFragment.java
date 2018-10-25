@@ -185,7 +185,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
             public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
                 if (newState == ChatRoom.State.Created) {
                     mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
+                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos, cr.getLocalAddress().asString());
                 } else if (newState == ChatRoom.State.CreationFailed) {
                     mWaitLayout.setVisibility(View.GONE);
                     LinphoneActivity.instance().displayChatRoomError();
@@ -414,10 +414,10 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                             mChatRoom.addParticipant(participant);
                         } else {
                             chatRoom = lc.getChatRoom(participant);
-                            LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                            LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, participant.asString());
                         }
                     } else {
-                        LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                        LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, participant.asString());
                     }
                 } else {
                     mContactsSelectedLayout.removeAllViews();
@@ -442,7 +442,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         ProxyConfig lpc = lc.getDefaultProxyConfig();
         if (lpc == null || lpc.getConferenceFactoryUri() == null) {
             ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
-            LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+            LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
         } else {
             removeContactFromSelection(ca);
         }
