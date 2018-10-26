@@ -2,10 +2,10 @@
 buildDir = 'bin'
 buildscript {
     repositories {
+	google()
         jcenter()
         mavenCentral()
         mavenLocal()
-        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
@@ -14,10 +14,10 @@ buildscript {
 
 allprojects {
     repositories {
+	google()
         jcenter()
         mavenCentral()
         mavenLocal()
-        google()
     }
 }
 
