@@ -682,7 +682,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
     }
 
-    public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack, Bundle shareInfos, boolean createGroupChat) {
+    public void goToChatCreator(String address, ArrayList<ContactAddress> selectedContacts, String subject, boolean isGoBack, Bundle shareInfos,
+                                boolean createGroupChat, boolean isChatRoomEncrypted) {
         if (currentFragment == FragmentsAvailable.INFO_GROUP_CHAT && isGoBack) {
             getFragmentManager().popBackStackImmediate();
             getFragmentManager().popBackStackImmediate();
@@ -692,6 +693,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         extras.putString("subject", subject);
         extras.putString("groupChatRoomAddress", address);
         extras.putBoolean("createGroupChatRoom", createGroupChat);
+        extras.putBoolean("encrypted", isChatRoomEncrypted);
 
         if (shareInfos != null) {
             if (shareInfos.getString("fileSharedUri") != null)
@@ -731,7 +733,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 
-    public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject, boolean isEditionEnabled, boolean isGoBack, Bundle shareInfos) {
+    public void goToChatGroupInfos(String address, ArrayList<ContactAddress> contacts, String subject,
+                                   boolean isEditionEnabled, boolean isGoBack, Bundle shareInfos, boolean enableEncryption) {
         if (currentFragment == FragmentsAvailable.CREATE_CHAT && isGoBack) {
             getFragmentManager().popBackStackImmediate();
             getFragmentManager().popBackStackImmediate();
@@ -741,6 +744,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         extras.putBoolean("isEditionEnabled", isEditionEnabled);
         extras.putSerializable("ContactAddress", contacts);
         extras.putString("subject", subject);
+        extras.putBoolean("encryptionEnabled", enableEncryption);
 
         if (shareInfos != null) {
             if (shareInfos.getString("fileSharedUri") != null)

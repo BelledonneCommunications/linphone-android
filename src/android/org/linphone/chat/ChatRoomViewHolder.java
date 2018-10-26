@@ -154,17 +154,28 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
             if (contact != null) {
-                ContactAvatar.displayAvatar(contact, avatarLayout);
+                if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+                    ContactAvatar.displayAvatar(contact, mRoom.getSecurityLevel(), avatarLayout);
+                } else {
+                    ContactAvatar.displayAvatar(contact, avatarLayout);
+                }
             } else {
                 String username = mRoom.getPeerAddress().getDisplayName();
                 if (username == null) {
                     username = mRoom.getPeerAddress().getUsername();
                 }
-                ContactAvatar.displayAvatar(username, avatarLayout);
+                if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+                    ContactAvatar.displayAvatar(username, mRoom.getSecurityLevel(), avatarLayout);
+                } else {
+                    ContactAvatar.displayAvatar(username, avatarLayout);
+                }
             }
         } else {
-            ((ImageView)avatarLayout.findViewById(R.id.contact_picture)).setImageBitmap(mDefaultGroupBitmap);
-            avatarLayout.findViewById(R.id.generated_avatar).setVisibility(View.GONE);
+            if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+                ContactAvatar.displayGroupChatAvatar(mRoom.getSecurityLevel(), avatarLayout);
+            } else {
+                ContactAvatar.displayGroupChatAvatar(avatarLayout);
+            }
         }
     }
 

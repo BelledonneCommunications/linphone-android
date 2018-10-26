@@ -80,6 +80,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private Bundle mShareInfos;
     private Context mContext;
     private LinearLayoutManager layoutManager;
+    private boolean mIsEncryptionEnabled;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,6 +113,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         if (mChatRoom != null && mChatRoom.hasBeenLeft()) {
             mIsEditionEnabled = false;
         }
+
+        mIsEncryptionEnabled = getArguments().getBoolean("encryptionEnabled", false);
 
         mParticipantsList = view.findViewById(R.id.chat_room_participants);
         mAdapter = new GroupInfoAdapter(mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
@@ -160,7 +163,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                         getFragmentManager().popBackStack();
                     }
                 } else {
-                    LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos, true);
+                    LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos, true, mIsEncryptionEnabled);
                 }
             }
         });
@@ -205,7 +208,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             @Override
             public void onClick(View view) {
                 if (mIsEditionEnabled) {
-                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true);
+                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
                 }
             }
         });
@@ -213,7 +216,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true);
+                LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
             }
         });
 
@@ -258,7 +261,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             public void onClick(View view) {
                 if (!mIsAlreadyCreatedGroup) {
                     mWaitLayout.setVisibility(View.VISIBLE);
-                    mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), mParticipants.size() == 1);
+                    mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), mParticipants.size() == 1, mIsEncryptionEnabled);
                     mTempChatRoom.addListener(mChatRoomCreationListener);
 
                     Address addresses[] = new Address[mParticipants.size()];
@@ -490,6 +493,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     @Override
     public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {
 
+    }
+
+    @Override
+    public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
+        refreshParticipantsList();
     }
 
     @Override

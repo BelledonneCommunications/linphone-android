@@ -42,6 +42,7 @@ enable_basic_to_client_group_chat_room_migration=0
 enable_simple_group_chat_message_state=0
 aggregate_imdn=1
 version_check_url_root=https://www.linphone.org/releases
+xmlrpc_server_url=https://subscribe.linphone.org:444/wizard.php
 
 [app]
 activation_code_length=4
@@ -60,3 +61,11 @@ username_max_length=64
 username_min_length=1
 username_regex=^[a-z0-9_.\-]*$
 xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
+
+[lime]
+lime_v2=1
+x3dh_server_url=http://54.37.202.229:80/flexisip-account-manager/x3dh-25519.php
+lime_update_threshold=86400
+max_nb_device_per_participant=255
+allow_message_in_unsafe_chatroom=0
+unsafe_if_sas_refused=1

@@ -35,6 +35,7 @@ import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Participant;
 import org.linphone.ui.ContactAvatar;
 

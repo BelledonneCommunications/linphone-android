@@ -30,6 +30,7 @@ import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.ui.ContactAvatar;
@@ -76,6 +77,21 @@ public class DeviceAdapter extends BaseExpandableListAdapter {
 
             Address deviceAddress = device.getAddress();
             holder.deviceName.setText(deviceAddress.getUriParam("gr")); //TODO
+
+            ChatRoomSecurityLevel level = device.getSecurityLevel();
+            switch (level) {
+                case Safe:
+                    holder.securityLevel.setImageResource(R.drawable.security_2_indicator);
+                    break;
+                case Encrypted:
+                    holder.securityLevel.setImageResource(R.drawable.security_1_indicator);
+                    break;
+                case ClearText:
+                case Unsafe:
+                default:
+                    holder.securityLevel.setImageResource(R.drawable.security_alert_indicator);
+                    break;
+            }
         } else {
             Participant participant = (Participant) getGroup(groupPosition);
 
@@ -97,11 +113,11 @@ public class DeviceAdapter extends BaseExpandableListAdapter {
             Address participantAddress = participant.getAddress();
             LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(participantAddress);
             if (contact != null) {
-                ContactAvatar.displayAvatar(contact, holder.avatarLayout);
+                ContactAvatar.displayAvatar(contact, participant.getSecurityLevel(), holder.avatarLayout);
                 holder.participantName.setText(contact.getFullName());
             } else {
                 String displayName = LinphoneUtils.getAddressDisplayName(participantAddress);
-                ContactAvatar.displayAvatar(displayName, holder.avatarLayout);
+                ContactAvatar.displayAvatar(displayName, participant.getSecurityLevel(), holder.avatarLayout);
                 holder.participantName.setText(displayName);
             }
 
@@ -132,7 +148,21 @@ public class DeviceAdapter extends BaseExpandableListAdapter {
 
         Address deviceAddress = device.getAddress();
         holder.deviceName.setText(deviceAddress.getUriParam("gr")); //TODO
-        //holder.securityLevel.setImageResource();
+
+        ChatRoomSecurityLevel level = device.getSecurityLevel();
+        switch (level) {
+            case Safe:
+                holder.securityLevel.setImageResource(R.drawable.security_2_indicator);
+                break;
+            case Encrypted:
+                holder.securityLevel.setImageResource(R.drawable.security_1_indicator);
+                break;
+            case ClearText:
+            case Unsafe:
+            default:
+                holder.securityLevel.setImageResource(R.drawable.security_alert_indicator);
+                break;
+        }
 
         return view;
     }

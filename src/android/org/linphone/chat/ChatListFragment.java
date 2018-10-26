@@ -101,14 +101,14 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
         mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, false);
+                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, false, false);
             }
         });
 
         mNewGroupDiscussionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, true);
+                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, true, false);
             }
         });
 

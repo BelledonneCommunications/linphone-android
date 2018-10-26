@@ -69,6 +69,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.ChatRoomListener;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.EventLog;
@@ -186,7 +187,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
                     ContactAddress ca = new ContactAddress(c, a.asString(), "", c.isFriend(), p.isAdmin());
                     participants.add(ca);
                 }
-                LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(), mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false, null);
+                LinphoneActivity.instance().goToChatGroupInfos(mRemoteSipAddress.asString(), participants, mChatRoom.getSubject(),
+                        mChatRoom.getMe() != null ? mChatRoom.getMe().isAdmin() : false, false, null,
+                        mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt()));
             }
         });
 
@@ -634,11 +637,23 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             setReadOnly();
         }
 
-        if (mChatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+        if (!mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
             mChatRoomSecurityLevel.setVisibility(View.GONE);
         } else {
-            //TODO
-            //mChatRoomSecurityLevel.setImageResource();
+            ChatRoomSecurityLevel level = mChatRoom.getSecurityLevel();
+            switch (level) {
+                case Safe:
+                    mChatRoomSecurityLevel.setImageResource(R.drawable.security_2_indicator);
+                    break;
+                case Encrypted:
+                    mChatRoomSecurityLevel.setImageResource(R.drawable.security_1_indicator);
+                    break;
+                case ClearText:
+                case Unsafe:
+                    mChatRoomSecurityLevel.setImageResource(R.drawable.security_alert_indicator);
+                    break;
+
+            }
         }
     }
 
@@ -1030,6 +1045,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     @Override
     public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {
 
+    }
+
+    @Override
+    public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
+        mEventsAdapter.addToHistory(eventLog);
+        scrollToBottom();
     }
 
     @Override

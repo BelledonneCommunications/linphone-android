@@ -54,8 +54,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CreateAccountFragment extends Fragment implements CompoundButton.OnCheckedChangeListener
-        , OnClickListener, AccountCreatorListener {
+public class CreateAccountFragment extends Fragment implements CompoundButton.OnCheckedChangeListener, OnClickListener, AccountCreatorListener {
     private EditText phoneNumberEdit, usernameEdit, passwordEdit, passwordConfirmEdit, emailEdit, dialCode;
     private TextView phoneNumberError, passwordError, passwordConfirmError, emailError, assisstantTitle, sipUri, skip, instruction;
     private ImageView phoneNumberInfo;

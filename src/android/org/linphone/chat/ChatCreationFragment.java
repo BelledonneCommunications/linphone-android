@@ -79,6 +79,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
     private ImageView mSecurityToggleOff, mSecurityToggleOn;
     private Switch mSecurityToggle;
     private boolean mCreateGroupChatRoom;
+    private boolean mChatRoomEncrypted;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
             mChatRoomSubject = getArguments().getString("subject");
             mChatRoomAddress = getArguments().getString("groupChatRoomAddress");
             mCreateGroupChatRoom = getArguments().getBoolean("createGroupChatRoom", false);
+            mChatRoomEncrypted = getArguments().getBoolean("encrypted", false);
         }
 
         mWaitLayout = view.findViewById(R.id.waitScreen);
@@ -169,6 +171,13 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                 mSecurityToggle.setChecked(false);
             }
         });
+
+        mSecurityToggle.setChecked(mChatRoomEncrypted);
+        if (mChatRoomSubject != null && mChatRoomAddress != null) {
+            mSecurityToggle.setEnabled(false);
+            mSecurityToggleOn.setOnClickListener(null);
+            mSecurityToggleOff.setOnClickListener(null);
+        }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
 
@@ -389,7 +398,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
     }
 
-    private void removeContactFromSelection(ContactAddress ca) {
+    private void addOrRemoveContactFromSelection(ContactAddress ca) {
         updateContactsClick(ca, mSearchAdapter.getContactsSelectedList());
         mSearchAdapter.notifyDataSetChanged();
         updateListSelected();
@@ -447,7 +456,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                     if (chatRoom == null) {
                         ProxyConfig lpc = lc.getDefaultProxyConfig();
                         if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true, mSecurityToggle.isChecked());
                             mChatRoom.addListener(mChatRoomCreationListener);
                             mChatRoom.addParticipant(participant);
                         } else {
@@ -459,17 +468,17 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                     }
                 } else {
                     mContactsSelectedLayout.removeAllViews();
-                    LinphoneActivity.instance().goToChatGroupInfos(null, mContactsSelected, null, true, false, mShareInfos);
+                    LinphoneActivity.instance().goToChatGroupInfos(null, mContactsSelected, null, true, false, mShareInfos, mSecurityToggle.isChecked());
                 }
             } else {
-                LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, mContactsSelected, mChatRoomSubject, true, true, mShareInfos);
+                LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, mContactsSelected, mChatRoomSubject, true, true, mShareInfos, mSecurityToggle.isChecked());
             }
         } else if (id == R.id.clearSearchField) {
             mSearchField.setText("");
             mSearchAdapter.searchContacts("", mContactsList);
         } else if (id == R.id.contactChatDelete) {
             ContactAddress ca = (ContactAddress) view.getTag();
-            removeContactFromSelection(ca);
+            addOrRemoveContactFromSelection(ca);
         }
     }
 
@@ -479,10 +488,16 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         ProxyConfig lpc = lc.getDefaultProxyConfig();
         if (lpc == null || lpc.getConferenceFactoryUri() == null || mCreateGroupChatRoom == false) {
-            ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
-            LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
+            if (mSecurityToggle.isChecked() && lpc != null && lpc.getConferenceFactoryUri() != null) {
+                mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true, mSecurityToggle.isChecked());
+                mChatRoom.addListener(mChatRoomCreationListener);
+                mChatRoom.addParticipant(ca.getAddress());
+            } else {
+                ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
+                LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
+            }
         } else {
-            removeContactFromSelection(ca);
+            addOrRemoveContactFromSelection(ca);
         }
     }
 

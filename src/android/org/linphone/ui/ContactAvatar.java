@@ -29,6 +29,7 @@ import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.mediastream.Log;
 
 import java.io.IOException;
@@ -63,6 +64,28 @@ public class ContactAvatar {
         return generatedAvatarText.toUpperCase();
     }
 
+    private static void setSecurityLevel(ChatRoomSecurityLevel level, View v) {
+        ContactAvatarHolder holder = new ContactAvatarHolder(v);
+        if (holder.securityLevel != null) {
+            holder.securityLevel.setVisibility(View.VISIBLE);
+            switch (level) {
+                case Safe:
+                    holder.securityLevel.setImageResource(R.drawable.security_2_indicator);
+                    break;
+                case Encrypted:
+                    holder.securityLevel.setImageResource(R.drawable.security_1_indicator);
+                    break;
+                case ClearText:
+                case Unsafe:
+                default:
+                    holder.securityLevel.setImageResource(R.drawable.security_alert_indicator);
+                    break;
+            }
+        } else {
+            holder.securityLevel.setVisibility(View.GONE);
+        }
+    }
+
     public static void setAvatarMask(View v, int resourceId) {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.avatarMask.setImageResource(resourceId);
@@ -77,11 +100,16 @@ public class ContactAvatar {
         if (displayName.startsWith("+")) {
             // If display name is a phone number, use default avatar because generated one will be +...
             holder.generatedAvatar.setVisibility(View.GONE);
-            return;
+        } else {
+            holder.generatedAvatar.setText(generateAvatar(displayName));
+            holder.generatedAvatar.setVisibility(View.VISIBLE);
         }
+        holder.securityLevel.setVisibility(View.GONE);
+    }
 
-        holder.generatedAvatar.setText(generateAvatar(displayName));
-        holder.generatedAvatar.setVisibility(View.VISIBLE);
+    public static void displayAvatar(String displayName, ChatRoomSecurityLevel securityLevel, View v) {
+        displayAvatar(displayName, v);
+        setSecurityLevel(securityLevel, v);
     }
 
     public static void displayAvatar(LinphoneContact contact, View v) {
@@ -112,25 +140,23 @@ public class ContactAvatar {
                     contact.getFirstName() + " " + contact.getLastName() : contact.getFullName()));
             holder.generatedAvatar.setVisibility(View.VISIBLE);
         }
+        holder.securityLevel.setVisibility(View.GONE);
+    }
 
-        if (holder.securityLevel != null) {
-            //TODO when security level will be available
-            /*if (contact.hasSecurity()) {
-                holder.securityLevel.setVisibility(View.VISIBLE);
-                switch(contact.getSecurityLevel()) {
-                    case 0:
-                        holder.securityLevel.setImageResource(R.drawable.security_alert_indicator);
-                        break;
-                    case 1:
-                        holder.securityLevel.setImageResource(R.drawable.security_1_indicator.png);
-                        break;
-                    case 2:
-                        holder.securityLevel.setImageResource(R.drawable.security_2_indicator);
-                        break;
-                }
-            } else {
-                holder.securityLevel.setVisibility(View.GONE);
-            }*/
-        }
+    public static void displayAvatar(LinphoneContact contact, ChatRoomSecurityLevel securityLevel, View v) {
+        displayAvatar(contact, v);
+        setSecurityLevel(securityLevel, v);
+    }
+
+    public static void displayGroupChatAvatar(View v) {
+        ContactAvatarHolder holder = new ContactAvatarHolder(v);
+        holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
+        holder.generatedAvatar.setVisibility(View.GONE);
+        holder.securityLevel.setVisibility(View.GONE);
+    }
+
+    public static void displayGroupChatAvatar(ChatRoomSecurityLevel level, View v) {
+        displayGroupChatAvatar(v);
+        setSecurityLevel(level, v);
     }
 }

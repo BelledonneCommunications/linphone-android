@@ -146,7 +146,6 @@ public class DevicesFragment extends Fragment {
 
         boolean onlyDisplayChilds = mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt());
 
-        //TODO get list of participants and devices
         if (mRoom != null && mRoom.getNbParticipants() > 0) {
             mAdapter.updateListItems(Arrays.asList(mRoom.getParticipants()), onlyDisplayChilds);
         }
