@@ -704,18 +704,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         mLc.setZrtpSecretsFile(basePath + "/zrtp_secrets");
 
-        try {
-            String versionName = mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionName;
-            if (versionName == null) {
-                versionName = String.valueOf(mServiceContext.getPackageManager().getPackageInfo(mServiceContext.getPackageName(), 0).versionCode);
-            } else {
-                //Api to check version can't use version code
-                mLc.checkForUpdate(versionName);
-            }
-            mLc.setUserAgent(mServiceContext.getResources().getString(R.string.user_agent), versionName);
-        } catch (NameNotFoundException e) {
-            Log.e(e, "cannot get version name");
-        }
+        String deviceName = LinphoneUtils.getDeviceName(mServiceContext);
+        String appName = mServiceContext.getResources().getString(R.string.user_agent);
+        String androidVersion = BuildConfig.VERSION_NAME;
+        String coreVersion = mLc.getVersion();
+        String userAgent = deviceName + " " + appName + "/" + androidVersion + " LinphoneCore";
+        mLc.setUserAgent(userAgent, coreVersion);
+
+        mLc.checkForUpdate(androidVersion);
 
         mLc.setChatDatabasePath(mChatDatabaseFile);
         mLc.setCallLogsDatabasePath(mCallLogDatabaseFile);

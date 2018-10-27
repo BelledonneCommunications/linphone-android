@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -35,6 +36,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -96,6 +98,23 @@ public final class LinphoneUtils {
 
     private LinphoneUtils() {
 
+    }
+
+    public static String getDeviceName(Context context) {
+        String name = null;
+        if (Build.VERSION.SDK_INT > 17) {
+            name = Settings.Global.getString(context.getContentResolver(), Settings.Global.DEVICE_NAME);
+        }
+        if (name == null) {
+            name = BluetoothAdapter.getDefaultAdapter().getName();
+        }
+        if (name == null) {
+            name = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
+        }
+        if (name == null) {
+            name = Build.MANUFACTURER + " " + Build.MODEL;
+        }
+        return name;
     }
 
     public static void initLoggingService(boolean isDebugEnabled, String appName) {
