@@ -708,7 +708,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         String appName = mServiceContext.getResources().getString(R.string.user_agent);
         String androidVersion = BuildConfig.VERSION_NAME;
         String coreVersion = mLc.getVersion();
-        String userAgent = deviceName + " " + appName + "/" + androidVersion + " LinphoneCore";
+        String userAgent = appName + "/" + androidVersion + " (" + deviceName + ") LinphoneCore";
         mLc.setUserAgent(userAgent, coreVersion);
 
         mLc.checkForUpdate(androidVersion);
@@ -722,7 +722,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         int availableCores = Runtime.getRuntime().availableProcessors();
         Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
-        //mLc.setCpuCount(availableCores);
 
         mLc.migrateLogsFromRcToDb();
 
