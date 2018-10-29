@@ -64,7 +64,7 @@ xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
 
 [lime]
 lime_v2=1
-x3dh_server_url=http://54.37.202.229:80/flexisip-account-manager/x3dh-25519.php
+x3dh_server_url=http://54.37.202.229:8082/flexisip-account-manager/x3dh-25519.php
 lime_update_threshold=86400
 max_nb_device_per_participant=255
 allow_message_in_unsafe_chatroom=0
