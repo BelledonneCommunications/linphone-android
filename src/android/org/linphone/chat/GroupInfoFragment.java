@@ -263,14 +263,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     mWaitLayout.setVisibility(View.VISIBLE);
                     mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), false, mIsEncryptionEnabled);
                     mTempChatRoom.addListener(mChatRoomCreationListener);
-
-                    Address addresses[] = new Address[mParticipants.size()];
-                    int index = 0;
                     for (ContactAddress ca : mParticipants) {
-                        addresses[index] = ca.getAddress();
-                        index++;
+                        mTempChatRoom.addParticipant(ca.getAddress());
                     }
-                    mTempChatRoom.addParticipants(addresses);
                 } else {
                     // Subject
                     String newSubject = mSubjectField.getText().toString();

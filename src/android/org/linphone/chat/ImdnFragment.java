@@ -124,6 +124,7 @@ public class ImdnFragment extends Fragment {
                 refreshInfo();
             }
         };
+        if (mMessage == null) return null;
         mMessage.setListener(mListener);
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);

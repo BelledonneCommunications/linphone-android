@@ -426,6 +426,8 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             if (contact != null) {
                 menu.removeItem(R.id.add_to_contacts);
             }
+        } else {
+            menu.removeItem(R.id.add_to_contacts);
         }
     }
 
