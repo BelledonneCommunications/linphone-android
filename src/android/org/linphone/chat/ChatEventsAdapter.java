@@ -209,12 +209,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
                 }
 
-                if (status == ChatMessage.State.Delivered) {
-				    /*holder.imdmLayout.setVisibility(View.VISIBLE);
-				    holder.imdmLabel.setText(R.string.sent);
-				    holder.imdmIcon.setImageResource(R.drawable.chat_delivered);
-				    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));*/
-                } else if (status == ChatMessage.State.DeliveredToUser) {
+                if (status == ChatMessage.State.DeliveredToUser) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
                     holder.imdmIcon.setImageResource(R.drawable.imdn_received);
                     holder.imdmLabel.setText(R.string.delivered);
