@@ -293,12 +293,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 break;
         }
 
+        mAlwaysChangingPhoneAngle = rotation;
         if (LinphoneManager.isInstanciated()) {
             LinphoneManager.getLc().setDeviceRotation(rotation);
+            onNewIntent(getIntent());
         }
-        mAlwaysChangingPhoneAngle = rotation;
-
-        onNewIntent(getIntent());
     }
 
     private void initButtons() {
