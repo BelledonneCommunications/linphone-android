@@ -94,6 +94,9 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                     lastMessageFileTransfer.setVisibility(View.VISIBLE);
                 }
             }
+        } else {
+            date.setText("");
+            lastMessageView.setText("");
         }
 
         displayName.setText(getContact(mRoom));
