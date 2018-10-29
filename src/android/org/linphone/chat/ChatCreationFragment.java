@@ -456,7 +456,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                     if (chatRoom == null) {
                         ProxyConfig lpc = lc.getDefaultProxyConfig();
                         if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true, mSecurityToggle.isChecked());
+                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !mSecurityToggle.isChecked(), mSecurityToggle.isChecked());
                             mChatRoom.addListener(mChatRoomCreationListener);
                             mChatRoom.addParticipant(participant);
                         } else {
@@ -489,7 +489,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         ProxyConfig lpc = lc.getDefaultProxyConfig();
         if (lpc == null || lpc.getConferenceFactoryUri() == null || mCreateGroupChatRoom == false) {
             if (mSecurityToggle.isChecked() && lpc != null && lpc.getConferenceFactoryUri() != null) {
-                mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true, mSecurityToggle.isChecked());
+                mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !mSecurityToggle.isChecked(), mSecurityToggle.isChecked());
                 mChatRoom.addListener(mChatRoomCreationListener);
                 Address participants[] = new Address[1];
                 participants[0] = ca.getAddress();
