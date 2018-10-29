@@ -1591,7 +1591,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onNetworkReachable(Core lc, boolean enable) {
-
+        if (enable) {
+            // When network isn't available, push informations might not be set. This should fix the issue.
+            LinphonePreferences prefs = LinphonePreferences.instance();
+            prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
+        }
     }
 
     @Override
