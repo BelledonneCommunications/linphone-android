@@ -30,7 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.Address;
@@ -39,7 +38,6 @@ import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
-import org.linphone.mediastream.Log;
 import org.linphone.ui.ContactAvatar;
 
 import java.util.ArrayList;
@@ -193,7 +191,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
     public void setContactsList(List<ContactAddress> contactsList) {
         if (contactsList == null) {
             contacts = getContactsList();
-            if (contacts.size() > 0 && progressBar != null)
+            if (progressBar != null)
                 progressBar.setVisibility(View.GONE);
         } else {
             contacts = contactsList;
