@@ -261,7 +261,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             public void onClick(View view) {
                 if (!mIsAlreadyCreatedGroup) {
                     mWaitLayout.setVisibility(View.VISIBLE);
-                    mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), mParticipants.size() == 1 && !mIsEncryptionEnabled, mIsEncryptionEnabled);
+                    mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), false, mIsEncryptionEnabled);
                     mTempChatRoom.addListener(mChatRoomCreationListener);
 
                     Address addresses[] = new Address[mParticipants.size()];
