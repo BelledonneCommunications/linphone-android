@@ -387,7 +387,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     ContactsContract.Contacts.LOOKUP_KEY,
                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
                     Data.MIMETYPE,
-                    Data.IN_VISIBLE_GROUP,
                     "data1", //Company, Phone or SIP Address
                     "data2", //ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
                     "data3", //ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
@@ -406,7 +405,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     mActivity,
                     ContactsContract.Data.CONTENT_URI,
                     PROJECTION,
-                    null,
+                    Data.IN_VISIBLE_GROUP + " == 1",
                     null,
                     null
             );
@@ -462,11 +461,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 String data2 = c.getString(c.getColumnIndex("data2"));
                 String data3 = c.getString(c.getColumnIndex("data3"));
                 String data4 = c.getString(c.getColumnIndex("data4"));
-                int visible = c.getInt(c.getColumnIndex(Data.IN_VISIBLE_GROUP));
-
-                if (visible == 0) {
-                    continue;
-                }
 
                 nativeIds.add(id);
                 LinphoneContact contact = mAndroidContactsCache.get(id);
