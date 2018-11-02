@@ -42,6 +42,7 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
+import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.SelectableHelper;
@@ -210,6 +211,9 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
         }
 
         refreshChatRoomsList();
+
+        ProxyConfig lpc = lc.getDefaultProxyConfig();
+        mNewGroupDiscussionButton.setEnabled(lpc != null && lpc.getConferenceFactoryUri() != null);
     }
 
     @Override

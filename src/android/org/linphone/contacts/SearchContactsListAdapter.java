@@ -85,7 +85,8 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
     private ProgressBar progressBar;
     private boolean mOnlySipContact = false;
     private ViewHolder.ClickListener mListener;
-    private boolean mHideSelectionMark = false;
+    private boolean mHideSelectionMark;
+    private String mPreviousSearch;
 
     public List<ContactAddress> getContacts() {
         return contacts;
@@ -105,6 +106,7 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         progressBar = pB;
         setContactsSelectedList(null);
         setContactsList(contactsList);
+        mPreviousSearch = null;
     }
 
     @NonNull
@@ -258,6 +260,13 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
 
     public void searchContacts(String search, RecyclerView resultContactsSearch) {
         List<ContactAddress> result = new ArrayList<>();
+
+        if (mPreviousSearch != null) {
+            if (mPreviousSearch.length() > search.length()) {
+                ContactsManager.getInstance().getMagicSearch().resetSearchCache();
+            }
+        }
+        mPreviousSearch = search;
 
         String domain = "";
         ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();

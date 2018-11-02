@@ -30,12 +30,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -65,11 +65,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
     private LinearLayout mContactsSelectedLayout;
     private HorizontalScrollView mContactsSelectLayout;
     private ArrayList<ContactAddress> mContactsSelected;
-    private ImageView mAllContactsButton, mLinphoneContactsButton, mClearSearchFieldButton, mBackButton, mNextButton;
+    private ImageView mAllContactsButton, mLinphoneContactsButton, mBackButton, mNextButton;
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
     private RelativeLayout mSearchLayout, mWaitLayout, mLinphoneContactsToggle, mAllContactsToggle;
-    private EditText mSearchField;
+    private SearchView mSearchField;
     private ProgressBar mContactsFetchInProgress;
     private SearchContactsListAdapter mSearchAdapter;
     private String mChatRoomSubject, mChatRoomAddress;
@@ -125,31 +125,22 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         mNextButton.setEnabled(false);
         mSearchLayout = view.findViewById(R.id.layoutSearchField);
 
-        mClearSearchFieldButton = view.findViewById(R.id.clearSearchField);
-        mClearSearchFieldButton.setOnClickListener(this);
-
         mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         mContactsFetchInProgress.setVisibility(View.VISIBLE);
 
         mSearchAdapter = new SearchContactsListAdapter(null, mContactsFetchInProgress, this, mCreateGroupChatRoom == false);
 
         mSearchField = view.findViewById(R.id.searchField);
-        mSearchField.addTextChangedListener(new TextWatcher() {
+        mSearchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (before > count) {
-                    ContactsManager.getInstance().getMagicSearch().resetSearchCache();
-                }
+            public boolean onQueryTextSubmit(String query) {
+                return true;
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
+            public boolean onQueryTextChange(String newText) {
+                mSearchAdapter.searchContacts(newText, mContactsList);
+                return true;
             }
         });
 
@@ -326,7 +317,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
     }
 
     private void updateList() {
-        mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
+        mSearchAdapter.searchContacts(mSearchField.getQuery().toString(), mContactsList);
         mSearchAdapter.notifyDataSetChanged();
     }
 
@@ -354,7 +345,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
 
     private void resetAndResearch() {
         ContactsManager.getInstance().getMagicSearch().resetSearchCache();
-        mSearchAdapter.searchContacts(mSearchField.getText().toString(), mContactsList);
+        mSearchAdapter.searchContacts(mSearchField.getQuery().toString(), mContactsList);
     }
 
     private void addSelectedContactAddress(ContactAddress ca) {
@@ -453,7 +444,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                 LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, mContactsSelected, mChatRoomSubject, true, true, mShareInfos, mSecurityToggle.isChecked());
             }
         } else if (id == R.id.clearSearchField) {
-            mSearchField.setText("");
+            mSearchField.setQuery("", false);
             mSearchAdapter.searchContacts("", mContactsList);
         } else if (id == R.id.contactChatDelete) {
             ContactAddress ca = (ContactAddress) view.getTag();

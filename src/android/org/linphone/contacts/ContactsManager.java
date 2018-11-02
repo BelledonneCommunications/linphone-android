@@ -76,7 +76,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     private List<LinphoneContact> mContacts, mSipContacts;
     private MagicSearch magicSearch;
-    private boolean preferLinphoneContacts = false;
     private Activity mActivity;
     private HashMap<String, LinphoneContact> mAndroidContactsCache;
     private Bitmap defaultAvatar;
@@ -202,12 +201,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         return contactsR && !mActivity.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
     }
 
-    public void setLinphoneContactsPrefered(boolean isPrefered) {
-        preferLinphoneContacts = isPrefered;
-    }
-
     public boolean isLinphoneContactsPrefered() {
-        return preferLinphoneContacts;
+        ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+        if (lpc != null && lpc.getIdentityAddress().getDomain().equals(getString(R.string.default_domain))) return true;
+        return false;
     }
 
     public void initializeContactManager(Activity activity) {

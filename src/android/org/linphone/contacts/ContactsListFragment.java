@@ -33,9 +33,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
@@ -56,8 +56,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
     private int lastKnownPosition;
     private boolean editOnClick = false, editConsumed = false, onlyDisplayChatAddress = false;
     private String sipAddressToAdd, displayName = null;
-    private ImageView clearSearchField;
-    private EditText searchField;
+    private SearchView mSearchView;
     private ProgressBar contactsFetchInProgress;
     private LinearLayoutManager layoutManager;
     private Context mContext;
@@ -149,27 +148,17 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             }
         }
 
-        clearSearchField = view.findViewById(R.id.clearSearchField);
-        clearSearchField.setOnClickListener(new View.OnClickListener() {
+        mSearchView = view.findViewById(R.id.searchField);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                searchField.setText("");
-            }
-        });
-
-        searchField = view.findViewById(R.id.searchField);
-        searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public boolean onQueryTextSubmit(String query) {
+                return true;
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                searchContacts(searchField.getText().toString());
+            public boolean onQueryTextChange(String newText) {
+                searchContacts(newText.toString());
+                return true;
             }
         });
 
@@ -232,7 +221,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         noContact.setVisibility(View.GONE);
         contactsList.setVisibility(View.VISIBLE);
         boolean isEditionEnabled = false;
-        if (searchField.getText().toString() == "") {
+        if (mSearchView.getQuery().toString() == "") {
             if (onlyDisplayLinphoneContacts) {
                 listContact = ContactsManager.getInstance().getSIPContacts();
             } else {
@@ -240,9 +229,9 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             }
         } else {
             if (onlyDisplayLinphoneContacts) {
-                listContact = ContactsManager.getInstance().getSIPContacts(searchField.getText().toString());
+                listContact = ContactsManager.getInstance().getSIPContacts(mSearchView.getQuery().toString());
             } else {
-                listContact = ContactsManager.getInstance().getContacts(searchField.getText().toString());
+                listContact = ContactsManager.getInstance().getContacts(mSearchView.getQuery().toString());
             }
         }
 
@@ -267,8 +256,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         } else if (onlyDisplayLinphoneContacts && mContactAdapter.getItemCount() == 0) {
             noSipContact.setVisibility(View.VISIBLE);
         }
-
-        ContactsManager.getInstance().setLinphoneContactsPrefered(onlyDisplayLinphoneContacts);
     }
 
     private void changeContactsToggle() {
@@ -365,8 +352,8 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
     }
 
     public void invalidate() {
-        if (searchField != null && searchField.getText().toString().length() > 0) {
-            searchContacts(searchField.getText().toString());
+        if (mSearchView != null && mSearchView.getQuery().toString().length() > 0) {
+            searchContacts(mSearchView.getQuery().toString());
         } else {
             changeContactsAdapter();
         }

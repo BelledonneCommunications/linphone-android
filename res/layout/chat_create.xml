@@ -132,28 +132,18 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
 
-            <EditText
+            <SearchView
                 android:id="@+id/searchField"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/resizable_textfield"
-                android:hint="@string/chat_room_creation_filter_hint"
-                android:contentDescription="@string/content_description_search_contact"
                 android:gravity="center"
-                android:inputType="textPersonName"
                 android:paddingRight="5dp"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="@string/chat_room_creation_filter_hint"
                 android:textColor="@android:color/black"
-                android:textCursorDrawable="@null"/>
-
-            <ImageView
-                android:id="@+id/clearSearchField"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:src="@drawable/clean_field"/>
+                android:background="@drawable/resizable_textfield"
+                android:inputType="textPersonName"/>
 
         </RelativeLayout>
 
