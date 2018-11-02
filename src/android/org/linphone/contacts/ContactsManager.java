@@ -32,14 +32,11 @@ import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -65,10 +62,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ContactsManager extends ContentObserver implements FriendListListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -388,20 +383,16 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION =
             {
-                    ContactsContract.Data.CONTACT_ID,
+                    Data.CONTACT_ID,
                     ContactsContract.Contacts.LOOKUP_KEY,
                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-                    ContactsContract.Data.MIMETYPE,
+                    Data.MIMETYPE,
+                    Data.IN_VISIBLE_GROUP,
                     "data1", //Company, Phone or SIP Address
                     "data2", //ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME
                     "data3", //ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
                     "data4", //Normalized phone number
             };
-
-    private static final String SELECTION = ContactsContract.Data.DISPLAY_NAME_PRIMARY + " IS NOT NULL AND ("
-            + "(" + ContactsContract.Data.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "' AND data1 IS NOT NULL) OR "
-            + "(" + ContactsContract.Data.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "' AND data1 IS NOT NULL) OR "
-            + "(" + ContactsContract.Data.MIMETYPE + " = '" + getInstance().getString(R.string.sync_mimetype) + "' AND data1 IS NOT NULL))";
 
     @NonNull
     @Override
@@ -464,13 +455,18 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (c != null) {
             List<String> nativeIds = new ArrayList<>();
             while (c.moveToNext()) {
-                String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
-                String displayName = c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME_PRIMARY));
-                String mime = c.getString(c.getColumnIndex(ContactsContract.Data.MIMETYPE));
+                String id = c.getString(c.getColumnIndex(Data.CONTACT_ID));
+                String displayName = c.getString(c.getColumnIndex(Data.DISPLAY_NAME_PRIMARY));
+                String mime = c.getString(c.getColumnIndex(Data.MIMETYPE));
                 String data1 = c.getString(c.getColumnIndex("data1"));
                 String data2 = c.getString(c.getColumnIndex("data2"));
                 String data3 = c.getString(c.getColumnIndex("data3"));
                 String data4 = c.getString(c.getColumnIndex("data4"));
+                int visible = c.getInt(c.getColumnIndex(Data.IN_VISIBLE_GROUP));
+
+                if (visible == 0) {
+                    continue;
+                }
 
                 nativeIds.add(id);
                 LinphoneContact contact = mAndroidContactsCache.get(id);
