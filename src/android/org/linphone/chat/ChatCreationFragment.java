@@ -481,12 +481,17 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                 }
             } else {
                 if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-                    mWaitLayout.setVisibility(View.VISIBLE);
-                    mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
-                    mChatRoom.addListener(mChatRoomCreationListener);
-                    Address participants[] = new Address[1];
-                    participants[0] = ca.getAddress();
-                    mChatRoom.addParticipants(participants);
+                    mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), false);
+                    if (mChatRoom == null) {
+                        mWaitLayout.setVisibility(View.VISIBLE);
+                        mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+                        mChatRoom.addListener(mChatRoomCreationListener);
+                        Address participants[] = new Address[1];
+                        participants[0] = ca.getAddress();
+                        mChatRoom.addParticipants(participants);
+                    } else {
+                        LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, mChatRoom.getLocalAddress().asString());
+                    }
                 } else {
                     ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
                     LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
