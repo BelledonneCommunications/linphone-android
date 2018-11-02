@@ -79,7 +79,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 Address participant = Factory.instance().createAddress(tag);
                 ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
                 if (defaultProxyConfig != null) {
-                    ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant);
+                    ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant, false);
                     if (room != null) {
                         LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null, room.getLocalAddress().asString());
                     } else {

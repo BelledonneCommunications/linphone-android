@@ -33,11 +33,11 @@ dependencies {
   androidTestCompile group: 'junit', name: 'junit', version: '+'
   androidTestCompile group: 'com.jayway.android.robotium', name: 'robotium', version: '+'
   androidTestCompile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
-  compile 'org.apache.commons:commons-compress:1.16.1'
-  compile group: 'junit', name: 'junit', version: '+'
-  compile group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
-  compile fileTree(dir: 'libs', include: 'android-junit-report*.jar')
-  compile project(":liblinphone-sdk")
+  implementation 'org.apache.commons:commons-compress:1.16.1'
+  implementation group: 'junit', name: 'junit', version: '+'
+  implementation group: 'com.jayway.android.robotium', name: 'robotium-solo', version: '+'
+  implementation fileTree(dir: 'libs', include: 'android-junit-report*.jar')
+  implementation project(":liblinphone-sdk")
 }
 
 android {

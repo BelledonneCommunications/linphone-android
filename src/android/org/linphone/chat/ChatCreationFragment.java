@@ -469,14 +469,28 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         boolean createEncryptedChatRoom = mSecurityToggle.isChecked();
         if (lpc == null || lpc.getConferenceFactoryUri() == null || mCreateGroupChatRoom == false) {
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
-                mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !createEncryptedChatRoom, createEncryptedChatRoom);
-                mChatRoom.addListener(mChatRoomCreationListener);
-                Address participants[] = new Address[1];
-                participants[0] = ca.getAddress();
-                mChatRoom.addParticipants(participants);
+                mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), true);
+                if (mChatRoom != null) {
+                    LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, mChatRoom.getLocalAddress().asString());
+                } else {
+                    mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !createEncryptedChatRoom, createEncryptedChatRoom);
+                    mChatRoom.addListener(mChatRoomCreationListener);
+                    Address participants[] = new Address[1];
+                    participants[0] = ca.getAddress();
+                    mChatRoom.addParticipants(participants);
+                }
             } else {
-                ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
-                LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
+                if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+                    mWaitLayout.setVisibility(View.VISIBLE);
+                    mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+                    mChatRoom.addListener(mChatRoomCreationListener);
+                    Address participants[] = new Address[1];
+                    participants[0] = ca.getAddress();
+                    mChatRoom.addParticipants(participants);
+                } else {
+                    ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
+                    LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
+                }
             }
         } else {
             addOrRemoveContactFromSelection(ca);

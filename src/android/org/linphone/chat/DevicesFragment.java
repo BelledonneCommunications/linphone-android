@@ -39,6 +39,9 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
+import org.linphone.core.Participant;
+import org.linphone.core.ParticipantDevice;
 import org.linphone.mediastream.Log;
 
 import java.util.Arrays;
@@ -53,6 +56,7 @@ public class DevicesFragment extends Fragment {
     private String mRoomUri;
     private Address mRoomAddr;
     private ChatRoom mRoom;
+    private boolean mOnlyDisplayChilds;
 
     @Nullable
     @Override
@@ -67,16 +71,26 @@ public class DevicesFragment extends Fragment {
         mInflater = inflater;
         View view = mInflater.inflate(R.layout.chat_devices, container, false);
 
+        mOnlyDisplayChilds = false;
+
         mExpandableList = view.findViewById(R.id.devices_list);
         mExpandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+                ParticipantDevice device = (ParticipantDevice) mAdapter.getChild(groupPosition, childPosition);
+                LinphoneManager.getLc().inviteAddress(device.getAddress());
                 return false;
             }
         });
         mExpandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+                if (mOnlyDisplayChilds) {
+                    // in this case groups are childs, so call on click
+                    ParticipantDevice device = (ParticipantDevice) mAdapter.getGroup(groupPosition);
+                    LinphoneManager.getLc().inviteAddress(device.getAddress());
+                    return true;
+                }
                 return false;
             }
         });
@@ -109,13 +123,7 @@ public class DevicesFragment extends Fragment {
 
     private void initChatRoom() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        Address proxyConfigContact = core.getDefaultProxyConfig().getContact();
-        if (proxyConfigContact != null) {
-            mRoom = core.findOneToOneChatRoom(proxyConfigContact, mRoomAddr);
-        }
-        if (mRoom == null) {
-            mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
-        }
+        mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
     }
 
     private void initHeader() {
@@ -144,10 +152,9 @@ public class DevicesFragment extends Fragment {
             initChatRoom();
         }
 
-        boolean onlyDisplayChilds = mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt());
-
         if (mRoom != null && mRoom.getNbParticipants() > 0) {
-            mAdapter.updateListItems(Arrays.asList(mRoom.getParticipants()), onlyDisplayChilds);
+            mOnlyDisplayChilds = mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt());
+            mAdapter.updateListItems(Arrays.asList(mRoom.getParticipants()), mOnlyDisplayChilds);
         }
     }
 }

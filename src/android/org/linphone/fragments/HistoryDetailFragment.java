@@ -197,7 +197,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         } else if (id == R.id.chat) {
             Core lc = LinphoneManager.getLc();
             Address participant = Factory.instance().createAddress(sipUri);
-            ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant);
+            ChatRoom room = lc.findOneToOneChatRoom(lc.getDefaultProxyConfig().getContact(), participant, false);
             if (room != null) {
                 LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null, room.getLocalAddress().asString());
             } else {

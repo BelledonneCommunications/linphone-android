@@ -580,18 +580,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             return;
         }
 
-        Address proxyConfigContact = mLocalIdentityAddress;
-        if (proxyConfigContact == null) {
-            proxyConfigContact = core.getDefaultProxyConfig() != null ? core.getDefaultProxyConfig().getContact() : null;
-        }
-
-        if (proxyConfigContact != null) {
-            mChatRoom = core.findOneToOneChatRoom(proxyConfigContact, mRemoteSipAddress);
-        }
-        if (mChatRoom == null) {
-            mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
-        }
-
+        mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
         mChatRoom.addListener(this);
         mChatRoom.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);

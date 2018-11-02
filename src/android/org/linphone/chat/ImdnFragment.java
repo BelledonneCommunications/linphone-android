@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
@@ -70,14 +71,9 @@ public class ImdnFragment extends Fragment {
             mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
             mMessageId = getArguments().getString("MessageId");
         }
+
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        Address proxyConfigContact = core.getDefaultProxyConfig().getContact();
-        if (proxyConfigContact != null) {
-            mRoom = core.findOneToOneChatRoom(proxyConfigContact, mRoomAddr);
-        }
-        if (mRoom == null) {
-            mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
-        }
+        mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
 
         mInflater = inflater;
         mContainer = container;
