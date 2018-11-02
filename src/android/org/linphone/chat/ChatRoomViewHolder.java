@@ -40,6 +40,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
+import org.linphone.core.Participant;
 import org.linphone.ui.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -155,7 +156,15 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
 
     public void getAvatar(ChatRoom mRoom) {
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
+            LinphoneContact contact = null;
+            if (mRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
+                contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
+            } else {
+                Participant[] participants = mRoom.getParticipants();
+                if (participants != null && participants.length > 0) {
+                    contact = ContactsManager.getInstance().findContactFromAddress(participants[0].getAddress());
+                }
+            }
             if (contact != null) {
                 if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
                     ContactAvatar.displayAvatar(contact, mRoom.getSecurityLevel(), avatarLayout);
