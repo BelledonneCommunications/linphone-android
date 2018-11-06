@@ -51,6 +51,7 @@ import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import org.linphone.activities.LinphoneActivity;
@@ -1519,17 +1520,30 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     private void askLinkWithPhoneNumber() {
+        if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
+
         long now = new Timestamp(new Date().getTime()).getTime();
+        if (LinphonePreferences.instance().getLinkPopupTime() != null && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
+
         long future = new Timestamp(LinphoneActivity.instance().getResources().getInteger(R.integer.popup_time_interval)).getTime();
         long newDate = now + future;
 
         LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
         final Dialog dialog = LinphoneActivity.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress().asStringUriOnly()));
-        Button delete = (Button) dialog.findViewById(R.id.delete_button);
+        Button delete = dialog.findViewById(R.id.delete_button);
         delete.setText(getString(R.string.link));
-        Button cancel = (Button) dialog.findViewById(R.id.cancel);
+        Button cancel = dialog.findViewById(R.id.cancel);
         cancel.setText(getString(R.string.maybe_later));
+
+        dialog.findViewById(R.id.doNotAskAgainLayout).setVisibility(View.VISIBLE);
+        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
+        dialog.findViewById(R.id.doNotAskAgainLabel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doNotAskAgain.setChecked(!doNotAskAgain.isChecked());
+            }
+        });
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1543,11 +1557,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
         });
 
-        LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
-
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (doNotAskAgain.isChecked()) {
+                    LinphonePreferences.instance().enableLinkPopup(false);
+                }
                 dialog.dismiss();
             }
         });

@@ -32,17 +32,6 @@
 			android:src="@drawable/event_gray"
 			android:scaleType="fitXY"/>
 
-		<!--<TextView
-			android:id="@+id/event_date"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textStyle="italic"/>
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text=" - "/>-->
-
 		<TextView
 			android:id="@+id/event_text"
 			android:layout_width="wrap_content"

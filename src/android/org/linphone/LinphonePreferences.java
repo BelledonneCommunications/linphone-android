@@ -1532,8 +1532,12 @@ public class LinphonePreferences {
         return getConfig().getString("app", "link_popup_time", null);
     }
 
-    public String getXmlRpcServerUrl() {
-        return getConfig().getString("app", "server_url", null);
+    public boolean isLinkPopupEnabled() {
+        return getConfig().getBool("app", "link_popup_enabled", true);
+    }
+
+    public void enableLinkPopup(boolean enable) {
+        getConfig().setBool("app", "link_popup_enabled", enable);
     }
 
     public String getDebugPopupAddress() {

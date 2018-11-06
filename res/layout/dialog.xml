@@ -1,47 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:gravity="center">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
 
-	<TextView
-		android:id="@+id/customText"
-		style="@style/font14"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:padding="20dp"/>
+    <ImageView
+        android:id="@+id/icon"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/security_alert_indicator"
+        android:layout_margin="15dp"/>
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:gravity="center"
-		android:orientation="horizontal">
+    <TextView
+        android:id="@+id/customText"
+        style="@style/font14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum dolor sit amet"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:layout_margin="15dp"/>
 
-		<Button
-			android:id="@+id/cancel"
-			android:text="@string/cancel"
-			android:background="@drawable/resizable_cancel_button"
-			style="@style/font8"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:padding="10dp"/>
+    <EditText
+        android:id="@+id/password"
+        android:visibility="gone"
+        android:background="@drawable/resizable_textfield"
+        android:textColor="@color/colorB"
+        android:inputType="textPassword"
+        android:hint="@string/password"
+        android:textCursorDrawable="@null"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="15dp"
+        android:maxLines="1"/>
 
-		<Button
-			android:id="@+id/delete_button"
-			android:text="@string/delete"
-			android:background="@drawable/resizable_confirm_delete_button"
-			style="@style/font15"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
-			android:padding="10dp"/>
+    <LinearLayout
+        android:id="@+id/doNotAskAgainLayout"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
 
-		</LinearLayout>
+        <CheckBox
+            android:id="@+id/doNotAskAgain"
+            android:button="@drawable/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/doNotAskAgainLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/font14"
+            android:layout_marginLeft="10dp"
+            android:text="@string/do_not_ask_again"/>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_margin="15dp">
+
+        <Button
+            android:id="@+id/cancel"
+            android:text="@string/cancel"
+            android:background="@drawable/resizable_assistant_button"
+            style="@style/font8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/delete_button"
+            android:text="@string/delete"
+            android:background="@drawable/resizable_assistant_button"
+            android:backgroundTint="@color/colorI"
+            style="@style/font15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/ok_button"
+            android:visibility="gone"
+            android:text="@string/ok"
+            android:background="@drawable/resizable_assistant_button"
+            android:backgroundTint="@color/colorL"
+            style="@style/font15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

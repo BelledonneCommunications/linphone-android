@@ -993,7 +993,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         dialog.getWindow().setBackgroundDrawable(d);
 
-        TextView customText = (TextView) dialog.findViewById(R.id.customText);
+        TextView customText = dialog.findViewById(R.id.customText);
         customText.setText(text);
         return dialog;
     }
