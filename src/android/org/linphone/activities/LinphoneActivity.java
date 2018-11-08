@@ -36,6 +36,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -153,7 +155,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
     private ListView accountsList, sideMenuItemList;
     private ImageView menu;
-    private List<String> sideMenuItems;
+    private List<MenuItem> sideMenuItems;
     private boolean callTransfer = false;
     private boolean isOnBackground = false;
 
@@ -1587,20 +1589,20 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         sideMenu = findViewById(R.id.side_menu);
         sideMenuItems = new ArrayList<>();
         if (!getResources().getBoolean(R.bool.hide_assistant_from_side_menu)) {
-            sideMenuItems.add(getResources().getString(R.string.menu_assistant));
+            sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_assistant), R.drawable.menu_assistant));
         }
         if (!getResources().getBoolean(R.bool.hide_settings_from_side_menu)) {
-            sideMenuItems.add(getResources().getString(R.string.menu_settings));
+            sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_settings), R.drawable.menu_options));
         }
         if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
-            sideMenuItems.add(getResources().getString(R.string.inapp));
+            sideMenuItems.add(new MenuItem(getResources().getString(R.string.inapp), R.drawable.menu_options));
         }
-        sideMenuItems.add(getResources().getString(R.string.menu_about));
+        sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_about), R.drawable.menu_about));
         sideMenuContent = findViewById(R.id.side_menu_content);
         sideMenuItemList = findViewById(R.id.item_list);
         menu = findViewById(R.id.side_menu_button);
 
-        sideMenuItemList.setAdapter(new ArrayAdapter<>(this, R.layout.side_menu_item_cell, sideMenuItems));
+        sideMenuItemList.setAdapter(new MenuAdapter(this, R.layout.side_menu_item_cell, sideMenuItems));
         sideMenuItemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -1861,5 +1863,58 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             return cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR);
         }
         return -1;
+    }
+
+    private class MenuItem {
+        public String name;
+        public int icon;
+
+        public MenuItem(String name, int icon) {
+            this.name = name;
+            this.icon = icon;
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
+
+    private class MenuAdapter extends ArrayAdapter<MenuItem> {
+        private List<MenuItem> mItems;
+        private int mResource;
+
+        public MenuAdapter(@NonNull Context context, int resource, @NonNull List<MenuItem> objects) {
+            super(context, resource, objects);
+            mResource = resource;
+            mItems = objects;
+        }
+
+        @Nullable
+        @Override
+        public MenuItem getItem(int position) {
+            return mItems.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mItems.size();
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View rowView = inflater.inflate(mResource, parent, false);
+
+            TextView textView = rowView.findViewById(R.id.item_name);
+            ImageView imageView = rowView.findViewById(R.id.item_icon);
+
+            MenuItem item = getItem(position);
+            textView.setText(item.name);
+            imageView.setImageResource(item.icon);
+
+            return rowView;
+        }
     }
 }
