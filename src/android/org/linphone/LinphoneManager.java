@@ -1532,7 +1532,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         final Dialog dialog = LinphoneActivity.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress().asStringUriOnly()));
         Button delete = dialog.findViewById(R.id.delete_button);
-        delete.setText(getString(R.string.link));
+        delete.setVisibility(View.GONE);
+        Button ok = dialog.findViewById(R.id.ok_button);
+        ok.setText(getString(R.string.link));
+        ok.setVisibility(View.VISIBLE);
         Button cancel = dialog.findViewById(R.id.cancel);
         cancel.setText(getString(R.string.maybe_later));
 
@@ -1545,7 +1548,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
         });
 
-        delete.setOnClickListener(new View.OnClickListener() {
+        ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent assistant = new Intent();
