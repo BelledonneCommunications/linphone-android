@@ -167,9 +167,9 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
         mSecurityToggle.setChecked(mChatRoomEncrypted);
         ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
         if ((mChatRoomSubject != null && mChatRoomAddress != null) || (lpc == null || lpc.getConferenceFactoryUri() == null)) {
-            mSecurityToggle.setEnabled(false);
-            mSecurityToggleOn.setOnClickListener(null);
-            mSecurityToggleOff.setOnClickListener(null);
+            mSecurityToggle.setVisibility(View.GONE);
+            mSecurityToggleOn.setVisibility(View.GONE);
+            mSecurityToggleOff.setVisibility(View.GONE);
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());

@@ -1,119 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- Global -->
-	<string name="default_domain">sip.linphone.org</string><!-- Set the default domain used for account creation/addresses -->
-	<string name="default_conference_factory_uri">sip:conference-factory@sip.linphone.org</string>
-	<string name="file_provider">org.linphone.provider</string>
-	<string name="sync_account_type">org.linphone</string> <!-- Change package ! -->
-	<string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string> <!-- Change package, leave .profile at the end. Also change res/xml/contacts.xml ! -->
-	<string name="rls_uri">sip:rls@sip.linphone.org</string>
-	<string name="user_agent">LinphoneAndroid</string>
-	<bool name="orientation_portrait_only">false</bool>
-	<bool name="show_statusbar_only_on_dialer">false</bool>
-	<bool name="force_use_of_linphone_friends">false</bool>
-	<bool name="use_linphone_tag">true</bool>
+    <!-- Global -->
+    <string name="default_domain">sip.linphone.org</string><!-- Set the default domain used for account creation/addresses -->
+    <string name="default_conference_factory_uri">sip:conference-factory@sip.linphone.org</string>
+    <string name="file_provider">org.linphone.provider</string>
+    <string name="sync_account_type">org.linphone</string> <!-- Change package ! -->
+    <string name="sync_mimetype">vnd.android.cursor.item/org.linphone.profile</string> <!-- Change package, leave .profile at the end. Also change res/xml/contacts.xml ! -->
+    <string name="rls_uri">sip:rls@sip.linphone.org</string>
+    <string name="user_agent">LinphoneAndroid</string>
+    <bool name="orientation_portrait_only">false</bool>
+    <bool name="show_statusbar_only_on_dialer">false</bool>
+    <bool name="force_use_of_linphone_friends">false</bool>
+    <bool name="use_linphone_tag">true</bool>
+    <bool name="hide_bottom_bar_on_second_level_views">true</bool>
 
-	<!-- Time -->
-	<string name="history_date_format">EEE, d MMM</string>
-	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
-	<string name="inapp_popup_date_format">yyyy/MM/dd</string>
-	<string name="inapp_popup_date_day">dd</string>
-	<string name="messages_date_format">dd/MM, HH:mm</string>
-	<string name="messages_list_date_format">dd/MM</string>
-	<string name="today_date_format">HH:mm</string>
+    <!-- Time -->
+    <string name="history_date_format">EEE, d MMM</string>
+    <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
+    <string name="inapp_popup_date_format">yyyy/MM/dd</string>
+    <string name="inapp_popup_date_day">dd</string>
+    <string name="messages_date_format">dd/MM, HH:mm</string>
+    <string name="messages_list_date_format">dd/MM</string>
+    <string name="today_date_format">HH:mm</string>
 
-	<!-- Phone numbers -->
-	<bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->
-	<integer name="popup_time_interval">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
+    <!-- Phone numbers -->
+    <bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->
+    <integer name="popup_time_interval">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
 
-	<!-- Assistant -->
-	<bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
+    <!-- Assistant -->
+    <bool name="assistant_allow_username">true</bool> <!-- Allow to use an username instead of the phone number for account creation -->
 
-	<!-- Only on should be set to true at a time! If not the first one will be used -->
-	<bool name="assistant_use_linphone_login_as_first_fragment">false</bool><!-- Start assistant in loginFragment view instead of menu -->
-	<bool name="assistant_use_create_linphone_account_as_first_fragment">false</bool><!-- Start Linphone creation account in loginFragment view instead of menu -->
+    <!-- Only on should be set to true at a time! If not the first one will be used -->
+    <bool name="assistant_use_linphone_login_as_first_fragment">false</bool><!-- Start assistant in loginFragment view instead of menu -->
+    <bool name="assistant_use_create_linphone_account_as_first_fragment">false</bool><!-- Start Linphone creation account in loginFragment view instead of menu -->
 
-	<bool name="replace_assistant_with_old_interface">false</bool>
-	<bool name="hide_assistant">false</bool>
-	<bool name="assistant_cancel_move_to_back">false</bool>
-	<bool name="pre_fill_email_in_assistant">true</bool> <!-- Set the email field of the wizard with one of the gmail account registered on the device -->
-	<bool name="assistant_account_validation_mandatory">false</bool>
-	<bool name="allow_only_phone_numbers_in_assistant">false</bool>
-	<bool name="hide_linphone_accounts_in_assistant">false</bool>
-	<bool name="hide_generic_accounts_in_assistant">false</bool>
-	<bool name="hide_remote_provisioning_in_assistant">false</bool>
-	<bool name="display_account_assistant_at_first_start">true</bool>
+    <bool name="replace_assistant_with_old_interface">false</bool>
+    <bool name="hide_assistant">false</bool>
+    <bool name="assistant_cancel_move_to_back">false</bool>
+    <bool name="pre_fill_email_in_assistant">true</bool> <!-- Set the email field of the wizard with one of the gmail account registered on the device -->
+    <bool name="assistant_account_validation_mandatory">false</bool>
+    <bool name="allow_only_phone_numbers_in_assistant">false</bool>
+    <bool name="hide_linphone_accounts_in_assistant">false</bool>
+    <bool name="hide_generic_accounts_in_assistant">false</bool>
+    <bool name="hide_remote_provisioning_in_assistant">false</bool>
+    <bool name="display_account_assistant_at_first_start">true</bool>
 
-	<!-- Remote provisioning -->
-	<bool name="display_sms_remote_provisioning_activity">false</bool>
-	<bool name="forbid_app_usage_until_remote_provisioning_completed">false</bool>
-	<bool name="display_confirmation_popup_after_first_configuration">false</bool>
-	<bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
+    <!-- Remote provisioning -->
+    <bool name="display_sms_remote_provisioning_activity">false</bool>
+    <bool name="forbid_app_usage_until_remote_provisioning_completed">false</bool>
+    <bool name="display_confirmation_popup_after_first_configuration">false</bool>
+    <bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
 
-	<!-- Inapp -->
-	<bool name="enable_in_app_purchase">false</bool>
-	<integer name="days_notification_shown">5</integer><!-- Notification shown before end of trial version in days -->
-	<integer name="time_between_inapp_notification">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
-	<bool name="hide_username_in_inapp">true</bool>
+    <!-- Inapp -->
+    <bool name="enable_in_app_purchase">false</bool>
+    <integer name="days_notification_shown">5</integer><!-- Notification shown before end of trial version in days -->
+    <integer name="time_between_inapp_notification">86400000</integer><!-- Time between two inapp notifications in milliseconds -->
+    <bool name="hide_username_in_inapp">true</bool>
 
-	<!-- Push notification settings -->
-	<bool name="enable_push_id">true</bool>
-	<string name="push_sender_id">929724111839</string><!--firebase 929724111839 !! gcm 622464153529 -->
-	<string name="push_type">firebase</string>
+    <!-- Push notification settings -->
+    <bool name="enable_push_id">true</bool>
+    <string name="push_sender_id">929724111839</string><!--firebase 929724111839 !! gcm 622464153529 -->
+    <string name="push_type">firebase</string>
 
-	<!-- Call -->
-	<bool name="forbid_self_call">false</bool>
-	<bool name="allow_ringing_while_early_media">true</bool>
-	<bool name="allow_transfers">true</bool>
-	<bool name="disable_options_in_call">false</bool>
-	<bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool><!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
-	<bool name="hide_camera_settings">false</bool>
-	<bool name="hide_in_call_stats">false</bool>
+    <!-- Call -->
+    <bool name="forbid_self_call">false</bool>
+    <bool name="allow_ringing_while_early_media">true</bool>
+    <bool name="allow_transfers">true</bool>
+    <bool name="disable_options_in_call">false</bool>
+    <bool name="automatically_start_intercepted_outgoing_gsm_call">true</bool><!-- This settings handle the behavior of the view waiting for the remote provisioning configuration to be done -->
+    <bool name="hide_camera_settings">false</bool>
+    <bool name="hide_in_call_stats">false</bool>
 
-	<!-- Settings -->
-	<bool name="disable_every_log">false</bool>
-	<bool name="disable_all_security_features_for_markets">false</bool> <!-- Disable TLS/SRTP/ZRTP -->
-	<bool name="disable_all_patented_codecs_for_markets">false</bool> <!-- Disable MPEG4/H264 -->
-	<bool name="use_friendlist_subscription">true</bool>
-	<string name="default_stun">stun.linphone.org</string>
-	<bool name="hide_accounts">false</bool>
+    <!-- Settings -->
+    <bool name="disable_every_log">false</bool>
+    <bool name="disable_all_security_features_for_markets">false</bool> <!-- Disable TLS/SRTP/ZRTP -->
+    <bool name="disable_all_patented_codecs_for_markets">false</bool> <!-- Disable MPEG4/H264 -->
+    <bool name="use_friendlist_subscription">true</bool>
+    <string name="default_stun">stun.linphone.org</string>
+    <bool name="hide_accounts">false</bool>
 
-	<!-- Chat -->
-	<bool name="disable_chat">false</bool>
-	<bool name="disable_chat_message_notification">false</bool>
-	<bool name="disable_chat_send_file">false</bool>
-	<string name="temp_photo_name">linphone-android-photo-temp</string>
-	<string name="temp_photo_name_with_date">linphone-android-photo-%s</string>
-	<bool name="lower_space_between_chat_bubbles_if_same_person">false</bool>
-	<bool name="allow_multiple_images_and_text">true</bool>
-	<bool name="send_text_and_images_as_different_messages">true</bool>
+    <!-- Chat -->
+    <bool name="disable_chat">false</bool>
+    <bool name="disable_chat_message_notification">false</bool>
+    <bool name="disable_chat_send_file">false</bool>
+    <string name="temp_photo_name">linphone-android-photo-temp</string>
+    <string name="temp_photo_name_with_date">linphone-android-photo-%s</string>
+    <bool name="lower_space_between_chat_bubbles_if_same_person">false</bool>
+    <bool name="allow_multiple_images_and_text">true</bool>
+    <bool name="send_text_and_images_as_different_messages">true</bool>
 
-	<!-- Contacts -->
-	<bool name="hide_contact_phone_numbers">false</bool>
-	<bool name="hide_contact_sip_addresses">false</bool>
-	<bool name="hide_phone_numbers_in_editor">false</bool>
-	<bool name="hide_sip_addresses_in_editor">false</bool>
-	<bool name="allow_only_one_phone_number">false</bool>
-	<bool name="allow_only_one_sip_address">false</bool>
-	<bool name="display_contact_organization">true</bool>
-	<bool name="hide_numbers_and_addresses_without_presence">false</bool>
-	<bool name="hide_sip_contacts_without_presence">false</bool>
-	<bool name="hide_non_linphone_contacts">false</bool>
+    <!-- Contacts -->
+    <bool name="hide_contact_phone_numbers">false</bool>
+    <bool name="hide_contact_sip_addresses">false</bool>
+    <bool name="hide_phone_numbers_in_editor">false</bool>
+    <bool name="hide_sip_addresses_in_editor">false</bool>
+    <bool name="allow_only_one_phone_number">false</bool>
+    <bool name="allow_only_one_sip_address">false</bool>
+    <bool name="display_contact_organization">true</bool>
+    <bool name="hide_numbers_and_addresses_without_presence">false</bool>
+    <bool name="hide_sip_contacts_without_presence">false</bool>
+    <bool name="hide_non_linphone_contacts">false</bool>
 
-	<!-- Side Menu -->
-	<bool name="hide_assistant_from_side_menu">false</bool>
-	<bool name="hide_settings_from_side_menu">false</bool>
+    <!-- Side Menu -->
+    <bool name="hide_assistant_from_side_menu">false</bool>
+    <bool name="hide_settings_from_side_menu">false</bool>
 
-	<!-- Others Parameters-->
-	<string name="about_text">GNU General Public License V2\n © 2010-2018 Belledonne Communications</string>
-	<string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
-	<bool name="enable_call_notification">true</bool>
-	<bool name="kill_service_with_task_manager">true</bool>
-	<string name="notification_service_channel_id">linphone_notification_service_id</string>
-	<string name="notification_channel_id">linphone_notification_id</string>
-	<integer name="notification_ms_on">1000</integer>
-	<integer name="notification_ms_off">7000</integer>
+    <!-- Others Parameters-->
+    <string name="about_text">GNU General Public License V2\n © 2010-2018 Belledonne Communications</string>
+    <string name="about_bugreport_email">linphone-android@belledonne-communications.com</string>
+    <bool name="enable_call_notification">true</bool>
+    <bool name="kill_service_with_task_manager">true</bool>
+    <string name="notification_service_channel_id">linphone_notification_service_id</string>
+    <string name="notification_channel_id">linphone_notification_id</string>
+    <integer name="notification_ms_on">1000</integer>
+    <integer name="notification_ms_off">7000</integer>
 
     <!-- Tutorial settings -->
     <bool name="show_tutorials_instead_of_app">false</bool> <!-- Be careful ! Setting this to true prevent the app from working ! It will only display tutorial activities -->
