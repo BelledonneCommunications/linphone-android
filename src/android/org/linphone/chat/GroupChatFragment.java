@@ -226,7 +226,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mSendMessageButton.setEnabled(mMessageTextToSend.getText().length() > 0 || mFilesUploadLayout.getChildCount() > 0);
                 if (mChatRoom != null && mMessageTextToSend.getText().length() > 0) {
-                    mAttachImageButton.setEnabled(false);
+                    if (!getResources().getBoolean(R.bool.allow_multiple_images_and_text)) {
+                        mAttachImageButton.setEnabled(false);
+                    }
                     mChatRoom.compose();
                 } else {
                     mAttachImageButton.setEnabled(true);
@@ -755,8 +757,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
         mFilesUploadLayout.addView(pendingFile);
 
-        mAttachImageButton.setEnabled(false); // For now limit file per message to 1
-        mMessageTextToSend.setEnabled(false); // For now forbid to send both text and picture at the same time
+        if (!getResources().getBoolean(R.bool.allow_multiple_images_and_text)) {
+            mAttachImageButton.setEnabled(false);
+            mMessageTextToSend.setEnabled(false);
+        }
         mSendMessageButton.setEnabled(true);
     }
 
@@ -789,8 +793,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
         mFilesUploadLayout.addView(pendingImage);
 
-        mAttachImageButton.setEnabled(false); // For now limit file per message to 1
-        mMessageTextToSend.setEnabled(false); // For now forbid to send both text and picture at the same time
+        if (!getResources().getBoolean(R.bool.allow_multiple_images_and_text)) {
+            mAttachImageButton.setEnabled(false);
+            mMessageTextToSend.setEnabled(false);
+        }
         mSendMessageButton.setEnabled(true);
     }
 
@@ -799,12 +805,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
      */
 
     private void sendMessage() {
-        String text = mMessageTextToSend.getText().toString();
-
-        ChatMessage msg;
-        //TODO: rework when we'll send multiple files at once
-        if (mFilesUploadLayout.getChildCount() > 0) {
-            String filePath = (String) mFilesUploadLayout.getChildAt(0).getTag();
+        ChatMessage msg = mChatRoom.createEmptyMessage();
+        for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
+            String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
             String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
             String extension = LinphoneUtils.getExtensionFromFileName(fileName);
             Content content = Factory.instance().createContent();
@@ -815,18 +818,25 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             }
             content.setSubtype(extension);
             content.setName(fileName);
-            msg = mChatRoom.createFileTransferMessage(content);
-            msg.setFileTransferFilepath(filePath); // Let the file body handler take care of the upload
-            msg.setAppdata(filePath);
+            content.setFilePath(filePath); // Let the file body handler take care of the upload
 
-            if (text != null && text.length() > 0) {
-                msg.addTextContent(text);
+            if (getResources().getBoolean(R.bool.send_text_and_images_as_different_messages)) {
+                ChatMessage fileMessage = mChatRoom.createFileTransferMessage(content);
+                fileMessage.send();
+            } else {
+                msg.addFileContent(content);
             }
-        } else {
-            msg = mChatRoom.createMessage(text);
         }
+
+        String text = mMessageTextToSend.getText().toString();
+        if (text != null && text.length() > 0) {
+            msg.addTextContent(text);
+        }
+
         // Set listener not required here anymore, message will be added to messages list and adapter will set the listener
-        msg.send();
+        if (msg.getContents().length > 0) {
+            msg.send();
+        }
 
         mFilesUploadLayout.removeAllViews();
         mAttachImageButton.setEnabled(true);
