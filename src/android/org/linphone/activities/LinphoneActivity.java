@@ -372,7 +372,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
 
         fragment = null;
-
         switch (newFragmentType) {
             case HISTORY_LIST:
                 fragment = new HistoryListFragment();
@@ -862,35 +861,49 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     public void selectMenu(FragmentsAvailable menuToSelect) {
         currentFragment = menuToSelect;
         resetSelection();
+        boolean hideBottomBar = getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views);
 
         switch (menuToSelect) {
             case HISTORY_LIST:
+                hideTabBar(false);
+                history_selected.setVisibility(View.VISIBLE);
+                break;
             case HISTORY_DETAIL:
+                hideTabBar(hideBottomBar);
                 history_selected.setVisibility(View.VISIBLE);
                 break;
             case CONTACTS_LIST:
+                hideTabBar(false);
+                contacts_selected.setVisibility(View.VISIBLE);
+                break;
             case CONTACT_DETAIL:
             case CONTACT_EDITOR:
+                hideTabBar(hideBottomBar);
                 contacts_selected.setVisibility(View.VISIBLE);
                 break;
             case DIALER:
+                hideTabBar(false);
                 dialer_selected.setVisibility(View.VISIBLE);
                 break;
             case SETTINGS:
             case ACCOUNT_SETTINGS:
-                hideTabBar(true);
+                hideTabBar(hideBottomBar);
                 mTopBar.setVisibility(View.VISIBLE);
                 break;
             case ABOUT:
-                hideTabBar(true);
+                hideTabBar(hideBottomBar);
                 break;
             case CHAT_LIST:
+                hideTabBar(false);
+                chat_selected.setVisibility(View.VISIBLE);
+                break;
             case CREATE_CHAT:
             case GROUP_CHAT:
             case INFO_GROUP_CHAT:
             case MESSAGE_IMDN:
             case CONTACT_DEVICES:
             case CHAT:
+                hideTabBar(hideBottomBar);
                 chat_selected.setVisibility(View.VISIBLE);
                 break;
         }

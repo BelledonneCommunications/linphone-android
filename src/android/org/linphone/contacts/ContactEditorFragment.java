@@ -318,7 +318,6 @@ public class ContactEditorFragment extends Fragment {
         super.onResume();
 
         if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().hideTabBar(false);
         }
 
         // Force hide keyboard

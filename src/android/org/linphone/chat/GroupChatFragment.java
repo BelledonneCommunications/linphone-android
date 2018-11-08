@@ -546,7 +546,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     }
 
     public void hideKeyboardVisibleMode() {
-        LinphoneActivity.instance().hideTabBar(false);
+        LinphoneActivity.instance().hideTabBar(getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views));
         LinphoneActivity.instance().showStatusBar();
         mTopBar.setVisibility(View.VISIBLE);
     }

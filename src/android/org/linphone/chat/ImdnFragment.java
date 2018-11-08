@@ -46,6 +46,7 @@ import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.ui.ContactAvatar;
 
 public class ImdnFragment extends Fragment {
@@ -146,6 +147,10 @@ public class ImdnFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().selectMenu(FragmentsAvailable.MESSAGE_IMDN);
+        }
 
         refreshInfo();
     }

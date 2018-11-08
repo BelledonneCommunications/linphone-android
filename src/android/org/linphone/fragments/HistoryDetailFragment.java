@@ -181,7 +181,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_DETAIL);
-            LinphoneActivity.instance().hideTabBar(false);
         }
     }
 

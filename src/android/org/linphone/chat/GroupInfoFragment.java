@@ -52,6 +52,7 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
@@ -343,6 +344,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().selectMenu(FragmentsAvailable.INFO_GROUP_CHAT);
+        }
 
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
         if (getActivity().getCurrentFocus() != null) {

@@ -42,6 +42,7 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 
 import java.util.Arrays;
@@ -118,6 +119,11 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DEVICES);
+        }
+
         initValues();
     }
 

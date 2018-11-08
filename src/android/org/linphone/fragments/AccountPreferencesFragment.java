@@ -536,7 +536,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment implemen
         super.onResume();
 
         if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
+            LinphoneActivity.instance().selectMenu(FragmentsAvailable.ACCOUNT_SETTINGS);
         }
     }
 

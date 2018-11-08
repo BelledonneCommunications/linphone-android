@@ -202,7 +202,6 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT_LIST);
-            LinphoneActivity.instance().hideTabBar(false);
         }
 
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();

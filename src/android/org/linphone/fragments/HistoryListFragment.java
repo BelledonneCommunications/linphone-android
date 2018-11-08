@@ -151,7 +151,6 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_LIST);
-            LinphoneActivity.instance().hideTabBar(false);
             LinphoneActivity.instance().displayMissedCalls(0);
         }
 

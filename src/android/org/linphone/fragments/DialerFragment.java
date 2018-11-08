@@ -154,7 +154,6 @@ public class DialerFragment extends Fragment {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
             LinphoneActivity.instance().updateDialerFragment(this);
             LinphoneActivity.instance().showStatusBar();
-            LinphoneActivity.instance().hideTabBar(false);
         }
 
         boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;

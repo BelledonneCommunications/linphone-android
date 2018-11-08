@@ -319,7 +319,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS_LIST);
-            LinphoneActivity.instance().hideTabBar(false);
             onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered() || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
         }
         changeContactsToggle();
