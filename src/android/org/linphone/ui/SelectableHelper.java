@@ -105,6 +105,7 @@ public class SelectableHelper {
                     @Override
                     public void onClick(View view) {
                         mDeleteListener.onDeleteSelection(getSelectedObjects());
+                        mEditButton.setEnabled(mAdapter.getItemCount() != 0);
                         dialog.dismiss();
                         quitEditionMode();
                     }
