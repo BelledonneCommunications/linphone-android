@@ -225,6 +225,7 @@
     <string name="chat_room_devices">%s\'s devices</string>
     <string name="group_chat_room_devices">Conversation\'s devices</string>
     <string name="add_to_contacts">Add to contacts</string>
+    <string name="lime_security_popup">Instant messages are end-to-end encrypted in secured conversations. It is possible to upgrade the security level of a conversation by authenticating participants. To do so, call the contact and follow the authentification process.</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

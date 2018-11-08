@@ -49,16 +49,19 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
+import org.linphone.assistant.AssistantActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
@@ -76,6 +79,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Factory;
 import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
+import org.linphone.core.ParticipantDevice;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 import org.linphone.ui.SelectableHelper;
@@ -106,7 +110,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     private Uri mImageToUploadUri;
     private ChatEventsAdapter mEventsAdapter;
     private String mRemoteSipUri;
-    private Address mRemoteSipAddress, mRemoteParticipantAddress, mLocalIdentityAddress;
+    private Address mRemoteSipAddress, mRemoteParticipantAddress;
     private ChatRoom mChatRoom;
     private ArrayList<LinphoneContact> mParticipants;
     private LinearLayoutManager layoutManager;
@@ -126,10 +130,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
                 mRemoteSipUri = getArguments().getString("SipUri");
                 mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
             }
-            if (getArguments().getString("LocalIdentity") != null) {
-                String localIdentity = getArguments().getString("LocalIdentity");
-                mLocalIdentityAddress = LinphoneManager.getLc().createAddress(localIdentity);
-            }
         }
 
         mContext = getActivity().getApplicationContext();
@@ -142,7 +142,24 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         mChatRoomSecurityLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinphoneActivity.instance().goToContactDevicesInfos(getRemoteSipUri());
+                boolean oneParticipantOneDevice = false;
+                if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                    ParticipantDevice[] devices = mChatRoom.getParticipants()[0].getDevices();
+                    if (devices.length == 1) {
+                        oneParticipantOneDevice = true;
+                    }
+                }
+
+                if (LinphonePreferences.instance().isLimeSecurityPopupEnabled()) {
+                    showSecurityDialog(oneParticipantOneDevice);
+                } else {
+                    if (oneParticipantOneDevice) {
+                        ParticipantDevice device = mChatRoom.getParticipants()[0].getDevices()[0];
+                        LinphoneManager.getLc().inviteAddress(device.getAddress());
+                    } else {
+                        LinphoneActivity.instance().goToContactDevicesInfos(getRemoteSipUri());
+                    }
+                }
             }
         });
 
@@ -435,7 +452,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
         EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
 
         if (event.getType() != EventLog.Type.ConferenceChatMessage) {
@@ -660,6 +676,57 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         mSelectionHelper.setAdapter(mEventsAdapter);
         mChatEventsList.setAdapter(mEventsAdapter);
         scrollToBottom();
+    }
+
+    private void showSecurityDialog(boolean oneParticipantOneDevice) {
+        final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.lime_security_popup));
+        Button delete = dialog.findViewById(R.id.delete_button);
+        delete.setVisibility(View.GONE);
+        Button ok = dialog.findViewById(R.id.ok_button);
+        ok.setText(oneParticipantOneDevice ? getString(R.string.call) : getString(R.string.ok));
+        ok.setVisibility(View.VISIBLE);
+        Button cancel = dialog.findViewById(R.id.cancel);
+        cancel.setText(getString(R.string.cancel));
+
+        dialog.findViewById(R.id.doNotAskAgainLayout).setVisibility(View.VISIBLE);
+        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
+        dialog.findViewById(R.id.doNotAskAgainLabel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doNotAskAgain.setChecked(!doNotAskAgain.isChecked());
+            }
+        });
+
+        ok.setTag(oneParticipantOneDevice);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean oneParticipantOneDevice = (boolean) view.getTag();
+                if (doNotAskAgain.isChecked()) {
+                    LinphonePreferences.instance().enableLimeSecurityPopup(false);
+                }
+
+                if (oneParticipantOneDevice) {
+                    ParticipantDevice device = mChatRoom.getParticipants()[0].getDevices()[0];
+                    LinphoneManager.getLc().inviteAddress(device.getAddress());
+                } else {
+                    LinphoneActivity.instance().goToContactDevicesInfos(getRemoteSipUri());
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (doNotAskAgain.isChecked()) {
+                    LinphonePreferences.instance().enableLimeSecurityPopup(false);
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     public void scrollToBottom() {

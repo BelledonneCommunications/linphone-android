@@ -1540,6 +1540,14 @@ public class LinphonePreferences {
         getConfig().setBool("app", "link_popup_enabled", enable);
     }
 
+    public boolean isLimeSecurityPopupEnabled() {
+        return getConfig().getBool("app", "lime_security_popup_enabled", true);
+    }
+
+    public void enableLimeSecurityPopup(boolean enable) {
+        getConfig().setBool("app", "lime_security_popup_enabled", enable);
+    }
+
     public String getDebugPopupAddress() {
         return getConfig().getString("app", "debug_popup_magic", null);
     }
