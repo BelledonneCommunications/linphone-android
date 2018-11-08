@@ -62,6 +62,7 @@ public class SelectableHelper {
         });
 
         mEditButton = view.findViewById(R.id.edit);
+        mEditButton.setEnabled(false);
 
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +126,7 @@ public class SelectableHelper {
 
     public void setAdapter(SelectableAdapter adapter) {
         mAdapter = adapter;
+        mEditButton.setEnabled(mAdapter.getItemCount() != 0);
     }
 
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
