@@ -166,6 +166,7 @@
     <string name="contact_first_name">First name</string>
     <string name="contact_last_name">Last name</string>
     <string name="contact_organization">Organization</string>
+    <string name="invite_friend">Invite</string>
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>

@@ -219,6 +219,17 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 }
             }
 
+            v.findViewById(R.id.inviteFriend).setVisibility(View.GONE);
+            if (!noa.isSIPAddress() && v.findViewById(R.id.friendLinphone).getVisibility() == View.GONE) {
+                v.findViewById(R.id.inviteFriend).setVisibility(View.VISIBLE);
+                v.findViewById(R.id.inviteFriend).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO
+                    }
+                });
+            }
+
             String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
             if (!displayChatAddressOnly) {
                 v.findViewById(R.id.contact_call).setOnClickListener(dialListener);
