@@ -208,7 +208,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         mAddParticipantsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mIsEditionEnabled) {
+                if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
                     LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
                 }
             }
@@ -217,9 +217,12 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
+                if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
+                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
+                }
             }
         });
+        mAddParticipantsButton.setVisibility(mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
 
         mSubjectField = view.findViewById(R.id.subjectField);
         mSubjectField.addTextChangedListener(new TextWatcher() {
