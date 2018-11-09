@@ -78,16 +78,20 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 Core lc = LinphoneManager.getLc();
                 Address participant = Factory.instance().createAddress(tag);
                 ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
+                boolean isSecured = v.getId() == R.id.contact_chat_secured;
+
                 if (defaultProxyConfig != null) {
-                    ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant, false);
+                    ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant, isSecured);
                     if (room != null) {
                         LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null, room.getLocalAddress().asString());
                     } else {
-                        if (defaultProxyConfig.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+                        if (defaultProxyConfig.getConferenceFactoryUri() != null && (isSecured || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
                             mWaitLayout.setVisibility(View.VISIBLE);
-                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !isSecured, isSecured);
                             mChatRoom.addListener(mChatRoomCreationListener);
-                            mChatRoom.addParticipant(participant);
+                            Address participants[] = new Address[1];
+                            participants[0] = participant;
+                            mChatRoom.addParticipants(participants);
                         } else {
                             room = lc.getChatRoom(participant);
                             LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null, room.getLocalAddress().asString());
@@ -243,14 +247,26 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
             }
 
             v.findViewById(R.id.contact_chat).setOnClickListener(chatListener);
+            v.findViewById(R.id.contact_chat_secured).setOnClickListener(chatListener);
             if (contactAddress != null) {
                 v.findViewById(R.id.contact_chat).setTag(contactAddress);
+                v.findViewById(R.id.contact_chat_secured).setTag(contactAddress);
             } else {
                 v.findViewById(R.id.contact_chat).setTag(value);
+                v.findViewById(R.id.contact_chat_secured).setTag(value);
+            }
+
+
+            if (v.findViewById(R.id.friendLinphone).getVisibility() == View.VISIBLE /* TODO Does contact have LIME capability ?*/
+                    && lpc.getConferenceFactoryUri() != null) {
+                v.findViewById(R.id.contact_chat_secured).setVisibility(View.VISIBLE);
+            } else {
+                v.findViewById(R.id.contact_chat_secured).setVisibility(View.GONE);
             }
 
             if (getResources().getBoolean(R.bool.disable_chat)) {
                 v.findViewById(R.id.contact_chat).setVisibility(View.GONE);
+                v.findViewById(R.id.contact_chat_secured).setVisibility(View.GONE);
             }
 
             if (!skip) {
