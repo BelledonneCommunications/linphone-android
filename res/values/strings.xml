@@ -167,6 +167,7 @@
     <string name="contact_last_name">Last name</string>
     <string name="contact_organization">Organization</string>
     <string name="invite_friend">Invite</string>
+    <string name="invite_friend_text">Hello, join me on Linphone! You can download it at http://www.linphone.org/technical-corner/linphone/downloads</string>
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>

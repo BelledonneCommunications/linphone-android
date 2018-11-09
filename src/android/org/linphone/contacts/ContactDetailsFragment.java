@@ -22,6 +22,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -226,10 +228,16 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
             v.findViewById(R.id.inviteFriend).setVisibility(View.GONE);
             if (!noa.isSIPAddress() && v.findViewById(R.id.friendLinphone).getVisibility() == View.GONE) {
                 v.findViewById(R.id.inviteFriend).setVisibility(View.VISIBLE);
+                v.findViewById(R.id.inviteFriend).setTag(noa.getNormalizedPhone());
                 v.findViewById(R.id.inviteFriend).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO
+                        String number = (String)v.getTag();
+                        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                        smsIntent.putExtra("address", number);
+                        smsIntent.setData(Uri.parse("smsto:" + number));
+                        smsIntent.putExtra("sms_body", getString(R.string.invite_friend_text));
+                        startActivity(smsIntent);
                     }
                 });
             }
