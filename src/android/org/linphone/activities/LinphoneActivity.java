@@ -206,7 +206,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                     ContactsManager.getInstance().initializeSyncAccount(this);
             }
         } else {
-            if (LinphoneService.isReady())
+            if (LinphoneService.isReady() && !ContactsManager.getInstance().contactsFetchedOnce())
                 ContactsManager.getInstance().initializeContactManager(this);
         }
 
@@ -1286,7 +1286,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     ContactsManager.getInstance().initializeSyncAccount(this);
                 } else {
-                    ContactsManager.getInstance().initializeContactManager(this);
+                    if (!ContactsManager.getInstance().contactsFetchedOnce()) {
+                        ContactsManager.getInstance().initializeContactManager(this);
+                    }
                 }
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:

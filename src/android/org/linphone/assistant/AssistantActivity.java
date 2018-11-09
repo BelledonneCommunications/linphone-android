@@ -412,9 +412,6 @@ public class AssistantActivity extends Activity implements OnClickListener, Acti
         if (LinphonePreferences.instance() != null)
             LinphonePreferences.instance().setPushNotificationEnabled(true);
 
-        if (ContactsManager.getInstance() != null)
-            ContactsManager.getInstance().fetchContactsAsync();
-
         if (LinphonePreferences.instance() != null)
             mPrefs.enabledFriendlistSubscription(getResources().getBoolean(R.bool.use_friendlist_subscription));
 
