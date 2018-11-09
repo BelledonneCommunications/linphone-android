@@ -536,14 +536,18 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
      */
 
     private class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-        private static final int SIZE_SMALL = 500;
         private final WeakReference<ImageView> imageViewReference;
         public String path;
 
         public BitmapWorkerTask(ImageView imageView) {
             path = null;
             // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<ImageView>(imageView);
+            imageViewReference = new WeakReference<>(imageView);
+        }
+
+        private Bitmap scaleToFitHeight(Bitmap b, int height) {
+            float factor = height / (float) b.getHeight();
+            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
         }
 
         // Decode image in background.
@@ -565,30 +569,37 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     bm = BitmapFactory.decodeFile(path);
                 }
 
-                // Rotate the bitmap if possible/needed, using EXIF data
+                ImageView imageView = imageViewReference.get();
                 try {
-                    Bitmap bm_tmp;
+                    // Rotate the bitmap if possible/needed, using EXIF data
+                    Matrix matrix = new Matrix();
                     ExifInterface exif = new ExifInterface(path);
                     int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
-                    Matrix matrix = new Matrix();
-                    if (pictureOrientation == 6) {
-                        matrix.postRotate(90);
-                    } else if (pictureOrientation == 3) {
-                        matrix.postRotate(180);
-                    } else if (pictureOrientation == 8) {
-                        matrix.postRotate(270);
-                    }
-                    bm_tmp = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
-                    if (bm_tmp != bm) {
-                        bm.recycle();
-                        bm = bm_tmp;
+                    if (pictureOrientation == 6 || pictureOrientation == 3 || pictureOrientation == 8) {
+                        if (pictureOrientation == 6) {
+                            matrix.postRotate(90);
+                        } else if (pictureOrientation == 3) {
+                            matrix.postRotate(180);
+                        } else {
+                            matrix.postRotate(270);
+                        }
+                        if (pictureOrientation == 6 || pictureOrientation == 8) {
+                            matrix.postScale(1, imageView.getMeasuredHeight() / (float) bm.getHeight());
+                        } else {
+                            matrix.postScale(imageView.getMeasuredHeight() / (float) bm.getHeight(), 1);
+                        }
+                        thumbnail = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+                        if (thumbnail != bm) {
+                            bm.recycle();
+                            bm = null;
+                        }
                     }
                 } catch (Exception e) {
                     Log.e(e);
                 }
 
-                if (bm != null) {
-                    thumbnail = ThumbnailUtils.extractThumbnail(bm, SIZE_SMALL, SIZE_SMALL);
+                if (thumbnail == null && bm != null) {
+                    thumbnail = scaleToFitHeight(bm, imageView.getMeasuredHeight());
                     bm.recycle();
                 }
                 return thumbnail;
@@ -601,6 +612,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (isCancelled()) {
+                bitmap.recycle();
                 bitmap = null;
             }
             if (imageViewReference != null && bitmap != null) {
