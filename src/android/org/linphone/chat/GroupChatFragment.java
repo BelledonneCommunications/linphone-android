@@ -606,13 +606,6 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         if (mChatRoom.hasBeenLeft()) {
             setReadOnly();
         }
-
-        if (mChatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
-            mChatRoomSecurityLevel.setVisibility(View.GONE);
-        } else {
-            //TODO
-            //mChatRoomSecurityLevel.setImageResource();
-        }
     }
 
     private void displayChatRoomHistory() {
