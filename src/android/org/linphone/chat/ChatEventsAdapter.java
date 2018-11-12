@@ -399,9 +399,25 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                 case ConferenceParticipantDeviceRemoved:
                     holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
                     break;
+                case ConferenceSecurityEvent:
+                    switch (event.getSecurityEventType()) {
+                        case LimeIdentityKeyChanged:
+                            holder.eventMessage.setText(mContext.getString(R.string.lime_identity_key_changed).replace("%s", displayName));
+                            break;
+                        case ManInTheMiddleDetected:
+                            holder.eventMessage.setText(mContext.getString(R.string.man_in_the_middle_detected).replace("%s", displayName));
+                            break;
+                        case SecurityLevelDowngraded:
+                            holder.eventMessage.setText(mContext.getString(R.string.security_level_downgraded).replace("%s", displayName));
+                            break;
+                        case ParticipantMaxDeviceCountExceeded:
+                            holder.eventMessage.setText(mContext.getString(R.string.participant_max_count_exceeded).replace("%s", displayName));
+                            break;
+                    }
+                    break;
                 case None:
                 default:
-                    //TODO
+                    holder.eventMessage.setText(mContext.getString(R.string.unexpected_event).replace("%s", displayName).replace("%i", String.valueOf(event.getType().toInt())));
                     break;
             }
         }
