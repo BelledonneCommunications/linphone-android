@@ -12,7 +12,7 @@ force_ice_disablement=0
 [sip]
 guess_hostname=1
 register_only_when_network_is_up=1
-auto_net_state_mon=0
+auto_net_state_mon=1
 auto_answer_replacing_calls=1
 ping_with_options=0
 rls_uri=

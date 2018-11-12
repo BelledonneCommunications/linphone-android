@@ -224,12 +224,7 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator"/>
         </service>
-
-        <receiver android:name=".receivers.NetworkManager">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
+        
         <receiver
             android:name=".receivers.BluetoothManager"
             android:enabled="false">

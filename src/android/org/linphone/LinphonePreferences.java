@@ -1042,11 +1042,13 @@ public class LinphonePreferences {
 
     // Network settings
     public void setWifiOnlyEnabled(Boolean enable) {
-        getConfig().setBool("app", "wifi_only", enable);
+        if (getLc() == null) return;
+        getLc().enableWifiOnly(enable);
     }
 
     public boolean isWifiOnlyEnabled() {
-        return getConfig().getBool("app", "wifi_only", false);
+        if (getLc() == null) return false;
+        return getLc().wifiOnlyEnabled();
     }
 
     public void useRandomPort(boolean enabled) {
