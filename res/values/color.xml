@@ -18,4 +18,5 @@
     <color name="security_thumb">#ffffff</color>
 
     <color name="transparent">#00000000</color>
+    <color name="linphone_launcher_icon_background">@color/colorA</color>
 </resources>
