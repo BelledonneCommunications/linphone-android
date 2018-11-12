@@ -101,7 +101,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         }
 
         displayName.setText(getContact(mRoom));
-        unreadMessages.setText(String.valueOf(LinphoneManager.getInstance().getUnreadCountForChatRoom(mRoom)));
+        unreadMessages.setText(String.valueOf(mRoom.getUnreadMessagesCount()));
         getAvatar(mRoom);
     }
 

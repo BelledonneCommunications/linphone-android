@@ -1803,8 +1803,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     public int getUnreadMessageCount() {
         int count = 0;
-        for (Integer unread : mUnreadChatsPerRoom.values()) {
-            count += unread;
+        for (ChatRoom room : mLc.getChatRooms()) {
+            count += room.getUnreadMessagesCount();
         }
         return count;
     }
@@ -1817,14 +1817,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void updateUnreadCountForChatRoom(ChatRoom cr, Integer value) {
         String key = cr.getPeerAddress().asStringUriOnly();
         updateUnreadCountForChatRoom(key, value);
-    }
-
-    public int getUnreadCountForChatRoom(ChatRoom cr) {
-        String key = cr.getPeerAddress().asStringUriOnly();
-        if (mUnreadChatsPerRoom.containsKey(key)) {
-            return mUnreadChatsPerRoom.get(key);
-        }
-        return 0;
     }
 
     private void increaseUnreadCountForChatRoom(ChatRoom cr) {
