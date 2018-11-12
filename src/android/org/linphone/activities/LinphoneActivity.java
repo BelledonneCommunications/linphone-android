@@ -848,7 +848,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     public void hideTabBar(Boolean hide) {
-        if (hide) {
+        if (hide && !isTablet()) { // do not hide if tablet, otherwise won't be able to navigate...
             mTabBar.setVisibility(View.GONE);
         } else {
             mTabBar.setVisibility(View.VISIBLE);

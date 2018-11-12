@@ -54,7 +54,7 @@ public enum FragmentsAvailable {
                 return fragment == CHAT_LIST || fragment == CHAT;
 
             case GROUP_CHAT:
-                return fragment == CHAT_LIST || fragment == GROUP_CHAT;
+                return fragment == CHAT_LIST || fragment == GROUP_CHAT || fragment == INFO_GROUP_CHAT || fragment == CREATE_CHAT;
 
             case MESSAGE_IMDN:
                 return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;
