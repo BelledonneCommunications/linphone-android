@@ -646,6 +646,10 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             setReadOnly();
         }
 
+        updateSecurityLevelIcon();
+    }
+
+    private void updateSecurityLevelIcon() {
         if (!mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
             mChatRoomSecurityLevel.setVisibility(View.GONE);
         } else {
@@ -1117,6 +1121,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
     @Override
     public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
+        updateSecurityLevelIcon();
         mEventsAdapter.addToHistory(eventLog);
         scrollToBottom();
     }
