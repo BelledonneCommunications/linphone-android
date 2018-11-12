@@ -137,21 +137,13 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
 
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             LinphoneContact contact;
-            if (mRoom.getParticipants().length > 0) {
-                contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getParticipants()[0].getAddress());
-                if (contact != null) {
-                    return (contact.getFullName());
-                }
-                return (LinphoneUtils.getAddressDisplayName(mRoom.getParticipants()[0].getAddress()));
-            } else {
-                contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
-                if (contact != null) {
-                    return (contact.getFullName());
-                }
-                return (LinphoneUtils.getAddressDisplayName(contactAddress));
+            contact = ContactsManager.getInstance().findContactFromAddress(contactAddress);
+            if (contact != null) {
+                return contact.getFullName();
             }
+            return LinphoneUtils.getAddressDisplayName(contactAddress);
         }
-        return (mRoom.getSubject());
+        return mRoom.getSubject();
     }
 
     public void getAvatar(ChatRoom mRoom) {
@@ -172,10 +164,15 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                     ContactAvatar.displayAvatar(contact, avatarLayout);
                 }
             } else {
-                String username = mRoom.getPeerAddress().getDisplayName();
-                if (username == null) {
-                    username = mRoom.getPeerAddress().getUsername();
+                Address remoteAddr;
+                if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
+                    Participant[] participants = mRoom.getParticipants();
+                    remoteAddr = participants[0].getAddress();
+                } else {
+                    remoteAddr = mRoom.getPeerAddress();
                 }
+
+                String username = LinphoneUtils.getAddressDisplayName(remoteAddr);
                 if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
                     ContactAvatar.displayAvatar(username, mRoom.getSecurityLevel(), avatarLayout);
                 } else {
