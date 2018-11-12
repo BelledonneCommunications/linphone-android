@@ -87,7 +87,7 @@
 
 	</RelativeLayout>
 
-	<org.linphone.mediastream.video.display.GL2JNIView
+	<TextureView
 		android:id="@+id/videoSurface"
 		android:layout_width="match_parent"
 		android:layout_height="0dip"
