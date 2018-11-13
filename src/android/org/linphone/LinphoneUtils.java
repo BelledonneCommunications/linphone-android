@@ -668,7 +668,7 @@ public final class LinphoneUtils {
 	 * Copy data from a source stream to destFile.
 	 * Return true if succeed, return false if failed.
 	 */
-	private static boolean copyToFile(InputStream inputStream, File destFile) {
+	public static boolean copyToFile(InputStream inputStream, File destFile) {
 		if (inputStream == null || destFile == null) return false;
 		try {
 			OutputStream out = new FileOutputStream(destFile);

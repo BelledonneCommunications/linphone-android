@@ -254,7 +254,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {}
 
 			public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-				LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
+				if (LinphoneManager.getLc() != null) LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
 			}
 
 			public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {}

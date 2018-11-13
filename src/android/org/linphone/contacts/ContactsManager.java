@@ -232,8 +232,8 @@ public class ContactsManager extends ContentObserver {
 	}
 
 	public synchronized LinphoneContact findContactFromAddress(Address address) {
-		if (address == null) return null;
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+		if (address == null || lc == null) return null;
 		Friend lf = lc.findFriend(address);
 		if (lf != null) {
 			LinphoneContact contact = (LinphoneContact)lf.getUserData();

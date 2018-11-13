@@ -103,7 +103,7 @@ public class ContactsListFragment extends Fragment implements OnClickListener, O
 		swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				//TODO get contact
+				//LinphoneManager.getInstance().restartCore();
 				if (LinphoneManager.getLc() != null) {
 					LinphoneManager.getLc().refreshRegisters();
 				}

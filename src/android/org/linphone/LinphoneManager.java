@@ -117,6 +117,7 @@ import org.linphone.ui.LinphoneMediaScanner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -568,12 +569,25 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	}
 
 	public synchronized final void destroyCore() {
+		String linphoneRcBack = mServiceContext.getFilesDir().getAbsolutePath() + "/linphonerc.back";
+		String linphoneRcPath = mServiceContext.getFilesDir().getAbsolutePath() + "/.linphonerc";
 		sExited = true;
 		ContactsManagerDestroy();
 		BluetoothManagerDestroy();
 		try {
 			mTimer.cancel();
 			destroyLinphoneCore();
+			try {
+				InputStream backup = new FileInputStream(linphoneRcBack);
+				if (backup != null) {
+					File rcfile = new File(linphoneRcPath);
+					if (rcfile.exists()) {
+						LinphoneUtils.copyToFile(backup, rcfile);
+					}
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		catch (RuntimeException e) {
 			Log.e(e);
@@ -1120,6 +1134,27 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			} catch (CoreException e) {
 				Log.e(e);
 			}
+		} else if (state == GlobalState.Configuring && lc.getProvisioningUri() != null && !lc.getProvisioningUri().isEmpty()) {
+			//Obiane spec
+			String linphoneRcPath = mServiceContext.getFilesDir().getAbsolutePath() + "/.linphonerc";
+			String linphoneRcBack = mServiceContext.getFilesDir().getAbsolutePath() + "/linphonerc.back";
+			FriendList savedList = lc.getDefaultFriendList();
+			if (savedList != null && savedList.getFriends() != null && savedList.getFriends().length > 0) {
+				try {
+					InputStream rc = new FileInputStream(linphoneRcPath);
+					File backup = new File(linphoneRcBack);
+					Config cfg = lc.getConfig();
+
+					LinphoneUtils.copyToFile(rc, backup);
+
+					for (int i = 0 ; i < savedList.getFriends().length ; i++) {
+						cfg.cleanSection("friend_" + i);
+					}
+					cfg.sync();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -1628,14 +1663,41 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
 
 		LinphonePreferences prefs = LinphonePreferences.instance();
+		final String linphoneRcBack = mServiceContext.getFilesDir().getAbsolutePath() + "/linphonerc.back";
 		if (state == ConfiguringState.Successful) {
-			if (lc.getFriendsLists() != null) lc.removeFriendList(lc.getFriendsLists()[0]);
 			if (prefs.isProvisioningLoginViewEnabled()) {
 				ProxyConfig proxyConfig = lc.createProxyConfig();
 				Address addr = proxyConfig.getIdentityAddress();
 				wizardLoginViewDomain = (addr != null) ? addr.getDomain() : "";
 			}
 			prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
+			File backup = new File(linphoneRcBack);
+			if (backup.exists()) backup.delete();
+		} else if (state == ConfiguringState.Failed) {
+			final CoreListener listener = this;
+			Handler mainHandler = new Handler(mServiceContext.getMainLooper());
+			Runnable thread = new Runnable() {
+				@Override
+				public void run() {
+					//Obiane spec
+					String linphoneRcPath = mServiceContext.getFilesDir().getAbsolutePath() + "/.linphonerc";
+					String remoteProvisioning = mLc.getProvisioningUri();
+					mLc.removeListener(listener);
+					destroyCore();
+					Config cfg = Factory.instance().createConfig(linphoneRcPath);
+					cfg.setString("misc", "config-uri", "");
+					cfg.sync();
+					startLibLinphone(mServiceContext);
+					sExited = false;
+					mLc.setProvisioningUri(remoteProvisioning);
+					File backup = new File(linphoneRcBack);
+					if (backup.exists()) {
+						backup.delete();
+					}
+					if (ContactsManager.getInstance() != null) ContactsManager.getInstance().fetchContactsAsync();
+				}
+			};
+			mainHandler.post(thread);
 		}
 	}
 
