@@ -529,13 +529,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                     transaction.replace(R.id.fragmentContainer2, new EmptyFragment());
                 }
 
-				/*if (!withoutAnimation && !isAnimationDisabled && currentFragment.shouldAnimate()) {
-					if (newFragmentType.isRightOf(currentFragment)) {
-						transaction.setCustomAnimations(R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left, R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right);
-					} else {
-						transaction.setCustomAnimations(R.anim.slide_in_left_to_right, R.anim.slide_out_left_to_right, R.anim.slide_in_right_to_left, R.anim.slide_out_right_to_left);
-					}
-				}*/
                 transaction.replace(R.id.fragmentContainer, newFragment);
             }
             transaction.commitAllowingStateLoss();
@@ -558,7 +551,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     public void displayHistoryDetail(String sipUri, CallLog log) {
-        Address lAddress = null;
+        Address lAddress;
         LinphoneContact c = null;
 
         lAddress = Factory.instance().createAddress(sipUri);
@@ -911,13 +904,15 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
     }
 
-    public void updateDialerFragment(DialerFragment fragment) {
+    public void updateDialerFragment() {
         // Hack to maintain soft input flags
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     public void goToDialerFragment() {
-        changeCurrentFragment(FragmentsAvailable.DIALER, null);
+        Bundle extras = new Bundle();
+        extras.putString("SipUri", "");
+        changeCurrentFragment(FragmentsAvailable.DIALER, extras);
         dialer_selected.setVisibility(View.VISIBLE);
     }
 
@@ -937,7 +932,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         Bundle bundle = new Bundle();
         bundle.putInt("Account", accountNumber);
         changeCurrentFragment(FragmentsAvailable.ACCOUNT_SETTINGS, bundle);
-        //settings.setSelected(true);
     }
 
     public StatusFragment getStatusFragment() {
@@ -973,7 +967,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
 
-        TextView toastText = (TextView) layout.findViewById(R.id.toastMessage);
+        TextView toastText = layout.findViewById(R.id.toastMessage);
         toastText.setText(message);
 
         final Toast toast = new Toast(getApplicationContext());
@@ -1027,7 +1021,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         LinphoneManager.getInstance().newOutgoingCall(address);
     }
 
-    public void startIncallActivity(Call currentCall) {
+    public void startIncallActivity() {
         Intent intent = new Intent(this, CallActivity.class);
         startOrientationSensor();
         startActivityForResult(intent, CALL_ACTIVITY);
@@ -1090,14 +1084,14 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         selectMenu(FragmentsAvailable.DIALER);
         DialerFragment dialerFragment = DialerFragment.instance();
         if (dialerFragment != null) {
-            ((DialerFragment) dialerFragment).resetLayout(callTransfer);
+            (dialerFragment).resetLayout();
         }
     }
 
     public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
         DialerFragment dialerFragment = DialerFragment.instance();
         if (dialerFragment != null) {
-            ((DialerFragment) dialerFragment).resetLayout(true);
+            (dialerFragment).resetLayout();
         }
 
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
@@ -1105,7 +1099,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             if (call.getState() == Call.State.IncomingReceived) {
                 startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
             } else {
-                startIncallActivity(call);
+                startIncallActivity();
             }
         }
     }
@@ -1423,7 +1417,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 } else if (onCallStateChanged == State.OutgoingInit || onCallStateChanged == State.OutgoingProgress || onCallStateChanged == State.OutgoingRinging) {
                     startActivity(new Intent(this, CallOutgoingActivity.class));
                 } else {
-                    startIncallActivity(call);
+                    startIncallActivity();
                 }
             }
         }
@@ -1503,7 +1497,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         } else if (extras != null && extras.getBoolean("Notification", false)) {
             if (LinphoneManager.getLc().getCallsNb() > 0) {
                 Call call = LinphoneManager.getLc().getCalls()[0];
-                startIncallActivity(call);
+                startIncallActivity();
             }
         } else if (extras != null && extras.getBoolean("StartCall", false)) {
             if (CallActivity.isInstanciated()) {

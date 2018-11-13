@@ -52,7 +52,6 @@ public class DialerFragment extends Fragment {
     private CallButton mCall;
     private ImageView mAddContact;
     private OnClickListener addContactListener, cancelListener, transferListener;
-    private boolean shouldEmptyAddressField = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,13 +113,11 @@ public class DialerFragment extends Fragment {
             }
         };
 
-        resetLayout(isCallTransferOngoing);
+        resetLayout();
 
         if (getArguments() != null) {
-            shouldEmptyAddressField = false;
             String number = getArguments().getString("SipUri");
             String displayName = getArguments().getString("DisplayName");
-            String photo = getArguments().getString("PhotoUri");
             mAddress.setText(number);
             if (displayName != null) {
                 mAddress.setDisplayedName(displayName);
@@ -152,7 +149,7 @@ public class DialerFragment extends Fragment {
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.DIALER);
-            LinphoneActivity.instance().updateDialerFragment(this);
+            LinphoneActivity.instance().updateDialerFragment();
             LinphoneActivity.instance().showStatusBar();
         }
 
@@ -163,12 +160,7 @@ public class DialerFragment extends Fragment {
             ((LinearLayout) numpad).setVisibility(View.VISIBLE);
         }
 
-        if (shouldEmptyAddressField) {
-            mAddress.setText("");
-        } else {
-            shouldEmptyAddressField = true;
-        }
-        resetLayout(isCallTransferOngoing);
+        resetLayout();
 
         String addressWaitingToBeCalled = LinphoneActivity.instance().mAddressWaitingToBeCalled;
         if (addressWaitingToBeCalled != null) {
@@ -180,7 +172,7 @@ public class DialerFragment extends Fragment {
         }
     }
 
-    public void resetLayout(boolean callTransfer) {
+    public void resetLayout() {
         if (!LinphoneActivity.isInstanciated()) {
             return;
         }
@@ -219,7 +211,6 @@ public class DialerFragment extends Fragment {
     }
 
     public void displayTextInAddressBar(String numberOrSipAddress) {
-        shouldEmptyAddressField = false;
         mAddress.setText(numberOrSipAddress);
     }
 
