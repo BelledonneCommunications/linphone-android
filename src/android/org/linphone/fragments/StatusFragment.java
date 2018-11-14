@@ -422,13 +422,7 @@ public class StatusFragment extends Fragment {
                 zrtpToListen = token.substring(0, 2);
                 zrtpToRead = token.substring(2);
             }
-
-            // Obiane specific dev : display sas notif only if screen locked
-            KeyguardManager myKM = (KeyguardManager) getActivity().getSystemService(Context.KEYGUARD_SERVICE);
-            if (myKM.inKeyguardRestrictedInputMode()) {
-                //Screen is locked
-                LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
-            }
+            
             TextView customText = ZRTPdialog.findViewById(R.id.customText);
             String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
                     + getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
