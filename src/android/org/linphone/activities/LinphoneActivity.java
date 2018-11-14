@@ -162,7 +162,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 	private RelativeLayout sideMenuContent, quitLayout, defaultAccount;
 	private ListView accountsList, sideMenuItemList;
 	private ImageView menu;
-	private boolean doNotGoToCallActivity = false;
 	private List<String> sideMenuItems;
 	private boolean callTransfer = false;
 	private boolean isOnBackground = false;
@@ -308,10 +307,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		}
 		mAlwaysChangingPhoneAngle = rotation;
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null && extras.getBoolean("GoToChat", false)) {
-			onNewIntent(getIntent());
-		}
+		onNewIntent(getIntent());
 	}
 
 	private void initButtons() {
@@ -1213,10 +1209,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		} else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == CALL_ACTIVITY) {
 			getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
 			callTransfer = data != null && data.getBooleanExtra("Transfer", false);
-			boolean chat = data != null && data.getBooleanExtra("chat", false);
-			if(chat){
-				pendingFragmentTransaction = FragmentsAvailable.CHAT_LIST;
-			}
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
 				initInCallMenuLayout(callTransfer);
 			} else {
@@ -1233,8 +1225,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 	@Override
 	protected void onPause() {
-		getIntent().putExtra("PreviousActivity", 0);
-
 		Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 		if (lc != null) {
 			lc.removeListener(mListener);
@@ -1428,10 +1418,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		super.onRestoreInstanceState(savedInstanceState);
 	}
 
-	public void disableGoToCall() {
-		doNotGoToCallActivity = true;
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -1469,7 +1455,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
 		//LinphoneManager.getInstance().changeStatusToOnline();
 
-		if (getIntent().getIntExtra("PreviousActivity", 0) != CALL_ACTIVITY && !doNotGoToCallActivity) {
+		if (!getIntent().getBooleanExtra("DoNotGoToCallActivity", false)) {
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				Call call = LinphoneManager.getLc().getCalls()[0];
 				Call.State onCallStateChanged = call.getState();
@@ -1494,7 +1480,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			displayChat(null, null, intent.getStringExtra("fileShared"));
 			intent.putExtra("fileShared", "");
 		}
-		doNotGoToCallActivity = false;
 		isOnBackground = false;
 
 		if (intent != null) {
@@ -1544,13 +1529,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 		Bundle extras = intent.getExtras();
 		if (extras != null && extras.getBoolean("GoToChat", false)) {
 			String sipUri = extras.getString("ChatContactSipUri");
-			doNotGoToCallActivity = true;
-			displayChat(sipUri, null, null);
+			intent.putExtra("DoNotGoToCallActivity", true);
+			if (sipUri == null) {
+				goToChatList();
+			} else {
+				displayChat(sipUri, null, null);
+			}
 		} else if (extras != null && extras.getBoolean("GoToHistory", false)) {
-			doNotGoToCallActivity = true;
+			intent.putExtra("DoNotGoToCallActivity", true);
 			changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
 		} else if (extras != null && extras.getBoolean("GoToInapp", false)) {
-			doNotGoToCallActivity = true;
+			intent.putExtra("DoNotGoToCallActivity", true);
 			displayInapp();
 		} else if (extras != null && extras.getBoolean("Notification", false)) {
 			if (LinphoneManager.getLc().getCallsNb() > 0) {
@@ -1558,7 +1547,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				startIncallActivity(call);
 			}
 		}else if (extras != null && extras.getBoolean("StartCall", false)) {
-			boolean extraBool = extras.getBoolean("StartCall", false);
 			if (CallActivity.isInstanciated()) {
 				CallActivity.instance().startIncomingCallActivity();
 			} else {
@@ -1566,17 +1554,19 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				goToDialerFragment();
 				//startActivity(new Intent(this, CallIncomingActivity.class));
 			}
+		} else if (extras != null && extras.getBoolean("Transfer", false)) {
+			intent.putExtra("DoNotGoToCallActivity", true);
 		} else {
 			DialerFragment dialerFragment = DialerFragment.instance();
 			if (dialerFragment != null) {
 				if (extras != null && extras.containsKey("SipUriOrNumber")) {
 					if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
-						((DialerFragment) dialerFragment).newOutgoingCall(extras.getString("SipUriOrNumber"));
+						dialerFragment.newOutgoingCall(extras.getString("SipUriOrNumber"));
 					} else {
-						((DialerFragment) dialerFragment).displayTextInAddressBar(extras.getString("SipUriOrNumber"));
+						dialerFragment.displayTextInAddressBar(extras.getString("SipUriOrNumber"));
 					}
 				} else {
-					((DialerFragment) dialerFragment).newOutgoingCall(intent);
+					dialerFragment.newOutgoingCall(intent);
 				}
 			} else {
 				if (extras != null && extras.containsKey("SipUriOrNumber")) {
@@ -1586,7 +1576,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 			if (LinphoneManager.getLc().getCalls().length > 0) {
 				// If a call is ringing, start incomingcallactivity
-				Collection<Call.State> incoming = new ArrayList<Call.State>();
+				Collection<Call.State> incoming = new ArrayList<>();
 				incoming.add(Call.State.IncomingReceived);
 				if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
 					if (CallActivity.isInstanciated()) {
@@ -1597,6 +1587,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 				}
 			}
 		}
+		setIntent(intent);
 	}
 
 	public boolean isOnBackground() {
