@@ -434,29 +434,31 @@ public class StatusFragment extends Fragment {
                 //Screen is locked
                 LinphoneService.instance().displaySasNotification(call.getAuthenticationToken());
             }
-            TextView customText = ZRTPdialog.findViewById(R.id.customText);
-            String newText = getString(R.string.zrtp_dialog1).replace("%s", zrtpToRead)
-                    + getString(R.string.zrtp_dialog2).replace("%s", zrtpToListen);
-            customText.setText(newText);
-            Button delete = ZRTPdialog.findViewById(R.id.delete_button);
-            delete.setText(R.string.accept);
-            Button cancel = ZRTPdialog.findViewById(R.id.cancel);
-            cancel.setText(R.string.deny);
+
+            TextView localSas = ZRTPdialog.findViewById(R.id.zrtp_sas_local);
+            localSas.setText(zrtpToRead);
+            TextView remoteSas = ZRTPdialog.findViewById(R.id.zrtp_sas_remote);
+            remoteSas.setText(zrtpToListen);
+            TextView message = ZRTPdialog.findViewById(R.id.dialog_message);
+            message.setVisibility(View.GONE);
+            ZRTPdialog.findViewById(R.id.dialog_zrtp_layout).setVisibility(View.VISIBLE);
+
+            TextView title = ZRTPdialog.findViewById(R.id.dialog_title);
+            title.setText(getString(R.string.zrtp_dialog_title));
+
+            Button delete = ZRTPdialog.findViewById(R.id.dialog_delete_button);
+            delete.setText(R.string.deny);
+            Button cancel = ZRTPdialog.findViewById(R.id.dialog_cancel_button);
+            cancel.setVisibility(View.GONE);
+            Button accept = ZRTPdialog.findViewById(R.id.dialog_ok_button);
+            accept.setVisibility(View.VISIBLE);
+            accept.setText(R.string.accept);
+
+            ImageView icon = ZRTPdialog.findViewById(R.id.dialog_icon);
+            icon.setVisibility(View.VISIBLE);
+            icon.setImageResource(R.drawable.security_2_indicator);
 
             delete.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    call.setAuthenticationTokenVerified(true);
-                    if (encryption != null) {
-                        encryption.setImageResource(R.drawable.security_ok);
-                    }
-                    isZrtpAsk = false;
-                    ZRTPdialog.dismiss();
-                    LinphoneService.instance().removeSasNotification();
-                }
-            });
-
-            cancel.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (call != null) {
@@ -464,6 +466,19 @@ public class StatusFragment extends Fragment {
                         if (encryption != null) {
                             encryption.setImageResource(R.drawable.security_ko);
                         }
+                    }
+                    isZrtpAsk = false;
+                    ZRTPdialog.dismiss();
+                    LinphoneService.instance().removeSasNotification();
+                }
+            });
+
+            accept.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    call.setAuthenticationTokenVerified(true);
+                    if (encryption != null) {
+                        encryption.setImageResource(R.drawable.security_ok);
                     }
                     isZrtpAsk = false;
                     ZRTPdialog.dismiss();

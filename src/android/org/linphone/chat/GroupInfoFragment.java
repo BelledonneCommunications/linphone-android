@@ -176,9 +176,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             @Override
             public void onClick(View view) {
                 final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_leave_dialog));
-                Button delete = dialog.findViewById(R.id.delete_button);
+                Button delete = dialog.findViewById(R.id.dialog_delete_button);
                 delete.setText(getString(R.string.chat_room_leave_button));
-                Button cancel = dialog.findViewById(R.id.cancel);
+                Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
 
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -405,9 +405,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         if (mAdminStateChangedDialog != null) mAdminStateChangedDialog.dismiss();
 
         mAdminStateChangedDialog = LinphoneActivity.instance().displayDialog(getString(mIsEditionEnabled ? R.string.chat_room_you_are_now_admin : R.string.chat_room_you_are_no_longer_admin));
-        Button delete = mAdminStateChangedDialog.findViewById(R.id.delete_button);
-        Button cancel = mAdminStateChangedDialog.findViewById(R.id.cancel);
-        delete.setVisibility(View.GONE);
+        Button cancel = mAdminStateChangedDialog.findViewById(R.id.dialog_cancel_button);
+        mAdminStateChangedDialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
         cancel.setText(getString(R.string.ok));
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override

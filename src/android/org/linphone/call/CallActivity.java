@@ -1124,13 +1124,15 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
         TextView customText = dialog.findViewById(R.id.customText);
         customText.setText(getResources().getString(R.string.add_video_dialog));
-        Button delete = dialog.findViewById(R.id.delete_button);
-        delete.setText(R.string.accept);
-        Button cancel = dialog.findViewById(R.id.cancel);
+        dialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
+        Button accept = dialog.findViewById(R.id.dialog_ok_button);
+        accept.setVisibility(View.VISIBLE);
+        accept.setText(R.string.accept);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
         cancel.setText(R.string.decline);
         isVideoAsk = true;
 
-        delete.setOnClickListener(new OnClickListener() {
+        accept.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());

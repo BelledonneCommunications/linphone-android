@@ -1531,16 +1531,16 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
         final Dialog dialog = LinphoneActivity.instance().displayDialog(String.format(getString(R.string.link_account_popup), LinphoneManager.getLc().getDefaultProxyConfig().getIdentityAddress().asStringUriOnly()));
-        Button delete = dialog.findViewById(R.id.delete_button);
+        Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
-        Button ok = dialog.findViewById(R.id.ok_button);
+        Button ok = dialog.findViewById(R.id.dialog_ok_button);
         ok.setText(getString(R.string.link));
         ok.setVisibility(View.VISIBLE);
-        Button cancel = dialog.findViewById(R.id.cancel);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
         cancel.setText(getString(R.string.maybe_later));
 
-        dialog.findViewById(R.id.doNotAskAgainLayout).setVisibility(View.VISIBLE);
-        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
+        dialog.findViewById(R.id.dialog_do_not_ask_again_layout).setVisibility(View.VISIBLE);
+        final CheckBox doNotAskAgain = dialog.findViewById(R.id.dialog_do_not_ask_again_layout);
         dialog.findViewById(R.id.doNotAskAgainLabel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

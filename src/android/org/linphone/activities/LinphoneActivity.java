@@ -979,9 +979,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
     public void displayChatRoomError() {
         final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_creation_failed));
-        Button delete = dialog.findViewById(R.id.delete_button);
-        Button cancel = dialog.findViewById(R.id.cancel);
-        delete.setVisibility(View.GONE);
+        dialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
         cancel.setText(getString(R.string.ok));
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1002,7 +1001,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         dialog.getWindow().setBackgroundDrawable(d);
 
-        TextView customText = dialog.findViewById(R.id.customText);
+        TextView customText = dialog.findViewById(R.id.dialog_message);
         customText.setText(text);
         return dialog;
     }

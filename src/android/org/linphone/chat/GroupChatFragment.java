@@ -684,15 +684,15 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
 
     private void showSecurityDialog(boolean oneParticipantOneDevice) {
         final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.lime_security_popup));
-        Button delete = dialog.findViewById(R.id.delete_button);
+        Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
-        Button ok = dialog.findViewById(R.id.ok_button);
+        Button ok = dialog.findViewById(R.id.dialog_ok_button);
         ok.setText(oneParticipantOneDevice ? getString(R.string.call) : getString(R.string.ok));
         ok.setVisibility(View.VISIBLE);
-        Button cancel = dialog.findViewById(R.id.cancel);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
         cancel.setText(getString(R.string.cancel));
 
-        dialog.findViewById(R.id.doNotAskAgainLayout).setVisibility(View.VISIBLE);
+        dialog.findViewById(R.id.dialog_do_not_ask_again_layout).setVisibility(View.VISIBLE);
         final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
         dialog.findViewById(R.id.doNotAskAgainLabel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -962,9 +962,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
             final Dialog dialog = LinphoneActivity.instance().displayDialog(
                     getString(R.string.message_cant_be_decrypted)
                             .replace("%s", (contact != null) ? contact.getFullName() : from.getUsername()));
-            Button delete = dialog.findViewById(R.id.delete_button);
+            Button delete = dialog.findViewById(R.id.dialog_delete_button);
             delete.setText(getString(R.string.call));
-            Button cancel = dialog.findViewById(R.id.cancel);
+            Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
             cancel.setText(getString(R.string.ok));
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
