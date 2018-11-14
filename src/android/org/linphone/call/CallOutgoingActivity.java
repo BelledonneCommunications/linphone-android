@@ -109,7 +109,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         return;
                     }
                     LinphoneActivity.instance().startIncallActivity();
-                    finish();
                     return;
                 } else if (state == State.Error) {
                     // Convert Core message for internalization
@@ -172,7 +171,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         return;
                     }
                     LinphoneActivity.instance().startIncallActivity();
-                    finish();
                     return;
                 }
             }

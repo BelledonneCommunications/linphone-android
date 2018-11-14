@@ -73,6 +73,7 @@
             android:launchMode="singleTask"
             android:label="@string/app_name"
             android:theme="@style/NoTitle"
+            android:noHistory="true"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -129,6 +130,7 @@
         <activity
             android:name=".call.CallIncomingActivity"
             android:launchMode="singleTop"
+            android:noHistory="true"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -137,6 +139,7 @@
         <activity
             android:name=".call.CallOutgoingActivity"
             android:launchMode="singleTop"
+            android:noHistory="true"
             android:theme="@style/NoTitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -145,6 +148,7 @@
         <activity
             android:name=".call.CallActivity"
             android:launchMode="singleTop"
+            android:noHistory="true"
             android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

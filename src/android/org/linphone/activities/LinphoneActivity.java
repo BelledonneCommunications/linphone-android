@@ -1496,7 +1496,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             displayInapp();
         } else if (extras != null && extras.getBoolean("Notification", false)) {
             if (LinphoneManager.getLc().getCallsNb() > 0) {
-                Call call = LinphoneManager.getLc().getCalls()[0];
                 startIncallActivity();
             }
         } else if (extras != null && extras.getBoolean("StartCall", false)) {
@@ -1505,9 +1504,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             } else {
                 mAddressWaitingToBeCalled = extras.getString("NumberToCall");
                 goToDialerFragment();
-                //startActivity(new Intent(this, CallIncomingActivity.class));
             }
         } else if (extras != null && extras.getBoolean("Transfer", false)) {
+            intent.putExtra("DoNotGoToCallActivity", true);
+        } else if (extras != null && extras.getBoolean("AddCall", false)) {
             intent.putExtra("DoNotGoToCallActivity", true);
         } else {
             DialerFragment dialerFragment = DialerFragment.instance();

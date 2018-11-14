@@ -167,7 +167,6 @@ public class LinphoneLauncherActivity extends Activity {
                         LinphoneActivity.instance().displayChat(null, null, stringUriFileShared);
                     }
                 }
-                finish();
             }
         }, 1000);
     }
