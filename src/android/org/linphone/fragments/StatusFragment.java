@@ -436,15 +436,16 @@ public class StatusFragment extends Fragment {
             }
 
             TextView localSas = ZRTPdialog.findViewById(R.id.zrtp_sas_local);
-            localSas.setText(zrtpToRead);
+            localSas.setText(zrtpToRead.toUpperCase());
             TextView remoteSas = ZRTPdialog.findViewById(R.id.zrtp_sas_remote);
-            remoteSas.setText(zrtpToListen);
+            remoteSas.setText(zrtpToListen.toUpperCase());
             TextView message = ZRTPdialog.findViewById(R.id.dialog_message);
             message.setVisibility(View.GONE);
             ZRTPdialog.findViewById(R.id.dialog_zrtp_layout).setVisibility(View.VISIBLE);
 
             TextView title = ZRTPdialog.findViewById(R.id.dialog_title);
             title.setText(getString(R.string.zrtp_dialog_title));
+            title.setVisibility(View.VISIBLE);
 
             Button delete = ZRTPdialog.findViewById(R.id.dialog_delete_button);
             delete.setText(R.string.deny);

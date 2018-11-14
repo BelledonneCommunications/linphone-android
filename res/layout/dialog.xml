@@ -8,8 +8,9 @@
     <ImageView
         android:id="@+id/dialog_icon"
         android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:adjustViewBounds="true"
         android:src="@drawable/security_alert_indicator"
         android:layout_margin="15dp"/>
 
@@ -140,8 +141,9 @@
             android:text="@string/cancel"
             android:background="@drawable/resizable_assistant_button"
             style="@style/font8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
             android:layout_margin="10dp"
             android:padding="10dp"/>
 
@@ -151,8 +153,9 @@
             android:background="@drawable/resizable_assistant_button"
             android:backgroundTint="@color/colorI"
             style="@style/font15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
             android:layout_margin="10dp"
             android:padding="10dp"/>
 
@@ -163,8 +166,9 @@
             android:background="@drawable/resizable_assistant_button"
             android:backgroundTint="@color/colorL"
             style="@style/font15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
             android:layout_margin="10dp"
             android:padding="10dp"/>
 
