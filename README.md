@@ -32,10 +32,11 @@ This allows developpers to keep a stable version as well as a developpment one o
 ## Firebase push notifications
 
 Now that Google Cloud Messaging has been deprecated and will be completely removed on April 11th 2019, the only official way of using push notifications is through Firebase.
+
 However to make Firebase push notifications work, the project needs to have a file named app/google-services.json that contains some confidential informations, so you won't find it (it has been added to the .gitignore file).
 This means that if you compile this project, you won't have push notification feature working in the app!
 
-To enable them, just add your own 'google-services.json' in the app folder, add your key at 'push_sender_id' and 'firebase' at 'push_type' in 'res/values/non_localizable_custom.xml'.
+To enable them, just add your own ```google-services.json``` in the app folder, edit the ```res/values/non_localizable_custom.xml``` file set your key in ```push_sender_id```. Also ensure ```push_type``` is set to ```firebase```.
 
 # CONTRIBUTIONS
 
@@ -43,4 +44,5 @@ In order to submit a patch for inclusion in linphone's source code:
 
 1.    First make sure your patch applies to latest git sources before submitting: patches made to old versions can't and won't be merged.
 2.    Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree.
+
 The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.
