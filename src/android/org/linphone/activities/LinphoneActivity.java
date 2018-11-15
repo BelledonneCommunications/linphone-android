@@ -1554,8 +1554,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 			}
 		} else if (extras != null && extras.getBoolean("Transfer", false)) {
 			intent.putExtra("DoNotGoToCallActivity", true);
+			displayContacts(false);
 		} else if (extras != null && extras.getBoolean("AddCall", false)) {
 			intent.putExtra("DoNotGoToCallActivity", true);
+			displayContacts(false);
 		} else {
 			DialerFragment dialerFragment = DialerFragment.instance();
 			if (dialerFragment != null) {
