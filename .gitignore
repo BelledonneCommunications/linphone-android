@@ -47,7 +47,7 @@ tests/linphonetester_*
 tests/tests.output
 WORK
 .d
-google-services.json
+app/google-services.json
 .*clang*
 **/*.iml
 src/linphone-wrapper

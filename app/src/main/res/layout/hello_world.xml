@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent"
+	android:orientation="vertical">
+	<LinearLayout android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		<EditText android:layout_height="wrap_content" android:id="@+id/AddressId"
+			android:hint="sip:user@host:port" android:layout_width="fill_parent"
+			android:layout_weight="1" android:text="sip:[user@]host[:port]"></EditText>
+		<Button android:layout_height="wrap_content" android:id="@+id/CallButton"
+			android:text="Call" android:layout_width="wrap_content"></Button>
+
+	</LinearLayout>
+	<EditText android:layout_height="wrap_content" android:id="@+id/MyAddressId"
+			android:hint="enter my sip identity (sip:[user@]host)" android:layout_width="fill_parent"
+			android:visibility="gone" android:text=""></EditText>
+	<EditText android:hint="my password" android:id="@+id/Password"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		 android:visibility="gone"></EditText>
+
+
+
+
+	<TextView android:layout_weight="1" android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:id="@+id/OutputText"
+		android:text="Debug"></TextView>
+
+	<Button android:text="STOP" android:id="@+id/ButtonStop"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
+
+</LinearLayout>

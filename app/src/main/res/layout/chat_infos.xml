@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorH" >
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:orientation="horizontal"
+            android:background="@color/colorF"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_weight="0.2"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_back"
+                android:padding="18dp"
+                android:src="@drawable/back"/>
+
+            <TextView
+                android:text="@string/chat_room_infos_title"
+                style="@style/font6"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:gravity="center"/>
+
+            <ImageView
+                android:id="@+id/confirm"
+                android:src="@drawable/chat_room_creation_confirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_valid"
+                android:padding="18dp"
+                android:layout_gravity="right"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layoutSubjectField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <EditText
+                android:id="@+id/subjectField"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_conversation_subject"
+                android:hint="@string/conversation_subject_hint"
+                android:gravity="center"
+                android:inputType="textEmailSubject"
+                android:paddingRight="5dp"
+                android:textColor="@android:color/black"
+                android:textCursorDrawable="@null"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/addParticipantsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorG"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="@color/colorB"
+                android:text="@string/chat_room_participants" />
+
+            <ImageView
+                android:id="@+id/addParticipants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="10dp"
+                android:src="@drawable/chat_group_add"/>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_room_participants"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:divider="@color/colorE"
+            android:dividerHeight="1dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/leaveGroupLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:background="@color/colorA">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textAllCaps="true"
+                android:textColor="@color/colorG"
+                android:text="@string/chat_room_leave_group"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/wait_layout" android:id="@+id/waitScreen"/>
+
+</RelativeLayout>
+

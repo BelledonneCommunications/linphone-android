@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Custom-->
+  <string name="app_name">लीनफ़ोन</string>
+  <string name="service_name">लीनफ़ोन सर्विस</string>
+  <string name="addressbook_label">लीनफ़ोन</string>
+  <string name="notification_title">लीनफ़ोन</string>
+  <string name="tunnel_host"></string>
+  <!--Common-->
+  <string name="phone_number">फ़ोन अंक</string>
+  <string name="email">ईमेल</string>
+  <string name="accept">स्वीकारे</string>
+  <string name="open">खोले</string>
+  <string name="continue_text">जारी रखे</string>
+  <string name="deny">रद्द करे</string>
+  <string name="no">नहीं</string>
+  <string name="ok">ठीक</string>
+  <string name="yes">हाँ</string>
+  <!--Launch screen-->
+  <!--Assistant-->
+  <string name="welcome">स्वागत हे</string>
+  <string name="assistant">सहायता</string>
+  <string name="assistant_continue">जारी रखे</string>
+  <!--Status-->
+  <!--In-app-->
+  <!--Dailer-->
+  <!--History-->
+  <!--Contacts-->
+  <!--Chat-->
+  <!--Status Bar-->
+  <!--Side Menu-->
+  <string name="menu_assistant">सहायता</string>
+  <!--Call-->
+  <!--About-->
+  <!--Service-->
+  <!--Errors-->
+  <!--Account Settings-->
+  <!--Settings-->
+  <!--do not change order without changing corresponding entry_values in non_localizable_strings.xml-->
+  <!--Audio settings-->
+  <!--Video settings-->
+  <!--Call settings-->
+  <!--Chat settings-->
+  <!--Network settings-->
+  <!--Advanced settings-->
+  <!--Audio hack settings-->
+  <!--Content description-->
+  <string name="content_description_accept">स्वीकारे</string>
+</resources>

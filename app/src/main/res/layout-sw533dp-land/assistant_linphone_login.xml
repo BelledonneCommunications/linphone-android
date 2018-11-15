@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:padding="30dp"
+    android:orientation="vertical">
+
+	<TextView
+		android:text="@string/assistant_linphone_account"
+		style="@style/font6"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"/>
+
+	<TextView
+		android:text="@string/assistant_linphone_login_desc"
+		style="@style/font11"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="10dp"
+		android:layout_gravity="center"
+		android:id="@+id/message_phone_number"/>
+
+
+
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="30dp"
+		android:orientation="horizontal">
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="left"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp">
+
+			<LinearLayout
+				android:id="@+id/phone_number_layout"
+				android:visibility="visible"
+				android:orientation="horizontal"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content">
+
+				<Button
+					android:id="@+id/select_country"
+					style="@style/font8"
+					android:text="@string/select_your_country"
+					android:layout_marginTop="15dp"
+					android:background="@drawable/resizable_assistant_button"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:layout_height="40dp"/>
+
+				<LinearLayout
+					android:orientation="vertical"
+					android:layout_marginLeft="30dp"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:layout_height="wrap_content">
+
+					<RelativeLayout
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content">
+
+						<TextView
+							android:id="@+id/phone_number_label"
+							android:text="@string/phone_number"
+							style="@style/font13"
+							android:textAllCaps="true"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"/>
+
+						<ImageView
+							android:id="@+id/info_phone_number"
+							android:src="@drawable/info"
+							android:layout_alignParentRight="true"
+							android:layout_width="15dp"
+							android:layout_height="15dp"/>
+
+					</RelativeLayout>
+
+					<LinearLayout
+						android:orientation="horizontal"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content">
+
+						<EditText
+							android:id="@+id/dial_code"
+							android:background="@drawable/resizable_textfield"
+							android:textColor="@color/colorB"
+							android:inputType="phone"
+							android:text="+"
+							android:layout_marginRight="10dp"
+							android:gravity="center"
+							android:layout_width="65dp"
+							android:layout_height="40dp"
+							android:maxLines="1"/>
+
+						<EditText
+							android:id="@+id/phone_number"
+							android:background="@drawable/resizable_textfield"
+							android:textColor="@color/colorB"
+							android:contentDescription="@string/content_description_phone_number_field"
+							android:inputType="phone"
+							android:layout_width="match_parent"
+							android:layout_height="40dp"
+							android:maxLines="1"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:id="@+id/phone_number_error_2"
+						android:text="@string/error"
+						style="@style/font20"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:visibility="invisible"/>
+
+				</LinearLayout>
+			</LinearLayout>
+
+		</TableRow>
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="center"
+			android:layout_margin="10dp">
+
+			<LinearLayout
+				android:id="@+id/username_layout"
+				android:layout_gravity="top"
+				android:visibility="gone"
+				android:orientation="vertical"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:text="@string/username"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/assistant_username"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="text|textNoSuggestions"
+					android:contentDescription="@string/content_description_username_field"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:maxLines="1"/>
+			</LinearLayout>
+
+			<LinearLayout
+				android:id="@+id/password_layout"
+				android:visibility="gone"
+				android:orientation="vertical"
+				android:layout_gravity="top"
+				android:paddingLeft="30dp"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="match_parent">
+
+				<TextView
+					android:text="@string/password"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/assistant_password"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="textPassword"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:maxLines="1"/>
+
+				<TextView
+					android:id="@+id/forgot_password"
+					android:layout_gravity="right"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:maxLines="1"/>
+			</LinearLayout>
+		</TableRow>
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="center"
+			android:layout_margin="10dp">
+
+			<LinearLayout
+				android:id="@+id/display_layout"
+				android:orientation="vertical"
+				android:visibility="gone"
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content">
+
+				<TextView
+					android:text="@string/assistant_display_name_optional"
+					style="@style/font13"
+					android:textAllCaps="true"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"/>
+
+				<EditText
+					android:id="@+id/assistant_display_name"
+					android:background="@drawable/resizable_textfield"
+					android:textColor="@color/colorB"
+					android:inputType="textPersonName"
+					android:contentDescription="@string/content_description_display_field"
+					android:layout_width="match_parent"
+					android:layout_height="40dp"
+					android:maxLines="1"/>
+			</LinearLayout>
+
+			<View
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="0dp"/>
+
+		</TableRow>
+
+		<TableRow
+			android:layout_weight="1"
+			android:gravity="left"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp">
+
+			<CheckBox
+				android:id="@+id/use_username"
+				android:visibility="visible"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/login_with_username"/>
+		</TableRow>
+	</TableLayout>
+
+	<Button
+		android:id="@+id/assistant_apply"
+		android:text="@string/assistant_login"
+		android:background="@drawable/assistant_button"
+		android:textColor="@drawable/assistant_button_text_color"
+		style="@style/font8"
+		android:layout_gravity="center"
+		android:layout_width="wrap_content"
+		android:layout_height="40dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:layout_marginTop="20dp"/>
+
+</LinearLayout>

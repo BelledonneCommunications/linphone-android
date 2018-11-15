@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="match_parent" 
+	android:layout_width="match_parent"
+	android:gravity="center"
+	android:orientation="vertical">
+	
+    
+    <Button android:text="Hello world tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_margin="10dp"
+        android:onClick="startHelloWorldTutorial" />
+    
+    <Button android:text="Registration tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_margin="10dp"
+        android:onClick="startRegistrationTutorial" />
+    
+    <Button android:text="Chat room tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_margin="10dp"
+        android:onClick="startChatRoomTutorial" />
+    
+    <Button android:text="Buddy status tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_margin="10dp"
+        android:onClick="startBuddyStatusTutorial" />
+    
+    <Button android:text="CardDAV Sync"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_margin="10dp"
+        android:onClick="startCardDavSyncTutorial"/>
+
+</LinearLayout>

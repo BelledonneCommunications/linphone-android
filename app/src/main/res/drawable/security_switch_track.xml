@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="center_vertical|fill_horizontal">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <size android:height="20dp" />
+            <solid android:color="@color/security_switch_track_color" />
+        </shape>
+    </item>
+</layer-list>

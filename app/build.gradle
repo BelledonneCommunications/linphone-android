@@ -1,0 +1,120 @@
+apply plugin: 'com.android.application'
+
+def getPackageName() {
+    return "org.linphone"
+}
+
+def firebaseEnabled() {
+    File googleFile = new File('google-services.json')
+    return googleFile.exists()
+}
+
+def isLocalAarAvailable() {
+    File debugAar = new File('linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-debug.aar')
+    File releaseAar = new File('linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-release.aar')
+    return debugAar.exists() || releaseAar.exists()
+}
+
+if (firebaseEnabled()) {
+    apply plugin: 'com.google.gms.google-services'
+}
+
+///// Exclude Files /////
+
+def excludeFiles = []
+// Exclude firebase file if not enable
+if (!firebaseEnabled()) {
+    excludeFiles.add('**/Firebase*')
+    println '[Push Notification] Firebase disabled'
+}
+
+def excludePackage = []
+
+excludePackage.add('**/gdb.*')
+excludePackage.add('**/libopenh264**')
+excludePackage.add('**/**tester**')
+excludePackage.add('**/LICENSE.txt')
+
+/////////////////////////
+
+repositories {
+    if (isLocalAarAvailable()) {
+        flatDir {
+            dirs './linphone-sdk/build/linphone-sdk/bin/outputs/aar/'
+        }
+    } else {
+        maven {
+            url "https://gitlab.linphone.org/BC/public/maven_repository/raw/master"
+        }
+    }
+}
+
+dependencies {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:+') {
+        exclude module: 'support-annotations'
+    }
+    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
+    androidTestImplementation 'junit:junit:4.12'
+
+    if (firebaseEnabled()) {
+        classpath 'com.google.gms:google-services:3.1.0'
+        implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    }
+    implementation 'org.apache.commons:commons-compress:1.16.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+
+    if (isLocalAarAvailable()) {
+        implementation project(":linphone-sdk-android")
+    } else {
+        releaseImplementation 'org.linphone:liblinphone-sdk:${defaultConfig.versionName}'
+        debugImplementation 'org.linphone:liblinphone-sdk:${defaultConfig.versionName}-DEBUG'
+    }
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 4100
+        versionName "4.1"
+        applicationId getPackageName()
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            jniDebuggable true
+        }
+    }
+
+    sourceSets {
+        main {
+            packagingOptions {
+                excludes = excludePackage
+            }
+        }
+    }
+    packagingOptions {
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/LICENSE'
+        exclude 'META-INF/MANIFEST.MF'
+    }
+}

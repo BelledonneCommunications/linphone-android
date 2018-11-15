@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+	    android:id="@+id/list"
+	    android:layout_width="match_parent" 
+	    android:layout_height="match_parent"
+	    android:drawSelectorOnTop="false"
+	    android:cacheColorHint="@color/transparent"
+	    android:scrollbarAlwaysDrawVerticalTrack="true" />
+    
+</RelativeLayout>

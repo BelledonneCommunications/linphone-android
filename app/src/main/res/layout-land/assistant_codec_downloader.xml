@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="30dp"
+	android:orientation="vertical" >
+
+	<TextView
+		android:text="@string/assistant_codec_down_question"
+		style="@style/font7"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/question"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"/>
+
+	<ProgressBar
+		style="?android:attr/progressBarStyleHorizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/progressBar"
+		android:layout_above="@+id/answerNo"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_alignRight="@+id/downloadingInfo"
+		android:layout_alignEnd="@+id/downloadingInfo"/>
+
+	<TextView
+		style="@style/font7"
+		android:text="@string/assistant_codec_downloading"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/downloading"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"/>
+
+	<Button
+		style="@style/font7"
+		android:text="@string/no"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/answerNo"
+		android:layout_marginBottom="35dp"
+		android:layout_alignParentBottom="true"
+		android:layout_marginRight="26dp"
+		android:layout_marginEnd="26dp"/>
+
+	<Button
+		style="@style/font7"
+		android:text="@string/yes"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/answerYes"
+		android:layout_below="@+id/progressBar"
+		android:layout_alignRight="@+id/progressBar"
+		android:layout_alignEnd="@+id/progressBar"/>
+
+	<Button
+		style="@style/font7"
+		android:text="@string/ok"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/answerOk"
+		android:layout_alignTop="@+id/answerYes"
+		android:layout_centerHorizontal="true"/>
+
+	<TextView
+		style="@style/font7"
+		android:text="@string/assistant_codec_downloaded"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/downloaded"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"/>
+
+	<TextView
+		style="@style/font7"
+		android:textAllCaps="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:id="@+id/downloadingInfo"
+		android:layout_above="@+id/progressBar"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

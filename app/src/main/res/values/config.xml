@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="account_linphone_login">wizard15</string>
+    <string name="account_linphone_pwd">wizard15</string>
+    <string name="account_linphone_domain">sip.linphone.org</string>
+    <string name="account_linphone_display_name">Bob</string>
+
+    <string name="account_generic_login">wizard15</string>
+    <string name="account_generic_pwd">wizard15</string>
+    <string name="account_generic_domain">test.linphone.org</string>
+
+    <string name="account_create_login">wizard42</string>
+    <string name="account_create_pwd">wizard42</string>
+    <string name="account_create_email">wizard42@linphone.org</string>
+    <string name="account_create_country_name">france</string>
+    <string name="account_create_country_code">33</string>
+    <string name="account_create_phone_number">12345678</string>
+
+    <string name="account_test_calls_login">wizard13</string>
+    <string name="account_test_calls_pwd">wizard13</string>
+    <string name="account_test_calls_domain">sip.linphone.org</string>
+
+    <string name="contact_name">Wizard</string>
+    <string name="contact_number">+33952636505</string>
+    <string name="contact_sip">wizard@sip.linphone.org</string>
+
+    <string name="chat_test_text_sent">Ping!</string>
+    <string name="chat_test_text_received">Pong!</string>
+
+    <string name="conference_account_login">wizard16</string>
+    <string name="conference_account_password">wizard16</string>
+    <string name="conference_account_domain">sip.linphone.org</string>
+
+</resources>

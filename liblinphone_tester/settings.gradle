@@ -1,2 +1,0 @@
-include ':liblinphone-sdk'
-project(':liblinphone-sdk').projectDir = new File(rootProject.projectDir,'../liblinphone-sdk')

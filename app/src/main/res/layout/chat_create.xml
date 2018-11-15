@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorH" >
+
+        <LinearLayout
+            android:id="@+id/top_bar"
+            android:orientation="horizontal"
+            android:background="@color/colorF"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_back"
+                android:padding="18dp"
+                android:src="@drawable/back"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/security_toogle_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/security_toogle_icon_grey"/>
+
+                <Switch
+                    android:id="@+id/security_toogle"
+                    android:layout_width="50dp"
+                    android:switchMinWidth="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="match_parent"
+                    android:track="@drawable/security_switch_track"
+                    android:thumb="@drawable/security_switch_thumb"
+                    android:textOff=""
+                    android:textOn=""/>
+
+                <ImageView
+                    android:id="@+id/security_toogle_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/security_toogle_icon_green"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_all_contacts"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/all_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/toolbar_button"
+                    android:contentDescription="@string/content_description_all_contacts"
+                    android:padding="15dp"
+                    android:src="@drawable/contacts_all"/>
+
+                <View
+                    android:id="@+id/all_contacts_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorA"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_linphone_contacts"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/linphone_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/toolbar_button"
+                    android:contentDescription="@string/content_description_linphone_contacts"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:src="@drawable/contacts_sip"/>
+
+                <View
+                    android:id="@+id/linphone_contacts_select"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorA"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/next"
+                android:visibility="gone"
+                android:src="@drawable/chat_room_creation_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_valid"
+                android:padding="18dp"
+                android:layout_gravity="right"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layoutSearchField"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <SearchView
+                android:id="@+id/searchField"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:paddingRight="5dp"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="@string/chat_room_creation_filter_hint"
+                android:textColor="@android:color/black"
+                android:background="@drawable/resizable_textfield"
+                android:inputType="textPersonName"/>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/layoutContactsSelected"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/resizable_textfield"
+            android:lines="1"
+            android:fadeScrollbars="false">
+
+            <LinearLayout
+                android:id="@+id/contactsSelected"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:lines="1"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:scrollIndicators="bottom"/>
+        </HorizontalScrollView>
+
+        <RelativeLayout
+            android:layout_below="@+id/layoutContactsSelected"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/relativeLayout">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/contactsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/colorE"
+                android:dividerHeight="1dp"
+                android:fastScrollAlwaysVisible="true"
+                android:fastScrollEnabled="true"/>
+
+            <ProgressBar
+                android:id="@+id/contactsFetchInProgress"
+                style="?android:attr/progressBarStyle"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/noSipContact"
+                android:text="@string/no_sip_contact"
+                style="@style/font6"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/noContact"
+                android:text="@string/no_contact"
+                android:visibility="gone"
+                style="@style/font6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/wait_layout" android:id="@+id/waitScreen"/>
+
+</RelativeLayout>

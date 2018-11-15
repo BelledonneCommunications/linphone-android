@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:background="@drawable/list_selector"
+	android:layout_width="25dp"
+	android:layout_height="60dp"
+	android:padding="5dp"
+	android:gravity="center_vertical"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:id="@+id/avatar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center">
+
+		<ImageView
+			android:id="@+id/contact_picture"
+			android:src="@drawable/avatar"
+			android:contentDescription="@string/content_description_contact_picture"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:adjustViewBounds="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="5dp"/>
+
+		<ImageView
+			android:id="@+id/mask"
+			android:src="@drawable/avatar_mask"
+			android:layout_width="35dp"
+			android:layout_height="35dp"
+			android:adjustViewBounds="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="5dp"/>
+
+	</RelativeLayout>
+
+	<TextView
+		android:id="@+id/sip_uri"
+		style="@style/font6"
+		android:lines="1"
+		android:ellipsize="end"
+		android:maxLines="1"
+		android:gravity="center_vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_marginLeft="10dp" />
+
+	<ImageView
+		android:id="@+id/remove"
+		android:layout_width="30dp"
+		android:layout_height="30dp"
+		android:layout_gravity="right"
+		android:paddingRight="10dp"
+		android:src="@drawable/chat_group_delete"
+		android:layout_centerVertical="true"
+		android:layout_toRightOf="@+id/layout_admin"/>
+
+	<LinearLayout
+		android:id="@id/layout_admin"
+		android:background="@drawable/list_selector"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentBottom="true"
+		android:layout_toLeftOf="@id/remove">
+
+		<ImageView
+			android:id="@+id/contact_is_select"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_alignParentRight="true"
+			android:layout_centerInParent="true"
+			android:layout_gravity="right"
+			android:visibility="invisible"
+			android:paddingRight="20dp"
+			android:src="@drawable/check_selected"/>
+
+		<TextView
+			android:id="@+id/admin"
+			style="@style/font6"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="0.6"
+			android:background="@drawable/toolbar_button"
+			android:gravity="center"
+			android:text="@string/administrator"/>
+
+	</LinearLayout>
+
+</RelativeLayout>
