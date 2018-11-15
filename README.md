@@ -2,99 +2,45 @@
 
 Linphone is a free VoIP and video softphone based on the SIP protocol.
 
-# COMPILATION INSTRUCTIONS
+# Getting Started
 
-## To build liblinphone for Android, you must:
+Now the default way of building linphone-android is to download the AAR SDK in our maven repository.
+However, if you wish to use a locally compiled SDK here's how to proceed.
 
-1. Download the latest Android sdk with platform-tools and tools updated to latest revision, then add both 'tools' and 'platform-tools' folders in your path and the android-sdk folder to ANDROID_HOME environment variable.
+## Building a local SDK
 
-2. Download the latest Android NDK from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
-
-3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_, _doxygen_, _graphviz_ and _cmake(>=3.12)_.
-  * On 64 bits linux systems you'll need the _ia32-libs_ package.
-  * With the latest Debian (multiarch), you need this:
-    * `dpkg --add-architecture i386`
-    * `aptitude update`
-    * `aptitude install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386`
-
-4. Run `./prepare.py` in the top level directory. This will configure the build and generate a Makefile in the top level directory. Some options can be passed to choose what you want to include in the build and the platforms for which you want to build. Use `./prepare.py --help` to see what these options are.
-
-5. Run the Makefile script in the top level directory, `make`.
-
-6. _(optional)_ To install the generated apk into a plugged device, run	`make install`.
-
-7. _(optional)_ To generate a liblinphone SDK zip containing a full jar and native libraries, run `make liblinphone-android-sdk`
-
-8. _(optional)_ To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run `make mediastreamer2-sdk`
-
-9. _(optional)_ To generate a signed apk to publish on the Google Play, run `make release`. Make sure you filled the gradle.properties values for version.name, store file, store password, key alias and key password to correctly sign the generated apk:
-  * RELEASE_STORE_FILE=""
-  * RELEASE_STORE_PASSWORD=
-  * RELEASE_KEY_ALIAS=
-  * RELEASE_KEY_PASSWORD=
-
-  If you don't, the passwords will be asked at the signing phase.
-
-10. _(optional)_ Once you compiled the libraries succesfully with 'make', you can reduce the compilation time using 'make quick': it will only generate a new APK from java files.
-
-## To create an apk with a different package name
-
-You need to edit the build.gradle file:
-
-1. look for the function named "getPackageName()" and change it value accordingly
-2. also update the values in the AndroidManifest file where the comment <!-- Change package ! --> appears
-3. change the package name also in the files: res/xml/syncadapter.xml, res/xml/contacts.xml and res/values/non_localizable_custom where <!-- Change package ! --> appears
-4. run again the Makefile script by calling "make"
-
-## To run the liblinphone test suite on android
-
-Simply run `make liblinphone_tester`. This will be build everything, generate an apk, and install it on the connected device if any.
-
-You can speed up the compilation by using ccache (compiler cache, see [ccache.samba.org](https://ccache.samba.org/)). Give the *"-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"* options to the *prepare.py* script.
-
-# PUSH NOTIFICATION
-
-## Firebase
-
-To enable firebase in Linphone, just add your 'google-service.json' in project root, add your key at 'push_sender_id' and add 'firebase' at 'push_type' in 'res/values/non_localizable_custom.xml'
-Be sure to have all services for Firebase in your 'AndroidManifest.xml'
-
-# TROUBLESHOOTING
-
-If you encounter the following issue:
-
+1. Update the submodules of this project (if not done yet) using the following command:
 ```
-E/dalvikvm( 2465): dlopen("/data/app-lib/org.linphone-1/liblinphone-armeabi-v7a.so") failed:
-Cannot load library: soinfo_relocate(linker.cpp:975): cannot locate symbol "rand" referenced
-by "liblinphone-armeabi-v7a.so"
+git submodule update --recursive --init
 ```
+After that the folder linphone-sdk will now contain all the modules required to build our SDK.
 
-It's because you have installed the android-21 platform (which is chosen automatically because it's the most recent) and you deployed the apk on a android < 5 device.
+2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-To fix this, in the Makefile, force *ANDROID_MOST_RECENT_TARGET=android-19*.
+3. Rebuild the app in Android Studio.
 
-If you encounter troubles with the make clean target and you are using the 8e android ndk, the solution can be found [here](https://groups.google.com/forum/?fromgroups=#!topic/android-ndk/3wIbb-h3nDU).
+## Create an apk with a different package name
 
-If you built the app using eclipse, ensure you ran at least once the make command (see above steps 0 to 3) ! Else you'll have this exceptions:
+Before the 4.1 release, there were a lot of files to edit to change the package name.
+Now, simply edit the app/build.gradle file and change the value returned by method ```getPackageName()```
+The next build will automatically use this value everywhere thanks to ```manifestPlaceholders``` feature of gradle and Android.
 
-```
-FATAL EXCEPTION: main
-java.lang.ExceptionInInitializerError
-...
-Caused by: java.lang.UnsatisfiedLinkError: Couldn't load linphone-armeabi-v7a: findLibrary
-returned null
-```
+You may have already noticed that the app installed by Android Studio has ```org.linphone.debug``` package name.
+If you build the app as release, the package name will be ```org.linphone```. 
+This allows developpers to keep a stable version as well as a developpment one on the same device easily.
 
-# BUILD OPTIONS
+## Firebase push notifications
 
-The build options are to be passed to the *prepare.py* script. For example to enable the x264 encoder give the *"-DENABLE_X264=YES"* to *prepare.py*.
+Now that Google Cloud Messaging has been deprecated and will be completely removed on April 11th 2019, the only official way of using push notifications is through Firebase.
+However to make Firebase push notifications work, the project needs to have a file named app/google-services.json that contains some confidential informations, so you won't find it (it has been added to the .gitignore file).
+This means that if you compile this project, you won't have push notification feature working in the app!
 
-The available options can be listed with the `./prepare.py --list-features`
+To enable them, just add your own 'google-services.json' in the app folder, add your key at 'push_sender_id' and 'firebase' at 'push_type' in 'res/values/non_localizable_custom.xml'.
 
 # CONTRIBUTIONS
 
 In order to submit a patch for inclusion in linphone's source code:
 
-1.    First make sure your patch applies to latest git sources before submitting: patches made to old versions can't be merged.
-2.    Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree. The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.
-
+1.    First make sure your patch applies to latest git sources before submitting: patches made to old versions can't and won't be merged.
+2.    Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree.
+The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.
