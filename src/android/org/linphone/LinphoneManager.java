@@ -805,7 +805,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		if (mLc.isIncomingInvitePending() && on) {
 			handsetON = true;
 			mLc.acceptCall(mLc.getCurrentCall());
-			LinphoneActivity.instance().startIncallActivity(mLc.getCurrentCall());
+			LinphoneActivity.instance().startIncallActivity();
 		} else if(on && CallActivity.isInstanciated()) {
 			handsetON = true;
 			CallActivity.instance().setSpeakerEnabled(true);
@@ -1218,7 +1218,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 							if (LinphoneManager.getInstance() != null) {
 								LinphoneManager.getInstance().routeAudioToReceiver();
 								if (LinphoneActivity.instance() != null)
-									LinphoneActivity.instance().startIncallActivity(call);
+									LinphoneActivity.instance().startIncallActivity();
 							}
 						}
 					}

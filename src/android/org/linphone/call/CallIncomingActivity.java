@@ -356,7 +356,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity implements Lin
 				return;
 			}
 			LinphoneManager.getInstance().routeAudioToReceiver();
-			LinphoneActivity.instance().startIncallActivity(mCall);
+			LinphoneActivity.instance().startIncallActivity();
 		}
 	}
 

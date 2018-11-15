@@ -1120,9 +1120,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	public void goBackToDialer() {
 		Intent intent = new Intent();
-		intent.putExtra("Transfer", false);
-		setResult(Activity.RESULT_FIRST_USER, intent);
-		finish();
+		intent.setClass(this, LinphoneActivity.class);
+		intent.putExtra("AddCall", true);
+		startActivity(intent);
 	}
 
 	private void goBackToDialerAndDisplayTransferButton() {
@@ -1130,7 +1130,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		intent.setClass(this, LinphoneActivity.class);
 		intent.putExtra("Transfer", true);
 		startActivity(intent);
-		finish();
 	}
 
 	private void goToChatList() {
@@ -1138,7 +1137,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		intent.setClass(this, LinphoneActivity.class);
 		intent.putExtra("GoToChat", true);
 		startActivity(intent);
-		finish();
 	}
 
 	public void acceptCallUpdate(boolean accept) {

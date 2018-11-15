@@ -118,7 +118,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
-					LinphoneActivity.instance().startIncallActivity(mCall);
+					LinphoneActivity.instance().startIncallActivity();
 					finish();
 					return;
 				} else if (state == State.Error) {
@@ -181,7 +181,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 					if (!LinphoneActivity.isInstanciated()) {
 						return;
 					}
-					LinphoneActivity.instance().startIncallActivity(mCall);
+					LinphoneActivity.instance().startIncallActivity();
 					finish();
 					return;
 				}
