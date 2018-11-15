@@ -60,6 +60,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.PresenceModel;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.ZrtpPeerStatus;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.contacts.ContactsManager;
@@ -98,6 +101,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.linphone.LinphoneUtils.getSecurityLevelForSipUri;
 import static org.linphone.LinphoneUtils.getZrtpStatus;
 
 public class CallActivity extends LinphoneGenericActivity implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -1523,7 +1527,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 			TextView contactName = (TextView) callView.findViewById(R.id.contact_name);
 			ImageView contactImage = (ImageView) callView.findViewById(R.id.contact_picture);
-
 			Address lAddress = call.getRemoteAddress();
 			setContactInformation(contactName, contactImage, lAddress);
 			displayCallStatusIconAndReturnCallPaused(callView, call);
@@ -1536,10 +1539,39 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(lAddress);
 		if (lContact == null) {
 			contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
-			//contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		} else {
 			contactName.setText(lContact.getFullName());
 			//LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
+		}
+
+		//Obiane spec
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, lAddress);
+		if (securityLevel == ChatRoomSecurityLevel.Safe) {
+			contactPicture.setImageResource(R.drawable.avatar_big_secure2);
+		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+			contactPicture.setImageResource(R.drawable.avatar_big_unsecure);
+		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+			contactPicture.setImageResource(R.drawable.avatar_big_secure1);
+		} else {
+			ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), lAddress.asStringUriOnly());
+			if (zrtpStatus == ZrtpPeerStatus.Valid) {
+				contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
+			} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+				contactPicture.setImageResource(R.drawable.avatar_medium_unsecure);
+			} else {
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && lContact != null && lContact.getFriend() != null) {
+					PresenceModel presenceModel = lContact.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				} else {
+					contactPicture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
+			}
 		}
 	}
 
@@ -1695,12 +1727,44 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 		LinearLayout confView = (LinearLayout) inflater.inflate(R.layout.conf_call_control_row, container, false);
 		conferenceList.setId(index + 1);
 		TextView contact = (TextView) confView.findViewById(R.id.contactNameOrNumber);
+		ImageView picture = confView.findViewById(R.id.contactPicture);
 
+		Address lAddress = call.getRemoteAddress();
 		LinphoneContact lContact  = ContactsManager.getInstance().findContactFromAddress(call.getRemoteAddress());
 		if (lContact == null) {
 			contact.setText(call.getRemoteAddress().getUsername());
 		} else {
 			contact.setText(lContact.getFullName());
+		}
+
+		//Obiane spec
+		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+		Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
+		ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, lAddress);
+		if (securityLevel == ChatRoomSecurityLevel.Safe) {
+			picture.setImageResource(R.drawable.avatar_big_secure2);
+		} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
+			picture.setImageResource(R.drawable.avatar_big_unsecure);
+		} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
+			picture.setImageResource(R.drawable.avatar_big_secure1);
+		} else {
+			ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), lAddress.asStringUriOnly());
+			if (zrtpStatus == ZrtpPeerStatus.Valid) {
+				picture.setImageResource(R.drawable.avatar_medium_secure2);
+			} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
+				picture.setImageResource(R.drawable.avatar_medium_unsecure);
+			} else {
+				if (!ContactsManager.getInstance().isContactPresenceDisabled() && lContact != null && lContact.getFriend() != null) {
+					PresenceModel presenceModel = lContact.getFriend().getPresenceModel();
+					if (presenceModel != null) {
+						picture.setImageResource(R.drawable.avatar_medium_secure1);
+					} else {
+						picture.setImageResource(R.drawable.avatar_medium_unregistered);
+					}
+				} else {
+					picture.setImageResource(R.drawable.avatar_medium_unregistered);
+				}
+			}
 		}
 
 		registerCallDurationTimer(confView, call);
