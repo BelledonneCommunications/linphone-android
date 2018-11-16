@@ -653,7 +653,7 @@ public final class LinphoneService extends Service {
         } else {
             bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
         }
-        Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, subject,
+        Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.notificationId, notif.numberOfUnreadMessage, subject,
                 getString(R.string.group_chat_notif).replace("%1", fromName).replace("%2", message), bm, notifContentIntent);
 
         notifyWrapper(notif.notificationId, notification);
@@ -691,9 +691,22 @@ public final class LinphoneService extends Service {
         } else {
             bm = BitmapFactory.decodeResource(getResources(), R.drawable.topbar_avatar);
         }
-        Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.numberOfUnreadMessage, fromName, message, bm, notifContentIntent);
+        Notification notification = Compatibility.createMessageNotification(getApplicationContext(), notif.notificationId, notif.numberOfUnreadMessage, fromName, message, bm, notifContentIntent);
 
         notifyWrapper(notif.notificationId, notification);
+    }
+
+    public void sendNotification(Notification notif, int notificationId) {
+        notifyWrapper(notificationId, notif);
+    }
+
+    public String getSipUriForNotificationId(int notificationId) {
+        for (String addr : mChatNotifMap.keySet()) {
+            if (mChatNotifMap.get(addr).notificationId == notificationId) {
+                return addr;
+            }
+        }
+        return null;
     }
 
     public void displayInappNotification(String message) {
@@ -704,15 +717,6 @@ public final class LinphoneService extends Service {
         mNotif = Compatibility.createSimpleNotification(getApplicationContext(), getString(R.string.inapp_notification_title), message, notifContentIntent);
 
         notifyWrapper(NOTIF_ID, mNotif);
-    }
-
-    public void displaySasNotification(String sas) {
-        mSasNotif = Compatibility.createSimpleNotification(getApplicationContext(),
-                getString(R.string.zrtp_notification_title),
-                sas + " " + getString(R.string.zrtp_notification_message),
-                null);
-
-        notifyWrapper(SAS_NOTIF_ID, mSasNotif);
     }
 
     public void removeSasNotification() {

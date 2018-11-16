@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,9 +15,13 @@ import android.view.ViewTreeObserver;
 
 import org.linphone.R;
 import org.linphone.mediastream.Log;
+import org.linphone.receivers.NotificationBroadcastReceiver;
+
+import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
+import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 /*
-ApiTwentyOnePlus.java
+ApiTwentySixPlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -36,6 +41,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 @TargetApi(26)
 public class ApiTwentySixPlus {
+	public static Notification createRepliedNotification(Context context, String reply) {
+		Notification repliedNotification = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+            .setSmallIcon(R.drawable.topbar_chat_notification)
+            .setContentText(context.getString(R.string.notification_replied_label).replace("%s", reply))
+            .build();
+
+		return repliedNotification;
+	}
 
 	public static void createServiceChannel(Context context) {
 		NotificationManager notificationManager =
@@ -68,9 +81,7 @@ public class ApiTwentySixPlus {
         notificationManager.createNotificationChannel(channel);
     }
 
-	public static Notification createMessageNotification(Context context,
-	                                                     int msgCount, String msgSender, String msg, Bitmap contactIcon,
-	                                                     PendingIntent intent) {
+	public static Notification createMessageNotification(Context context, int notificationId, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
 		String title;
 		if (msgCount == 1) {
 			title = msgSender;
@@ -78,24 +89,39 @@ public class ApiTwentySixPlus {
 			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
 		}
 
-		Notification notif = null;
+		String replyLabel = context.getResources().getString(R.string.notification_reply_label);
+		RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
+
+		Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
+		replyIntent.setAction(context.getPackageName() + ".REPLY_ACTION");
+		replyIntent.putExtra(INTENT_NOTIF_ID, notificationId);
+
+		PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context,
+            notificationId, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		Notification.Action action = new Notification.Action.Builder(R.drawable.chat_send_over,
+            context.getString(R.string.notification_reply_label), replyPendingIntent)
+            .addRemoteInput(remoteInput)
+            .build();
+
+		Notification notif;
 		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-					.setContentTitle(title)
-					.setContentText(msg)
-					.setSmallIcon(R.drawable.topbar_chat_notification)
-					.setAutoCancel(true)
-					.setContentIntent(intent)
-					.setDefaults(Notification.DEFAULT_SOUND
-							| Notification.DEFAULT_VIBRATE)
-					.setLargeIcon(contactIcon)
-					.setCategory(Notification.CATEGORY_MESSAGE)
-					.setVisibility(Notification.VISIBILITY_PRIVATE)
-					.setPriority(Notification.PRIORITY_HIGH)
-					.setNumber(msgCount)
-					.setWhen(System.currentTimeMillis())
-					.setShowWhen(true)
-					.setColor(context.getColor(R.color.notification_color_led))
-					.build();
+			.setContentTitle(title)
+			.setContentText(msg)
+			.setSmallIcon(R.drawable.topbar_chat_notification)
+			.setAutoCancel(true)
+			.setContentIntent(intent)
+			.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+			.setLargeIcon(contactIcon)
+			.setCategory(Notification.CATEGORY_MESSAGE)
+			.setVisibility(Notification.VISIBILITY_PRIVATE)
+			.setPriority(Notification.PRIORITY_HIGH)
+			.setNumber(msgCount)
+			.setWhen(System.currentTimeMillis())
+			.setShowWhen(true)
+			.setColor(context.getColor(R.color.notification_color_led))
+			.addAction(action)
+			.build();
 
 		return notif;
 	}
@@ -105,19 +131,19 @@ public class ApiTwentySixPlus {
 	                                                    String contactName, PendingIntent intent) {
 
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
-				.setContentTitle(contactName)
-				.setContentText(msg)
-				.setSmallIcon(iconID)
-				.setAutoCancel(false)
-				.setContentIntent(intent)
-				.setLargeIcon(contactIcon)
-				.setCategory(Notification.CATEGORY_CALL)
-				.setVisibility(Notification.VISIBILITY_PUBLIC)
-				.setPriority(Notification.PRIORITY_HIGH)
-				.setWhen(System.currentTimeMillis())
-				.setShowWhen(true)
-				.setColor(context.getColor(R.color.notification_color_led))
-				.build();
+			.setContentTitle(contactName)
+			.setContentText(msg)
+			.setSmallIcon(iconID)
+			.setAutoCancel(false)
+			.setContentIntent(intent)
+			.setLargeIcon(contactIcon)
+			.setCategory(Notification.CATEGORY_CALL)
+			.setVisibility(Notification.VISIBILITY_PUBLIC)
+			.setPriority(Notification.PRIORITY_HIGH)
+			.setWhen(System.currentTimeMillis())
+			.setShowWhen(true)
+			.setColor(context.getColor(R.color.notification_color_led))
+			.build();
 
 		return notif;
 	}
@@ -127,31 +153,31 @@ public class ApiTwentySixPlus {
 
 		if (largeIcon != null) {
 			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
-					.setContentTitle(title)
-					.setContentText(message)
-					.setSmallIcon(icon, level)
-					.setLargeIcon(largeIcon)
-					.setContentIntent(intent)
-					.setCategory(Notification.CATEGORY_SERVICE)
-					.setVisibility(Notification.VISIBILITY_SECRET)
-					.setPriority(priority)
-					.setWhen(System.currentTimeMillis())
-					.setShowWhen(true)
-					.setColor(context.getColor(R.color.notification_color_led))
-					.build();
+				.setContentTitle(title)
+				.setContentText(message)
+				.setSmallIcon(icon, level)
+				.setLargeIcon(largeIcon)
+				.setContentIntent(intent)
+				.setCategory(Notification.CATEGORY_SERVICE)
+				.setVisibility(Notification.VISIBILITY_SECRET)
+				.setPriority(priority)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColor(context.getColor(R.color.notification_color_led))
+				.build();
 		} else {
 			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
-					.setContentTitle(title)
-					.setContentText(message)
-					.setSmallIcon(icon, level)
-					.setContentIntent(intent)
-					.setCategory(Notification.CATEGORY_SERVICE)
-					.setVisibility(Notification.VISIBILITY_SECRET)
-					.setPriority(priority)
-					.setWhen(System.currentTimeMillis())
-					.setShowWhen(true)
-					.setColor(context.getColor(R.color.notification_color_led))
-					.build();
+				.setContentTitle(title)
+				.setContentText(message)
+				.setSmallIcon(icon, level)
+				.setContentIntent(intent)
+				.setCategory(Notification.CATEGORY_SERVICE)
+				.setVisibility(Notification.VISIBILITY_SECRET)
+				.setPriority(priority)
+				.setWhen(System.currentTimeMillis())
+				.setShowWhen(true)
+				.setColor(context.getColor(R.color.notification_color_led))
+				.build();
 		}
 
 		return notif;
@@ -163,41 +189,41 @@ public class ApiTwentySixPlus {
 
 	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-				.setContentTitle(title)
-				.setContentText(text)
-				.setSmallIcon(R.drawable.call_status_missed)
-				.setAutoCancel(true)
-				.setContentIntent(intent)
-				.setDefaults(Notification.DEFAULT_SOUND
-						| Notification.DEFAULT_VIBRATE)
-				.setCategory(Notification.CATEGORY_MESSAGE)
-				.setVisibility(Notification.VISIBILITY_PRIVATE)
-				.setPriority(Notification.PRIORITY_HIGH)
-				.setWhen(System.currentTimeMillis())
-				.setShowWhen(true)
-				.setColor(context.getColor(R.color.notification_color_led))
-				.build();
+			.setContentTitle(title)
+			.setContentText(text)
+			.setSmallIcon(R.drawable.call_status_missed)
+			.setAutoCancel(true)
+			.setContentIntent(intent)
+			.setDefaults(Notification.DEFAULT_SOUND
+					| Notification.DEFAULT_VIBRATE)
+			.setCategory(Notification.CATEGORY_MESSAGE)
+			.setVisibility(Notification.VISIBILITY_PRIVATE)
+			.setPriority(Notification.PRIORITY_HIGH)
+			.setWhen(System.currentTimeMillis())
+			.setShowWhen(true)
+			.setColor(context.getColor(R.color.notification_color_led))
+			.build();
 
 		return notif;
 	}
 
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
 		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-				.setContentTitle(title)
-				.setContentText(text)
-				.setSmallIcon(R.drawable.linphone_logo)
-				.setAutoCancel(true)
-				.setContentIntent(intent)
-				.setDefaults(Notification.DEFAULT_SOUND
-						| Notification.DEFAULT_VIBRATE)
-				.setCategory(Notification.CATEGORY_MESSAGE)
-				.setVisibility(Notification.VISIBILITY_PRIVATE)
-				.setPriority(Notification.PRIORITY_HIGH)
-				.setWhen(System.currentTimeMillis())
-				.setShowWhen(true)
-				.setColorized(true)
-				.setColor(context.getColor(R.color.notification_color_led))
-				.build();
+			.setContentTitle(title)
+			.setContentText(text)
+			.setSmallIcon(R.drawable.linphone_logo)
+			.setAutoCancel(true)
+			.setContentIntent(intent)
+			.setDefaults(Notification.DEFAULT_SOUND
+					| Notification.DEFAULT_VIBRATE)
+			.setCategory(Notification.CATEGORY_MESSAGE)
+			.setVisibility(Notification.VISIBILITY_PRIVATE)
+			.setPriority(Notification.PRIORITY_HIGH)
+			.setWhen(System.currentTimeMillis())
+			.setShowWhen(true)
+			.setColorized(true)
+			.setColor(context.getColor(R.color.notification_color_led))
+			.build();
 
 		return notif;
 	}

@@ -293,5 +293,10 @@
 
         <activity android:name=".activities.LinphoneGenericActivity"/>
 
+        <receiver
+            android:name=".receivers.NotificationBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 </manifest>

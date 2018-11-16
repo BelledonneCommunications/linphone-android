@@ -15,6 +15,10 @@
     <string name="about_link">www.linphone.org</string>
     <string name="sync_account_name">linphone contacts</string>
 
+    <!-- Notifications -->
+    <string name="notification_reply_label">Reply</string>
+    <string name="notification_replied_label">Sent reply: %s</string>
+
     <!-- Common -->
     <string name="username">Username</string>
     <string name="userid">User-id (optional)</string>

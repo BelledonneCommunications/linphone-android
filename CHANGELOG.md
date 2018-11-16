@@ -16,13 +16,22 @@ Group changes to describe their impact on the project, as follows:
 - feature: option to automatically download incoming files, either always, never or depending on their sizes.
 
 ## [4.1] - 2018-xx-xx
+
+### Improvements
 - Improved UI.
+- Added adaptive icon for Android 8+.
 - Use of binary SDK hosted in Maven repository instead of having to build it manually.
-- feature: added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
-- feature: send multiple files with text at the same time.
-- feature: support of H265 codec.
-- feature: use TextureView instead of GL2JNIView, easier to use and will fix issues.
-- feature: send SMS to invite your friends in using Linphone.
+- Asynchronous fetch of native contacts.
+- Removed unused graphical resources.
+- Updated translations.
+
+### Features
+- Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
+- Send multiple files with text at the same time.
+- Support of H265 codec.
+- Use TextureView instead of GL2JNIView, easier to use and will fix issues.
+- Send SMS to invite your friends in using Linphone.
+- Reply to received chat message in notification
 
 ## [4.0.1] - 2018-06-26
 

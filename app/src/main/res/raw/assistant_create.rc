@@ -9,8 +9,7 @@
     <entry name="quality_reporting_interval" overwrite="true">180</entry>
     <entry name="reg_expires" overwrite="true">31536000</entry>
     <entry name="reg_identity" overwrite="true">sip:?@sip.linphone.org</entry>
-    <entry name="reg_proxy" overwrite="true">&lt;sip:sip-staging.linphone.org:5081;transport=tls&gt;</entry>
-    <entry name="reg_route" overwrite="true">&lt;sip:sip-staging.linphone.org:5081;transport=tls&gt;</entry>
+    <entry name="reg_proxy" overwrite="true">&lt;sip:sip.linphone.org;transport=tls&gt;</entry>
     <entry name="reg_sendregister" overwrite="true">1</entry>
     <entry name="nat_policy_ref" overwrite="true">nat_policy_default_values</entry>
     <entry name="realm" overwrite="true">sip.linphone.org</entry>

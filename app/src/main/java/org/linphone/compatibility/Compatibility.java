@@ -37,6 +37,9 @@ import android.widget.TextView;
 import org.linphone.mediastream.Version;
 
 public class Compatibility {
+    public static final String KEY_TEXT_REPLY = "key_text_reply";
+    public static final String INTENT_NOTIF_ID = "NOTIFICATION_ID";
+
     public static void createNotificationChannels(Context context) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             ApiTwentySixPlus.createServiceChannel(context);
@@ -68,9 +71,11 @@ public class Compatibility {
         }
     }
 
-    public static Notification createMessageNotification(Context context, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
+    public static Notification createMessageNotification(Context context, int notificationId, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
+            return ApiTwentySixPlus.createMessageNotification(context, notificationId, msgCount, msgSender, msg, contactIcon, intent);
+        } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
+            return ApiTwentyFourPlus.createMessageNotification(context, notificationId, msgCount, msgSender, msg, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
             return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {
@@ -78,6 +83,15 @@ public class Compatibility {
         } else {
             return ApiElevenPlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
         }
+    }
+
+    public static Notification createRepliedNotification(Context context, String reply) {
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+            return ApiTwentySixPlus.createRepliedNotification(context, reply);
+        } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
+            return ApiTwentyFourPlus.createRepliedNotification(context, reply);
+        }
+        return null;
     }
 
     public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
