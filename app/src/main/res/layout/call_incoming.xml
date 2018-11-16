@@ -93,88 +93,99 @@
 		android:layout_alignParentBottom="true"
 		android:orientation="horizontal" >
 
-		<ImageView
-			android:id="@+id/decline"
-			android:src="@drawable/call_hangup"
-			android:background="@drawable/hangup"
-			android:contentDescription="@string/content_description_decline"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:padding="12dp"/>
+        <LinearLayout
+            android:id="@+id/decline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/colorI"
+            android:gravity="center"
+            android:padding="12dp">
 
-		<LinearLayout
-			android:id="@+id/acceptUnlock"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:visibility="gone"
-			android:orientation="horizontal"
-			android:background="@color/colorA"
-			android:paddingLeft="15dp"
-			android:paddingTop="15dp"
-			android:paddingBottom="15dp"
-			android:layout_gravity="bottom">
+            <ImageView
+                android:src="@drawable/call_hangup"
+                android:contentDescription="@string/content_description_decline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-			<ImageView
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/declineUnlock"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-			<ImageView
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.6"/>
+                <ImageView
+                    android:id="@+id/arrow_hangup"
+                    android:src="@drawable/arrow_hangup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-			<ImageView
-				android:id="@+id/acceptArrow"
-				android:src="@drawable/arrow_accept"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.2"/>
-		</LinearLayout>
+                <ImageView
+                    android:src="@drawable/arrow_hangup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"/>
 
-		<ImageView
-			android:id="@+id/accept"
-			android:src="@drawable/call_audio_start"
-			android:background="@drawable/call"
-			android:contentDescription="@string/content_description_accept"
-			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:padding="12dp"/>
+                <ImageView
+                    android:src="@drawable/arrow_hangup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"/>
 
-		<LinearLayout
-			android:id="@+id/declineUnlock"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:visibility="gone"
-			android:orientation="horizontal"
-			android:background="@color/colorD"
-			android:paddingLeft="15dp"
-			android:paddingTop="15dp"
-			android:paddingBottom="15dp"
-			android:layout_gravity="bottom">
+            </LinearLayout>
 
-			<ImageView
-				android:id="@+id/arrow_hangup"
-				android:src="@drawable/arrow_hangup"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.2"/>
+        </LinearLayout>
 
-			<ImageView
-				android:src="@drawable/arrow_hangup"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:alpha="0.6"/>
+        <LinearLayout
+            android:id="@+id/accept"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/colorL"
+            android:gravity="center"
+            android:padding="12dp">
 
-			<ImageView
-				android:src="@drawable/arrow_hangup"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/acceptUnlock"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-		</LinearLayout>
+                <ImageView
+                    android:src="@drawable/arrow_accept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"/>
+
+                <ImageView
+                    android:src="@drawable/arrow_accept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.6"/>
+
+                <ImageView
+                    android:src="@drawable/arrow_accept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/acceptIcon"
+                android:src="@drawable/call_audio_start"
+                android:contentDescription="@string/content_description_accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
 	</LinearLayout>
 

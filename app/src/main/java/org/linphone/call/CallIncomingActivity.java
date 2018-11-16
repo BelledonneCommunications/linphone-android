@@ -60,7 +60,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private static CallIncomingActivity instance;
 
     private TextView name, number;
-    private ImageView contactPicture, accept, decline, arrow;
+    private ImageView contactPicture, acceptIcon;
+    private LinearLayout accept, decline;
     private Call mCall;
     private CoreListenerStub mListener;
     private LinearLayout acceptUnlock;
@@ -102,17 +103,17 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         acceptUnlock = findViewById(R.id.acceptUnlock);
         declineUnlock = findViewById(R.id.declineUnlock);
 
+        acceptIcon = findViewById(R.id.acceptIcon);
         accept = findViewById(R.id.accept);
         lookupCurrentCall();
 
         if (LinphonePreferences.instance() != null && mCall != null && mCall.getRemoteParams() != null &&
                 LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests() &&
                 mCall.getRemoteParams().videoEnabled()) {
-            accept.setImageResource(R.drawable.call_video_start);
+            acceptIcon.setImageResource(R.drawable.call_video_start);
         }
 
         decline = findViewById(R.id.decline);
-        arrow = findViewById(R.id.arrow_hangup);
 
         mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         boolean doNotUseSliders = getResources().getBoolean(R.bool.do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked);
@@ -131,47 +132,46 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                 }
             });
         } else {
+            acceptUnlock.setVisibility(View.VISIBLE);
             accept.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     float curX;
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            acceptUnlock.setVisibility(View.VISIBLE);
                             decline.setVisibility(View.GONE);
-                            answerX = motionEvent.getX() + accept.getWidth() / 2;
+                            answerX = motionEvent.getX() - accept.getWidth();
                             begin = true;
                             oldMove = 0;
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            curX = motionEvent.getX();
+                            curX = motionEvent.getX() - accept.getWidth();
                             view.scrollBy((int) (answerX - curX), view.getScrollY());
                             oldMove -= answerX - curX;
                             answerX = curX;
                             if (oldMove < -25)
                                 begin = false;
-                            if (curX < arrow.getWidth() && !begin) {
+                            if (curX < (screenWidth / 4) - accept.getWidth() && !begin) {
                                 answer();
                                 return true;
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            view.scrollTo(0, view.getScrollY());
                             decline.setVisibility(View.VISIBLE);
-                            acceptUnlock.setVisibility(View.GONE);
+                            view.scrollTo(0, view.getScrollY());
                             break;
                     }
                     return true;
                 }
             });
 
+            declineUnlock.setVisibility(View.VISIBLE);
             decline.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     float curX;
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            declineUnlock.setVisibility(View.VISIBLE);
                             accept.setVisibility(View.GONE);
                             declineX = motionEvent.getX();
                             break;
@@ -179,15 +179,14 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                             curX = motionEvent.getX();
                             view.scrollBy((int) (declineX - curX), view.getScrollY());
                             declineX = curX;
-                            if (curX > (screenWidth - arrow.getWidth() * 4)) {
+                            if (curX > (3 * screenWidth / 4)) {
                                 decline();
                                 return true;
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            view.scrollTo(0, view.getScrollY());
                             accept.setVisibility(View.VISIBLE);
-                            declineUnlock.setVisibility(View.GONE);
+                            view.scrollTo(0, view.getScrollY());
                             break;
                     }
                     return true;

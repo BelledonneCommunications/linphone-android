@@ -527,7 +527,7 @@ public final class LinphoneService extends Service {
         }
 
         int notificationTextId;
-        int inconId;
+        int iconId;
         switch (call.getState()) {
             case Released:
             case End:
@@ -537,15 +537,15 @@ public final class LinphoneService extends Service {
             case Paused:
             case PausedByRemote:
             case Pausing:
-                inconId = R.drawable.topbar_call_notification;
+                iconId = R.drawable.topbar_call_notification;
                 notificationTextId = R.string.incall_notif_paused;
                 break;
             default:
                 if (call.getCurrentParams().videoEnabled()) {
-                    inconId = R.drawable.topbar_videocall_notification;
+                    iconId = R.drawable.topbar_videocall_notification;
                     notificationTextId = R.string.incall_notif_video;
                 } else {
-                    inconId = R.drawable.topbar_call_notification;
+                    iconId = R.drawable.topbar_call_notification;
                     notificationTextId = R.string.incall_notif_active;
                 }
                 break;
@@ -565,7 +565,7 @@ public final class LinphoneService extends Service {
         Intent notifIntent = new Intent(this, incomingReceivedActivity);
         notifIntent.putExtra("Notification", true);
         mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = Compatibility.createInCallNotification(getApplicationContext(), notif.notificationId, showAnswerAction, mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
+        Notification notification = Compatibility.createInCallNotification(getApplicationContext(), notif.notificationId, showAnswerAction, mNotificationTitle, getString(notificationTextId), iconId, bm, name, mNotifContentIntent);
 
         notifyWrapper(notif.notificationId, notification);
     }
