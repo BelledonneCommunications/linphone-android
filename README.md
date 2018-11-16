@@ -9,15 +9,19 @@ However, if you wish to use a locally compiled SDK here's how to proceed.
 
 ## Building a local SDK
 
-1. Update the submodules of this project (if not done yet) using the following command:
+1. Clone the linphone-sdk repository from out gitlab:
 ```
-git submodule update --recursive --init
+git clone git@gitlab.linphone.org:BC/public/linphone-sdk.git --recursive
 ```
-After that the folder linphone-sdk will now contain all the modules required to build our SDK.
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Rebuild the app in Android Studio.
+3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug or release) to the generated aar:
+```
+ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-<debug or release>.aar linphone-sdk-android/linphone-sdk-android-<debug or release>.aar
+```
+
+4. Rebuild the app in Android Studio.
 
 ## Create an apk with a different package name
 
