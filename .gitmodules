@@ -1,3 +1,0 @@
-[submodule "linphone-sdk"]
-	path = linphone-sdk
-	url = git@gitlab.linphone.org:BC/public/linphone-sdk.git
