@@ -11,8 +11,18 @@ Group changes to describe their impact on the project, as follows:
     Security to invite users to upgrade in case of vulnerabilities.
 
 ## [Incomming]
+- feature: call recording.
+- feature: QR code configuration.
+- feature: option to automatically download incoming files, either always, never or depending on their sizes.
+
+## [4.1] - 2018-xx-xx
+- Improved UI.
+- Use of binary SDK hosted in Maven repository instead of having to build it manually.
+- feature: added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
+- feature: send multiple files with text at the same time.
 - feature: support of H265 codec.
-- feature: use TextureView instead of GL2JNIView, easier to use and will fix issues
+- feature: use TextureView instead of GL2JNIView, easier to use and will fix issues.
+- feature: send SMS to invite your friends in using Linphone.
 
 ## [4.0.1] - 2018-06-26
 
@@ -33,7 +43,6 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - issue with changing push notification token not passed to library, possibly resulting in a loss of incoming calls.
-
 
 ## [3.3.0] - 2017-10-18
 

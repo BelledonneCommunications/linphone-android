@@ -2,10 +2,14 @@
 
 Linphone is a free VoIP and video softphone based on the SIP protocol.
 
-# Getting Started
+# What's new
 
 Now the default way of building linphone-android is to download the AAR SDK in our maven repository.
-However, if you wish to use a locally compiled SDK here's how to proceed.
+Compared to previous versions, this project no longer uses submodules developper has to build in order to get a working app.
+However, if you wish to use a locally compiled SDK see below how to proceed.
+
+The repository structure has also been cleaned and updated, and changing the package name can now be done in a single step.
+This allows developpers to keep a stable version as well as a developpment one on the same device easily.
 
 ## Building a local SDK
 
@@ -31,7 +35,6 @@ The next build will automatically use this value everywhere thanks to ```manifes
 
 You may have already noticed that the app installed by Android Studio has ```org.linphone.debug``` package name.
 If you build the app as release, the package name will be ```org.linphone```. 
-This allows developpers to keep a stable version as well as a developpment one on the same device easily.
 
 ## Firebase push notifications
 
