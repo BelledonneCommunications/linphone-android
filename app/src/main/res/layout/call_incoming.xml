@@ -134,7 +134,7 @@
                     android:src="@drawable/arrow_hangup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha="0.2"/>
+                    android:alpha="0.4"/>
 
             </LinearLayout>
 
@@ -163,7 +163,7 @@
                     android:src="@drawable/arrow_accept"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha="0.2"/>
+                    android:alpha="0.4"/>
 
                 <ImageView
                     android:src="@drawable/arrow_accept"

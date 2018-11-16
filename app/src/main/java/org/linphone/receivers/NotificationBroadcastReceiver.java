@@ -29,6 +29,7 @@ import android.os.Bundle;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
@@ -60,6 +61,9 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             if (room == null) return;
 
             room.markAsRead();
+            if (LinphoneActivity.isInstanciated()) {
+                LinphoneActivity.instance().displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+            }
             ChatMessage msg = room.createMessage(reply);
             msg.send();
 

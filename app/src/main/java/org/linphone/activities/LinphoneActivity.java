@@ -953,7 +953,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         }
     }
 
-    private void displayMissedChats(final int missedChatCount) {
+    public void displayMissedChats(final int missedChatCount) {
         if (missedChatCount > 0) {
             missedChats.setText(missedChatCount + "");
             missedChats.setVisibility(View.VISIBLE);
