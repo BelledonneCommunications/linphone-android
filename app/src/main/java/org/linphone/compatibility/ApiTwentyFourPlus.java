@@ -16,7 +16,11 @@ import android.view.ViewTreeObserver;
 import org.linphone.R;
 import org.linphone.receivers.NotificationBroadcastReceiver;
 
+import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.INTENT_CALL_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 /*
@@ -42,12 +46,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 public class ApiTwentyFourPlus {
 
 	public static Notification createRepliedNotification(Context context, String reply) {
-		Notification repliedNotification = new Notification.Builder(context)
+		return new Notification.Builder(context)
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setContentText(context.getString(R.string.notification_replied_label).replace("%s", reply))
             .build();
-
-		return repliedNotification;
 	}
 
 	public static Notification createMessageNotification(Context context, int notificationId, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
@@ -62,7 +64,7 @@ public class ApiTwentyFourPlus {
 		RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
 
 		Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
-		replyIntent.setAction(context.getPackageName() + ".REPLY_ACTION");
+		replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
 		replyIntent.putExtra(INTENT_NOTIF_ID, notificationId);
 
 		PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context,
@@ -71,10 +73,10 @@ public class ApiTwentyFourPlus {
 		Notification.Action action = new Notification.Action.Builder(R.drawable.chat_send_over,
             context.getString(R.string.notification_reply_label), replyPendingIntent)
             .addRemoteInput(remoteInput)
+            .setAllowGeneratedReplies(true)
             .build();
 
-		Notification notif;
-		notif = new Notification.Builder(context)
+		return new Notification.Builder(context)
 			.setContentTitle(title)
 			.setContentText(msg)
 			.setSmallIcon(R.drawable.topbar_chat_notification)
@@ -91,7 +93,44 @@ public class ApiTwentyFourPlus {
 			.setColor(context.getColor(R.color.notification_color_led))
 			.addAction(action)
 			.build();
-
-		return notif;
 	}
+
+    public static Notification createInCallNotification(Context context,
+        int callId, boolean showActions, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
+
+       Notification.Builder builder = new Notification.Builder(context)
+            .setContentTitle(contactName)
+            .setContentText(msg)
+            .setSmallIcon(iconID)
+            .setAutoCancel(false)
+            .setContentIntent(intent)
+            .setLargeIcon(contactIcon)
+            .setCategory(Notification.CATEGORY_CALL)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
+            .setPriority(Notification.PRIORITY_HIGH)
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .setColor(context.getColor(R.color.notification_color_led));
+
+        if (showActions) {
+            Intent hangupIntent = new Intent(context, NotificationBroadcastReceiver.class);
+            hangupIntent.setAction(INTENT_HANGUP_CALL_NOTIF_ACTION);
+            hangupIntent.putExtra(INTENT_CALL_ID, callId);
+
+            PendingIntent hangupPendingIntent = PendingIntent.getBroadcast(context,
+                    callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent answerIntent = new Intent(context, NotificationBroadcastReceiver.class);
+            answerIntent.setAction(INTENT_ANSWER_CALL_NOTIF_ACTION);
+            answerIntent.putExtra(INTENT_CALL_ID, callId);
+
+            PendingIntent answerPendingIntent = PendingIntent.getBroadcast(context,
+                    callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.addAction(R.drawable.call_hangup, context.getString(R.string.notification_call_hangup_label), hangupPendingIntent);
+            builder.addAction(R.drawable.call_audio_start, context.getString(R.string.notification_call_answer_label), answerPendingIntent);
+        }
+
+        return builder.build();
+    }
 }

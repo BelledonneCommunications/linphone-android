@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.Manifest;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -199,8 +200,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             public void onCallStateChanged(Core lc, Call call, State state, String message) {
                 if (call == mCall && State.End == state) {
                     finish();
-                }
-                if (state == State.StreamsRunning) {
+                } else if (state == State.Connected) {
+                    startActivity(new Intent(CallIncomingActivity.this, CallActivity.class));
+                } else if (state == State.StreamsRunning) {
                     Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = " + LinphoneManager.getInstance().isSpeakerEnabled());
                     // The following should not be needed except some devices need it (e.g. Galaxy S).
                     LinphoneManager.getInstance().enableSpeaker(LinphoneManager.getInstance().isSpeakerEnabled());

@@ -463,7 +463,6 @@ public class StatusFragment extends Fragment {
                     }
                     isZrtpAsk = false;
                     ZRTPdialog.dismiss();
-                    LinphoneService.instance().removeSasNotification();
                 }
             });
 
@@ -476,7 +475,6 @@ public class StatusFragment extends Fragment {
                     }
                     isZrtpAsk = false;
                     ZRTPdialog.dismiss();
-                    LinphoneService.instance().removeSasNotification();
                 }
             });
             ZRTPdialog.show();

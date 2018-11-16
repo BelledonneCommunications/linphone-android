@@ -39,6 +39,10 @@ import org.linphone.mediastream.Version;
 public class Compatibility {
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final String INTENT_NOTIF_ID = "NOTIFICATION_ID";
+    public static final String INTENT_CALL_ID = "CALL_ID";
+    public static final String INTENT_REPLY_NOTIF_ACTION = "org.linphone.REPLY_ACTION";
+    public static final String INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION";
+    public static final String INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION";
 
     public static void createNotificationChannels(Context context) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
@@ -94,9 +98,11 @@ public class Compatibility {
         return null;
     }
 
-    public static Notification createInCallNotification(Context context, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
+    public static Notification createInCallNotification(Context context, int callId, boolean showActions, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
+            return ApiTwentySixPlus.createInCallNotification(context, callId, showActions, msg, iconID, contactIcon, contactName, intent);
+        } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
+            return ApiTwentyFourPlus.createInCallNotification(context, callId, showActions, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
             return ApiTwentyOnePlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {

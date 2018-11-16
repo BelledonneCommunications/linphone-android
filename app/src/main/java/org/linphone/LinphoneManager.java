@@ -504,7 +504,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (call != null) {
             call.enableCamera(enable);
             if (mServiceContext.getResources().getBoolean(R.bool.enable_call_notification))
-                LinphoneService.instance().refreshIncallIcon(mLc.getCurrentCall());
+                LinphoneService.instance().displayCallNotification(mLc.getCurrentCall());
         }
     }
 

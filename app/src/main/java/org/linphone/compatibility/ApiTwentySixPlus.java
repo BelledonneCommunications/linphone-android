@@ -17,7 +17,11 @@ import org.linphone.R;
 import org.linphone.mediastream.Log;
 import org.linphone.receivers.NotificationBroadcastReceiver;
 
+import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.INTENT_CALL_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 /*
@@ -42,12 +46,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @TargetApi(26)
 public class ApiTwentySixPlus {
 	public static Notification createRepliedNotification(Context context, String reply) {
-		Notification repliedNotification = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setContentText(context.getString(R.string.notification_replied_label).replace("%s", reply))
             .build();
-
-		return repliedNotification;
 	}
 
 	public static void createServiceChannel(Context context) {
@@ -93,7 +95,7 @@ public class ApiTwentySixPlus {
 		RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
 
 		Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
-		replyIntent.setAction(context.getPackageName() + ".REPLY_ACTION");
+		replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
 		replyIntent.putExtra(INTENT_NOTIF_ID, notificationId);
 
 		PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context,
@@ -102,10 +104,10 @@ public class ApiTwentySixPlus {
 		Notification.Action action = new Notification.Action.Builder(R.drawable.chat_send_over,
             context.getString(R.string.notification_reply_label), replyPendingIntent)
             .addRemoteInput(remoteInput)
+            .setAllowGeneratedReplies(true)
             .build();
 
-		Notification notif;
-		notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 			.setContentTitle(title)
 			.setContentText(msg)
 			.setSmallIcon(R.drawable.topbar_chat_notification)
@@ -122,15 +124,12 @@ public class ApiTwentySixPlus {
 			.setColor(context.getColor(R.color.notification_color_led))
 			.addAction(action)
 			.build();
-
-		return notif;
 	}
 
 	public static Notification createInCallNotification(Context context,
-	                                                    String title, String msg, int iconID, Bitmap contactIcon,
-	                                                    String contactName, PendingIntent intent) {
+        int callId, boolean showActions, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
 
-		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
+        Notification.Builder builder = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
 			.setContentTitle(contactName)
 			.setContentText(msg)
 			.setSmallIcon(iconID)
@@ -142,17 +141,35 @@ public class ApiTwentySixPlus {
 			.setPriority(Notification.PRIORITY_HIGH)
 			.setWhen(System.currentTimeMillis())
 			.setShowWhen(true)
-			.setColor(context.getColor(R.color.notification_color_led))
-			.build();
+			.setColor(context.getColor(R.color.notification_color_led));
 
-		return notif;
+        if (showActions) {
+
+            Intent hangupIntent = new Intent(context, NotificationBroadcastReceiver.class);
+            hangupIntent.setAction(INTENT_HANGUP_CALL_NOTIF_ACTION);
+            hangupIntent.putExtra(INTENT_CALL_ID, callId);
+
+            PendingIntent hangupPendingIntent = PendingIntent.getBroadcast(context,
+                    callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent answerIntent = new Intent(context, NotificationBroadcastReceiver.class);
+            answerIntent.setAction(INTENT_ANSWER_CALL_NOTIF_ACTION);
+            answerIntent.putExtra(INTENT_CALL_ID, callId);
+
+            PendingIntent answerPendingIntent = PendingIntent.getBroadcast(context,
+                    callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            builder.addAction(R.drawable.call_hangup, context.getString(R.string.notification_call_hangup_label), hangupPendingIntent);
+            builder.addAction(R.drawable.call_audio_start, context.getString(R.string.notification_call_answer_label), answerPendingIntent);
+        }
+        return builder.build();
 	}
 
-	public static Notification createNotification(Context context, String title, String message, int icon, int level, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
-		Notification notif;
+	public static Notification createNotification(Context context, String title, String message, int icon, int level,
+        Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent,int priority) {
 
 		if (largeIcon != null) {
-			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
+			return new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
 				.setContentTitle(title)
 				.setContentText(message)
 				.setSmallIcon(icon, level)
@@ -166,7 +183,7 @@ public class ApiTwentySixPlus {
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 		} else {
-			notif = new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
+			return new Notification.Builder(context, context.getString(R.string.notification_service_channel_id))
 				.setContentTitle(title)
 				.setContentText(message)
 				.setSmallIcon(icon, level)
@@ -179,16 +196,10 @@ public class ApiTwentySixPlus {
 				.setColor(context.getColor(R.color.notification_color_led))
 				.build();
 		}
-
-		return notif;
-	}
-
-	public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, ViewTreeObserver.OnGlobalLayoutListener keyboardListener) {
-		viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
 	}
 
 	public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
-		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 			.setContentTitle(title)
 			.setContentText(text)
 			.setSmallIcon(R.drawable.call_status_missed)
@@ -203,12 +214,10 @@ public class ApiTwentySixPlus {
 			.setShowWhen(true)
 			.setColor(context.getColor(R.color.notification_color_led))
 			.build();
-
-		return notif;
 	}
 
 	public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
-		Notification notif = new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 			.setContentTitle(title)
 			.setContentText(text)
 			.setSmallIcon(R.drawable.linphone_logo)
@@ -224,8 +233,6 @@ public class ApiTwentySixPlus {
 			.setColorized(true)
 			.setColor(context.getColor(R.color.notification_color_led))
 			.build();
-
-		return notif;
 	}
 
 	public static void startService(Context context, Intent intent) {

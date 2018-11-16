@@ -18,6 +18,8 @@
     <!-- Notifications -->
     <string name="notification_reply_label">Reply</string>
     <string name="notification_replied_label">Sent reply: %s</string>
+    <string name="notification_call_hangup_label">Hangup</string>
+    <string name="notification_call_answer_label">Answer</string>
 
     <!-- Common -->
     <string name="username">Username</string>

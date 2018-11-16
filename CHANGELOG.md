@@ -31,7 +31,8 @@ Group changes to describe their impact on the project, as follows:
 - Support of H265 codec.
 - Use TextureView instead of GL2JNIView, easier to use and will fix issues.
 - Send SMS to invite your friends in using Linphone.
-- Reply to received chat message in notification
+- Reply to received chat message in notification.
+- Answer or hangup incoming call in notification.
 
 ## [4.0.1] - 2018-06-26
 

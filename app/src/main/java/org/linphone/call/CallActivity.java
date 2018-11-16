@@ -187,7 +187,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             public void onCallStateChanged(Core lc, final Call call, Call.State state, String message) {
                 if (LinphoneManager.getLc().getCallsNb() == 0) {
                     if (status != null) {
-                        LinphoneService.instance().removeSasNotification();
                         status.setisZrtpAsk(false);
                     }
                     finish();
