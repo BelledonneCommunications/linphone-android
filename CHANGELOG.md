@@ -32,7 +32,7 @@ Group changes to describe their impact on the project, as follows:
 - Use TextureView instead of GL2JNIView, easier to use and will fix issues.
 - Send SMS to invite your friends in using Linphone.
 - Reply to received chat message in notification.
-- Answer or hangup incoming call in notification.
+- Answer or hangup calls in notification.
 
 ## [4.0.1] - 2018-06-26
 

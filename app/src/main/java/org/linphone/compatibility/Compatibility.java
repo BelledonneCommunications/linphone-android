@@ -98,11 +98,11 @@ public class Compatibility {
         return null;
     }
 
-    public static Notification createInCallNotification(Context context, int callId, boolean showActions, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
+    public static Notification createInCallNotification(Context context, int callId, boolean showAnswerAction, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createInCallNotification(context, callId, showActions, msg, iconID, contactIcon, contactName, intent);
+            return ApiTwentySixPlus.createInCallNotification(context, callId, showAnswerAction, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
-            return ApiTwentyFourPlus.createInCallNotification(context, callId, showActions, msg, iconID, contactIcon, contactName, intent);
+            return ApiTwentyFourPlus.createInCallNotification(context, callId, showAnswerAction, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
             return ApiTwentyOnePlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
         } else if (Version.sdkAboveOrEqual(Version.API16_JELLY_BEAN_41)) {

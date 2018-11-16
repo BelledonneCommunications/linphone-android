@@ -511,7 +511,6 @@ public final class LinphoneService extends Service {
         Address address = call.getRemoteAddress();
         String addressAsString = address.asStringUriOnly();
         Notified notif = mCallNotifMap.get(addressAsString);
-
         if (notif == null) {
             notif = new Notified();
             notif.notificationId = mLastNotificationId;
@@ -519,18 +518,22 @@ public final class LinphoneService extends Service {
             mCallNotifMap.put(addressAsString, notif);
         }
 
-        int notificationTextId = 0;
-        int inconId = 0;
+        if (!displayServiceNotification()) {
+            if (call.getCore().getCallsNb() == 0) {
+                hideServiceNotification();
+            } else {
+                showServiceNotification();
+            }
+        }
+
+        int notificationTextId;
+        int inconId;
         switch (call.getState()) {
             case Released:
             case End:
-                if (!displayServiceNotification()) {
-                    stopForegroundCompat(notif.notificationId);
-                } else {
-                    mNM.cancel(notif.notificationId);
-                }
+                mNM.cancel(notif.notificationId);
                 mCallNotifMap.remove(addressAsString);
-                break;
+                return;
             case Paused:
             case PausedByRemote:
             case Pausing:
@@ -558,17 +561,13 @@ public final class LinphoneService extends Service {
         }
         String name = LinphoneUtils.getAddressDisplayName(address);
 
-        boolean showActions = call.getState() == State.IncomingReceived || call.getState() == State.IncomingEarlyMedia;
+        boolean showAnswerAction = call.getState() == State.IncomingReceived || call.getState() == State.IncomingEarlyMedia;
         Intent notifIntent = new Intent(this, incomingReceivedActivity);
         notifIntent.putExtra("Notification", true);
         mNotifContentIntent = PendingIntent.getActivity(this, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notification = Compatibility.createInCallNotification(getApplicationContext(), notif.notificationId, showActions, mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
+        Notification notification = Compatibility.createInCallNotification(getApplicationContext(), notif.notificationId, showAnswerAction, mNotificationTitle, getString(notificationTextId), inconId, bm, name, mNotifContentIntent);
 
-        if (!displayServiceNotification()) {
-            startForegroundCompat(notif.notificationId, notification);
-        } else {
-            notifyWrapper(notif.notificationId, notification);
-        }
+        notifyWrapper(notif.notificationId, notification);
     }
 
     public String getSipUriForCallNotificationId(int notificationId) {
@@ -734,8 +733,6 @@ public final class LinphoneService extends Service {
             invokeMethod(mStartForeground, mStartForegroundArgs);
             return;
         }
-
-        notifyWrapper(id, notification);
     }
 
     /**
@@ -749,10 +746,6 @@ public final class LinphoneService extends Service {
             invokeMethod(mStopForeground, mStopForegroundArgs);
             return;
         }
-
-        // Fall back on the old API.  Note to cancel BEFORE changing the
-        // foreground state, since we could be killed at that point.
-        mNM.cancel(id);
     }
 
     private void dumpDeviceInformation() {
