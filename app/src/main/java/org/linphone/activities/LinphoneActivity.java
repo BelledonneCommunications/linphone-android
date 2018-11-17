@@ -1079,7 +1079,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         return callTransfer;
     }
 
-    private void initInCallMenuLayout(final boolean callTransfer) {
+    private void initInCallMenuLayout() {
         selectMenu(FragmentsAvailable.DIALER);
         DialerFragment dialerFragment = DialerFragment.instance();
         if (dialerFragment != null) {
@@ -1161,7 +1161,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             getIntent().putExtra("PreviousActivity", CALL_ACTIVITY);
             callTransfer = data != null && data.getBooleanExtra("Transfer", false);
             if (LinphoneManager.getLc().getCallsNb() > 0) {
-                initInCallMenuLayout(callTransfer);
+                initInCallMenuLayout();
             } else {
                 resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
             }

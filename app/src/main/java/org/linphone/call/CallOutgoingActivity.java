@@ -268,7 +268,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         finish();
     }
 
-
     private void checkAndRequestCallPermissions() {
         ArrayList<String> permissionsList = new ArrayList<String>();
 

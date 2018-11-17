@@ -197,7 +197,7 @@ public class ChatListFragment extends Fragment implements ContactsUpdatedListene
         if (LinphoneManager.getLc().getCallsNb() > 0) {
             mBackToCallButton.setVisibility(View.VISIBLE);
         } else {
-            mBackToCallButton.setVisibility(View.GONE);
+            mBackToCallButton.setVisibility(View.INVISIBLE);
         }
 
         if (LinphoneActivity.isInstanciated()) {
