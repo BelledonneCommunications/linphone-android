@@ -22,3 +22,4 @@ app/google-services.json
 **/.vscode
 res/value-hi_IN
 linphone-sdk-android/*.aar
+app/release
