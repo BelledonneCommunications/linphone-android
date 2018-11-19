@@ -52,6 +52,9 @@ import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
+import org.linphone.ui.CallIncomingAnswerButton;
+import org.linphone.ui.CallIncomingButtonListener;
+import org.linphone.ui.CallIncomingDeclineButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,14 +64,13 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
     private TextView name, number;
     private ImageView contactPicture, acceptIcon;
-    private LinearLayout accept, decline;
+    private CallIncomingAnswerButton accept;
+    private CallIncomingDeclineButton decline;
     private Call mCall;
     private CoreListenerStub mListener;
     private LinearLayout acceptUnlock;
     private LinearLayout declineUnlock;
-    private boolean alreadyAcceptedOrDeniedCall, begin;
-    private float answerX, oldMove;
-    private float declineX;
+    private boolean alreadyAcceptedOrDeniedCall;
     private KeyguardManager mKeyguardManager;
 
     public static CallIncomingActivity instance() {
@@ -98,13 +100,12 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
-        final int screenWidth = getResources().getDisplayMetrics().widthPixels;
-
         acceptUnlock = findViewById(R.id.acceptUnlock);
         declineUnlock = findViewById(R.id.declineUnlock);
 
+        accept = findViewById(R.id.answer_button);
+        decline = findViewById(R.id.decline_button);
         acceptIcon = findViewById(R.id.acceptIcon);
-        accept = findViewById(R.id.accept);
         lookupCurrentCall();
 
         if (LinphonePreferences.instance() != null && mCall != null && mCall.getRemoteParams() != null &&
@@ -113,86 +114,29 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             acceptIcon.setImageResource(R.drawable.call_video_start);
         }
 
-        decline = findViewById(R.id.decline);
-
         mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         boolean doNotUseSliders = getResources().getBoolean(R.bool.do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked);
         if (doNotUseSliders && !mKeyguardManager.inKeyguardRestrictedInputMode()) {
-            accept.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    answer();
-                }
-            });
-
-            decline.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    decline();
-                }
-            });
+            accept.setSliderMode(false);
+            decline.setSliderMode(false);
         } else {
-            acceptUnlock.setVisibility(View.VISIBLE);
-            accept.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    float curX;
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            decline.setVisibility(View.GONE);
-                            answerX = motionEvent.getX() - accept.getWidth();
-                            begin = true;
-                            oldMove = 0;
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            curX = motionEvent.getX() - accept.getWidth();
-                            view.scrollBy((int) (answerX - curX), view.getScrollY());
-                            oldMove -= answerX - curX;
-                            answerX = curX;
-                            if (oldMove < -25)
-                                begin = false;
-                            if (curX < (screenWidth / 4) - accept.getWidth() && !begin) {
-                                answer();
-                                return true;
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            decline.setVisibility(View.VISIBLE);
-                            view.scrollTo(0, view.getScrollY());
-                            break;
-                    }
-                    return true;
-                }
-            });
-
-            declineUnlock.setVisibility(View.VISIBLE);
-            decline.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    float curX;
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            accept.setVisibility(View.GONE);
-                            declineX = motionEvent.getX();
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            curX = motionEvent.getX();
-                            view.scrollBy((int) (declineX - curX), view.getScrollY());
-                            declineX = curX;
-                            if (curX > (3 * screenWidth / 4)) {
-                                decline();
-                                return true;
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            accept.setVisibility(View.VISIBLE);
-                            view.scrollTo(0, view.getScrollY());
-                            break;
-                    }
-                    return true;
-                }
-            });
+            accept.setSliderMode(true);
+            decline.setSliderMode(true);
+            accept.setDeclineButton(decline);
+            decline.setAnswerButton(accept);
         }
+        accept.setListener(new CallIncomingButtonListener() {
+            @Override
+            public void onAction() {
+                answer();
+            }
+        });
+        decline.setListener(new CallIncomingButtonListener() {
+            @Override
+            public void onAction() {
+                decline();
+            }
+        });
 
         mListener = new CoreListenerStub() {
             @Override
