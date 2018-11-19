@@ -1013,10 +1013,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             routeSpeaker.setVisibility(View.INVISIBLE);
             routeBluetooth.setVisibility(View.INVISIBLE);
             routeEarpiece.setVisibility(View.INVISIBLE);
+            audioRoute.setSelected(false);
         } else {
             routeSpeaker.setVisibility(View.VISIBLE);
             routeBluetooth.setVisibility(View.VISIBLE);
             routeEarpiece.setVisibility(View.VISIBLE);
+            audioRoute.setSelected(true);
         }
     }
 
