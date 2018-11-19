@@ -1654,4 +1654,14 @@ public class LinphonePreferences {
     public boolean useBasicChatRoomFor1To1() {
         return getConfig().getBool("app", "prefer_basic_chat_room", false);
     }
+
+    // 0 is download all, -1 is disable feature, else size is bytes
+    public int getAutoDownloadFileMaxSize() {
+        return getLc().getMaxSizeForAutoDownloadIncomingFiles();
+    }
+
+    // 0 is download all, -1 is disable feature, else size is bytes
+    public void setAutoDownloadFileMaxSize(int size) {
+        getLc().setMaxSizeForAutoDownloadIncomingFiles(size);
+    }
 }
