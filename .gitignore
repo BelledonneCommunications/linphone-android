@@ -23,3 +23,4 @@ app/google-services.json
 res/value-hi_IN
 linphone-sdk-android/*.aar
 app/release
+keystore.properties
