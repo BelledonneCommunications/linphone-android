@@ -51,11 +51,17 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4100
+        versionCode 4101
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "linphone-android-${variant.buildType.name}-${defaultConfig.versionName}.apk"
+        }
     }
 
     def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -91,6 +97,7 @@ android {
             }
         }
     }
+
     packagingOptions {
         pickFirst 'META-INF/NOTICE'
         pickFirst 'META-INF/LICENSE'
