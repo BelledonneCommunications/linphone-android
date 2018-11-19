@@ -359,6 +359,9 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
             holder.bubbleLayout.setLayoutParams(layoutParams);
         } else { // Event is not chat message
             holder.eventLayout.setVisibility(View.VISIBLE);
+            holder.eventMessage.setTextColor(mContext.getResources().getColor(R.color.colorE));
+            holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_gray);
+            holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_gray);
 
             Address address = event.getParticipantAddress();
             String displayName = null;
@@ -400,6 +403,10 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
                     break;
                 case ConferenceSecurityEvent:
+                    holder.eventMessage.setTextColor(mContext.getResources().getColor(R.color.colorI));
+                    holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
+                    holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
+
                     switch (event.getSecurityEventType()) {
                         case LimeIdentityKeyChanged:
                             holder.eventMessage.setText(mContext.getString(R.string.lime_identity_key_changed).replace("%s", displayName));
