@@ -414,6 +414,7 @@
 
                 <org.linphone.ui.Numpad
                     android:id="@+id/numpad"
+                    android:visibility="gone"
                     android:background="@color/colorF"
                     android:contentDescription="@string/content_description_numpad"
                     android:layout_width="wrap_content"
