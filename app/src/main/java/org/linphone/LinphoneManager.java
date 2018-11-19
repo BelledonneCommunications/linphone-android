@@ -758,7 +758,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        mProximityWakelock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, "manager_proximity_sensor");
+        mProximityWakelock = mPowerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, mServiceContext.getPackageName() + ";manager_proximity_sensor");
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -851,7 +851,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void updateNetworkReachability() {
         if (mConnectivityManager == null) return;
 
-        boolean connected = false;
+        boolean connected;
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
         connected = networkInfo != null && networkInfo.isConnected();
 

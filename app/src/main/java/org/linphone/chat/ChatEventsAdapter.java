@@ -148,7 +148,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatBubbleViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ChatBubbleViewHolder holder, int position) {
         final EventLog event = mHistory.get(position);
         holder.eventLayout.setVisibility(View.GONE);
         holder.bubbleLayout.setVisibility(View.GONE);
@@ -351,7 +351,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     @Override
                     public void onClick(View v) {
                         message.cancelFileTransfer();
-                        notifyItemChanged(position);
+                        notifyItemChanged(holder.getAdapterPosition());
                     }
                 });
             }

@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -153,7 +154,7 @@ public class LinphoneLoginFragment extends Fragment implements CompoundButton.On
             useUsername.setVisibility(View.VISIBLE);
             useUsername.setOnCheckedChangeListener(this);
             password.addTextChangedListener(this);
-            forgotPassword.setText(Compatibility.fromHtml("<a href=\"" + url + "\"'>" + getString(R.string.forgot_password) + "</a>"));
+            forgotPassword.setText(Html.fromHtml("<a href=\"" + url + "\"'>" + getString(R.string.forgot_password) + "</a>"));
             forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
         }
 

@@ -22,7 +22,6 @@ if (firebaseEnabled()) {
 ///// Exclude Files /////
 
 def excludeFiles = []
-// Exclude firebase file if not enable
 if (!firebaseEnabled()) {
     excludeFiles.add('**/Firebase*')
     println '[Push Notification] Firebase disabled'
@@ -44,9 +43,13 @@ repositories {
 }
 
 android {
+    lintOptions {
+        abortOnError false
+    }
+
     compileSdkVersion 28
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 4100
         versionName "4.1"
@@ -54,6 +57,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     signingConfigs {
         release {
             storeFile file(RELEASE_STORE_FILE)
@@ -62,6 +66,7 @@ android {
             keyPassword RELEASE_KEY_PASSWORD
         }
     }
+
     buildTypes {
         release {
             minifyEnabled true

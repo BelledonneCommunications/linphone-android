@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -29,6 +30,7 @@ import org.linphone.LinphoneManager.AddressType;
 import org.linphone.R;
 import org.linphone.fragments.DialerFragment;
 
+@SuppressLint("AppCompatCustomView")
 public class AddressText extends EditText implements AddressType {
 
     private String displayedName;

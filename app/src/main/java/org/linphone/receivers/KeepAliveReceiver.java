@@ -64,7 +64,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(context, 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
 
                     AlarmManager alarmManager = ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE));
-                    Compatibility.scheduleAlarm(alarmManager, AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
                 }
             } else if (action.equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
                 Log.i("[KeepAlive] Screen is on, enable");

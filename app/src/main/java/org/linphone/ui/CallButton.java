@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -34,6 +35,7 @@ import org.linphone.core.CallLog;
 import org.linphone.core.CoreException;
 import org.linphone.core.ProxyConfig;
 
+@SuppressLint("AppCompatCustomView")
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
 
     private AddressText mAddress;

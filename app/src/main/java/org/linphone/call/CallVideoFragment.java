@@ -200,7 +200,8 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
         }
 
         mGestureDetector = new GestureDetector(inCallActivity, this);
-        mScaleDetector = Compatibility.getScaleGestureDetector(inCallActivity, this);
+        CompatibilityScaleGestureDetector mScaleDetector = new CompatibilityScaleGestureDetector(inCallActivity);
+        mScaleDetector.setOnScaleListener(this);
 
         resizePreview();
     }

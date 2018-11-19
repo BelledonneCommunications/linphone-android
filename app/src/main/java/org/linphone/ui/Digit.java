@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +37,7 @@ import org.linphone.call.CallActivity;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
 
+@SuppressLint("AppCompatCustomView")
 public class Digit extends Button implements AddressAware {
 
     private AddressText mAddress;

@@ -536,7 +536,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     }
 
     private void removeVirtualKeyboardVisiblityListener() {
-        Compatibility.removeGlobalLayoutListener(getActivity().getWindow().getDecorView().getViewTreeObserver(), mKeyboardListener);
+        getActivity().getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardListener);
     }
 
     public void showKeyboardVisibleMode() {

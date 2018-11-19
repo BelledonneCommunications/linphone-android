@@ -38,6 +38,7 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -762,7 +763,7 @@ public final class LinphoneUtils {
             text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
         }
 
-        return Compatibility.fromHtml(text);
+        return Html.fromHtml(text);
     }
 
     public static Uri getCVSPathFromLookupUri(String content) {
