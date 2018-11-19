@@ -109,6 +109,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    holder.fileTransferLayout.setVisibility(View.GONE);
 
 				    displayAttachedFile(message, holder);
+					mFragment.scrollToBottom();
 			    } else {
 				    holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
 				    holder.fileTransferProgressBar.setProgress(offset * 100 / total);
@@ -588,7 +589,6 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			}
 		}
 		notifyDataSetChanged();
-		mFragment.scrollToBottom();
 	}
 
 	/*
