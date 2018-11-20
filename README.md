@@ -15,7 +15,7 @@ This allows developpers to keep a stable version as well as a developpment one o
 
 1. Clone the linphone-sdk repository from out gitlab:
 ```
-git clone git@gitlab.linphone.org:BC/public/linphone-sdk.git --recursive
+git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 ```
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
