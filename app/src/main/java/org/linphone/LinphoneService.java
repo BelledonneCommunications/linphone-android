@@ -356,7 +356,6 @@ public final class LinphoneService extends Service {
                         }
                     }
 
-
                     Intent missedCallNotifIntent = new Intent(LinphoneService.this, incomingReceivedActivity);
                     missedCallNotifIntent.putExtra("GoToHistory", true);
                     PendingIntent intent = PendingIntent.getActivity(LinphoneService.this, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);

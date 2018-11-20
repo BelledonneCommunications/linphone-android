@@ -1315,6 +1315,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     protected void onStart() {
         super.onStart();
         ArrayList<String> permissionsList = new ArrayList<>();
+        permissionsList.add(Manifest.permission.SYSTEM_ALERT_WINDOW); // This one is to allow floating notifications
+        permissionsList.add("android.permission.FOREGROUND_SERVICE"); // Manifest.permission.FOREGROUND_SERVICE, required starting Android 9 to be able to start a foreground service
 
         int contacts = getPackageManager().checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
         Log.i("[Permission] Contacts permission is " + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
@@ -1326,19 +1328,22 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         Log.i("[Permission] Read external storage for ring tone permission is " + (ringtone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
         if (ringtone != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Log.i("[Permission] Asking for read external storage for ring tone");
                 permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         }
         if (readPhone != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_PHONE_STATE) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_PHONE_STATE)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
                 Log.i("[Permission] Asking for read phone state");
                 permissionsList.add(Manifest.permission.READ_PHONE_STATE);
             }
         }
         if (contacts != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
+            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
                 Log.i("[Permission] Asking for contacts");
                 permissionsList.add(Manifest.permission.READ_CONTACTS);
             }
@@ -1348,8 +1353,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 ContactsManager.getInstance().fetchContactsAsync();
             }
         }
-        // This one is to allow floating notifications
-        permissionsList.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
 
         if (permissionsList.size() > 0) {
             String[] permissions = new String[permissionsList.size()];
