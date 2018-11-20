@@ -637,6 +637,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         changeCurrentFragment(FragmentsAvailable.ABOUT, null);
     }
 
+    public void displayRecordings() {
+
+    }
+
     public void displayContactsForEdition(String sipAddress, String displayName) {
         Bundle extras = new Bundle();
         extras.putBoolean("EditOnClick", true);
@@ -1606,6 +1610,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
             sideMenuItems.add(new MenuItem(getResources().getString(R.string.inapp), R.drawable.menu_options));
         }
+        sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_recordings), R.drawable.menu_recordings));
         sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_about), R.drawable.menu_about));
         sideMenuContent = findViewById(R.id.side_menu_content);
         sideMenuItemList = findViewById(R.id.item_list);
@@ -1628,6 +1633,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                     if (sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.inapp))) {
                         LinphoneActivity.instance().displayInapp();
                     }
+                }
+                if (sideMenuItemList.getAdapter().getItem(i).toString().equals(R.string.menu_recordings)) {
+                    LinphoneActivity.instance().displayRecordings();
                 }
                 openOrCloseSideMenu(false);
             }

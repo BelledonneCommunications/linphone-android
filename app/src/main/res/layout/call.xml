@@ -181,6 +181,19 @@
                         android:layout_gravity="center"/>
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/recording"
+                    android:src="@drawable/recording"
+                    android:background="@drawable/round_orange_button_background"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:layout_margin="20dp"
+                    android:contentDescription="@string/content_description_record_call"
+                    android:visibility="gone"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true" />
+
             </RelativeLayout>
 
             <LinearLayout
@@ -311,9 +324,20 @@
                             android:layout_height="60dp" />
 
                         <ImageView
+                            android:id="@+id/record_call"
+                            android:src="@drawable/options_rec_default"
+                            android:background="@drawable/button_background"
+                            android:contentDescription="@string/content_description_record_call"
+                            android:visibility="gone"
+                            android:padding="15dp"
+                            android:layout_above="@id/options"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp" />
+
+                        <ImageView
                             android:id="@+id/add_call"
                             android:visibility="gone"
-                            android:layout_above="@id/options"
+                            android:layout_above="@id/record_call"
                             android:src="@drawable/options_add_call"
                             android:background="@drawable/button_background"
                             android:contentDescription="@string/content_description_add_call"
