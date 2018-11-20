@@ -24,6 +24,8 @@ Group changes to describe their impact on the project, as follows:
 - Asynchronous fetch of native contacts.
 - Removed unused graphical resources.
 - Updated translations.
+- Updated sliders used to answer or hangup incoming call so they can be used with accessibility tools.
+- Added setting to disable vibration while incoming call is ringing.
 
 ### Features
 - Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.

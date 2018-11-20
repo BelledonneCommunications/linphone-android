@@ -1366,7 +1366,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         try {
             if ((mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL)
-                    && mVibrator != null) {
+                    && mVibrator != null && LinphonePreferences.instance().isIncomingCallVibrationEnabled()) {
                 long[] patern = {0, 1000, 1000};
                 mVibrator.vibrate(patern, 1);
             }
