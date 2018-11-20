@@ -1,4 +1,4 @@
-package org.linphone.receivers;
+package org.linphone.notifications;
 
 /*
 NotificationBroadcastReceiver.java
@@ -29,48 +29,82 @@ import android.os.Bundle;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;
-import org.linphone.core.Reason;
+import org.linphone.mediastream.Log;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
+        final int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
+        final String localyIdentity = intent.getStringExtra(Compatibility.INTENT_LOCAL_IDENTITY);
+
         if (intent.getAction() == Compatibility.INTENT_REPLY_NOTIF_ACTION) {
-            String reply = getMessageText(intent).toString();
-            if (reply == null) return;
-            Notification replied = Compatibility.createRepliedNotification(context, reply);
-            if (replied == null) return;
-            int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
-            String remoteSipAddr = LinphoneService.instance().getSipUriForNotificationId(notifId);
+            final String reply = getMessageText(intent).toString();
+            if (reply == null) {
+                Log.e("Couldn't get reply text");
+                onError(context, notifId);
+                return;
+            }
+            String remoteSipAddr = LinphoneService.instance().getNotificationManager().getSipUriForNotificationId(notifId);
 
             Core core = LinphoneManager.getLc();
-            if (core == null) return;
-            ProxyConfig proxyConfig = core.getDefaultProxyConfig();
-            if (proxyConfig == null) return;
-            Address localAddr = proxyConfig.getIdentityAddress();
+            if (core == null)  {
+                Log.e("Couldn't get Core instance");
+                onError(context, notifId);
+                return;
+            }
+
             Address remoteAddr = core.interpretUrl(remoteSipAddr);
-            if (localAddr == null || remoteAddr == null) return;
+            if (remoteAddr == null)  {
+                Log.e("Couldn't interpret remote address " + remoteSipAddr);
+                onError(context, notifId);
+                return;
+            }
+
+            Address localAddr = core.interpretUrl(localyIdentity);
+            if (localAddr == null) {
+                Log.e("Couldn't interpret local address " + localyIdentity);
+                onError(context, notifId);
+                return;
+            }
+
             ChatRoom room = core.findChatRoom(remoteAddr, localAddr);
-            if (room == null) return;
+            if (room == null)  {
+                Log.e("Couldn't find chat room for remote address " + remoteSipAddr + " and local address " + localyIdentity);
+                onError(context, notifId);
+                return;
+            }
 
             room.markAsRead();
             if (LinphoneActivity.isInstanciated()) {
                 LinphoneActivity.instance().displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
             }
+
             ChatMessage msg = room.createMessage(reply);
             msg.send();
-
-            LinphoneService.instance().sendNotification(replied, notifId);
+            msg.setListener(new ChatMessageListenerStub() {
+                @Override
+                public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
+                    if (state == ChatMessage.State.Delivered) {
+                        Notification replied = Compatibility.createRepliedNotification(context, reply);
+                        LinphoneService.instance().getNotificationManager().sendNotification(notifId, replied);
+                    } else if (state == ChatMessage.State.NotDelivered) {
+                        Log.e("Couldn't send reply, message is not delivered");
+                        onError(context, notifId);
+                    }
+                }
+            });
         } else if (intent.getAction() == Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION || intent.getAction() == Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION) {
-            int callId = intent.getIntExtra(Compatibility.INTENT_CALL_ID, 0);
-            String remoteAddr = LinphoneService.instance().getSipUriForCallNotificationId(callId);
+            String remoteAddr = LinphoneService.instance().getNotificationManager().getSipUriForCallNotificationId(notifId);
 
             Core core = LinphoneManager.getLc();
             if (core == null) return;
@@ -83,6 +117,11 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 call.terminate();
             }
         }
+    }
+
+    private void onError(Context context, int notifId) {
+        Notification replyError = Compatibility.createRepliedNotification(context, context.getString(R.string.error));
+        LinphoneService.instance().getNotificationManager().sendNotification(notifId, replyError);
     }
 
     @TargetApi(20)

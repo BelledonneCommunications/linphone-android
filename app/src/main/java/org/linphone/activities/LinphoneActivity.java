@@ -698,10 +698,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
     }
 
-    public void goToChat(String sipUri, Bundle shareInfos, String localIdentity) {
+    public void goToChat(String sipUri, Bundle shareInfos) {
         Bundle extras = new Bundle();
         extras.putString("SipUri", sipUri);
-        extras.putString("LocalIdentity", localIdentity);
 
         if (shareInfos != null) {
             if (shareInfos.getString("fileSharedUri") != null)
@@ -1382,9 +1381,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.addListener(mListener);
-            if (!LinphoneService.instance().displayServiceNotification()) {
-                lc.refreshRegisters();
-            }
         }
 
         if (isTablet()) {
@@ -1483,12 +1479,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         Bundle extras = intent.getExtras();
         if (extras != null && extras.getBoolean("GoToChat", false)) {
             String sipUri = extras.getString("ChatContactSipUri");
-            String localIdentity = extras.getString("LocalIdentity");
             intent.putExtra("DoNotGoToCallActivity", true);
             if (sipUri == null) {
                 goToChatList();
             } else {
-                goToChat(sipUri, extras, localIdentity);
+                goToChat(sipUri, extras);
             }
         } else if (extras != null && extras.getBoolean("GoToHistory", false)) {
             intent.putExtra("DoNotGoToCallActivity", true);
@@ -1496,7 +1491,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         } else if (extras != null && extras.getBoolean("GoToInapp", false)) {
             intent.putExtra("DoNotGoToCallActivity", true);
             displayInapp();
-        } else if (extras != null && extras.getBoolean("Notification", false)) {
+        } else if (extras != null && extras.getBoolean("Notifiable", false)) {
             if (LinphoneManager.getLc().getCallsNb() > 0) {
                 startIncallActivity();
             }
@@ -1840,9 +1835,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             LinphonePreferences.instance().setInappPopupTime(String.valueOf(newDate));
         }
         if (isTrialAccount) {
-            LinphoneService.instance().displayInappNotification(String.format(getString(R.string.inapp_notification_trial_expire), date));
+            LinphoneService.instance().getNotificationManager().displayInappNotification(String.format(getString(R.string.inapp_notification_trial_expire), date));
         } else {
-            LinphoneService.instance().displayInappNotification(String.format(getString(R.string.inapp_notification_account_expire), date));
+            LinphoneService.instance().getNotificationManager().displayInappNotification(String.format(getString(R.string.inapp_notification_account_expire), date));
         }
 
     }

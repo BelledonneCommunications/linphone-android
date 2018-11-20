@@ -1362,9 +1362,9 @@ public class SettingsFragment extends PreferencesListFragment {
                 boolean value = (Boolean) newValue;
                 mPrefs.setServiceNotificationVisibility(value);
                 if (value) {
-                    LinphoneService.instance().showServiceNotification();
+                    LinphoneService.instance().getNotificationManager().startForeground();
                 } else {
-                    LinphoneService.instance().hideServiceNotification();
+                    LinphoneService.instance().getNotificationManager().stopForeground();
                 }
                 return true;
             }

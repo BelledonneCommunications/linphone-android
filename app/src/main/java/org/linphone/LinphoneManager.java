@@ -504,7 +504,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (call != null) {
             call.enableCamera(enable);
             if (mServiceContext.getResources().getBoolean(R.bool.enable_call_notification))
-                LinphoneService.instance().displayCallNotification(mLc.getCurrentCall());
+                LinphoneService.instance().getNotificationManager().displayCallNotification(mLc.getCurrentCall());
         }
     }
 
@@ -1075,16 +1075,16 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification) && !message.isOutgoing()) {
             if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
                 if (contact != null) {
-                    LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress().asString());
+                    LinphoneService.instance().getNotificationManager().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress());
                 } else {
-                    LinphoneService.instance().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress().asString());
+                    LinphoneService.instance().getNotificationManager().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress());
                 }
             } else {
                 String subject = cr.getSubject();
                 if (contact != null) {
-                    LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress().asString());
+                    LinphoneService.instance().getNotificationManager().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress());
                 } else {
-                    LinphoneService.instance().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress().asString());
+                    LinphoneService.instance().getNotificationManager().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress());
                 }
             }
         }

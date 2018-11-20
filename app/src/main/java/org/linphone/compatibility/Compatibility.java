@@ -18,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.AlarmManager;
 import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -26,15 +25,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.PowerManager;
 import android.provider.Settings;
-import android.text.Html;
-import android.text.Spanned;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 
 import org.linphone.mediastream.Version;
+import org.linphone.notifications.Notifiable;
 
 public class Compatibility {
     public static final String KEY_TEXT_REPLY = "key_text_reply";
@@ -43,6 +38,7 @@ public class Compatibility {
     public static final String INTENT_REPLY_NOTIF_ACTION = "org.linphone.REPLY_ACTION";
     public static final String INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION";
     public static final String INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION";
+    public static final String INTENT_LOCAL_IDENTITY = "LOCAL_IDENTITY";
 
     public static void createNotificationChannels(Context context) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
@@ -65,13 +61,13 @@ public class Compatibility {
         return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
     }
 
-    public static Notification createMessageNotification(Context context, int notificationId, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
+    public static Notification createMessageNotification(Context context, Notifiable notif, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createMessageNotification(context, notificationId, msgCount, msgSender, msg, contactIcon, intent);
+            return ApiTwentySixPlus.createMessageNotification(context, notif, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
-            return ApiTwentyFourPlus.createMessageNotification(context, notificationId, msgCount, msgSender, msg, contactIcon, intent);
+            return ApiTwentyFourPlus.createMessageNotification(context, notif, contactIcon, intent);
         }
-        return ApiTwentyOnePlus.createMessageNotification(context, msgCount, msgSender, msg, contactIcon, intent);
+        return ApiTwentyOnePlus.createMessageNotification(context, notif.getMessages().size(), msgSender, msg, contactIcon, intent);
     }
 
     public static Notification createRepliedNotification(Context context, String reply) {

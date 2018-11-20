@@ -951,11 +951,11 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         if (LinphoneActivity.instance().isOnBackground()) {
             if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
                 if (contact != null) {
-                    LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(),
-                            contact.getFullName(), contact.getThumbnailUri(), getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress().asString());
+                    LinphoneService.instance().getNotificationManager().displayMessageNotification(from.asStringUriOnly(),
+                            contact.getFullName(), contact.getThumbnailUri(), getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress());
                 } else {
-                    LinphoneService.instance().displayMessageNotification(from.asStringUriOnly(),
-                            from.getUsername(), null, getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress().asString());
+                    LinphoneService.instance().getNotificationManager().displayMessageNotification(from.asStringUriOnly(),
+                            from.getUsername(), null, getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress());
                 }
             }
         } else if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {

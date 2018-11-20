@@ -213,7 +213,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
             public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
                 if (newState == ChatRoom.State.Created) {
                     mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos, cr.getLocalAddress().asString());
+                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
                 } else if (newState == ChatRoom.State.CreationFailed) {
                     mWaitLayout.setVisibility(View.GONE);
                     LinphoneActivity.instance().displayChatRoomError();
@@ -468,7 +468,7 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
                 mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), true);
                 if (mChatRoom != null) {
-                    LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, mChatRoom.getLocalAddress().asString());
+                    LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                 } else {
                     mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !createEncryptedChatRoom, createEncryptedChatRoom);
                     mChatRoom.addListener(mChatRoomCreationListener);
@@ -487,11 +487,11 @@ public class ChatCreationFragment extends Fragment implements View.OnClickListen
                         participants[0] = ca.getAddress();
                         mChatRoom.addParticipants(participants);
                     } else {
-                        LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, mChatRoom.getLocalAddress().asString());
+                        LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                     }
                 } else {
                     ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
-                    LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos, chatRoom.getLocalAddress().asString());
+                    LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                 }
             }
         } else {

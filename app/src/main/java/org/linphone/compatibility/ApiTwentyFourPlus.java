@@ -2,23 +2,22 @@ package org.linphone.compatibility;
 
 
 import android.annotation.TargetApi;
-import android.app.FragmentTransaction;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.view.ViewTreeObserver;
 
 import org.linphone.R;
-import org.linphone.receivers.NotificationBroadcastReceiver;
+import org.linphone.notifications.Notifiable;
+import org.linphone.notifications.NotifiableMessage;
+import org.linphone.notifications.NotificationBroadcastReceiver;
 
 import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_CALL_ID;
 import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
 import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
 import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
@@ -52,23 +51,17 @@ public class ApiTwentyFourPlus {
             .build();
 	}
 
-	public static Notification createMessageNotification(Context context, int notificationId, int msgCount, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
-		String title;
-		if (msgCount == 1) {
-			title = msgSender;
-		} else {
-			title = context.getString(R.string.unread_messages).replace("%i", String.valueOf(msgCount));
-		}
-
+	public static Notification createMessageNotification(Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
 		String replyLabel = context.getResources().getString(R.string.notification_reply_label);
 		RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
 
 		Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
 		replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
-		replyIntent.putExtra(INTENT_NOTIF_ID, notificationId);
+		replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
+		replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
 
 		PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context,
-            notificationId, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			notif.getNotificationId(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		Notification.Action action = new Notification.Action.Builder(R.drawable.chat_send_over,
             context.getString(R.string.notification_reply_label), replyPendingIntent)
@@ -76,9 +69,13 @@ public class ApiTwentyFourPlus {
             .setAllowGeneratedReplies(true)
             .build();
 
+		Notification.MessagingStyle style = new Notification.MessagingStyle(notif.getMyself());
+		for (NotifiableMessage message : notif.getMessages()) {
+			style.addMessage(message.getMessage(), message.getTime(), message.getSender());
+		}
+		style.setConversationTitle(notif.getGroupTitle());
+
 		return new Notification.Builder(context)
-			.setContentTitle(title)
-			.setContentText(msg)
 			.setSmallIcon(R.drawable.topbar_chat_notification)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
@@ -87,10 +84,11 @@ public class ApiTwentyFourPlus {
 			.setCategory(Notification.CATEGORY_MESSAGE)
 			.setVisibility(Notification.VISIBILITY_PRIVATE)
 			.setPriority(Notification.PRIORITY_HIGH)
-			.setNumber(msgCount)
+			.setNumber(notif.getMessages().size())
 			.setWhen(System.currentTimeMillis())
 			.setShowWhen(true)
 			.setColor(context.getColor(R.color.notification_color_led))
+			.setStyle(style)
 			.addAction(action)
 			.build();
 	}
