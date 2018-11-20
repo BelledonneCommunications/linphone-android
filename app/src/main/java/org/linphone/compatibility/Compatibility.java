@@ -62,7 +62,9 @@ public class Compatibility {
     }
 
     public static Notification createMessageNotification(Context context, Notifiable notif, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+        if (Version.sdkAboveOrEqual(28)) {
+            return ApiTwentyEightPlus.createMessageNotification(context, notif, contactIcon, intent);
+        } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createMessageNotification(context, notif, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
             return ApiTwentyFourPlus.createMessageNotification(context, notif, contactIcon, intent);
@@ -71,7 +73,9 @@ public class Compatibility {
     }
 
     public static Notification createRepliedNotification(Context context, String reply) {
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+        if (Version.sdkAboveOrEqual(28)) {
+            return ApiTwentyEightPlus.createRepliedNotification(context, reply);
+        } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createRepliedNotification(context, reply);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
             return ApiTwentyFourPlus.createRepliedNotification(context, reply);

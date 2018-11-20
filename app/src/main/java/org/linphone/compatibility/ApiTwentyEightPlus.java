@@ -4,6 +4,7 @@ package org.linphone.compatibility;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.Person;
 import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +24,7 @@ import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION
 import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 /*
-ApiTwentyFourPlus.java
+ApiTwentyEightPlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -41,8 +42,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-@TargetApi(24)
-public class ApiTwentyFourPlus {
+@TargetApi(28)
+public class ApiTwentyEightPlus {
 
 	public static Notification createRepliedNotification(Context context, String reply) {
 		return new Notification.Builder(context)
@@ -69,13 +70,16 @@ public class ApiTwentyFourPlus {
             .setAllowGeneratedReplies(true)
             .build();
 
-		Notification.MessagingStyle style = new Notification.MessagingStyle(notif.getMyself());
+		Person me = new Person.Builder().setName(notif.getMyself()).build();
+		Notification.MessagingStyle style = new Notification.MessagingStyle(me);
 		for (NotifiableMessage message : notif.getMessages()) {
-			style.addMessage(message.getMessage(), message.getTime(), message.getSender());
+			Person user = new Person.Builder().setName(message.getSender()).build();
+			style.addMessage(message.getMessage(), message.getTime(), user);
 		}
 		if (notif.isGroup()) {
 			style.setConversationTitle(notif.getGroupTitle());
 		}
+		style.setGroupConversation(notif.isGroup());
 
 		return new Notification.Builder(context)
 			.setSmallIcon(R.drawable.topbar_chat_notification)
@@ -94,43 +98,4 @@ public class ApiTwentyFourPlus {
 			.addAction(action)
 			.build();
 	}
-
-    public static Notification createInCallNotification(Context context,
-        int callId, boolean showAnswerAction, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
-
-		Intent hangupIntent = new Intent(context, NotificationBroadcastReceiver.class);
-		hangupIntent.setAction(INTENT_HANGUP_CALL_NOTIF_ACTION);
-		hangupIntent.putExtra(INTENT_CALL_ID, callId);
-
-		PendingIntent hangupPendingIntent = PendingIntent.getBroadcast(context,
-				callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-       Notification.Builder builder = new Notification.Builder(context)
-            .setContentTitle(contactName)
-            .setContentText(msg)
-            .setSmallIcon(iconID)
-            .setAutoCancel(false)
-            .setContentIntent(intent)
-            .setLargeIcon(contactIcon)
-            .setCategory(Notification.CATEGORY_CALL)
-            .setVisibility(Notification.VISIBILITY_PUBLIC)
-            .setPriority(Notification.PRIORITY_HIGH)
-            .setWhen(System.currentTimeMillis())
-            .setShowWhen(true)
-            .setColor(context.getColor(R.color.notification_color_led))
-            .addAction(R.drawable.call_hangup, context.getString(R.string.notification_call_hangup_label), hangupPendingIntent);
-
-        if (showAnswerAction) {
-            Intent answerIntent = new Intent(context, NotificationBroadcastReceiver.class);
-            answerIntent.setAction(INTENT_ANSWER_CALL_NOTIF_ACTION);
-            answerIntent.putExtra(INTENT_CALL_ID, callId);
-
-            PendingIntent answerPendingIntent = PendingIntent.getBroadcast(context,
-                    callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            builder.addAction(R.drawable.call_audio_start, context.getString(R.string.notification_call_answer_label), answerPendingIntent);
-        }
-
-        return builder.build();
-    }
 }

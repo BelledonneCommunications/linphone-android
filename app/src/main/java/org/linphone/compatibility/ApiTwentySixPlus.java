@@ -106,7 +106,9 @@ public class ApiTwentySixPlus {
 		for (NotifiableMessage message : notif.getMessages()) {
 			style.addMessage(message.getMessage(), message.getTime(), message.getSender());
 		}
-		style.setConversationTitle(notif.getGroupTitle());
+		if (notif.isGroup()) {
+			style.setConversationTitle(notif.getGroupTitle());
+		}
 
 		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 			.setSmallIcon(R.drawable.topbar_chat_notification)
