@@ -107,9 +107,15 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             String remoteAddr = LinphoneService.instance().getNotificationManager().getSipUriForCallNotificationId(notifId);
 
             Core core = LinphoneManager.getLc();
-            if (core == null) return;
+            if (core == null) {
+                Log.e("Couldn't get Core instance");
+                return;
+            }
             Call call = core.findCallFromUri(remoteAddr);
-            if (call == null) return;
+            if (call == null) {
+                Log.e("Couldn't find call from remote address " + remoteAddr);
+                return;
+            }
 
             if (intent.getAction() == Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION) {
                 call.accept();

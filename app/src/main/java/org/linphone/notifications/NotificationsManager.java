@@ -55,7 +55,6 @@ public class NotificationsManager {
     private NotificationManager mNM;
     private HashMap<String, Notifiable> mChatNotifMap, mCallNotifMap;
     private int mLastNotificationId;
-    private PendingIntent mPendingIntent;
     private Notification mServiceNotification;
 
     public NotificationsManager(Context context) {
@@ -71,8 +70,7 @@ public class NotificationsManager {
         Compatibility.createNotificationChannels(mContext);
 
         Intent notifIntent = new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
-        notifIntent.putExtra("Notifiable", true);
-        mPendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notifIntent.putExtra("Notification", true);
 
         //Disable service notification for Android O
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
@@ -84,8 +82,9 @@ public class NotificationsManager {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
         } catch (Exception e) {
         }
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mServiceNotification = Compatibility.createNotification(mContext, mContext.getString(R.string.service_name), "",
-                R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, mPendingIntent, true,
+                R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, pendingIntent, true,
                 Notification.PRIORITY_MIN);
 
         if (isServiceNotificationDisplayed()) {
@@ -226,6 +225,8 @@ public class NotificationsManager {
     }
 
     public void displayCallNotification(Call call) {
+        Intent callNotifIntent = new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, callNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (call == null) return;
 
         Address address = call.getRemoteAddress();
@@ -283,7 +284,7 @@ public class NotificationsManager {
         boolean showAnswerAction = call.getState() == Call.State.IncomingReceived || call.getState() == Call.State.IncomingEarlyMedia;
         Notification notification = Compatibility.createInCallNotification(mContext, notif.getNotificationId(),
                 showAnswerAction, mContext.getString(R.string.service_name),
-                mContext.getString(notificationTextId), iconId, bm, name, mPendingIntent);
+                mContext.getString(notificationTextId), iconId, bm, name, pendingIntent);
 
         sendNotification(notif.getNotificationId(), notification);
     }

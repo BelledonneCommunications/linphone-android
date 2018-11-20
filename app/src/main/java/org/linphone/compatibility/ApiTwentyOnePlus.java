@@ -1,15 +1,5 @@
 package org.linphone.compatibility;
 
-import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v4.content.ContextCompat;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-
-import org.linphone.R;
 /*
 ApiTwentyOnePlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -28,6 +18,17 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+
+import org.linphone.R;
 
 @TargetApi(21)
 public class ApiTwentyOnePlus {

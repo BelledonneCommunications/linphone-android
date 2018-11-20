@@ -34,7 +34,6 @@ import org.linphone.notifications.Notifiable;
 public class Compatibility {
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final String INTENT_NOTIF_ID = "NOTIFICATION_ID";
-    public static final String INTENT_CALL_ID = "CALL_ID";
     public static final String INTENT_REPLY_NOTIF_ACTION = "org.linphone.REPLY_ACTION";
     public static final String INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION";
     public static final String INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION";
@@ -73,9 +72,7 @@ public class Compatibility {
     }
 
     public static Notification createRepliedNotification(Context context, String reply) {
-        if (Version.sdkAboveOrEqual(28)) {
-            return ApiTwentyEightPlus.createRepliedNotification(context, reply);
-        } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
+        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createRepliedNotification(context, reply);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
             return ApiTwentyFourPlus.createRepliedNotification(context, reply);

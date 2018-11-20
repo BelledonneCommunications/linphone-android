@@ -30,7 +30,7 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        android.util.Log.i("FirebaseIdService", "[Push Notifiable] Refreshed token: " + refreshedToken);
+        android.util.Log.i("FirebaseIdService", "[Push Notification] Refreshed token: " + refreshedToken);
 
         LinphoneUtils.dispatchOnUIThread(new Runnable() {
             @Override

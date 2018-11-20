@@ -1491,7 +1491,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         } else if (extras != null && extras.getBoolean("GoToInapp", false)) {
             intent.putExtra("DoNotGoToCallActivity", true);
             displayInapp();
-        } else if (extras != null && extras.getBoolean("Notifiable", false)) {
+        } else if (extras != null && extras.getBoolean("Notification", false)) {
             if (LinphoneManager.getLc().getCallsNb() > 0) {
                 startIncallActivity();
             }

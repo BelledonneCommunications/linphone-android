@@ -1,27 +1,5 @@
 package org.linphone.compatibility;
 
-
-import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.RemoteInput;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-
-import org.linphone.R;
-import org.linphone.notifications.Notifiable;
-import org.linphone.notifications.NotifiableMessage;
-import org.linphone.notifications.NotificationBroadcastReceiver;
-
-import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.INTENT_CALL_ID;
-import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
-import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
-import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
-
 /*
 ApiTwentyFourPlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -40,6 +18,26 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
+
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.RemoteInput;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+
+import org.linphone.R;
+import org.linphone.notifications.Notifiable;
+import org.linphone.notifications.NotifiableMessage;
+import org.linphone.notifications.NotificationBroadcastReceiver;
+
+import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
+import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 @TargetApi(24)
 public class ApiTwentyFourPlus {
@@ -100,7 +98,7 @@ public class ApiTwentyFourPlus {
 
 		Intent hangupIntent = new Intent(context, NotificationBroadcastReceiver.class);
 		hangupIntent.setAction(INTENT_HANGUP_CALL_NOTIF_ACTION);
-		hangupIntent.putExtra(INTENT_CALL_ID, callId);
+		hangupIntent.putExtra(INTENT_NOTIF_ID, callId);
 
 		PendingIntent hangupPendingIntent = PendingIntent.getBroadcast(context,
 				callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -123,7 +121,7 @@ public class ApiTwentyFourPlus {
         if (showAnswerAction) {
             Intent answerIntent = new Intent(context, NotificationBroadcastReceiver.class);
             answerIntent.setAction(INTENT_ANSWER_CALL_NOTIF_ACTION);
-            answerIntent.putExtra(INTENT_CALL_ID, callId);
+            answerIntent.putExtra(INTENT_NOTIF_ID, callId);
 
             PendingIntent answerPendingIntent = PendingIntent.getBroadcast(context,
                     callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);

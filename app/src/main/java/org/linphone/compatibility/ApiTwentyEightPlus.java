@@ -1,28 +1,5 @@
 package org.linphone.compatibility;
 
-
-import android.annotation.TargetApi;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Person;
-import android.app.RemoteInput;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-
-import org.linphone.R;
-import org.linphone.notifications.Notifiable;
-import org.linphone.notifications.NotifiableMessage;
-import org.linphone.notifications.NotificationBroadcastReceiver;
-
-import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.INTENT_CALL_ID;
-import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
-import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
-import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
-
 /*
 ApiTwentyEightPlus.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -42,16 +19,27 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Person;
+import android.app.RemoteInput;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+
+import org.linphone.R;
+import org.linphone.notifications.Notifiable;
+import org.linphone.notifications.NotifiableMessage;
+import org.linphone.notifications.NotificationBroadcastReceiver;
+
+import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
+import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
+import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
+import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
+
 @TargetApi(28)
 public class ApiTwentyEightPlus {
-
-	public static Notification createRepliedNotification(Context context, String reply) {
-		return new Notification.Builder(context)
-            .setSmallIcon(R.drawable.topbar_chat_notification)
-            .setContentText(context.getString(R.string.notification_replied_label).replace("%s", reply))
-            .build();
-	}
-
 	public static Notification createMessageNotification(Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
 		String replyLabel = context.getResources().getString(R.string.notification_reply_label);
 		RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
@@ -81,7 +69,7 @@ public class ApiTwentyEightPlus {
 		}
 		style.setGroupConversation(notif.isGroup());
 
-		return new Notification.Builder(context)
+		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
 			.setSmallIcon(R.drawable.topbar_chat_notification)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
