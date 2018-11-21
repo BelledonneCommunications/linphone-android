@@ -407,7 +407,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                     holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
 
                     switch (event.getSecurityEventType()) {
-                        case LimeIdentityKeyChanged:
+                        case EncryptionIdentityKeyChanged:
                             holder.eventMessage.setText(mContext.getString(R.string.lime_identity_key_changed).replace("%s", displayName));
                             break;
                         case ManInTheMiddleDetected:
