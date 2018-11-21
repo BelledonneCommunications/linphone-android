@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Application;
@@ -77,9 +76,6 @@ public final class LinphoneService extends Service {
         return instance != null && instance.mTestDelayElapsed;
     }
 
-    /**
-     * @throws RuntimeException service not instantiated
-     */
     public static LinphoneService instance() {
         if (isReady()) return instance;
 
@@ -88,22 +84,18 @@ public final class LinphoneService extends Service {
 
     public Handler mHandler = new Handler();
 
-    //	private boolean mTestDelayElapsed; // add a timer for testing
-    private boolean mTestDelayElapsed = true; // no timer
-
+    private boolean mTestDelayElapsed = true;
     private CoreListenerStub mListener;
     private WindowManager mWindowManager;
     private LinphoneOverlay mOverlay;
-    private Application.ActivityLifecycleCallbacks activityCallbacks;
-
+    private Application.ActivityLifecycleCallbacks mActivityCallbacks;
     private NotificationsManager mNotificationManager;
+    private String incomingReceivedActivityName;
+    private Class<? extends Activity> incomingReceivedActivity = LinphoneActivity.class;
 
     public NotificationsManager getNotificationManager() {
         return mNotificationManager;
     }
-
-    private String incomingReceivedActivityName;
-    private Class<? extends Activity> incomingReceivedActivity = LinphoneActivity.class;
 
     public Class<? extends Activity> getIncomingReceivedActivity() {
         return incomingReceivedActivity;
@@ -112,111 +104,6 @@ public final class LinphoneService extends Service {
     public void setCurrentlyDisplayedChatRoom(String address) {
         if (address != null) {
             mNotificationManager.resetMessageNotifCount(address);
-        }
-    }
-
-    /*Believe me or not, but knowing the application visibility state on Android is a nightmare.
-    After two days of hard work I ended with the following class, that does the job more or less reliabily.
-    */
-    class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
-        private ArrayList<Activity> activities = new ArrayList<>();
-        private boolean mActive = false;
-        private int mRunningActivities = 0;
-
-        class InactivityChecker implements Runnable {
-            private boolean isCanceled;
-
-            public void cancel() {
-                isCanceled = true;
-            }
-
-            @Override
-            public void run() {
-                synchronized (LinphoneService.this) {
-                    if (!isCanceled) {
-                        if (ActivityMonitor.this.mRunningActivities == 0 && mActive) {
-                            mActive = false;
-                            LinphoneService.this.onBackgroundMode();
-                        }
-                    }
-                }
-            }
-        }
-
-        private InactivityChecker mLastChecker;
-
-        @Override
-        public synchronized void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            Log.i("Activity created:" + activity);
-            if (!activities.contains(activity))
-                activities.add(activity);
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-            Log.i("Activity started:" + activity);
-        }
-
-        @Override
-        public synchronized void onActivityResumed(Activity activity) {
-            Log.i("Activity resumed:" + activity);
-            if (activities.contains(activity)) {
-                mRunningActivities++;
-                Log.i("runningActivities=" + mRunningActivities);
-                checkActivity();
-            }
-
-        }
-
-        @Override
-        public synchronized void onActivityPaused(Activity activity) {
-            Log.i("Activity paused:" + activity);
-            if (activities.contains(activity)) {
-                mRunningActivities--;
-                Log.i("runningActivities=" + mRunningActivities);
-                checkActivity();
-            }
-
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            Log.i("Activity stopped:" + activity);
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public synchronized void onActivityDestroyed(Activity activity) {
-            Log.i("Activity destroyed:" + activity);
-            if (activities.contains(activity)) {
-                activities.remove(activity);
-            }
-        }
-
-        void startInactivityChecker() {
-            if (mLastChecker != null) mLastChecker.cancel();
-            LinphoneService.this.mHandler.postDelayed(
-                    (mLastChecker = new InactivityChecker()), 2000);
-        }
-
-        void checkActivity() {
-
-            if (mRunningActivities == 0) {
-                if (mActive) startInactivityChecker();
-            } else if (mRunningActivities > 0) {
-                if (!mActive) {
-                    mActive = true;
-                    LinphoneService.this.onForegroundMode();
-                }
-                if (mLastChecker != null) {
-                    mLastChecker.cancel();
-                    mLastChecker = null;
-                }
-            }
         }
     }
 
@@ -243,8 +130,8 @@ public final class LinphoneService extends Service {
     }
 
     private void setupActivityMonitor() {
-        if (activityCallbacks != null) return;
-        getApplication().registerActivityLifecycleCallbacks(activityCallbacks = new ActivityMonitor());
+        if (mActivityCallbacks != null) return;
+        getApplication().registerActivityLifecycleCallbacks(mActivityCallbacks = new ActivityMonitor());
     }
 
     @Override
@@ -417,7 +304,6 @@ public final class LinphoneService extends Service {
         return null;
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
@@ -439,9 +325,9 @@ public final class LinphoneService extends Service {
 
     @Override
     public synchronized void onDestroy() {
-        if (activityCallbacks != null) {
-            getApplication().unregisterActivityLifecycleCallbacks(activityCallbacks);
-            activityCallbacks = null;
+        if (mActivityCallbacks != null) {
+            getApplication().unregisterActivityLifecycleCallbacks(mActivityCallbacks);
+            mActivityCallbacks = null;
         }
 
         destroyOverlay();
@@ -481,6 +367,110 @@ public final class LinphoneService extends Service {
         startActivity(new Intent()
             .setClass(this, incomingReceivedActivity)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    /*Believe me or not, but knowing the application visibility state on Android is a nightmare.
+    After two days of hard work I ended with the following class, that does the job more or less reliabily.
+    */
+    class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
+        private ArrayList<Activity> activities = new ArrayList<>();
+        private boolean mActive = false;
+        private int mRunningActivities = 0;
+
+        class InactivityChecker implements Runnable {
+            private boolean isCanceled;
+
+            public void cancel() {
+                isCanceled = true;
+            }
+
+            @Override
+            public void run() {
+                synchronized (LinphoneService.this) {
+                    if (!isCanceled) {
+                        if (ActivityMonitor.this.mRunningActivities == 0 && mActive) {
+                            mActive = false;
+                            LinphoneService.this.onBackgroundMode();
+                        }
+                    }
+                }
+            }
+        }
+
+        private InactivityChecker mLastChecker;
+
+        @Override
+        public synchronized void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            Log.i("Activity created:" + activity);
+            if (!activities.contains(activity))
+                activities.add(activity);
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            Log.i("Activity started:" + activity);
+        }
+
+        @Override
+        public synchronized void onActivityResumed(Activity activity) {
+            Log.i("Activity resumed:" + activity);
+            if (activities.contains(activity)) {
+                mRunningActivities++;
+                Log.i("runningActivities=" + mRunningActivities);
+                checkActivity();
+            }
+
+        }
+
+        @Override
+        public synchronized void onActivityPaused(Activity activity) {
+            Log.i("Activity paused:" + activity);
+            if (activities.contains(activity)) {
+                mRunningActivities--;
+                Log.i("runningActivities=" + mRunningActivities);
+                checkActivity();
+            }
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            Log.i("Activity stopped:" + activity);
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public synchronized void onActivityDestroyed(Activity activity) {
+            Log.i("Activity destroyed:" + activity);
+            if (activities.contains(activity)) {
+                activities.remove(activity);
+            }
+        }
+
+        void startInactivityChecker() {
+            if (mLastChecker != null) mLastChecker.cancel();
+            LinphoneService.this.mHandler.postDelayed(
+                    (mLastChecker = new InactivityChecker()), 2000);
+        }
+
+        void checkActivity() {
+            if (mRunningActivities == 0) {
+                if (mActive) startInactivityChecker();
+            } else if (mRunningActivities > 0) {
+                if (!mActive) {
+                    mActive = true;
+                    LinphoneService.this.onForegroundMode();
+                }
+                if (mLastChecker != null) {
+                    mLastChecker.cancel();
+                    mLastChecker = null;
+                }
+            }
+        }
     }
 }
 
