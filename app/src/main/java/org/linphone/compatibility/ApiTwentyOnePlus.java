@@ -128,10 +128,6 @@ public class ApiTwentyOnePlus {
         return notif;
     }
 
-    public static void removeGlobalLayoutListener(ViewTreeObserver viewTreeObserver, OnGlobalLayoutListener keyboardListener) {
-        viewTreeObserver.removeOnGlobalLayoutListener(keyboardListener);
-    }
-
     public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
         Notification notif = new Notification.Builder(context)
                 .setContentTitle(title)
@@ -141,7 +137,7 @@ public class ApiTwentyOnePlus {
                 .setContentIntent(intent)
                 .setDefaults(Notification.DEFAULT_SOUND
                         | Notification.DEFAULT_VIBRATE)
-                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setCategory(Notification.CATEGORY_EVENT)
                 .setVisibility(Notification.VISIBILITY_PRIVATE)
                 .setLights(ContextCompat.getColor(context, R.color.notification_color_led),
                         context.getResources().getInteger(R.integer.notification_ms_on),

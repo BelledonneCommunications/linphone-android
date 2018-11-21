@@ -206,7 +206,7 @@ public class ApiTwentySixPlus {
 			.setContentIntent(intent)
 			.setDefaults(Notification.DEFAULT_SOUND
 					| Notification.DEFAULT_VIBRATE)
-			.setCategory(Notification.CATEGORY_MESSAGE)
+			.setCategory(Notification.CATEGORY_EVENT)
 			.setVisibility(Notification.VISIBILITY_PRIVATE)
 			.setPriority(Notification.PRIORITY_HIGH)
 			.setWhen(System.currentTimeMillis())

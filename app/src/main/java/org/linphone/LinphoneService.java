@@ -165,15 +165,10 @@ public final class LinphoneService extends Service {
                 }
 
                 if (state == State.End || state == State.Released || state == State.Error) {
-                    if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null && LinphoneManager.getLc().getCallsNb() == 0) {
-                        if (LinphoneActivity.isInstanciated() && LinphoneActivity.instance().getStatusFragment() != null) {
-                            LinphoneActivity.instance().getStatusFragment().setisZrtpAsk(false);
-                        }
-                    }
                     destroyOverlay();
                 }
 
-                if (state == State.End && call.getCallLog().getStatus() == Call.Status.Missed) {
+                if (state == State.Released && call.getCallLog().getStatus() == Call.Status.Missed) {
                     mNotificationManager.displayMissedCallNotification(call);
                 }
             }

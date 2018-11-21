@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
@@ -82,6 +81,7 @@ public class NotificationsManager {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
         } catch (Exception e) {
         }
+
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mServiceNotification = Compatibility.createNotification(mContext, mContext.getString(R.string.service_name), "",
                 R.drawable.linphone_notification_icon, R.mipmap.ic_launcher, bm, pendingIntent, true,
@@ -143,6 +143,7 @@ public class NotificationsManager {
             mLastNotificationId += 1;
             mChatNotifMap.put(conferenceAddress, notif);
         }
+
         notifMessage.setSenderBitmap(bm);
         notif.addMessage(notifMessage);
         notif.setIsGroup(true);
@@ -173,6 +174,7 @@ public class NotificationsManager {
             mLastNotificationId += 1;
             mChatNotifMap.put(fromSipUri, notif);
         }
+
         notifMessage.setSenderBitmap(bm);
         notif.addMessage(notifMessage);
         notif.setIsGroup(false);
@@ -184,7 +186,7 @@ public class NotificationsManager {
     }
 
     public void displayMissedCallNotification(Call call) {
-        Intent missedCallNotifIntent = new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
+        Intent missedCallNotifIntent = new Intent(mContext, LinphoneActivity.class);
         missedCallNotifIntent.putExtra("GoToHistory", true);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -204,14 +206,15 @@ public class NotificationsManager {
                 }
             }
         }
+
         Notification notif = Compatibility.createMissedCallNotification(mContext, mContext.getString(R.string.missed_calls_notif_title), body, pendingIntent);
         sendNotification(MISSED_CALLS_NOTIF_ID, notif);
     }
 
     public void displayCallNotification(Call call) {
+        if (call == null) return;
         Intent callNotifIntent = new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, callNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (call == null) return;
 
         Address address = call.getRemoteAddress();
         String addressAsString = address.asStringUriOnly();
@@ -264,7 +267,6 @@ public class NotificationsManager {
         Notification notification = Compatibility.createInCallNotification(mContext, notif.getNotificationId(),
                 showAnswerAction, mContext.getString(R.string.service_name),
                 mContext.getString(notificationTextId), iconId, bm, name, pendingIntent);
-
         sendNotification(notif.getNotificationId(), notification);
     }
 
@@ -281,8 +283,8 @@ public class NotificationsManager {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToInapp", true);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notif = Compatibility.createSimpleNotification(mContext, mContext.getString(R.string.inapp_notification_title), message, pendingIntent);
 
+        Notification notif = Compatibility.createSimpleNotification(mContext, mContext.getString(R.string.inapp_notification_title), message, pendingIntent);
         sendNotification(IN_APP_NOTIF_ID, notif);
     }
 }

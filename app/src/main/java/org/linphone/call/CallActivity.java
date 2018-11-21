@@ -186,9 +186,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             @Override
             public void onCallStateChanged(Core lc, final Call call, Call.State state, String message) {
                 if (LinphoneManager.getLc().getCallsNb() == 0) {
-                    if (status != null) {
-                        status.setisZrtpAsk(false);
-                    }
                     finish();
                     return;
                 }
@@ -273,9 +270,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
                     TimeRemind = savedInstanceState.getLong("TimeRemind");
                     createTimerForDialog(TimeRemind);
                 }
-                if (status != null && savedInstanceState.getBoolean("AskingZrtp")) {
-                    status.setisZrtpAsk(savedInstanceState.getBoolean("AskingZrtp"));
-                }
                 refreshInCallActions();
                 return;
             } else {
@@ -334,7 +328,6 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         outState.putBoolean("VideoCallPaused", isVideoCallPaused);
         outState.putBoolean("AskingVideo", isVideoAsk);
         outState.putLong("TimeRemind", TimeRemind);
-        if (status != null) outState.putBoolean("AskingZrtp", status.getisZrtpAsk());
         if (dialog != null) dialog.dismiss();
         super.onSaveInstanceState(outState);
     }
@@ -1179,8 +1172,11 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
         refreshIncallUi();
         handleViewIntent();
 
-        if (status != null && status.getisZrtpAsk() && lc != null) {
-            status.showZRTPDialog(lc.getCurrentCall());
+        if (status != null && lc != null) {
+            Call currentCall = lc.getCurrentCall();
+            if (!currentCall.getAuthenticationTokenVerified()) {
+                status.showZRTPDialog(currentCall);
+            }
         }
 
         if (!isVideoEnabled(LinphoneManager.getLc().getCurrentCall())) {
