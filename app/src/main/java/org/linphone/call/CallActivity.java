@@ -1174,7 +1174,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
         if (status != null && lc != null) {
             Call currentCall = lc.getCurrentCall();
-            if (!currentCall.getAuthenticationTokenVerified()) {
+            if (currentCall != null && !currentCall.getAuthenticationTokenVerified()) {
                 status.showZRTPDialog(currentCall);
             }
         }

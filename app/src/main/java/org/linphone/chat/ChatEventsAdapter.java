@@ -30,7 +30,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -419,6 +418,9 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                             break;
                         case ParticipantMaxDeviceCountExceeded:
                             holder.eventMessage.setText(mContext.getString(R.string.participant_max_count_exceeded).replace("%s", displayName));
+                            break;
+                        case None:
+                        default:
                             break;
                     }
                     break;
