@@ -129,24 +129,11 @@ public class NotificationsManager {
         return null;
     }
 
-    public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message, Address localIdentity) {
+    public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message, Address localIdentity, long timestamp) {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notifiable notif = mChatNotifMap.get(conferenceAddress);
-        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, 0);
-        if (notif == null) {
-            notif = new Notifiable(mLastNotificationId);
-            mLastNotificationId += 1;
-            mChatNotifMap.put(conferenceAddress, notif);
-        }
-        notif.addMessage(notifMessage);
-        notif.setIsGroup(true);
-        notif.setGroupTitle(subject);
-        notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
-        notif.setLocalIdentity(localIdentity.asString());
 
         Bitmap bm;
         if (fromPictureUri != null) {
@@ -158,12 +145,27 @@ public class NotificationsManager {
         } else {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.topbar_avatar);
         }
+
+        Notifiable notif = mChatNotifMap.get(conferenceAddress);
+        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
+        if (notif == null) {
+            notif = new Notifiable(mLastNotificationId);
+            mLastNotificationId += 1;
+            mChatNotifMap.put(conferenceAddress, notif);
+        }
+        notifMessage.setSenderBitmap(bm);
+        notif.addMessage(notifMessage);
+        notif.setIsGroup(true);
+        notif.setGroupTitle(subject);
+        notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
+        notif.setLocalIdentity(localIdentity.asString());
+
         Notification notification = Compatibility.createMessageNotification(mContext, notif, subject,
                 mContext.getString(R.string.group_chat_notif).replace("%1", fromName).replace("%2", message), bm, pendingIntent);
         sendNotification(notif.getNotificationId(), notification);
     }
 
-    public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message, Address localIdentity) {
+    public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message, Address localIdentity, long timestamp) {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", fromSipUri);
@@ -172,18 +174,6 @@ public class NotificationsManager {
         if (fromName == null) {
             fromName = fromSipUri;
         }
-
-        Notifiable notif = mChatNotifMap.get(fromSipUri);
-        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, 0);
-        if (notif == null) {
-            notif = new Notifiable(mLastNotificationId);
-            mLastNotificationId += 1;
-            mChatNotifMap.put(fromSipUri, notif);
-        }
-        notif.addMessage(notifMessage);
-        notif.setIsGroup(false);
-        notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
-        notif.setLocalIdentity(localIdentity.asString());
 
         Bitmap bm;
         if (fromPictureUri != null) {
@@ -195,6 +185,20 @@ public class NotificationsManager {
         } else {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.topbar_avatar);
         }
+
+        Notifiable notif = mChatNotifMap.get(fromSipUri);
+        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
+        if (notif == null) {
+            notif = new Notifiable(mLastNotificationId);
+            mLastNotificationId += 1;
+            mChatNotifMap.put(fromSipUri, notif);
+        }
+        notifMessage.setSenderBitmap(bm);
+        notif.addMessage(notifMessage);
+        notif.setIsGroup(false);
+        notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
+        notif.setLocalIdentity(localIdentity.asString());
+
         Notification notification = Compatibility.createMessageNotification(mContext, notif, fromName, message, bm, pendingIntent);
         sendNotification(notif.getNotificationId(), notification);
     }

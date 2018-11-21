@@ -19,10 +19,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.graphics.Bitmap;
+
 public class NotifiableMessage {
     String mMessage;
     String mSender;
     long mTime;
+    Bitmap mSenderBitmap;
 
     public NotifiableMessage(String message, String sender, long time) {
         mMessage = message;
@@ -40,5 +43,13 @@ public class NotifiableMessage {
 
     public long getTime() {
         return mTime;
+    }
+
+    public Bitmap getSenderBitmap() {
+        return mSenderBitmap;
+    }
+
+    public void setSenderBitmap(Bitmap bm) {
+        mSenderBitmap = bm;
     }
 }

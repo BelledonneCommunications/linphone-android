@@ -27,6 +27,7 @@ import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Icon;
 
 import org.linphone.R;
 import org.linphone.notifications.Notifiable;
@@ -40,50 +41,51 @@ import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 @TargetApi(28)
 public class ApiTwentyEightPlus {
-	public static Notification createMessageNotification(Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
-		String replyLabel = context.getResources().getString(R.string.notification_reply_label);
-		RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
+    public static Notification createMessageNotification(Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
+        String replyLabel = context.getResources().getString(R.string.notification_reply_label);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
 
-		Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
-		replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
-		replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
-		replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
+        Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
+        replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
+        replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
+        replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
 
-		PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context,
-			notif.getNotificationId(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent replyPendingIntent = PendingIntent.getBroadcast(context,
+            notif.getNotificationId(), replyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		Notification.Action action = new Notification.Action.Builder(R.drawable.chat_send_over,
+        Notification.Action action = new Notification.Action.Builder(R.drawable.chat_send_over,
             context.getString(R.string.notification_reply_label), replyPendingIntent)
             .addRemoteInput(remoteInput)
             .setAllowGeneratedReplies(true)
             .build();
 
-		Person me = new Person.Builder().setName(notif.getMyself()).build();
-		Notification.MessagingStyle style = new Notification.MessagingStyle(me);
-		for (NotifiableMessage message : notif.getMessages()) {
-			Person user = new Person.Builder().setName(message.getSender()).build();
-			style.addMessage(message.getMessage(), message.getTime(), user);
-		}
-		if (notif.isGroup()) {
-			style.setConversationTitle(notif.getGroupTitle());
-		}
-		style.setGroupConversation(notif.isGroup());
+        Person me = new Person.Builder().setName(notif.getMyself()).build();
+        Notification.MessagingStyle style = new Notification.MessagingStyle(me);
+        for (NotifiableMessage message : notif.getMessages()) {
+            Icon userIcon = Icon.createWithBitmap(message.getSenderBitmap());
+            Person user = new Person.Builder().setName(message.getSender()).setIcon(userIcon).build();
+            style.addMessage(message.getMessage(), message.getTime(), user);
+        }
+        if (notif.isGroup()) {
+            style.setConversationTitle(notif.getGroupTitle());
+        }
+        style.setGroupConversation(notif.isGroup());
 
-		return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
-			.setSmallIcon(R.drawable.topbar_chat_notification)
-			.setAutoCancel(true)
-			.setContentIntent(intent)
-			.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-			.setLargeIcon(contactIcon)
-			.setCategory(Notification.CATEGORY_MESSAGE)
-			.setVisibility(Notification.VISIBILITY_PRIVATE)
-			.setPriority(Notification.PRIORITY_HIGH)
-			.setNumber(notif.getMessages().size())
-			.setWhen(System.currentTimeMillis())
-			.setShowWhen(true)
-			.setColor(context.getColor(R.color.notification_color_led))
-			.setStyle(style)
-			.addAction(action)
-			.build();
-	}
+        return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
+            .setSmallIcon(R.drawable.topbar_chat_notification)
+            .setAutoCancel(true)
+            .setContentIntent(intent)
+            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+            .setLargeIcon(contactIcon)
+            .setCategory(Notification.CATEGORY_MESSAGE)
+            .setVisibility(Notification.VISIBILITY_PRIVATE)
+            .setPriority(Notification.PRIORITY_HIGH)
+            .setNumber(notif.getMessages().size())
+            .setWhen(System.currentTimeMillis())
+            .setShowWhen(true)
+            .setColor(context.getColor(R.color.notification_color_led))
+            .setStyle(style)
+            .addAction(action)
+            .build();
+    }
 }
