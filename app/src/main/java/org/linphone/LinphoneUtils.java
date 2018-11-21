@@ -27,6 +27,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -811,6 +816,46 @@ public final class LinphoneUtils {
             }
         }
         LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData));
+    }
+
+    public static Bitmap getRoundBitmapFromUri(Context context, Uri fromPictureUri) {
+        Bitmap bm;
+        Bitmap roundBm;
+        if (fromPictureUri != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), fromPictureUri);
+            } catch (Exception e) {
+                bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
+            }
+        } else {
+            bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
+        }
+        if (bm != null) {
+            roundBm = LinphoneUtils.getRoundBitmap(bm);
+            if (roundBm != null) {
+                bm.recycle();
+                bm = roundBm;
+            }
+        }
+        return bm;
+    }
+
+    public static Bitmap getRoundBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }
 

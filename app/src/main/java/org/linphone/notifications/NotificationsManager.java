@@ -135,17 +135,7 @@ public class NotificationsManager {
         notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap bm;
-        if (fromPictureUri != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), fromPictureUri);
-            } catch (Exception e) {
-                bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_group_avatar);
-            }
-        } else {
-            bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.topbar_avatar);
-        }
-
+        Bitmap bm = LinphoneUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(conferenceAddress);
         NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
         if (notif == null) {
@@ -175,17 +165,7 @@ public class NotificationsManager {
             fromName = fromSipUri;
         }
 
-        Bitmap bm;
-        if (fromPictureUri != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), fromPictureUri);
-            } catch (Exception e) {
-                bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.topbar_avatar);
-            }
-        } else {
-            bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.topbar_avatar);
-        }
-
+        Bitmap bm = LinphoneUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(fromSipUri);
         NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
         if (notif == null) {
@@ -277,12 +257,7 @@ public class NotificationsManager {
 
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
-        Bitmap bm;
-        try {
-            bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), pictureUri);
-        } catch (Exception e) {
-            bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.avatar);
-        }
+        Bitmap bm = LinphoneUtils.getRoundBitmapFromUri(mContext, pictureUri);
         String name = LinphoneUtils.getAddressDisplayName(address);
 
         boolean showAnswerAction = call.getState() == Call.State.IncomingReceived || call.getState() == Call.State.IncomingEarlyMedia;
