@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, HistoryAdapter.ViewHolder.ClickListener, ContactsUpdatedListener, SelectableHelper.DeleteListener {
+public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, HistoryViewHolder.ClickListener, ContactsUpdatedListener, SelectableHelper.DeleteListener {
     private RecyclerView historyList;
     private TextView noCallHistory, noMissedCallHistory;
     private ImageView missedCalls, allCalls;
