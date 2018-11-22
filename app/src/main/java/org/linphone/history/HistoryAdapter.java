@@ -22,15 +22,9 @@ package org.linphone.history;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
@@ -48,61 +42,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder> {
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-            View.OnLongClickListener {
-        public TextView contact;
-        public ImageView detail;
-        public CheckBox select;
-        public ImageView callDirection;
-        public RelativeLayout avatarLayout;
-        public RelativeLayout CallContact;
-        public LinearLayout separator;
-        public TextView separatorText;
-        private HistoryAdapter.ViewHolder.ClickListener mListener;
-
-        public ViewHolder(View view, HistoryAdapter.ViewHolder.ClickListener listener) {
-            super(view);
-            contact = view.findViewById(R.id.sip_uri);
-            detail = view.findViewById(R.id.detail);
-            select = view.findViewById(R.id.delete);
-            callDirection = view.findViewById(R.id.icon);
-            avatarLayout = view.findViewById(R.id.avatar_layout);
-            CallContact = view.findViewById(R.id.history_click);
-            separator = view.findViewById(R.id.separator);
-            separatorText = view.findViewById(R.id.separator_text);
-            mListener = listener;
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onItemClicked(getAdapterPosition());
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            if (mListener != null) {
-                return mListener.onItemLongClicked(getAdapterPosition());
-            }
-            return false;
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-
-            boolean onItemLongClicked(int position);
-        }
-    }
-
+public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private List<CallLog> mLogs;
     private Context mContext;
-    private HistoryAdapter.ViewHolder.ClickListener clickListener;
+    private HistoryViewHolder.ClickListener clickListener;
 
-    public HistoryAdapter(Context aContext, List<CallLog> logs, HistoryAdapter.ViewHolder.ClickListener listener, SelectableHelper helper) {
+    public HistoryAdapter(Context aContext, List<CallLog> logs, HistoryViewHolder.ClickListener listener, SelectableHelper helper) {
         super(helper);
         this.mLogs = logs;
         this.mContext = aContext;
@@ -119,14 +64,14 @@ public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder>
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_cell, parent, false);
-        return new ViewHolder(v, clickListener);
+        return new HistoryViewHolder(v, clickListener);
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final HistoryViewHolder holder, final int position) {
         final CallLog log = mLogs.get(position);
         long timestamp = log.getStartDate() * 1000;
         Address address;

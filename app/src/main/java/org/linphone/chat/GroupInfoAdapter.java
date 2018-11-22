@@ -1,5 +1,5 @@
 /*
-GroupChatFragment.java
+GroupInfoAdapter.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or

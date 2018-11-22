@@ -63,16 +63,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.chat.ChatMessagesFragment;
+import org.linphone.chat.ChatRoomCreationFragment;
+import org.linphone.chat.ChatRoomsFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
-import org.linphone.chat.ChatCreationFragment;
-import org.linphone.chat.ChatListFragment;
 import org.linphone.chat.DevicesFragment;
-import org.linphone.chat.GroupChatFragment;
 import org.linphone.chat.GroupInfoFragment;
 import org.linphone.chat.ImdnFragment;
 import org.linphone.compatibility.Compatibility;
@@ -408,17 +408,17 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 fragment = new EmptyFragment();
                 break;
             case CHAT_LIST:
-                fragment = new ChatListFragment();
+                fragment = new ChatRoomsFragment();
                 break;
             case CREATE_CHAT:
                 checkAndRequestWriteContactsPermission();
-                fragment = new ChatCreationFragment();
+                fragment = new ChatRoomCreationFragment();
                 break;
             case INFO_GROUP_CHAT:
                 fragment = new GroupInfoFragment();
                 break;
             case GROUP_CHAT:
-                fragment = new GroupChatFragment();
+                fragment = new ChatMessagesFragment();
                 break;
             case MESSAGE_IMDN:
                 fragment = new ImdnFragment();
@@ -442,7 +442,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                         ((ContactsListFragment) fragment).displayFirstContact();
                         break;
                     case CHAT_LIST:
-                        ((ChatListFragment) fragment).displayFirstChat();
+                        ((ChatRoomsFragment) fragment).displayFirstChat();
                         break;
                 }
             } else {
@@ -506,7 +506,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
                 if (newFragmentType == FragmentsAvailable.GROUP_CHAT && leftFragment != FragmentsAvailable.CHAT_LIST) {
                     leftFragment = FragmentsAvailable.CHAT_LIST;
-                    transaction.replace(R.id.fragmentContainer, new ChatListFragment());
+                    transaction.replace(R.id.fragmentContainer, new ChatRoomsFragment());
                 }
             } else {
                 if (newFragmentType == FragmentsAvailable.EMPTY) {
@@ -710,7 +710,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (isTablet()) {
             Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
             if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.GROUP_CHAT && !emptyFragment) {
-                GroupChatFragment chatFragment = (GroupChatFragment) fragment2;
+                ChatMessagesFragment chatFragment = (ChatMessagesFragment) fragment2;
                 chatFragment.changeDisplayedChat(sipUri);
             } else {
                 changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
@@ -788,7 +788,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (currentFragment == FragmentsAvailable.CHAT_LIST || currentFragment == FragmentsAvailable.GROUP_CHAT) {
             Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
             if (fragment2 != null && fragment2.isVisible() && currentFragment == FragmentsAvailable.GROUP_CHAT && !emptyFragment) {
-                GroupChatFragment chatFragment = (GroupChatFragment) fragment2;
+                ChatMessagesFragment chatFragment = (ChatMessagesFragment) fragment2;
                 chatFragment.changeDisplayedChat(sipUri);
             } else {
                 displayChat(sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);

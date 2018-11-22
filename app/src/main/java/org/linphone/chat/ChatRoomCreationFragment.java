@@ -1,5 +1,5 @@
 /*
-ChatCreationFragment.java
+ChatRoomCreationFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class ChatCreationFragment extends Fragment implements View.OnClickListener, SearchContactsListAdapter.ViewHolder.ClickListener, ContactsUpdatedListener {
+public class ChatRoomCreationFragment extends Fragment implements View.OnClickListener, SearchContactsListAdapter.ViewHolder.ClickListener, ContactsUpdatedListener {
     private RecyclerView mContactsList;
     private LinearLayout mContactsSelectedLayout;
     private HorizontalScrollView mContactsSelectLayout;

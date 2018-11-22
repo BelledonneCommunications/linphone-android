@@ -39,11 +39,8 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
-import org.linphone.core.Factory;
-import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 
 import java.util.Arrays;
 
@@ -52,7 +49,7 @@ public class DevicesFragment extends Fragment {
     private ImageView mBackButton;
     private TextView mTitle;
     private ExpandableListView mExpandableList;
-    private DeviceAdapter mAdapter;
+    private DevicesAdapter mAdapter;
 
     private String mRoomUri;
     private Address mRoomAddr;
@@ -151,7 +148,7 @@ public class DevicesFragment extends Fragment {
 
     private void initValues() {
         if (mAdapter == null) {
-            mAdapter = new DeviceAdapter(getActivity());
+            mAdapter = new DevicesAdapter(getActivity());
             mExpandableList.setAdapter(mAdapter);
         }
         if (mRoom == null) {

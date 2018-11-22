@@ -1,7 +1,7 @@
 package org.linphone.chat;
 
 /*
-DeviceAdapter.java
+DevicesAdapter.java
 Copyright (C) 2010-2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -38,12 +38,12 @@ import org.linphone.views.ContactAvatar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceAdapter extends BaseExpandableListAdapter {
+public class DevicesAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private List<Participant> mParticipants;
     private boolean mOnlyDisplayChildsAsGroups;
 
-    public DeviceAdapter(Context context) {
+    public DevicesAdapter(Context context) {
         mContext = context;
         mParticipants = new ArrayList<>();
         mOnlyDisplayChildsAsGroups = false;

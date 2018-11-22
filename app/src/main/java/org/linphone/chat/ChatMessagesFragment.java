@@ -1,5 +1,5 @@
 /*
-GroupChatFragment.java
+ChatMessagesFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -91,7 +91,7 @@ import java.util.List;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
-public class GroupChatFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ChatBubbleViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class ChatMessagesFragment extends Fragment implements ChatRoomListener, ContactsUpdatedListener, ChatMessageViewHolder.ClickListener, SelectableHelper.DeleteListener {
     private static final int ADD_PHOTO = 1337;
     private static final int MESSAGES_PER_PAGE = 20;
 
@@ -107,7 +107,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     private Context mContext;
     private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
     private Uri mImageToUploadUri;
-    private ChatEventsAdapter mEventsAdapter;
+    private ChatMessagesAdapter mEventsAdapter;
     private String mRemoteSipUri;
     private Address mRemoteSipAddress, mRemoteParticipantAddress;
     private ChatRoom mChatRoom;
@@ -413,7 +413,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        ChatBubbleViewHolder holder = (ChatBubbleViewHolder) v.getTag();
+        ChatMessageViewHolder holder = (ChatMessageViewHolder) v.getTag();
         mContextMenuMessagePosition = holder.getAdapterPosition();
 
         EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
@@ -672,9 +672,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     private void displayChatRoomHistory() {
         if (mChatRoom == null) return;
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE), mParticipants, this);
+            mEventsAdapter = new ChatMessagesAdapter(this, mSelectionHelper, R.layout.chat_bubble, mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE), mParticipants, this);
         } else {
-            mEventsAdapter = new ChatEventsAdapter(this, mSelectionHelper, R.layout.chat_bubble, mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE), mParticipants, this);
+            mEventsAdapter = new ChatMessagesAdapter(this, mSelectionHelper, R.layout.chat_bubble, mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE), mParticipants, this);
         }
         mSelectionHelper.setAdapter(mEventsAdapter);
         mChatEventsList.setAdapter(mEventsAdapter);

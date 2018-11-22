@@ -1,5 +1,5 @@
 /*
-ChatBubbleViewHolder.java
+ChatMessageViewHolder.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ import android.widget.TextView;
 import org.linphone.R;
 import org.linphone.core.ChatMessage;
 
-public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public String messageId;
     public Context mContext;
     public ChatMessage message;
@@ -65,14 +65,14 @@ public class ChatBubbleViewHolder extends RecyclerView.ViewHolder implements Vie
     public CheckBox delete;
     private ClickListener mListener;
 
-    public ChatBubbleViewHolder(Context context, View view, ClickListener listener) {
+    public ChatMessageViewHolder(Context context, View view, ClickListener listener) {
         this(view);
         mContext = context;
         mListener = listener;
         view.setOnClickListener(this);
     }
 
-    public ChatBubbleViewHolder(View view) {
+    public ChatMessageViewHolder(View view) {
         super(view);
         eventLayout = view.findViewById(R.id.event);
         //eventTime = view.findViewById(R.id.event_date);

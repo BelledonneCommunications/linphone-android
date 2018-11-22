@@ -1,5 +1,5 @@
 /*
-ChatEventsAdapter.java
+ChatMessagesAdapter.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -74,7 +74,7 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
+public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder> {
 
     private static int MARGIN_BETWEEN_MESSAGES = 10;
     private static int SIDE_MARGIN = 100;
@@ -83,12 +83,12 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     private List<LinphoneContact> mParticipants;
     private int mItemResource;
     private Bitmap mDefaultBitmap;
-    private GroupChatFragment mFragment;
+    private ChatMessagesFragment mFragment;
     private ChatMessageListenerStub mListener;
 
-    private ChatBubbleViewHolder.ClickListener mClickListener;
+    private ChatMessageViewHolder.ClickListener mClickListener;
 
-    public ChatEventsAdapter(GroupChatFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatBubbleViewHolder.ClickListener clickListener) {
+    public ChatMessagesAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolder.ClickListener clickListener) {
         super(helper);
         mFragment = fragment;
         mContext = mFragment.getActivity();
@@ -100,7 +100,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         mListener = new ChatMessageListenerStub() {
             @Override
             public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-                ChatBubbleViewHolder holder = (ChatBubbleViewHolder) message.getUserData();
+                ChatMessageViewHolder holder = (ChatMessageViewHolder) message.getUserData();
                 if (holder == null) return;
 
                 if (offset == total) {
@@ -136,10 +136,10 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public ChatBubbleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChatMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(mItemResource, parent, false);
-        ChatBubbleViewHolder VH = new ChatBubbleViewHolder(mContext, v, mClickListener);
+        ChatMessageViewHolder VH = new ChatMessageViewHolder(mContext, v, mClickListener);
 
         //Allows onLongClick ContextMenu on bubbles
         mFragment.registerForContextMenu(v);
@@ -148,7 +148,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ChatBubbleViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ChatMessageViewHolder holder, int position) {
         final EventLog event = mHistory.get(position);
         holder.eventLayout.setVisibility(View.GONE);
         holder.bubbleLayout.setVisibility(View.GONE);
@@ -525,7 +525,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         mContext.startActivity(intent);
     }
 
-    private void displayAttachedFile(ChatMessage message, ChatBubbleViewHolder holder) {
+    private void displayAttachedFile(ChatMessage message, ChatMessageViewHolder holder) {
         holder.fileName.setVisibility(View.VISIBLE);
 
         String appData = message.getAppdata();

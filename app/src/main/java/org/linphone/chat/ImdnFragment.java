@@ -53,7 +53,7 @@ public class ImdnFragment extends Fragment {
     private LayoutInflater mInflater;
     private LinearLayout mRead, mReadHeader, mDelivered, mDeliveredHeader, mSent, mSentHeader, mUndelivered, mUndeliveredHeader;
     private ImageView mBackButton;
-    private ChatBubbleViewHolder mBubble;
+    private ChatMessageViewHolder mBubble;
     private ViewGroup mContainer;
 
     private String mRoomUri, mMessageId;
@@ -101,7 +101,7 @@ public class ImdnFragment extends Fragment {
         mSentHeader = view.findViewById(R.id.sent_layout_header);
         mUndeliveredHeader = view.findViewById(R.id.undelivered_layout_header);
 
-        mBubble = new ChatBubbleViewHolder(view.findViewById(R.id.bubble));
+        mBubble = new ChatMessageViewHolder(view.findViewById(R.id.bubble));
         mBubble.eventLayout.setVisibility(View.GONE);
         mBubble.bubbleLayout.setVisibility(View.VISIBLE);
         mBubble.delete.setVisibility(View.GONE);

@@ -1,5 +1,5 @@
 /*
-ChatListFragment.java
+ChatRoomsFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -54,7 +54,7 @@ import java.util.List;
 
 import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
 
-public class ChatListFragment extends Fragment implements ContactsUpdatedListener, ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListener, ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
 
     private RecyclerView mChatRoomsList;
     private ImageView mNewDiscussionButton, mNewGroupDiscussionButton, mBackToCallButton;
