@@ -36,7 +36,6 @@ import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
 
-import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -51,7 +50,9 @@ import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.receivers.KeepAliveReceiver;
-import org.linphone.ui.LinphoneOverlay;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.views.LinphoneOverlay;
+import org.linphone.utils.LinphoneUtils;
 
 import java.util.ArrayList;
 

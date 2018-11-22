@@ -1,4 +1,4 @@
-package org.linphone.fragments;
+package org.linphone.settings;
 /*
 AccountPreferencesFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -32,19 +32,18 @@ import android.preference.PreferenceScreen;
 import android.view.WindowManager;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphonePreferences.AccountBuilder;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences.AccountBuilder;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.CoreException;
 import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.PreferencesListFragment;
 
 import java.util.ArrayList;
 import java.util.List;

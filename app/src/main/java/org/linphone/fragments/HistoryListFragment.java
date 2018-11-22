@@ -36,14 +36,14 @@ import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.call.CallHistoryAdapter;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.utils.SelectableHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

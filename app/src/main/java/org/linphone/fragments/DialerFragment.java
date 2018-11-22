@@ -34,14 +34,14 @@ import android.widget.LinearLayout;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.AddressAware;
-import org.linphone.ui.AddressText;
-import org.linphone.ui.CallButton;
-import org.linphone.ui.EraseButton;
+import org.linphone.views.AddressAware;
+import org.linphone.views.AddressText;
+import org.linphone.views.CallButton;
+import org.linphone.views.EraseButton;
 
 public class DialerFragment extends Fragment {
     private static DialerFragment instance;

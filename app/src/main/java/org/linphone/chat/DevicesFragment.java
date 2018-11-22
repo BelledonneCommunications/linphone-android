@@ -30,9 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;

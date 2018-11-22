@@ -27,11 +27,10 @@ import android.content.Intent;
 import android.os.SystemClock;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
 

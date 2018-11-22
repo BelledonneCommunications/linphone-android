@@ -63,7 +63,7 @@
         android:largeHeap="true">
 
         <activity
-            android:name=".activities.LinphoneLauncherActivity"
+            android:name=".LinphoneLauncherActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:label="@string/app_name"
@@ -115,7 +115,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.LinphoneActivity"
+            android:name=".LinphoneActivity"
             android:launchMode="singleTask"
             android:theme="@style/NoTitle">
             <intent-filter>
@@ -292,7 +292,7 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <activity android:name=".activities.LinphoneGenericActivity"/>
+        <activity android:name=".utils.LinphoneGenericActivity"/>
 
         <receiver
             android:name=".notifications.NotificationBroadcastReceiver"

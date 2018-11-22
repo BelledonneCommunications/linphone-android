@@ -24,7 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 
 public class AccountEnableReceiver extends BroadcastReceiver {
     private static final String TAG = "AccountEnableReceiver";

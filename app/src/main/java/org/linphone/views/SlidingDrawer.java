@@ -1,4 +1,4 @@
-package org.linphone.ui;
+package org.linphone.views;
 
 /*
  * Copyright (C) 2008 The Android Open Source Project

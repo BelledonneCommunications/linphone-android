@@ -37,7 +37,7 @@ import com.android.vending.billing.IInAppBillingService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.mediastream.Log;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;

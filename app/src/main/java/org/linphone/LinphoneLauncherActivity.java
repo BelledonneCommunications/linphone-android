@@ -1,4 +1,4 @@
-package org.linphone.activities;
+package org.linphone;
 
 /*
 LinphoneLauncherActivity.java
@@ -27,14 +27,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
-import org.linphone.R;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 
 import static android.content.Intent.ACTION_MAIN;
 
@@ -133,7 +131,7 @@ public class LinphoneLauncherActivity extends Activity {
                             newIntent.putExtra("msgShared", stringFileShared);
                         } else {
                             fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                            stringUriFileShared = LinphoneUtils.getFilePath(getBaseContext(), fileUri);
+                            stringUriFileShared = FileUtils.getFilePath(getBaseContext(), fileUri);
                             newIntent.putExtra("fileShared", stringUriFileShared);
                         }
                     } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {

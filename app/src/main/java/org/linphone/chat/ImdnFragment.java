@@ -33,10 +33,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -47,7 +47,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.ui.ContactAvatar;
+import org.linphone.views.ContactAvatar;
 
 public class ImdnFragment extends Fragment {
     private LayoutInflater mInflater;
@@ -185,7 +185,7 @@ public class ImdnFragment extends Fragment {
         String appData = mMessage.getAppdata();
         if (appData != null) { // Something to display
             mBubble.fileName.setVisibility(View.VISIBLE);
-            mBubble.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
+            mBubble.fileName.setText(FileUtils.getNameFromFilePath(appData));
             // We purposely chose not to display the image
         }
 

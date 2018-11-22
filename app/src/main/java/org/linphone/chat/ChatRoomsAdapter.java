@@ -26,8 +26,8 @@ import android.view.ViewGroup;
 
 import org.linphone.LinphoneManager;
 import org.linphone.core.ChatRoom;
-import org.linphone.ui.SelectableAdapter;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.utils.SelectableAdapter;
+import org.linphone.utils.SelectableHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

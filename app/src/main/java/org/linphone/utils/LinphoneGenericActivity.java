@@ -1,4 +1,4 @@
-package org.linphone.activities;
+package org.linphone.utils;
 
 /*
 LinphoneGenericActivity.java
@@ -24,6 +24,7 @@ import android.os.Bundle;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.LinphoneLauncherActivity;
 
 public class LinphoneGenericActivity extends Activity {
 

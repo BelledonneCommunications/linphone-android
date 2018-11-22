@@ -31,7 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.ProxyConfig;
 

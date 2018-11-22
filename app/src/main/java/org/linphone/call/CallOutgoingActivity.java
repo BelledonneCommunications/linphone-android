@@ -36,11 +36,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.activities.LinphoneGenericActivity;
+import org.linphone.LinphoneActivity;
+import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -158,8 +159,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
         // Only one call ringing at a time is allowed
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            List<Call> calls = LinphoneUtils.getCalls(LinphoneManager.getLc());
-            for (Call call : calls) {
+            for (Call call : LinphoneManager.getLc().getCalls()) {
                 State cstate = call.getState();
                 if (State.OutgoingInit == cstate || State.OutgoingProgress == cstate
                         || State.OutgoingRinging == cstate || State.OutgoingEarlyMedia == cstate) {
@@ -184,7 +184,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
-            LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
             name.setText(contact.getFullName());
         } else {
             name.setText(LinphoneUtils.getAddressDisplayName(address));

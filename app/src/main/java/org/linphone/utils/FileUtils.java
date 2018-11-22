@@ -1,0 +1,225 @@
+package org.linphone.utils;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.text.TextUtils;
+
+import org.linphone.LinphoneManager;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.Content;
+import org.linphone.core.Friend;
+import org.linphone.core.FriendList;
+import org.linphone.mediastream.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+public class FileUtils {
+    public static String getNameFromFilePath(String filePath) {
+        String name = filePath;
+        int i = filePath.lastIndexOf('/');
+        if (i > 0) {
+            name = filePath.substring(i + 1);
+        }
+        return name;
+    }
+
+    public static String getExtensionFromFileName(String fileName) {
+        String extension = null;
+        int i = fileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
+    }
+
+    public static Boolean isExtensionImage(String path) {
+        String extension = getExtensionFromFileName(path);
+        if (extension != null)
+            extension = extension.toLowerCase();
+        return (extension != null && extension.matches("(png|jpg|jpeg|bmp|gif)"));
+    }
+
+    public static void recursiveFileRemoval(File root) {
+        if (!root.delete()) {
+            if (root.isDirectory()) {
+                File[] files = root.listFiles();
+                if (files != null) {
+                    for (File f : files) {
+                        recursiveFileRemoval(f);
+                    }
+                }
+            }
+        }
+    }
+    public static String getFilePath(final Context context, final Uri uri) {
+        if (uri == null) return null;
+
+        String result = null;
+        String name = getNameFromUri(uri, context);
+
+        try {
+            File localFile = createFile(context, name);
+            InputStream remoteFile = context.getContentResolver().openInputStream(uri);
+
+            if (copyToFile(remoteFile, localFile)) {
+                result = localFile.getAbsolutePath();
+            }
+
+            remoteFile.close();
+        } catch (IOException e) {
+            Log.e("Enable to get sharing file", e);
+        }
+
+        return result;
+    }
+
+    private static String getNameFromUri(Uri uri, Context context) {
+        String name = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
+            if (returnCursor != null) {
+                returnCursor.moveToFirst();
+                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                name = returnCursor.getString(nameIndex);
+                returnCursor.close();
+            }
+        } else if (uri.getScheme().equals("file")) {
+            name = uri.getLastPathSegment();
+        }
+        return name;
+    }
+
+    /**
+     * Copy data from a source stream to destFile.
+     * Return true if succeed, return false if failed.
+     */
+    private static boolean copyToFile(InputStream inputStream, File destFile) {
+        if (inputStream == null || destFile == null) return false;
+        try {
+            OutputStream out = new FileOutputStream(destFile);
+            try {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) >= 0) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            } finally {
+                out.close();
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public static File createFile(Context context, String fileName) throws IOException {
+        if (TextUtils.isEmpty(fileName))
+            fileName = getStartDate();
+
+        if (!fileName.contains(".")) {
+            fileName = fileName + ".unknown";
+        }
+
+        final File root;
+        root = context.getExternalCacheDir();
+
+        if (root != null && !root.exists())
+            root.mkdirs();
+        return new File(root, fileName);
+    }
+
+    public static Uri getCVSPathFromLookupUri(String content) {
+        String contactId = getNameFromFilePath(content);
+        FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
+        for (FriendList list : friendList) {
+            for (Friend friend : list.getFriends()) {
+                if (friend.getRefKey().toString().equals(contactId)) {
+                    String contactVcard = friend.getVcard().asVcard4String();
+                    Uri path = createCvsFromString(contactVcard);
+                    return path;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static String getRealPathFromURI(Context context, Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            String result = cursor.getString(column_index);
+            cursor.close();
+            return result;
+        }
+        return null;
+    }
+
+    public static String getStorageDirectory(Context mContext) {
+        String storageDir = Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName()));
+        File file = new File(storageDir);
+        if (!file.isDirectory() || !file.exists()) {
+            Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
+            file.mkdirs();
+            LinphoneManager.getInstance().getMediaScanner().scanFile(file);
+        }
+        return storageDir;
+    }
+
+    public static void scanFile(ChatMessage message) {
+        String appData = message.getAppdata();
+        if (appData == null) {
+            for (Content c : message.getContents()) {
+                if (c.isFile()) {
+                    appData = c.getFilePath();
+                }
+            }
+        }
+        LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData));
+    }
+
+    private static Uri createCvsFromString(String vcardString) {
+        String contactName = getContactNameFromVcard(vcardString);
+        File vcfFile = new File(Environment.getExternalStorageDirectory(), contactName + ".cvs");
+        try {
+            FileWriter fw = new FileWriter(vcfFile);
+            fw.write(vcardString);
+            fw.close();
+            return Uri.fromFile(vcfFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String getContactNameFromVcard(String vcard) {
+        if (vcard != null) {
+            String contactName = vcard.substring(vcard.indexOf("FN:") + 3);
+            contactName = contactName.substring(0, contactName.indexOf("\n") - 1);
+            contactName = contactName.replace(";", "");
+            contactName = contactName.replace(" ", "");
+            return contactName;
+        }
+        return null;
+    }
+
+    private static String getStartDate() {
+        try {
+            return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
+        } catch (RuntimeException e) {
+            return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        }
+    }
+}

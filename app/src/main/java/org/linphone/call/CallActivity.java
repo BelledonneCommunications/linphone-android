@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -60,12 +59,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.activities.LinphoneGenericActivity;
+import org.linphone.LinphoneActivity;
+import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -87,7 +86,7 @@ import org.linphone.fragments.StatusFragment;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.receivers.BluetoothManager;
-import org.linphone.ui.Numpad;
+import org.linphone.views.Numpad;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -1336,7 +1335,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
             contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         } else {
             contactName.setText(lContact.getFullName());
-            LinphoneUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(contactPicture.getContext(), contactPicture, lContact.getPhotoUri(), lContact.getThumbnailUri());
         }
     }
 

@@ -28,8 +28,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,12 +35,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.activities.LinphoneGenericActivity;
+import org.linphone.LinphoneActivity;
+import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -52,9 +51,9 @@ import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.CallIncomingAnswerButton;
-import org.linphone.ui.CallIncomingButtonListener;
-import org.linphone.ui.CallIncomingDeclineButton;
+import org.linphone.views.CallIncomingAnswerButton;
+import org.linphone.views.CallIncomingButtonListener;
+import org.linphone.views.CallIncomingDeclineButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +181,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
-            LinphoneUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
             name.setText(contact.getFullName());
         } else {
             name.setText(LinphoneUtils.getAddressDisplayName(address));
@@ -222,8 +221,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
     private void lookupCurrentCall() {
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            List<Call> calls = LinphoneUtils.getCalls(LinphoneManager.getLc());
-            for (Call call : calls) {
+            for (Call call : LinphoneManager.getLc().getCalls()) {
                 if (State.IncomingReceived == call.getState()) {
                     mCall = call;
                     break;

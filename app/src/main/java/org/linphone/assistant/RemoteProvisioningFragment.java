@@ -30,7 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 
 public class RemoteProvisioningFragment extends Fragment implements OnClickListener, TextWatcher {

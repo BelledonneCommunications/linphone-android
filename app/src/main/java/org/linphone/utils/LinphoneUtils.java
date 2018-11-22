@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.utils;
 
 /*
 LinphoneUtils.java
@@ -24,36 +24,24 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.linphone.compatibility.Compatibility;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
@@ -72,28 +60,15 @@ import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
-import org.linphone.ui.LinphoneMediaScanner;
+import org.linphone.settings.LinphonePreferences;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Helpers.
@@ -217,8 +192,8 @@ public final class LinphoneUtils {
         return true;
     }
 
-    public static String timestampToHumanDate(Context context, long timestamp, int resFormat) {
-        return LinphoneUtils.timestampToHumanDate(context, timestamp, context.getString(resFormat));
+    public static String timestampToHumanDate(Context context, long timestamp, int format) {
+        return timestampToHumanDate(context, timestamp, context.getString(format));
     }
 
     public static String timestampToHumanDate(Context context, long timestamp, String format) {
@@ -270,101 +245,14 @@ public final class LinphoneUtils {
         return true;
     }
 
-
-    public static Bitmap downloadBitmap(Uri uri) {
-        URL url;
-        InputStream is = null;
-        try {
-            url = new URL(uri.toString());
-            is = url.openStream();
-            return BitmapFactory.decodeStream(is);
-        } catch (MalformedURLException e) {
-            Log.e(e, e.getMessage());
-        } catch (IOException e) {
-            Log.e(e, e.getMessage());
-        } finally {
-            try {
-                is.close();
-            } catch (IOException x) {
-            }
-        }
-        return null;
-    }
-
-
-    public static void setImagePictureFromUri(Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
-        if (pictureUri == null && thumbnailUri == null) {
-            view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-            return;
-        }
-        if (pictureUri.getScheme().startsWith("http")) {
-            Bitmap bm = downloadBitmap(pictureUri);
-            if (bm == null) view.setImageResource(R.drawable.avatar);
-            view.setImageBitmap(bm);
-        } else {
-            Bitmap bm = null;
-            try {
-                bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), pictureUri);
-            } catch (IOException e) {
-                if (thumbnailUri != null) {
-                    try {
-                        bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), thumbnailUri);
-                    } catch (IOException ie) {
-                    }
-                }
-            }
-            if (bm != null) {
-                view.setImageBitmap(bm);
-            } else {
-                view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-            }
-        }
-    }
-
-    public static void setThumbnailPictureFromUri(Context c, ImageView view, Uri tUri) {
-        if (tUri == null) {
-            view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-            return;
-        }
-        if (tUri.getScheme().startsWith("http")) {
-            Bitmap bm = downloadBitmap(tUri);
-            if (bm == null) view.setImageResource(R.drawable.avatar);
-            view.setImageBitmap(bm);
-        } else {
-            Bitmap bm = null;
-            try {
-                bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), tUri);
-            } catch (IOException e) {
-            }
-            if (bm != null) {
-                view.setImageBitmap(bm);
-            } else {
-                view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-            }
-        }
-    }
-
-    public static final List<Call> getCalls(Core lc) {
-        // return a modifiable list
-        return new ArrayList<>(Arrays.asList(lc.getCalls()));
-    }
-
     public static final List<Call> getCallsInState(Core lc, Collection<State> states) {
         List<Call> foundCalls = new ArrayList<>();
-        for (Call call : getCalls(lc)) {
+        for (Call call : lc.getCalls()) {
             if (states.contains(call.getState())) {
                 foundCalls.add(call);
             }
         }
         return foundCalls;
-    }
-
-    public static void setVisibility(View v, int id, boolean visible) {
-        v.findViewById(id).setVisibility(visible ? VISIBLE : GONE);
-    }
-
-    public static void setVisibility(View v, boolean visible) {
-        v.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public static boolean isCallRunning(Call call) {
@@ -413,44 +301,6 @@ public final class LinphoneUtils {
         return true;
     }
 
-    public static String getNameFromFilePath(String filePath) {
-        String name = filePath;
-        int i = filePath.lastIndexOf('/');
-        if (i > 0) {
-            name = filePath.substring(i + 1);
-        }
-        return name;
-    }
-
-    public static String getExtensionFromFileName(String fileName) {
-        String extension = null;
-        int i = fileName.lastIndexOf('.');
-        if (i > 0) {
-            extension = fileName.substring(i + 1);
-        }
-        return extension;
-    }
-
-    public static Boolean isExtensionImage(String path) {
-        String extension = LinphoneUtils.getExtensionFromFileName(path);
-        if (extension != null)
-            extension = extension.toLowerCase();
-        return (extension != null && extension.matches("(png|jpg|jpeg|bmp|gif)"));
-    }
-
-    public static void recursiveFileRemoval(File root) {
-        if (!root.delete()) {
-            if (root.isDirectory()) {
-                File[] files = root.listFiles();
-                if (files != null) {
-                    for (File f : files) {
-                        recursiveFileRemoval(f);
-                    }
-                }
-            }
-        }
-    }
-
     public static String getDisplayableUsernameFromAddress(String sipAddress) {
         String username = sipAddress;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -494,12 +344,6 @@ public final class LinphoneUtils {
             }
         }
         return sipAddress;
-    }
-
-    private static Context getContext() {
-        if (context == null && LinphoneManager.isInstanciated())
-            context = LinphoneManager.getInstance().getContext();
-        return context;
     }
 
     public static void displayError(boolean isOk, TextView error, String errorText) {
@@ -618,129 +462,6 @@ public final class LinphoneUtils {
         }
     }
 
-
-    public static String getFilePath(final Context context, final Uri uri) {
-        if (uri == null) return null;
-
-        String result = null;
-        String name = getNameFromUri(uri, context);
-
-        try {
-            File localFile = createFile(context, name);
-            InputStream remoteFile = context.getContentResolver().openInputStream(uri);
-
-            if (copyToFile(remoteFile, localFile)) {
-                result = localFile.getAbsolutePath();
-            }
-
-            remoteFile.close();
-        } catch (IOException e) {
-            Log.e("Enable to get sharing file", e);
-        }
-
-        return result;
-    }
-
-    private static String getNameFromUri(Uri uri, Context context) {
-        String name = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
-            if (returnCursor != null) {
-                returnCursor.moveToFirst();
-                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                name = returnCursor.getString(nameIndex);
-                returnCursor.close();
-            }
-        } else if (uri.getScheme().equals("file")) {
-            name = uri.getLastPathSegment();
-        }
-        return name;
-    }
-
-    /**
-     * Copy data from a source stream to destFile.
-     * Return true if succeed, return false if failed.
-     */
-    private static boolean copyToFile(InputStream inputStream, File destFile) {
-        if (inputStream == null || destFile == null) return false;
-        try {
-            OutputStream out = new FileOutputStream(destFile);
-            try {
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) >= 0) {
-                    out.write(buffer, 0, bytesRead);
-                }
-            } finally {
-                out.close();
-            }
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public static String getStartDate() {
-        try {
-            return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(new Date());
-        } catch (RuntimeException e) {
-            return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        }
-    }
-
-    public static File createFile(Context context, String fileName) throws IOException {
-        if (TextUtils.isEmpty(fileName))
-            fileName = getStartDate();
-
-        if (!fileName.contains(".")) {
-            fileName = fileName + ".unknown";
-        }
-
-        final File root;
-        root = context.getExternalCacheDir();
-
-        if (root != null && !root.exists())
-            root.mkdirs();
-        return new File(root, fileName);
-    }
-
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            String result = cursor.getString(column_index);
-            cursor.close();
-            return result;
-        }
-        return null;
-    }
-
-    public static String getContactNameFromVcard(String vcard) {
-        if (vcard != null) {
-            String contactName = vcard.substring(vcard.indexOf("FN:") + 3);
-            contactName = contactName.substring(0, contactName.indexOf("\n") - 1);
-            contactName = contactName.replace(";", "");
-            contactName = contactName.replace(" ", "");
-            return contactName;
-        }
-        return null;
-    }
-
-    public static Uri createCvsFromString(String vcardString) {
-        String contactName = getContactNameFromVcard(vcardString);
-        File vcfFile = new File(Environment.getExternalStorageDirectory(), contactName + ".cvs");
-        try {
-            FileWriter fw = new FileWriter(vcfFile);
-            fw.write(vcardString);
-            fw.close();
-            return Uri.fromFile(vcfFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public static Spanned getTextWithHttpLinks(String text) {
         if (text == null) return null;
 
@@ -771,32 +492,6 @@ public final class LinphoneUtils {
         return Html.fromHtml(text);
     }
 
-    public static Uri getCVSPathFromLookupUri(String content) {
-        String contactId = LinphoneUtils.getNameFromFilePath(content);
-        FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
-        for (FriendList list : friendList) {
-            for (Friend friend : list.getFriends()) {
-                if (friend.getRefKey().toString().equals(contactId)) {
-                    String contactVcard = friend.getVcard().asVcard4String();
-                    Uri path = LinphoneUtils.createCvsFromString(contactVcard);
-                    return path;
-                }
-            }
-        }
-        return null;
-    }
-
-    public static String getStorageDirectory(Context mContext) {
-        String storageDir = Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName()));
-        File file = new File(storageDir);
-        if (!file.isDirectory() || !file.exists()) {
-            Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
-            file.mkdirs();
-            LinphoneManager.getInstance().getMediaScanner().scanFile(file);
-        }
-        return storageDir;
-    }
-
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = activity.getCurrentFocus();
@@ -806,56 +501,10 @@ public final class LinphoneUtils {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void scanFile(ChatMessage message) {
-        String appData = message.getAppdata();
-        if (appData == null) {
-            for (Content c : message.getContents()) {
-                if (c.isFile()) {
-                    appData = c.getFilePath();
-                }
-            }
-        }
-        LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData));
-    }
-
-    public static Bitmap getRoundBitmapFromUri(Context context, Uri fromPictureUri) {
-        Bitmap bm;
-        Bitmap roundBm;
-        if (fromPictureUri != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), fromPictureUri);
-            } catch (Exception e) {
-                bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
-            }
-        } else {
-            bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
-        }
-        if (bm != null) {
-            roundBm = LinphoneUtils.getRoundBitmap(bm);
-            if (roundBm != null) {
-                bm.recycle();
-                bm = roundBm;
-            }
-        }
-        return bm;
-    }
-
-    public static Bitmap getRoundBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
+    private static Context getContext() {
+        if (context == null && LinphoneManager.isInstanciated())
+            context = LinphoneManager.getInstance().getContext();
+        return context;
     }
 }
 

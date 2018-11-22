@@ -22,8 +22,8 @@ package org.linphone.firebase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 public class FirebaseIdService extends FirebaseInstanceIdService {
     @Override

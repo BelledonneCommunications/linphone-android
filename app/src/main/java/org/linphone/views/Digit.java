@@ -1,4 +1,4 @@
-package org.linphone.ui;
+package org.linphone.views;
 
 /*
 Digit.java
@@ -30,7 +30,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.call.CallActivity;

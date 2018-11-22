@@ -1,4 +1,4 @@
-package org.linphone.ui;
+package org.linphone.views;
 
 /*
 ContactAvatar.java
@@ -26,7 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
@@ -120,7 +121,7 @@ public class ContactAvatar {
         holder.init();
 
         if (contact.getThumbnailUri() != null && contact.getThumbnailUri().getScheme().startsWith("http")) {
-            bm = LinphoneUtils.downloadBitmap(contact.getThumbnailUri());
+            bm = ImageUtils.downloadBitmap(contact.getThumbnailUri());
         } else {
             if (contact.getThumbnailUri() != null) {
                 try {

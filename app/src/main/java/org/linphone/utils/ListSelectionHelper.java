@@ -1,5 +1,5 @@
 /*
-SelectableHelper.java
+ListSelectionHelper.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -17,36 +17,31 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.ui;
+package org.linphone.utils;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 
-public class SelectableHelper {
+public class ListSelectionHelper {
     private ImageView mEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton, mCancelButton;
     private LinearLayout mEditTopBar, mTopBar;
-    private SelectableAdapter<RecyclerView.ViewHolder> mAdapter;
+    private ListSelectionAdapter mAdapter;
     private DeleteListener mDeleteListener;
     private Context mContext;
     private int mDialogDeleteMessageResourceId;
-
-    public void setDialogMessage(int id) {
-        mDialogDeleteMessageResourceId = id;
-    }
 
     public interface DeleteListener {
         void onDeleteSelection(Object[] objectsToDelete);
     }
 
-    public SelectableHelper(View view, DeleteListener listener) {
+    public ListSelectionHelper(View view, DeleteListener listener) {
         mContext = view.getContext();
         mDeleteListener = listener;
 
@@ -62,13 +57,11 @@ public class SelectableHelper {
         });
 
         mEditButton = view.findViewById(R.id.edit);
-        mEditButton.setEnabled(false);
-
         mEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAdapter.getItemCount() > 0) {
-                    enterEditionMode();
+                if (mAdapter != null && mAdapter.getCount() > 0) {
+                    mAdapter.enableEdition(true);
                     mTopBar.setVisibility(View.GONE);
                     mEditTopBar.setVisibility(View.VISIBLE);
                 }
@@ -93,7 +86,6 @@ public class SelectableHelper {
 
         mDeleteSelectionButton = view.findViewById(R.id.delete);
         mDeleteSelectionButton.setEnabled(false);
-
         mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +97,6 @@ public class SelectableHelper {
                     @Override
                     public void onClick(View view) {
                         mDeleteListener.onDeleteSelection(getSelectedObjects());
-                        mEditButton.setEnabled(mAdapter.getItemCount() != 0);
                         dialog.dismiss();
                         quitEditionMode();
                     }
@@ -125,9 +116,8 @@ public class SelectableHelper {
         mDialogDeleteMessageResourceId = R.string.delete_text;
     }
 
-    public void setAdapter(SelectableAdapter adapter) {
+    public void setAdapter(ListSelectionAdapter adapter) {
         mAdapter = adapter;
-        mEditButton.setEnabled(mAdapter.getItemCount() != 0);
     }
 
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
@@ -146,28 +136,19 @@ public class SelectableHelper {
         }
     }
 
-    public void quitEditionMode() {
+    private void quitEditionMode() {
         mAdapter.enableEdition(false);
         mTopBar.setVisibility(View.VISIBLE);
         mEditTopBar.setVisibility(View.GONE);
-        mDeleteSelectionButton.setEnabled(false);
-        mSelectAllButton.setVisibility(View.GONE);
-        mDeselectAllButton.setVisibility(View.VISIBLE);
-    }
-
-    public void enterEditionMode() {
-        mAdapter.enableEdition(true);
-        mTopBar.setVisibility(View.GONE);
-        mEditTopBar.setVisibility(View.VISIBLE);
         mDeleteSelectionButton.setEnabled(false);
         mSelectAllButton.setVisibility(View.VISIBLE);
         mDeselectAllButton.setVisibility(View.GONE);
     }
 
     private Object[] getSelectedObjects() {
-        Object objects[] = new Object[mAdapter.getSelectedItemCount()];
+        Object objects[] = new Object[mAdapter.getSelectedItemsPosition().size()];
         int index = 0;
-        for (Integer i : mAdapter.getSelectedItems()) {
+        for (Integer i : mAdapter.getSelectedItemsPosition()) {
             objects[index] = mAdapter.getItem(i);
             index++;
         }

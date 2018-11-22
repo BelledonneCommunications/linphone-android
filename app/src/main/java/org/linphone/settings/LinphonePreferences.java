@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.settings;
 
 /*
 LinphonePreferences.java
@@ -23,6 +23,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import org.linphone.LinphoneManager;
+import org.linphone.utils.LinphoneUtils;
+import org.linphone.R;
 import org.linphone.core.AVPFMode;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
@@ -1553,7 +1556,7 @@ public class LinphonePreferences {
     }
 
     public String getActivityToLaunchOnIncomingReceived() {
-        return getConfig().getString("app", "incoming_call_activity", "org.linphone.activities.LinphoneActivity");
+        return getConfig().getString("app", "incoming_call_activity", "org.linphone.LinphoneActivity");
     }
 
     public void setActivityToLaunchOnIncomingReceived(String name) {

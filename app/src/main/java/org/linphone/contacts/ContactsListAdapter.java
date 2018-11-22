@@ -32,13 +32,11 @@ import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import org.linphone.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.ContactAvatar;
-import org.linphone.ui.SelectableAdapter;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.views.ContactAvatar;
+import org.linphone.utils.SelectableAdapter;
+import org.linphone.utils.SelectableHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

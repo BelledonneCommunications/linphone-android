@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -54,7 +53,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
-import org.linphone.activities.LinphoneActivity;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
@@ -112,7 +110,9 @@ import org.linphone.receivers.HookReceiver;
 import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.receivers.NetworkManager;
 import org.linphone.receivers.OutgoingCallReceiver;
-import org.linphone.ui.LinphoneMediaScanner;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneMediaScanner;
+import org.linphone.utils.LinphoneUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

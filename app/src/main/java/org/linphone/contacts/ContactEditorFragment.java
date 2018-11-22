@@ -30,7 +30,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.ContactsContract.DisplayPhoto;
 import android.provider.MediaStore;
@@ -49,9 +48,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 
@@ -269,7 +270,7 @@ public class ContactEditorFragment extends Fragment {
 
         contactPicture = view.findViewById(R.id.contact_picture);
         if (contact != null) {
-            LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
         } else {
             contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         }
@@ -340,7 +341,7 @@ public class ContactEditorFragment extends Fragment {
         pickedPhotoForContactUri = null;
         final List<Intent> cameraIntents = new ArrayList<>();
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file = new File(LinphoneUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
+        File file = new File(FileUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
         pickedPhotoForContactUri = Uri.fromFile(file);
         captureIntent.putExtra("outputX", PHOTO_SIZE);
         captureIntent.putExtra("outputY", PHOTO_SIZE);
@@ -380,7 +381,7 @@ public class ContactEditorFragment extends Fragment {
                 String filePath = pickedPhotoForContactUri.getPath();
                 editContactPicture(filePath, null);
             } else {
-                File file = new File(LinphoneUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
+                File file = new File(FileUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
                 if (file.exists()) {
                     pickedPhotoForContactUri = Uri.fromFile(file);
                     String filePath = pickedPhotoForContactUri.getPath();

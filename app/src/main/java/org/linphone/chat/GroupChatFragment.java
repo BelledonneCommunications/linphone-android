@@ -56,13 +56,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
-import org.linphone.assistant.AssistantActivity;
-import org.linphone.compatibility.Compatibility;
+import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -82,7 +81,7 @@ import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.utils.SelectableHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -276,13 +275,13 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         if (getArguments() != null) {
             String fileSharedUri = getArguments().getString("fileSharedUri");
             if (fileSharedUri != null) {
-                if (LinphoneUtils.isExtensionImage(fileSharedUri)) {
+                if (FileUtils.isExtensionImage(fileSharedUri)) {
                     addImageToPendingList(fileSharedUri);
                 } else {
                     if (fileSharedUri.startsWith("content://") || fileSharedUri.startsWith("file://")) {
-                        fileSharedUri = LinphoneUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
+                        fileSharedUri = FileUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
                     } else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
-                        fileSharedUri = LinphoneUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
+                        fileSharedUri = FileUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
                     }
                     addFileToPendingList(fileSharedUri);
                 }
@@ -350,14 +349,14 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
                 String fileToUploadPath = null;
                 if (data != null && data.getData() != null) {
                     if (data.getData().toString().contains("com.android.contacts/contacts/")) {
-                        if (LinphoneUtils.getCVSPathFromLookupUri(data.getData().toString()) != null) {
-                            fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(data.getData().toString()).toString();
+                        if (FileUtils.getCVSPathFromLookupUri(data.getData().toString()) != null) {
+                            fileToUploadPath = FileUtils.getCVSPathFromLookupUri(data.getData().toString()).toString();
                         } else {
                             //TODO Error
                             return;
                         }
                     } else {
-                        fileToUploadPath = LinphoneUtils.getRealPathFromURI(getActivity(), data.getData());
+                        fileToUploadPath = FileUtils.getRealPathFromURI(getActivity(), data.getData());
                     }
                     if (fileToUploadPath == null) {
                         fileToUploadPath = data.getData().toString();
@@ -367,12 +366,12 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
                 }
 
                 if (fileToUploadPath.startsWith("content://") || fileToUploadPath.startsWith("file://")) {
-                    fileToUploadPath = LinphoneUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
+                    fileToUploadPath = FileUtils.getFilePath(getActivity().getApplicationContext(), Uri.parse(fileToUploadPath));
                 } else if (fileToUploadPath.contains("com.android.contacts/contacts/")) {
-                    fileToUploadPath = LinphoneUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
+                    fileToUploadPath = FileUtils.getCVSPathFromLookupUri(fileToUploadPath).toString();
                 }
 
-                if (LinphoneUtils.isExtensionImage(fileToUploadPath)) {
+                if (FileUtils.isExtensionImage(fileToUploadPath)) {
                     addImageToPendingList(fileToUploadPath);
                 } else {
                     addFileToPendingList(fileToUploadPath);
@@ -381,7 +380,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
                 super.onActivityResult(requestCode, resultCode, data);
             }
         } else {
-            if (LinphoneUtils.isExtensionImage(mImageToUploadUri.getPath())) {
+            if (FileUtils.isExtensionImage(mImageToUploadUri.getPath())) {
                 addImageToPendingList(mImageToUploadUri.getPath());
             }
         }
@@ -768,7 +767,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         String files[] = savedInstanceState.getStringArray("Files");
         if (files.length > 0) {
             for (String file : files) {
-                if (LinphoneUtils.isExtensionImage(file)) {
+                if (FileUtils.isExtensionImage(file)) {
                     addImageToPendingList(file);
                 } else {
                     addFileToPendingList(file);
@@ -780,7 +779,7 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
     private void pickFile() {
         List<Intent> cameraIntents = new ArrayList<>();
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file = new File(LinphoneUtils.getStorageDirectory(mContext), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()) + ".jpeg"));
+        File file = new File(FileUtils.getStorageDirectory(mContext), getString(R.string.temp_photo_name_with_date).replace("%s", String.valueOf(System.currentTimeMillis()) + ".jpeg"));
         mImageToUploadUri = Uri.fromFile(file);
         captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageToUploadUri);
         cameraIntents.add(captureIntent);
@@ -880,9 +879,9 @@ public class GroupChatFragment extends Fragment implements ChatRoomListener, Con
         for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
             String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
             String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
-            String extension = LinphoneUtils.getExtensionFromFileName(fileName);
+            String extension = FileUtils.getExtensionFromFileName(fileName);
             Content content = Factory.instance().createContent();
-            if (LinphoneUtils.isExtensionImage(fileName)) {
+            if (FileUtils.isExtensionImage(fileName)) {
                 content.setType("image");
             } else {
                 content.setType("file");

@@ -1,4 +1,4 @@
-package org.linphone.ui;
+package org.linphone.settings;
 
 /*
 PreferencesListFragment.java

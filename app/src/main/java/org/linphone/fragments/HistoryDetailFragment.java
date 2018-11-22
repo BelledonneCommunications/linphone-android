@@ -31,10 +31,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -149,7 +150,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
             if (contact != null) {
                 contactName.setText(contact.getFullName());
-                LinphoneUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+                ImageUtils.setImagePictureFromUri(view.getContext(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
                 addToContacts.setVisibility(View.GONE);
                 goToContact.setVisibility(View.VISIBLE);
             } else {

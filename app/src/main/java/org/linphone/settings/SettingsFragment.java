@@ -1,4 +1,4 @@
-package org.linphone.fragments;
+package org.linphone.settings;
 
 /*
 SettingsFragment.java
@@ -41,11 +41,11 @@ import android.preference.PreferenceScreen;
 import android.provider.Settings;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.CoreException;
@@ -59,11 +59,11 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.OpenH264DownloadHelper;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.ui.LedPreference;
-import org.linphone.ui.PreferencesListFragment;
+import org.linphone.views.LedPreference;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public class SettingsFragment extends PreferencesListFragment {
         editor.apply();
 
         File dir = new File(getActivity().getFilesDir().getAbsolutePath() + "shared_prefs");
-        LinphoneUtils.recursiveFileRemoval(dir);
+        FileUtils.recursiveFileRemoval(dir);
     }
 
     // Inits the values or the listener on some settings

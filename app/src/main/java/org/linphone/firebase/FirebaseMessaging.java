@@ -26,7 +26,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.LinphoneUtils;
 
 import static android.content.Intent.ACTION_MAIN;
 

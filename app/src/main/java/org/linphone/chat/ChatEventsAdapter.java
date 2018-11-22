@@ -45,9 +45,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -58,9 +59,9 @@ import org.linphone.core.Content;
 import org.linphone.core.EventLog;
 import org.linphone.core.LimeState;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.ContactAvatar;
-import org.linphone.ui.SelectableAdapter;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.views.ContactAvatar;
+import org.linphone.utils.SelectableAdapter;
+import org.linphone.utils.SelectableHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -323,10 +324,10 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
                             if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
                                 v.setEnabled(false);
                                 String filename = message.getFileTransferInformation().getName();
-                                File file = new File(LinphoneUtils.getStorageDirectory(mContext), filename);
+                                File file = new File(FileUtils.getStorageDirectory(mContext), filename);
                                 int prefix = 1;
                                 while (file.exists()) {
-                                    file = new File(LinphoneUtils.getStorageDirectory(mContext), prefix + "_" + filename);
+                                    file = new File(FileUtils.getStorageDirectory(mContext), prefix + "_" + filename);
                                     Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
                                     prefix += 1;
                                 }
@@ -537,9 +538,9 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
         }
 
         if (appData != null) {
-            LinphoneUtils.scanFile(message);
-            holder.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
-            if (LinphoneUtils.isExtensionImage(appData)) {
+            FileUtils.scanFile(message);
+            holder.fileName.setText(FileUtils.getNameFromFilePath(appData));
+            if (FileUtils.isExtensionImage(appData)) {
                 holder.messageImage.setVisibility(View.VISIBLE);
                 loadBitmap(appData, holder.messageImage);
                 holder.messageImage.setTag(appData);
@@ -581,7 +582,7 @@ public class ChatEventsAdapter extends SelectableAdapter<ChatBubbleViewHolder> {
             path = params[0];
             Bitmap bm = null;
             Bitmap thumbnail = null;
-            if (LinphoneUtils.isExtensionImage(path)) {
+            if (FileUtils.isExtensionImage(path)) {
                 if (path.startsWith("content")) {
                     try {
                         bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));

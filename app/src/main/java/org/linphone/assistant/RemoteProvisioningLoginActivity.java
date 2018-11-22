@@ -27,7 +27,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;

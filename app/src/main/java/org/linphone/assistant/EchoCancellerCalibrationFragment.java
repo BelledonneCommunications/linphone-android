@@ -28,7 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreException;

@@ -1,4 +1,4 @@
-package org.linphone.activities;
+package org.linphone;
 
 /*
  LinphoneActivity.java
@@ -62,12 +62,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.linphone.LinphoneManager;
 import org.linphone.LinphoneManager.AddressType;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
-import org.linphone.R;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
 import org.linphone.call.CallActivity;
@@ -101,17 +97,19 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.core.RegistrationState;
 import org.linphone.fragments.AboutFragment;
-import org.linphone.fragments.AccountPreferencesFragment;
+import org.linphone.settings.AccountPreferencesFragment;
 import org.linphone.fragments.DialerFragment;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.fragments.HistoryDetailFragment;
 import org.linphone.fragments.HistoryListFragment;
-import org.linphone.fragments.SettingsFragment;
+import org.linphone.settings.SettingsFragment;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.InAppPurchaseActivity;
-import org.linphone.ui.AddressText;
+import org.linphone.views.AddressText;
+import org.linphone.utils.LinphoneGenericActivity;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 

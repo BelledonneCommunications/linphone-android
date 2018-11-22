@@ -23,7 +23,7 @@
 		android:layout_height="60dp"
 		android:layout_alignParentTop="true">
 
-        <org.linphone.ui.EraseButton
+        <org.linphone.views.EraseButton
             android:id="@+id/erase"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:contentDescription="@string/content_description_backspace"
             android:src="@drawable/backspace"/>
 
-		<org.linphone.ui.AddressText
+		<org.linphone.views.AddressText
 			android:id="@+id/address"
             android:background="@color/transparent"
             android:backgroundTint="@color/transparent"
@@ -52,7 +52,7 @@
 
 	</RelativeLayout>
 
-	<org.linphone.ui.Numpad
+	<org.linphone.views.Numpad
 		android:id="@+id/numpad"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -86,7 +86,7 @@
 
 		</RelativeLayout>
 
-        <org.linphone.ui.CallButton
+        <org.linphone.views.CallButton
 			android:id="@+id/call"
 			android:src="@drawable/call_audio_start"
 			android:background="@drawable/call"

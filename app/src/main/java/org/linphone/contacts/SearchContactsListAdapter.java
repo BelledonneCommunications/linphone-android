@@ -31,14 +31,14 @@ import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
-import org.linphone.ui.ContactAvatar;
+import org.linphone.views.ContactAvatar;
 
 import java.util.ArrayList;
 import java.util.List;

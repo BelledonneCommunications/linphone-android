@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.mediastream.Log;
 import org.linphone.xmlrpc.XmlRpcHelper;

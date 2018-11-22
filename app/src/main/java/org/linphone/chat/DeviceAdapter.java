@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -33,7 +33,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
-import org.linphone.ui.ContactAvatar;
+import org.linphone.views.ContactAvatar;
 
 import java.util.ArrayList;
 import java.util.List;

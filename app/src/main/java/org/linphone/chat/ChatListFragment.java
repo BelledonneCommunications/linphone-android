@@ -33,7 +33,7 @@ import android.widget.RelativeLayout;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -45,7 +45,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.utils.SelectableHelper;
 
 import java.io.File;
 import java.util.ArrayList;

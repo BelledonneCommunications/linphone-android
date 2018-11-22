@@ -1,4 +1,4 @@
-package org.linphone.ui;
+package org.linphone.utils;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;

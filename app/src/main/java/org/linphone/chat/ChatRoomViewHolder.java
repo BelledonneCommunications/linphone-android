@@ -29,10 +29,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -41,7 +39,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
 import org.linphone.core.Participant;
-import org.linphone.ui.ContactAvatar;
+import org.linphone.views.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     private Bitmap mDefaultBitmap;

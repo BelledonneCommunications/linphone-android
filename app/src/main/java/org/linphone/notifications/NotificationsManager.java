@@ -29,11 +29,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -135,7 +136,7 @@ public class NotificationsManager {
         notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Bitmap bm = LinphoneUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
+        Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(conferenceAddress);
         NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
         if (notif == null) {
@@ -166,7 +167,7 @@ public class NotificationsManager {
             fromName = fromSipUri;
         }
 
-        Bitmap bm = LinphoneUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
+        Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(fromSipUri);
         NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
         if (notif == null) {
@@ -260,7 +261,7 @@ public class NotificationsManager {
 
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
-        Bitmap bm = LinphoneUtils.getRoundBitmapFromUri(mContext, pictureUri);
+        Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, pictureUri);
         String name = LinphoneUtils.getAddressDisplayName(address);
 
         boolean showAnswerAction = call.getState() == Call.State.IncomingReceived || call.getState() == Call.State.IncomingEarlyMedia;

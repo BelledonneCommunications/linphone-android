@@ -1,8 +1,8 @@
-package org.linphone.ui;
+package org.linphone.views;
 
 /*
-AddressAwareWidget.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+CallIncomingButtonListener.java
+Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,6 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-public interface AddressAware {
-    void setAddressWidget(AddressText address);
+public interface CallIncomingButtonListener {
+    void onAction();
 }

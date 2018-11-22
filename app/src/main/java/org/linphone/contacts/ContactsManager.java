@@ -37,9 +37,9 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Data;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;

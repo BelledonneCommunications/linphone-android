@@ -36,10 +36,11 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
@@ -173,7 +174,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
     private void displayContact(LayoutInflater inflater, View view) {
         ImageView contactPicture = view.findViewById(R.id.contact_picture);
         if (contact.hasPhoto()) {
-            LinphoneUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
         } else {
             contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         }

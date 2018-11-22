@@ -1,4 +1,4 @@
-package org.linphone;
+package org.linphone.call;
 
 /*
 BandwithManager.java

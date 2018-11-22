@@ -26,8 +26,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +38,9 @@ import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.utils.SelectableHelper;
 
 import java.util.ArrayList;
 import java.util.List;

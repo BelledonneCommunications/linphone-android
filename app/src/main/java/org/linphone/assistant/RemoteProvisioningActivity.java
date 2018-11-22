@@ -30,10 +30,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.activities.LinphoneLauncherActivity;
+import org.linphone.LinphoneLauncherActivity;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
@@ -188,7 +188,7 @@ public class RemoteProvisioningActivity extends Activity {
 
     private void goToLinphoneActivity() {
         if (LinphoneService.isReady()) {
-            LinphoneService.instance().setActivityToLaunchOnIncomingReceived("org.linphone.activities.LinphoneLauncherActivity");
+            LinphoneService.instance().setActivityToLaunchOnIncomingReceived("org.linphone.LinphoneLauncherActivity");
             //finish(); // To prevent the user to come back to this page using back button
             startActivity(new Intent().setClass(this, LinphoneLauncherActivity.class));
         } else {

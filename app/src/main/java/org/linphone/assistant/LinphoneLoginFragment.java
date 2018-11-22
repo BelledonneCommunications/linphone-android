@@ -41,10 +41,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphonePreferences;
-import org.linphone.LinphoneUtils;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.DialPlan;

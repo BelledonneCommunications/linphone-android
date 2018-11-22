@@ -1,4 +1,4 @@
-package org.linphone.ui;
+package org.linphone.views;
 
 /*
 LinphoneOverlay.java
@@ -33,7 +33,7 @@ import android.view.WindowManager;
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.activities.LinphoneActivity;
+import org.linphone.LinphoneActivity;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.mediastream.Version;
