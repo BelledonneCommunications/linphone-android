@@ -66,15 +66,12 @@ public class ApiTwentyEightPlus {
         for (NotifiableMessage message : notif.getMessages()) {
             Icon userIcon = Icon.createWithBitmap(message.getSenderBitmap());
             Person user = new Person.Builder().setName(message.getSender()).setIcon(userIcon).build();
-            style.addMessage(message.getMessage(), message.getTime() * 1000, user);
+            style.addMessage(message.getMessage(), message.getTime(), user);
         }
         if (notif.isGroup()) {
             style.setConversationTitle(notif.getGroupTitle());
         }
         style.setGroupConversation(notif.isGroup());
-
-        Log.e("System current time " + System.currentTimeMillis());
-        Log.e("Message timestamp " + notif.getMessages().get(0).getTime());
 
         return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
