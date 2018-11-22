@@ -1,4 +1,4 @@
-package org.linphone.fragments;
+package org.linphone.history;
 
 /*
 HistoryDetailFragment.java
@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;

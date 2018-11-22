@@ -1,7 +1,7 @@
-package org.linphone.call;
+package org.linphone.history;
 
 /*
- CallHistoryAdapter.java
+ HistoryAdapter.java
  Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
  This program is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.ViewHolder> {
+public class HistoryAdapter extends SelectableAdapter<HistoryAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
             View.OnLongClickListener {
         public TextView contact;
@@ -59,9 +59,9 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
         public RelativeLayout CallContact;
         public LinearLayout separator;
         public TextView separatorText;
-        private CallHistoryAdapter.ViewHolder.ClickListener mListener;
+        private HistoryAdapter.ViewHolder.ClickListener mListener;
 
-        public ViewHolder(View view, CallHistoryAdapter.ViewHolder.ClickListener listener) {
+        public ViewHolder(View view, HistoryAdapter.ViewHolder.ClickListener listener) {
             super(view);
             contact = view.findViewById(R.id.sip_uri);
             detail = view.findViewById(R.id.detail);
@@ -100,9 +100,9 @@ public class CallHistoryAdapter extends SelectableAdapter<CallHistoryAdapter.Vie
 
     private List<CallLog> mLogs;
     private Context mContext;
-    private CallHistoryAdapter.ViewHolder.ClickListener clickListener;
+    private HistoryAdapter.ViewHolder.ClickListener clickListener;
 
-    public CallHistoryAdapter(Context aContext, List<CallLog> logs, CallHistoryAdapter.ViewHolder.ClickListener listener, SelectableHelper helper) {
+    public HistoryAdapter(Context aContext, List<CallLog> logs, HistoryAdapter.ViewHolder.ClickListener listener, SelectableHelper helper) {
         super(helper);
         this.mLogs = logs;
         this.mContext = aContext;

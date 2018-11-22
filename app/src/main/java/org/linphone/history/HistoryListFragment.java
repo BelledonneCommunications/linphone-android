@@ -1,4 +1,4 @@
-package org.linphone.fragments;
+package org.linphone.history;
 
 /*
 HistoryListFragment.java
@@ -37,7 +37,7 @@ import android.widget.TextView;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.LinphoneActivity;
-import org.linphone.call.CallHistoryAdapter;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Address;
@@ -49,14 +49,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, CallHistoryAdapter.ViewHolder.ClickListener, ContactsUpdatedListener, SelectableHelper.DeleteListener {
+public class HistoryListFragment extends Fragment implements OnClickListener, OnItemClickListener, HistoryAdapter.ViewHolder.ClickListener, ContactsUpdatedListener, SelectableHelper.DeleteListener {
     private RecyclerView historyList;
     private TextView noCallHistory, noMissedCallHistory;
     private ImageView missedCalls, allCalls;
     private View allCallsSelected, missedCallsSelected;
     private boolean mOnlyDisplayMissedCalls;
     private List<CallLog> mLogs;
-    private CallHistoryAdapter mHistoryAdapter;
+    private HistoryAdapter mHistoryAdapter;
     private LinearLayoutManager mLayoutManager;
     private Context mContext;
     private SelectableHelper mSelectionHelper;
@@ -156,7 +156,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
         mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
         hideHistoryListAndDisplayMessageIfEmpty();
-        mHistoryAdapter = new CallHistoryAdapter(getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
+        mHistoryAdapter = new HistoryAdapter(getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
         historyList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
@@ -172,7 +172,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
     public void onContactsUpdated() {
         if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != FragmentsAvailable.HISTORY_LIST)
             return;
-        CallHistoryAdapter adapter = (CallHistoryAdapter) historyList.getAdapter();
+        HistoryAdapter adapter = (HistoryAdapter) historyList.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -198,7 +198,7 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
             mOnlyDisplayMissedCalls = true;
         }
         hideHistoryListAndDisplayMessageIfEmpty();
-        mHistoryAdapter = new CallHistoryAdapter(mContext, mLogs, this, mSelectionHelper);
+        mHistoryAdapter = new HistoryAdapter(mContext, mLogs, this, mSelectionHelper);
         historyList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
