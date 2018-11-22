@@ -55,7 +55,6 @@ android {
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     applicationVariants.all { variant ->
@@ -107,11 +106,6 @@ android {
 }
 
 dependencies {
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:+') {
-        exclude module: 'support-annotations'
-    }
-    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
-    androidTestImplementation 'junit:junit:4.12'
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
     implementation 'com.android.billingclient:billing:1.2'
     implementation 'org.apache.commons:commons-compress:1.16.1'
