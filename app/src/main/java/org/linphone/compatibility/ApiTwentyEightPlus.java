@@ -30,10 +30,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
 
+import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
 import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
 import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
@@ -64,20 +66,24 @@ public class ApiTwentyEightPlus {
         for (NotifiableMessage message : notif.getMessages()) {
             Icon userIcon = Icon.createWithBitmap(message.getSenderBitmap());
             Person user = new Person.Builder().setName(message.getSender()).setIcon(userIcon).build();
-            style.addMessage(message.getMessage(), message.getTime(), user);
+            style.addMessage(message.getMessage(), message.getTime() * 1000, user);
         }
         if (notif.isGroup()) {
             style.setConversationTitle(notif.getGroupTitle());
         }
         style.setGroupConversation(notif.isGroup());
 
+        Log.e("System current time " + System.currentTimeMillis());
+        Log.e("Message timestamp " + notif.getMessages().get(0).getTime());
+
         return new Notification.Builder(context, context.getString(R.string.notification_channel_id))
             .setSmallIcon(R.drawable.topbar_chat_notification)
             .setAutoCancel(true)
             .setContentIntent(intent)
-            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+            .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
             .setLargeIcon(contactIcon)
             .setCategory(Notification.CATEGORY_MESSAGE)
+            .setGroup(CHAT_NOTIFICATIONS_GROUP)
             .setVisibility(Notification.VISIBILITY_PRIVATE)
             .setPriority(Notification.PRIORITY_HIGH)
             .setNumber(notif.getMessages().size())

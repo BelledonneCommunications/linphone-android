@@ -35,6 +35,7 @@ import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
 
+import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
@@ -112,9 +113,10 @@ public class ApiTwentySixPlus {
 			.setSmallIcon(R.drawable.topbar_chat_notification)
 			.setAutoCancel(true)
 			.setContentIntent(intent)
-			.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+			.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS)
 			.setLargeIcon(contactIcon)
 			.setCategory(Notification.CATEGORY_MESSAGE)
+			.setGroup(CHAT_NOTIFICATIONS_GROUP)
 			.setVisibility(Notification.VISIBILITY_PRIVATE)
 			.setPriority(Notification.PRIORITY_HIGH)
 			.setNumber(notif.getMessages().size())

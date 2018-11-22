@@ -32,6 +32,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.notifications.Notifiable;
 
 public class Compatibility {
+    public static final String CHAT_NOTIFICATIONS_GROUP = "CHAT_NOTIF_GROUP";
     public static final String KEY_TEXT_REPLY = "key_text_reply";
     public static final String INTENT_NOTIF_ID = "NOTIFICATION_ID";
     public static final String INTENT_REPLY_NOTIF_ACTION = "org.linphone.REPLY_ACTION";

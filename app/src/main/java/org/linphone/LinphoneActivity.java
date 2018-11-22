@@ -931,10 +931,6 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         changeCurrentFragment(FragmentsAvailable.ACCOUNT_SETTINGS, bundle);
     }
 
-    public StatusFragment getStatusFragment() {
-        return statusFragment;
-    }
-
     public void refreshMissedChatCountDisplay() {
         displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
@@ -957,6 +953,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         } else {
             missedChats.clearAnimation();
             missedChats.setVisibility(View.GONE);
+        }
+        if (currentFragment == FragmentsAvailable.CHAT_LIST) {
+            ((ChatRoomsFragment)fragment).invalidate();
         }
     }
 

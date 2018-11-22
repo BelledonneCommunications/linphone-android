@@ -51,7 +51,8 @@ public class ApiTwentyOnePlus {
                 .setAutoCancel(true)
                 .setContentIntent(intent)
                 .setDefaults(Notification.DEFAULT_SOUND
-                        | Notification.DEFAULT_VIBRATE)
+                        | Notification.DEFAULT_VIBRATE
+                        | Notification.DEFAULT_LIGHTS)
                 .setLargeIcon(contactIcon)
                 .setLights(ContextCompat.getColor(context, R.color.notification_color_led),
                         context.getResources().getInteger(R.integer.notification_ms_on),

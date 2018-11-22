@@ -189,6 +189,12 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
         }
     }
 
+    public void invalidate() {
+        if (mChatRoomsAdapter != null) {
+            mChatRoomsAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
