@@ -144,30 +144,48 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="font26" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorD</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="font27" parent="@android:style/TextAppearance.Medium">
+    <style name="imdn_read_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorK</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="font28" parent="@android:style/TextAppearance.Medium">
+    <style name="imdn_delivered_sent_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorD</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="font29" parent="@android:style/TextAppearance.Medium">
+    <style name="imdn_undelivered_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorI</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="font33" parent="@android:style/TextAppearance.Medium">
+    <style name="chat_bubble_time_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorM</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="chat_bubble_message_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingExtra">-1.7sp</item>
+    </style>
+
+    <style name="chat_bubble_file_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textSize">11.7sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="contact_invite_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorA</item>
         <item name="android:textSize">16.7sp</item>
         <item name="android:fontFamily">sans-serif</item>
