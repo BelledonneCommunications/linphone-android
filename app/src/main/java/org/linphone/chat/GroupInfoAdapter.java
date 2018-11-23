@@ -19,8 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +33,6 @@ import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoom;
-import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Participant;
 import org.linphone.views.ContactAvatar;
 

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-	<android.support.v4.widget.DrawerLayout
+	<androidx.drawerlayout.widget.DrawerLayout
 		android:id="@+id/side_menu"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
@@ -441,7 +441,7 @@
 
 		</RelativeLayout>
 
-	</android.support.v4.widget.DrawerLayout>
+	</androidx.drawerlayout.widget.DrawerLayout>
 
 	<fragment
 		android:id="@+id/status"

@@ -110,26 +110,13 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/pictures"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:choiceMode="multipleChoice"
-                android:transcriptMode="normal"
-                android:layout_marginLeft="5dp"
-				android:layout_marginRight="5dp"
-                android:cacheColorHint="@color/transparent"
-                android:listSelector="@color/transparent"/>
-
             <TextView
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/chat_bubble_message_font"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_below="@id/pictures"/>
+                android:layout_marginRight="10dp"/>
 
         </RelativeLayout>
 

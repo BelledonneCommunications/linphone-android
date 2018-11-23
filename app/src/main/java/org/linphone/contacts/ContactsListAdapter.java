@@ -20,8 +20,8 @@ package org.linphone.contacts;
  */
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +33,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import org.linphone.R;
-import org.linphone.mediastream.Log;
 import org.linphone.views.ContactAvatar;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;

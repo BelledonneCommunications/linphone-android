@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -63,8 +63,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public ImageView outgoingImdn;
     public TextView messageText;
 
-    public RecyclerView pictures;
-
     public CheckBox delete;
     private ClickListener mListener;
 
@@ -93,8 +91,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         outgoingImdn = view.findViewById(R.id.imdn);
         messageText = view.findViewById(R.id.message);
 
-        pictures = view.findViewById(R.id.pictures);
-
         delete = view.findViewById(R.id.delete_message);
     }
 
@@ -118,7 +114,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         timeText.setVisibility(View.VISIBLE);
         outgoingImdn.setVisibility(View.GONE);
         avatarLayout.setVisibility(View.GONE);
-        pictures.setVisibility(View.GONE);
         sendInProgress.setVisibility(View.GONE);
 
         ChatMessage.State status = message.getState();
@@ -188,14 +183,5 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                 fileContents.add(c);
             }
         }
-
-        /*if (fileContents.size() > 0) {
-            pictures.setVisibility(View.VISIBLE);
-            mAdapter = new ChatBubbleFilesAdapter(mContext, message, fileContents);
-            pictures.setAdapter(mAdapter);
-            pictures.setHasFixedSize(true);
-            mLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL);
-            pictures.setLayoutManager(mLayoutManager);
-        }*/
     }
 }

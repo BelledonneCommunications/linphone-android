@@ -23,7 +23,7 @@ import android.Manifest;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -53,7 +53,6 @@ import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
     private static CallOutgoingActivity instance;

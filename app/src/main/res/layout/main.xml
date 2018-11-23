@@ -12,7 +12,7 @@
 		android:layout_height="40dp"
 		tools:layout="@layout/status" />
 
-	<android.support.v4.widget.DrawerLayout
+	<androidx.drawerlayout.widget.DrawerLayout
 		android:id="@+id/side_menu"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -281,6 +281,6 @@
 		</LinearLayout>
 	</RelativeLayout>
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
 
 </RelativeLayout>
