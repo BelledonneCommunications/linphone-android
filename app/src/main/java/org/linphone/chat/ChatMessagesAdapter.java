@@ -96,6 +96,18 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
             ChatMessage message = event.getChatMessage();
             message.setUserData(holder);
 
+            if (message.isOutgoing() && message.getState() != ChatMessage.State.Displayed) {
+                message.setListener(new ChatMessageListenerStub() {
+                    @Override
+                    public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
+                        ChatMessageViewHolder holder = (ChatMessageViewHolder) message.getUserData();
+                        if (holder != null) {
+                            notifyItemChanged(holder.getAdapterPosition());
+                        }
+                    }
+                });
+            }
+
             LinphoneContact contact = null;
             Address remoteSender = message.getFromAddress();
             if (!message.isOutgoing()) {
@@ -108,17 +120,6 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
             }
             holder.bindMessage(message, contact);
             changeBackgroundDependingOnPreviousAndNextEvents(message, holder, position);
-
-            message.setListener(new ChatMessageListenerStub() {
-                @Override
-                public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
-                    ChatMessageViewHolder holder = (ChatMessageViewHolder) message.getUserData();
-                    if (holder != null) {
-                        holder.bindMessage(message, null);
-                        changeBackgroundDependingOnPreviousAndNextEvents(message, holder, holder.getAdapterPosition());
-                    }
-                }
-            });
         } else { // Event is not chat message
             Address address = event.getParticipantAddress();
             String displayName = null;
