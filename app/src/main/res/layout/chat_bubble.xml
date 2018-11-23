@@ -107,8 +107,17 @@
             android:background="@drawable/chat_bubble_outgoing_full"
             android:layout_below="@+id/time"
             android:layout_toLeftOf="@+id/imdn"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <com.google.android.flexbox.FlexboxLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/pictures"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:flexWrap="wrap"/>
 
             <TextView
                 android:id="@+id/message"
@@ -116,7 +125,10 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/chat_bubble_message_font"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_below="@id/pictures"/>
 
         </RelativeLayout>
 

@@ -20,10 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.content.Context;
+
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,20 +38,27 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.flexbox.FlexboxLayout;
+
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.Content;
+import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public Context mContext;
+    private Context mContext;
+
     public ChatMessage message;
 
     public LinearLayout eventLayout;
@@ -62,6 +76,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public TextView timeText;
     public ImageView outgoingImdn;
     public TextView messageText;
+
+    public FlexboxLayout pictures;
 
     public CheckBox delete;
     private ClickListener mListener;
@@ -91,6 +107,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         outgoingImdn = view.findViewById(R.id.imdn);
         messageText = view.findViewById(R.id.message);
 
+        pictures = view.findViewById(R.id.pictures);
+
         delete = view.findViewById(R.id.delete_message);
     }
 
@@ -115,6 +133,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         outgoingImdn.setVisibility(View.GONE);
         avatarLayout.setVisibility(View.GONE);
         sendInProgress.setVisibility(View.GONE);
+        pictures.setVisibility(View.GONE);
+        pictures.removeAllViews();
 
         ChatMessage.State status = message.getState();
         Address remoteSender = message.getFromAddress();
@@ -183,5 +203,65 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                 fileContents.add(c);
             }
         }
+
+        if (fileContents.size() > 0) {
+            pictures.setVisibility(View.VISIBLE);
+            for (Content c : fileContents) {
+                if (c.isFile()) {
+                    String filePath = c.getFilePath();
+                    View content = LayoutInflater.from(mContext).inflate(R.layout.chat_bubble_content, null, false);
+
+                    if (FileUtils.isExtensionImage(filePath)) {
+                        ImageView iv = content.findViewById(R.id.image);
+                        iv.setImageURI(Uri.parse(c.getFilePath()));
+                        iv.setTag(c.getFilePath());
+                        iv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openFile((String) v.getTag());
+                            }
+                        });
+                    } else {
+                        //TODO: display file name and extension ?
+                    }
+                    pictures.addView(content);
+                } else {
+                    //TODO: download button if incoming
+                }
+            }
+        }
+    }
+
+    private void openFile(String path) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        File file;
+        Uri contentUri;
+        if (path.startsWith("file://")) {
+            path = path.substring("file://".length());
+            file = new File(path);
+            contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
+        } else if (path.startsWith("content://")) {
+            contentUri = Uri.parse(path);
+        } else {
+            file = new File(path);
+            try {
+                contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
+            } catch (Exception e) {
+                contentUri = Uri.parse(path);
+            }
+        }
+
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(contentUri.toString());
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        if (type != null) {
+            intent.setDataAndType(contentUri, type);
+        } else {
+            intent.setDataAndType(contentUri, "*/*");
+        }
+        intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
+        mContext.startActivity(intent);
     }
 }

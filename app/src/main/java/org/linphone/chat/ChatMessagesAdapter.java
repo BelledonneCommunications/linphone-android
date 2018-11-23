@@ -207,6 +207,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     public void addToHistory(EventLog log) {
         mHistory.add(0, log);
         notifyItemInserted(0);
+        notifyItemChanged(1); // Update second to last item just in case for grouping purposes
     }
 
     public void addAllToHistory(ArrayList<EventLog> logs) {

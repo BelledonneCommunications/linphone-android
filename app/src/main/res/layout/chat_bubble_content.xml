@@ -2,34 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
-
-    <TextView
-        android:id="@+id/file"
-        android:textAlignment="center"
-        android:gravity="center"
-        style="@style/chat_bubble_file_name_font"
-        android:background="@color/colorN"
-        android:ellipsize="end"
-        android:layout_width="150dp"
-        android:layout_height="75dp"/>
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/image"
         android:adjustViewBounds="true"
         android:layout_width="wrap_content"
-        android:layout_height="75dp"/>
-
-    <Button
-        android:id="@+id/download"
-        android:text="Download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ProgressBar
-        android:id="@+id/fileTransferInProgress"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:indeterminate="true"/>
+        android:layout_height="100dp"/>
 
 </RelativeLayout>
