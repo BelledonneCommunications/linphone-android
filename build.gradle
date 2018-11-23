@@ -13,10 +13,10 @@ def firebaseEnable() {
 buildscript {
     File googleFile = new File('google-services.json')
     repositories {
-        jcenter()
         mavenCentral()
         mavenLocal()
         google()
+	jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.0'
@@ -28,10 +28,10 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
         mavenCentral()
         mavenLocal()
         google()
+	jcenter()
     }
 }
 
