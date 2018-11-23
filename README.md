@@ -10,24 +10,26 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
 2. Download the latest Android NDK from google and add it to your path (no symlink !!!) and ANDROID_NDK environment variable.
 
-3. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_, _doxygen_, _graphviz_ and _cmake(>=3.12)_.
+3. _(optional)_ If you have many NDK you can set the default to use with the ANDROID_NDK_HOME env variable.
+
+4. Install _yasm_, _nasm_ (For OpenH224 support only), _python_, _pkg_config_, _doxygen_, _graphviz_ and _cmake(>=3.12)_.
   * On 64 bits linux systems you'll need the _ia32-libs_ package.
   * With the latest Debian (multiarch), you need this:
     * `dpkg --add-architecture i386`
     * `aptitude update`
     * `aptitude install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386`
 
-4. Run `./prepare.py` in the top level directory. This will configure the build and generate a Makefile in the top level directory. Some options can be passed to choose what you want to include in the build and the platforms for which you want to build. Use `./prepare.py --help` to see what these options are.
+5. Run `./prepare.py` in the top level directory. This will configure the build and generate a Makefile in the top level directory. Some options can be passed to choose what you want to include in the build and the platforms for which you want to build. Use `./prepare.py --help` to see what these options are.
 
-5. Run the Makefile script in the top level directory, `make`.
+6. Run the Makefile script in the top level directory, `make`.
 
-6. _(optional)_ To install the generated apk into a plugged device, run	`make install`.
+7. _(optional)_ To install the generated apk into a plugged device, run	`make install`.
 
-7. _(optional)_ To generate a liblinphone SDK zip containing a full jar and native libraries, run `make liblinphone-android-sdk`
+8. _(optional)_ To generate a liblinphone SDK zip containing a full jar and native libraries, run `make liblinphone-android-sdk`
 
-8. _(optional)_ To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run `make mediastreamer2-sdk`
+9. _(optional)_ To generate a libmediastreamer2 SDK zip containing a full jar and native libraries, run `make mediastreamer2-sdk`
 
-9. _(optional)_ To generate a signed apk to publish on the Google Play, run `make release`. Make sure you filled the gradle.properties values for version.name, store file, store password, key alias and key password to correctly sign the generated apk:
+10. _(optional)_ To generate a signed apk to publish on the Google Play, run `make release`. Make sure you filled the gradle.properties values for version.name, store file, store password, key alias and key password to correctly sign the generated apk:
   * RELEASE_STORE_FILE=""
   * RELEASE_STORE_PASSWORD=
   * RELEASE_KEY_ALIAS=
@@ -35,7 +37,7 @@ Linphone is a free VoIP and video softphone based on the SIP protocol.
 
   If you don't, the passwords will be asked at the signing phase.
 
-10. _(optional)_ Once you compiled the libraries succesfully with 'make', you can reduce the compilation time using 'make quick': it will only generate a new APK from java files.
+11. _(optional)_ Once you compiled the libraries succesfully with 'make', you can reduce the compilation time using 'make quick': it will only generate a new APK from java files.
 
 ## To create an apk with a different package name
 
@@ -97,4 +99,3 @@ In order to submit a patch for inclusion in linphone's source code:
 
 1.    First make sure your patch applies to latest git sources before submitting: patches made to old versions can't be merged.
 2.    Fill out and send us an email with the link of pullrequest and the [Contributor Agreement](http://www.belledonne-communications.com/downloads/Belledonne_communications_CA.pdf) for your patch to be included in the git tree. The goal of this agreement to grant us peaceful exercise of our rights on the linphone source code, while not losing your rights on your contribution.
-
