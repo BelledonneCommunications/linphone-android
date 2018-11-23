@@ -22,74 +22,51 @@
         android:layout_marginLeft="5dp"
         android:layout_alignRight="@id/rightAnchor"/>
 
-	<LinearLayout
-		android:id="@+id/event"
-		android:visibility="gone"
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/rightAnchor"
-		android:layout_marginTop="5dp"
-		android:layout_marginBottom="5dp"
-		android:gravity="center_vertical">
+    <LinearLayout
+        android:id="@+id/event"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/delete_message"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:background="@drawable/event_decoration_gray">
 
-		<ImageView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:layout_marginRight="10dp"
-			android:src="@drawable/event_decoration_gray"
-			android:scaleType="fitXY"/>
+        <TextView
+            android:id="@+id/event_text"
+            android:textAppearance="@style/font_group_chat_event"
+            android:background="@color/colorH"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-		<TextView
-			android:id="@+id/event_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-		<ImageView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:layout_marginLeft="10dp"
-			android:src="@drawable/event_decoration_gray"
-			android:scaleType="fitXY"/>
+    <LinearLayout
+        android:id="@+id/security_event"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/delete_message"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:background="@drawable/event_decoration_red">
 
-	</LinearLayout>
+        <TextView
+            android:id="@+id/security_event_text"
+            android:textAppearance="@style/font_group_chat_event"
+            android:background="@color/colorI"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-	<LinearLayout
-		android:id="@+id/security_event"
-		android:visibility="gone"
-		android:orientation="horizontal"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_toLeftOf="@id/rightAnchor"
-		android:layout_marginTop="5dp"
-		android:layout_marginBottom="5dp"
-		android:gravity="center_vertical">
-
-		<ImageView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:layout_marginRight="10dp"
-			android:src="@drawable/event_decoration_red"
-			android:scaleType="fitXY"/>
-
-		<TextView
-			android:id="@+id/security_event_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textColor="@color/colorI"/>
-
-		<ImageView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:layout_marginLeft="10dp"
-			android:src="@drawable/event_decoration_red"
-			android:scaleType="fitXY"/>
-
-	</LinearLayout>
+    </LinearLayout>
 
 	<RelativeLayout
 		android:id="@+id/bubble"
