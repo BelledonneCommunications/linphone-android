@@ -69,7 +69,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     public View rightAnchor;
     public RelativeLayout bubbleLayout;
-    public RelativeLayout background;
+    public LinearLayout background;
     public RelativeLayout avatarLayout;
 
     public ProgressBar sendInProgress;
@@ -211,19 +211,23 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                     String filePath = c.getFilePath();
                     View content = LayoutInflater.from(mContext).inflate(R.layout.chat_bubble_content, null, false);
 
+                    View v;
                     if (FileUtils.isExtensionImage(filePath)) {
-                        ImageView iv = content.findViewById(R.id.image);
-                        iv.setImageURI(Uri.parse(c.getFilePath()));
-                        iv.setTag(c.getFilePath());
-                        iv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                openFile((String) v.getTag());
-                            }
-                        });
+                        v = content.findViewById(R.id.image);
+                        ((ImageView)v).setImageURI(Uri.parse(c.getFilePath()));
                     } else {
-                        //TODO: display file name and extension ?
+                        v = content.findViewById(R.id.file);
+                        ((TextView)v).setText(FileUtils.getNameFromFilePath(filePath));
                     }
+                    v.setVisibility(View.VISIBLE);
+                    v.setTag(c.getFilePath());
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openFile((String) v.getTag());
+                        }
+                    });
+
                     pictures.addView(content);
                 } else {
                     //TODO: download button if incoming
