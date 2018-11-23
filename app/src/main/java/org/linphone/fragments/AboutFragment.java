@@ -48,7 +48,6 @@ import org.linphone.mediastream.Log;
 public class AboutFragment extends Fragment implements OnClickListener {
     View sendLogButton = null;
     View resetLogButton = null;
-    ImageView cancel;
     CoreListenerStub mListener;
     private ProgressDialog progress;
     private boolean uploadInProgress;
@@ -61,9 +60,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
         TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
         aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
         aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
-
-        cancel = view.findViewById(R.id.cancel);
-        cancel.setOnClickListener(this);
 
         sendLogButton = view.findViewById(R.id.send_log);
         sendLogButton.setOnClickListener(this);
@@ -162,8 +158,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
                 if (lc != null) {
                     lc.resetLogCollection();
                 }
-            } else if (v == cancel) {
-                LinphoneActivity.instance().goToDialerFragment();
             }
         }
     }

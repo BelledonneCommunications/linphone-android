@@ -136,7 +136,8 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private TextView missedCalls, missedChats;
     private RelativeLayout contacts, history, dialer, chat;
     private View contacts_selected, history_selected, dialer_selected, chat_selected;
-    private RelativeLayout mTopBar;
+    private LinearLayout mTopBar;
+    private TextView mTopBarTitle;
     private ImageView cancel;
     private FragmentsAvailable pendingFragmentTransaction, currentFragment, leftFragment;
     private Fragment fragment;
@@ -303,6 +304,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private void initButtons() {
         mTabBar = findViewById(R.id.footer);
         mTopBar = findViewById(R.id.top_bar);
+        mTopBarTitle = findViewById(R.id.top_bar_title);
 
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(this);
@@ -847,6 +849,16 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
     public void hideTopBar() {
         mTopBar.setVisibility(View.GONE);
+        mTopBarTitle.setText("");
+    }
+
+    public void showTopBar() {
+        mTopBar.setVisibility(View.VISIBLE);
+    }
+
+    public void showTopBarWithTitle(String title) {
+        showTopBar();
+        mTopBarTitle.setText(title);
     }
 
     @SuppressWarnings("incomplete-switch")
@@ -880,9 +892,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             case SETTINGS:
             case ACCOUNT_SETTINGS:
                 hideTabBar(hideBottomBar);
-                mTopBar.setVisibility(View.VISIBLE);
+                showTopBarWithTitle(getString(R.string.settings));
                 break;
             case ABOUT:
+                showTopBarWithTitle(getString(R.string.about));
                 hideTabBar(hideBottomBar);
                 break;
             case CHAT_LIST:
