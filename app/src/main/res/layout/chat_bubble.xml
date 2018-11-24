@@ -135,6 +135,7 @@
             android:layout_height="10dp"
             android:src="@drawable/imdn_received"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/background"/>
 
@@ -145,6 +146,7 @@
             android:indeterminateTint="@color/colorA"
             android:src="@drawable/imdn_received"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/background"/>
 

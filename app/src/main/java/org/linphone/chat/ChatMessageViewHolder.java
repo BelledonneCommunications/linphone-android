@@ -19,18 +19,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,12 +43,15 @@ import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.Content;
+import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
@@ -123,7 +129,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         void onItemClicked(int position);
     }
 
-    public void bindMessage(ChatMessage message, LinphoneContact contact) {
+    public void bindMessage(final ChatMessage message, LinphoneContact contact) {
         eventLayout.setVisibility(View.GONE);
         securityEventLayout.setVisibility(View.GONE);
         rightAnchor.setVisibility(View.VISIBLE);
@@ -207,9 +213,10 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (fileContents.size() > 0) {
             pictures.setVisibility(View.VISIBLE);
             for (Content c : fileContents) {
+                View content = LayoutInflater.from(mContext).inflate(R.layout.chat_bubble_content, null, false);
+
                 if (c.isFile()) {
                     String filePath = c.getFilePath();
-                    View content = LayoutInflater.from(mContext).inflate(R.layout.chat_bubble_content, null, false);
 
                     View v;
                     if (FileUtils.isExtensionImage(filePath)) {
@@ -227,11 +234,44 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                             openFile((String) v.getTag());
                         }
                     });
-
-                    pictures.addView(content);
                 } else {
-                    //TODO: download button if incoming
+                    Button download = content.findViewById(R.id.download);
+                    download.setVisibility(View.VISIBLE);
+
+                    if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+                        String filename = c.getName();
+                        File file = new File(FileUtils.getStorageDirectory(mContext), filename);
+
+                        int prefix = 1;
+                        while (file.exists()) {
+                            file = new File(FileUtils.getStorageDirectory(mContext), prefix + "_" + filename);
+                            Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
+                            prefix += 1;
+                        }
+
+                        download.setTag(c);
+                        c.setFilePath(file.getPath());
+                        download.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Content c = (Content) v.getTag();
+                                message.downloadContent(c);
+                            }
+                        });
+
+                        message.setListener(new ChatMessageListenerStub() {
+                            @Override
+                            public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
+                                //TODO: invalidate
+                            }
+                        });
+                    } else {
+                        Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+                        LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+                    }
                 }
+
+                pictures.addView(content);
             }
         }
     }

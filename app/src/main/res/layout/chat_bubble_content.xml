@@ -23,4 +23,16 @@
         android:layout_height="100dp"
         android:layout_margin="5dp"/>
 
+    <Button
+        android:id="@+id/download"
+        android:visibility="gone"
+        android:text="@string/download_file"
+        android:background="@drawable/resizable_assistant_button"
+        style="@style/font8"
+        android:ellipsize="end"
+        android:layout_width="137dp"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:padding="10dp"/>
+
 </RelativeLayout>
