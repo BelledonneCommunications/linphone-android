@@ -53,13 +53,6 @@
         android:gravity="center_horizontal"
         android:layout_below="@id/top">
 
-        <include
-            android:id="@+id/bubble"
-            layout="@layout/chat_bubble"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"/>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -68,6 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <include
+                    android:id="@+id/bubble"
+                    layout="@layout/chat_bubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"/>
 
                 <LinearLayout
                     android:id="@+id/read_layout_header"

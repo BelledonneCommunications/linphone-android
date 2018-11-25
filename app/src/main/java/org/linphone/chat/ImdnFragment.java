@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.mediastream.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.LinphoneActivity;
@@ -120,6 +121,18 @@ public class ImdnFragment extends Fragment {
         }
 
         refreshInfo();
+        mMessage.setListener(new ChatMessageListenerStub() {
+            @Override
+            public void onParticipantImdnStateChanged(ChatMessage msg, ParticipantImdnState state) {
+                refreshInfo();
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        mMessage.setListener(null);
+        super.onPause();
     }
 
     private void refreshInfo() {
