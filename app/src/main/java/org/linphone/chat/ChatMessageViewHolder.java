@@ -1,3 +1,5 @@
+package org.linphone.chat;
+
 /*
 ChatMessageViewHolder.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -17,8 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
 import android.Manifest;
 import android.content.Context;
 
@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -54,6 +56,8 @@ import org.linphone.core.Content;
 import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.AsyncBitmap;
+import org.linphone.views.BitmapWorkerTask;
 import org.linphone.views.ContactAvatar;
 
 import java.io.File;
@@ -221,7 +225,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                     View v;
                     if (FileUtils.isExtensionImage(filePath)) {
                         v = content.findViewById(R.id.image);
-                        ((ImageView)v).setImageURI(Uri.parse(c.getFilePath()));
+                        loadBitmap(c.getFilePath(), ((ImageView)v));
                     } else {
                         v = content.findViewById(R.id.file);
                         ((TextView)v).setText(FileUtils.getNameFromFilePath(filePath));
@@ -308,4 +312,33 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
         mContext.startActivity(intent);
     }
+
+    private void loadBitmap(String path, ImageView imageView) {
+        if (cancelPotentialWork(path, imageView)) {
+            Bitmap defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
+            BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView, defaultBitmap);
+            final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), defaultBitmap, task);
+            imageView.setImageDrawable(asyncBitmap);
+            task.execute(path);
+        }
+    }
+
+    private boolean cancelPotentialWork(String path, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = BitmapWorkerTask.getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final String bitmapData = bitmapWorkerTask.path;
+            // If bitmapData is not yet set or it differs from the new data
+            if (bitmapData == null || bitmapData != path) {
+                // Cancel previous task
+                bitmapWorkerTask.cancel(true);
+            } else {
+                // The same work is already in progress
+                return false;
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+
 }
