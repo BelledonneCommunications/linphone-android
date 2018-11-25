@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -63,8 +64,9 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
     private int mChatRoomDeletionPendingCount;
     private ChatRoomListenerStub mChatRoomListener;
     private Context mContext;
-    public List<ChatRoom> mRooms;
+    private List<ChatRoom> mRooms;
     private SelectableHelper mSelectionHelper;
+    private TextView mNoChatHistory;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
         mNewDiscussionButton = view.findViewById(R.id.new_discussion);
         mNewGroupDiscussionButton = view.findViewById(R.id.new_group_discussion);
         mBackToCallButton = view.findViewById(R.id.back_in_call);
+        mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
         mSelectionHelper = new SelectableHelper(view, this);
         mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms, this, mSelectionHelper);
@@ -175,7 +178,7 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
 
     private void refreshChatRoomsList() {
         mChatRoomsAdapter.refresh();
-        //mNoChatHistory.setVisibility(mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        mNoChatHistory.setVisibility(mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public void displayFirstChat() {

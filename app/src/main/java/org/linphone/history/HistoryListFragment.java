@@ -130,6 +130,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
     private void hideHistoryListAndDisplayMessageIfEmpty() {
         removeNotMissedCallsFromLogs();
+        noCallHistory.setVisibility(View.GONE);
+        noMissedCallHistory.setVisibility(View.GONE);
+        
         if (mLogs.isEmpty()) {
             if (mOnlyDisplayMissedCalls) {
                 noMissedCallHistory.setVisibility(View.VISIBLE);
