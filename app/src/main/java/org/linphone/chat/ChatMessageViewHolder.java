@@ -89,7 +89,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     public FlexboxLayout pictures;
 
-    public CheckBox delete;
+    public CheckBox deleteEvent;
+    public CheckBox deleteMessage;
     private ClickListener mListener;
 
     public ChatMessageViewHolder(Context context, View view, ClickListener listener) {
@@ -119,7 +120,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
         pictures = view.findViewById(R.id.pictures);
 
-        delete = view.findViewById(R.id.delete_message);
+        deleteEvent = view.findViewById(R.id.delete_event);
+        deleteMessage = view.findViewById(R.id.delete_message);
     }
 
     @Override

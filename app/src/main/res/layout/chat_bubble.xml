@@ -11,16 +11,15 @@
         android:layout_alignParentTop="true"/>
 
     <CheckBox
-        android:id="@+id/delete_message"
-        android:visibility="gone"
+        android:id="@+id/delete_event"
         android:button="@drawable/checkbox"
         android:contentDescription="@string/content_description_delete"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:adjustViewBounds="true"
-		android:clickable="false"
-        android:layout_marginLeft="5dp"
-        android:layout_alignRight="@id/rightAnchor"/>
+        android:clickable="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"/>
 
     <LinearLayout
         android:id="@+id/event"
@@ -28,7 +27,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete_message"
+        android:layout_toLeftOf="@id/delete_event"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:gravity="center"
@@ -51,7 +50,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete_message"
+        android:layout_toLeftOf="@id/delete_event"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:gravity="center"
@@ -78,6 +77,7 @@
             android:id="@+id/background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
             android:layout_marginLeft="45dp"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="1dp"
@@ -129,14 +129,25 @@
             android:layout_marginLeft="45dp"
             android:layout_toLeftOf="@id/imdn"/>
 
+        <CheckBox
+            android:id="@+id/delete_message"
+            android:button="@drawable/checkbox"
+            android:contentDescription="@string/content_description_delete"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:clickable="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/background"/>
+
         <ImageView
             android:id="@id/imdn"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:src="@drawable/imdn_received"
-            android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_alignParentRight="true"
+            android:layout_alignLeft="@id/delete_message"
             android:layout_alignBottom="@id/background"/>
 
         <ProgressBar

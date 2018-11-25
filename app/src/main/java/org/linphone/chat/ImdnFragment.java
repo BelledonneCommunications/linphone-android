@@ -126,7 +126,8 @@ public class ImdnFragment extends Fragment {
         Address remoteSender = mMessage.getFromAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
 
-        mBubble.delete.setVisibility(View.GONE);
+        mBubble.deleteMessage.setVisibility(View.GONE);
+        mBubble.deleteEvent.setVisibility(View.GONE);
         mBubble.eventLayout.setVisibility(View.GONE);
         mBubble.securityEventLayout.setVisibility(View.GONE);
         mBubble.rightAnchor.setVisibility(View.GONE);

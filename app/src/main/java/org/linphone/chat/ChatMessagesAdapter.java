@@ -79,22 +79,23 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     public void onBindViewHolder(@NonNull final ChatMessageViewHolder holder, int position) {
         EventLog event = mHistory.get(position);
 
-        holder.delete.setVisibility(View.GONE);
+        holder.deleteEvent.setVisibility(View.GONE);
+        holder.deleteMessage.setVisibility(View.GONE);
         holder.eventLayout.setVisibility(View.GONE);
         holder.securityEventLayout.setVisibility(View.GONE);
         holder.rightAnchor.setVisibility(View.GONE);
         holder.bubbleLayout.setVisibility(View.GONE);
         holder.sendInProgress.setVisibility(View.GONE);
 
-        if (isEditionEnabled()) {
-            holder.delete.setOnCheckedChangeListener(null);
-            holder.delete.setChecked(isSelected(position));
-            holder.delete.setTag(position);
-        }
-
         if (event.getType() == EventLog.Type.ConferenceChatMessage) {
             ChatMessage message = event.getChatMessage();
             message.setUserData(holder);
+
+            if (isEditionEnabled()) {
+                holder.deleteMessage.setVisibility(View.VISIBLE);
+                holder.deleteMessage.setChecked(isSelected(position));
+                holder.deleteMessage.setTag(position);
+            }
 
             if (message.isOutgoing() && message.getState() != ChatMessage.State.Displayed) {
                 message.setListener(new ChatMessageListenerStub() {
@@ -121,6 +122,12 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
             holder.bindMessage(message, contact);
             changeBackgroundDependingOnPreviousAndNextEvents(message, holder, position);
         } else { // Event is not chat message
+            if (isEditionEnabled()) {
+                holder.deleteEvent.setVisibility(View.VISIBLE);
+                holder.deleteEvent.setChecked(isSelected(position));
+                holder.deleteEvent.setTag(position);
+            }
+
             Address address = event.getParticipantAddress();
             String displayName = null;
             if (address != null) {
