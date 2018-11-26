@@ -145,6 +145,9 @@ public class SearchContactsListAdapter extends RecyclerView.Adapter<SearchContac
         }
 
         if (c != null) {
+            if (c.getFullName() == null && c.getFirstName() == null && c.getLastName() == null) {
+                c.setFullName(holder.name.getText().toString());
+            }
             ContactAvatar.displayAvatar(c, holder.avatarLayout);
             //TODO get if contact has security capabilities
         } else {
