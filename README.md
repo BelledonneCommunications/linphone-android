@@ -27,6 +27,18 @@ ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/lin
 
 4. Rebuild the app in Android Studio.
 
+## Native debugging
+
+1. Install LLDB from SDK Tools in Android-studio.
+
+2. In Android-studio go to Run->Edit Configurations->Debugger.
+
+3. Select 'Dual' or 'Native' and add the path to linphone-sdk libraries.
+
+4. Open native file and put your breakpoint on it.
+
+5. Debug app.
+
 ## Create an apk with a different package name
 
 Before the 4.1 release, there were a lot of files to edit to change the package name.

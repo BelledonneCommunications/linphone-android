@@ -22,34 +22,40 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
-			<RelativeLayout
+            <LinearLayout
 				android:id="@+id/top_bar"
+                android:visibility="gone"
+                android:orientation="horizontal"
 				android:background="@color/colorF"
 				android:layout_width="match_parent"
-				android:layout_height="60dp"
-				android:visibility="gone"
-				android:layout_alignParentTop="true">
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:id="@+id/cancel"
+                    android:src="@drawable/back"
+                    android:background="@drawable/toolbar_button"
+                    android:contentDescription="@string/content_description_dialer_back"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:padding="15dp"/>
 
 				<TextView
-					android:id="@+id/menu_name"
-					android:text="@string/settings"
+                    android:id="@+id/top_bar_title"
 					style="@style/font1"
-					android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:layout_width="0dp"
 					android:layout_height="match_parent"
-					android:layout_centerInParent="true"
-					android:gravity="center_vertical"/>
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:padding="15dp"/>
 
-				<ImageView
-					android:id="@+id/cancel"
-					android:src="@drawable/dialer_back"
-					android:contentDescription="@string/content_description_dialer_back"
-					android:layout_width="wrap_content"
+                <View
+                    android:layout_width="0dp"
 					android:layout_height="match_parent"
-					android:padding="15dp"
-					android:layout_centerInParent="true"
-					android:layout_alignParentRight="true"/>
+                    android:layout_weight="0.2"/>
 
-			</RelativeLayout>
+            </LinearLayout>
 
 			<LinearLayout
 				android:layout_width="match_parent"
@@ -196,6 +202,7 @@
 						android:visibility="gone"/>
 
 				</RelativeLayout>
+
 			</LinearLayout>
 
 			<LinearLayout
@@ -206,6 +213,7 @@
 				android:orientation="vertical">
 
 			</LinearLayout>
+
 		</RelativeLayout>
 
 	<!-- Side Menu -->
@@ -279,6 +287,7 @@
 				android:background="@color/colorE"/>
 
 		</LinearLayout>
+
 	</RelativeLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

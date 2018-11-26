@@ -5,7 +5,7 @@ def getPackageName() {
 }
 
 def firebaseEnabled() {
-    File googleFile = new File('google-services.json')
+    File googleFile = new File('app/google-services.json')
     return googleFile.exists()
 }
 
@@ -13,10 +13,6 @@ def isLocalAarAvailable() {
     File debugAar = new File('linphone-sdk-android/linphone-sdk-android-debug.aar')
     File releaseAar = new File('linphone-sdk-android/linphone-sdk-android-release.aar')
     return debugAar.exists() || releaseAar.exists()
-}
-
-if (firebaseEnabled()) {
-    apply plugin: 'com.google.gms.google-services'
 }
 
 ///// Exclude Files /////
@@ -51,7 +47,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4103
+        versionCode 4104
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
@@ -122,4 +118,7 @@ dependencies {
         releaseImplementation "org.linphone:liblinphone-sdk:${android.defaultConfig.versionName}"
         debugImplementation "org.linphone:liblinphone-sdk:${android.defaultConfig.versionName}-DEBUG"
     }
+}
+if (firebaseEnabled()) {
+    apply plugin: 'com.google.gms.google-services'
 }
