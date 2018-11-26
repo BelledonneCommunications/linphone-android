@@ -162,10 +162,14 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                     ContactAvatar.displayAvatar(contact, avatarLayout);
                 }
             } else {
-                Address remoteAddr;
+                Address remoteAddr = null;
                 if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
                     Participant[] participants = mRoom.getParticipants();
-                    remoteAddr = participants[0].getAddress();
+                    if (participants.length > 0) {
+                        remoteAddr = participants[0].getAddress();
+                    } else {
+                        //TODO: error
+                    }
                 } else {
                     remoteAddr = mRoom.getPeerAddress();
                 }

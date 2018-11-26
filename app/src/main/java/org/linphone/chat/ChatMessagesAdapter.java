@@ -364,7 +364,10 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
             holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_gray);
 
             Address address = event.getParticipantAddress();
-            String displayName = null;
+            if (address == null && event.getType() == EventLog.Type.ConferenceSecurityEvent) {
+                address = event.getSecurityEventFaultyDeviceAddress();
+            }
+            String displayName = "";
             if (address != null) {
                 LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
                 if (contact != null) {
