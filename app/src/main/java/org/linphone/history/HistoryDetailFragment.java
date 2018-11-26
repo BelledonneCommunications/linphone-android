@@ -45,6 +45,7 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
+import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
