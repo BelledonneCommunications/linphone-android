@@ -111,6 +111,7 @@ import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.receivers.NetworkManager;
 import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneMediaScanner;
 import org.linphone.utils.LinphoneUtils;
 
@@ -1474,7 +1475,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         if (params != null) {
             params.enableLowBandwidth(isLowBandwidthConnection);
-            params.setRecordFile(LinphoneUtils.getCallRecordingFilename(getContext(), call.getRemoteAddress()));
+            params.setRecordFile(FileUtils.getCallRecordingFilename(getContext(), call.getRemoteAddress()));
         } else {
             Log.e("Could not create call params for call");
             return false;

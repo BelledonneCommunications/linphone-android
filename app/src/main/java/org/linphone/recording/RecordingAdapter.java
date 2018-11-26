@@ -22,20 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import org.linphone.R;
-import org.linphone.mediastream.Log;
-import org.linphone.ui.SelectableAdapter;
-import org.linphone.ui.SelectableHelper;
+import org.linphone.utils.SelectableAdapter;
+import org.linphone.utils.SelectableHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,62 +38,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class RecordingAdapter extends SelectableAdapter<RecordingAdapter.ViewHolder> {
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        public ImageView playButton;
-        public TextView name, date, currentPosition, duration;
-        public SeekBar progressionBar;
-        public CheckBox select;
-        public LinearLayout separator;
-        public TextView separatorText;
-        private RecordingAdapter.ViewHolder.ClickListener listener;
-
-        public ViewHolder(View view, RecordingAdapter.ViewHolder.ClickListener listener) {
-            super(view);
-
-            playButton = view.findViewById(R.id.record_play);
-            name = view.findViewById(R.id.record_name);
-            date = view.findViewById(R.id.record_date);
-            currentPosition = view.findViewById(R.id.record_current_time);
-            duration = view.findViewById(R.id.record_duration);
-            progressionBar = view.findViewById(R.id.record_progression_bar);
-            select = view.findViewById(R.id.delete);
-            separator = view.findViewById(R.id.separator);
-            separatorText = view.findViewById(R.id.separator_text);
-
-            this.listener = listener;
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (listener != null) {
-                listener.onItemClicked(getAdapterPosition());
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            if (listener != null) {
-                return listener.onItemLongClicked(getAdapterPosition());
-            }
-            return false;
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-
-            boolean onItemLongClicked(int position);
-        }
-    }
-
+public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
     private List<Recording> recordings;
     private Context context;
-    private RecordingAdapter.ViewHolder.ClickListener clickListener;
+    private RecordingViewHolder.ClickListener clickListener;
 
-    public RecordingAdapter(Context context, List<Recording> recordings, RecordingAdapter.ViewHolder.ClickListener listener, SelectableHelper helper) {
+    public RecordingAdapter(Context context, List<Recording> recordings, RecordingViewHolder.ClickListener listener, SelectableHelper helper) {
         super(helper);
 
         this.recordings = recordings;
@@ -114,14 +58,14 @@ public class RecordingAdapter extends SelectableAdapter<RecordingAdapter.ViewHol
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public RecordingViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recording_cell, viewGroup, false);
-        return new RecordingAdapter.ViewHolder(v, clickListener);
+        return new RecordingViewHolder(v, clickListener);
     }
 
     @SuppressLint("SimpleDateFormat")
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecordingViewHolder viewHolder, int i) {
         final Recording record = recordings.get(i);
 
         viewHolder.name.setSelected(true); // For automated horizontal scrolling of long texts
@@ -168,12 +112,12 @@ public class RecordingAdapter extends SelectableAdapter<RecordingAdapter.ViewHol
         viewHolder.name.setText(record.getName());
         viewHolder.date.setText(new SimpleDateFormat("HH:mm").format(record.getRecordDate()));
 
-        int position = record.getCurrentPosition();
-        viewHolder.currentPosition.setText(String.format("%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(position),
-                TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
-        ));
-        //viewHolder.currentPosition.setText("00:00");
+//        int position = record.getCurrentPosition();
+//        viewHolder.currentPosition.setText(String.format("%02d:%02d",
+//                TimeUnit.MILLISECONDS.toMinutes(position),
+//                TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
+//        ));
+        viewHolder.currentPosition.setText("00:00");
 
         int duration = record.getDuration();
         viewHolder.duration.setText(String.format("%02d:%02d",

@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneUtils;
+import org.linphone.utils.FileUtils;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
@@ -64,7 +64,7 @@ public class CallManager {
             Log.d("Low bandwidth enabled in call params");
         }
 
-        String recordFile = LinphoneUtils.getCallRecordingFilename(LinphoneManager.getInstance().getContext(), lAddress);
+        String recordFile = FileUtils.getCallRecordingFilename(LinphoneManager.getInstance().getContext(), lAddress);
         params.setRecordFile(recordFile);
 
         lc.inviteAddressWithParams(lAddress, params);
