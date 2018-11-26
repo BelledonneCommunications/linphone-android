@@ -163,12 +163,16 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         });
 
         mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LinphoneActivity.instance().goToChatList();
-            }
-        });
+        if (getResources().getBoolean(R.bool.isTablet)) {
+            mBackButton.setVisibility(View.INVISIBLE);
+        } else {
+            mBackButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LinphoneActivity.instance().goToChatList();
+                }
+            });
+        }
 
         mCallButton = view.findViewById(R.id.start_call);
         mCallButton.setOnClickListener(new View.OnClickListener() {
