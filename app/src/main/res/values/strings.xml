@@ -289,6 +289,7 @@
 
     <!-- Recordings -->
     <string name="no_recordings">No recordings.</string>
+    <string name="recordings_delete_dialog">Do you really want to delete and leave the selected recordings?</string>
 
     <!-- About -->
     <string name="menu_send_log">Send log</string>

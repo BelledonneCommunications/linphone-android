@@ -110,6 +110,7 @@ import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.views.AddressText;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.recording.RecordingListFragment;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
@@ -135,7 +136,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private StatusFragment statusFragment;
     private TextView missedCalls, missedChats;
     private RelativeLayout contacts, history, dialer, chat;
-    private View contacts_selected, history_selected, dialer_selected, chat_selected;
+    private View contacts_selected, history_selected, dialer_selected, chat_selected, record_selected;
     private LinearLayout mTopBar;
     private TextView mTopBarTitle;
     private ImageView cancel;
@@ -428,6 +429,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             case CONTACT_DEVICES:
                 fragment = new DevicesFragment();
                 break;
+            case RECORDING_LIST:
+                fragment = new RecordingListFragment();
+                break;
             default:
                 break;
         }
@@ -638,7 +642,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     }
 
     public void displayRecordings() {
-
+        changeCurrentFragment(FragmentsAvailable.RECORDING_LIST, null);
     }
 
     public void displayContactsForEdition(String sipAddress, String displayName) {
@@ -1634,7 +1638,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                         LinphoneActivity.instance().displayInapp();
                     }
                 }
-                if (sideMenuItemList.getAdapter().getItem(i).toString().equals(R.string.menu_recordings)) {
+                if (sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.menu_recordings))) {
                     LinphoneActivity.instance().displayRecordings();
                 }
                 openOrCloseSideMenu(false);
