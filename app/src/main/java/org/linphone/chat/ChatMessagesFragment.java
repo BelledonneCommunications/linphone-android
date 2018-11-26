@@ -59,6 +59,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.LinphoneActivity;
@@ -838,6 +839,11 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         mSendMessageButton.setEnabled(true);
     }
 
+    private Bitmap scaleToFitHeight(Bitmap b, int height) {
+        float factor = height / (float) b.getHeight();
+        return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
+    }
+
     private void addImageToPendingList(String path) {
         if (path == null) {
             Log.e("Can't add image to pending list because it's path is null...");
@@ -850,7 +856,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         ImageView image = pendingImage.findViewById(R.id.pendingImageForUpload);
         Bitmap bm = BitmapFactory.decodeFile(path);
         if (bm == null) return;
-        image.setImageBitmap(bm);
+        image.setImageBitmap(scaleToFitHeight(bm, (int) ImageUtils.dpToPixels(mContext, 100)));
 
         ImageView remove = pendingImage.findViewById(R.id.remove);
         remove.setTag(pendingImage);
