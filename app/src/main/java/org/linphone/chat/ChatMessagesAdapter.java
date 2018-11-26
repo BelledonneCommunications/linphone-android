@@ -181,7 +181,6 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                     break;
                 case ConferenceSecurityEvent:
                     holder.securityEventLayout.setVisibility(View.VISIBLE);
-                    holder.securityEventMessage.setText("TODO");
 
                     switch (event.getSecurityEventType()) {
                         case EncryptionIdentityKeyChanged:
