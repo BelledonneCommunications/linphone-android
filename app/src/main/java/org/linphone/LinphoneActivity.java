@@ -1570,7 +1570,13 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                     }
                     break;
                 case GROUP_CHAT:
+                    hideTopBar(); // just in case
                     LinphoneActivity.instance().goToChatList();
+                    return true;
+                case SETTINGS:
+                case ABOUT:
+                    hideTopBar(); // just in case
+                    LinphoneActivity.instance().goToDialerFragment();
                     return true;
                 default:
                     break;
