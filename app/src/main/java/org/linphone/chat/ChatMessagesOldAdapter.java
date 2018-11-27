@@ -74,7 +74,7 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldViewHolder> {
+public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldViewHolder> implements ChatMessagesGenericAdapter {
 
     private static int MARGIN_BETWEEN_MESSAGES = 10;
     private static int SIDE_MARGIN = 100;

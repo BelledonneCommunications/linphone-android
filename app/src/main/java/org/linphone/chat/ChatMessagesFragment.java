@@ -345,7 +345,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         removeVirtualKeyboardVisiblityListener();
         LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
         if (mChatRoom != null) mChatRoom.removeListener(this);
-        if (mEventsAdapter != null) mEventsAdapter.clear();
+        if (mChatEventsList.getAdapter() != null) ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).clear();
         super.onPause();
     }
 
@@ -409,9 +409,9 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             eventLog.deleteFromDatabase();
         }
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-            mEventsAdapter.refresh(mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE));
+            ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).refresh(mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE));
         } else {
-            mEventsAdapter.refresh(mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE));
+            ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).refresh(mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE));
         }
     }
 
@@ -428,7 +428,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             mContextMenuMessagePosition = holder.getAdapterPosition();
         }
 
-        EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
+        EventLog event = (EventLog) ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).getItem(mContextMenuMessagePosition);
         if (event.getType() != EventLog.Type.ConferenceChatMessage) {
             return;
         }
@@ -463,7 +463,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        EventLog event = (EventLog) mEventsAdapter.getItem(mContextMenuMessagePosition);
+        EventLog event = (EventLog) ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).getItem(mContextMenuMessagePosition);
 
         if (event.getType() != EventLog.Type.ConferenceChatMessage) {
             return super.onContextItemSelected(item);
@@ -473,7 +473,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         String messageId = message.getMessageId();
 
         if (item.getItemId() == R.id.resend) {
-            mEventsAdapter.removeItem(mContextMenuMessagePosition);
+            ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).removeItem(mContextMenuMessagePosition);
             message.resend();
             return true;
         }
@@ -491,7 +491,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         }
         if (item.getItemId() == R.id.delete_message) {
             mChatRoom.deleteMessage(message);
-            mEventsAdapter.removeItem(mContextMenuMessagePosition);
+            ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).removeItem(mContextMenuMessagePosition);
             return true;
         }
         if (item.getItemId() == R.id.add_to_contacts) {
@@ -518,7 +518,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
                     }
                     EventLog[] newLogs = mChatRoom.getHistoryRangeEvents(totalItemsCount, upperBound);
                     ArrayList<EventLog> logsList = new ArrayList<>(Arrays.asList(newLogs));
-                    mEventsAdapter.addAllToHistory(logsList);
+                    ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addAllToHistory(logsList);
                 }
             }
         });
@@ -597,8 +597,8 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             mParticipantsLabel.setText(participantsLabel.toString());
         }
 
-        if (mEventsAdapter != null) {
-            mEventsAdapter.setContacts(mParticipants);
+        if (mChatEventsList.getAdapter() != null) {
+            ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).setContacts(mParticipants);
         }
     }
 
@@ -761,8 +761,8 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     @Override
     public void onItemClicked(int position) {
-        if (mEventsAdapter.isEditionEnabled()) {
-            mEventsAdapter.toggleSelection(position);
+        if (mSelectionHelper.getAdapter().isEditionEnabled()) {
+            mSelectionHelper.getAdapter().toggleSelection(position);
         }
     }
 
@@ -944,7 +944,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     @Override
     public void onChatMessageSent(ChatRoom cr, EventLog event) {
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
@@ -1031,7 +1031,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
         }
 
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
@@ -1099,19 +1099,19 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         getContactsForParticipants();
         displayChatRoomHeader();
 
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
     @Override
     public void onConferenceLeft(ChatRoom cr, EventLog event) {
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
     @Override
     public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
@@ -1123,7 +1123,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
     @Override
     public void onParticipantRemoved(ChatRoom cr, EventLog event) {
         getContactsForParticipants();
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
@@ -1145,7 +1145,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
     @Override
     public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
         updateSecurityLevelIcon();
-        mEventsAdapter.addToHistory(eventLog);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(eventLog);
         scrollToBottom();
     }
 
@@ -1159,14 +1159,14 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
     @Override
     public void onParticipantAdded(ChatRoom cr, EventLog event) {
         getContactsForParticipants();
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
     @Override
     public void onSubjectChanged(ChatRoom cr, EventLog event) {
         mRoomLabel.setText(event.getSubject());
-        mEventsAdapter.addToHistory(event);
+        ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 

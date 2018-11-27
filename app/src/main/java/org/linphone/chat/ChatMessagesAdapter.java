@@ -41,7 +41,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder> {
+public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder> implements ChatMessagesGenericAdapter {
     public static int MAX_TIME_TO_GROUP_MESSAGES = 60;
 
     private Context mContext;

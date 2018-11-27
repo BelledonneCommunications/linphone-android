@@ -130,6 +130,10 @@ public class SelectableHelper {
         mEditButton.setEnabled(mAdapter.getItemCount() != 0);
     }
 
+    public SelectableAdapter getAdapter() {
+        return mAdapter;
+    }
+
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
         if (isSelectionEmpty) {
             mDeleteSelectionButton.setEnabled(false);
