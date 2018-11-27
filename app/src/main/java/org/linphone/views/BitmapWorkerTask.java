@@ -95,13 +95,6 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                     } else {
                         matrix.postRotate(270);
                     }
-                    if (imageView != null) {
-                        if (pictureOrientation == 6 || pictureOrientation == 8) {
-                            matrix.postScale(1, imageView.getMeasuredHeight() / (float) bm.getHeight());
-                        } else {
-                            matrix.postScale(imageView.getMeasuredHeight() / (float) bm.getHeight(), 1);
-                        }
-                    }
                     thumbnail = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
                     if (thumbnail != bm) {
                         bm.recycle();
