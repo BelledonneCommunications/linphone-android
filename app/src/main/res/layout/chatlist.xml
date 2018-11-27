@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorH"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/top_bar"
@@ -65,7 +65,7 @@
 
         <include layout="@layout/edit_list"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,9 +80,9 @@
         android:text="@string/no_chat_history"
         style="@style/font6"
         android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
     <include layout="@layout/wait_layout" android:id="@+id/waitScreen"/>
 

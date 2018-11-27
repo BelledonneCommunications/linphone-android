@@ -53,13 +53,6 @@
         android:gravity="center_horizontal"
         android:layout_below="@id/top">
 
-        <include
-            android:id="@+id/bubble"
-            layout="@layout/chat_bubble"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"/>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -68,6 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <include
+                    android:id="@+id/bubble"
+                    layout="@layout/chat_bubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"/>
 
                 <LinearLayout
                     android:id="@+id/read_layout_header"
@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font27"
+                        style="@style/imdn_read_font"
                         android:text="@string/displayed"/>
 
                     <ImageView
@@ -108,7 +108,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font28"
+                        style="@style/imdn_delivered_sent_font"
                         android:text="@string/delivered"/>
 
                     <ImageView
@@ -136,7 +136,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font28"
+                        style="@style/imdn_delivered_sent_font"
                         android:text="@string/sent"/>
 
                     <ImageView
@@ -165,7 +165,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/font29"
+                        style="@style/imdn_undelivered_font"
                         android:text="@string/error"/>
 
                     <ImageView

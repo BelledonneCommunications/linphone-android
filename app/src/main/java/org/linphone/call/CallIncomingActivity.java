@@ -26,7 +26,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -56,7 +56,6 @@ import org.linphone.views.CallIncomingButtonListener;
 import org.linphone.views.CallIncomingDeclineButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
     private static CallIncomingActivity instance;

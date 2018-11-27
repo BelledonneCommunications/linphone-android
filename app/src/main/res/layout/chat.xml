@@ -176,7 +176,7 @@
 		android:layout_height="wrap_content"
 		android:layout_above="@id/footer"/>
 
-	<android.support.v7.widget.RecyclerView
+	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/chat_message_list"
 		android:divider="@android:color/transparent"
 		android:choiceMode="multipleChoice"
@@ -186,8 +186,6 @@
 		android:layout_above="@id/remote_composing"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_marginRight="10dp"
-		android:layout_marginLeft="10dp"
 		android:layout_below="@+id/top"/>
 
 	<ImageView

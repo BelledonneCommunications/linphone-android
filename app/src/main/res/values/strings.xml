@@ -239,6 +239,7 @@
     <string name="security_level_downgraded">Security level downgraded because of %s</string>
     <string name="participant_max_count_exceeded">Max participant count exceeded by %s</string>
     <string name="unexpected_event">Unexpected event %i for %s</string>
+    <string name="download_file">Download</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

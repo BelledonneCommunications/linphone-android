@@ -35,8 +35,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -56,6 +56,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.utils.FileUtils;
@@ -167,12 +168,12 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         if (getResources().getBoolean(R.bool.isTablet)) {
             mBackButton.setVisibility(View.INVISIBLE);
         } else {
-            mBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LinphoneActivity.instance().goToChatList();
-                }
-            });
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LinphoneActivity.instance().goToChatList();
+            }
+        });
         }
 
         mCallButton = view.findViewById(R.id.start_call);

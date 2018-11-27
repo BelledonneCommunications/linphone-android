@@ -22,7 +22,7 @@ package org.linphone.chat;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -156,8 +156,8 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                 if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
                     Participant[] participants = mRoom.getParticipants();
                     if (participants.length > 0) {
-                        remoteAddr = participants[0].getAddress();
-                    } else {
+                    remoteAddr = participants[0].getAddress();
+                } else {
                         //TODO: error
                     }
                 } else {

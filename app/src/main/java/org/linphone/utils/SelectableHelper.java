@@ -21,7 +21,7 @@ package org.linphone.utils;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;

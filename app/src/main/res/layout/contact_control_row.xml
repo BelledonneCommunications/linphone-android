@@ -50,7 +50,7 @@
 				android:layout_alignParentRight="true"
 				android:layout_centerVertical="true"
 				android:layout_marginRight="10dp"
-				android:textAppearance="@style/font33"
+				android:textAppearance="@style/contact_invite_font"
 				android:text="@string/invite_friend" />
 
 		</RelativeLayout>

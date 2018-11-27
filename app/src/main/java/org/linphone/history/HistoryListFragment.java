@@ -22,9 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -130,6 +130,9 @@ public class HistoryListFragment extends Fragment implements OnClickListener, On
 
     private void hideHistoryListAndDisplayMessageIfEmpty() {
         removeNotMissedCallsFromLogs();
+        noCallHistory.setVisibility(View.GONE);
+        noMissedCallHistory.setVisibility(View.GONE);
+        
         if (mLogs.isEmpty()) {
             if (mOnlyDisplayMissedCalls) {
                 noMissedCallHistory.setVisibility(View.VISIBLE);
