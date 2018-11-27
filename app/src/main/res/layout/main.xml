@@ -38,7 +38,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.2"
-                    android:padding="15dp"/>
+                    android:padding="18dp"/>
 
                 <TextView
                     android:id="@+id/top_bar_title"
