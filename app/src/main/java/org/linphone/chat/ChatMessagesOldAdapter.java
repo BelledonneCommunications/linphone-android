@@ -1,3 +1,5 @@
+package org.linphone.chat;
+
 /*
 ChatMessagesAdapter.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -17,8 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -33,8 +33,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -74,7 +74,7 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
-public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageViewHolder> {
+public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldViewHolder> {
 
     private static int MARGIN_BETWEEN_MESSAGES = 10;
     private static int SIDE_MARGIN = 100;
@@ -86,9 +86,9 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageViewHol
     private ChatMessagesFragment mFragment;
     private ChatMessageListenerStub mListener;
 
-    private ChatMessageViewHolder.ClickListener mClickListener;
+    private ChatMessageViewHolderClickListener mClickListener;
 
-    public ChatMessagesOldAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolder.ClickListener clickListener) {
+    public ChatMessagesOldAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolderClickListener clickListener) {
         super(helper);
         mFragment = fragment;
         mContext = mFragment.getActivity();
@@ -100,7 +100,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageViewHol
         mListener = new ChatMessageListenerStub() {
             @Override
             public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-                ChatMessageViewHolder holder = (ChatMessageViewHolder) message.getUserData();
+                ChatMessageOldViewHolder holder = (ChatMessageOldViewHolder) message.getUserData();
                 if (holder == null) return;
 
                 if (offset == total) {
@@ -136,10 +136,10 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageViewHol
     }
 
     @Override
-    public ChatMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ChatMessageOldViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(mItemResource, parent, false);
-        ChatMessageViewHolder VH = new ChatMessageViewHolder(mContext, v, mClickListener);
+        ChatMessageOldViewHolder VH = new ChatMessageOldViewHolder(mContext, v, mClickListener);
 
         //Allows onLongClick ContextMenu on bubbles
         mFragment.registerForContextMenu(v);
@@ -148,7 +148,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ChatMessageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ChatMessageOldViewHolder holder, int position) {
         final EventLog event = mHistory.get(position);
         holder.eventLayout.setVisibility(View.GONE);
         holder.bubbleLayout.setVisibility(View.GONE);
@@ -528,7 +528,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageViewHol
         mContext.startActivity(intent);
     }
 
-    private void displayAttachedFile(ChatMessage message, ChatMessageViewHolder holder) {
+    private void displayAttachedFile(ChatMessage message, ChatMessageOldViewHolder holder) {
         holder.fileName.setVisibility(View.VISIBLE);
 
         String appData = message.getAppdata();

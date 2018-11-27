@@ -1,3 +1,5 @@
+package org.linphone.chat;
+
 /*
 ChatMessagesAdapter.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -16,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-
-package org.linphone.chat;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -50,9 +50,9 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     private int mItemResource;
     private ChatMessagesFragment mFragment;
 
-    private ChatMessageViewHolder.ClickListener mClickListener;
+    private ChatMessageViewHolderClickListener mClickListener;
 
-    public ChatMessagesAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolder.ClickListener clickListener) {
+    public ChatMessagesAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolderClickListener clickListener) {
         super(helper);
         mFragment = fragment;
         mContext = mFragment.getActivity();

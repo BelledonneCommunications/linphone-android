@@ -1,3 +1,5 @@
+package org.linphone.chat;
+
 /*
 ChatMessageViewHolder.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
@@ -17,10 +19,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -63,9 +64,9 @@ public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder implements
     public Button openFileButton;
 
     public CheckBox delete;
-    private ClickListener mListener;
+    private ChatMessageViewHolderClickListener mListener;
 
-    public ChatMessageOldViewHolder(Context context, View view, ClickListener listener) {
+    public ChatMessageOldViewHolder(Context context, View view, ChatMessageViewHolderClickListener listener) {
         this(view);
         mContext = context;
         mListener = listener;
@@ -108,9 +109,5 @@ public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder implements
         if (mListener != null) {
             mListener.onItemClicked(getAdapterPosition());
         }
-    }
-
-    public interface ClickListener {
-        void onItemClicked(int position);
     }
 }

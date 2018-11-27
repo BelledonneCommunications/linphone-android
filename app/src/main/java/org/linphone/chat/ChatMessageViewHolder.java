@@ -91,9 +91,9 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     public CheckBox deleteEvent;
     public CheckBox deleteMessage;
-    private ClickListener mListener;
+    private ChatMessageViewHolderClickListener mListener;
 
-    public ChatMessageViewHolder(Context context, View view, ClickListener listener) {
+    public ChatMessageViewHolder(Context context, View view, ChatMessageViewHolderClickListener listener) {
         this(view);
         mContext = context;
         mListener = listener;
@@ -129,10 +129,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (mListener != null) {
             mListener.onItemClicked(getAdapterPosition());
         }
-    }
-
-    public interface ClickListener {
-        void onItemClicked(int position);
     }
 
     public void bindMessage(final ChatMessage message, LinphoneContact contact) {

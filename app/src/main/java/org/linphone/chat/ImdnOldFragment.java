@@ -1,3 +1,5 @@
+package org.linphone.chat;
+
 /*
 ImdnOldFragment.java
 Copyright (C) 2010-2018  Belledonne Communications, Grenoble, France
@@ -17,20 +19,25 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
 import android.app.Fragment;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
+import org.linphone.LinphoneActivity;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -40,16 +47,13 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
-import androidx.annotation.Nullable;
-
-public class ImdnFragment extends Fragment {
+public class ImdnOldFragment extends Fragment {
     private LayoutInflater mInflater;
     private LinearLayout mRead, mReadHeader, mDelivered, mDeliveredHeader, mSent, mSentHeader, mUndelivered, mUndeliveredHeader;
     private ImageView mBackButton;
-    private ChatMessageViewHolder mBubble;
+    private ChatMessageOldViewHolder mBubble;
     private ViewGroup mContainer;
 
     private String mRoomUri, mMessageId;
@@ -74,7 +78,7 @@ public class ImdnFragment extends Fragment {
 
         mInflater = inflater;
         mContainer = container;
-        View view = mInflater.inflate(R.layout.chat_imdn, container, false);
+        View view = mInflater.inflate(R.layout.chat_imdn_old, container, false);
 
         mBackButton = view.findViewById(R.id.back);
         mBackButton.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +101,18 @@ public class ImdnFragment extends Fragment {
         mSentHeader = view.findViewById(R.id.sent_layout_header);
         mUndeliveredHeader = view.findViewById(R.id.undelivered_layout_header);
 
-        mBubble = new ChatMessageViewHolder(getActivity(), view.findViewById(R.id.bubble), null);
+        mBubble = new ChatMessageOldViewHolder(view.findViewById(R.id.bubble));
+        mBubble.eventLayout.setVisibility(View.GONE);
+        mBubble.bubbleLayout.setVisibility(View.VISIBLE);
+        mBubble.delete.setVisibility(View.GONE);
+        mBubble.messageText.setVisibility(View.GONE);
+        mBubble.messageImage.setVisibility(View.GONE);
+        mBubble.fileTransferLayout.setVisibility(View.GONE);
+        mBubble.fileName.setVisibility(View.GONE);
+        mBubble.openFileButton.setVisibility(View.GONE);
+        mBubble.messageStatus.setVisibility(View.INVISIBLE);
+        mBubble.messageSendingInProgress.setVisibility(View.GONE);
+        mBubble.imdmLayout.setVisibility(View.INVISIBLE);
 
         mMessage = mRoom.findMessage(mMessageId);
         mListener = new ChatMessageListenerStub() {
@@ -108,6 +123,23 @@ public class ImdnFragment extends Fragment {
         };
         if (mMessage == null) return null;
         mMessage.setListener(mListener);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.setMargins(100, 10, 10, 10);
+        if (mMessage.isOutgoing()) {
+            mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
+            Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
+            Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
+            mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
+            ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_chat_mask_outgoing);
+        } else {
+            mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
+            Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font9);
+            Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font8);
+            mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+            ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_chat_mask);
+        }
 
         return view;
     }
@@ -121,31 +153,41 @@ public class ImdnFragment extends Fragment {
         }
 
         refreshInfo();
-        mMessage.setListener(new ChatMessageListenerStub() {
-            @Override
-            public void onParticipantImdnStateChanged(ChatMessage msg, ParticipantImdnState state) {
-                refreshInfo();
-            }
-        });
-    }
-
-    @Override
-    public void onPause() {
-        mMessage.setListener(null);
-        super.onPause();
     }
 
     private void refreshInfo() {
         Address remoteSender = mMessage.getFromAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
+        String displayName;
 
-        mBubble.deleteMessage.setVisibility(View.GONE);
-        mBubble.deleteEvent.setVisibility(View.GONE);
-        mBubble.eventLayout.setVisibility(View.GONE);
-        mBubble.securityEventLayout.setVisibility(View.GONE);
-        mBubble.rightAnchor.setVisibility(View.GONE);
-        mBubble.bubbleLayout.setVisibility(View.GONE);
-        mBubble.bindMessage(mMessage, contact);
+        if (contact != null) {
+            if (contact.getFullName() != null) {
+                displayName = contact.getFullName();
+            } else {
+                displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+            }
+
+            ContactAvatar.displayAvatar(contact, mBubble.avatarLayout);
+        } else {
+            displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
+            ContactAvatar.displayAvatar(displayName, mBubble.avatarLayout);
+        }
+        mBubble.contactName.setText(LinphoneUtils.timestampToHumanDate(getActivity(), mMessage.getTime(), R.string.messages_date_format) + " - " + displayName);
+
+        if (mMessage.hasTextContent()) {
+            String msg = mMessage.getTextContent();
+            Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
+            mBubble.messageText.setText(text);
+            mBubble.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+            mBubble.messageText.setVisibility(View.VISIBLE);
+        }
+
+        String appData = mMessage.getAppdata();
+        if (appData != null) { // Something to display
+            mBubble.fileName.setVisibility(View.VISIBLE);
+            mBubble.fileName.setText(FileUtils.getNameFromFilePath(appData));
+            // We purposely chose not to display the image
+        }
 
         mRead.removeAllViews();
         mDelivered.removeAllViews();

@@ -66,6 +66,8 @@ import org.linphone.LinphoneManager.AddressType;
 import org.linphone.chat.ChatMessagesFragment;
 import org.linphone.chat.ChatRoomCreationFragment;
 import org.linphone.chat.ChatRoomsFragment;
+import org.linphone.chat.ImdnFragment;
+import org.linphone.chat.ImdnOldFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.assistant.RemoteProvisioningLoginActivity;
@@ -74,7 +76,6 @@ import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
 import org.linphone.chat.DevicesFragment;
 import org.linphone.chat.GroupInfoFragment;
-import org.linphone.chat.ImdnFragment;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactDetailsFragment;
@@ -423,7 +424,11 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                 fragment = new ChatMessagesFragment();
                 break;
             case MESSAGE_IMDN:
-                fragment = new ImdnFragment();
+                if (getResources().getBoolean(R.bool.use_new_chat_bubbles_layout)) {
+                    fragment = new ImdnFragment();
+                } else {
+                    fragment = new ImdnOldFragment();
+                }
                 break;
             case CONTACT_DEVICES:
                 fragment = new DevicesFragment();
