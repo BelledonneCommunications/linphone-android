@@ -42,25 +42,18 @@ import org.linphone.core.Participant;
 import org.linphone.views.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-    private Bitmap mDefaultBitmap;
-    private Bitmap mDefaultGroupBitmap;
-
     public TextView lastMessageView;
     public TextView date;
     public TextView displayName;
     public TextView unreadMessages;
     public CheckBox delete;
     public RelativeLayout avatarLayout;
-    public ImageView lastMessageFileTransfer;
     public Context mContext;
     public ChatRoom mRoom;
     private ClickListener mListener;
 
     public ChatRoomViewHolder(Context context, View itemView, ClickListener listener) {
         super(itemView);
-
-        mDefaultBitmap = ContactsManager.getInstance().getDefaultAvatarBitmap();
-        mDefaultGroupBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.chat_group_avatar);
 
         mContext = context;
         lastMessageView = itemView.findViewById(R.id.lastMessage);
@@ -69,7 +62,6 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         unreadMessages = itemView.findViewById(R.id.unreadMessages);
         delete = itemView.findViewById(R.id.delete_chatroom);
         avatarLayout = itemView.findViewById(R.id.avatar_layout);
-        lastMessageFileTransfer = itemView.findViewById(R.id.lastMessageFileTransfer);
         mListener = listener;
 
         itemView.setOnClickListener(this);
@@ -79,7 +71,6 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
     public void bindChatRoom(ChatRoom room) {
         mRoom = room;
         ChatMessage lastMessage = mRoom.getLastMessageInHistory();
-        lastMessageFileTransfer.setVisibility(View.GONE);
 
         if (lastMessage != null) {
             String text = lastMessage.getTextContent();
@@ -87,12 +78,13 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                 lastMessageView.setText(getSender(mRoom) + text);
             }
             date.setText(LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format));
+            String files = "";
             for (Content c : lastMessage.getContents()) {
                 if (c.isFile() || c.isFileTransfer()) {
-                    lastMessageView.setText(getSender(mRoom));
-                    lastMessageFileTransfer.setVisibility(View.VISIBLE);
+                    files += c.getName() + " ";
                 }
             }
+            lastMessageView.setText(getSender(mRoom) + files);
         } else {
             date.setText("");
             lastMessageView.setText("");
