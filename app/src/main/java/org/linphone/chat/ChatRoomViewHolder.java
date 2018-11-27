@@ -73,18 +73,16 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         ChatMessage lastMessage = mRoom.getLastMessageInHistory();
 
         if (lastMessage != null) {
-            String text = lastMessage.getTextContent();
-            if (text != null && text.length() > 0) {
-                lastMessageView.setText(getSender(mRoom) + text);
-            }
-            date.setText(LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format));
-            String files = "";
+            String messageContent = "";
             for (Content c : lastMessage.getContents()) {
                 if (c.isFile() || c.isFileTransfer()) {
-                    files += c.getName() + " ";
+                    messageContent += c.getName() + " ";
+                } else if (c.isText()) {
+                    messageContent = c.getStringBuffer() + " " + messageContent;
                 }
             }
-            lastMessageView.setText(getSender(mRoom) + files);
+            lastMessageView.setText(getSender(mRoom) + messageContent);
+            date.setText(LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format));
         } else {
             date.setText("");
             lastMessageView.setText("");
