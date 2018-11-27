@@ -425,6 +425,16 @@
     <string name="lime_encryption_entry_mandatory">Mandatory</string>
     <string name="lime_encryption_entry_preferred">Preferred</string>
     <string name="lime_encryption_enable_zrtp">LIME requires ZRTP encryption.\nBy activating LIME you automatically activate ZRTP media encryption.</string>
+    <string name="pref_auto_download_policy_title">Auto download incoming files policy</string>
+    <string name="pref_auto_download_max_size_title">Max size in bytes to auto download incoming files</string>
+    <string-array name="pref_auto_download_policy_entries_labels">
+        <item>@string/pref_auto_download_disabled</item>
+        <item>@string/pref_auto_download_always</item>
+        <item>@string/pref_auto_download_under_size</item>
+    </string-array>
+    <string name="pref_auto_download_disabled">Never</string>
+    <string name="pref_auto_download_always">Always</string>
+    <string name="pref_auto_download_under_size">If lighter than given size (see below setting)</string>
 
     <!-- Network settings -->
     <string name="pref_network_title">Network</string>

@@ -483,8 +483,8 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     private void initLimeEncryptionPreference(ListPreference pref) {
-        List<CharSequence> entries = new ArrayList<CharSequence>();
-        List<CharSequence> values = new ArrayList<CharSequence>();
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> values = new ArrayList<>();
         entries.add(getString(R.string.lime_encryption_entry_disabled));
         values.add(LimeState.Disabled.toString());
 
@@ -510,6 +510,20 @@ public class SettingsFragment extends PreferencesListFragment {
             pref.setSummary(getString(R.string.lime_encryption_entry_preferred));
         }
         pref.setValue(lime.toString());
+    }
+
+    private void initAutoDownloadPolicyPreference(ListPreference pref) {
+        int max_size = mPrefs.getAutoDownloadFileMaxSize();
+        if (max_size == -1) {
+            pref.setSummary(getString(R.string.pref_auto_download_disabled));
+            pref.setValue(getString(R.string.pref_auto_download_policy_disabled_key));
+        } else if (max_size == 0) {
+            pref.setSummary(getString(R.string.pref_auto_download_always));
+            pref.setValue(getString(R.string.pref_auto_download_policy_always_key));
+        } else {
+            pref.setSummary(getString(R.string.pref_auto_download_under_size));
+            pref.setValue(getString(R.string.pref_auto_download_policy_size_key));
+        }
     }
 
     private static void setListPreferenceValues(ListPreference pref, List<CharSequence> entries, List<CharSequence> values) {
@@ -1100,6 +1114,10 @@ public class SettingsFragment extends PreferencesListFragment {
     private void initChatSettings() {
         setPreferenceDefaultValueAndSummary(R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
         initLimeEncryptionPreference((ListPreference) findPreference(getString(R.string.pref_use_lime_encryption_key)));
+        initAutoDownloadPolicyPreference((ListPreference) findPreference(getString(R.string.pref_auto_download_policy_key)));
+        int max_size = mPrefs.getAutoDownloadFileMaxSize();
+        setPreferenceDefaultValueAndSummary(R.string.pref_auto_download_max_size_key, String.valueOf(max_size));
+        findPreference(getString(R.string.pref_auto_download_max_size_key)).setEnabled(max_size > 0);
         if (Version.sdkStrictlyBelow(Version.API26_O_80)) {
             findPreference(getString(R.string.pref_android_app_notif_settings_key)).setLayoutResource(R.layout.hidden);
         }
@@ -1156,7 +1174,33 @@ public class SettingsFragment extends PreferencesListFragment {
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                     context.startActivity(i);
+                    return true;
                 }
+            }
+        });
+
+        findPreference(getString(R.string.pref_auto_download_policy_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String value = (String)newValue;
+                int size = Integer.valueOf(value);
+                mPrefs.setAutoDownloadFileMaxSize(size);
+                initAutoDownloadPolicyPreference((ListPreference) findPreference(getString(R.string.pref_auto_download_policy_key)));
+                setPreferenceDefaultValueAndSummary(R.string.pref_auto_download_max_size_key, String.valueOf(size));
+                findPreference(getString(R.string.pref_auto_download_max_size_key)).setEnabled(size > 0);
+                return true;
+                }
+        });
+
+        findPreference(getString(R.string.pref_auto_download_max_size_key)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String value = (String)newValue;
+                int size = Integer.valueOf(value);
+                mPrefs.setAutoDownloadFileMaxSize(size);
+                preference.setSummary(String.valueOf(size));
+                preference.setEnabled(size > 0);
+                initAutoDownloadPolicyPreference((ListPreference) findPreference(getString(R.string.pref_auto_download_policy_key)));
                 return true;
             }
         });

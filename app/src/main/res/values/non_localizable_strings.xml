@@ -116,6 +116,16 @@
 	<string name="pref_codec_bitrate_limit_key">pref_codec_bitrate_limit_key</string>
 	<string name="pref_adaptive_rate_control_key">pref_adaptive_rate_control_key</string>
 	<string name="pref_echo_tester_key">pref_echo_tester_key</string>
+	<string name="pref_auto_download_policy_key">pref_auto_download_policy_key</string>
+	<string name="pref_auto_download_max_size_key">pref_auto_download_max_size_key</string>
+	<string name="pref_auto_download_policy_disabled_key">-1</string>
+	<string name="pref_auto_download_policy_always_key">0</string>
+	<string name="pref_auto_download_policy_size_key">10000000</string>
+	<string-array name="pref_auto_download_policy_entries_values">
+		<item>@string/pref_auto_download_policy_disabled_key</item>
+		<item>@string/pref_auto_download_policy_always_key</item>
+		<item>@string/pref_auto_download_policy_size_key</item>
+	</string-array>
 
 	<string name="push_reg_id_key">push_reg_id_key</string>
 	<string name="push_sender_id_key">push_sender_id_key</string>
