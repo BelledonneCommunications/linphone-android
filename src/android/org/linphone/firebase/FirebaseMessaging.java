@@ -27,6 +27,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.LinphoneUtils;
+import org.linphone.mediastream.Log;
 
 import static android.content.Intent.ACTION_MAIN;
 
@@ -40,11 +41,15 @@ public class FirebaseMessaging extends FirebaseMessagingService {
 
         if (!LinphoneService.isReady()) {
             android.util.Log.i("FirebaseMessaging", "[Push Notification] Starting Service");
-            startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
+            Intent intent = new Intent(ACTION_MAIN);
+            intent.setClass(this, LinphoneService.class);
+            intent.putExtra("PushNotification", true);
+            startService(intent);
         } else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
             LinphoneUtils.dispatchOnUIThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.i("[Push Notification] Push notification received with LinphoneManager still alive");
                     if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
                         LinphoneManager.getLc().setNetworkReachable(false);
                         LinphoneManager.getLc().setNetworkReachable(true);
