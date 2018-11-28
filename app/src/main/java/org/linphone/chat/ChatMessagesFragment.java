@@ -510,15 +510,25 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                int maxSize = mChatRoom.getHistoryEventsSize();
+                int maxSize;
+                if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                    maxSize = mChatRoom.getHistorySize();
+                } else {
+                    maxSize = mChatRoom.getHistoryEventsSize();
+                }
                 if (totalItemsCount < maxSize) {
                     int upperBound = totalItemsCount + MESSAGES_PER_PAGE;
                     if (upperBound > maxSize) {
                         upperBound = maxSize;
                     }
-                    EventLog[] newLogs = mChatRoom.getHistoryRangeEvents(totalItemsCount, upperBound);
+                    EventLog[] newLogs;
+                    if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+                        newLogs = mChatRoom.getHistoryRangeMessageEvents(totalItemsCount, upperBound);
+                    } else {
+                        newLogs = mChatRoom.getHistoryRangeEvents(totalItemsCount, upperBound);
+                    }
                     ArrayList<EventLog> logsList = new ArrayList<>(Arrays.asList(newLogs));
-                    ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addAllToHistory(logsList);
+                    ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addAllToHistory(logsList);
                 }
             }
         });
