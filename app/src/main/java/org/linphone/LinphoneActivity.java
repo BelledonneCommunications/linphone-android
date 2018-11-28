@@ -972,7 +972,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             missedChats.clearAnimation();
             missedChats.setVisibility(View.GONE);
         }
-        if (currentFragment == FragmentsAvailable.CHAT_LIST) {
+        if (currentFragment == FragmentsAvailable.CHAT_LIST && fragment != null && fragment instanceof ChatRoomsFragment) {
             ((ChatRoomsFragment)fragment).invalidate();
         }
     }

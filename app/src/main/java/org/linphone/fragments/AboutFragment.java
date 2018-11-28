@@ -59,7 +59,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
         TextView aboutVersion = view.findViewById(R.id.about_android_version);
         TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
         aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
-        aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
+        aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
 
         sendLogButton = view.findViewById(R.id.send_log);
         sendLogButton.setOnClickListener(this);
