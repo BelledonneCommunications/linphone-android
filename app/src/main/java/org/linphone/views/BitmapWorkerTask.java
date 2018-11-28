@@ -86,16 +86,23 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 // Rotate the bitmap if possible/needed, using EXIF data
                 Matrix matrix = new Matrix();
                 ExifInterface exif = new ExifInterface(path);
+                int width = bm.getWidth();
+                int height = bm.getHeight();
+
                 int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
                 if (pictureOrientation == 6 || pictureOrientation == 3 || pictureOrientation == 8) {
-                    if (pictureOrientation == 6) {
-                        matrix.postRotate(90);
-                    } else if (pictureOrientation == 3) {
-                        matrix.postRotate(180);
-                    } else {
-                        matrix.postRotate(270);
+                    if (imageView != null) {
+                        float factor = (float) imageView.getMeasuredHeight() / height;
+                        matrix.postScale(factor, factor);
                     }
-                    thumbnail = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+                    if (pictureOrientation == 6) {
+                        matrix.preRotate(90);
+                    } else if (pictureOrientation == 3) {
+                        matrix.preRotate(180);
+                    } else {
+                        matrix.preRotate(270);
+                    }
+                    thumbnail = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
                     if (thumbnail != bm) {
                         bm.recycle();
                         bm = null;
