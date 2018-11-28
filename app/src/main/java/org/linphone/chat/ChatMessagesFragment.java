@@ -989,10 +989,10 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
                 if (contact != null) {
                     LinphoneService.instance().getNotificationManager().displayMessageNotification(from.asStringUriOnly(),
-                            contact.getFullName(), contact.getThumbnailUri(), getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress(), msg.getTime());
+                            contact.getFullName(), contact.getThumbnailUri(), getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress(), msg.getTime(), null, null);
                 } else {
                     LinphoneService.instance().getNotificationManager().displayMessageNotification(from.asStringUriOnly(),
-                            from.getUsername(), null, getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress(), msg.getTime());
+                            from.getUsername(), null, getString(R.string.message_cant_be_decrypted_notif), cr.getLocalAddress(), msg.getTime(), null, null);
                 }
             }
         } else if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {

@@ -192,7 +192,7 @@ public class FileUtils {
         if (!file.isDirectory() || !file.exists()) {
             Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
             file.mkdirs();
-            LinphoneManager.getInstance().getMediaScanner().scanFile(file);
+            LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
         }
         return storageDir;
     }
@@ -206,7 +206,7 @@ public class FileUtils {
                 }
             }
         }
-        LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData));
+        LinphoneManager.getInstance().getMediaScanner().scanFile(new File(appData), null);
     }
 
     private static Uri createCvsFromString(String vcardString) {
@@ -240,5 +240,12 @@ public class FileUtils {
         } catch (RuntimeException e) {
             return new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         }
+    }
+
+    public static String getMimeFromFile(String path) {
+        if (isExtensionImage(path)) {
+            return "image/" + getExtensionFromFileName(path);
+        }
+        return "file/" + getExtensionFromFileName(path);
     }
 }

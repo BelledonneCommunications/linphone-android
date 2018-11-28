@@ -26,11 +26,14 @@ import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import org.linphone.R;
+import org.linphone.mediastream.Log;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
+import org.linphone.utils.FileUtils;
 
 import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
@@ -70,7 +73,9 @@ public class ApiTwentyFourPlus {
 
 		Notification.MessagingStyle style = new Notification.MessagingStyle(notif.getMyself());
 		for (NotifiableMessage message : notif.getMessages()) {
-			style.addMessage(message.getMessage(), message.getTime(), message.getSender());
+            Notification.MessagingStyle.Message msg = new Notification.MessagingStyle.Message(message.getMessage(), message.getTime(), message.getSender());
+            if (message.getFilePath() != null) msg.setData(message.getFileMime(), message.getFilePath());
+            style.addMessage(msg);
 		}
 		if (notif.isGroup()) {
 			style.setConversationTitle(notif.getGroupTitle());

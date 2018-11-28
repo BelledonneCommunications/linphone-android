@@ -28,12 +28,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
+import android.net.Uri;
 
 import org.linphone.R;
 import org.linphone.mediastream.Log;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
+import org.linphone.utils.FileUtils;
 
 import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
@@ -66,7 +68,9 @@ public class ApiTwentyEightPlus {
         for (NotifiableMessage message : notif.getMessages()) {
             Icon userIcon = Icon.createWithBitmap(message.getSenderBitmap());
             Person user = new Person.Builder().setName(message.getSender()).setIcon(userIcon).build();
-            style.addMessage(message.getMessage(), message.getTime(), user);
+            Notification.MessagingStyle.Message msg = new Notification.MessagingStyle.Message(message.getMessage(), message.getTime(), user);
+            if (message.getFilePath() != null) msg.setData(message.getFileMime(), message.getFilePath());
+            style.addMessage(msg);
         }
         if (notif.isGroup()) {
             style.setConversationTitle(notif.getGroupTitle());

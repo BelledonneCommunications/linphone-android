@@ -20,17 +20,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 public class NotifiableMessage {
     String mMessage;
     String mSender;
     long mTime;
     Bitmap mSenderBitmap;
+    Uri mFilePath;
+    String mFileMime;
 
-    public NotifiableMessage(String message, String sender, long time) {
+    public NotifiableMessage(String message, String sender, long time, Uri filePath, String fileMime) {
         mMessage = message;
         mSender = sender;
         mTime = time;
+        mFilePath = filePath;
+        mFileMime = fileMime;
     }
 
     public String getMessage() {
@@ -51,5 +56,13 @@ public class NotifiableMessage {
 
     public void setSenderBitmap(Bitmap bm) {
         mSenderBitmap = bm;
+    }
+
+    public Uri getFilePath() {
+        return mFilePath;
+    }
+
+    public String getFileMime() {
+        return mFileMime;
     }
 }

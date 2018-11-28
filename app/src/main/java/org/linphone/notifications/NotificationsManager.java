@@ -130,7 +130,7 @@ public class NotificationsManager {
         return null;
     }
 
-    public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message, Address localIdentity, long timestamp) {
+    public void displayGroupChatMessageNotification(String subject, String conferenceAddress, String fromName, Uri fromPictureUri, String message, Address localIdentity, long timestamp, Uri filePath, String fileMime) {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
@@ -138,7 +138,7 @@ public class NotificationsManager {
 
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(conferenceAddress);
-        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
+        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp, filePath, fileMime);
         if (notif == null) {
             notif = new Notifiable(mLastNotificationId);
             mLastNotificationId += 1;
@@ -157,7 +157,7 @@ public class NotificationsManager {
         sendNotification(notif.getNotificationId(), notification);
     }
 
-    public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message, Address localIdentity, long timestamp) {
+    public void displayMessageNotification(String fromSipUri, String fromName, Uri fromPictureUri, String message, Address localIdentity, long timestamp, Uri filePath, String fileMime) {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", fromSipUri);
@@ -169,7 +169,7 @@ public class NotificationsManager {
 
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(fromSipUri);
-        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp);
+        NotifiableMessage notifMessage = new NotifiableMessage(message, fromName, timestamp, filePath, fileMime);
         if (notif == null) {
             notif = new Notifiable(mLastNotificationId);
             mLastNotificationId += 1;

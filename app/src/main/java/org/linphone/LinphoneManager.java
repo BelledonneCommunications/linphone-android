@@ -111,8 +111,10 @@ import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.receivers.NetworkManager;
 import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneMediaScanner;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.MediaScannerListener;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -482,10 +484,19 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         int camId = 0;
         AndroidCamera[] cameras = AndroidCameraConfiguration.retrieveCameras();
         for (AndroidCamera androidCamera : cameras) {
-            if (androidCamera.frontFacing == useFrontCam)
+            if (androidCamera.frontFacing == useFrontCam) {
                 camId = androidCamera.id;
+                break;
+            }
         }
         String[] devices = getLc().getVideoDevicesList();
+        if (devices.length != cameras.length) {
+            Log.w("Be careful, there are more cameras available than 2 !");
+        }
+        if (camId >= devices.length) {
+            Log.e("Trying to use a camera that's not in the first two, will crash so use 0 one !");
+            camId = 0;
+        }
         String newDevice = devices[camId];
         LinphoneManager.getLc().setVideoDevice(newDevice);
     }
@@ -1022,7 +1033,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     @Override
-    public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
+    public void onMessageReceived(Core lc, final ChatRoom cr, final ChatMessage message) {
         if (mServiceContext.getResources().getBoolean(R.bool.disable_chat)) {
             return;
         }
@@ -1044,24 +1055,46 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         increaseUnreadCountForChatRoom(cr);
 
-        Address from = message.getFromAddress();
-        LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
-        String textMessage = (message.getFileTransferInformation() != null) ? getString(R.string.content_description_incoming_file) : message.getTextContent();
+        if (mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification) || message.isOutgoing()) {
+            return;
+        }
 
-        if (!mServiceContext.getResources().getBoolean(R.bool.disable_chat_message_notification) && !message.isOutgoing()) {
-            if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
-                if (contact != null) {
-                    LinphoneService.instance().getNotificationManager().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress(), message.getTime());
-                } else {
-                    LinphoneService.instance().getNotificationManager().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress(), message.getTime());
-                }
+        final Address from = message.getFromAddress();
+        final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
+        final String textMessage = (message.hasTextContent()) ? message.getTextContent() : getString(R.string.content_description_incoming_file);
+
+        String file = null;
+        for (Content c : message.getContents()) {
+            if (c.isFile()) {
+                file = c.getFilePath();
+                getMediaScanner().scanFile(new File(file), new MediaScannerListener() {
+                    @Override
+                    public void onMediaScanned(String path, Uri uri) {
+                        createNotification(cr, contact, from, textMessage, message.getTime(), uri, FileUtils.getMimeFromFile(path));
+                    }
+                });
+                break;
+            }
+        }
+
+        if (file == null) {
+            createNotification(cr, contact, from, textMessage, message.getTime(), null, null);
+        }
+    }
+
+    private void createNotification(ChatRoom cr, LinphoneContact contact, Address from, String textMessage, long time, Uri file, String mime) {
+        if (cr.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
+            if (contact != null) {
+                LinphoneService.instance().getNotificationManager().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress(), time, file, mime);
             } else {
-                String subject = cr.getSubject();
-                if (contact != null) {
-                    LinphoneService.instance().getNotificationManager().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress(), message.getTime());
-                } else {
-                    LinphoneService.instance().getNotificationManager().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress(), message.getTime());
-                }
+                LinphoneService.instance().getNotificationManager().displayMessageNotification(cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress(), time, file, mime);
+            }
+        } else {
+            String subject = cr.getSubject();
+            if (contact != null) {
+                LinphoneService.instance().getNotificationManager().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), contact.getFullName(), contact.getThumbnailUri(), textMessage, cr.getLocalAddress(), time, file, mime);
+            } else {
+                LinphoneService.instance().getNotificationManager().displayGroupChatMessageNotification(subject, cr.getPeerAddress().asStringUriOnly(), from.getUsername(), null, textMessage, cr.getLocalAddress(), time, file, mime);
             }
         }
     }
@@ -1516,7 +1549,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         cancel.setText(getString(R.string.maybe_later));
 
         dialog.findViewById(R.id.dialog_do_not_ask_again_layout).setVisibility(View.VISIBLE);
-        final CheckBox doNotAskAgain = dialog.findViewById(R.id.dialog_do_not_ask_again_layout);
+        final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
         dialog.findViewById(R.id.doNotAskAgainLabel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
