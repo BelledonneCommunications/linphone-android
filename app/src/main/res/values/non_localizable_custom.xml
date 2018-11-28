@@ -91,6 +91,7 @@
     <bool name="allow_multiple_images_and_text">true</bool>
     <bool name="send_text_and_images_as_different_messages">true</bool>
     <bool name="use_new_chat_bubbles_layout">true</bool>
+    <bool name="use_big_pictures_to_preview_images_file_transfers">true</bool>
 
     <!-- Contacts -->
     <bool name="hide_contact_phone_numbers">false</bool>

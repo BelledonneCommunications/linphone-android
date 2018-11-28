@@ -11,6 +11,14 @@
         android:layout_height="100dp"
         android:layout_margin="5dp"/>
 
+    <ImageView
+        android:id="@+id/bigImage"
+        android:visibility="gone"
+        android:adjustViewBounds="true"
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:layout_margin="5dp"/>
+
     <TextView
         android:id="@+id/file"
         android:visibility="gone"

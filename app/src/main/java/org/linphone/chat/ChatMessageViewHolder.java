@@ -222,8 +222,13 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
                     View v;
                     if (FileUtils.isExtensionImage(filePath)) {
-                        v = content.findViewById(R.id.image);
-                        loadBitmap(c.getFilePath(), ((ImageView)v));
+                        if (fileContents.size() == 1 && mContext.getResources().getBoolean(R.bool.use_big_pictures_to_preview_images_file_transfers)) {
+                            v = content.findViewById(R.id.bigImage);
+                            loadBitmap(c.getFilePath(), ((ImageView) v));
+                        } else {
+                            v = content.findViewById(R.id.image);
+                            loadBitmap(c.getFilePath(), ((ImageView) v));
+                        }
                     } else {
                         v = content.findViewById(R.id.file);
                         ((TextView)v).setText(FileUtils.getNameFromFilePath(filePath));
