@@ -28,10 +28,13 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -137,6 +140,13 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
             if (this == bitmapWorkerTask && imageView != null) {
                 imageView.setImageBitmap(bitmap);
+                if (bitmap.getWidth() > ImageUtils.dpToPixels(mContext, 300)) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(bitmap.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
+                    int margin = (int) ImageUtils.dpToPixels(mContext, 5);
+                    params.setMargins(margin, margin, margin, margin);
+                    imageView.setLayoutParams(params);
+                    imageView.invalidate();
+                }
             }
         }
     }
