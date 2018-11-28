@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.linphone.mediastream.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -50,6 +51,8 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     private int mItemResource;
     private ChatMessagesFragment mFragment;
 
+    private List<ChatMessage> mTransientMessages;
+
     private ChatMessageViewHolderClickListener mClickListener;
 
     public ChatMessagesAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolderClickListener clickListener) {
@@ -61,6 +64,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         Collections.reverse(mHistory);
         mParticipants = participants;
         mClickListener = clickListener;
+        mTransientMessages = new ArrayList<>();
     }
 
     @Override
@@ -76,7 +80,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ChatMessageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position) {
         EventLog event = mHistory.get(position);
 
         holder.deleteEvent.setVisibility(View.GONE);
@@ -89,7 +93,6 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
 
         if (event.getType() == EventLog.Type.ConferenceChatMessage) {
             ChatMessage message = event.getChatMessage();
-            message.setUserData(holder);
 
             if (isEditionEnabled()) {
                 holder.deleteMessage.setVisibility(View.VISIBLE);
@@ -97,13 +100,23 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 holder.deleteMessage.setTag(position);
             }
 
-            if (message.isOutgoing() && message.getState() != ChatMessage.State.Displayed) {
+            if ((message.isOutgoing() && message.getState() != ChatMessage.State.Displayed) || (!message.isOutgoing() && message.isFileTransfer())) {
+                if (!mTransientMessages.contains(message)) {
+                    mTransientMessages.add(message);
+                }
+                message.setUserData(holder); // This only works if JAVA object is kept, hence the transient list
                 message.setListener(new ChatMessageListenerStub() {
                     @Override
                     public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
                         ChatMessageViewHolder holder = (ChatMessageViewHolder) message.getUserData();
                         if (holder != null) {
                             notifyItemChanged(holder.getAdapterPosition());
+                        } else {
+                            // Just in case, better to refresh the whole view than to miss an update
+                            notifyDataSetChanged();
+                        }
+                        if (state == ChatMessage.State.Displayed) {
+                            mTransientMessages.remove(message);
                         }
                     }
                 });
@@ -244,6 +257,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 message.setListener(null);
             }
         }
+        mTransientMessages.clear();
         mHistory.clear();
     }
 

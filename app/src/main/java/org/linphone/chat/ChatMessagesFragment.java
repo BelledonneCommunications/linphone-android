@@ -57,6 +57,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
+import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.utils.FileUtils;
@@ -900,6 +901,10 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     private void sendMessage() {
         ChatMessage msg = mChatRoom.createEmptyMessage();
+
+        String text = mMessageTextToSend.getText().toString();
+        boolean hasText = text != null && text.length() > 0;
+
         for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
             String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
             String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -914,7 +919,8 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             content.setName(fileName);
             content.setFilePath(filePath); // Let the file body handler take care of the upload
 
-            if (getResources().getBoolean(R.bool.send_text_and_images_as_different_messages)) {
+            if (getResources().getBoolean(R.bool.send_text_and_images_as_different_messages)
+                    && (mFilesUploadLayout.getChildCount() > 1 || hasText)) {
                 ChatMessage fileMessage = mChatRoom.createFileTransferMessage(content);
                 fileMessage.send();
             } else {
@@ -922,8 +928,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
             }
         }
 
-        String text = mMessageTextToSend.getText().toString();
-        if (text != null && text.length() > 0) {
+        if (hasText) {
             msg.addTextContent(text);
         }
 

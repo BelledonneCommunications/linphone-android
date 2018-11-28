@@ -217,7 +217,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             for (Content c : fileContents) {
                 View content = LayoutInflater.from(mContext).inflate(R.layout.chat_bubble_content, null, false);
 
-                if (c.isFile()) {
+                if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) { // If message is outgoing, even if content is file transfer we have the file available
                     String filePath = c.getFilePath();
 
                     View v;
@@ -258,13 +258,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                             public void onClick(View v) {
                                 Content c = (Content) v.getTag();
                                 message.downloadContent(c);
-                            }
-                        });
-
-                        message.setListener(new ChatMessageListenerStub() {
-                            @Override
-                            public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-                                //TODO: invalidate
                             }
                         });
                     } else {

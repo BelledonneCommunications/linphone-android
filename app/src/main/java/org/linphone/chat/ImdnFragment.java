@@ -136,6 +136,10 @@ public class ImdnFragment extends Fragment {
     }
 
     private void refreshInfo() {
+        if (mMessage == null) {
+            //TODO: error
+            return;
+        }
         Address remoteSender = mMessage.getFromAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(remoteSender);
 
