@@ -13,7 +13,6 @@ Group changes to describe their impact on the project, as follows:
 ## [Incomming]
 - feature: call recording.
 - feature: QR code configuration.
-- feature: option to automatically download incoming files, either always, never or depending on their sizes.
 
 ## [4.1] - 2018-xx-xx
 
@@ -35,6 +34,7 @@ Group changes to describe their impact on the project, as follows:
 - Send SMS to invite your friends in using Linphone.
 - Reply to received chat message in notification.
 - Answer or hangup calls in notification.
+- Option to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications.
 
 ## [4.0.1] - 2018-06-26
 
