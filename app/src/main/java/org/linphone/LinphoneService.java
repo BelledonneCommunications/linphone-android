@@ -139,6 +139,10 @@ public final class LinphoneService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
+        if (intent.getBooleanExtra("PushNotification", false)) {
+            Log.i("[Push Notification] LinphoneService started because of a push");
+        }
+
         if (instance != null) {
             Log.w("Attempt to start the LinphoneService but it is already running !");
             return START_REDELIVER_INTENT;

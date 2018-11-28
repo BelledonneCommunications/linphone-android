@@ -1238,6 +1238,7 @@ public class LinphonePreferences {
                         }
                     }
                 }
+                Log.i("[Push Notification] Refreshing registers to ensure token is up to date" + regId);
                 lc.refreshRegisters();
             }
         } else {
@@ -1260,6 +1261,7 @@ public class LinphonePreferences {
 
     public void setPushNotificationRegistrationID(String regId) {
         if (getConfig() == null) return;
+        Log.i("[Push Notification] New token received" + regId);
         getConfig().setString("app", "push_notification_regid", (regId != null) ? regId : "");
         setPushNotificationEnabled(isPushNotificationEnabled());
     }

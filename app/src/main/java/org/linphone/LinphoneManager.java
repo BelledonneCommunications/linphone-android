@@ -659,31 +659,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     private void initPushNotificationsService() {
-        if (getString(R.string.push_type).equals("google")) {
-            try {
-                Class<?> GCMRegistrar = Class.forName("com.google.android.gcm.GCMRegistrar");
-                GCMRegistrar.getMethod("checkDevice", Context.class).invoke(null, mServiceContext);
-                try {
-                    GCMRegistrar.getMethod("checkManifest", Context.class).invoke(null, mServiceContext);
-                } catch (IllegalStateException e) {
-                    Log.e("[Push Notification] No receiver found", e);
-                }
-                final String regId = (String) GCMRegistrar.getMethod("getRegistrationId", Context.class).invoke(null, mServiceContext);
-                String newPushSenderID = mServiceContext.getString(R.string.push_sender_id);
-                String currentPushSenderID = LinphonePreferences.instance().getPushNotificationRegistrationID();
-                if (regId.equals("") || currentPushSenderID == null || !currentPushSenderID.equals(newPushSenderID)) {
-                    GCMRegistrar.getMethod("register", Context.class, String[].class).invoke(null, mServiceContext, new String[]{newPushSenderID});
-                    Log.i("[Push Notification] Storing current sender id = " + newPushSenderID);
-                } else {
-                    Log.i("[Push Notification] Already registered with id = " + regId);
-                    LinphonePreferences.instance().setPushNotificationRegistrationID(regId);
-                }
-            } catch (java.lang.UnsupportedOperationException e) {
-                Log.i("[Push Notification] Not activated");
-            } catch (Exception e1) {
-                Log.i("[Push Notification] Assuming GCM jar is not provided.");
-            }
-        } else if (getString(R.string.push_type).equals("firebase")) {
+        if (getString(R.string.push_type).equals("firebase")) {
             try {
                 Class<?> firebaseClass = Class.forName("com.google.firebase.iid.FirebaseInstanceId");
                 Object firebaseInstance = firebaseClass.getMethod("getInstance").invoke(null);
@@ -691,7 +667,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
                 //final String refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
                 if (refreshedToken != null) {
-                    Log.i("[Push Notification] current token is: " + refreshedToken);
+                    Log.i("[Push Notification] init push notif service token is: " + refreshedToken);
                     LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
                 }
             } catch (Exception e) {
