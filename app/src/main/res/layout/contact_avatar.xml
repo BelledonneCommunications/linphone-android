@@ -3,23 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/avatar_layout"
     android:layout_width="45dp"
-    android:layout_height="35dp"
-    android:gravity="center"
-    android:layout_centerHorizontal="true">
+    android:layout_height="35dp">
 
     <ImageView
         android:id="@+id/contact_picture"
         android:src="@drawable/avatar"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:layout_alignParentLeft="true"/>
 
     <ImageView
         android:id="@+id/mask"
         android:src="@drawable/avatar_mask"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:layout_alignParentLeft="true"/>
 
     <TextView
         android:id="@+id/generated_avatar"
@@ -28,7 +28,8 @@
         android:background="@drawable/generated_avatar_bg"
         style="@style/font25"
         android:gravity="center"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:layout_alignParentLeft="true"/>
 
     <ImageView
         android:id="@+id/security_level"
