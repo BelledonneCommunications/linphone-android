@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -48,7 +49,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -57,7 +57,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.linphone.LinphoneManager;
-import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.utils.FileUtils;
@@ -269,7 +268,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
         mChatEventsList = view.findViewById(R.id.chat_message_list);
         mSelectionHelper = new SelectableHelper(view, this);
-        layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, true);
+        layoutManager = new LinphoneLinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, true);
         mChatEventsList.setLayoutManager(layoutManager);
 
         mChatScrollListener = new ChatScrollListener(layoutManager) {
@@ -1178,5 +1177,21 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
     @Override
     public void onContactsUpdated() {
         getContactsForParticipants();
+    }
+
+    // This is a workaround to prevent a crash from happening while rotating the device
+    private class LinphoneLinearLayoutManager extends LinearLayoutManager {
+        public LinphoneLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
+
+        @Override
+        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+            try {
+                super.onLayoutChildren(recycler, state);
+            } catch (IndexOutOfBoundsException e) {
+                Log.e("InvalidIndexOutOfBound Exception, probably while rotating the device");
+            }
+        }
     }
 }
