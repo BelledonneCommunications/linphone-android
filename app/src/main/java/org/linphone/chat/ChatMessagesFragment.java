@@ -1113,18 +1113,21 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
         getContactsForParticipants();
         displayChatRoomHeader();
 
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
     @Override
     public void onConferenceLeft(ChatRoom cr, EventLog event) {
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
 
     @Override
     public void onParticipantAdminStatusChanged(ChatRoom cr, EventLog event) {
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
     }
@@ -1136,6 +1139,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     @Override
     public void onParticipantRemoved(ChatRoom cr, EventLog event) {
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         getContactsForParticipants();
         ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
@@ -1172,6 +1176,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     @Override
     public void onParticipantAdded(ChatRoom cr, EventLog event) {
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         getContactsForParticipants();
         ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();
@@ -1179,6 +1184,7 @@ public class ChatMessagesFragment extends Fragment implements ChatRoomListener, 
 
     @Override
     public void onSubjectChanged(ChatRoom cr, EventLog event) {
+        if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) return;
         mRoomLabel.setText(event.getSubject());
         ((ChatMessagesGenericAdapter)mChatEventsList.getAdapter()).addToHistory(event);
         scrollToBottom();

@@ -490,11 +490,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
         }
         String[] devices = getLc().getVideoDevicesList();
-        if (devices.length != cameras.length) {
-            Log.w("Be careful, there are more cameras available than 2 !");
-        }
         if (camId >= devices.length) {
-            Log.e("Trying to use a camera that's not in the first two, will crash so use 0 one !");
+            Log.e("Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
             camId = 0;
         }
         String newDevice = devices[camId];
