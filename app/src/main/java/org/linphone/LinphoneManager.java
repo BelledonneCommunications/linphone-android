@@ -1143,6 +1143,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         return null;
     }
 
+    public void setAudioManagerModeNormal() {
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
+    }
+
     public void setAudioManagerInCallMode() {
         if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
             Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping...");

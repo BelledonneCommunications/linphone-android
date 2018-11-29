@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import org.linphone.LinphoneManager;
@@ -30,8 +32,6 @@ import org.linphone.mediastream.Log;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,16 +40,16 @@ public class Recording implements PlayerListener, Comparable<Recording> {
     private Date recordDate;
     private Player player;
     private RecordingListener listener;
-    private Timer timer;
-    private TimerTask updateCurrentPositionTimer;
+    private Handler handler;
+    private Runnable updateCurrentPositionTimer;
 
-    private static final Pattern mRecordPattern = Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*");
+    public static final Pattern RECORD_PATTERN = Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*");
 
     @SuppressLint("SimpleDateFormat")
-    public Recording(String recordPath) {
+    public Recording(Context context, String recordPath) {
         this.recordPath = recordPath;
 
-        Matcher m = mRecordPattern.matcher(recordPath);
+        Matcher m = RECORD_PATTERN.matcher(recordPath);
         if (m.matches()) {
             name = m.group(1);
 
@@ -60,17 +60,17 @@ public class Recording implements PlayerListener, Comparable<Recording> {
             }
         }
 
-        timer = new Timer();
-        updateCurrentPositionTimer = new TimerTask() {
+        handler = new Handler(context.getMainLooper());
+        updateCurrentPositionTimer = new Runnable() {
             @Override
             public void run() {
                 if (listener != null) listener.currentPositionChanged(getCurrentPosition());
+                if (isPlaying()) handler.postDelayed(updateCurrentPositionTimer, 20);
             }
         };
 
         player = LinphoneManager.getLc().createLocalPlayer(null, null, null);
         player.setListener(this);
-        player.open(recordPath);
     }
 
     public String getRecordPath() {
@@ -90,8 +90,12 @@ public class Recording implements PlayerListener, Comparable<Recording> {
     }
 
     public void play() {
+        if (isClosed()) {
+            player.open(recordPath);
+        }
+
         player.start();
-        //timer.scheduleAtFixedRate(updateCurrentPositionTimer, 0, 1000);
+        handler.post(updateCurrentPositionTimer);
     }
 
     public boolean isPlaying() {
@@ -101,9 +105,6 @@ public class Recording implements PlayerListener, Comparable<Recording> {
     public void pause() {
         if (!isClosed()) {
             player.pause();
-
-            timer.cancel();
-            timer.purge();
         }
     }
 
@@ -116,10 +117,18 @@ public class Recording implements PlayerListener, Comparable<Recording> {
     }
 
     public int getCurrentPosition() {
+        if (isClosed()) {
+            player.open(recordPath);
+        }
+
         return player.getCurrentPosition();
     }
 
     public int getDuration() {
+        if (isClosed()) {
+            player.open(recordPath);
+        }
+
         return player.getDuration();
     }
 

@@ -32,8 +32,10 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
 
@@ -86,6 +88,29 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    public void removeDeletedRecordings() {
+        String recordingsDirectory = FileUtils.getRecordingsDirectory(context);
+        File directory = new File(recordingsDirectory);
+
+        if (directory.exists() && directory.isDirectory()) {
+            File[] existingRecordings = directory.listFiles();
+
+            for(Recording r : recordings) {
+                boolean exists = false;
+                for(File f : existingRecordings) {
+                    if (f.getPath().equals(r.getRecordPath())) {
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists) recordings.remove(r);
+            }
+
+            Collections.sort(recordings);
+        }
+    }
+
     public void searchForRecordings() {
         String recordingsDirectory = FileUtils.getRecordingsDirectory(context);
         File directory = new File(recordingsDirectory);
@@ -93,7 +118,7 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
         if (directory.exists() && directory.isDirectory()) {
             File[] existingRecordings = directory.listFiles();
 
-            for (File f : existingRecordings) {
+            for(File f : existingRecordings) {
                 boolean exists = false;
                 for(Recording r : recordings) {
                     if (r.getRecordPath().equals(f.getPath())) {
@@ -102,7 +127,11 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
                     }
                 }
 
-                if (!exists) recordings.add(new Recording(f.getPath()));
+                if (!exists) {
+                    if (Recording.RECORD_PATTERN.matcher(f.getPath()).matches()) {
+                        recordings.add(new Recording(context, f.getPath()));
+                    }
+                }
             }
 
             Collections.sort(recordings);
@@ -113,10 +142,14 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
     public void onResume() {
         super.onResume();
 
+        LinphoneManager.getInstance().setAudioManagerModeNormal();
+        LinphoneManager.getInstance().routeAudioToSpeaker();
+
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.RECORDING_LIST);
         }
 
+        removeDeletedRecordings();
         searchForRecordings();
 
         hideRecordingListAndDisplayMessageIfEmpty();
@@ -129,6 +162,8 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
+
+        LinphoneManager.getInstance().routeAudioToReceiver();
 
         // Close all opened recordings
         for (Recording r : recordings) {
@@ -148,13 +183,14 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (recordingAdapter.isEditionEnabled()) {
             Recording record = recordings.get(position);
-            recordings.remove(position);
 
             if (record.isPlaying()) record.pause();
             record.close();
 
             File recordingFile = new File(record.getRecordPath());
-            recordingFile.delete();
+            if (recordingFile.delete()) {
+                recordings.remove(record);
+            }
         }
     }
 
@@ -179,13 +215,14 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
         int size = recordingAdapter.getSelectedItemCount();
         for (int i = 0; i < size; i++) {
             Recording record = (Recording) objectsToDelete[i];
-            recordings.remove(record);
 
             if (record.isPlaying()) record.pause();
             record.close();
 
             File recordingFile = new File(record.getRecordPath());
-            recordingFile.delete();
+            if (recordingFile.delete()) {
+                recordings.remove(record);
+            }
         }
     }
 }

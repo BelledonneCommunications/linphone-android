@@ -35,7 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
@@ -112,12 +111,11 @@ public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
         viewHolder.name.setText(record.getName());
         viewHolder.date.setText(new SimpleDateFormat("HH:mm").format(record.getRecordDate()));
 
-//        int position = record.getCurrentPosition();
-//        viewHolder.currentPosition.setText(String.format("%02d:%02d",
-//                TimeUnit.MILLISECONDS.toMinutes(position),
-//                TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
-//        ));
-        viewHolder.currentPosition.setText("00:00");
+        int position = record.getCurrentPosition();
+        viewHolder.currentPosition.setText(String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(position),
+                TimeUnit.MILLISECONDS.toSeconds(position) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(position))
+        ));
 
         int duration = record.getDuration();
         viewHolder.duration.setText(String.format("%02d:%02d",
@@ -125,27 +123,26 @@ public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
                 TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
         ));
 
-        viewHolder.progressionBar.setMax(100);
+        viewHolder.progressionBar.setMax(record.getDuration());
         viewHolder.progressionBar.setProgress(0);
         viewHolder.progressionBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    if (progress == 0) {
-                        record.seek(0);
-                    } else if (progress == seekBar.getMax()) {
-                        if (record.isPlaying()) record.pause();
-                        record.seek(0);
-                        seekBar.setProgress(0);
-                    } else {
-                        record.seek(progress);
+                    int progressToSet = progress > 0 && progress < seekBar.getMax() ? progress : 0;
 
-                        int currentPosition = record.getCurrentPosition();
-                        viewHolder.currentPosition.setText(String.format("%02d:%02d",
-                                TimeUnit.MILLISECONDS.toMinutes(currentPosition),
-                                TimeUnit.MILLISECONDS.toSeconds(currentPosition) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentPosition))
-                        ));
+                    if (progress == seekBar.getMax()) {
+                        if (record.isPlaying()) record.pause();
                     }
+
+                    record.seek(progressToSet);
+                    seekBar.setProgress(progressToSet);
+
+                    int currentPosition = record.getCurrentPosition();
+                    viewHolder.currentPosition.setText(String.format("%02d:%02d",
+                            TimeUnit.MILLISECONDS.toMinutes(currentPosition),
+                            TimeUnit.MILLISECONDS.toSeconds(currentPosition) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentPosition))
+                    ));
                 }
             }
 
@@ -163,9 +160,10 @@ public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
         record.setRecordingListener(new RecordingListener() {
             @Override
             public void currentPositionChanged(int currentPosition) {
-                viewHolder.currentPosition.setText(String.format("%02d:%02",
-                        currentPosition % 60,
-                        currentPosition - (currentPosition % 60) * 60, Locale.getDefault()));
+                viewHolder.currentPosition.setText(String.format("%02d:%02d",
+                        TimeUnit.MILLISECONDS.toMinutes(currentPosition),
+                        TimeUnit.MILLISECONDS.toSeconds(currentPosition) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentPosition))
+                ));
                 viewHolder.progressionBar.setProgress(currentPosition);
             }
 
@@ -174,6 +172,8 @@ public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
                 record.pause();
                 record.seek(0);
                 viewHolder.progressionBar.setProgress(0);
+                viewHolder.currentPosition.setText("00:00");
+                viewHolder.playButton.setImageResource(R.drawable.record_play);
             }
         });
     }
