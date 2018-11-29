@@ -115,8 +115,8 @@ dependencies {
     if (isLocalAarAvailable()) {
         implementation project(":linphone-sdk-android")
     } else {
-        releaseImplementation "org.linphone:linphone-sdk-android:4.1"
-        debugImplementation "org.linphone:linphone-sdk-android:4.1-debug"
+        releaseImplementation "org.linphone:linphone-sdk-android:4.1+"
+        debugImplementation "org.linphone:linphone-sdk-android:4.1+-debug"
     }
 }
 if (firebaseEnabled()) {
