@@ -1225,7 +1225,7 @@ public class LinphonePreferences {
                         lpc.setContactUriParameters(null);
                         lpc.done();
                         if (lpc.getIdentityAddress() != null)
-                            Log.d("Push notif infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+                            Log.d("[Push Notification] infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
                     } else {
                         String contactInfos = "app-id=" + appId + ";pn-type=" + getString(R.string.push_type) + ";pn-tok=" + regId + ";pn-silent=1";
                         String prevContactParams = lpc.getContactParameters();
@@ -1234,11 +1234,11 @@ public class LinphonePreferences {
                             lpc.setContactUriParameters(contactInfos);
                             lpc.done();
                             if (lpc.getIdentityAddress() != null)
-                                Log.d("Push notif infos added to proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+                                Log.d("[Push Notification] infos added to proxy config " + lpc.getIdentityAddress().asStringUriOnly());
                         }
                     }
                 }
-                Log.i("[Push Notification] Refreshing registers to ensure token is up to date" + regId);
+                Log.i("[Push Notification] Refreshing registers to ensure token is up to date: " + regId);
                 lc.refreshRegisters();
             }
         } else {
@@ -1248,7 +1248,7 @@ public class LinphonePreferences {
                     lpc.setContactUriParameters(null);
                     lpc.done();
                     if (lpc.getIdentityAddress() != null)
-                        Log.d("Push notif infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
+                        Log.d("[Push Notification] infos removed from proxy config " + lpc.getIdentityAddress().asStringUriOnly());
                 }
                 lc.refreshRegisters();
             }
@@ -1261,7 +1261,7 @@ public class LinphonePreferences {
 
     public void setPushNotificationRegistrationID(String regId) {
         if (getConfig() == null) return;
-        Log.i("[Push Notification] New token received" + regId);
+        Log.i("[Push Notification] New token received: " + regId);
         getConfig().setString("app", "push_notification_regid", (regId != null) ? regId : "");
         setPushNotificationEnabled(isPushNotificationEnabled());
     }

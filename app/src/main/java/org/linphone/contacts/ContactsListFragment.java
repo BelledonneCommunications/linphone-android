@@ -22,10 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,10 +118,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             @Override
             public void onClick(View v) {
                 editConsumed = true;
-                if (displayName != null)
-                    LinphoneActivity.instance().addContact(displayName, sipAddressToAdd);
-                else
-                    LinphoneActivity.instance().addContact(null, sipAddressToAdd);
+                ContactsManager.getInstance().createContact(getActivity(), displayName, sipAddressToAdd);
             }
         });
 
@@ -154,7 +155,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchContacts(newText.toString());
+                searchContacts(newText);
                 return true;
             }
         });
@@ -273,7 +274,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         LinphoneContact contact = (LinphoneContact) adapter.getItemAtPosition(position);
         if (editOnClick) {
             editConsumed = true;
-            LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
+            ContactsManager.getInstance().editContact(getActivity(), contact, sipAddressToAdd);
         } else {
             lastKnownPosition = layoutManager.findFirstVisibleItemPosition();
             LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);
@@ -289,7 +290,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
         } else if (editOnClick) {
             editConsumed = true;
-            LinphoneActivity.instance().editContact(contact, sipAddressToAdd);
+            ContactsManager.getInstance().editContact(getActivity(), contact, sipAddressToAdd);
         } else {
             lastKnownPosition = layoutManager.findFirstVisibleItemPosition();
             LinphoneActivity.instance().displayContact(contact, onlyDisplayChatAddress);

@@ -25,7 +25,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -36,6 +38,7 @@ import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Data;
 
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
@@ -225,7 +228,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             try {
                 accountManager.addAccountExplicitly(newAccount, null, null);
             } catch (Exception e) {
-                Log.e(e);
+                Log.e("[Contacts Manager] " + e);
             }
         }
     }
@@ -319,7 +322,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         try {
             mContext.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
         } catch (Exception e) {
-            Log.e(e);
+            Log.e("[Contacts Manager] " + e);
         }
     }
 
@@ -455,12 +458,14 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                     String data2 = c.getString(c.getColumnIndex("data2"));
                     String data3 = c.getString(c.getColumnIndex("data3"));
                     String data4 = c.getString(c.getColumnIndex("data4"));
+                    String lookupKey = c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
                     LinphoneContact contact = mAndroidContactsCache.get(id);
                     if (contact == null) {
                         nativeIds.add(id);
                         contact = new LinphoneContact();
                         contact.setAndroidId(id);
+                        contact.setAndroidLookupKey(lookupKey);
                         contact.setFullName(displayName);
                         mAndroidContactsCache.put(id, contact);
                     }
@@ -505,7 +510,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                         for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
                             if (noa.isSIPAddress()) {
                                 contact.setFullName(LinphoneUtils.getAddressDisplayName(noa.getValue()));
-                                Log.w("Couldn't find a display name for contact " + contact.getFullName() + ", used SIP address display name / username instead...");
+                                Log.w("[Contacts Manager] Couldn't find a display name for contact " + contact.getFullName() + ", used SIP address display name / username instead...");
                                 break;
                             }
                         }
@@ -524,7 +529,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                         data.sipContacts.add(contact);
                     }
                 }
-                contact.createOrUpdateFriendFromNativeContact();
                 data.contacts.add(contact);
             }
             mAndroidContactsCache.clear();
@@ -539,6 +543,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         protected void onPostExecute(AsyncContactsData data) {
             for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
                 listener.onContactsUpdated();
+            }
+            for (LinphoneContact contact : data.contacts) {
+                contact.createOrUpdateFriendFromNativeContact();
             }
 
             setContacts(data.contacts);
@@ -555,6 +562,38 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     public synchronized void setSipContacts(List<LinphoneContact> c) {
         synchronized (mSipContacts) {
             mSipContacts = c;
+        }
+    }
+
+    public void editContact(Context context, LinphoneContact contact, String valueToAdd) {
+        if (context.getResources().getBoolean(R.bool.use_native_contact_editor)) {
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            Uri contactUri = ContactsContract.Contacts.getLookupUri(Long.parseLong(contact.getAndroidId()), contact.getAndroidLookupKey());
+            intent.setDataAndType(contactUri, ContactsContract.Contacts.CONTENT_ITEM_TYPE);
+            intent.putExtra("finishActivityOnSaveCompleted", true); // So after save will go back here
+            if (valueToAdd != null) {
+                intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
+            }
+            context.startActivity(intent);
+        } else {
+            LinphoneActivity.instance().editContact(contact);
+        }
+    }
+
+    public void createContact(Context context, String name, String valueToAdd) {
+        if (context.getResources().getBoolean(R.bool.use_native_contact_editor)) {
+            Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+            intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+            intent.putExtra("finishActivityOnSaveCompleted", true); // So after save will go back here
+            if (name != null) {
+                intent.putExtra(ContactsContract.Intents.Insert.NAME, name);
+            }
+            if (valueToAdd != null) {
+                intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
+            }
+            context.startActivity(intent);
+        } else {
+            LinphoneActivity.instance().addContact(name, valueToAdd);
         }
     }
 }

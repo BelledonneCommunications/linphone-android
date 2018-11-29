@@ -25,6 +25,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -300,9 +301,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
         int id = v.getId();
 
         if (id == R.id.editContact) {
-            LinphoneActivity.instance().editContact(contact);
-        }
-        if (id == R.id.deleteContact) {
+            ContactsManager.getInstance().editContact(getActivity(), contact, null);
+        } else if (id == R.id.deleteContact) {
             final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
             Button delete = dialog.findViewById(R.id.dialog_delete_button);
             Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
@@ -324,8 +324,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 }
             });
             dialog.show();
-        }
-        if (id == R.id.back) {
+        } else if (id == R.id.back) {
             getFragmentManager().popBackStackImmediate();
         }
     }

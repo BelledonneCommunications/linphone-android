@@ -104,6 +104,7 @@
     <bool name="hide_numbers_and_addresses_without_presence">false</bool>
     <bool name="hide_sip_contacts_without_presence">false</bool>
     <bool name="hide_non_linphone_contacts">false</bool>
+    <bool name="use_native_contact_editor">false</bool>
 
     <!-- Side Menu -->
     <bool name="hide_assistant_from_side_menu">false</bool>

@@ -50,7 +50,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
     private static final long serialVersionUID = 9015568163905205244L;
 
     private transient Friend friend;
-    private String fullName, firstName, lastName, androidId, androidRawId, androidTagId, organization;
+    private String fullName, firstName, lastName, androidId, androidRawId, androidTagId, organization, androidLookupKey;
     private transient Uri photoUri, thumbnailUri;
     private List<LinphoneNumberOrAddress> addresses;
     private transient ArrayList<ContentProviderOperation> changesToCommit;
@@ -60,6 +60,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
     public LinphoneContact() {
         addresses = new ArrayList<>();
         androidId = null;
+        androidLookupKey = null;
         thumbnailUri = null;
         photoUri = null;
         changesToCommit = new ArrayList<>();
@@ -463,8 +464,16 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         setPhotoUri(getContactPictureUri());
     }
 
+    public void setAndroidLookupKey(String lookupKey) {
+        androidLookupKey = lookupKey;
+    }
+
     public String getAndroidId() {
         return androidId;
+    }
+
+    public String getAndroidLookupKey() {
+        return androidLookupKey;
     }
 
     public Friend getFriend() {
@@ -489,8 +498,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         if (isFriend()) {
             friend.edit();
             friend.setName(fullName);
-            friend.getVcard().setFamilyName(lastName);
-            friend.getVcard().setGivenName(firstName);
+            if (friend.getVcard() != null) {
+                friend.getVcard().setFamilyName(lastName);
+                friend.getVcard().setGivenName(firstName);
+            }
             if (organization != null) {
                 friend.getVcard().setOrganization(organization);
             }
