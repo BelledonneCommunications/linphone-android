@@ -215,11 +215,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             }
         } else if (id == R.id.add_contact) {
             Address addr = Factory.instance().createAddress(sipUri);
-            String uri = addr.asStringUriOnly();
-            if (addr != null && addr.getDisplayName() != null)
-                LinphoneActivity.instance().displayContactsForEdition(addr.asStringUriOnly(), addr.getDisplayName());
-            else
-                LinphoneActivity.instance().displayContactsForEdition(uri);
+            if (addr != null) {
+                String address =
+                        "sip:" + addr.getUsername() + "@" + addr.getDomain(); // Clean gruu param
+                if (addr.getDisplayName() != null) {
+                    LinphoneActivity.instance()
+                            .displayContactsForEdition(address, addr.getDisplayName());
+                } else {
+                    LinphoneActivity.instance().displayContactsForEdition(address);
+                }
+            }
         } else if (id == R.id.goto_contact) {
             LinphoneActivity.instance().displayContact(contact, false);
         }
