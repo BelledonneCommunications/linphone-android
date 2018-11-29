@@ -70,6 +70,7 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         View view = inflater.inflate(R.layout.contacts_list, container, false);
         mContext = getActivity().getApplicationContext();
         mSelectionHelper = new SelectableHelper(view, this);
+        mSelectionHelper.setDialogMessage(R.string.delete_contacts_text);
 
         if (getArguments() != null) {
             editOnClick = getArguments().getBoolean("EditOnClick");
