@@ -142,6 +142,9 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
     public void onResume() {
         super.onResume();
 
+        // This is necessary, without it you won't be able to remove recordings as you won't be allowed to.
+        LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+
         LinphoneManager.getInstance().setAudioManagerModeNormal();
         LinphoneManager.getInstance().routeAudioToSpeaker();
 
