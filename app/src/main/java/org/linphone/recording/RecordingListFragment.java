@@ -35,7 +35,6 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
 
@@ -44,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RecordingListFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, RecordingViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class RecordingListFragment extends Fragment implements AdapterView.OnItemClickListener, RecordingViewHolder.ClickListener, SelectableHelper.DeleteListener {
     private RecyclerView recordingList;
     private List<Recording> recordings;
     private TextView noRecordings;
@@ -175,11 +174,6 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
                 r.close();
             }
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 
     @Override
