@@ -35,7 +35,7 @@ excludePackage.add('**/LICENSE.txt')
 repositories {
     maven {
         // Switch to release for releases !
-        url "https://gitlab.linphone.org/BC/public/maven_repository/raw/snapshots"
+        url "https://gitlab.linphone.org/BC/public/maven_repository/raw/master"
     }
 }
 
@@ -115,8 +115,7 @@ dependencies {
     if (isLocalAarAvailable()) {
         implementation project(":linphone-sdk-android")
     } else {
-        releaseImplementation "org.linphone:linphone-sdk-android:4.1+"
-        debugImplementation "org.linphone:linphone-sdk-android:4.1+-debug"
+        implementation "org.linphone:linphone-sdk-android:4.1+"
     }
 }
 if (firebaseEnabled()) {
