@@ -122,3 +122,13 @@ dependencies {
 if (firebaseEnabled()) {
     apply plugin: 'com.google.gms.google-services'
 }
+
+apply plugin: "com.diffplug.gradle.spotless"
+spotless {
+    java {
+        target '**/*.java'
+        googleJavaFormat('1.6').aosp()
+        removeUnusedImports()
+    }
+}
+project.tasks['preBuild'].dependsOn 'spotlessApply'
