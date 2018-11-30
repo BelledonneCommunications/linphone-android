@@ -111,6 +111,7 @@ import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.views.AddressText;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.recording.RecordingListFragment;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
@@ -136,7 +137,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
     private StatusFragment statusFragment;
     private TextView missedCalls, missedChats;
     private RelativeLayout contacts, history, dialer, chat;
-    private View contacts_selected, history_selected, dialer_selected, chat_selected;
+    private View contacts_selected, history_selected, dialer_selected, chat_selected, record_selected;
     private LinearLayout mTopBar;
     private TextView mTopBarTitle;
     private ImageView cancel;
@@ -433,6 +434,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
             case CONTACT_DEVICES:
                 fragment = new DevicesFragment();
                 break;
+            case RECORDING_LIST:
+                fragment = new RecordingListFragment();
+                break;
             default:
                 break;
         }
@@ -640,6 +644,10 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 
     public void displayAbout() {
         changeCurrentFragment(FragmentsAvailable.ABOUT, null);
+    }
+
+    public void displayRecordings() {
+        changeCurrentFragment(FragmentsAvailable.RECORDING_LIST, null);
     }
 
     public void displayContactsForEdition(String sipAddress, String displayName) {
@@ -1611,6 +1619,7 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
         if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
             sideMenuItems.add(new MenuItem(getResources().getString(R.string.inapp), R.drawable.menu_options));
         }
+        sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_recordings), R.drawable.menu_recordings));
         sideMenuItems.add(new MenuItem(getResources().getString(R.string.menu_about), R.drawable.menu_about));
         sideMenuContent = findViewById(R.id.side_menu_content);
         sideMenuItemList = findViewById(R.id.item_list);
@@ -1633,6 +1642,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
                     if (sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.inapp))) {
                         LinphoneActivity.instance().displayInapp();
                     }
+                }
+                if (sideMenuItemList.getAdapter().getItem(i).toString().equals(getString(R.string.menu_recordings))) {
+                    LinphoneActivity.instance().displayRecordings();
                 }
                 openOrCloseSideMenu(false);
             }

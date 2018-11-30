@@ -37,7 +37,8 @@ public enum FragmentsAvailable {
     INFO_GROUP_CHAT,
     GROUP_CHAT,
     MESSAGE_IMDN,
-    CONTACT_DEVICES;
+    CONTACT_DEVICES,
+    RECORDING_LIST;
 
     public boolean shouldAddItselfToTheRightOf(FragmentsAvailable fragment) {
         switch (this) {

@@ -245,17 +245,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         }
         alreadyAcceptedOrDeniedCall = true;
 
-        CallParams params = LinphoneManager.getLc().createCallParams(mCall);
-
-        boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance().getApplicationContext());
-
-        if (params != null) {
-            params.enableLowBandwidth(isLowBandwidthConnection);
-        } else {
-            Log.e("Could not create call params for call");
-        }
-
-        if (params == null || !LinphoneManager.getInstance().acceptCallWithParams(mCall, params)) {
+        if (!LinphoneManager.getInstance().acceptCall(mCall)) {
             // the above method takes care of Samsung Galaxy S
             Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
         } else {

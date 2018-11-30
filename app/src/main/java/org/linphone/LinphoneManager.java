@@ -779,7 +779,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void setHandsetMode(Boolean on) {
         if (mLc.isIncomingInvitePending() && on) {
             handsetON = true;
-            mLc.acceptCall(mLc.getCurrentCall());
+            acceptCall(mLc.getCurrentCall());
             LinphoneActivity.instance().startIncallActivity();
         } else if (on && CallActivity.isInstanciated()) {
             handsetON = true;
@@ -1148,6 +1148,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         return null;
     }
 
+    public void setAudioManagerModeNormal() {
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
+    }
+
     public void setAudioManagerInCallMode() {
         if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
             Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping...");
@@ -1179,7 +1183,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 public void run() {
                     if (mLc != null) {
                         if (mLc.getCallsNb() > 0) {
-                            mLc.acceptCall(call);
+                            acceptCall(call);
                             if (LinphoneManager.getInstance() != null) {
                                 LinphoneManager.getInstance().routeAudioToReceiver();
                                 if (LinphoneActivity.instance() != null)
@@ -1471,12 +1475,22 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         return reinviteWithVideo();
     }
 
-    public boolean acceptCallIfIncomingPending() throws CoreException {
-        if (mLc.isIncomingInvitePending()) {
-            mLc.acceptCall(mLc.getCurrentCall());
-            return true;
+    public boolean acceptCall(Call call) {
+        if (call == null) return false;
+
+        CallParams params = LinphoneManager.getLc().createCallParams(call);
+
+        boolean isLowBandwidthConnection = !LinphoneUtils.isHighBandwidthConnection(LinphoneService.instance().getApplicationContext());
+
+        if (params != null) {
+            params.enableLowBandwidth(isLowBandwidthConnection);
+            params.setRecordFile(FileUtils.getCallRecordingFilename(getContext(), call.getRemoteAddress()));
+        } else {
+            Log.e("Could not create call params for call");
+            return false;
         }
-        return false;
+
+        return acceptCallWithParams(call, params);
     }
 
     public boolean acceptCallWithParams(Call call, CallParams params) {
