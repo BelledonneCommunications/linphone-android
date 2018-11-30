@@ -72,7 +72,7 @@ public class WelcomeFragment extends Fragment implements OnClickListener {
         } else if (id == R.id.create_account) {
             AssistantActivity.instance().displayCreateAccount();
         } else if (id == R.id.remote_provisioning) {
-            AssistantActivity.instance().displayRemoteProvisioning();
+            AssistantActivity.instance().displayRemoteProvisioning("");
         }
     }
 }
