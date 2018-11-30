@@ -22,27 +22,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 public class QrcodeFragment extends Fragment {
-    private SurfaceView mQrcodeView;
+    private TextureView mQrcodeView;
     private CoreListenerStub mListener;
-    private AndroidVideoWindowImpl androidVideoWindowImpl;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.qrcode, container, false);
 
-        mQrcodeView = (SurfaceView) view.findViewById(R.id.qrcodeCaptureSurface);
+        mQrcodeView = view.findViewById(R.id.qrcodeCaptureSurface);
+
+        LinphoneManager.getLc().setNativePreviewWindowId(mQrcodeView);
 
         mListener =
                 new CoreListenerStub() {
@@ -81,26 +81,6 @@ public class QrcodeFragment extends Fragment {
     private void launchQrcodeReader() {
         setBackCamera(true);
 
-        androidVideoWindowImpl =
-                new AndroidVideoWindowImpl(
-                        null,
-                        mQrcodeView,
-                        new AndroidVideoWindowImpl.VideoWindowListener() {
-                            public void onVideoRenderingSurfaceReady(
-                                    AndroidVideoWindowImpl vw, SurfaceView surface) {}
-
-                            public void onVideoRenderingSurfaceDestroyed(
-                                    AndroidVideoWindowImpl vw) {}
-
-                            public void onVideoPreviewSurfaceReady(
-                                    AndroidVideoWindowImpl vw, SurfaceView surface) {
-                                LinphoneManager.getLc()
-                                        .setNativePreviewWindowId(androidVideoWindowImpl);
-                            }
-
-                            public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {}
-                        });
-
         enableQrcodeReader(true);
     }
 
@@ -112,21 +92,11 @@ public class QrcodeFragment extends Fragment {
     @Override
     public void onResume() {
         launchQrcodeReader();
-        if (androidVideoWindowImpl != null) {
-            synchronized (androidVideoWindowImpl) {
-                // LinphoneManager.getLc().setNativePreviewWindowId(androidVideoWindowImpl);
-            }
-        }
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        if (androidVideoWindowImpl != null) {
-            synchronized (androidVideoWindowImpl) {
-                // LinphoneManager.getLc().setNativePreviewWindowId(null);
-            }
-        }
         enableQrcodeReader(false);
         // setBackCamera(false);
         super.onPause();
@@ -134,10 +104,6 @@ public class QrcodeFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if (androidVideoWindowImpl != null) {
-            androidVideoWindowImpl.release();
-            androidVideoWindowImpl = null;
-        }
         super.onDestroy();
     }
 }
