@@ -33,24 +33,24 @@ import org.linphone.R;
 import org.linphone.settings.LinphonePreferences;
 
 public class RemoteProvisioningFragment extends Fragment implements OnClickListener, TextWatcher {
-    private EditText remoteProvisioningUrl;
-    private Button apply, qrcode;
+    private EditText mRemoteProvisioningUrl;
+    private Button mApply, mQrcode;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_remote_provisioning, container, false);
 
-        remoteProvisioningUrl = view.findViewById(R.id.assistant_remote_provisioning_url);
-        remoteProvisioningUrl.addTextChangedListener(this);
-        qrcode = view.findViewById(R.id.assistant_qrcode);
-        qrcode.setOnClickListener(this);
-        apply = view.findViewById(R.id.assistant_apply);
-        apply.setEnabled(false);
-        apply.setOnClickListener(this);
+        mRemoteProvisioningUrl = view.findViewById(R.id.assistant_remote_provisioning_url);
+        mRemoteProvisioningUrl.addTextChangedListener(this);
+        mQrcode = view.findViewById(R.id.assistant_qrcode);
+        mQrcode.setOnClickListener(this);
+        mApply = view.findViewById(R.id.assistant_apply);
+        mApply.setEnabled(false);
+        mApply.setOnClickListener(this);
 
-        if (!getArguments().getString("RemoteUrl").isEmpty()) {
-            remoteProvisioningUrl.setText(getArguments().getString("RemoteUrl"));
+        if (getArguments() != null && !getArguments().getString("RemoteUrl").isEmpty()) {
+            mRemoteProvisioningUrl.setText(getArguments().getString("RemoteUrl"));
         }
 
         return view;
@@ -61,7 +61,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
         int id = v.getId();
 
         if (id == R.id.assistant_apply) {
-            String url = remoteProvisioningUrl.getText().toString();
+            String url = mRemoteProvisioningUrl.getText().toString();
             AssistantActivity.instance().displayRemoteProvisioningInProgressDialog();
             LinphonePreferences.instance().setRemoteProvisioningUrl(url);
             LinphoneManager.getLc().getConfig().sync();
@@ -77,7 +77,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        apply.setEnabled(!remoteProvisioningUrl.getText().toString().isEmpty());
+        mApply.setEnabled(!mRemoteProvisioningUrl.getText().toString().isEmpty());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 
 /*
-QrcodeFragment.java
+QrCodeFragment.java
 Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
-public class QrcodeFragment extends Fragment {
+public class QrCodeFragment extends Fragment {
     private TextureView mQrcodeView;
     private CoreListenerStub mListener;
 
@@ -85,11 +85,6 @@ public class QrcodeFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onResume() {
         launchQrcodeReader();
         super.onResume();
@@ -100,10 +95,5 @@ public class QrcodeFragment extends Fragment {
         enableQrcodeReader(false);
         // setBackCamera(false);
         super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

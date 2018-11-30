@@ -87,7 +87,6 @@ public class AssistantActivity extends Activity
                 AccountCreatorListener {
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
     private static final int PERMISSIONS_REQUEST_CAMERA = 202;
-    private static final int PERMISSIONS_ENABLED_CAMERA = 203;
     private static AssistantActivity instance;
     public DialPlan country;
     public String phone_number;
@@ -399,17 +398,11 @@ public class AssistantActivity extends Activity
                 }
                 break;
             case PERMISSIONS_REQUEST_RECORD_AUDIO:
-                LinphoneUtils.dispatchOnUIThread(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                                    launchEchoCancellerCalibration(true);
-                                } else {
-                                    isEchoCalibrationFinished();
-                                }
-                            }
-                        });
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    launchEchoCancellerCalibration(true);
+                } else {
+                    isEchoCalibrationFinished();
+                }
                 break;
         }
     }
@@ -581,7 +574,7 @@ public class AssistantActivity extends Activity
                 != PackageManager.PERMISSION_GRANTED) {
             checkAndRequestVideoPermission();
         } else {
-            fragment = new QrcodeFragment();
+            fragment = new QrCodeFragment();
             changeFragment(fragment);
             currentFragment = AssistantFragmentsEnum.QRCODE_READER;
             back.setVisibility(View.VISIBLE);
