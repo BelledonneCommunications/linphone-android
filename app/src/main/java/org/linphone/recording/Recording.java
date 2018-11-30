@@ -36,125 +36,125 @@ import org.linphone.mediastream.Log;
 public class Recording implements PlayerListener, Comparable<Recording> {
     public static final Pattern RECORD_PATTERN =
             Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*");
-    private String recordPath, name;
-    private Date recordDate;
-    private Player player;
-    private RecordingListener listener;
-    private Handler handler;
-    private Runnable updateCurrentPositionTimer;
+    private String mRecordPath, mName;
+    private Date mRecordDate;
+    private Player mPlayer;
+    private RecordingListener mListener;
+    private Handler mHandler;
+    private Runnable mUpdateCurrentPositionTimer;
 
     @SuppressLint("SimpleDateFormat")
     public Recording(Context context, String recordPath) {
-        this.recordPath = recordPath;
+        this.mRecordPath = recordPath;
 
         Matcher m = RECORD_PATTERN.matcher(recordPath);
         if (m.matches()) {
-            name = m.group(1);
+            mName = m.group(1);
 
             try {
-                recordDate = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss").parse(m.group(2));
+                mRecordDate = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss").parse(m.group(2));
             } catch (ParseException e) {
                 Log.e(e);
             }
         }
 
-        handler = new Handler(context.getMainLooper());
-        updateCurrentPositionTimer =
+        mHandler = new Handler(context.getMainLooper());
+        mUpdateCurrentPositionTimer =
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (listener != null) listener.currentPositionChanged(getCurrentPosition());
-                        if (isPlaying()) handler.postDelayed(updateCurrentPositionTimer, 20);
+                        if (mListener != null) mListener.currentPositionChanged(getCurrentPosition());
+                        if (isPlaying()) mHandler.postDelayed(mUpdateCurrentPositionTimer, 20);
                     }
                 };
 
-        player = LinphoneManager.getLc().createLocalPlayer(null, null, null);
-        player.setListener(this);
+        mPlayer = LinphoneManager.getLc().createLocalPlayer(null, null, null);
+        mPlayer.setListener(this);
     }
 
     public String getRecordPath() {
-        return recordPath;
+        return mRecordPath;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public Date getRecordDate() {
-        return recordDate;
+        return mRecordDate;
     }
 
     public boolean isClosed() {
-        return player.getState() == Player.State.Closed;
+        return mPlayer.getState() == Player.State.Closed;
     }
 
     public void play() {
         if (isClosed()) {
-            player.open(recordPath);
+            mPlayer.open(mRecordPath);
         }
 
-        player.start();
-        handler.post(updateCurrentPositionTimer);
+        mPlayer.start();
+        mHandler.post(mUpdateCurrentPositionTimer);
     }
 
     public boolean isPlaying() {
-        return player.getState() == Player.State.Playing;
+        return mPlayer.getState() == Player.State.Playing;
     }
 
     public void pause() {
         if (!isClosed()) {
-            player.pause();
+            mPlayer.pause();
         }
     }
 
     public boolean isPaused() {
-        return player.getState() == Player.State.Paused;
+        return mPlayer.getState() == Player.State.Paused;
     }
 
     public void seek(int i) {
-        if (!isClosed()) player.seek(i);
+        if (!isClosed()) mPlayer.seek(i);
     }
 
     public int getCurrentPosition() {
         if (isClosed()) {
-            player.open(recordPath);
+            mPlayer.open(mRecordPath);
         }
 
-        return player.getCurrentPosition();
+        return mPlayer.getCurrentPosition();
     }
 
     public int getDuration() {
         if (isClosed()) {
-            player.open(recordPath);
+            mPlayer.open(mRecordPath);
         }
 
-        return player.getDuration();
+        return mPlayer.getDuration();
     }
 
     public void close() {
-        player.close();
+        mPlayer.close();
     }
 
     public void setRecordingListener(RecordingListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 
     @Override
     public void onEofReached(Player player) {
-        if (listener != null) listener.endOfRecordReached();
+        if (mListener != null) mListener.endOfRecordReached();
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Recording) {
             Recording r = (Recording) o;
-            return recordPath.equals(r.getRecordPath());
+            return mRecordPath.equals(r.getRecordPath());
         }
         return false;
     }
 
     @Override
     public int compareTo(@NonNull Recording o) {
-        return -recordDate.compareTo(o.getRecordDate());
+        return -mRecordDate.compareTo(o.getRecordDate());
     }
 }

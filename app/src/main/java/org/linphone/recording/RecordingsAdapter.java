@@ -1,7 +1,7 @@
 package org.linphone.recording;
 
 /*
-RecordingAdapter.java
+RecordingsAdapter.java
 Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -35,12 +35,12 @@ import org.linphone.R;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
-public class RecordingAdapter extends SelectableAdapter<RecordingViewHolder> {
+public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
     private List<Recording> recordings;
     private Context context;
     private RecordingViewHolder.ClickListener clickListener;
 
-    public RecordingAdapter(
+    public RecordingsAdapter(
             Context context,
             List<Recording> recordings,
             RecordingViewHolder.ClickListener listener,

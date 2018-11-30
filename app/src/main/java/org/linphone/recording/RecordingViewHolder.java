@@ -36,7 +36,8 @@ public class RecordingViewHolder extends RecyclerView.ViewHolder
     public CheckBox select;
     public LinearLayout separator;
     public TextView separatorText;
-    private RecordingViewHolder.ClickListener listener;
+
+    private RecordingViewHolder.ClickListener mListener;
 
     public RecordingViewHolder(View view, RecordingViewHolder.ClickListener listener) {
         super(view);
@@ -51,22 +52,22 @@ public class RecordingViewHolder extends RecyclerView.ViewHolder
         separator = view.findViewById(R.id.separator);
         separatorText = view.findViewById(R.id.separator_text);
 
-        this.listener = listener;
+        mListener = listener;
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (listener != null) {
-            listener.onItemClicked(getAdapterPosition());
+        if (mListener != null) {
+            mListener.onItemClicked(getAdapterPosition());
         }
     }
 
     @Override
     public boolean onLongClick(View view) {
-        if (listener != null) {
-            return listener.onItemLongClicked(getAdapterPosition());
+        if (mListener != null) {
+            return mListener.onItemLongClicked(getAdapterPosition());
         }
         return false;
     }

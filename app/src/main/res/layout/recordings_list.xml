@@ -12,10 +12,20 @@
         android:background="@color/colorF"
         android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="@drawable/toolbar_button"
+            android:contentDescription="@string/content_description_back"
+            android:padding="18dp"
+            android:src="@drawable/back" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.8" />
+            android:layout_weight="0.6" />
 
         <ImageView
             android:id="@+id/edit"

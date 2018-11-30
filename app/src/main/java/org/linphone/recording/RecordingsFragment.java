@@ -1,7 +1,7 @@
 package org.linphone.recording;
 
 /*
-RecordingListFragment.java
+RecordingsFragment.java
 Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,62 +42,76 @@ import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
 
-public class RecordingListFragment extends Fragment
+public class RecordingsFragment extends Fragment
         implements AdapterView.OnItemClickListener,
                 RecordingViewHolder.ClickListener,
                 SelectableHelper.DeleteListener {
-    private RecyclerView recordingList;
-    private List<Recording> recordings;
-    private TextView noRecordings;
-    private RecordingAdapter recordingAdapter;
-    private LinearLayoutManager layoutManager;
-    private Context context;
-    private SelectableHelper selectableHelper;
+    private RecyclerView mRecordingList;
+    private List<Recording> mRecordings;
+    private TextView mNoRecordings;
+    private RecordingsAdapter mRecordingsAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private Context mContext;
+    private SelectableHelper mSelectableHelper;
+    private ImageView mBackButton;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recordings_list, container, false);
 
-        context = getActivity().getApplicationContext();
-        selectableHelper = new SelectableHelper(view, this);
+        mContext = getActivity().getApplicationContext();
+        mSelectableHelper = new SelectableHelper(view, this);
 
-        recordingList = view.findViewById(R.id.recording_list);
-        noRecordings = view.findViewById(R.id.no_recordings);
+        mRecordingList = view.findViewById(R.id.recording_list);
+        mNoRecordings = view.findViewById(R.id.no_recordings);
 
-        layoutManager = new LinearLayoutManager(context);
-        recordingList.setLayoutManager(layoutManager);
+        mBackButton = view.findViewById(R.id.back);
+        if (getResources().getBoolean(R.bool.isTablet)) {
+            mBackButton.setVisibility(View.INVISIBLE);
+        } else {
+            mBackButton.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            LinphoneActivity.instance().popBackStack();
+                        }
+                    });
+        }
+
+        mLayoutManager = new LinearLayoutManager(mContext);
+        mRecordingList.setLayoutManager(mLayoutManager);
 
         // Divider between items
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(
-                        recordingList.getContext(), layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(context.getResources().getDrawable(R.drawable.divider));
-        recordingList.addItemDecoration(dividerItemDecoration);
+                        mRecordingList.getContext(), mLayoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
+        mRecordingList.addItemDecoration(dividerItemDecoration);
 
-        recordings = new ArrayList<>();
+        mRecordings = new ArrayList<>();
 
         return view;
     }
 
     private void hideRecordingListAndDisplayMessageIfEmpty() {
-        if (recordings == null || recordings.isEmpty()) {
-            noRecordings.setVisibility(View.VISIBLE);
-            recordingList.setVisibility(View.GONE);
+        if (mRecordings == null || mRecordings.isEmpty()) {
+            mNoRecordings.setVisibility(View.VISIBLE);
+            mRecordingList.setVisibility(View.GONE);
         } else {
-            noRecordings.setVisibility(View.GONE);
-            recordingList.setVisibility(View.VISIBLE);
+            mNoRecordings.setVisibility(View.GONE);
+            mRecordingList.setVisibility(View.VISIBLE);
         }
     }
 
     public void removeDeletedRecordings() {
-        String recordingsDirectory = FileUtils.getRecordingsDirectory(context);
+        String recordingsDirectory = FileUtils.getRecordingsDirectory(mContext);
         File directory = new File(recordingsDirectory);
 
         if (directory.exists() && directory.isDirectory()) {
             File[] existingRecordings = directory.listFiles();
 
-            for (Recording r : recordings) {
+            for (Recording r : mRecordings) {
                 boolean exists = false;
                 for (File f : existingRecordings) {
                     if (f.getPath().equals(r.getRecordPath())) {
@@ -105,15 +120,15 @@ public class RecordingListFragment extends Fragment
                     }
                 }
 
-                if (!exists) recordings.remove(r);
+                if (!exists) mRecordings.remove(r);
             }
 
-            Collections.sort(recordings);
+            Collections.sort(mRecordings);
         }
     }
 
     public void searchForRecordings() {
-        String recordingsDirectory = FileUtils.getRecordingsDirectory(context);
+        String recordingsDirectory = FileUtils.getRecordingsDirectory(mContext);
         File directory = new File(recordingsDirectory);
 
         if (directory.exists() && directory.isDirectory()) {
@@ -121,7 +136,7 @@ public class RecordingListFragment extends Fragment
 
             for (File f : existingRecordings) {
                 boolean exists = false;
-                for (Recording r : recordings) {
+                for (Recording r : mRecordings) {
                     if (r.getRecordPath().equals(f.getPath())) {
                         exists = true;
                         break;
@@ -130,12 +145,12 @@ public class RecordingListFragment extends Fragment
 
                 if (!exists) {
                     if (Recording.RECORD_PATTERN.matcher(f.getPath()).matches()) {
-                        recordings.add(new Recording(context, f.getPath()));
+                        mRecordings.add(new Recording(mContext, f.getPath()));
                     }
                 }
             }
 
-            Collections.sort(recordings);
+            Collections.sort(mRecordings);
         }
     }
 
@@ -143,7 +158,7 @@ public class RecordingListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        // This is necessary, without it you won't be able to remove recordings as you won't be
+        // This is necessary, without it you won't be able to remove mRecordings as you won't be
         // allowed to.
         LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
 
@@ -158,12 +173,15 @@ public class RecordingListFragment extends Fragment
         searchForRecordings();
 
         hideRecordingListAndDisplayMessageIfEmpty();
-        recordingAdapter =
-                new RecordingAdapter(
-                        getActivity().getApplicationContext(), recordings, this, selectableHelper);
-        recordingList.setAdapter(recordingAdapter);
-        selectableHelper.setAdapter(recordingAdapter);
-        selectableHelper.setDialogMessage(R.string.recordings_delete_dialog);
+        mRecordingsAdapter =
+                new RecordingsAdapter(
+                        getActivity().getApplicationContext(),
+                        mRecordings,
+                        this,
+                        mSelectableHelper);
+        mRecordingList.setAdapter(mRecordingsAdapter);
+        mSelectableHelper.setAdapter(mRecordingsAdapter);
+        mSelectableHelper.setDialogMessage(R.string.recordings_delete_dialog);
     }
 
     @Override
@@ -172,8 +190,8 @@ public class RecordingListFragment extends Fragment
 
         LinphoneManager.getInstance().routeAudioToReceiver();
 
-        // Close all opened recordings
-        for (Recording r : recordings) {
+        // Close all opened mRecordings
+        for (Recording r : mRecordings) {
             if (!r.isClosed()) {
                 if (r.isPlaying()) r.pause();
                 r.close();
@@ -183,38 +201,38 @@ public class RecordingListFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (recordingAdapter.isEditionEnabled()) {
-            Recording record = recordings.get(position);
+        if (mRecordingsAdapter.isEditionEnabled()) {
+            Recording record = mRecordings.get(position);
 
             if (record.isPlaying()) record.pause();
             record.close();
 
             File recordingFile = new File(record.getRecordPath());
             if (recordingFile.delete()) {
-                recordings.remove(record);
+                mRecordings.remove(record);
             }
         }
     }
 
     @Override
     public void onItemClicked(int position) {
-        if (recordingAdapter.isEditionEnabled()) {
-            recordingAdapter.toggleSelection(position);
+        if (mRecordingsAdapter.isEditionEnabled()) {
+            mRecordingsAdapter.toggleSelection(position);
         }
     }
 
     @Override
     public boolean onItemLongClicked(int position) {
-        if (!recordingAdapter.isEditionEnabled()) {
-            selectableHelper.enterEditionMode();
+        if (!mRecordingsAdapter.isEditionEnabled()) {
+            mSelectableHelper.enterEditionMode();
         }
-        recordingAdapter.toggleSelection(position);
+        mRecordingsAdapter.toggleSelection(position);
         return true;
     }
 
     @Override
     public void onDeleteSelection(Object[] objectsToDelete) {
-        int size = recordingAdapter.getSelectedItemCount();
+        int size = mRecordingsAdapter.getSelectedItemCount();
         for (int i = 0; i < size; i++) {
             Recording record = (Recording) objectsToDelete[i];
 
@@ -223,7 +241,7 @@ public class RecordingListFragment extends Fragment
 
             File recordingFile = new File(record.getRecordPath());
             if (recordingFile.delete()) {
-                recordings.remove(record);
+                mRecordings.remove(record);
             }
         }
     }

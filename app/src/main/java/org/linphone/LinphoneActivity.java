@@ -111,7 +111,7 @@ import org.linphone.history.HistoryDetailFragment;
 import org.linphone.history.HistoryListFragment;
 import org.linphone.mediastream.Log;
 import org.linphone.purchase.InAppPurchaseActivity;
-import org.linphone.recording.RecordingListFragment;
+import org.linphone.recording.RecordingsFragment;
 import org.linphone.settings.AccountPreferencesFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsFragment;
@@ -465,7 +465,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 fragment = new DevicesFragment();
                 break;
             case RECORDING_LIST:
-                fragment = new RecordingListFragment();
+                fragment = new RecordingsFragment();
                 break;
             default:
                 break;
@@ -991,6 +991,9 @@ public class LinphoneActivity extends LinphoneGenericActivity
             case CHAT:
                 hideTabBar(hideBottomBar);
                 chat_selected.setVisibility(View.VISIBLE);
+                break;
+            case RECORDING_LIST:
+                hideTabBar(hideBottomBar);
                 break;
         }
     }
