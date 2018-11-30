@@ -63,7 +63,8 @@ public class Recording implements PlayerListener, Comparable<Recording> {
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (mListener != null) mListener.currentPositionChanged(getCurrentPosition());
+                        if (mListener != null)
+                            mListener.currentPositionChanged(getCurrentPosition());
                         if (isPlaying()) mHandler.postDelayed(mUpdateCurrentPositionTimer, 20);
                     }
                 };
