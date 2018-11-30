@@ -46,16 +46,23 @@ public enum FragmentsAvailable {
                 return fragment == HISTORY_LIST || fragment == HISTORY_DETAIL;
 
             case CONTACT_DETAIL:
-                return fragment == CONTACTS_LIST || fragment == CONTACT_EDITOR || fragment == CONTACT_DETAIL;
+                return fragment == CONTACTS_LIST
+                        || fragment == CONTACT_EDITOR
+                        || fragment == CONTACT_DETAIL;
 
             case CONTACT_EDITOR:
-                return fragment == CONTACTS_LIST || fragment == CONTACT_DETAIL || fragment == CONTACT_EDITOR;
+                return fragment == CONTACTS_LIST
+                        || fragment == CONTACT_DETAIL
+                        || fragment == CONTACT_EDITOR;
 
             case CHAT:
                 return fragment == CHAT_LIST || fragment == CHAT;
 
             case GROUP_CHAT:
-                return fragment == CHAT_LIST || fragment == GROUP_CHAT || fragment == INFO_GROUP_CHAT || fragment == CREATE_CHAT;
+                return fragment == CHAT_LIST
+                        || fragment == GROUP_CHAT
+                        || fragment == INFO_GROUP_CHAT
+                        || fragment == CREATE_CHAT;
 
             case MESSAGE_IMDN:
                 return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;

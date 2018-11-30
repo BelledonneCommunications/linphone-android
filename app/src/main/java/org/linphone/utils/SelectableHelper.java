@@ -21,30 +21,25 @@ package org.linphone.utils;
 
 import android.app.Dialog;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import org.linphone.R;
+import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.LinphoneActivity;
+import org.linphone.R;
 
 public class SelectableHelper {
-    private ImageView mEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton, mCancelButton;
+    private ImageView mEditButton,
+            mSelectAllButton,
+            mDeselectAllButton,
+            mDeleteSelectionButton,
+            mCancelButton;
     private LinearLayout mEditTopBar, mTopBar;
     private SelectableAdapter<RecyclerView.ViewHolder> mAdapter;
     private DeleteListener mDeleteListener;
     private Context mContext;
     private int mDialogDeleteMessageResourceId;
-
-    public void setDialogMessage(int id) {
-        mDialogDeleteMessageResourceId = id;
-    }
-
-    public interface DeleteListener {
-        void onDeleteSelection(Object[] objectsToDelete);
-    }
 
     public SelectableHelper(View view, DeleteListener listener) {
         mContext = view.getContext();
@@ -54,84 +49,98 @@ public class SelectableHelper {
         mTopBar = view.findViewById(R.id.top_bar);
 
         mCancelButton = view.findViewById(R.id.cancel);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                quitEditionMode();
-            }
-        });
+        mCancelButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        quitEditionMode();
+                    }
+                });
 
         mEditButton = view.findViewById(R.id.edit);
         mEditButton.setEnabled(false);
 
-        mEditButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mAdapter.getItemCount() > 0) {
-                    enterEditionMode();
-                    mTopBar.setVisibility(View.GONE);
-                    mEditTopBar.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        mEditButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mAdapter.getItemCount() > 0) {
+                            enterEditionMode();
+                            mTopBar.setVisibility(View.GONE);
+                            mEditTopBar.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
 
         mSelectAllButton = view.findViewById(R.id.select_all);
-        mSelectAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.selectAll();
-            }
-        });
+        mSelectAllButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapter.selectAll();
+                    }
+                });
 
         mDeselectAllButton = view.findViewById(R.id.deselect_all);
-        mDeselectAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.deselectAll();
-            }
-        });
+        mDeselectAllButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapter.deselectAll();
+                    }
+                });
 
         mDeleteSelectionButton = view.findViewById(R.id.delete);
         mDeleteSelectionButton.setEnabled(false);
 
-        mDeleteSelectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = LinphoneActivity.instance().displayDialog(mContext.getString(mDialogDeleteMessageResourceId));
-                Button delete = dialog.findViewById(R.id.dialog_delete_button);
-                Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
-
-                delete.setOnClickListener(new View.OnClickListener() {
+        mDeleteSelectionButton.setOnClickListener(
+                new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        mDeleteListener.onDeleteSelection(getSelectedObjects());
-                        mEditButton.setEnabled(mAdapter.getItemCount() != 0);
-                        dialog.dismiss();
-                        quitEditionMode();
+                    public void onClick(View v) {
+                        final Dialog dialog =
+                                LinphoneActivity.instance()
+                                        .displayDialog(
+                                                mContext.getString(mDialogDeleteMessageResourceId));
+                        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+                        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+
+                        delete.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        mDeleteListener.onDeleteSelection(getSelectedObjects());
+                                        mEditButton.setEnabled(mAdapter.getItemCount() != 0);
+                                        dialog.dismiss();
+                                        quitEditionMode();
+                                    }
+                                });
+
+                        cancel.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.dismiss();
+                                        quitEditionMode();
+                                    }
+                                });
+                        dialog.show();
                     }
                 });
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                        quitEditionMode();
-                    }
-                });
-                dialog.show();
-            }
-        });
 
         mDialogDeleteMessageResourceId = R.string.delete_text;
+    }
+
+    public void setDialogMessage(int id) {
+        mDialogDeleteMessageResourceId = id;
+    }
+
+    public SelectableAdapter getAdapter() {
+        return mAdapter;
     }
 
     public void setAdapter(SelectableAdapter adapter) {
         mAdapter = adapter;
         mEditButton.setEnabled(mAdapter.getItemCount() != 0);
-    }
-
-    public SelectableAdapter getAdapter() {
-        return mAdapter;
     }
 
     public void updateSelectionButtons(boolean isSelectionEmpty, boolean isSelectionFull) {
@@ -176,5 +185,9 @@ public class SelectableHelper {
             index++;
         }
         return objects;
+    }
+
+    public interface DeleteListener {
+        void onDeleteSelection(Object[] objectsToDelete);
     }
 }

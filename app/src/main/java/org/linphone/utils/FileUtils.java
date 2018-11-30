@@ -27,15 +27,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
-
-import org.linphone.LinphoneManager;
-import org.linphone.core.Address;
-import org.linphone.core.ChatMessage;
-import org.linphone.core.Content;
-import org.linphone.core.Friend;
-import org.linphone.core.FriendList;
-import org.linphone.mediastream.Log;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -46,6 +37,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import org.linphone.LinphoneManager;
+import org.linphone.core.Address;
+import org.linphone.core.ChatMessage;
+import org.linphone.core.Content;
+import org.linphone.core.Friend;
+import org.linphone.core.FriendList;
+import org.linphone.mediastream.Log;
 
 public class FileUtils {
     public static String getNameFromFilePath(String filePath) {
@@ -68,8 +66,7 @@ public class FileUtils {
 
     public static Boolean isExtensionImage(String path) {
         String extension = getExtensionFromFileName(path);
-        if (extension != null)
-            extension = extension.toLowerCase();
+        if (extension != null) extension = extension.toLowerCase();
         return (extension != null && extension.matches("(png|jpg|jpeg|bmp|gif)"));
     }
 
@@ -85,6 +82,7 @@ public class FileUtils {
             }
         }
     }
+
     public static String getFilePath(final Context context, final Uri uri) {
         if (uri == null) return null;
 
@@ -124,8 +122,7 @@ public class FileUtils {
     }
 
     /**
-     * Copy data from a source stream to destFile.
-     * Return true if succeed, return false if failed.
+     * Copy data from a source stream to destFile. Return true if succeed, return false if failed.
      */
     private static boolean copyToFile(InputStream inputStream, File destFile) {
         if (inputStream == null || destFile == null) return false;
@@ -147,8 +144,7 @@ public class FileUtils {
     }
 
     public static File createFile(Context context, String fileName) throws IOException {
-        if (TextUtils.isEmpty(fileName))
-            fileName = getStartDate();
+        if (TextUtils.isEmpty(fileName)) fileName = getStartDate();
 
         if (!fileName.contains(".")) {
             fileName = fileName + ".unknown";
@@ -157,8 +153,7 @@ public class FileUtils {
         final File root;
         root = context.getExternalCacheDir();
 
-        if (root != null && !root.exists())
-            root.mkdirs();
+        if (root != null && !root.exists()) root.mkdirs();
         return new File(root, fileName);
     }
 
@@ -190,7 +185,13 @@ public class FileUtils {
     }
 
     public static String getStorageDirectory(Context mContext) {
-        String storageDir = Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName()));
+        String storageDir =
+                Environment.getExternalStorageDirectory()
+                        + "/"
+                        + mContext.getString(
+                                mContext.getResources()
+                                        .getIdentifier(
+                                                "app_name", "string", mContext.getPackageName()));
         File file = new File(storageDir);
         if (!file.isDirectory() || !file.exists()) {
             Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
@@ -201,12 +202,19 @@ public class FileUtils {
     }
 
     public static String getRecordingsDirectory(Context mContext) {
-        String recordingsDir = Environment.getExternalStorageDirectory() + "/" + mContext.getString(mContext.getResources().getIdentifier("app_name", "string", mContext.getPackageName())) + "/recordings";
+        String recordingsDir =
+                Environment.getExternalStorageDirectory()
+                        + "/"
+                        + mContext.getString(
+                                mContext.getResources()
+                                        .getIdentifier(
+                                                "app_name", "string", mContext.getPackageName()))
+                        + "/recordings";
         File file = new File(recordingsDir);
         if (!file.isDirectory() || !file.exists()) {
             Log.w("Directory " + file + " doesn't seem to exists yet, let's create it");
             file.mkdirs();
-            LinphoneManager.getInstance().getMediaScanner().scanFile(file);
+            LinphoneManager.getInstance().getMediaScanner().scanFile(file, null);
         }
         return recordingsDir;
     }
@@ -215,7 +223,8 @@ public class FileUtils {
     public static String getCallRecordingFilename(Context context, Address address) {
         String fileName = getRecordingsDirectory(context) + "/";
 
-        String name = address.getDisplayName() == null ? address.getUsername() : address.getDisplayName();
+        String name =
+                address.getDisplayName() == null ? address.getUsername() : address.getDisplayName();
         fileName += name + "_";
 
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");

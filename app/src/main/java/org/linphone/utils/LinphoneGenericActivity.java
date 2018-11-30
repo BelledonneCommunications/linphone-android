@@ -21,10 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.os.Bundle;
-
+import org.linphone.LinphoneLauncherActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneLauncherActivity;
 
 public class LinphoneGenericActivity extends Activity {
 

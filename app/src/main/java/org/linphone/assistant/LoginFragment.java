@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import org.linphone.R;
 import org.linphone.core.TransportType;
 
@@ -40,8 +39,8 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
     private Button apply;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_login, container, false);
 
         login = view.findViewById(R.id.assistant_username);
@@ -67,8 +66,17 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
         int id = v.getId();
 
         if (id == R.id.assistant_apply) {
-            if (login.getText() == null || login.length() == 0 || password.getText() == null || password.length() == 0 || domain.getText() == null || domain.length() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.first_launch_no_login_password), Toast.LENGTH_LONG).show();
+            if (login.getText() == null
+                    || login.length() == 0
+                    || password.getText() == null
+                    || password.length() == 0
+                    || domain.getText() == null
+                    || domain.length() == 0) {
+                Toast.makeText(
+                                getActivity(),
+                                getString(R.string.first_launch_no_login_password),
+                                Toast.LENGTH_LONG)
+                        .show();
                 return;
             }
 
@@ -84,24 +92,34 @@ public class LoginFragment extends Fragment implements OnClickListener, TextWatc
             }
 
             if (domain.getText().toString().compareTo(getString(R.string.default_domain)) == 0) {
-                AssistantActivity.instance().displayLoginLinphone(login.getText().toString(), password.getText().toString());
+                AssistantActivity.instance()
+                        .displayLoginLinphone(
+                                login.getText().toString(), password.getText().toString());
             } else {
-                AssistantActivity.instance().genericLogIn(login.getText().toString(), userid.getText().toString(), password.getText().toString(), displayName.getText().toString(), null, domain.getText().toString(), transport);
+                AssistantActivity.instance()
+                        .genericLogIn(
+                                login.getText().toString(),
+                                userid.getText().toString(),
+                                password.getText().toString(),
+                                displayName.getText().toString(),
+                                null,
+                                domain.getText().toString(),
+                                transport);
             }
         }
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        apply.setEnabled(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && !domain.getText().toString().isEmpty());
+        apply.setEnabled(
+                !login.getText().toString().isEmpty()
+                        && !password.getText().toString().isEmpty()
+                        && !domain.getText().toString().isEmpty());
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-
-    }
+    public void afterTextChanged(Editable s) {}
 }

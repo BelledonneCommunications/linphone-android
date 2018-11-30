@@ -19,12 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 import android.Manifest;
 import android.content.Context;
-
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -42,16 +40,18 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.flexbox.FlexboxLayout;
-
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
-import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.Content;
 import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
@@ -59,12 +59,6 @@ import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.AsyncBitmap;
 import org.linphone.views.BitmapWorkerTask;
 import org.linphone.views.ContactAvatar;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private Context mContext;
@@ -93,7 +87,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public CheckBox deleteMessage;
     private ChatMessageViewHolderClickListener mListener;
 
-    public ChatMessageViewHolder(Context context, View view, ChatMessageViewHolderClickListener listener) {
+    public ChatMessageViewHolder(
+            Context context, View view, ChatMessageViewHolderClickListener listener) {
         this(view);
         mContext = context;
         mListener = listener;
@@ -147,7 +142,9 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         ChatMessage.State status = message.getState();
         Address remoteSender = message.getFromAddress();
         String displayName;
-        String time = LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format);
+        String time =
+                LinphoneUtils.timestampToHumanDate(
+                        mContext, message.getTime(), R.string.messages_date_format);
 
         if (message.isOutgoing()) {
             outgoingImdn.setVisibility(View.INVISIBLE); // For anchoring purposes
@@ -215,14 +212,24 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (fileContents.size() > 0) {
             pictures.setVisibility(View.VISIBLE);
             for (Content c : fileContents) {
-                View content = LayoutInflater.from(mContext).inflate(R.layout.chat_bubble_content, null, false);
+                View content =
+                        LayoutInflater.from(mContext)
+                                .inflate(R.layout.chat_bubble_content, null, false);
 
-                if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) { // If message is outgoing, even if content is file transfer we have the file available
+                if (c.isFile()
+                        || (c.isFileTransfer()
+                                && message
+                                        .isOutgoing())) { // If message is outgoing, even if content
+                    // is file transfer we have the file
+                    // available
                     String filePath = c.getFilePath();
 
                     View v;
                     if (FileUtils.isExtensionImage(filePath)) {
-                        if (fileContents.size() == 1 && mContext.getResources().getBoolean(R.bool.use_big_pictures_to_preview_images_file_transfers)) {
+                        if (fileContents.size() == 1
+                                && mContext.getResources()
+                                        .getBoolean(
+                                                R.bool.use_big_pictures_to_preview_images_file_transfers)) {
                             v = content.findViewById(R.id.bigImage);
                             loadBitmap(c.getFilePath(), ((ImageView) v));
                         } else {
@@ -231,42 +238,56 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         }
                     } else {
                         v = content.findViewById(R.id.file);
-                        ((TextView)v).setText(FileUtils.getNameFromFilePath(filePath));
+                        ((TextView) v).setText(FileUtils.getNameFromFilePath(filePath));
                     }
                     v.setVisibility(View.VISIBLE);
                     v.setTag(c.getFilePath());
-                    v.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            openFile((String) v.getTag());
-                        }
-                    });
+                    v.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    openFile((String) v.getTag());
+                                }
+                            });
                 } else {
                     Button download = content.findViewById(R.id.download);
                     download.setVisibility(View.VISIBLE);
 
-                    if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+                    if (mContext.getPackageManager()
+                                    .checkPermission(
+                                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                            mContext.getPackageName())
+                            == PackageManager.PERMISSION_GRANTED) {
                         String filename = c.getName();
                         File file = new File(FileUtils.getStorageDirectory(mContext), filename);
 
                         int prefix = 1;
                         while (file.exists()) {
-                            file = new File(FileUtils.getStorageDirectory(mContext), prefix + "_" + filename);
-                            Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
+                            file =
+                                    new File(
+                                            FileUtils.getStorageDirectory(mContext),
+                                            prefix + "_" + filename);
+                            Log.w(
+                                    "File with that name already exists, renamed to "
+                                            + prefix
+                                            + "_"
+                                            + filename);
                             prefix += 1;
                         }
 
                         download.setTag(c);
                         c.setFilePath(file.getPath());
-                        download.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Content c = (Content) v.getTag();
-                                message.downloadContent(c);
-                            }
-                        });
+                        download.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Content c = (Content) v.getTag();
+                                        message.downloadContent(c);
+                                    }
+                                });
                     } else {
-                        Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+                        Log.w(
+                                "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
                         LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
                     }
                 }
@@ -283,13 +304,21 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (path.startsWith("file://")) {
             path = path.substring("file://".length());
             file = new File(path);
-            contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
+            contentUri =
+                    FileProvider.getUriForFile(
+                            mContext,
+                            mContext.getResources().getString(R.string.file_provider),
+                            file);
         } else if (path.startsWith("content://")) {
             contentUri = Uri.parse(path);
         } else {
             file = new File(path);
             try {
-                contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
+                contentUri =
+                        FileProvider.getUriForFile(
+                                mContext,
+                                mContext.getResources().getString(R.string.file_provider),
+                                file);
             } catch (Exception e) {
                 contentUri = Uri.parse(path);
             }
@@ -311,9 +340,11 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     private void loadBitmap(String path, ImageView imageView) {
         if (cancelPotentialWork(path, imageView)) {
-            Bitmap defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
+            Bitmap defaultBitmap =
+                    BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
             BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView, defaultBitmap);
-            final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), defaultBitmap, task);
+            final AsyncBitmap asyncBitmap =
+                    new AsyncBitmap(mContext.getResources(), defaultBitmap, task);
             imageView.setImageDrawable(asyncBitmap);
             task.execute(path);
         }
@@ -336,5 +367,4 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         // No task associated with the ImageView, or an existing task was cancelled
         return true;
     }
-
 }

@@ -25,25 +25,23 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.core.content.ContextCompat;
 import org.linphone.BuildConfig;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.LinphoneActivity;
 import org.linphone.core.Core;
 import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 
 public class AboutFragment extends Fragment implements OnClickListener {
     View sendLogButton = null;
@@ -53,40 +51,52 @@ public class AboutFragment extends Fragment implements OnClickListener {
     private boolean uploadInProgress;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.about, container, false);
 
         TextView aboutVersion = view.findViewById(R.id.about_android_version);
         TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
-        aboutLiblinphoneVersion.setText(String.format(getString(R.string.about_liblinphone_version), LinphoneManager.getLc().getVersion()));
-        aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
+        aboutLiblinphoneVersion.setText(
+                String.format(
+                        getString(R.string.about_liblinphone_version),
+                        LinphoneManager.getLc().getVersion()));
+        aboutVersion.setText(
+                String.format(
+                        getString(R.string.about_version),
+                        BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
 
         sendLogButton = view.findViewById(R.id.send_log);
         sendLogButton.setOnClickListener(this);
-        sendLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+        sendLogButton.setVisibility(
+                LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
         resetLogButton = view.findViewById(R.id.reset_log);
         resetLogButton.setOnClickListener(this);
-        resetLogButton.setVisibility(LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+        resetLogButton.setVisibility(
+                LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onLogCollectionUploadProgressIndication(Core lc, int offset, int total) {
-            }
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onLogCollectionUploadProgressIndication(
+                            Core lc, int offset, int total) {}
 
-            @Override
-            public void onLogCollectionUploadStateChanged(Core lc, LogCollectionUploadState state, String info) {
-                if (state == LogCollectionUploadState.InProgress) {
-                    displayUploadLogsInProgress();
-                } else if (state == LogCollectionUploadState.Delivered || state == LogCollectionUploadState.NotDelivered) {
-                    uploadInProgress = false;
-                    if (progress != null) progress.dismiss();
-                    if (state == LogCollectionUploadState.Delivered) {
-                        sendLogs(LinphoneService.instance().getApplicationContext(), info);
+                    @Override
+                    public void onLogCollectionUploadStateChanged(
+                            Core lc, LogCollectionUploadState state, String info) {
+                        if (state == LogCollectionUploadState.InProgress) {
+                            displayUploadLogsInProgress();
+                        } else if (state == LogCollectionUploadState.Delivered
+                                || state == LogCollectionUploadState.NotDelivered) {
+                            uploadInProgress = false;
+                            if (progress != null) progress.dismiss();
+                            if (state == LogCollectionUploadState.Delivered) {
+                                sendLogs(LinphoneService.instance().getApplicationContext(), info);
+                            }
+                        }
                     }
-                }
-            }
-        };
+                };
 
         return view;
     }
@@ -100,7 +110,10 @@ public class AboutFragment extends Fragment implements OnClickListener {
         progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
         Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorE));
         d.setAlpha(200);
-        progress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        progress.getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
         progress.getWindow().setBackgroundDrawable(d);
         progress.setContentView(R.layout.progress_dialog);
         progress.show();
@@ -110,7 +123,9 @@ public class AboutFragment extends Fragment implements OnClickListener {
         final String appName = context.getString(R.string.app_name);
 
         Intent i = new Intent(Intent.ACTION_SEND);
-        i.putExtra(Intent.EXTRA_EMAIL, new String[]{context.getString(R.string.about_bugreport_email)});
+        i.putExtra(
+                Intent.EXTRA_EMAIL,
+                new String[] {context.getString(R.string.about_bugreport_email)});
         i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
         i.putExtra(Intent.EXTRA_TEXT, info);
         i.setType("application/zip");

@@ -23,7 +23,6 @@ import android.Manifest;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,14 +33,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
+import androidx.core.app.ActivityCompat;
+import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
-import org.linphone.utils.LinphoneGenericActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -51,8 +47,10 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.mediastream.Log;
-
-import java.util.ArrayList;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneGenericActivity;
+import org.linphone.utils.LinphoneUtils;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
     private static CallOutgoingActivity instance;
@@ -95,53 +93,69 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         speaker.setOnClickListener(this);
 
         // set this flag so this activity will stay in front of the keyguard
-        int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+        int flags =
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
         hangUp = findViewById(R.id.outgoing_hang_up);
         hangUp.setOnClickListener(this);
 
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onCallStateChanged(Core lc, Call call, Call.State state, String message) {
-                if (call == mCall && State.Connected == state) {
-                    if (!LinphoneActivity.isInstanciated()) {
-                        return;
-                    }
-                    LinphoneActivity.instance().startIncallActivity();
-                    return;
-                } else if (state == State.Error) {
-                    // Convert Core message for internalization
-                    if (call.getErrorInfo().getReason() == Reason.Declined) {
-                        displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-                        decline();
-                    } else if (call.getErrorInfo().getReason() == Reason.NotFound) {
-                        displayCustomToast(getString(R.string.error_user_not_found), Toast.LENGTH_SHORT);
-                        decline();
-                    } else if (call.getErrorInfo().getReason() == Reason.NotAcceptable) {
-                        displayCustomToast(getString(R.string.error_incompatible_media), Toast.LENGTH_SHORT);
-                        decline();
-                    } else if (call.getErrorInfo().getReason() == Reason.Busy) {
-                        displayCustomToast(getString(R.string.error_user_busy), Toast.LENGTH_SHORT);
-                        decline();
-                    } else if (message != null) {
-                        displayCustomToast(getString(R.string.error_unknown) + " - " + message, Toast.LENGTH_SHORT);
-                        decline();
-                    }
-                } else if (state == State.End) {
-                    // Convert Core message for internalization
-                    if (call.getErrorInfo().getReason() == Reason.Declined) {
-                        displayCustomToast(getString(R.string.error_call_declined), Toast.LENGTH_SHORT);
-                        decline();
-                    }
-                }
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core lc, Call call, Call.State state, String message) {
+                        if (call == mCall && State.Connected == state) {
+                            if (!LinphoneActivity.isInstanciated()) {
+                                return;
+                            }
+                            LinphoneActivity.instance().startIncallActivity();
+                            return;
+                        } else if (state == State.Error) {
+                            // Convert Core message for internalization
+                            if (call.getErrorInfo().getReason() == Reason.Declined) {
+                                displayCustomToast(
+                                        getString(R.string.error_call_declined),
+                                        Toast.LENGTH_SHORT);
+                                decline();
+                            } else if (call.getErrorInfo().getReason() == Reason.NotFound) {
+                                displayCustomToast(
+                                        getString(R.string.error_user_not_found),
+                                        Toast.LENGTH_SHORT);
+                                decline();
+                            } else if (call.getErrorInfo().getReason() == Reason.NotAcceptable) {
+                                displayCustomToast(
+                                        getString(R.string.error_incompatible_media),
+                                        Toast.LENGTH_SHORT);
+                                decline();
+                            } else if (call.getErrorInfo().getReason() == Reason.Busy) {
+                                displayCustomToast(
+                                        getString(R.string.error_user_busy), Toast.LENGTH_SHORT);
+                                decline();
+                            } else if (message != null) {
+                                displayCustomToast(
+                                        getString(R.string.error_unknown) + " - " + message,
+                                        Toast.LENGTH_SHORT);
+                                decline();
+                            }
+                        } else if (state == State.End) {
+                            // Convert Core message for internalization
+                            if (call.getErrorInfo().getReason() == Reason.Declined) {
+                                displayCustomToast(
+                                        getString(R.string.error_call_declined),
+                                        Toast.LENGTH_SHORT);
+                                decline();
+                            }
+                        }
 
-                if (LinphoneManager.getLc().getCallsNb() == 0) {
-                    finish();
-                    return;
-                }
-            }
-        };
+                        if (LinphoneManager.getLc().getCallsNb() == 0) {
+                            finish();
+                            return;
+                        }
+                    }
+                };
         instance = this;
     }
 
@@ -160,8 +174,10 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             for (Call call : LinphoneManager.getLc().getCalls()) {
                 State cstate = call.getState();
-                if (State.OutgoingInit == cstate || State.OutgoingProgress == cstate
-                        || State.OutgoingRinging == cstate || State.OutgoingEarlyMedia == cstate) {
+                if (State.OutgoingInit == cstate
+                        || State.OutgoingProgress == cstate
+                        || State.OutgoingRinging == cstate
+                        || State.OutgoingEarlyMedia == cstate) {
                     mCall = call;
                     break;
                 }
@@ -183,7 +199,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
-            ImageUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(
+                    this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
             name.setText(contact.getFullName());
         } else {
             name.setText(LinphoneUtils.getAddressDisplayName(address));
@@ -241,7 +258,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (LinphoneManager.isInstanciated() && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
+        if (LinphoneManager.isInstanciated()
+                && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
             LinphoneManager.getLc().terminateCall(mCall);
             finish();
         }
@@ -270,20 +288,36 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     private void checkAndRequestCallPermissions() {
         ArrayList<String> permissionsList = new ArrayList<String>();
 
-        int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
-        Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-        int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
-        Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        int recordAudio =
+                getPackageManager()
+                        .checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+        Log.i(
+                "[Permission] Record audio permission is "
+                        + (recordAudio == PackageManager.PERMISSION_GRANTED
+                                ? "granted"
+                                : "denied"));
+        int camera =
+                getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+        Log.i(
+                "[Permission] Camera permission is "
+                        + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
         if (recordAudio != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            if (LinphonePreferences.instance()
+                            .firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                            this, Manifest.permission.RECORD_AUDIO)) {
                 Log.i("[Permission] Asking for record audio");
                 permissionsList.add(Manifest.permission.RECORD_AUDIO);
             }
         }
-        if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+        if (LinphonePreferences.instance().shouldInitiateVideoCall()
+                || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
-                if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                if (LinphonePreferences.instance()
+                                .firstTimeAskingForPermission(Manifest.permission.CAMERA)
+                        || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this, Manifest.permission.CAMERA)) {
                     Log.i("[Permission] Asking for camera");
                     permissionsList.add(Manifest.permission.CAMERA);
                 }
@@ -298,9 +332,16 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
         for (int i = 0; i < permissions.length; i++) {
-            Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+            Log.i(
+                    "[Permission] "
+                            + permissions[i]
+                            + " is "
+                            + (grantResults[i] == PackageManager.PERMISSION_GRANTED
+                                    ? "granted"
+                                    : "denied"));
         }
     }
 }

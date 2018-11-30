@@ -21,18 +21,17 @@ package org.linphone.chat;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.linphone.LinphoneManager;
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
+import androidx.annotation.Nullable;
+import java.util.Arrays;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -41,8 +40,7 @@ import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.fragments.FragmentsAvailable;
-
-import java.util.Arrays;
+import org.linphone.utils.LinphoneUtils;
 
 public class DevicesFragment extends Fragment {
     private LayoutInflater mInflater;
@@ -58,7 +56,8 @@ public class DevicesFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
@@ -72,26 +71,39 @@ public class DevicesFragment extends Fragment {
         mOnlyDisplayChilds = false;
 
         mExpandableList = view.findViewById(R.id.devices_list);
-        mExpandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-                ParticipantDevice device = (ParticipantDevice) mAdapter.getChild(groupPosition, childPosition);
-                LinphoneManager.getLc().inviteAddress(device.getAddress());
-                return false;
-            }
-        });
-        mExpandableList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
-                if (mOnlyDisplayChilds) {
-                    // in this case groups are childs, so call on click
-                    ParticipantDevice device = (ParticipantDevice) mAdapter.getGroup(groupPosition);
-                    LinphoneManager.getLc().inviteAddress(device.getAddress());
-                    return true;
-                }
-                return false;
-            }
-        });
+        mExpandableList.setOnChildClickListener(
+                new ExpandableListView.OnChildClickListener() {
+                    @Override
+                    public boolean onChildClick(
+                            ExpandableListView expandableListView,
+                            View view,
+                            int groupPosition,
+                            int childPosition,
+                            long l) {
+                        ParticipantDevice device =
+                                (ParticipantDevice) mAdapter.getChild(groupPosition, childPosition);
+                        LinphoneManager.getLc().inviteAddress(device.getAddress());
+                        return false;
+                    }
+                });
+        mExpandableList.setOnGroupClickListener(
+                new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(
+                            ExpandableListView expandableListView,
+                            View view,
+                            int groupPosition,
+                            long l) {
+                        if (mOnlyDisplayChilds) {
+                            // in this case groups are childs, so call on click
+                            ParticipantDevice device =
+                                    (ParticipantDevice) mAdapter.getGroup(groupPosition);
+                            LinphoneManager.getLc().inviteAddress(device.getAddress());
+                            return true;
+                        }
+                        return false;
+                    }
+                });
 
         initChatRoom();
 
@@ -99,16 +111,17 @@ public class DevicesFragment extends Fragment {
         initHeader();
 
         mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (LinphoneActivity.instance().isTablet()) {
-                    LinphoneActivity.instance().goToChat(mRoomUri, null);
-                } else {
-                    LinphoneActivity.instance().onBackPressed();
-                }
-            }
-        });
+        mBackButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (LinphoneActivity.instance().isTablet()) {
+                            LinphoneActivity.instance().goToChat(mRoomUri, null);
+                        } else {
+                            LinphoneActivity.instance().onBackPressed();
+                        }
+                    }
+                });
 
         return view;
     }
@@ -135,7 +148,8 @@ public class DevicesFragment extends Fragment {
             if (mRoom.getParticipants().length > 0) {
                 remoteParticipantAddr = mRoom.getParticipants()[0].getAddress();
             }
-            LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(remoteParticipantAddr);
+            LinphoneContact c =
+                    ContactsManager.getInstance().findContactFromAddress(remoteParticipantAddr);
             String displayName;
             if (c != null) {
                 displayName = c.getFullName();

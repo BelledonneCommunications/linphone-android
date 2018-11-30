@@ -31,21 +31,18 @@ import android.provider.MediaStore;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-    private Context mContext;
-    private Bitmap mDefaultBitmap;
-
     private final WeakReference<ImageView> imageViewReference;
     public String path;
+    private Context mContext;
+    private Bitmap mDefaultBitmap;
 
     public BitmapWorkerTask(Context context, ImageView imageView, Bitmap defaultBitmap) {
         mContext = context;
@@ -53,6 +50,17 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         path = null;
         // Use a WeakReference to ensure the ImageView can be garbage collected
         imageViewReference = new WeakReference<>(imageView);
+    }
+
+    public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncBitmap) {
+                final AsyncBitmap asyncDrawable = (AsyncBitmap) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
     }
 
     private Bitmap scaleToFitHeight(Bitmap b, int height) {
@@ -73,7 +81,9 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         if (FileUtils.isExtensionImage(path)) {
             if (path.startsWith("content")) {
                 try {
-                    bm = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), Uri.parse(path));
+                    bm =
+                            MediaStore.Images.Media.getBitmap(
+                                    mContext.getContentResolver(), Uri.parse(path));
                 } catch (FileNotFoundException e) {
                     Log.e(e);
                 } catch (IOException e) {
@@ -141,7 +151,9 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             if (this == bitmapWorkerTask && imageView != null) {
                 imageView.setImageBitmap(bitmap);
                 if (bitmap.getWidth() > ImageUtils.dpToPixels(mContext, 300)) {
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(bitmap.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
+                    RelativeLayout.LayoutParams params =
+                            new RelativeLayout.LayoutParams(
+                                    bitmap.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
                     int margin = (int) ImageUtils.dpToPixels(mContext, 5);
                     params.setMargins(margin, margin, margin, margin);
                     imageView.setLayoutParams(params);
@@ -149,16 +161,5 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 }
             }
         }
-    }
-
-    public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncBitmap) {
-                final AsyncBitmap asyncDrawable = (AsyncBitmap) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
     }
 }

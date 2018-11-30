@@ -23,17 +23,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.linphone.LinphoneManager;
-import org.linphone.core.ChatRoom;
-import org.linphone.utils.SelectableAdapter;
-import org.linphone.utils.SelectableHelper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.linphone.LinphoneManager;
+import org.linphone.core.ChatRoom;
+import org.linphone.utils.SelectableAdapter;
+import org.linphone.utils.SelectableHelper;
 
 public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     private Context mContext;
@@ -41,7 +39,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     private int mItemResource;
     private ChatRoomViewHolder.ClickListener mClickListener;
 
-    public ChatRoomsAdapter(Context context, int itemResource, List<ChatRoom> rooms, ChatRoomViewHolder.ClickListener clickListener, SelectableHelper helper) {
+    public ChatRoomsAdapter(
+            Context context,
+            int itemResource,
+            List<ChatRoom> rooms,
+            ChatRoomViewHolder.ClickListener clickListener,
+            SelectableHelper helper) {
         super(helper);
         mClickListener = clickListener;
         mRooms = rooms;
@@ -51,8 +54,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
     @Override
     public ChatRoomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(mItemResource, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(mItemResource, parent, false);
         return new ChatRoomViewHolder(mContext, view, mClickListener);
     }
 
@@ -60,21 +62,26 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     public void onBindViewHolder(ChatRoomViewHolder holder, int position) {
         ChatRoom room = mRooms.get(position);
         holder.delete.setVisibility(isEditionEnabled() ? View.VISIBLE : View.INVISIBLE);
-        holder.unreadMessages.setVisibility(isEditionEnabled() ? View.INVISIBLE : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
+        holder.unreadMessages.setVisibility(
+                isEditionEnabled()
+                        ? View.INVISIBLE
+                        : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
         holder.delete.setChecked(isSelected(position));
         holder.bindChatRoom(room);
     }
 
     public void refresh() {
         mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
-        Collections.sort(mRooms, new Comparator<ChatRoom>() {
-            public int compare(ChatRoom cr1, ChatRoom cr2) {
-                long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
-                if (timeDiff > 0) return -1;
-                else if (timeDiff == 0) return 0;
-                return 1;
-            }
-        });
+        Collections.sort(
+                mRooms,
+                new Comparator<ChatRoom>() {
+                    public int compare(ChatRoom cr1, ChatRoom cr2) {
+                        long timeDiff = cr1.getLastUpdateTime() - cr2.getLastUpdateTime();
+                        if (timeDiff > 0) return -1;
+                        else if (timeDiff == 0) return 0;
+                        return 1;
+                    }
+                });
         notifyDataSetChanged();
     }
 
@@ -83,10 +90,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
         notifyDataSetChanged();
     }
 
-    /**
-     * Adapter's methods
-     */
-
+    /** Adapter's methods */
     @Override
     public int getItemCount() {
         return mRooms.size();

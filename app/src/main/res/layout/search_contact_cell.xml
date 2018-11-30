@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@drawable/list_selector"
-	android:layout_width="match_parent"
-	android:layout_height="60dp"
-	android:padding="5dp"
-	android:gravity="center_vertical"
-	android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@drawable/list_selector"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="5dp">
 
-	<RelativeLayout
-		android:id="@+id/avatar"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:gravity="center">
+    <RelativeLayout
+        android:id="@+id/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-		<include layout="@layout/contact_avatar"/>
+        <include layout="@layout/contact_avatar" />
 
-	</RelativeLayout>
+    </RelativeLayout>
 
-	<LinearLayout
-		android:id="@+id/layout"
-		android:background="@drawable/list_selector"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:orientation="vertical"
-		android:layout_marginRight="70dp"
-		android:layout_toRightOf="@id/avatar"
-		android:layout_marginLeft="5dp"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentBottom="true">
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="70dp"
+        android:layout_toRightOf="@id/avatar"
+        android:background="@drawable/list_selector"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
-		<TextView
-			android:id="@+id/contact_name"
-			style="@style/font6"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:gravity="top|left"
-			android:lines="1"/>
+        <TextView
+            android:id="@+id/contact_name"
+            style="@style/font6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="top|left"
+            android:lines="1" />
 
-		<TextView
-			android:id="@+id/contact_address"
-			style="@style/font2"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerVertical="true"
-			android:ellipsize="end"
-			android:gravity="bottom|left"
-			android:lines="1"/>
+        <TextView
+            android:id="@+id/contact_address"
+            style="@style/font2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:gravity="bottom|left"
+            android:lines="1" />
 
-	</LinearLayout>
+    </LinearLayout>
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_toLeftOf="@+id/contact_is_select">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/contact_is_select">
 
-		<ImageView
-			android:id="@+id/contact_linphone"
-			android:layout_width="30dp"
-			android:layout_height="30dp"
-			android:layout_gravity="right"
-			android:paddingRight="10dp"
-			android:src="@drawable/linphone_user"
-			android:layout_centerVertical="true"
-			android:layout_alignParentRight="true"/>
+        <ImageView
+            android:id="@+id/contact_linphone"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:paddingRight="10dp"
+            android:src="@drawable/linphone_user" />
 
-	</RelativeLayout>
+    </RelativeLayout>
 
-	<ImageView
-		android:id="@+id/contact_is_select"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:layout_alignParentRight="true"
-		android:layout_centerInParent="true"
-		android:layout_gravity="right"
-		android:visibility="invisible"
-		android:paddingRight="20dp"
-		android:src="@drawable/check_selected"/>
+    <ImageView
+        android:id="@+id/contact_is_select"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_gravity="right"
+        android:paddingRight="20dp"
+        android:src="@drawable/check_selected"
+        android:visibility="invisible" />
 
 </RelativeLayout>

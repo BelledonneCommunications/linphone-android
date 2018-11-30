@@ -19,11 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.app.Fragment;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +35,14 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
-import org.linphone.R;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -52,14 +54,13 @@ import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.views.ContactSelectView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
-
-public class ChatRoomCreationFragment extends Fragment implements View.OnClickListener, SearchContactsListAdapter.ViewHolder.ClickListener, ContactsUpdatedListener {
+public class ChatRoomCreationFragment extends Fragment
+        implements View.OnClickListener,
+                SearchContactsListAdapter.ViewHolder.ClickListener,
+                ContactsUpdatedListener {
     private RecyclerView mContactsList;
     private LinearLayout mContactsSelectedLayout;
     private HorizontalScrollView mContactsSelectLayout;
@@ -81,7 +82,8 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
     private boolean mChatRoomEncrypted;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.chat_create, container, false);
 
@@ -92,7 +94,9 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
 
         if (getArguments() != null) {
             if (getArguments().getSerializable("selectedContacts") != null) {
-                mContactsSelected = (ArrayList<ContactAddress>) getArguments().getSerializable("selectedContacts");
+                mContactsSelected =
+                        (ArrayList<ContactAddress>)
+                                getArguments().getSerializable("selectedContacts");
             }
             mChatRoomSubject = getArguments().getString("subject");
             mChatRoomAddress = getArguments().getString("groupChatRoomAddress");
@@ -127,21 +131,24 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
         mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         mContactsFetchInProgress.setVisibility(View.VISIBLE);
 
-        mSearchAdapter = new SearchContactsListAdapter(null, mContactsFetchInProgress, this, mCreateGroupChatRoom == false);
+        mSearchAdapter =
+                new SearchContactsListAdapter(
+                        null, mContactsFetchInProgress, this, mCreateGroupChatRoom == false);
 
         mSearchField = view.findViewById(R.id.searchField);
-        mSearchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
-            }
+        mSearchField.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return true;
+                    }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                mSearchAdapter.searchContacts(newText, mContactsList);
-                return true;
-            }
-        });
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        mSearchAdapter.searchContacts(newText, mContactsList);
+                        return true;
+                    }
+                });
 
         mLinphoneContactsToggle = view.findViewById(R.id.layout_linphone_contacts);
         mAllContactsToggle = view.findViewById(R.id.layout_all_contacts);
@@ -149,39 +156,49 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
         mSecurityToggle = view.findViewById(R.id.security_toogle);
         mSecurityToggleOn = view.findViewById(R.id.security_toogle_on);
         mSecurityToggleOff = view.findViewById(R.id.security_toogle_off);
-        mSecurityToggleOn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSecurityToggle.setChecked(true);
-            }
-        });
-        mSecurityToggleOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSecurityToggle.setChecked(false);
-            }
-        });
+        mSecurityToggleOn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSecurityToggle.setChecked(true);
+                    }
+                });
+        mSecurityToggleOff.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSecurityToggle.setChecked(false);
+                    }
+                });
 
         mSecurityToggle.setChecked(mChatRoomEncrypted);
         ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
-        if ((mChatRoomSubject != null && mChatRoomAddress != null) || (lpc == null || lpc.getConferenceFactoryUri() == null)) {
+        if ((mChatRoomSubject != null && mChatRoomAddress != null)
+                || (lpc == null || lpc.getConferenceFactoryUri() == null)) {
             mSecurityToggle.setVisibility(View.GONE);
             mSecurityToggleOn.setVisibility(View.GONE);
             mSecurityToggleOff.setVisibility(View.GONE);
         }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(getActivity().getApplicationContext());
 
         mContactsList.setAdapter(mSearchAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContactsList.getContext(),
-                layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(
+                        mContactsList.getContext(), layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(
+                getActivity()
+                        .getApplicationContext()
+                        .getResources()
+                        .getDrawable(R.drawable.divider));
         mContactsList.addItemDecoration(dividerItemDecoration);
 
         mContactsList.setLayoutManager(layoutManager);
 
-        if (savedInstanceState != null && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
+        if (savedInstanceState != null
+                && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
             mContactsSelectedLayout.removeAllViews();
             // We need to get all contacts not only sip
             for (String uri : savedInstanceState.getStringArrayList("mContactsSelected")) {
@@ -197,7 +214,8 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
             updateListSelected();
         }
 
-        mOnlyDisplayLinphoneContacts = ContactsManager.getInstance().getSIPContacts().size() > 0 ? true : false;
+        mOnlyDisplayLinphoneContacts =
+                ContactsManager.getInstance().getSIPContacts().size() > 0 ? true : false;
         if (savedInstanceState != null) {
             mOnlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact", true);
         }
@@ -206,34 +224,37 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
 
         displayChatCreation();
 
-        mChatRoomCreationListener = new ChatRoomListenerStub() {
-            @Override
-            public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-                if (newState == ChatRoom.State.Created) {
-                    mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
-                } else if (newState == ChatRoom.State.CreationFailed) {
-                    mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().displayChatRoomError();
-                    Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
-                }
-            }
-        };
+        mChatRoomCreationListener =
+                new ChatRoomListenerStub() {
+                    @Override
+                    public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+                        if (newState == ChatRoom.State.Created) {
+                            mWaitLayout.setVisibility(View.GONE);
+                            LinphoneActivity.instance()
+                                    .goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
+                        } else if (newState == ChatRoom.State.CreationFailed) {
+                            mWaitLayout.setVisibility(View.GONE);
+                            LinphoneActivity.instance().displayChatRoomError();
+                            Log.e(
+                                    "Group chat room for address "
+                                            + cr.getPeerAddress()
+                                            + " has failed !");
+                        }
+                    }
+                };
 
         if (getArguments() != null) {
             String fileSharedUri = getArguments().getString("fileSharedUri");
             String messageDraft = getArguments().getString("messageDraft");
 
-            if (fileSharedUri != null || messageDraft != null)
-                mShareInfos = new Bundle();
+            if (fileSharedUri != null || messageDraft != null) mShareInfos = new Bundle();
 
             if (fileSharedUri != null) {
                 LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
                 mShareInfos.putString("fileSharedUri", fileSharedUri);
             }
 
-            if (messageDraft != null)
-                mShareInfos.putString("messageDraft", messageDraft);
+            if (messageDraft != null) mShareInfos.putString("messageDraft", messageDraft);
         }
 
         return view;
@@ -248,9 +269,11 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CREATE_CHAT);
         }
 
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
         if (getActivity().getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(
+                    getActivity().getCurrentFocus().getWindowToken(), 0);
         }
     }
 
@@ -337,11 +360,12 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
     private int getIndexOfCa(ContactAddress ca, List<ContactAddress> caList) {
         for (int i = 0; i < caList.size(); i++) {
             if (ca.getAddress() != null && ca.getAddress().getUsername() != null) {
-                if (caList.get(i).getAddressAsDisplayableString().compareTo(ca.getAddressAsDisplayableString()) == 0)
-                    return i;
+                if (caList.get(i)
+                                .getAddressAsDisplayableString()
+                                .compareTo(ca.getAddressAsDisplayableString())
+                        == 0) return i;
             } else if (ca.getPhoneNumber() != null && caList.get(i).getPhoneNumber() != null) {
-                if (ca.getPhoneNumber().compareTo(caList.get(i).getPhoneNumber()) == 0)
-                    return i;
+                if (ca.getPhoneNumber().compareTo(caList.get(i).getPhoneNumber()) == 0) return i;
             }
         }
         return -1;
@@ -353,15 +377,21 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
     }
 
     private void addSelectedContactAddress(ContactAddress ca) {
-        View viewContact = LayoutInflater.from(LinphoneActivity.instance()).inflate(R.layout.contact_selected, null);
+        View viewContact =
+                LayoutInflater.from(LinphoneActivity.instance())
+                        .inflate(R.layout.contact_selected, null);
         if (ca.getContact() != null) {
-            String name = (ca.getContact().getFullName() != null && !ca.getContact().getFullName().isEmpty()) ?
-                    ca.getContact().getFullName() : (ca.getDisplayName() != null) ?
-                    ca.getDisplayName() : (ca.getUsername() != null) ?
-                    ca.getUsername() : "";
+            String name =
+                    (ca.getContact().getFullName() != null
+                                    && !ca.getContact().getFullName().isEmpty())
+                            ? ca.getContact().getFullName()
+                            : (ca.getDisplayName() != null)
+                                    ? ca.getDisplayName()
+                                    : (ca.getUsername() != null) ? ca.getUsername() : "";
             ((TextView) viewContact.findViewById(R.id.sipUri)).setText(name);
         } else {
-            ((TextView) viewContact.findViewById(R.id.sipUri)).setText(ca.getAddressAsDisplayableString());
+            ((TextView) viewContact.findViewById(R.id.sipUri))
+                    .setText(ca.getAddressAsDisplayableString());
         }
         View removeContact = viewContact.findViewById(R.id.contactChatDelete);
         removeContact.setTag(ca);
@@ -390,7 +420,6 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
         }
         mSearchAdapter.setContactsSelectedList(mContactsSelected);
         mContactsSelectedLayout.invalidate();
-
     }
 
     private void addOrRemoveContactFromSelection(ContactAddress ca) {
@@ -443,9 +472,25 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
         } else if (id == R.id.next) {
             if (mChatRoomAddress == null && mChatRoomSubject == null) {
                 mContactsSelectedLayout.removeAllViews();
-                LinphoneActivity.instance().goToChatGroupInfos(null, mContactsSelected, null, true, false, mShareInfos, mSecurityToggle.isChecked());
+                LinphoneActivity.instance()
+                        .goToChatGroupInfos(
+                                null,
+                                mContactsSelected,
+                                null,
+                                true,
+                                false,
+                                mShareInfos,
+                                mSecurityToggle.isChecked());
             } else {
-                LinphoneActivity.instance().goToChatGroupInfos(mChatRoomAddress, mContactsSelected, mChatRoomSubject, true, true, mShareInfos, mSecurityToggle.isChecked());
+                LinphoneActivity.instance()
+                        .goToChatGroupInfos(
+                                mChatRoomAddress,
+                                mContactsSelected,
+                                mChatRoomSubject,
+                                true,
+                                true,
+                                mShareInfos,
+                                mSecurityToggle.isChecked());
             }
         } else if (id == R.id.clearSearchField) {
             mSearchField.setQuery("", false);
@@ -464,32 +509,47 @@ public class ChatRoomCreationFragment extends Fragment implements View.OnClickLi
         boolean createEncryptedChatRoom = mSecurityToggle.isChecked();
         if (lpc == null || lpc.getConferenceFactoryUri() == null || mCreateGroupChatRoom == false) {
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
-                mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), true);
+                mChatRoom =
+                        lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), true);
                 if (mChatRoom != null) {
-                    LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                    LinphoneActivity.instance()
+                            .goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                 } else {
-                    mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !createEncryptedChatRoom, createEncryptedChatRoom);
+                    mChatRoom =
+                            lc.createClientGroupChatRoom(
+                                    getString(R.string.dummy_group_chat_subject),
+                                    !createEncryptedChatRoom,
+                                    createEncryptedChatRoom);
                     mChatRoom.addListener(mChatRoomCreationListener);
                     Address participants[] = new Address[1];
                     participants[0] = ca.getAddress();
                     mChatRoom.addParticipants(participants);
                 }
             } else {
-                if (lpc != null && lpc.getConferenceFactoryUri() != null && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-                    mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), false);
+                if (lpc != null
+                        && lpc.getConferenceFactoryUri() != null
+                        && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+                    mChatRoom =
+                            lc.findOneToOneChatRoom(
+                                    lpc.getIdentityAddress(), ca.getAddress(), false);
                     if (mChatRoom == null) {
                         mWaitLayout.setVisibility(View.VISIBLE);
-                        mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), true);
+                        mChatRoom =
+                                lc.createClientGroupChatRoom(
+                                        getString(R.string.dummy_group_chat_subject), true);
                         mChatRoom.addListener(mChatRoomCreationListener);
                         Address participants[] = new Address[1];
                         participants[0] = ca.getAddress();
                         mChatRoom.addParticipants(participants);
                     } else {
-                        LinphoneActivity.instance().goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                        LinphoneActivity.instance()
+                                .goToChat(
+                                        mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                     }
                 } else {
                     ChatRoom chatRoom = lc.getChatRoom(ca.getAddress());
-                    LinphoneActivity.instance().goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                    LinphoneActivity.instance()
+                            .goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                 }
             }
         } else {

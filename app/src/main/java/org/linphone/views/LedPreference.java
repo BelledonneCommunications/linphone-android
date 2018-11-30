@@ -23,7 +23,6 @@ import android.content.Context;
 import android.preference.Preference;
 import android.view.View;
 import android.widget.ImageView;
-
 import org.linphone.R;
 
 public class LedPreference extends Preference {

@@ -3,8 +3,8 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:background="@color/colorH"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -19,20 +19,20 @@
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <include layout="@layout/contact_avatar"/>
+            <include layout="@layout/contact_avatar" />
 
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/delete"
-            android:src="@drawable/chat_group_delete"
-            android:contentDescription="@string/content_description_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_delete"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp" />
+            android:paddingRight="5dp"
+            android:src="@drawable/chat_group_delete" />
 
         <LinearLayout
             android:id="@+id/adminLayout"
@@ -50,9 +50,9 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:paddingRight="5dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
+                    android:paddingRight="5dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/check_selected" />
 
@@ -60,9 +60,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textStyle="bold"
+                    android:text="@string/chat_room_infos_admin"
                     android:textColor="@color/colorB"
-                    android:text="@string/chat_room_infos_admin"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -75,9 +75,9 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:paddingRight="5dp"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
+                    android:paddingRight="5dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/check_unselected" />
 
@@ -85,8 +85,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/colorF"
-                    android:text="@string/chat_room_infos_admin"/>
+                    android:text="@string/chat_room_infos_admin"
+                    android:textColor="@color/colorF" />
 
             </LinearLayout>
         </LinearLayout>
@@ -94,20 +94,20 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/avatar"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@id/adminLayout"
-            android:layout_marginLeft="10dp">
+            android:layout_toRightOf="@id/avatar">
 
             <TextView
                 android:id="@+id/name"
                 style="@style/font6"
-                android:lines="1"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1" />
 
         </RelativeLayout>
 

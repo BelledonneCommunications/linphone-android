@@ -4,24 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorB">
-    
+
     <TextureView
-        android:visibility="visible" 
-        android:layout_height="match_parent" 
-        android:layout_width="match_parent" 
-        android:id="@+id/videoSurface" />
+        android:id="@+id/videoSurface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-	
-	<TextureView
-	    android:id="@+id/videoCaptureSurface"
-	    android:layout_width="300dp"
-	    android:layout_height="200dp"
-	    android:layout_alignParentBottom="true"
-	    android:layout_alignParentRight="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-	</RelativeLayout>
+        <TextureView
+            android:id="@+id/videoCaptureSurface"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
 
 </FrameLayout>

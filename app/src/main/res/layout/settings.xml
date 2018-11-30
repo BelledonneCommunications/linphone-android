@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <ListView
-	    android:id="@+id/list"
-	    android:layout_width="match_parent" 
-	    android:layout_height="match_parent"
-	    android:drawSelectorOnTop="false"
-	    android:cacheColorHint="@color/transparent"
-	    android:scrollbarAlwaysDrawVerticalTrack="true" />
-    
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@color/transparent"
+        android:drawSelectorOnTop="false"
+        android:scrollbarAlwaysDrawVerticalTrack="true" />
+
 </RelativeLayout>

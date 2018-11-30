@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/topLayout"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@color/colorH">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorH">
 
-	<fragment
-		android:id="@+id/status"
-		android:name="org.linphone.fragments.StatusFragment"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		tools:layout="@layout/status" />
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.fragments.StatusFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status" />
 
-	<RelativeLayout
-		android:id="@+id/top_bar"
-		android:background="@color/colorF"
-		android:layout_width="match_parent"
-		android:layout_height="60dp"
-		android:layout_below="@id/status">
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/status"
+        android:background="@color/colorF">
 
-		<TextView
-			android:text="@string/incoming_call"
-			style="@style/font1"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:gravity="center"/>
+        <TextView
+            style="@style/font1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/incoming_call" />
 
-	</RelativeLayout>
+    </RelativeLayout>
 
-	<RelativeLayout
-		android:id="@+id/contact_detail"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_below="@id/top_bar"
-		android:paddingTop="10dp"
-		android:layout_above="@+id/menu">
+    <RelativeLayout
+        android:id="@+id/contact_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/menu"
+        android:layout_below="@id/top_bar"
+        android:paddingTop="10dp">
 
-		<TextView
-			android:id="@+id/contact_name"
-			style="@style/font5"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
-			android:gravity="center_vertical|center_horizontal"
-			android:paddingTop="5dp"/>
+        <TextView
+            android:id="@+id/contact_name"
+            style="@style/font5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="5dp" />
 
-		<TextView
-			android:id="@+id/contact_number"
-			style="@style/font2"
-			android:ellipsize="end"
-			android:maxLines="1"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/contact_name"
-			android:layout_centerHorizontal="true"
-			android:paddingBottom="10dp"
-			android:layout_gravity="center_vertical|center_horizontal" />
+        <TextView
+            android:id="@+id/contact_number"
+            style="@style/font2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_name"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingBottom="10dp" />
 
-		<RelativeLayout
-			android:id="@+id/avatar_layout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/contact_number"
-			android:layout_margin="5dp"
-			android:gravity="center">
+        <RelativeLayout
+            android:id="@+id/avatar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contact_number"
+            android:layout_margin="5dp"
+            android:gravity="center">
 
-			<ImageView
-				android:id="@+id/contact_picture"
-				android:src="@drawable/avatar"
-				android:contentDescription="@string/content_description_contact_picture"
-				android:layout_width="200dp"
-				android:layout_height="wrap_content"
-				android:adjustViewBounds="true"/>
+            <ImageView
+                android:id="@+id/contact_picture"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_description_contact_picture"
+                android:src="@drawable/avatar" />
 
-			<ImageView
-				android:src="@drawable/avatar_mask_border"
-				android:layout_width="200dp"
-				android:layout_height="wrap_content"
-				android:adjustViewBounds="true"
-				android:layout_alignParentTop="true"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
+                android:src="@drawable/avatar_mask_border" />
 
-		</RelativeLayout>
+        </RelativeLayout>
 
-	</RelativeLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/menu"

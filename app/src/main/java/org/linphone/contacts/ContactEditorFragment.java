@@ -1,23 +1,23 @@
 package org.linphone.contacts;
 
 /*
- ContactEditorFragment.java
- Copyright (C) 2017  Belledonne Communications, Grenoble, France
+ContactEditorFragment.java
+Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -46,34 +46,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import org.linphone.LinphoneManager;
-import org.linphone.utils.FileUtils;
-import org.linphone.utils.ImageUtils;
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
-import org.linphone.LinphoneActivity;
-import org.linphone.mediastream.Log;
-import org.linphone.mediastream.Version;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
+import org.linphone.mediastream.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 
 public class ContactEditorFragment extends Fragment {
+    private static final int ADD_PHOTO = 1337;
+    private static final int PHOTO_SIZE = 128;
     private View view;
     private ImageView cancel, deleteContact, ok;
     private ImageView addNumber, addSipAddress, contactPicture;
     private LinearLayout phoneNumbersSection, sipAddressesSection;
     private EditText firstName, lastName, organization;
     private LayoutInflater inflater;
-
-    private static final int ADD_PHOTO = 1337;
-    private static final int PHOTO_SIZE = 128;
-
     private boolean isNewContact;
     private LinphoneContact contact;
     private List<LinphoneNumberOrAddress> numbersAndAddresses;
@@ -83,7 +79,8 @@ public class ContactEditorFragment extends Fragment {
     private Uri pickedPhotoForContactUri;
     private byte[] photoToAdd;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
 
         contact = null;
@@ -111,8 +108,9 @@ public class ContactEditorFragment extends Fragment {
         view = inflater.inflate(R.layout.contact_edit, container, false);
 
         phoneNumbersSection = view.findViewById(R.id.phone_numbers);
-        if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) || !ContactsManager.getInstance().hasContactsAccess()) {
-            //Currently linphone friends don't support phone numbers, so hide them
+        if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)
+                || !ContactsManager.getInstance().hasContactsAccess()) {
+            // Currently linphone friends don't support phone numbers, so hide them
             phoneNumbersSection.setVisibility(View.GONE);
         }
 
@@ -124,97 +122,106 @@ public class ContactEditorFragment extends Fragment {
         deleteContact = view.findViewById(R.id.delete_contact);
 
         cancel = view.findViewById(R.id.cancel);
-        cancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFragmentManager().popBackStackImmediate();
-            }
-        });
+        cancel.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getFragmentManager().popBackStackImmediate();
+                    }
+                });
 
         ok = view.findViewById(R.id.ok);
-        ok.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isNewContact) {
-                    boolean areAllFielsEmpty = true;
-                    for (LinphoneNumberOrAddress nounoa : numbersAndAddresses) {
-                        if (nounoa.getValue() != null && !nounoa.getValue().equals("")) {
-                            areAllFielsEmpty = false;
-                            break;
+        ok.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isNewContact) {
+                            boolean areAllFielsEmpty = true;
+                            for (LinphoneNumberOrAddress nounoa : numbersAndAddresses) {
+                                if (nounoa.getValue() != null && !nounoa.getValue().equals("")) {
+                                    areAllFielsEmpty = false;
+                                    break;
+                                }
+                            }
+                            if (areAllFielsEmpty) {
+                                getFragmentManager().popBackStackImmediate();
+                                return;
+                            }
+                            contact = LinphoneContact.createContact();
                         }
-                    }
-                    if (areAllFielsEmpty) {
+                        contact.setFirstNameAndLastName(
+                                firstName.getText().toString(),
+                                lastName.getText().toString(),
+                                true);
+                        if (photoToAdd != null) {
+                            contact.setPhoto(photoToAdd);
+                        }
+                        for (LinphoneNumberOrAddress noa : numbersAndAddresses) {
+                            if (noa.isSIPAddress() && noa.getValue() != null) {
+                                noa.setValue(
+                                        LinphoneUtils.getFullAddressFromUsername(noa.getValue()));
+                            }
+                            contact.addOrUpdateNumberOrAddress(noa);
+                        }
+                        contact.setOrganization(organization.getText().toString(), true);
+                        contact.save();
                         getFragmentManager().popBackStackImmediate();
-                        return;
                     }
-                    contact = LinphoneContact.createContact();
-                }
-                contact.setFirstNameAndLastName(firstName.getText().toString(), lastName.getText().toString(), true);
-                if (photoToAdd != null) {
-                    contact.setPhoto(photoToAdd);
-                }
-                for (LinphoneNumberOrAddress noa : numbersAndAddresses) {
-                    if (noa.isSIPAddress() && noa.getValue() != null) {
-                        noa.setValue(LinphoneUtils.getFullAddressFromUsername(noa.getValue()));
-                    }
-                    contact.addOrUpdateNumberOrAddress(noa);
-                }
-                contact.setOrganization(organization.getText().toString(), true);
-                contact.save();
-                getFragmentManager().popBackStackImmediate();
-            }
-        });
+                });
 
         lastName = view.findViewById(R.id.contactLastName);
         // Hack to display keyboard when touching focused edittext on Nexus One
         if (Version.sdkStrictlyBelow(Version.API11_HONEYCOMB_30)) {
-            lastName.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    InputMethodManager imm = (InputMethodManager) LinphoneActivity.instance().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                }
-            });
+            lastName.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            InputMethodManager imm =
+                                    (InputMethodManager)
+                                            LinphoneActivity.instance()
+                                                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        }
+                    });
         }
-        lastName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (lastName.getText().length() > 0 || firstName.getText().length() > 0) {
-                    ok.setEnabled(true);
-                } else {
-                    ok.setEnabled(false);
-                }
-            }
+        lastName.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (lastName.getText().length() > 0 || firstName.getText().length() > 0) {
+                            ok.setEnabled(true);
+                        } else {
+                            ok.setEnabled(false);
+                        }
+                    }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
 
         firstName = view.findViewById(R.id.contactFirstName);
-        firstName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (firstName.getText().length() > 0 || lastName.getText().length() > 0) {
-                    ok.setEnabled(true);
-                } else {
-                    ok.setEnabled(false);
-                }
-            }
+        firstName.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (firstName.getText().length() > 0 || lastName.getText().length() > 0) {
+                            ok.setEnabled(true);
+                        } else {
+                            ok.setEnabled(false);
+                        }
+                    }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
 
         organization = view.findViewById(R.id.contactOrganization);
         boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
@@ -238,50 +245,59 @@ public class ContactEditorFragment extends Fragment {
                 firstName.setText("");
             }
 
-            deleteContact.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-                    Button delete = dialog.findViewById(R.id.dialog_delete_button);
-                    Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
-
-                    delete.setOnClickListener(new OnClickListener() {
+            deleteContact.setOnClickListener(
+                    new OnClickListener() {
                         @Override
-                        public void onClick(View view) {
-                            contact.delete();
-                            LinphoneActivity.instance().displayContacts(false);
-                            dialog.dismiss();
+                        public void onClick(View v) {
+                            final Dialog dialog =
+                                    LinphoneActivity.instance()
+                                            .displayDialog(getString(R.string.delete_text));
+                            Button delete = dialog.findViewById(R.id.dialog_delete_button);
+                            Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+
+                            delete.setOnClickListener(
+                                    new OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            contact.delete();
+                                            LinphoneActivity.instance().displayContacts(false);
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            cancel.setOnClickListener(
+                                    new OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            dialog.show();
                         }
                     });
-
-                    cancel.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-
-                        }
-                    });
-                    dialog.show();
-                }
-            });
         } else {
             deleteContact.setVisibility(View.INVISIBLE);
         }
 
         contactPicture = view.findViewById(R.id.contact_picture);
         if (contact != null) {
-            ImageUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(
+                    getActivity(),
+                    contactPicture,
+                    contact.getPhotoUri(),
+                    contact.getThumbnailUri());
         } else {
             contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         }
 
-        contactPicture.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickImage();
-                LinphoneActivity.instance().checkAndRequestCameraPermission();
-            }
-        });
+        contactPicture.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        pickImage();
+                        LinphoneActivity.instance().checkAndRequestCameraPermission();
+                    }
+                });
 
         numbersAndAddresses = new ArrayList<>();
         sipAddresses = initSipAddressFields(contact);
@@ -291,23 +307,25 @@ public class ContactEditorFragment extends Fragment {
         if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
             addSipAddress.setVisibility(View.GONE);
         }
-        addSipAddress.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addEmptyRowToAllowNewNumberOrAddress(sipAddresses, true);
-            }
-        });
+        addSipAddress.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addEmptyRowToAllowNewNumberOrAddress(sipAddresses, true);
+                    }
+                });
 
         addNumber = view.findViewById(R.id.add_number_field);
         if (getResources().getBoolean(R.bool.allow_only_one_phone_number)) {
             addNumber.setVisibility(View.GONE);
         }
-        addNumber.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addEmptyRowToAllowNewNumberOrAddress(numbers, false);
-            }
-        });
+        addNumber.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addEmptyRowToAllowNewNumberOrAddress(numbers, false);
+                    }
+                });
 
         lastName.requestFocus();
 
@@ -318,17 +336,21 @@ public class ContactEditorFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (LinphoneActivity.isInstanciated()) {
-        }
+        if (LinphoneActivity.isInstanciated()) {}
 
         // Force hide keyboard
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getActivity()
+                .getWindow()
+                .setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
     public void onPause() {
         // Force hide keyboard
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm =
+                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         View view = getActivity().getCurrentFocus();
         if (imm != null && view != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -341,7 +363,10 @@ public class ContactEditorFragment extends Fragment {
         pickedPhotoForContactUri = null;
         final List<Intent> cameraIntents = new ArrayList<>();
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file = new File(FileUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
+        File file =
+                new File(
+                        FileUtils.getStorageDirectory(LinphoneActivity.instance()),
+                        getString(R.string.temp_photo_name));
         pickedPhotoForContactUri = Uri.fromFile(file);
         captureIntent.putExtra("outputX", PHOTO_SIZE);
         captureIntent.putExtra("outputY", PHOTO_SIZE);
@@ -356,8 +381,10 @@ public class ContactEditorFragment extends Fragment {
         galleryIntent.setType("image/*");
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-        final Intent chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
+        final Intent chooserIntent =
+                Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
+        chooserIntent.putExtra(
+                Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[] {}));
 
         startActivityForResult(chooserIntent, ADD_PHOTO);
     }
@@ -371,8 +398,12 @@ public class ContactEditorFragment extends Fragment {
             } else if (data != null && data.getData() != null) {
                 Uri selectedImageUri = data.getData();
                 try {
-                    Bitmap selectedImage = MediaStore.Images.Media.getBitmap(LinphoneManager.getInstance().getContext().getContentResolver(), selectedImageUri);
-                    selectedImage = Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
+                    Bitmap selectedImage =
+                            MediaStore.Images.Media.getBitmap(
+                                    LinphoneManager.getInstance().getContext().getContentResolver(),
+                                    selectedImageUri);
+                    selectedImage =
+                            Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
                     editContactPicture(null, selectedImage);
                 } catch (IOException e) {
                     Log.e(e);
@@ -381,7 +412,10 @@ public class ContactEditorFragment extends Fragment {
                 String filePath = pickedPhotoForContactUri.getPath();
                 editContactPicture(filePath, null);
             } else {
-                File file = new File(FileUtils.getStorageDirectory(LinphoneActivity.instance()), getString(R.string.temp_photo_name));
+                File file =
+                        new File(
+                                FileUtils.getStorageDirectory(LinphoneActivity.instance()),
+                                getString(R.string.temp_photo_name));
                 if (file.exists()) {
                     pickedPhotoForContactUri = Uri.fromFile(file);
                     String filePath = pickedPhotoForContactUri.getPath();
@@ -415,7 +449,15 @@ public class ContactEditorFragment extends Fragment {
 
     private int getThumbnailSize() {
         int value = -1;
-        Cursor c = LinphoneActivity.instance().getContentResolver().query(DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI, new String[]{DisplayPhoto.THUMBNAIL_MAX_DIM}, null, null, null);
+        Cursor c =
+                LinphoneActivity.instance()
+                        .getContentResolver()
+                        .query(
+                                DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,
+                                new String[] {DisplayPhoto.THUMBNAIL_MAX_DIM},
+                                null,
+                                null,
+                                null);
         try {
             c.moveToFirst();
             value = c.getInt(0);
@@ -433,25 +475,24 @@ public class ContactEditorFragment extends Fragment {
             for (LinphoneNumberOrAddress numberOrAddress : contact.getNumbersOrAddresses()) {
                 if (!numberOrAddress.isSIPAddress()) {
                     View view = displayNumberOrAddress(controls, numberOrAddress.getValue(), false);
-                    if (view != null)
-                        controls.addView(view);
+                    if (view != null) controls.addView(view);
                 }
             }
         }
 
         if (newSipOrNumberToAdd != null) {
-            boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
+            boolean isSip =
+                    LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd)
+                            || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
             if (!isSip) {
                 View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, false);
-                if (view != null)
-                    controls.addView(view);
+                if (view != null) controls.addView(view);
             }
         }
 
         if (newDisplayName != null) {
             EditText lastNameEditText = view.findViewById(R.id.contactLastName);
-            if (view != null)
-                lastNameEditText.setText(newDisplayName);
+            if (view != null) lastNameEditText.setText(newDisplayName);
         }
 
         if (controls.getChildCount() == 0) {
@@ -469,18 +510,18 @@ public class ContactEditorFragment extends Fragment {
             for (LinphoneNumberOrAddress numberOrAddress : contact.getNumbersOrAddresses()) {
                 if (numberOrAddress.isSIPAddress()) {
                     View view = displayNumberOrAddress(controls, numberOrAddress.getValue(), true);
-                    if (view != null)
-                        controls.addView(view);
+                    if (view != null) controls.addView(view);
                 }
             }
         }
 
         if (newSipOrNumberToAdd != null) {
-            boolean isSip = LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd) || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
+            boolean isSip =
+                    LinphoneUtils.isStrictSipAddress(newSipOrNumberToAdd)
+                            || !LinphoneUtils.isNumberAddress(newSipOrNumberToAdd);
             if (isSip) {
                 View view = displayNumberOrAddress(controls, newSipOrNumberToAdd, true);
-                if (view != null)
-                    controls.addView(view);
+                if (view != null) controls.addView(view);
             }
         }
 
@@ -491,24 +532,31 @@ public class ContactEditorFragment extends Fragment {
         return controls;
     }
 
-    private View displayNumberOrAddress(final LinearLayout controls, String numberOrAddress, boolean isSIP) {
+    private View displayNumberOrAddress(
+            final LinearLayout controls, String numberOrAddress, boolean isSIP) {
         return displayNumberOrAddress(controls, numberOrAddress, isSIP, false);
     }
 
     @SuppressLint("InflateParams")
-    private View displayNumberOrAddress(final LinearLayout controls, String numberOrAddress, boolean isSIP, boolean forceAddNumber) {
+    private View displayNumberOrAddress(
+            final LinearLayout controls,
+            String numberOrAddress,
+            boolean isSIP,
+            boolean forceAddNumber) {
         String displayNumberOrAddress = numberOrAddress;
         if (isSIP) {
             if (firstSipAddressIndex == -1) {
                 firstSipAddressIndex = controls.getChildCount();
             }
-            displayNumberOrAddress = LinphoneUtils.getDisplayableUsernameFromAddress(numberOrAddress);
+            displayNumberOrAddress =
+                    LinphoneUtils.getDisplayableUsernameFromAddress(numberOrAddress);
         }
-        if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP) || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
+        if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP)
+                || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
             if (forceAddNumber)
-                isSIP = !isSIP; // If number can't be displayed because we hide a sort of number, change that category
-            else
-                return null;
+                isSIP = !isSIP; // If number can't be displayed because we hide a sort of number,
+            // change that category
+            else return null;
         }
 
         LinphoneNumberOrAddress tempNounoa;
@@ -531,44 +579,46 @@ public class ContactEditorFragment extends Fragment {
             noa.setInputType(InputType.TYPE_CLASS_PHONE);
         }
         noa.setText(displayNumberOrAddress);
-        noa.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                nounoa.setValue(noa.getText().toString());
-            }
+        noa.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        nounoa.setValue(noa.getText().toString());
+                    }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
         if (forceAddNumber) {
             nounoa.setValue(noa.getText().toString());
         }
 
         ImageView delete = view.findViewById(R.id.delete_field);
-        if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSIP) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSIP)) {
+        if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSIP)
+                || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSIP)) {
             delete.setVisibility(View.GONE);
         }
-        delete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (contact != null) {
-                    contact.removeNumberOrAddress(nounoa);
-                }
-                numbersAndAddresses.remove(nounoa);
-                view.setVisibility(View.GONE);
-
-            }
-        });
+        delete.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (contact != null) {
+                            contact.removeNumberOrAddress(nounoa);
+                        }
+                        numbersAndAddresses.remove(nounoa);
+                        view.setVisibility(View.GONE);
+                    }
+                });
         return view;
     }
 
     @SuppressLint("InflateParams")
-    private void addEmptyRowToAllowNewNumberOrAddress(final LinearLayout controls, final boolean isSip) {
+    private void addEmptyRowToAllowNewNumberOrAddress(
+            final LinearLayout controls, final boolean isSip) {
         final View view = inflater.inflate(R.layout.contact_edit_row, null);
         final LinphoneNumberOrAddress nounoa = new LinphoneNumberOrAddress(null, isSip);
 
@@ -579,32 +629,34 @@ public class ContactEditorFragment extends Fragment {
             noa.setInputType(InputType.TYPE_CLASS_PHONE);
         }
         noa.requestFocus();
-        noa.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                nounoa.setValue(noa.getText().toString());
-            }
+        noa.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        nounoa.setValue(noa.getText().toString());
+                    }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
 
         final ImageView delete = view.findViewById(R.id.delete_field);
-        if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip) || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
+        if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSip)
+                || (getResources().getBoolean(R.bool.allow_only_one_sip_address) && isSip)) {
             delete.setVisibility(View.GONE);
         }
-        delete.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                numbersAndAddresses.remove(nounoa);
-                view.setVisibility(View.GONE);
-            }
-        });
+        delete.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        numbersAndAddresses.remove(nounoa);
+                        view.setVisibility(View.GONE);
+                    }
+                });
 
         controls.addView(view);
     }

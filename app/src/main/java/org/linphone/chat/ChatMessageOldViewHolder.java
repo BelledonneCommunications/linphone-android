@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -30,11 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
 import org.linphone.core.ChatMessage;
 
-public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener {
     public String messageId;
     public Context mContext;
     public ChatMessage message;
@@ -66,7 +65,8 @@ public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder implements
     public CheckBox delete;
     private ChatMessageViewHolderClickListener mListener;
 
-    public ChatMessageOldViewHolder(Context context, View view, ChatMessageViewHolderClickListener listener) {
+    public ChatMessageOldViewHolder(
+            Context context, View view, ChatMessageViewHolderClickListener listener) {
         this(view);
         mContext = context;
         mListener = listener;
@@ -76,7 +76,7 @@ public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder implements
     public ChatMessageOldViewHolder(View view) {
         super(view);
         eventLayout = view.findViewById(R.id.event);
-        //eventTime = view.findViewById(R.id.event_date);
+        // eventTime = view.findViewById(R.id.event_date);
         eventMessage = view.findViewById(R.id.event_text);
 
         bubbleLayout = view.findViewById(R.id.bubble);

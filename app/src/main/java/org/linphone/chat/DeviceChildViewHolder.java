@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import org.linphone.R;
 
 public class DeviceChildViewHolder {

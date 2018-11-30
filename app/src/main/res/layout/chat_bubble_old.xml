@@ -5,34 +5,34 @@
 
     <CheckBox
         android:id="@+id/delete_message"
-        android:button="@drawable/checkbox"
-        android:contentDescription="@string/content_description_delete"
-        android:layout_marginLeft="5dp"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
         android:adjustViewBounds="true"
+        android:button="@drawable/checkbox"
         android:clickable="false"
-        android:layout_alignParentRight="true"/>
+        android:contentDescription="@string/content_description_delete" />
 
     <LinearLayout
         android:id="@+id/event"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete_message"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@id/delete_message"
+        android:background="@drawable/event_decoration_gray"
         android:gravity="center"
-        android:background="@drawable/event_decoration_gray">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/event_text"
-            android:textAppearance="@style/font_group_chat_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@color/colorH"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textAppearance="@style/font_group_chat_event" />
 
     </LinearLayout>
 
@@ -46,7 +46,7 @@
             android:id="@+id/separator"
             android:layout_width="100dp"
             android:layout_height="10dp"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
 
         <LinearLayout
             android:id="@+id/background"
@@ -61,7 +61,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp">
 
-                <include layout="@layout/contact_avatar"/>
+                <include layout="@layout/contact_avatar" />
 
             </RelativeLayout>
 
@@ -74,9 +74,9 @@
 
                 <TextView
                     android:id="@+id/contact_header"
-                    android:maxLines="1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:maxLines="1" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -94,28 +94,28 @@
                         android:layout_height="150dp"
                         android:layout_below="@id/file_name"
                         android:layout_centerHorizontal="true"
-                        android:adjustViewBounds="true"/>
+                        android:adjustViewBounds="true" />
 
                     <Button
                         android:id="@+id/open_file"
-                        android:textAppearance="@style/font8"
-                        android:text="@string/open"
-                        android:background="@drawable/resizable_assistant_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/file_name"
                         android:layout_centerVertical="true"
-                        android:visibility="gone"/>
+                        android:background="@drawable/resizable_assistant_button"
+                        android:text="@string/open"
+                        android:textAppearance="@style/font8"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/message"
                     style="@style/font11"
-                    android:autoLink="web"
-                    android:linksClickable="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:linksClickable="true" />
 
                 <RelativeLayout
                     android:id="@+id/file_transfer_layout"
@@ -126,19 +126,19 @@
                     <ProgressBar
                         android:id="@+id/progress_bar"
                         style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:paddingRight="5dp"
+                        android:layout_width="150dp"
+                        android:layout_height="5dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_width="150dp"
-                        android:layout_height="5dp"/>
+                        android:paddingRight="5dp" />
 
                     <Button
                         android:id="@+id/file_transfer_action"
-                        android:textAppearance="@style/font8"
-                        android:background="@drawable/resizable_assistant_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/progress_bar"/>
+                        android:layout_below="@id/progress_bar"
+                        android:background="@drawable/resizable_assistant_button"
+                        android:textAppearance="@style/font8" />
 
                 </RelativeLayout>
 
@@ -147,28 +147,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:orientation="horizontal"
-                    android:layout_gravity="right"
                     android:gravity="right"
+                    android:orientation="horizontal"
                     android:visibility="invisible">
 
                     <TextView
                         android:id="@+id/imdmText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingRight="3dp"
                         android:text="Displayed"
-                        android:textSize="12sp"
-                        android:paddingRight="3dp"/>
+                        android:textSize="12sp" />
 
                     <ImageView
                         android:id="@+id/imdmIcon"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:src="@drawable/valid"
+                        android:layout_marginTop="2dp"
                         android:scaleType="fitCenter"
-                        android:layout_marginTop="2dp" />
+                        android:src="@drawable/valid" />
 
                 </LinearLayout>
 
@@ -177,32 +177,32 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_alignRight="@id/background"
-            android:layout_alignTop="@id/background"
             android:layout_width="15dp"
             android:layout_height="15dp"
+            android:layout_alignTop="@id/background"
+            android:layout_alignRight="@id/background"
             android:paddingTop="5dp"
             android:paddingBottom="3dp">
 
             <ImageView
                 android:id="@+id/status"
-                android:contentDescription="@string/content_description_message_status"
-                android:visibility="invisible"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:paddingRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:adjustViewBounds="true" />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_description_message_status"
+                android:paddingRight="5dp"
+                android:visibility="invisible" />
 
             <ProgressBar
                 android:id="@+id/inprogress"
-                android:progressTint="@color/colorB"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:paddingRight="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:progressTint="@color/colorB" />
 
         </RelativeLayout>
 

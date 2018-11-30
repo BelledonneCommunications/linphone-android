@@ -32,11 +32,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.compatibility.CompatibilityScaleGestureDetector;
 import org.linphone.compatibility.CompatibilityScaleGestureListener;
@@ -44,8 +41,11 @@ import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.VideoDefinition;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
-public class CallVideoFragment extends Fragment implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
+public class CallVideoFragment extends Fragment
+        implements OnGestureListener, OnDoubleTapListener, CompatibilityScaleGestureListener {
     private TextureView mVideoView;
     private TextureView mCaptureView;
     private GestureDetector mGestureDetector;
@@ -58,8 +58,8 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
     @SuppressWarnings("deprecation")
     // Warning useless because value is ignored and automatically set by new APIs.
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
         if (LinphoneManager.getLc().hasCrappyOpengl()) {
             view = inflater.inflate(R.layout.video_no_opengl, container, false);
@@ -69,48 +69,55 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
 
         mVideoView = view.findViewById(R.id.videoSurface);
         mCaptureView = view.findViewById(R.id.videoCaptureSurface);
-        
+
         LinphoneManager.getLc().setNativeVideoWindowId(mVideoView);
         LinphoneManager.getLc().setNativePreviewWindowId(mCaptureView);
 
-        mVideoView.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mScaleDetector != null) {
-                    mScaleDetector.onTouchEvent(event);
-                }
+        mVideoView.setOnTouchListener(
+                new OnTouchListener() {
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (mScaleDetector != null) {
+                            mScaleDetector.onTouchEvent(event);
+                        }
 
-                mGestureDetector.onTouchEvent(event);
-                if (inCallActivity != null) {
-                    inCallActivity.displayVideoCallControlsIfHidden();
-                }
-                return true;
-            }
-        });
+                        mGestureDetector.onTouchEvent(event);
+                        if (inCallActivity != null) {
+                            inCallActivity.displayVideoCallControlsIfHidden();
+                        }
+                        return true;
+                    }
+                });
 
-        mCaptureView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        previewX = (int) motionEvent.getX();
-                        previewY = (int) motionEvent.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        int x = (int) motionEvent.getX();
-                        int y = (int) motionEvent.getY();
-                        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCaptureView.getLayoutParams();
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0); // Clears the rule, as there is no removeRule until API 17.
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        int left = lp.leftMargin + (x - previewX);
-                        int top = lp.topMargin + (y - previewY);
-                        lp.leftMargin = left;
-                        lp.topMargin = top;
-                        view.setLayoutParams(lp);
-                        break;
-                }
-                return true;
-            }
-        });
+        mCaptureView.setOnTouchListener(
+                new OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                previewX = (int) motionEvent.getX();
+                                previewY = (int) motionEvent.getY();
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                int x = (int) motionEvent.getX();
+                                int y = (int) motionEvent.getY();
+                                RelativeLayout.LayoutParams lp =
+                                        (RelativeLayout.LayoutParams)
+                                                mCaptureView.getLayoutParams();
+                                lp.addRule(
+                                        RelativeLayout.ALIGN_PARENT_BOTTOM,
+                                        0); // Clears the rule, as there is no removeRule until API
+                                // 17.
+                                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                                int left = lp.leftMargin + (x - previewX);
+                                int top = lp.topMargin + (y - previewY);
+                                lp.leftMargin = left;
+                                lp.topMargin = top;
+                                view.setLayoutParams(lp);
+                                break;
+                        }
+                        return true;
+                    }
+                });
         return view;
     }
 
@@ -135,9 +142,12 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
             DisplayMetrics metrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
             int screenHeight = metrics.heightPixels;
-            int maxHeight = screenHeight / 4; // Let's take at most 1/4 of the screen for the camera preview
+            int maxHeight =
+                    screenHeight / 4; // Let's take at most 1/4 of the screen for the camera preview
 
-            VideoDefinition videoSize = call.getCurrentParams().getSentVideoDefinition(); // It already takes care of rotation
+            VideoDefinition videoSize =
+                    call.getCurrentParams()
+                            .getSentVideoDefinition(); // It already takes care of rotation
             if (videoSize.getWidth() == 0 || videoSize.getHeight() == 0) {
                 Log.w("Couldn't get sent video definition, using default video definition");
                 videoSize = lc.getPreferredVideoDefinition();
@@ -155,7 +165,9 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
             }
 
             RelativeLayout.LayoutParams newLp = new RelativeLayout.LayoutParams(width, height);
-            newLp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1); // Clears the rule, as there is no removeRule until API 17.
+            newLp.addRule(
+                    RelativeLayout.ALIGN_PARENT_BOTTOM,
+                    1); // Clears the rule, as there is no removeRule until API 17.
             newLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
             mCaptureView.setLayoutParams(newLp);
             Log.d("Video preview size set to " + width + "x" + height);
@@ -175,12 +187,9 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
             }
 
             String newDevice;
-            if (index == 1)
-                newDevice = devices[0];
-            else if (devices.length > 1)
-                newDevice = devices[1];
-            else
-                newDevice = devices[index];
+            if (index == 1) newDevice = devices[0];
+            else if (devices.length > 1) newDevice = devices[1];
+            else newDevice = devices[index];
             LinphoneManager.getLc().setVideoDevice(newDevice);
 
             CallManager.getInstance().updateCall();
@@ -217,10 +226,15 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
         mZoomFactor *= detector.getScaleFactor();
         // Don't let the object get too small or too large.
         // Zoom to make the video fill the screen vertically
-        float portraitZoomFactor = ((float) mVideoView.getHeight()) / (float) ((3 * mVideoView.getWidth()) / 4);
+        float portraitZoomFactor =
+                ((float) mVideoView.getHeight()) / (float) ((3 * mVideoView.getWidth()) / 4);
         // Zoom to make the video fill the screen horizontally
-        float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
-        mZoomFactor = Math.max(0.1f, Math.min(mZoomFactor, Math.max(portraitZoomFactor, landscapeZoomFactor)));
+        float landscapeZoomFactor =
+                ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
+        mZoomFactor =
+                Math.max(
+                        0.1f,
+                        Math.min(mZoomFactor, Math.max(portraitZoomFactor, landscapeZoomFactor)));
 
         Call currentCall = LinphoneManager.getLc().getCurrentCall();
         if (currentCall != null) {
@@ -246,16 +260,14 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
                     mZoomCenterY -= 0.01;
                 }
 
-                if (mZoomCenterX > 1)
-                    mZoomCenterX = 1;
-                if (mZoomCenterX < 0)
-                    mZoomCenterX = 0;
-                if (mZoomCenterY > 1)
-                    mZoomCenterY = 1;
-                if (mZoomCenterY < 0)
-                    mZoomCenterY = 0;
+                if (mZoomCenterX > 1) mZoomCenterX = 1;
+                if (mZoomCenterX < 0) mZoomCenterX = 0;
+                if (mZoomCenterY > 1) mZoomCenterY = 1;
+                if (mZoomCenterY < 0) mZoomCenterY = 0;
 
-                LinphoneManager.getLc().getCurrentCall().zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
+                LinphoneManager.getLc()
+                        .getCurrentCall()
+                        .zoom(mZoomFactor, mZoomCenterX, mZoomCenterY);
                 return true;
             }
         }
@@ -268,9 +280,13 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
         if (LinphoneUtils.isCallEstablished(LinphoneManager.getLc().getCurrentCall())) {
             if (mZoomFactor == 1.f) {
                 // Zoom to make the video fill the screen vertically
-                float portraitZoomFactor = ((float) mVideoView.getHeight()) / (float) ((3 * mVideoView.getWidth()) / 4);
+                float portraitZoomFactor =
+                        ((float) mVideoView.getHeight())
+                                / (float) ((3 * mVideoView.getWidth()) / 4);
                 // Zoom to make the video fill the screen horizontally
-                float landscapeZoomFactor = ((float) mVideoView.getWidth()) / (float) ((3 * mVideoView.getHeight()) / 4);
+                float landscapeZoomFactor =
+                        ((float) mVideoView.getWidth())
+                                / (float) ((3 * mVideoView.getHeight()) / 4);
 
                 mZoomFactor = Math.max(portraitZoomFactor, landscapeZoomFactor);
             } else {
@@ -326,20 +342,15 @@ public class CallVideoFragment extends Fragment implements OnGestureListener, On
     }
 
     @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                           float velocityY) {
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;
     }
 
     @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
+    public void onLongPress(MotionEvent e) {}
 
     @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
+    public void onShowPress(MotionEvent e) {}
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {

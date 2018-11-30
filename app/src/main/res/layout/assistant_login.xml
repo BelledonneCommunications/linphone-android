@@ -1,177 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:padding="30dp"
-		android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
 
-		<TextView
-			android:text="@string/assistant_generic_account"
-			style="@style/font6"
-			android:textAllCaps="true"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_gravity="center"/>
+        <TextView
+            style="@style/font6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/assistant_generic_account"
+            android:textAllCaps="true" />
 
-		<TextView
-			android:text="@string/assistant_login_desc"
-			style="@style/font11"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingTop="10dp"
-			android:gravity="center"
-			android:layout_gravity="center"/>
+        <TextView
+            style="@style/font11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="@string/assistant_login_desc" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:gravity="center"
-			android:layout_marginTop="30dp"
-			android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
-			<TextView
-				android:text="@string/username"
-				style="@style/font13"
-				android:textAllCaps="true"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
+            <TextView
+                style="@style/font13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:textAllCaps="true" />
 
-			<EditText
-				android:id="@+id/assistant_username"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:inputType="text|textNoSuggestions"
-				android:contentDescription="@string/content_description_username_field"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:maxLines="1"/>
+            <EditText
+                android:id="@+id/assistant_username"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_username_field"
+                android:inputType="text|textNoSuggestions"
+                android:maxLines="1"
+                android:textColor="@color/colorB" />
 
-			<TextView
-				android:text="@string/userid"
-				style="@style/font13"
-				android:textAllCaps="true"
-				android:paddingTop="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
+            <TextView
+                style="@style/font13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/userid"
+                android:textAllCaps="true" />
 
-			<EditText
-				android:id="@+id/assistant_userid"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:inputType="text|textNoSuggestions"
-				android:contentDescription="@string/content_description_username_field"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:maxLines="1"/>
+            <EditText
+                android:id="@+id/assistant_userid"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_username_field"
+                android:inputType="text|textNoSuggestions"
+                android:maxLines="1"
+                android:textColor="@color/colorB" />
 
-			<TextView
-				android:text="@string/password"
-				style="@style/font13"
-				android:textAllCaps="true"
-				android:paddingTop="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
+            <TextView
+                style="@style/font13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/password"
+                android:textAllCaps="true" />
 
-			<EditText
-				android:id="@+id/assistant_password"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:inputType="textPassword"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:maxLines="1"/>
+            <EditText
+                android:id="@+id/assistant_password"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@color/colorB" />
 
-			<TextView
-				android:text="@string/domain"
-				style="@style/font13"
-				android:textAllCaps="true"
-				android:paddingTop="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
+            <TextView
+                style="@style/font13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/domain"
+                android:textAllCaps="true" />
 
-			<EditText
-				android:id="@+id/assistant_domain"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:inputType="textUri"
-				android:contentDescription="@string/content_description_domain_field"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:maxLines="1"/>
+            <EditText
+                android:id="@+id/assistant_domain"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_domain_field"
+                android:inputType="textUri"
+                android:maxLines="1"
+                android:textColor="@color/colorB" />
 
-			<TextView
-				android:text="@string/assistant_display_name_optional"
-				style="@style/font13"
-				android:textAllCaps="true"
-				android:paddingTop="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
+            <TextView
+                style="@style/font13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/assistant_display_name_optional"
+                android:textAllCaps="true" />
 
-			<EditText
-				android:id="@+id/assistant_display_name"
-				android:background="@drawable/resizable_textfield"
-				android:textColor="@color/colorB"
-				android:inputType="textPersonName"
-				android:contentDescription="@string/content_description_display_field"
-				android:layout_width="match_parent"
-				android:layout_height="40dp"
-				android:maxLines="1"/>
+            <EditText
+                android:id="@+id/assistant_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/resizable_textfield"
+                android:contentDescription="@string/content_description_display_field"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:textColor="@color/colorB" />
 
-			<TextView
-				android:text="@string/transport"
-				style="@style/font13"
-				android:textAllCaps="true"
-				android:paddingTop="20dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
+            <TextView
+                style="@style/font13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="@string/transport"
+                android:textAllCaps="true" />
 
-			<RadioGroup
-				android:id="@+id/assistant_transports"
-				android:orientation="horizontal"
-				android:gravity="center"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+            <RadioGroup
+                android:id="@+id/assistant_transports"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-				<RadioButton
-					android:id="@+id/transport_udp"
-					android:text="@string/pref_transport_udp"
-					android:layout_margin="5dp"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/transport_udp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/pref_transport_udp" />
 
-				<RadioButton
-					android:id="@+id/transport_tcp"
-					android:text="@string/pref_transport_tcp"
-					android:layout_margin="5dp"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
+                <RadioButton
+                    android:id="@+id/transport_tcp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/pref_transport_tcp" />
 
-				<RadioButton
-					android:id="@+id/transport_tls"
-					android:text="@string/pref_transport_tls"
-					android:layout_margin="5dp"
-					android:checked="true"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
-			</RadioGroup>
+                <RadioButton
+                    android:id="@+id/transport_tls"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:checked="true"
+                    android:text="@string/pref_transport_tls" />
+            </RadioGroup>
 
-			<Button
-				android:id="@+id/assistant_apply"
-				android:text="@string/assistant_login"
-				android:background="@drawable/assistant_button"
-				android:textColor="@drawable/assistant_button_text_color"
-				style="@style/font8"
-				android:layout_width="wrap_content"
-				android:layout_height="40dp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:layout_marginTop="20dp"/>
+            <Button
+                android:id="@+id/assistant_apply"
+                style="@style/font8"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/assistant_button"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/assistant_login"
+                android:textColor="@drawable/assistant_button_text_color" />
 
-		</LinearLayout>
-	</LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

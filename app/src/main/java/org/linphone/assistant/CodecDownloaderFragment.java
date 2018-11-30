@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.PayloadType;
@@ -48,8 +47,8 @@ public class CodecDownloaderFragment extends Fragment {
     private TextView downloadingInfo;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.assistant_codec_downloader, container, false);
 
         question = view.findViewById(R.id.question);
@@ -61,101 +60,112 @@ public class CodecDownloaderFragment extends Fragment {
         bar = view.findViewById(R.id.progressBar);
         downloadingInfo = view.findViewById(R.id.downloadingInfo);
 
-        final OpenH264DownloadHelper codecDownloader = LinphoneManager.getInstance().getOpenH264DownloadHelper();
-        final OpenH264DownloadHelperListener codecListener = new OpenH264DownloadHelperListener() {
+        final OpenH264DownloadHelper codecDownloader =
+                LinphoneManager.getInstance().getOpenH264DownloadHelper();
+        final OpenH264DownloadHelperListener codecListener =
+                new OpenH264DownloadHelperListener() {
 
-            @Override
-            public void OnProgress(final int current, final int max) {
-                mHandler.post(new Runnable() {
                     @Override
-                    public void run() {
-                        if (current <= max) {
-                            hideAllItems();
-                            downloadingInfo.setText(current + " / " + max);
-                            downloadingInfo.setVisibility(View.VISIBLE);
-                            downloading.setVisibility(View.VISIBLE);
-                            bar.setMax(max);
-                            bar.setProgress(current);
-                            bar.setVisibility(View.VISIBLE);
-                        } else {
-                            hideAllItems();
-                            downloaded.setVisibility(View.VISIBLE);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                                enabledH264(true);
-                                LinphoneManager.getLc().reloadMsPlugins(AssistantActivity.instance().getApplicationInfo().nativeLibraryDir);
-                                AssistantActivity.instance().endDownloadCodec();
-                            } else {
-                                // We need to restart due to bad android linker
-                                AssistantActivity.instance().restartApplication();
-                            }
-                        }
+                    public void OnProgress(final int current, final int max) {
+                        mHandler.post(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (current <= max) {
+                                            hideAllItems();
+                                            downloadingInfo.setText(current + " / " + max);
+                                            downloadingInfo.setVisibility(View.VISIBLE);
+                                            downloading.setVisibility(View.VISIBLE);
+                                            bar.setMax(max);
+                                            bar.setProgress(current);
+                                            bar.setVisibility(View.VISIBLE);
+                                        } else {
+                                            hideAllItems();
+                                            downloaded.setVisibility(View.VISIBLE);
+                                            if (Build.VERSION.SDK_INT
+                                                    >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                                                enabledH264(true);
+                                                LinphoneManager.getLc()
+                                                        .reloadMsPlugins(
+                                                                AssistantActivity.instance()
+                                                                        .getApplicationInfo()
+                                                                        .nativeLibraryDir);
+                                                AssistantActivity.instance().endDownloadCodec();
+                                            } else {
+                                                // We need to restart due to bad android linker
+                                                AssistantActivity.instance().restartApplication();
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void OnError(final String error) {
+                        mHandler.post(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideAllItems();
+                                        downloaded.setText("Sorry an error has occurred.");
+                                        downloaded.setVisibility(View.VISIBLE);
+                                        ok.setVisibility(View.VISIBLE);
+                                        enabledH264(false);
+                                        AssistantActivity.instance().endDownloadCodec();
+                                    }
+                                });
+                    }
+                };
+
+        codecDownloader.setOpenH264HelperListener(codecListener);
+
+        yes.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hideAllItems();
+                        bar.setVisibility(View.VISIBLE);
+                        codecDownloader.downloadCodec();
                     }
                 });
-            }
 
-            @Override
-            public void OnError(final String error) {
-                mHandler.post(new Runnable() {
+        no.setOnClickListener(
+                new View.OnClickListener() {
                     @Override
-                    public void run() {
-                        hideAllItems();
-                        downloaded.setText("Sorry an error has occurred.");
-                        downloaded.setVisibility(View.VISIBLE);
-                        ok.setVisibility(View.VISIBLE);
+                    public void onClick(View v) {
                         enabledH264(false);
                         AssistantActivity.instance().endDownloadCodec();
                     }
                 });
-            }
-        };
-
-        codecDownloader.setOpenH264HelperListener(codecListener);
-
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideAllItems();
-                bar.setVisibility(View.VISIBLE);
-                codecDownloader.downloadCodec();
-            }
-        });
-
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enabledH264(false);
-                AssistantActivity.instance().endDownloadCodec();
-            }
-        });
         hideAllItems();
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey("question"))
                 question.setVisibility((Integer) savedInstanceState.getSerializable("question"));
-            else
-                question.setVisibility(View.VISIBLE);
+            else question.setVisibility(View.VISIBLE);
 
             if (savedInstanceState.containsKey("yes"))
                 yes.setVisibility((Integer) savedInstanceState.getSerializable("yes"));
-            else
-                yes.setVisibility(View.VISIBLE);
+            else yes.setVisibility(View.VISIBLE);
 
             if (savedInstanceState.containsKey("no"))
                 no.setVisibility((Integer) savedInstanceState.getSerializable("no"));
-            else
-                no.setVisibility(View.VISIBLE);
+            else no.setVisibility(View.VISIBLE);
 
             if (savedInstanceState.containsKey("downloading"))
-                downloading.setVisibility((Integer) savedInstanceState.getSerializable("downloading"));
+                downloading.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("downloading"));
 
             if (savedInstanceState.containsKey("downloaded"))
-                downloaded.setVisibility((Integer) savedInstanceState.getSerializable("downloaded"));
+                downloaded.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("downloaded"));
 
             if (savedInstanceState.containsKey("context_bar"))
                 bar.setVisibility((Integer) savedInstanceState.getSerializable("context_bar"));
 
             if (savedInstanceState.containsKey("downloadingInfo"))
-                downloadingInfo.setVisibility((Integer) savedInstanceState.getSerializable("downloadingInfo"));
+                downloadingInfo.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("downloadingInfo"));
 
             if (savedInstanceState.containsKey("ok"))
                 ok.setVisibility((Integer) savedInstanceState.getSerializable("ok"));

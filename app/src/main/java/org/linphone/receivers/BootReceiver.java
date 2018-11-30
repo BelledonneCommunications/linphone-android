@@ -22,11 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.compatibility.Compatibility;
+import org.linphone.settings.LinphonePreferences;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -34,11 +33,14 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         LinphonePreferences.instance().setContext(context);
         if (intent.getAction().equalsIgnoreCase(Intent.ACTION_SHUTDOWN)) {
-            android.util.Log.d("LinphoneBootReceiver", "Device is shutting down, destroying Core to unregister");
+            android.util.Log.d(
+                    "LinphoneBootReceiver",
+                    "Device is shutting down, destroying Core to unregister");
             LinphoneManager.destroy();
         } else {
             boolean autostart = LinphonePreferences.instance().isAutoStartEnabled();
-            android.util.Log.i("LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
+            android.util.Log.i(
+                    "LinphoneBootReceiver", "Device is starting, auto_start is " + autostart);
             if (autostart && !LinphoneService.isReady()) {
                 Intent lLinphoneServiceIntent = new Intent(Intent.ACTION_MAIN);
                 lLinphoneServiceIntent.setClass(context, LinphoneService.class);

@@ -20,12 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.view.View;
-
+import java.io.Serializable;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.SearchResult;
-
-import java.io.Serializable;
 
 public class ContactAddress implements Serializable {
     private LinphoneContact contact;
@@ -36,6 +34,15 @@ public class ContactAddress implements Serializable {
     private boolean isSelect = false;
     private boolean isAdmin = false;
     private transient View view;
+
+    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
+        init(c, a, pn, isLC);
+    }
+
+    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
+        init(c, a, pn, isLC);
+        this.isAdmin = isAdmin;
+    }
 
     public boolean isAdmin() {
         return isAdmin;
@@ -49,12 +56,16 @@ public class ContactAddress implements Serializable {
         return isSelect;
     }
 
-    public void setView(View v) {
-        view = v;
+    public void setSelect(boolean select) {
+        isSelect = select;
     }
 
     public View getView() {
         return view;
+    }
+
+    public void setView(View v) {
+        view = v;
     }
 
     public LinphoneContact getContact() {
@@ -76,7 +87,9 @@ public class ContactAddress implements Serializable {
     }
 
     public Address getAddress() {
-        String presence = contact.getPresenceModelForUriOrTel((phoneNumber != null && !phoneNumber.isEmpty()) ? phoneNumber : address);
+        String presence =
+                contact.getPresenceModelForUriOrTel(
+                        (phoneNumber != null && !phoneNumber.isEmpty()) ? phoneNumber : address);
         Address addr = Factory.instance().createAddress(presence != null ? presence : address);
         // Remove the user=phone URI param if existing, it will break everything otherwise
         if (addr.hasUriParam("user")) {
@@ -109,10 +122,6 @@ public class ContactAddress implements Serializable {
         return phoneNumber;
     }
 
-    public void setSelect(boolean select) {
-        isSelect = select;
-    }
-
     public boolean isLinphoneContact() {
         return isLinphoneContact;
     }
@@ -124,22 +133,13 @@ public class ContactAddress implements Serializable {
         isLinphoneContact = isLC;
     }
 
-    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
-        init(c, a, pn, isLC);
-    }
-
-    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
-        init(c, a, pn, isLC);
-        this.isAdmin = isAdmin;
-    }
-
     @Override
     public boolean equals(Object other) {
         if (other == null) return false;
         if (other == this) return true;
         if (!(other instanceof ContactAddress)) return false;
-        if (((ContactAddress) other).getAddressAsDisplayableString() == this.getAddressAsDisplayableString())
-            return true;
+        if (((ContactAddress) other).getAddressAsDisplayableString()
+                == this.getAddressAsDisplayableString()) return true;
         return false;
     }
 }

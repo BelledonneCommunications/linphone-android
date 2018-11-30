@@ -29,7 +29,8 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 
 @SuppressLint("AppCompatCustomView")
-public class EraseButton extends ImageView implements AddressAware, OnClickListener, OnLongClickListener, TextWatcher {
+public class EraseButton extends ImageView
+        implements AddressAware, OnClickListener, OnLongClickListener, TextWatcher {
 
     private AddressText address;
 
@@ -61,20 +62,14 @@ public class EraseButton extends ImageView implements AddressAware, OnClickListe
         view.addTextChangedListener(this);
     }
 
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-                                  int after) {
-    }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
     @Override
     public void afterTextChanged(Editable s) {
         setEnabled(s.length() > 0);
     }
-
 }

@@ -19,6 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import static android.content.Intent.ACTION_MAIN;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -26,19 +28,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
-import org.linphone.utils.LinphoneUtils;
 
-import static android.content.Intent.ACTION_MAIN;
-
-/**
- * Launch Linphone main activity when Service is ready.
- */
+/** Launch Linphone main activity when Service is ready. */
 public class LinphoneLauncherActivity extends Activity {
 
     private final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
@@ -75,7 +71,10 @@ public class LinphoneLauncherActivity extends Activity {
                 }
             } else if (Intent.ACTION_VIEW.equals(action)) {
                 if (LinphoneService.isReady()) {
-                    addressToCall = ContactsManager.getInstance().getAddressOrNumberForAndroidContact(getContentResolver(), intent.getData());
+                    addressToCall =
+                            ContactsManager.getInstance()
+                                    .getAddressOrNumberForAndroidContact(
+                                            getContentResolver(), intent.getData());
                 } else {
                     uriToResolve = intent.getData();
                 }
@@ -104,71 +103,89 @@ public class LinphoneLauncherActivity extends Activity {
 
     protected void onServiceReady() {
         final Class<? extends Activity> classToStart;
-		/*if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
-			classToStart = TutorialLauncherActivity.class;
-		} else */
-        if (getResources().getBoolean(R.bool.display_sms_remote_provisioning_activity) && LinphonePreferences.instance().isFirstRemoteProvisioning()) {
+        /*if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
+        	classToStart = TutorialLauncherActivity.class;
+        } else */
+        if (getResources().getBoolean(R.bool.display_sms_remote_provisioning_activity)
+                && LinphonePreferences.instance().isFirstRemoteProvisioning()) {
             classToStart = RemoteProvisioningActivity.class;
         } else {
             classToStart = LinphoneActivity.class;
         }
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent newIntent = new Intent(LinphoneLauncherActivity.this, classToStart);
-                Intent intent = getIntent();
-                String stringFileShared = null;
-                String stringUriFileShared = null;
-                Uri fileUri = null;
-                if (intent != null) {
-                    String action = intent.getAction();
-                    String type = intent.getType();
-                    newIntent.setData(intent.getData());
-                    if (Intent.ACTION_SEND.equals(action) && type != null) {
-                        if (("text/plain").equals(type) && (String) intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
-                            stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
-                            newIntent.putExtra("msgShared", stringFileShared);
-                        } else {
-                            fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                            stringUriFileShared = FileUtils.getFilePath(getBaseContext(), fileUri);
-                            newIntent.putExtra("fileShared", stringUriFileShared);
+        mHandler.postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent newIntent = new Intent(LinphoneLauncherActivity.this, classToStart);
+                        Intent intent = getIntent();
+                        String stringFileShared = null;
+                        String stringUriFileShared = null;
+                        Uri fileUri = null;
+                        if (intent != null) {
+                            String action = intent.getAction();
+                            String type = intent.getType();
+                            newIntent.setData(intent.getData());
+                            if (Intent.ACTION_SEND.equals(action) && type != null) {
+                                if (("text/plain").equals(type)
+                                        && (String) intent.getStringExtra(Intent.EXTRA_TEXT)
+                                                != null) {
+                                    stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
+                                    newIntent.putExtra("msgShared", stringFileShared);
+                                } else {
+                                    fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                                    stringUriFileShared =
+                                            FileUtils.getFilePath(getBaseContext(), fileUri);
+                                    newIntent.putExtra("fileShared", stringUriFileShared);
+                                }
+                            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+                                if (type.startsWith("image/")) {
+                                    // TODO : Manage multiple files sharing
+                                }
+                            } else if (ACTION_CALL_LINPHONE.equals(action)
+                                    && (intent.getStringExtra("NumberToCall") != null)) {
+                                String numberToCall = intent.getStringExtra("NumberToCall");
+                                if (CallActivity.isInstanciated()) {
+                                    CallActivity.instance().startIncomingCallActivity();
+                                } else {
+                                    LinphoneManager.getInstance()
+                                            .newOutgoingCall(numberToCall, null);
+                                }
+                            }
                         }
-                    } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-                        if (type.startsWith("image/")) {
-                            //TODO : Manage multiple files sharing
+                        if (uriToResolve != null) {
+                            addressToCall =
+                                    ContactsManager.getInstance()
+                                            .getAddressOrNumberForAndroidContact(
+                                                    getContentResolver(), uriToResolve);
+                            Log.i(
+                                    "LinphoneLauncher",
+                                    "Intent has uri to resolve : " + uriToResolve.toString());
+                            uriToResolve = null;
                         }
-                    } else if (ACTION_CALL_LINPHONE.equals(action) && (intent.getStringExtra("NumberToCall") != null)) {
-                        String numberToCall = intent.getStringExtra("NumberToCall");
-                        if (CallActivity.isInstanciated()) {
-                            CallActivity.instance().startIncomingCallActivity();
-                        } else {
-                            LinphoneManager.getInstance().newOutgoingCall(numberToCall, null);
+                        if (addressToCall != null) {
+                            newIntent.putExtra("SipUriOrNumber", addressToCall);
+                            Log.i(
+                                    "LinphoneLauncher",
+                                    "Intent has address to call : " + addressToCall);
+                            addressToCall = null;
+                        }
+                        startActivity(newIntent);
+                        if (classToStart == LinphoneActivity.class
+                                && LinphoneActivity.isInstanciated()
+                                && (stringFileShared != null || fileUri != null)) {
+                            if (stringFileShared != null) {
+                                LinphoneActivity.instance()
+                                        .displayChat(null, stringFileShared, null);
+                            } else if (fileUri != null) {
+                                LinphoneActivity.instance()
+                                        .displayChat(null, null, stringUriFileShared);
+                            }
                         }
                     }
-                }
-                if (uriToResolve != null) {
-                    addressToCall = ContactsManager.getInstance().getAddressOrNumberForAndroidContact(getContentResolver(), uriToResolve);
-                    Log.i("LinphoneLauncher", "Intent has uri to resolve : " + uriToResolve.toString());
-                    uriToResolve = null;
-                }
-                if (addressToCall != null) {
-                    newIntent.putExtra("SipUriOrNumber", addressToCall);
-                    Log.i("LinphoneLauncher", "Intent has address to call : " + addressToCall);
-                    addressToCall = null;
-                }
-                startActivity(newIntent);
-                if (classToStart == LinphoneActivity.class && LinphoneActivity.isInstanciated() && (stringFileShared != null || fileUri != null)) {
-                    if (stringFileShared != null) {
-                        LinphoneActivity.instance().displayChat(null, stringFileShared, null);
-                    } else if (fileUri != null) {
-                        LinphoneActivity.instance().displayChat(null, null, stringUriFileShared);
-                    }
-                }
-            }
-        }, 1000);
+                },
+                1000);
     }
-
 
     private class ServiceWaitThread extends Thread {
         public void run() {
@@ -179,16 +196,14 @@ public class LinphoneLauncherActivity extends Activity {
                     throw new RuntimeException("waiting thread sleep() has been interrupted");
                 }
             }
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    onServiceReady();
-                }
-            });
+            mHandler.post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            onServiceReady();
+                        }
+                    });
             mServiceThread = null;
         }
     }
-
 }
-
-

@@ -1,27 +1,25 @@
 package org.linphone.contacts;
 
 /*
- ContactsListAdapter.java
- Copyright (C) 2018  Belledonne Communications, Grenoble, France
+ContactsListAdapter.java
+Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,67 +29,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-
-import org.linphone.R;
-import org.linphone.views.ContactAvatar;
-import org.linphone.utils.SelectableAdapter;
-import org.linphone.utils.SelectableHelper;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import org.linphone.R;
+import org.linphone.utils.SelectableAdapter;
+import org.linphone.utils.SelectableHelper;
+import org.linphone.views.ContactAvatar;
 
-public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.ViewHolder> implements SectionIndexer {
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        public CheckBox delete;
-        public ImageView linphoneFriend;
-        public TextView name;
-        public LinearLayout separator;
-        public TextView separatorText;
-        public RelativeLayout avatarLayout;
-        public TextView organization;
-        //public ImageView friendStatus;
-        private ClickListener mListener;
-
-        private ViewHolder(View view, ClickListener listener) {
-            super(view);
-
-            delete = view.findViewById(R.id.delete);
-            linphoneFriend = view.findViewById(R.id.friendLinphone);
-            name = view.findViewById(R.id.name);
-            separator = view.findViewById(R.id.separator);
-            separatorText = view.findViewById(R.id.separator_text);
-            avatarLayout = view.findViewById(R.id.avatar_layout);
-            organization = view.findViewById(R.id.contactOrganization);
-            //friendStatus = view.findViewById(R.id.friendStatus);
-            mListener = listener;
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onItemClicked(getAdapterPosition());
-            }
-        }
-
-        public boolean onLongClick(View v) {
-            if (mListener != null) {
-                return mListener.onItemLongClicked(getAdapterPosition());
-            }
-            return false;
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-
-            boolean onItemLongClicked(int position);
-        }
-    }
-
+public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.ViewHolder>
+        implements SectionIndexer {
     private List<LinphoneContact> mContacts;
     private String[] mSections;
     private ArrayList<String> mSectionsList;
@@ -100,7 +51,11 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     private Context mContext;
     private boolean mIsSearchMode;
 
-    ContactsListAdapter(Context context, List<LinphoneContact> contactsList, ViewHolder.ClickListener clickListener, SelectableHelper helper) {
+    ContactsListAdapter(
+            Context context,
+            List<LinphoneContact> contactsList,
+            ViewHolder.ClickListener clickListener,
+            SelectableHelper helper) {
         super(helper);
         mContext = context;
         updateDataSet(contactsList);
@@ -110,7 +65,9 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_cell, parent, false);
+        View v =
+                LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.contact_cell, parent, false);
         return new ViewHolder(v, mClickListener);
     }
 
@@ -126,12 +83,19 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
                 holder.separatorText.setText(String.valueOf(fullName.charAt(0)));
             }
         }
-        holder.separator.setVisibility(mIsSearchMode || (!mIsSearchMode && getPositionForSection(getSectionForPosition(position)) != position) ? View.GONE : View.VISIBLE);
+        holder.separator.setVisibility(
+                mIsSearchMode
+                                || (!mIsSearchMode
+                                        && getPositionForSection(getSectionForPosition(position))
+                                                != position)
+                        ? View.GONE
+                        : View.VISIBLE);
         holder.linphoneFriend.setVisibility(contact.isInFriendList() ? View.VISIBLE : View.GONE);
 
         ContactAvatar.displayAvatar(contact, holder.avatarLayout);
 
-        boolean isOrgVisible = mContext.getResources().getBoolean(R.bool.display_contact_organization);
+        boolean isOrgVisible =
+                mContext.getResources().getBoolean(R.bool.display_contact_organization);
         String org = contact.getOrganization();
         if (org != null && !org.isEmpty() && isOrgVisible) {
             holder.organization.setText(org);
@@ -211,5 +175,54 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         }
         String letter = fullName.substring(0, 1).toUpperCase(Locale.getDefault());
         return mSectionsList.indexOf(letter);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
+        public CheckBox delete;
+        public ImageView linphoneFriend;
+        public TextView name;
+        public LinearLayout separator;
+        public TextView separatorText;
+        public RelativeLayout avatarLayout;
+        public TextView organization;
+        // public ImageView friendStatus;
+        private ClickListener mListener;
+
+        private ViewHolder(View view, ClickListener listener) {
+            super(view);
+
+            delete = view.findViewById(R.id.delete);
+            linphoneFriend = view.findViewById(R.id.friendLinphone);
+            name = view.findViewById(R.id.name);
+            separator = view.findViewById(R.id.separator);
+            separatorText = view.findViewById(R.id.separator_text);
+            avatarLayout = view.findViewById(R.id.avatar_layout);
+            organization = view.findViewById(R.id.contactOrganization);
+            // friendStatus = view.findViewById(R.id.friendStatus);
+            mListener = listener;
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mListener != null) {
+                mListener.onItemClicked(getAdapterPosition());
+            }
+        }
+
+        public boolean onLongClick(View v) {
+            if (mListener != null) {
+                return mListener.onItemLongClicked(getAdapterPosition());
+            }
+            return false;
+        }
+
+        public interface ClickListener {
+            void onItemClicked(int position);
+
+            boolean onItemLongClicked(int position);
+        }
     }
 }

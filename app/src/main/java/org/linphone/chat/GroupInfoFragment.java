@@ -19,13 +19,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -37,11 +36,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-import org.linphone.LinphoneManager;
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -54,10 +55,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
-
-import java.util.ArrayList;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
+import org.linphone.utils.LinphoneUtils;
 
 public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private ImageView mBackButton, mConfirmButton, mAddParticipantsButton;
@@ -84,7 +82,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private boolean mIsEncryptionEnabled;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mInflater = inflater;
         View view = inflater.inflate(R.layout.chat_infos, container, false);
 
@@ -93,7 +92,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         }
         mContext = getActivity().getApplicationContext();
 
-        mParticipants = (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
+        mParticipants =
+                (ArrayList<ContactAddress>) getArguments().getSerializable("ContactAddress");
 
         mGroupChatRoomAddress = null;
         mChatRoom = null;
@@ -119,213 +119,271 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 
         mParticipantsList = view.findViewById(R.id.chat_room_participants);
         mAdapter = new GroupInfoAdapter(mParticipants, !mIsEditionEnabled, !mIsAlreadyCreatedGroup);
-        mAdapter.setOnDeleteClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ContactAddress ca = (ContactAddress) view.getTag();
-                mParticipants.remove(ca);
-                mAdapter.updateDataSet(mParticipants);
-                mParticipantsList.setAdapter(mAdapter);
-                mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
-            }
-        });
+        mAdapter.setOnDeleteClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ContactAddress ca = (ContactAddress) view.getTag();
+                        mParticipants.remove(ca);
+                        mAdapter.updateDataSet(mParticipants);
+                        mParticipantsList.setAdapter(mAdapter);
+                        mConfirmButton.setEnabled(
+                                mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
+                    }
+                });
         mParticipantsList.setAdapter(mAdapter);
         mAdapter.setChatRoom(mChatRoom);
         layoutManager = new LinearLayoutManager(mContext);
         mParticipantsList.setLayoutManager(layoutManager);
 
-        //Divider between items
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mParticipantsList.getContext(),
-                layoutManager.getOrientation());
+        // Divider between items
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(
+                        mParticipantsList.getContext(), layoutManager.getOrientation());
         dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
         mParticipantsList.addItemDecoration(dividerItemDecoration);
-
 
         String fileSharedUri = getArguments().getString("fileSharedUri");
         String messageDraft = getArguments().getString("messageDraft");
 
-        if (fileSharedUri != null || messageDraft != null)
-            mShareInfos = new Bundle();
+        if (fileSharedUri != null || messageDraft != null) mShareInfos = new Bundle();
 
-        if (fileSharedUri != null)
-            mShareInfos.putString("fileSharedUri", fileSharedUri);
+        if (fileSharedUri != null) mShareInfos.putString("fileSharedUri", fileSharedUri);
 
-        if (messageDraft != null)
-            mShareInfos.putString("messageDraft", messageDraft);
+        if (messageDraft != null) mShareInfos.putString("messageDraft", messageDraft);
 
         mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mIsAlreadyCreatedGroup) {
-                    if (LinphoneActivity.instance().isTablet()) {
-                        LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asStringUriOnly(), mShareInfos);
-                    } else {
-                        getFragmentManager().popBackStack();
+        mBackButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mIsAlreadyCreatedGroup) {
+                            if (LinphoneActivity.instance().isTablet()) {
+                                LinphoneActivity.instance()
+                                        .goToChat(
+                                                mGroupChatRoomAddress.asStringUriOnly(),
+                                                mShareInfos);
+                            } else {
+                                getFragmentManager().popBackStack();
+                            }
+                        } else {
+                            LinphoneActivity.instance()
+                                    .goToChatCreator(
+                                            null,
+                                            mParticipants,
+                                            null,
+                                            true,
+                                            mShareInfos,
+                                            true,
+                                            mIsEncryptionEnabled);
+                        }
                     }
-                } else {
-                    LinphoneActivity.instance().goToChatCreator(null, mParticipants, null, true, mShareInfos, true, mIsEncryptionEnabled);
-                }
-            }
-        });
+                });
 
         mConfirmButton = view.findViewById(R.id.confirm);
 
         mLeaveGroupButton = view.findViewById(R.id.leaveGroupLayout);
-        mLeaveGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.chat_room_leave_dialog));
-                Button delete = dialog.findViewById(R.id.dialog_delete_button);
-                delete.setText(getString(R.string.chat_room_leave_button));
-                Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
-
-                delete.setOnClickListener(new View.OnClickListener() {
+        mLeaveGroupButton.setOnClickListener(
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (mChatRoom != null) {
-                            mChatRoom.leave();
-                            LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null);
-                        } else {
-                            Log.e("Can't leave, chatRoom for address " + mGroupChatRoomAddress.asString() + " is null...");
-                        }
-                        dialog.dismiss();
-                    }
-                });
+                        final Dialog dialog =
+                                LinphoneActivity.instance()
+                                        .displayDialog(getString(R.string.chat_room_leave_dialog));
+                        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+                        delete.setText(getString(R.string.chat_room_leave_button));
+                        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
 
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
+                        delete.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if (mChatRoom != null) {
+                                            mChatRoom.leave();
+                                            LinphoneActivity.instance()
+                                                    .goToChat(
+                                                            mGroupChatRoomAddress.asString(), null);
+                                        } else {
+                                            Log.e(
+                                                    "Can't leave, chatRoom for address "
+                                                            + mGroupChatRoomAddress.asString()
+                                                            + " is null...");
+                                        }
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                        cancel.setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        dialog.show();
                     }
                 });
-                dialog.show();
-            }
-        });
-        mLeaveGroupButton.setVisibility(mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft() ? View.GONE : mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
+        mLeaveGroupButton.setVisibility(
+                mIsAlreadyCreatedGroup && mChatRoom.hasBeenLeft()
+                        ? View.GONE
+                        : mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
 
         mAddParticipantsLayout = view.findViewById(R.id.addParticipantsLayout);
-        mAddParticipantsLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
-                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
-                }
-            }
-        });
+        mAddParticipantsLayout.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
+                            LinphoneActivity.instance()
+                                    .goToChatCreator(
+                                            mGroupChatRoomAddress != null
+                                                    ? mGroupChatRoomAddress.asString()
+                                                    : null,
+                                            mParticipants,
+                                            mSubject,
+                                            !mIsAlreadyCreatedGroup,
+                                            null,
+                                            true,
+                                            mIsEncryptionEnabled);
+                        }
+                    }
+                });
         mAddParticipantsButton = view.findViewById(R.id.addParticipants);
-        mAddParticipantsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
-                    LinphoneActivity.instance().goToChatCreator(mGroupChatRoomAddress != null ? mGroupChatRoomAddress.asString() : null, mParticipants, mSubject, !mIsAlreadyCreatedGroup, null, true, mIsEncryptionEnabled);
-                }
-            }
-        });
+        mAddParticipantsButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
+                            LinphoneActivity.instance()
+                                    .goToChatCreator(
+                                            mGroupChatRoomAddress != null
+                                                    ? mGroupChatRoomAddress.asString()
+                                                    : null,
+                                            mParticipants,
+                                            mSubject,
+                                            !mIsAlreadyCreatedGroup,
+                                            null,
+                                            true,
+                                            mIsEncryptionEnabled);
+                        }
+                    }
+                });
         mAddParticipantsButton.setVisibility(mIsAlreadyCreatedGroup ? View.VISIBLE : View.GONE);
 
         mSubjectField = view.findViewById(R.id.subjectField);
-        mSubjectField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        mSubjectField.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence charSequence, int i, int i1, int i2) {}
 
-            }
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        mConfirmButton.setEnabled(
+                                mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
+                    }
+                });
         mSubjectField.setText(mSubject);
 
-        mChatRoomCreationListener = new ChatRoomListenerStub() {
-            @Override
-            public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-                if (newState == ChatRoom.State.Created) {
-                    mWaitLayout.setVisibility(View.GONE);
-                    // This will remove both the creation fragment and the group info fragment from the back stack
-                    getFragmentManager().popBackStack();
-                    getFragmentManager().popBackStack();
-                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
-                } else if (newState == ChatRoom.State.CreationFailed) {
-                    mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().displayChatRoomError();
-                    Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
-                }
-            }
-        };
-
-        mConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mIsAlreadyCreatedGroup) {
-                    mWaitLayout.setVisibility(View.VISIBLE);
-                    mTempChatRoom = LinphoneManager.getLc().createClientGroupChatRoom(mSubjectField.getText().toString(), false, mIsEncryptionEnabled);
-                    mTempChatRoom.addListener(mChatRoomCreationListener);
-                    for (ContactAddress ca : mParticipants) {
-                        mTempChatRoom.addParticipant(ca.getAddress());
+        mChatRoomCreationListener =
+                new ChatRoomListenerStub() {
+                    @Override
+                    public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+                        if (newState == ChatRoom.State.Created) {
+                            mWaitLayout.setVisibility(View.GONE);
+                            // This will remove both the creation fragment and the group info
+                            // fragment from the back stack
+                            getFragmentManager().popBackStack();
+                            getFragmentManager().popBackStack();
+                            LinphoneActivity.instance()
+                                    .goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
+                        } else if (newState == ChatRoom.State.CreationFailed) {
+                            mWaitLayout.setVisibility(View.GONE);
+                            LinphoneActivity.instance().displayChatRoomError();
+                            Log.e(
+                                    "Group chat room for address "
+                                            + cr.getPeerAddress()
+                                            + " has failed !");
+                        }
                     }
-                } else {
-                    // Subject
-                    String newSubject = mSubjectField.getText().toString();
-                    if (!newSubject.equals(mSubject)) {
-                        mChatRoom.setSubject(newSubject);
-                    }
+                };
 
-                    // Participants removed
-                    ArrayList<Participant> toRemove = new ArrayList<>();
-                    for (Participant p : mChatRoom.getParticipants()) {
-                        boolean found = false;
-                        for (ContactAddress c : mParticipants) {
-                            if (c.getAddress().weakEqual(p.getAddress())) {
-                                found = true;
-                                break;
+        mConfirmButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!mIsAlreadyCreatedGroup) {
+                            mWaitLayout.setVisibility(View.VISIBLE);
+                            mTempChatRoom =
+                                    LinphoneManager.getLc()
+                                            .createClientGroupChatRoom(
+                                                    mSubjectField.getText().toString(),
+                                                    false,
+                                                    mIsEncryptionEnabled);
+                            mTempChatRoom.addListener(mChatRoomCreationListener);
+                            for (ContactAddress ca : mParticipants) {
+                                mTempChatRoom.addParticipant(ca.getAddress());
                             }
-                        }
-                        if (!found) {
-                            toRemove.add(p);
-                        }
-                    }
-                    Participant[] participantsToRemove = new Participant[toRemove.size()];
-                    toRemove.toArray(participantsToRemove);
-                    mChatRoom.removeParticipants(participantsToRemove);
+                        } else {
+                            // Subject
+                            String newSubject = mSubjectField.getText().toString();
+                            if (!newSubject.equals(mSubject)) {
+                                mChatRoom.setSubject(newSubject);
+                            }
 
-                    // Participants added
-                    ArrayList<Address> toAdd = new ArrayList<>();
-                    for (ContactAddress c : mParticipants) {
-                        boolean found = false;
-                        for (Participant p : mChatRoom.getParticipants()) {
-                            if (p.getAddress().weakEqual(c.getAddress())) {
-                                // Admin rights
-                                if (c.isAdmin() != p.isAdmin()) {
-                                    mChatRoom.setParticipantAdminStatus(p, c.isAdmin());
+                            // Participants removed
+                            ArrayList<Participant> toRemove = new ArrayList<>();
+                            for (Participant p : mChatRoom.getParticipants()) {
+                                boolean found = false;
+                                for (ContactAddress c : mParticipants) {
+                                    if (c.getAddress().weakEqual(p.getAddress())) {
+                                        found = true;
+                                        break;
+                                    }
                                 }
-                                found = true;
-                                break;
+                                if (!found) {
+                                    toRemove.add(p);
+                                }
                             }
-                        }
-                        if (!found) {
-                            Address addr = c.getAddress();
-                            if (addr != null) {
-                                toAdd.add(addr);
-                            } else {
-                                //TODO error
+                            Participant[] participantsToRemove = new Participant[toRemove.size()];
+                            toRemove.toArray(participantsToRemove);
+                            mChatRoom.removeParticipants(participantsToRemove);
+
+                            // Participants added
+                            ArrayList<Address> toAdd = new ArrayList<>();
+                            for (ContactAddress c : mParticipants) {
+                                boolean found = false;
+                                for (Participant p : mChatRoom.getParticipants()) {
+                                    if (p.getAddress().weakEqual(c.getAddress())) {
+                                        // Admin rights
+                                        if (c.isAdmin() != p.isAdmin()) {
+                                            mChatRoom.setParticipantAdminStatus(p, c.isAdmin());
+                                        }
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found) {
+                                    Address addr = c.getAddress();
+                                    if (addr != null) {
+                                        toAdd.add(addr);
+                                    } else {
+                                        // TODO error
+                                    }
+                                }
                             }
+                            Address[] participantsToAdd = new Address[toAdd.size()];
+                            toAdd.toArray(participantsToAdd);
+                            mChatRoom.addParticipants(participantsToAdd);
+
+                            LinphoneActivity.instance()
+                                    .goToChat(mGroupChatRoomAddress.asString(), null);
                         }
                     }
-                    Address[] participantsToAdd = new Address[toAdd.size()];
-                    toAdd.toArray(participantsToAdd);
-                    mChatRoom.addParticipants(participantsToAdd);
-
-                    LinphoneActivity.instance().goToChat(mGroupChatRoomAddress.asString(), null);
-                }
-            }
-        });
+                });
         mConfirmButton.setEnabled(mSubjectField.getText().length() > 0 && mParticipants.size() > 0);
 
         if (!mIsEditionEnabled) {
@@ -352,9 +410,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.INFO_GROUP_CHAT);
         }
 
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
         if (getActivity().getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            inputMethodManager.hideSoftInputFromWindow(
+                    getActivity().getCurrentFocus().getWindowToken(), 0);
         }
     }
 
@@ -404,16 +464,23 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private void displayMeAdminStatusUpdated() {
         if (mAdminStateChangedDialog != null) mAdminStateChangedDialog.dismiss();
 
-        mAdminStateChangedDialog = LinphoneActivity.instance().displayDialog(getString(mIsEditionEnabled ? R.string.chat_room_you_are_now_admin : R.string.chat_room_you_are_no_longer_admin));
+        mAdminStateChangedDialog =
+                LinphoneActivity.instance()
+                        .displayDialog(
+                                getString(
+                                        mIsEditionEnabled
+                                                ? R.string.chat_room_you_are_now_admin
+                                                : R.string.chat_room_you_are_no_longer_admin));
         Button cancel = mAdminStateChangedDialog.findViewById(R.id.dialog_cancel_button);
         mAdminStateChangedDialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
         cancel.setText(getString(R.string.ok));
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAdminStateChangedDialog.dismiss();
-            }
-        });
+        cancel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAdminStateChangedDialog.dismiss();
+                    }
+                });
 
         mAdminStateChangedDialog.show();
     }
@@ -435,12 +502,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     }
 
     @Override
-    public void onConferenceJoined(ChatRoom cr, EventLog event_log) {
-    }
+    public void onConferenceJoined(ChatRoom cr, EventLog event_log) {}
 
     @Override
-    public void onConferenceLeft(ChatRoom cr, EventLog event_log) {
-    }
+    public void onConferenceLeft(ChatRoom cr, EventLog event_log) {}
 
     @Override
     public void onParticipantAdded(ChatRoom cr, EventLog event_log) {
@@ -453,49 +518,32 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     }
 
     @Override
-    public void onChatMessageShouldBeStored(ChatRoom cr, ChatMessage msg) {
-
-    }
+    public void onChatMessageShouldBeStored(ChatRoom cr, ChatMessage msg) {}
 
     @Override
-    public void onParticipantsCapabilitiesChecked(ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {
-
-    }
-
-    @Override
-    public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {
-
-    }
+    public void onParticipantsCapabilitiesChecked(
+            ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {}
 
     @Override
-    public void onChatMessageSent(ChatRoom cr, EventLog event_log) {
-
-    }
+    public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {}
 
     @Override
-    public void onConferenceAddressGeneration(ChatRoom cr) {
-
-    }
+    public void onChatMessageSent(ChatRoom cr, EventLog event_log) {}
 
     @Override
-    public void onChatMessageReceived(ChatRoom cr, EventLog event_log) {
-
-    }
+    public void onConferenceAddressGeneration(ChatRoom cr) {}
 
     @Override
-    public void onMessageReceived(ChatRoom cr, ChatMessage msg) {
-
-    }
+    public void onChatMessageReceived(ChatRoom cr, EventLog event_log) {}
 
     @Override
-    public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event_log) {
-
-    }
+    public void onMessageReceived(ChatRoom cr, ChatMessage msg) {}
 
     @Override
-    public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {
+    public void onParticipantDeviceRemoved(ChatRoom cr, EventLog event_log) {}
 
-    }
+    @Override
+    public void onParticipantDeviceAdded(ChatRoom cr, EventLog event_log) {}
 
     @Override
     public void onSecurityEvent(ChatRoom cr, EventLog eventLog) {
@@ -503,25 +551,19 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     }
 
     @Override
-    public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {
-
-    }
+    public void onUndecryptableMessageReceived(ChatRoom cr, ChatMessage msg) {}
 
     @Override
-    public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-
-    }
+    public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {}
 
     @Override
-    public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {
-
-    }
+    public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {}
 
     @Override
-    public void onParticipantRegistrationSubscriptionRequested(ChatRoom cr, Address participantAddr) {
-    }
+    public void onParticipantRegistrationSubscriptionRequested(
+            ChatRoom cr, Address participantAddr) {}
 
     @Override
-    public void onParticipantRegistrationUnsubscriptionRequested(ChatRoom cr, Address participantAddr) {
-    }
+    public void onParticipantRegistrationUnsubscriptionRequested(
+            ChatRoom cr, Address participantAddr) {}
 }

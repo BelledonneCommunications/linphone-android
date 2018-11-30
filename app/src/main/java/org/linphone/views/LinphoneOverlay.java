@@ -30,10 +30,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.LinphoneActivity;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.mediastream.Version;
@@ -61,31 +60,35 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
         }
 
-        params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_FLAG,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
+        params =
+                new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        LAYOUT_FLAG,
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.LEFT;
         metrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(metrics);
 
-        androidVideoWindowImpl = new AndroidVideoWindowImpl(this, null, new AndroidVideoWindowImpl.VideoWindowListener() {
-            public void onVideoRenderingSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-                LinphoneManager.getLc().setNativeVideoWindowId(vw);
-            }
+        androidVideoWindowImpl =
+                new AndroidVideoWindowImpl(
+                        this,
+                        null,
+                        new AndroidVideoWindowImpl.VideoWindowListener() {
+                            public void onVideoRenderingSurfaceReady(
+                                    AndroidVideoWindowImpl vw, SurfaceView surface) {
+                                LinphoneManager.getLc().setNativeVideoWindowId(vw);
+                            }
 
-            public void onVideoRenderingSurfaceDestroyed(AndroidVideoWindowImpl vw) {
+                            public void onVideoRenderingSurfaceDestroyed(
+                                    AndroidVideoWindowImpl vw) {}
 
-            }
+                            public void onVideoPreviewSurfaceReady(
+                                    AndroidVideoWindowImpl vw, SurfaceView surface) {}
 
-            public void onVideoPreviewSurfaceReady(AndroidVideoWindowImpl vw, SurfaceView surface) {
-            }
-
-            public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {
-            }
-        });
+                            public void onVideoPreviewSurfaceDestroyed(AndroidVideoWindowImpl vw) {}
+                        });
 
         Call call = LinphoneManager.getLc().getCurrentCall();
         CallParams callParams = call.getCurrentParams();
@@ -93,21 +96,25 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
         params.height = callParams.getReceivedVideoDefinition().getHeight();
         LinphoneManager.getLc().setNativeVideoWindowId(androidVideoWindowImpl);
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = LinphoneService.instance();
-                Intent intent = new Intent(context, LinphoneActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                dragEnabled = true;
-                return true;
-            }
-        });
+        setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Context context = LinphoneService.instance();
+                        Intent intent =
+                                new Intent(context, LinphoneActivity.class)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                });
+        setOnLongClickListener(
+                new OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        dragEnabled = true;
+                        return true;
+                    }
+                });
     }
 
     public LinphoneOverlay(Context context, AttributeSet attrs) {
@@ -148,8 +155,12 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
     }
 
     private void updateViewPostion() {
-        params.x = Math.min(Math.max(0, (int) (x - touchX)), metrics.widthPixels - getMeasuredWidth());
-        params.y = Math.min(Math.max(0, (int) (y - touchY)), metrics.heightPixels - getMeasuredHeight());
+        params.x =
+                Math.min(Math.max(0, (int) (x - touchX)), metrics.widthPixels - getMeasuredWidth());
+        params.y =
+                Math.min(
+                        Math.max(0, (int) (y - touchY)),
+                        metrics.heightPixels - getMeasuredHeight());
         wm.updateViewLayout(this, params);
     }
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_enabled="false"
-        android:color="@color/security_gray"/>
-    <item android:state_checked="true"
-        android:color="@color/security_green" />
+    <item android:color="@color/security_gray" android:state_enabled="false" />
+    <item android:color="@color/security_green" android:state_checked="true" />
     <item android:color="@color/security_gray" />
 </selector>

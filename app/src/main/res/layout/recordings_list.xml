@@ -1,67 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:background="@color/colorH"
-	android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorH"
+    android:orientation="vertical">
 
-	<LinearLayout
-		android:id="@+id/top_bar"
-		android:orientation="horizontal"
-		android:background="@color/colorF"
-		android:layout_width="match_parent"
-		android:layout_height="60dp">
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorF"
+        android:orientation="horizontal">
 
-		<View
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.8"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8" />
 
-		<ImageView
-			android:id="@+id/edit"
-			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit_list"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2"
-			android:padding="15dp"/>
-	</LinearLayout>
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="@drawable/toolbar_button"
+            android:contentDescription="@string/content_description_edit_list"
+            android:padding="15dp"
+            android:src="@drawable/delete" />
+    </LinearLayout>
 
-	<include layout="@layout/edit_list"/>
+    <include layout="@layout/edit_list" />
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/recording_list"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:divider="@color/colorE"
-			android:cacheColorHint="@color/transparent"
-			android:dividerHeight="1dp"/>
-		
-		<ProgressBar
-			android:id="@+id/recording_fetch_in_progress"
-			style="?android:attr/progressBarStyle"
-			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:visibility="gone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recording_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@color/transparent"
+            android:divider="@color/colorE"
+            android:dividerHeight="1dp" />
 
-		<TextView
-			android:id="@+id/no_recordings"
-			android:text="@string/no_recordings"
-			style="@style/font6"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_centerVertical="true"/>
+        <ProgressBar
+            android:id="@+id/recording_fetch_in_progress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
 
-	</RelativeLayout>
+        <TextView
+            android:id="@+id/no_recordings"
+            style="@style/font6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/no_recordings"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
 </LinearLayout>

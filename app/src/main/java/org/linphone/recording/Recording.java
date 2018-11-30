@@ -22,28 +22,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-
-import org.linphone.LinphoneManager;
-import org.linphone.core.Player;
-import org.linphone.core.PlayerListener;
-import org.linphone.mediastream.Log;
-
+import androidx.annotation.NonNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.linphone.LinphoneManager;
+import org.linphone.core.Player;
+import org.linphone.core.PlayerListener;
+import org.linphone.mediastream.Log;
 
 public class Recording implements PlayerListener, Comparable<Recording> {
+    public static final Pattern RECORD_PATTERN =
+            Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*");
     private String recordPath, name;
     private Date recordDate;
     private Player player;
     private RecordingListener listener;
     private Handler handler;
     private Runnable updateCurrentPositionTimer;
-
-    public static final Pattern RECORD_PATTERN = Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*");
 
     @SuppressLint("SimpleDateFormat")
     public Recording(Context context, String recordPath) {
@@ -61,13 +59,14 @@ public class Recording implements PlayerListener, Comparable<Recording> {
         }
 
         handler = new Handler(context.getMainLooper());
-        updateCurrentPositionTimer = new Runnable() {
-            @Override
-            public void run() {
-                if (listener != null) listener.currentPositionChanged(getCurrentPosition());
-                if (isPlaying()) handler.postDelayed(updateCurrentPositionTimer, 20);
-            }
-        };
+        updateCurrentPositionTimer =
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.currentPositionChanged(getCurrentPosition());
+                        if (isPlaying()) handler.postDelayed(updateCurrentPositionTimer, 20);
+                    }
+                };
 
         player = LinphoneManager.getLc().createLocalPlayer(null, null, null);
         player.setListener(this);

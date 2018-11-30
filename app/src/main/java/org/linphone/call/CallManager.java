@@ -20,23 +20,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.LinphoneManager;
-import org.linphone.utils.FileUtils;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreException;
 import org.linphone.mediastream.Log;
+import org.linphone.utils.FileUtils;
 
-/**
- * Handle call updating, reinvites.
- */
+/** Handle call updating, reinvites. */
 public class CallManager {
 
     private static CallManager instance;
 
-    private CallManager() {
-    }
+    private CallManager() {}
 
     public static final synchronized CallManager getInstance() {
         if (instance == null) instance = new CallManager();
@@ -47,7 +44,8 @@ public class CallManager {
         return BandwidthManager.getInstance();
     }
 
-    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) throws CoreException {
+    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth)
+            throws CoreException {
         Core lc = LinphoneManager.getLc();
 
         CallParams params = lc.createCallParams(null);
@@ -64,16 +62,17 @@ public class CallManager {
             Log.d("Low bandwidth enabled in call params");
         }
 
-        String recordFile = FileUtils.getCallRecordingFilename(LinphoneManager.getInstance().getContext(), lAddress);
+        String recordFile =
+                FileUtils.getCallRecordingFilename(
+                        LinphoneManager.getInstance().getContext(), lAddress);
         params.setRecordFile(recordFile);
 
         lc.inviteAddressWithParams(lAddress, params);
     }
 
     /**
-     * Add video to a currently running voice only call.
-     * No re-invite is sent if the current call is already video
-     * or if the bandwidth settings are too low.
+     * Add video to a currently running voice only call. No re-invite is sent if the current call is
+     * already video or if the bandwidth settings are too low.
      *
      * @return if updateCall called
      */
@@ -87,7 +86,6 @@ public class CallManager {
         CallParams params = lc.createCallParams(lCall);
 
         if (params.videoEnabled()) return false;
-
 
         // Check if video possible regarding bandwidth limitations
         bm().updateWithProfileSettings(lc, params);
@@ -104,8 +102,8 @@ public class CallManager {
 
     /**
      * Change the preferred video size used by linphone core. (impact landscape/portrait buffer).
-     * Update current call, without reinvite.
-     * The camera will be restarted when mediastreamer chain is recreated and setParameters is called.
+     * Update current call, without reinvite. The camera will be restarted when mediastreamer chain
+     * is recreated and setParameters is called.
      */
     public void updateCall() {
         Core lc = LinphoneManager.getLc();
@@ -118,5 +116,4 @@ public class CallManager {
         bm().updateWithProfileSettings(lc, params);
         lc.updateCall(lCall, null);
     }
-
 }

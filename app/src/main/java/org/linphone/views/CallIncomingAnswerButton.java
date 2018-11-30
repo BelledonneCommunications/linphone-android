@@ -20,15 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-
+import androidx.annotation.Nullable;
 import org.linphone.R;
 
-public class CallIncomingAnswerButton extends LinearLayout implements View.OnClickListener, View.OnTouchListener {
+public class CallIncomingAnswerButton extends LinearLayout
+        implements View.OnClickListener, View.OnTouchListener {
     private LinearLayout mRoot;
     private boolean mUseSliderMode = false;
     private CallIncomingButtonListener mListener;
@@ -43,12 +43,13 @@ public class CallIncomingAnswerButton extends LinearLayout implements View.OnCli
         init();
     }
 
-    public CallIncomingAnswerButton(Context context,@Nullable AttributeSet attrs) {
+    public CallIncomingAnswerButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CallIncomingAnswerButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CallIncomingAnswerButton(
+            Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -97,8 +98,7 @@ public class CallIncomingAnswerButton extends LinearLayout implements View.OnCli
                     view.scrollBy((int) (mAnswerX - curX), view.getScrollY());
                     mOldSize -= mAnswerX - curX;
                     mAnswerX = curX;
-                    if (mOldSize < -25)
-                        mBegin = false;
+                    if (mOldSize < -25) mBegin = false;
                     if (curX < (mScreenWidth / 4) - mRoot.getWidth() && !mBegin) {
                         performClick();
                         return true;

@@ -29,13 +29,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import java.util.Locale;
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.ProxyConfig;
-
-import java.util.Locale;
+import org.linphone.settings.LinphonePreferences;
 
 public class InAppPurchaseFragment extends Fragment implements View.OnClickListener {
     private LinearLayout usernameLayout;
@@ -47,8 +45,8 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
     private Button buyItemButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
@@ -61,13 +59,19 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
         displayBuySubscriptionButton(item);
 
         defaultEmail = InAppPurchaseActivity.instance().getGmailAccount();
-        defaultUsername = LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex());
+        defaultUsername =
+                LinphonePreferences.instance()
+                        .getAccountUsername(
+                                LinphonePreferences.instance().getDefaultAccountIndex());
 
         usernameLayout = view.findViewById(R.id.username_layout);
         username = view.findViewById(R.id.username);
         if (!getResources().getBoolean(R.bool.hide_username_in_inapp)) {
             usernameLayout.setVisibility(View.VISIBLE);
-            username.setText(LinphonePreferences.instance().getAccountUsername(LinphonePreferences.instance().getDefaultAccountIndex()));
+            username.setText(
+                    LinphonePreferences.instance()
+                            .getAccountUsername(
+                                    LinphonePreferences.instance().getDefaultAccountIndex()));
 
             addUsernameHandler(username, errorMessage);
         } else {
@@ -90,27 +94,25 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
     }
 
     private void addUsernameHandler(final EditText field, final TextView errorMessage) {
-        field.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
+        field.addTextChangedListener(
+                new TextWatcher() {
+                    public void afterTextChanged(Editable s) {}
 
-            }
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int count, int after) {
-                usernameOk = false;
-                String username = s.toString();
-                if (isUsernameCorrect(username)) {
-                    usernameOk = true;
-                    errorMessage.setText("");
-                } else {
-                    errorMessage.setText(R.string.wizard_username_incorrect);
-                }
-                if (buyItemButton != null) buyItemButton.setEnabled(usernameOk);
-            }
-        });
+                    public void onTextChanged(CharSequence s, int start, int count, int after) {
+                        usernameOk = false;
+                        String username = s.toString();
+                        if (isUsernameCorrect(username)) {
+                            usernameOk = true;
+                            errorMessage.setText("");
+                        } else {
+                            errorMessage.setText(R.string.wizard_username_incorrect);
+                        }
+                        if (buyItemButton != null) buyItemButton.setEnabled(usernameOk);
+                    }
+                });
     }
 
     private boolean isUsernameCorrect(String username) {

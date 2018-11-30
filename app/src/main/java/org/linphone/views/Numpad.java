@@ -26,19 +26,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import org.linphone.R;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import org.linphone.R;
 
 public class Numpad extends LinearLayout implements AddressAware {
 
     private boolean mPlayDtmf;
-
-    public void setPlayDtmf(boolean sendDtmf) {
-        this.mPlayDtmf = sendDtmf;
-    }
 
     public Numpad(Context context, boolean playDtmf) {
         super(context);
@@ -57,6 +51,10 @@ public class Numpad extends LinearLayout implements AddressAware {
         setLongClickable(true);
     }
 
+    public void setPlayDtmf(boolean sendDtmf) {
+        this.mPlayDtmf = sendDtmf;
+    }
+
     @Override
     protected final void onFinishInflate() {
         for (Digit v : retrieveChildren(this, Digit.class)) {
@@ -71,7 +69,6 @@ public class Numpad extends LinearLayout implements AddressAware {
         }
     }
 
-
     private final <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
         final Collection<T> views = new ArrayList<>();
 
@@ -80,12 +77,10 @@ public class Numpad extends LinearLayout implements AddressAware {
             if (v instanceof ViewGroup) {
                 views.addAll(retrieveChildren((ViewGroup) v, clazz));
             } else {
-                if (clazz.isInstance(v))
-                    views.add(clazz.cast(v));
+                if (clazz.isInstance(v)) views.add(clazz.cast(v));
             }
         }
 
         return views;
     }
-
 }

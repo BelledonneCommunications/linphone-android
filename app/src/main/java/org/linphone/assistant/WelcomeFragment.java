@@ -25,15 +25,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import org.linphone.R;
 
 public class WelcomeFragment extends Fragment implements OnClickListener {
     private Button createAccount, logLinphoneAccount, logGenericAccount, remoteProvisioning;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_welcome, container, false);
 
         createAccount = view.findViewById(R.id.create_account);

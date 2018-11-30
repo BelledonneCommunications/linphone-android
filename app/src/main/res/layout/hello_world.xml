@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="fill_parent" android:layout_width="fill_parent"
-	android:orientation="vertical">
-	<LinearLayout android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-		<EditText android:layout_height="wrap_content" android:id="@+id/AddressId"
-			android:hint="sip:user@host:port" android:layout_width="fill_parent"
-			android:layout_weight="1" android:text="sip:[user@]host[:port]"></EditText>
-		<Button android:layout_height="wrap_content" android:id="@+id/CallButton"
-			android:text="Call" android:layout_width="wrap_content"></Button>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
-	</LinearLayout>
-	<EditText android:layout_height="wrap_content" android:id="@+id/MyAddressId"
-			android:hint="enter my sip identity (sip:[user@]host)" android:layout_width="fill_parent"
-			android:visibility="gone" android:text=""></EditText>
-	<EditText android:hint="my password" android:id="@+id/Password"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		 android:visibility="gone"></EditText>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/AddressId"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="sip:user@host:port"
+            android:text="sip:[user@]host[:port]"></EditText>
+
+        <Button
+            android:id="@+id/CallButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Call"></Button>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/MyAddressId"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="enter my sip identity (sip:[user@]host)"
+        android:text=""
+        android:visibility="gone"></EditText>
+
+    <EditText
+        android:id="@+id/Password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="my password"
+        android:visibility="gone"></EditText>
 
 
+    <TextView
+        android:id="@+id/OutputText"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:text="Debug"></TextView>
 
-
-	<TextView android:layout_weight="1" android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:id="@+id/OutputText"
-		android:text="Debug"></TextView>
-
-	<Button android:text="STOP" android:id="@+id/ButtonStop"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
+    <Button
+        android:id="@+id/ButtonStop"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="STOP"></Button>
 
 </LinearLayout>

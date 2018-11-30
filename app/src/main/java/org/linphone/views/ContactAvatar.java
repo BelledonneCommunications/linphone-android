@@ -24,17 +24,13 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import java.io.IOException;
 import org.linphone.LinphoneService;
-import org.linphone.utils.ImageUtils;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.mediastream.Log;
-
-import java.io.IOException;
-
+import org.linphone.utils.ImageUtils;
 
 class ContactAvatarHolder {
     public ImageView contactPicture, avatarMask, securityLevel;
@@ -99,7 +95,8 @@ public class ContactAvatar {
         holder.init();
 
         if (displayName.startsWith("+")) {
-            // If display name is a phone number, use default avatar because generated one will be +...
+            // If display name is a phone number, use default avatar because generated one will be
+            // +...
             holder.generatedAvatar.setVisibility(View.GONE);
         } else {
             holder.generatedAvatar.setText(generateAvatar(displayName));
@@ -108,7 +105,8 @@ public class ContactAvatar {
         holder.securityLevel.setVisibility(View.GONE);
     }
 
-    public static void displayAvatar(String displayName, ChatRoomSecurityLevel securityLevel, View v) {
+    public static void displayAvatar(
+            String displayName, ChatRoomSecurityLevel securityLevel, View v) {
         displayAvatar(displayName, v);
         setSecurityLevel(securityLevel, v);
     }
@@ -120,12 +118,16 @@ public class ContactAvatar {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.init();
 
-        if (contact.getThumbnailUri() != null && contact.getThumbnailUri().getScheme().startsWith("http")) {
+        if (contact.getThumbnailUri() != null
+                && contact.getThumbnailUri().getScheme().startsWith("http")) {
             bm = ImageUtils.downloadBitmap(contact.getThumbnailUri());
         } else {
             if (contact.getThumbnailUri() != null) {
                 try {
-                    bm = MediaStore.Images.Media.getBitmap(LinphoneService.instance().getContentResolver(), contact.getThumbnailUri());
+                    bm =
+                            MediaStore.Images.Media.getBitmap(
+                                    LinphoneService.instance().getContentResolver(),
+                                    contact.getThumbnailUri());
                 } catch (IOException e) {
                     Log.e(e);
                 }
@@ -137,14 +139,18 @@ public class ContactAvatar {
             holder.contactPicture.setVisibility(View.VISIBLE);
             holder.generatedAvatar.setVisibility(View.GONE);
         } else {
-            holder.generatedAvatar.setText(generateAvatar(contact.getFullName() == null ?
-                    contact.getFirstName() + " " + contact.getLastName() : contact.getFullName()));
+            holder.generatedAvatar.setText(
+                    generateAvatar(
+                            contact.getFullName() == null
+                                    ? contact.getFirstName() + " " + contact.getLastName()
+                                    : contact.getFullName()));
             holder.generatedAvatar.setVisibility(View.VISIBLE);
         }
         holder.securityLevel.setVisibility(View.GONE);
     }
 
-    public static void displayAvatar(LinphoneContact contact, ChatRoomSecurityLevel securityLevel, View v) {
+    public static void displayAvatar(
+            LinphoneContact contact, ChatRoomSecurityLevel securityLevel, View v) {
         displayAvatar(contact, v);
         setSecurityLevel(securityLevel, v);
     }

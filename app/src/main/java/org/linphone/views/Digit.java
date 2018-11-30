@@ -28,33 +28,45 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 
 @SuppressLint("AppCompatCustomView")
 public class Digit extends Button implements AddressAware {
 
     private AddressText mAddress;
+    private boolean mPlayDtmf;
+
+    public Digit(Context context, AttributeSet attrs, int style) {
+        super(context, attrs, style);
+        setLongClickable(true);
+    }
+
+    public Digit(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setLongClickable(true);
+    }
+
+    public Digit(Context context) {
+        super(context);
+        setLongClickable(true);
+    }
 
     public void setAddressWidget(AddressText address) {
         mAddress = address;
     }
-
-    private boolean mPlayDtmf;
 
     public void setPlayDtmf(boolean play) {
         mPlayDtmf = play;
     }
 
     @Override
-    protected void onTextChanged(CharSequence text, int start, int before,
-                                 int after) {
+    protected void onTextChanged(CharSequence text, int start, int before, int after) {
         super.onTextChanged(text, start, before, after);
 
         if (text == null || text.length() < 1) {
@@ -74,21 +86,6 @@ public class Digit extends Button implements AddressAware {
         }
     }
 
-    public Digit(Context context, AttributeSet attrs, int style) {
-        super(context, attrs, style);
-        setLongClickable(true);
-    }
-
-    public Digit(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setLongClickable(true);
-    }
-
-    public Digit(Context context) {
-        super(context);
-        setLongClickable(true);
-    }
-
     private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
         final char mKeyCode;
         boolean mIsDtmfStarted;
@@ -100,7 +97,11 @@ public class Digit extends Button implements AddressAware {
         private boolean linphoneServiceReady() {
             if (!LinphoneService.isReady()) {
                 Log.w("Service is not ready while pressing digit");
-                Toast.makeText(getContext(), getContext().getString(R.string.skipable_error_service_not_ready), Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                                getContext(),
+                                getContext().getString(R.string.skipable_error_service_not_ready),
+                                Toast.LENGTH_SHORT)
+                        .show();
                 return false;
             }
             return true;
@@ -127,7 +128,9 @@ public class Digit extends Button implements AddressAware {
                 }
 
                 if (LinphonePreferences.instance().getDebugPopupAddress() != null
-                        && mAddress.getText().toString().equals(LinphonePreferences.instance().getDebugPopupAddress())) {
+                        && mAddress.getText()
+                                .toString()
+                                .equals(LinphonePreferences.instance().getDebugPopupAddress())) {
                     displayDebugPopup();
                 }
             }
@@ -137,28 +140,32 @@ public class Digit extends Button implements AddressAware {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
             alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
             if (LinphonePreferences.instance().isDebugEnabled()) {
-                alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_send_log), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            LinphonePreferences.instance().setDebugEnabled(false);
-                        }
-                        if (which == 1) {
-                            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-                            if (lc != null) {
-                                lc.uploadLogCollection();
+                alertDialog.setItems(
+                        getContext().getResources().getStringArray(R.array.popup_send_log),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    LinphonePreferences.instance().setDebugEnabled(false);
+                                }
+                                if (which == 1) {
+                                    Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                                    if (lc != null) {
+                                        lc.uploadLogCollection();
+                                    }
+                                }
                             }
-                        }
-                    }
-                });
+                        });
 
             } else {
-                alertDialog.setItems(getContext().getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            LinphonePreferences.instance().setDebugEnabled(true);
-                        }
-                    }
-                });
+                alertDialog.setItems(
+                        getContext().getResources().getStringArray(R.array.popup_enable_log),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    LinphonePreferences.instance().setDebugEnabled(true);
+                                }
+                            }
+                        });
             }
             alertDialog.show();
             mAddress.getEditableText().clear();
@@ -205,7 +212,6 @@ public class Digit extends Button implements AddressAware {
                 return true;
             }
 
-
             if (mAddress == null) return true;
 
             int lBegin = mAddress.getSelectionStart();
@@ -218,6 +224,4 @@ public class Digit extends Button implements AddressAware {
             return true;
         }
     }
-
-
 }

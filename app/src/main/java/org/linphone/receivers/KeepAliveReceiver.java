@@ -25,14 +25,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 /*
  * Purpose of this receiver is to disable keep alives when screen is off
@@ -52,18 +51,25 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             if (action == null) {
                 Log.i("[KeepAlive] Refresh registers");
                 lc.refreshRegisters();
-                //make sure iterate will have enough time, device will not sleep until exit from this method
+                // make sure iterate will have enough time, device will not sleep until exit from
+                // this method
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     Log.e("Cannot sleep for 2s", e);
                 } finally {
-                    //make sure the application will at least wakes up every 10 mn
+                    // make sure the application will at least wakes up every 10 mn
                     Intent newIntent = new Intent(context, KeepAliveReceiver.class);
-                    PendingIntent keepAlivePendingIntent = PendingIntent.getBroadcast(context, 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
+                    PendingIntent keepAlivePendingIntent =
+                            PendingIntent.getBroadcast(
+                                    context, 0, newIntent, PendingIntent.FLAG_ONE_SHOT);
 
-                    AlarmManager alarmManager = ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE));
-                    alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 600000, keepAlivePendingIntent);
+                    AlarmManager alarmManager =
+                            ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE));
+                    alarmManager.setExact(
+                            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            SystemClock.elapsedRealtime() + 600000,
+                            keepAlivePendingIntent);
                 }
             } else if (action.equalsIgnoreCase(Intent.ACTION_SCREEN_ON)) {
                 Log.i("[KeepAlive] Screen is on, enable");

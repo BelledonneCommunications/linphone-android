@@ -30,11 +30,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
@@ -53,9 +52,14 @@ public class DialerFragment extends Fragment {
     private ImageView mAddContact;
     private OnClickListener addContactListener, cancelListener, transferListener;
 
+    /** @return null if not ready yet */
+    public static DialerFragment instance() {
+        return instance;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialer, container, false);
 
         mAddress = view.findViewById(R.id.address);
@@ -66,14 +70,19 @@ public class DialerFragment extends Fragment {
 
         mCall = view.findViewById(R.id.call);
         mCall.setAddressWidget(mAddress);
-        if (LinphoneActivity.isInstanciated() && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCallsNb() > 0) {
+        if (LinphoneActivity.isInstanciated()
+                && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+                && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCallsNb() > 0) {
             if (isCallTransferOngoing) {
                 mCall.setImageResource(R.drawable.call_transfer);
             } else {
                 mCall.setImageResource(R.drawable.call_add);
             }
         } else {
-            if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getVideoActivationPolicy().getAutomaticallyInitiate()) {
+            if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+                    && LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                            .getVideoActivationPolicy()
+                            .getAutomaticallyInitiate()) {
                 mCall.setImageResource(R.drawable.call_video_start);
             } else {
                 mCall.setImageResource(R.drawable.call_audio_start);
@@ -86,32 +95,41 @@ public class DialerFragment extends Fragment {
         }
 
         mAddContact = view.findViewById(R.id.add_contact);
-        mAddContact.setEnabled(!(LinphoneActivity.isInstanciated() && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLc().getCallsNb() > 0));
+        mAddContact.setEnabled(
+                !(LinphoneActivity.isInstanciated()
+                        && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+                        && LinphoneManager.getLc().getCallsNb() > 0));
 
-        addContactListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinphoneActivity.instance().displayContactsForEdition(mAddress.getText().toString());
-            }
-        };
-        cancelListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-            }
-        };
-        transferListener = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Core lc = LinphoneManager.getLc();
-                if (lc.getCurrentCall() == null) {
-                    return;
-                }
-                lc.transferCall(lc.getCurrentCall(), mAddress.getText().toString());
-                isCallTransferOngoing = false;
-                LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-            }
-        };
+        addContactListener =
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneActivity.instance()
+                                .displayContactsForEdition(mAddress.getText().toString());
+                    }
+                };
+        cancelListener =
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneActivity.instance()
+                                .resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                    }
+                };
+        transferListener =
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Core lc = LinphoneManager.getLc();
+                        if (lc.getCurrentCall() == null) {
+                            return;
+                        }
+                        lc.transferCall(lc.getCurrentCall(), mAddress.getText().toString());
+                        isCallTransferOngoing = false;
+                        LinphoneActivity.instance()
+                                .resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                    }
+                };
 
         resetLayout();
 
@@ -127,13 +145,6 @@ public class DialerFragment extends Fragment {
         instance = this;
 
         return view;
-    }
-
-    /**
-     * @return null if not ready yet
-     */
-    public static DialerFragment instance() {
-        return instance;
     }
 
     @Override
@@ -153,7 +164,9 @@ public class DialerFragment extends Fragment {
             LinphoneActivity.instance().showStatusBar();
         }
 
-        boolean isOrientationLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        boolean isOrientationLandscape =
+                getResources().getConfiguration().orientation
+                        == Configuration.ORIENTATION_LANDSCAPE;
         if (isOrientationLandscape && !getResources().getBoolean(R.bool.isTablet)) {
             ((LinearLayout) numpad).setVisibility(View.GONE);
         } else {
@@ -165,7 +178,8 @@ public class DialerFragment extends Fragment {
         String addressWaitingToBeCalled = LinphoneActivity.instance().mAddressWaitingToBeCalled;
         if (addressWaitingToBeCalled != null) {
             mAddress.setText(addressWaitingToBeCalled);
-            if (getResources().getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
+            if (getResources()
+                    .getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
                 newOutgoingCall(addressWaitingToBeCalled);
             }
             LinphoneActivity.instance().mAddressWaitingToBeCalled = null;
@@ -207,7 +221,10 @@ public class DialerFragment extends Fragment {
     }
 
     public void enableDisableAddContact() {
-        mAddContact.setEnabled(LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null && LinphoneManager.getLc().getCallsNb() > 0 || !mAddress.getText().toString().equals(""));
+        mAddContact.setEnabled(
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+                                && LinphoneManager.getLc().getCallsNb() > 0
+                        || !mAddress.getText().toString().equals(""));
     }
 
     public void displayTextInAddressBar(String numberOrSipAddress) {
@@ -228,7 +245,9 @@ public class DialerFragment extends Fragment {
                 mAddress.setText(intent.getData().getSchemeSpecificPart());
             } else {
                 Uri contactUri = intent.getData();
-                String address = ContactsManager.getAddressOrNumberForAndroidContact(LinphoneService.instance().getContentResolver(), contactUri);
+                String address =
+                        ContactsManager.getAddressOrNumberForAndroidContact(
+                                LinphoneService.instance().getContentResolver(), contactUri);
                 if (address != null) {
                     mAddress.setText(address);
                 } else {

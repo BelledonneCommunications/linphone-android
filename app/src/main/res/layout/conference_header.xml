@@ -2,48 +2,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:gravity="center_vertical"
-    android:background="@color/colorH">
+    android:background="@color/colorH"
+    android:gravity="center_vertical">
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:gravity="center_vertical"
-		android:paddingLeft="10dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
 
-		<TextView
-			android:text="@string/conference"
-			style="@style/font5"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+        <TextView
+            style="@style/font5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conference" />
 
-		<Chronometer
-			android:id="@+id/callTimer"
-			style="@style/font2"
-			android:visibility="gone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+        <Chronometer
+            android:id="@+id/callTimer"
+            style="@style/font2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
-	</LinearLayout>
+    </LinearLayout>
 
-    
+
     <ImageView
-        android:contentDescription="@string/content_description_pause"
         android:id="@+id/conference_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-        android:scaleType="fitCenter"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
         android:adjustViewBounds="true"
-		android:layout_centerInParent="true"
-		android:padding="10dp"
-		android:src="@drawable/pause"/>
+        android:contentDescription="@string/content_description_pause"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/pause" />
 
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:background="@color/colorE"
-		android:layout_alignParentBottom="true"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorE" />
 
 </RelativeLayout>

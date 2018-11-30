@@ -26,9 +26,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreException;
@@ -39,6 +37,7 @@ import org.linphone.core.XmlRpcRequest;
 import org.linphone.core.XmlRpcRequestListener;
 import org.linphone.core.XmlRpcSession;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 
 public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpcRequestListener {
     private Handler mHandler = new Handler();
@@ -49,30 +48,36 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
     private Runnable runFinished;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_ec_calibration, container, false);
 
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delay_ms) {
-                lc.removeListener(mListener);
-                LinphoneManager.getInstance().routeAudioToReceiver();
-                if (mSendEcCalibrationResult) {
-                    sendEcCalibrationResult(status, delay_ms);
-                } else {
-                    AssistantActivity.instance().isEchoCalibrationFinished();
-                }
-            }
-        };
-        runFinished = new Runnable() {
-            public void run() {
-                AssistantActivity.instance().isEchoCalibrationFinished();
-            }
-        };
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onEcCalibrationResult(
+                            Core lc, EcCalibratorStatus status, int delay_ms) {
+                        lc.removeListener(mListener);
+                        LinphoneManager.getInstance().routeAudioToReceiver();
+                        if (mSendEcCalibrationResult) {
+                            sendEcCalibrationResult(status, delay_ms);
+                        } else {
+                            AssistantActivity.instance().isEchoCalibrationFinished();
+                        }
+                    }
+                };
+        runFinished =
+                new Runnable() {
+                    public void run() {
+                        AssistantActivity.instance().isEchoCalibrationFinished();
+                    }
+                };
 
-        xmlRpcSession = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createXmlRpcSession(LinphonePreferences.instance().getXmlrpcUrl());
-        xmlRpcRequest = xmlRpcSession.createRequest(XmlRpcArgType.None, "add_ec_calibration_result");
+        xmlRpcSession =
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                        .createXmlRpcSession(LinphonePreferences.instance().getXmlrpcUrl());
+        xmlRpcRequest =
+                xmlRpcSession.createRequest(XmlRpcArgType.None, "add_ec_calibration_result");
         xmlRpcRequest.setListener(this);
 
         try {
@@ -96,7 +101,18 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 
     private void sendEcCalibrationResult(EcCalibratorStatus status, int delayMs) {
         Boolean hasBuiltInEchoCanceler = LinphoneManager.getLc().hasBuiltinEchoCanceller();
-        Log.i("Add echo canceller calibration result: manufacturer=" + Build.MANUFACTURER + " model=" + Build.MODEL + " status=" + status + " delay=" + delayMs + "ms" + " hasBuiltInEchoCanceler " + hasBuiltInEchoCanceler);
+        Log.i(
+                "Add echo canceller calibration result: manufacturer="
+                        + Build.MANUFACTURER
+                        + " model="
+                        + Build.MODEL
+                        + " status="
+                        + status
+                        + " delay="
+                        + delayMs
+                        + "ms"
+                        + " hasBuiltInEchoCanceler "
+                        + hasBuiltInEchoCanceler);
         xmlRpcRequest.addStringArg(Build.MANUFACTURER);
         xmlRpcRequest.addStringArg(Build.MODEL);
         xmlRpcRequest.addStringArg(status.toString());

@@ -86,5 +86,7 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
         value = v;
     }
 
-    public String getNormalizedPhone() { return normalizedPhone != null ? normalizedPhone : value; }
+    public String getNormalizedPhone() {
+        return normalizedPhone != null ? normalizedPhone : value;
+    }
 }

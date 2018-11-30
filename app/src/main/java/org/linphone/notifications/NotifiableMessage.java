@@ -30,7 +30,8 @@ public class NotifiableMessage {
     Uri mFilePath;
     String mFileMime;
 
-    public NotifiableMessage(String message, String sender, long time, Uri filePath, String fileMime) {
+    public NotifiableMessage(
+            String message, String sender, long time, Uri filePath, String fileMime) {
         mMessage = message;
         mSender = sender;
         mTime = time;

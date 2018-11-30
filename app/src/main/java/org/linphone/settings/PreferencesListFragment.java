@@ -37,34 +37,30 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import org.linphone.R;
 import org.linphone.mediastream.Log;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
 @SuppressLint("ValidFragment")
 public class PreferencesListFragment extends ListFragment {
-    private PreferenceManager mPreferenceManager;
-
-    /**
-     * The starting request code given out to preference framework.
-     */
+    /** The starting request code given out to preference framework. */
     private static final int FIRST_REQUEST_CODE = 100;
-    private static final int MSG_BIND_PREFERENCES = 0;
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_BIND_PREFERENCES:
-                    bindPreferences();
-                    break;
-            }
-        }
-    };
+    private static final int MSG_BIND_PREFERENCES = 0;
+    private PreferenceManager mPreferenceManager;
     private ListView preferencesList;
+    private Handler mHandler =
+            new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    switch (msg.what) {
+                        case MSG_BIND_PREFERENCES:
+                            bindPreferences();
+                            break;
+                    }
+                }
+            };
     private int xmlResID;
 
     public PreferencesListFragment(int xmlId) {
@@ -72,9 +68,7 @@ public class PreferencesListFragment extends ListFragment {
     }
 
     // Must be provided
-    public PreferencesListFragment() {
-
-    }
+    public PreferencesListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle b) {
@@ -111,7 +105,10 @@ public class PreferencesListFragment extends ListFragment {
         }
 
         mPreferenceManager = onCreatePreferenceManager();
-        preferencesList = (ListView) LayoutInflater.from(getActivity()).inflate(R.layout.preference_list_content, null);
+        preferencesList =
+                (ListView)
+                        LayoutInflater.from(getActivity())
+                                .inflate(R.layout.preference_list_content, null);
         preferencesList.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         addPreferencesFromResource(xmlResID);
         postBindPreferences();
@@ -152,7 +149,9 @@ public class PreferencesListFragment extends ListFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            Method m = PreferenceManager.class.getDeclaredMethod("dispatchActivityResult", int.class, int.class, Intent.class);
+            Method m =
+                    PreferenceManager.class.getDeclaredMethod(
+                            "dispatchActivityResult", int.class, int.class, Intent.class);
             m.setAccessible(true);
             m.invoke(mPreferenceManager, requestCode, resultCode, data);
         } catch (Exception e) {
@@ -162,9 +161,9 @@ public class PreferencesListFragment extends ListFragment {
 
     /**
      * Posts a message to bind the preferences to the list view.
-     * <p>
-     * Binding late is preferred as any custom preference types created in
-     * {@link #onCreate(Bundle)} are able to have their views recycled.
+     *
+     * <p>Binding late is preferred as any custom preference types created in {@link
+     * #onCreate(Bundle)} are able to have their views recycled.
      */
     private void postBindPreferences() {
         if (mHandler.hasMessages(MSG_BIND_PREFERENCES)) return;
@@ -185,9 +184,11 @@ public class PreferencesListFragment extends ListFragment {
      */
     private PreferenceManager onCreatePreferenceManager() {
         try {
-            Constructor<PreferenceManager> c = PreferenceManager.class.getDeclaredConstructor(Activity.class, int.class);
+            Constructor<PreferenceManager> c =
+                    PreferenceManager.class.getDeclaredConstructor(Activity.class, int.class);
             c.setAccessible(true);
-            PreferenceManager preferenceManager = c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
+            PreferenceManager preferenceManager =
+                    c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
             return preferenceManager;
         } catch (Exception e) {
             Log.e("[PreferencesListFragment] onCreatePreferenceManager " + e);
@@ -205,28 +206,9 @@ public class PreferencesListFragment extends ListFragment {
     }
 
     /**
-     * Sets the root of the preference hierarchy that this activity is showing.
-     *
-     * @param preferenceScreen The root {@link PreferenceScreen} of the preference hierarchy.
-     */
-    public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
-        try {
-            Method m = PreferenceManager.class.getDeclaredMethod("setPreferences", PreferenceScreen.class);
-            m.setAccessible(true);
-            boolean result = (Boolean) m.invoke(mPreferenceManager, preferenceScreen);
-            if (result && preferenceScreen != null) {
-                postBindPreferences();
-            }
-        } catch (Exception e) {
-            Log.e("[PreferencesListFragment] setPreferenceScreen " + e);
-        }
-    }
-
-    /**
      * Gets the root of the preference hierarchy that this activity is showing.
      *
-     * @return The {@link PreferenceScreen} that is the root of the preference
-     * hierarchy.
+     * @return The {@link PreferenceScreen} that is the root of the preference hierarchy.
      */
     public PreferenceScreen getPreferenceScreen() {
         try {
@@ -241,16 +223,47 @@ public class PreferencesListFragment extends ListFragment {
     }
 
     /**
-     * Inflates the given XML resource and adds the preference hierarchy to the current
-     * preference hierarchy.
+     * Sets the root of the preference hierarchy that this activity is showing.
+     *
+     * @param preferenceScreen The root {@link PreferenceScreen} of the preference hierarchy.
+     */
+    public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
+        try {
+            Method m =
+                    PreferenceManager.class.getDeclaredMethod(
+                            "setPreferences", PreferenceScreen.class);
+            m.setAccessible(true);
+            boolean result = (Boolean) m.invoke(mPreferenceManager, preferenceScreen);
+            if (result && preferenceScreen != null) {
+                postBindPreferences();
+            }
+        } catch (Exception e) {
+            Log.e("[PreferencesListFragment] setPreferenceScreen " + e);
+        }
+    }
+
+    /**
+     * Inflates the given XML resource and adds the preference hierarchy to the current preference
+     * hierarchy.
      *
      * @param preferencesResId The XML resource ID to inflate.
      */
     public void addPreferencesFromResource(int preferencesResId) {
         try {
-            Method m = PreferenceManager.class.getDeclaredMethod("inflateFromResource", Context.class, int.class, PreferenceScreen.class);
+            Method m =
+                    PreferenceManager.class.getDeclaredMethod(
+                            "inflateFromResource",
+                            Context.class,
+                            int.class,
+                            PreferenceScreen.class);
             m.setAccessible(true);
-            PreferenceScreen prefScreen = (PreferenceScreen) m.invoke(mPreferenceManager, getActivity(), preferencesResId, getPreferenceScreen());
+            PreferenceScreen prefScreen =
+                    (PreferenceScreen)
+                            m.invoke(
+                                    mPreferenceManager,
+                                    getActivity(),
+                                    preferencesResId,
+                                    getPreferenceScreen());
             setPreferenceScreen(prefScreen);
         } catch (Exception e) {
             Log.e("[PreferencesListFragment] addPreferencesFromResource " + e);

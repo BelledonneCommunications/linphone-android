@@ -28,10 +28,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.linphone.R;
-
 import java.util.List;
+import org.linphone.R;
 
 public class InAppPurchaseListFragment extends Fragment implements AdapterView.OnItemClickListener {
     private ListView inappList;
@@ -39,8 +37,8 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
     private List<Purchasable> mPurchasableItems;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mInflater = inflater;
         View view = inflater.inflate(R.layout.in_app_list, container, false);
 
@@ -54,9 +52,14 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
         return view;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Purchasable item = (Purchasable) view.getTag();
+        InAppPurchaseActivity.instance().displayPurchase(item);
+    }
+
     class InAppListAdapter extends BaseAdapter {
-        InAppListAdapter() {
-        }
+        InAppListAdapter() {}
 
         public int getCount() {
             return mPurchasableItems.size();
@@ -91,12 +94,5 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
             view.setTag(item);
             return view;
         }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Purchasable item = (Purchasable) view.getTag();
-        InAppPurchaseActivity.instance().displayPurchase(item);
     }
 }

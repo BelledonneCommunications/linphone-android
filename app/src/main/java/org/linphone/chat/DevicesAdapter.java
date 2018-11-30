@@ -24,8 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-
-import org.linphone.utils.LinphoneUtils;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -33,10 +33,8 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DevicesAdapter extends BaseExpandableListAdapter {
     private Context mContext;
@@ -56,7 +54,8 @@ public class DevicesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup viewGroup) {
+    public View getGroupView(
+            int groupPosition, boolean isExpanded, View view, ViewGroup viewGroup) {
         if (mOnlyDisplayChildsAsGroups) {
             ParticipantDevice device = (ParticipantDevice) getGroup(groupPosition);
 
@@ -76,7 +75,7 @@ public class DevicesAdapter extends BaseExpandableListAdapter {
             }
 
             Address deviceAddress = device.getAddress();
-            holder.deviceName.setText(deviceAddress.getUriParam("gr")); //TODO
+            holder.deviceName.setText(deviceAddress.getUriParam("gr")); // TODO
 
             ChatRoomSecurityLevel level = device.getSecurityLevel();
             switch (level) {
@@ -111,24 +110,29 @@ public class DevicesAdapter extends BaseExpandableListAdapter {
             }
 
             Address participantAddress = participant.getAddress();
-            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(participantAddress);
+            LinphoneContact contact =
+                    ContactsManager.getInstance().findContactFromAddress(participantAddress);
             if (contact != null) {
-                ContactAvatar.displayAvatar(contact, participant.getSecurityLevel(), holder.avatarLayout);
+                ContactAvatar.displayAvatar(
+                        contact, participant.getSecurityLevel(), holder.avatarLayout);
                 holder.participantName.setText(contact.getFullName());
             } else {
                 String displayName = LinphoneUtils.getAddressDisplayName(participantAddress);
-                ContactAvatar.displayAvatar(displayName, participant.getSecurityLevel(), holder.avatarLayout);
+                ContactAvatar.displayAvatar(
+                        displayName, participant.getSecurityLevel(), holder.avatarLayout);
                 holder.participantName.setText(displayName);
             }
 
-            holder.groupExpander.setImageResource(isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
+            holder.groupExpander.setImageResource(
+                    isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
         }
 
         return view;
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean b, View view, ViewGroup viewGroup) {
+    public View getChildView(
+            int groupPosition, int childPosition, boolean b, View view, ViewGroup viewGroup) {
         ParticipantDevice device = (ParticipantDevice) getChild(groupPosition, childPosition);
 
         DeviceChildViewHolder holder = null;
@@ -147,7 +151,7 @@ public class DevicesAdapter extends BaseExpandableListAdapter {
         }
 
         Address deviceAddress = device.getAddress();
-        holder.deviceName.setText(deviceAddress.getUriParam("gr")); //TODO
+        holder.deviceName.setText(deviceAddress.getUriParam("gr")); // TODO
 
         ChatRoomSecurityLevel level = device.getSecurityLevel();
         switch (level) {
@@ -170,19 +174,25 @@ public class DevicesAdapter extends BaseExpandableListAdapter {
     @Override
     public int getGroupCount() {
         if (mParticipants.size() == 0) return 0;
-        return mOnlyDisplayChildsAsGroups ? mParticipants.get(0).getDevices().length : mParticipants.size();
+        return mOnlyDisplayChildsAsGroups
+                ? mParticipants.get(0).getDevices().length
+                : mParticipants.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
         if (mParticipants.size() == 0) return 0;
-        return mOnlyDisplayChildsAsGroups ? 0 : mParticipants.get(groupPosition).getDevices().length;
+        return mOnlyDisplayChildsAsGroups
+                ? 0
+                : mParticipants.get(groupPosition).getDevices().length;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
         if (mParticipants.size() == 0) return null;
-        return mOnlyDisplayChildsAsGroups ? mParticipants.get(0).getDevices()[groupPosition] : mParticipants.get(groupPosition);
+        return mOnlyDisplayChildsAsGroups
+                ? mParticipants.get(0).getDevices()[groupPosition]
+                : mParticipants.get(groupPosition);
     }
 
     @Override

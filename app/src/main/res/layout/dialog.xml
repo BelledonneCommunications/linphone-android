@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/dialog_icon"
-        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_margin="15dp"
         android:adjustViewBounds="true"
         android:src="@drawable/security_alert_indicator"
-        android:layout_margin="15dp"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/dialog_title"
-        android:visibility="gone"
         style="@style/dialog_title_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:gravity="center"
         android:textAlignment="center"
-        android:layout_margin="15dp"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/dialog_message"
         style="@style/font14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:gravity="center"
-        android:textAlignment="center"
-        android:layout_margin="15dp"/>
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/dialog_password"
-        android:visibility="gone"
-        android:background="@drawable/resizable_textfield"
-        android:textColor="@color/colorB"
-        android:inputType="textPassword"
-        android:hint="@string/password"
-        android:textCursorDrawable="@null"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="15dp"
-        android:maxLines="1"/>
+        android:background="@drawable/resizable_textfield"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:textColor="@color/colorB"
+        android:textCursorDrawable="@null"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/dialog_zrtp_layout"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:orientation="vertical"
-        android:layout_margin="5dp">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,18 +63,18 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="@string/zrtp_local_sas"
-                android:textAppearance="@style/dialog_zrtp_white_font"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/zrtp_local_sas"
+                android:textAlignment="center"
+                android:textAppearance="@style/dialog_zrtp_white_font" />
 
             <TextView
                 android:id="@+id/zrtp_sas_local"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="@style/dialog_zrtp_colored_font"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@style/dialog_zrtp_colored_font" />
 
         </LinearLayout>
 
@@ -86,18 +86,18 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="@string/zrtp_remote_sas"
-                android:textAppearance="@style/dialog_zrtp_white_font"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/zrtp_remote_sas"
+                android:textAlignment="center"
+                android:textAppearance="@style/dialog_zrtp_white_font" />
 
             <TextView
                 android:id="@+id/zrtp_sas_remote"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="@style/dialog_zrtp_colored_font"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@style/dialog_zrtp_colored_font" />
 
         </LinearLayout>
 
@@ -105,26 +105,26 @@
 
     <LinearLayout
         android:id="@+id/dialog_do_not_ask_again_layout"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="5dp"
         android:orientation="horizontal"
-        android:layout_margin="5dp">
+        android:visibility="gone">
 
         <CheckBox
             android:id="@+id/doNotAskAgain"
-            android:button="@drawable/checkbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox" />
 
         <TextView
             android:id="@+id/doNotAskAgainLabel"
+            style="@style/font14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/font14"
             android:layout_marginLeft="10dp"
-            android:text="@string/do_not_ask_again"/>
+            android:text="@string/do_not_ask_again" />
 
     </LinearLayout>
 
@@ -132,45 +132,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="15dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_margin="15dp">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/dialog_cancel_button"
-            android:text="@string/cancel"
-            android:background="@drawable/resizable_assistant_button"
             style="@style/font8"
-            android:ellipsize="end"
             android:layout_width="137dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            android:padding="10dp"/>
+            android:background="@drawable/resizable_assistant_button"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/dialog_delete_button"
-            android:text="@string/delete"
-            android:background="@drawable/resizable_assistant_button"
-            android:backgroundTint="@color/colorI"
             style="@style/font15"
-            android:ellipsize="end"
             android:layout_width="137dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            android:padding="10dp"/>
+            android:background="@drawable/resizable_assistant_button"
+            android:backgroundTint="@color/colorI"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="@string/delete" />
 
         <Button
             android:id="@+id/dialog_ok_button"
-            android:visibility="gone"
-            android:text="@string/ok"
-            android:background="@drawable/resizable_assistant_button"
-            android:backgroundTint="@color/colorL"
             style="@style/font15"
-            android:ellipsize="end"
             android:layout_width="137dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            android:padding="10dp"/>
+            android:background="@drawable/resizable_assistant_button"
+            android:backgroundTint="@color/colorL"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="@string/ok"
+            android:visibility="gone" />
 
     </LinearLayout>
 

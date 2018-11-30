@@ -69,15 +69,15 @@ public class Purchasable {
         return expire;
     }
 
+    public Purchasable setExpire(long expire) {
+        this.expire = expire;
+        return this;
+    }
+
     public String getExpireDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
         Date date = new Date(expire);
         return dateFormat.format(date);
-    }
-
-    public Purchasable setExpire(long expire) {
-        this.expire = expire;
-        return this;
     }
 
     public Purchasable setPayloadAndSignature(String payload, String signature) {
@@ -94,12 +94,12 @@ public class Purchasable {
         return this.purchasePayloadSignature;
     }
 
+    public String getUserData() {
+        return this.userData;
+    }
+
     public Purchasable setUserData(String data) {
         this.userData = data;
         return this;
-    }
-
-    public String getUserData() {
-        return this.userData;
     }
 }

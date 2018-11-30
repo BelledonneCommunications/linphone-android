@@ -30,19 +30,19 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-
 import org.linphone.R;
 import org.linphone.core.DialPlan;
 
-public class CountryListFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class CountryListFragment extends Fragment
+        implements AdapterView.OnItemClickListener, View.OnClickListener {
     private ListView list;
     private EditText search;
     private ImageView clearSearchField;
     private AssistantActivity.CountryListAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.assistant_country_list, container, false);
         adapter = AssistantActivity.instance().getCountryListAdapter();
@@ -56,21 +56,20 @@ public class CountryListFragment extends Fragment implements AdapterView.OnItemC
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
 
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        search.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s);
-            }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s);
+                    }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
         search.setText("");
 
         return view;

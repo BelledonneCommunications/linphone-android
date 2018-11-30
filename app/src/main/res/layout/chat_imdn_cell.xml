@@ -3,8 +3,8 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:background="@color/colorH"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,9 +14,9 @@
         android:orientation="vertical">
 
         <ImageView
-            android:background="@color/colorE"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="@color/colorE" />
 
     </LinearLayout>
 
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:gravity="center">
 
-            <include layout="@layout/contact_avatar"/>
+            <include layout="@layout/contact_avatar" />
 
         </RelativeLayout>
 
@@ -41,22 +41,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/name"
             style="@style/font6"
-            android:lines="1"
-            android:ellipsize="end"
-            android:maxLines="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/avatar"
-            android:layout_toLeftOf="@id/time"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:layout_centerVertical="true"/>
+            android:layout_toLeftOf="@id/time"
+            android:layout_toRightOf="@id/avatar"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1" />
 
     </RelativeLayout>
 

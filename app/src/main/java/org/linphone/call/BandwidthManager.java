@@ -32,12 +32,6 @@ public class BandwidthManager {
 
     private int currentProfile = HIGH_RESOLUTION;
 
-    public static final synchronized BandwidthManager getInstance() {
-        if (instance == null) instance = new BandwidthManager();
-        return instance;
-    }
-
-
     private BandwidthManager() {
         // FIXME register a listener on NetworkManager to get notified of network state
         // FIXME register a listener on Preference to get notified of change in video enable value
@@ -45,6 +39,10 @@ public class BandwidthManager {
         // FIXME initially get those values
     }
 
+    public static final synchronized BandwidthManager getInstance() {
+        if (instance == null) instance = new BandwidthManager();
+        return instance;
+    }
 
     public void updateWithProfileSettings(Core lc, CallParams callParams) {
         if (callParams != null) { // in call

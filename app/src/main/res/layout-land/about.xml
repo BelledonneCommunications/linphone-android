@@ -5,130 +5,130 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:baselineAligned="false"
-        android:background="@color/colorC"
-        android:orientation="horizontal"
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@color/colorC"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
             <ImageView
-                android:src="@drawable/splashscreen"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:src="@drawable/splashscreen" />
 
             <TextView
-                android:text="@string/app_name"
                 style="@style/font15"
-                android:visibility="gone"
-                android:paddingTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/app_name"
+                android:visibility="gone" />
 
             <TextView
-                android:text="@string/app_description"
                 style="@style/font3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:text="@string/app_description" />
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/about_android_version"
-                android:text="@string/about_version"
                 style="@style/font12"
-                android:layout_gravity="left"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/about_version" />
 
             <TextView
                 android:id="@+id/about_liblinphone_version"
-                android:text="@string/about_liblinphone_version"
                 style="@style/font12"
-                android:layout_gravity="left"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="@string/about_liblinphone_version" />
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/colorH"
-        android:orientation="vertical"
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:layout_gravity="center">
+        android:background="@color/colorH"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/about_link"
-            android:text="@string/about_link"
-            android:autoLink="web"
             style="@style/font2"
-            android:textColorLink="@color/colorA"
-            android:layout_gravity="center"
-            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:autoLink="web"
+            android:gravity="center"
+            android:text="@string/about_link"
+            android:textColorLink="@color/colorA" />
 
         <TextView
             android:id="@+id/about_text"
-            android:text="@string/about_text"
             style="@style/font23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="18sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:text="@string/about_text"
+            android:textSize="18sp" />
 
         <View
-            android:background="@color/colorE"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp"
+            android:background="@color/colorE" />
 
         <LinearLayout
             style="android:attr/buttonBarStyle"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/send_log"
                 style="android:attr/buttonBarButtonStyleStyle"
-                android:background="@drawable/button_background"
-                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_background"
                 android:text="@string/menu_send_log" />
 
             <Button
                 android:id="@+id/reset_log"
                 style="android:attr/buttonBarButtonStyleStyle"
-                android:background="@drawable/button_background"
-                android:layout_margin="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_background"
                 android:text="@string/menu_reset_log" />
 
         </LinearLayout>

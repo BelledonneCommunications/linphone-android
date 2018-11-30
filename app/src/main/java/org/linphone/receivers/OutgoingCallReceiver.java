@@ -19,18 +19,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-
 import org.linphone.settings.LinphonePreferences;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-
-
 public class OutgoingCallReceiver extends BroadcastReceiver {
-    private final static String TAG = "CallHandler";
+    private static final String TAG = "CallHandler";
     private final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
 
     private LinphonePreferences mPrefs;

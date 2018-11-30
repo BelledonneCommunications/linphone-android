@@ -31,14 +31,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
+import org.linphone.settings.LinphonePreferences;
 
-public class CreateAccountCodeActivationFragment extends Fragment implements AccountCreatorListener {
+public class CreateAccountCodeActivationFragment extends Fragment
+        implements AccountCreatorListener {
     private String username, phone, dialcode;
     private TextView title, phonenumber;
     private EditText code;
@@ -49,9 +49,11 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
     private AccountCreator accountCreator;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.assistant_account_creation_code_activation, container, false);
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view =
+                inflater.inflate(
+                        R.layout.assistant_account_creation_code_activation, container, false);
 
         username = getArguments().getString("Username");
         phone = getArguments().getString("Phone");
@@ -61,14 +63,15 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
         accountNumber = getArguments().getInt("AccountNumber");
 
         code_length = LinphonePreferences.instance().getCodeLength();
-        accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+        accountCreator =
+                LinphoneManager.getLc()
+                        .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         accountCreator.setListener(this);
         accountCreator.setUsername(username);
         accountCreator.setPhoneNumber(phone, dialcode);
 
         back = view.findViewById(R.id.back);
-        if (back != null)
-            back.setVisibility(Button.INVISIBLE);
+        if (back != null) back.setVisibility(Button.INVISIBLE);
 
         title = view.findViewById(R.id.title_account_activation);
         if (linkAccount) {
@@ -81,46 +84,47 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
         phonenumber.setText(accountCreator.getPhoneNumber());
 
         code = view.findViewById(R.id.assistant_code);
-        code.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        code.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() == code_length) {
-                    checkAccount.setEnabled(true);
-                } else {
-                    checkAccount.setEnabled(false);
-                }
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (s.length() == code_length) {
+                            checkAccount.setEnabled(true);
+                        } else {
+                            checkAccount.setEnabled(false);
+                        }
+                    }
+                });
 
         checkAccount = view.findViewById(R.id.assistant_check);
         checkAccount.setEnabled(false);
-        checkAccount.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAccount.setEnabled(false);
-                accountCreator.setActivationCode(code.getText().toString());
-                if (linkAccount) {
-                    linkAccount();
-                } else {
-                    activateAccount();
-                }
-            }
-        });
-
+        checkAccount.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        checkAccount.setEnabled(false);
+                        accountCreator.setActivationCode(code.getText().toString());
+                        if (linkAccount) {
+                            linkAccount();
+                        } else {
+                            activateAccount();
+                        }
+                    }
+                });
 
         return view;
     }
 
     private void linkAccount() {
-        accountCreator.setUsername(LinphonePreferences.instance().getAccountUsername(accountNumber));
+        accountCreator.setUsername(
+                LinphonePreferences.instance().getAccountUsername(accountNumber));
         accountCreator.setHa1(LinphonePreferences.instance().getAccountHa1(accountNumber));
         accountCreator.activateAlias();
     }
@@ -133,15 +137,16 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
     }
 
     @Override
-    public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onIsAccountExist(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onCreateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onCreateAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onActivateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+    public void onActivateAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {
         if (AssistantActivity.instance() == null) {
             return;
         }
@@ -163,25 +168,37 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
                 }
             }
         } else if (status.equals(AccountCreator.Status.RequestFailed)) {
-            Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                            getActivity(),
+                            getString(R.string.wizard_server_unavailable),
+                            Toast.LENGTH_LONG)
+                    .show();
         } else {
-            Toast.makeText(getActivity(), getString(R.string.assistant_error_confirmation_code), Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                            getActivity(),
+                            getString(R.string.assistant_error_confirmation_code),
+                            Toast.LENGTH_LONG)
+                    .show();
             AssistantActivity.instance().displayAssistantLinphoneLogin(phone, dialcode);
         }
     }
 
     @Override
-    public void onLinkAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-
-    }
+    public void onLinkAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onActivateAlias(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+    public void onActivateAlias(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {
         if (AssistantActivity.instance() == null) {
             return;
         }
         if (status.equals(AccountCreator.Status.AccountActivated)) {
-            LinphonePreferences.instance().setPrefix(accountNumber, org.linphone.core.Utils.getPrefixFromE164(accountCreator.getPhoneNumber()));
+            LinphonePreferences.instance()
+                    .setPrefix(
+                            accountNumber,
+                            org.linphone.core.Utils.getPrefixFromE164(
+                                    accountCreator.getPhoneNumber()));
             LinphonePreferences.instance().setLinkPopupTime("");
             AssistantActivity.instance().hideKeyboard();
             AssistantActivity.instance().success();
@@ -189,26 +206,22 @@ public class CreateAccountCodeActivationFragment extends Fragment implements Acc
     }
 
     @Override
-    public void onIsAccountActivated(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-
-    }
-
-    @Override
-    public void onRecoverAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onIsAccountActivated(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onIsAccountLinked(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-
-    }
-
-    @Override
-    public void onIsAliasUsed(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-
-    }
+    public void onRecoverAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+    public void onIsAccountLinked(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
-    }
+    @Override
+    public void onIsAliasUsed(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
+
+    @Override
+    public void onUpdateAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 }

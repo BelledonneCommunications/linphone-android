@@ -29,17 +29,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import org.linphone.settings.LinphonePreferences;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.R;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class InAppPurchaseActivity extends Activity implements InAppPurchaseListener, OnClickListener {
+public class InAppPurchaseActivity extends Activity
+        implements InAppPurchaseListener, OnClickListener {
     private static InAppPurchaseActivity instance;
     private InAppPurchaseHelper inAppPurchaseHelper;
     private ImageView cancel, back;
@@ -48,6 +47,10 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
     private List<Purchasable> purchasedItems;
     private Fragment fragment;
     private Handler mHandler = new Handler();
+
+    public static InAppPurchaseActivity instance() {
+        return instance;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +95,9 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
         inAppPurchaseHelper.purchaseItemAsync(item.getId(), username);
     }
 
-
     public String getGmailAccount() {
         return inAppPurchaseHelper.getGmailAccount();
     }
-
 
     @Override
     protected void onDestroy() {
@@ -122,22 +123,18 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
         return null;
     }
 
-    public static InAppPurchaseActivity instance() {
-        return instance;
-    }
-
     @Override
     public void onServiceAvailableForQueries() {
-        //email.setText(inAppPurchaseHelper.getGmailAccount());
-        //email.setEnabled(false);
+        // email.setText(inAppPurchaseHelper.getGmailAccount());
+        // email.setEnabled(false);
 
-        //inAppPurchaseHelper.getPurchasedItemsAsync();
+        // inAppPurchaseHelper.getPurchasedItemsAsync();
         inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
     }
 
     @Override
     public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
-        //purchasableItemsLayout.removeAllViews();
+        // purchasableItemsLayout.removeAllViews();
         inProgress.setVisibility(View.GONE);
         purchasedItems = new ArrayList<>();
         for (Purchasable item : items) {
@@ -154,8 +151,10 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
             inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
         } else {
             for (Purchasable purchasedItem : purchasedItems) {
-                Log.d("[In-app purchase] Found already bought item, expires " + purchasedItem.getExpireDate());
-                //displayRecoverAccountButton(purchasedItem);
+                Log.d(
+                        "[In-app purchase] Found already bought item, expires "
+                                + purchasedItem.getExpireDate());
+                // displayRecoverAccountButton(purchasedItem);
             }
         }
     }
@@ -167,12 +166,18 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
 
             Purchasable item = LinphonePreferences.instance().getInAppPurchasedItem();
 
-            xmlRpcHelper.updateAccountExpireAsync(new XmlRpcListenerBase() {
-                @Override
-                public void onAccountExpireUpdated(String result) {
-                    //TODO
-                }
-            }, LinphonePreferences.instance().getAccountUsername(0), LinphonePreferences.instance().getAccountHa1(0), getString(R.string.default_domain), item.getPayload(), item.getPayloadSignature());
+            xmlRpcHelper.updateAccountExpireAsync(
+                    new XmlRpcListenerBase() {
+                        @Override
+                        public void onAccountExpireUpdated(String result) {
+                            // TODO
+                        }
+                    },
+                    LinphonePreferences.instance().getAccountUsername(0),
+                    LinphonePreferences.instance().getAccountHa1(0),
+                    getString(R.string.default_domain),
+                    item.getPayload(),
+                    item.getPayloadSignature());
         }
     }
 
@@ -193,19 +198,19 @@ public class InAppPurchaseActivity extends Activity implements InAppPurchaseList
     }
 
     @Override
-    public void onRecoverAccountSuccessful(boolean success) {
-    }
+    public void onRecoverAccountSuccessful(boolean success) {}
 
     @Override
     public void onError(final String error) {
         Log.e(error);
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                inProgress.setVisibility(View.GONE);
-                Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();
-            }
-        });
+        mHandler.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        inProgress.setVisibility(View.GONE);
+                        Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     @Override

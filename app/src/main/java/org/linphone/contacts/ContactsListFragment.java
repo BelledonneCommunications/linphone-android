@@ -19,17 +19,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,17 +31,22 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.LinphoneActivity;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.SelectableHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ContactsListFragment extends Fragment implements OnItemClickListener, ContactsUpdatedListener, ContactsListAdapter.ViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class ContactsListFragment extends Fragment
+        implements OnItemClickListener,
+                ContactsUpdatedListener,
+                ContactsListAdapter.ViewHolder.ClickListener,
+                SelectableHelper.DeleteListener {
     private RecyclerView contactsList;
     private TextView noSipContact, noContact;
     private ImageView allContacts, linphoneContacts, newContact;
@@ -66,7 +63,8 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
     private ContactsListAdapter mContactAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contacts_list, container, false);
         mContext = getActivity().getApplicationContext();
         mSelectionHelper = new SelectableHelper(view, this);
@@ -91,37 +89,41 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         contactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         newContact = view.findViewById(R.id.newContact);
 
-        allContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onlyDisplayLinphoneContacts = false;
-                allContactsSelected.setVisibility(View.VISIBLE);
-                allContacts.setEnabled(false);
-                linphoneContacts.setEnabled(true);
-                linphoneContactsSelected.setVisibility(View.INVISIBLE);
-                changeContactsAdapter();
-            }
-        });
+        allContacts.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onlyDisplayLinphoneContacts = false;
+                        allContactsSelected.setVisibility(View.VISIBLE);
+                        allContacts.setEnabled(false);
+                        linphoneContacts.setEnabled(true);
+                        linphoneContactsSelected.setVisibility(View.INVISIBLE);
+                        changeContactsAdapter();
+                    }
+                });
 
-        linphoneContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                allContactsSelected.setVisibility(View.INVISIBLE);
-                linphoneContactsSelected.setVisibility(View.VISIBLE);
-                linphoneContacts.setEnabled(false);
-                allContacts.setEnabled(true);
-                onlyDisplayLinphoneContacts = true;
-                changeContactsAdapter();
-            }
-        });
+        linphoneContacts.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        allContactsSelected.setVisibility(View.INVISIBLE);
+                        linphoneContactsSelected.setVisibility(View.VISIBLE);
+                        linphoneContacts.setEnabled(false);
+                        allContacts.setEnabled(true);
+                        onlyDisplayLinphoneContacts = true;
+                        changeContactsAdapter();
+                    }
+                });
 
-        newContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editConsumed = true;
-                ContactsManager.getInstance().createContact(getActivity(), displayName, sipAddressToAdd);
-            }
-        });
+        newContact.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editConsumed = true;
+                        ContactsManager.getInstance()
+                                .createContact(getActivity(), displayName, sipAddressToAdd);
+                    }
+                });
 
         if (getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
             allContacts.setEnabled(false);
@@ -140,40 +142,47 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
         if (!ContactsManager.getInstance().contactsFetchedOnce()) {
             contactsFetchInProgress.setVisibility(View.VISIBLE);
         } else {
-            if (!onlyDisplayLinphoneContacts && ContactsManager.getInstance().getContacts().size() == 0) {
+            if (!onlyDisplayLinphoneContacts
+                    && ContactsManager.getInstance().getContacts().size() == 0) {
                 noContact.setVisibility(View.VISIBLE);
-            } else if (onlyDisplayLinphoneContacts && ContactsManager.getInstance().getSIPContacts().size() == 0) {
+            } else if (onlyDisplayLinphoneContacts
+                    && ContactsManager.getInstance().getSIPContacts().size() == 0) {
                 noSipContact.setVisibility(View.VISIBLE);
             }
         }
 
         mSearchView = view.findViewById(R.id.searchField);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
-            }
+        mSearchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return true;
+                    }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchContacts(newText);
-                return true;
-            }
-        });
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        searchContacts(newText);
+                        return true;
+                    }
+                });
 
         layoutManager = new LinearLayoutManager(mContext);
         contactsList.setLayoutManager(layoutManager);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(contactsList.getContext(),
-                layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(getActivity().getResources().getDrawable(R.drawable.divider));
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(
+                        contactsList.getContext(), layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(
+                getActivity().getResources().getDrawable(R.drawable.divider));
         contactsList.addItemDecoration(dividerItemDecoration);
 
         return view;
     }
 
     public void displayFirstContact() {
-        if (contactsList != null && contactsList.getAdapter() != null && contactsList.getAdapter().getItemCount() > 0) {
+        if (contactsList != null
+                && contactsList.getAdapter() != null
+                && contactsList.getAdapter().getItemCount() > 0) {
             ContactsListAdapter mAdapt = (ContactsListAdapter) contactsList.getAdapter();
             LinphoneActivity.instance().displayContact((LinphoneContact) mAdapt.getItem(0), false);
         } else {
@@ -203,14 +212,13 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
         mContactAdapter = new ContactsListAdapter(mContext, listContact, this, mSelectionHelper);
 
-//		contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        //		contactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         mSelectionHelper.setAdapter(mContactAdapter);
         if (isEditionEnabled) {
             mSelectionHelper.enterEditionMode();
         }
         contactsList.setAdapter(mContactAdapter);
     }
-
 
     private void changeContactsAdapter() {
         changeContactsToggle();
@@ -228,9 +236,13 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             }
         } else {
             if (onlyDisplayLinphoneContacts) {
-                listContact = ContactsManager.getInstance().getSIPContacts(mSearchView.getQuery().toString());
+                listContact =
+                        ContactsManager.getInstance()
+                                .getSIPContacts(mSearchView.getQuery().toString());
             } else {
-                listContact = ContactsManager.getInstance().getContacts(mSearchView.getQuery().toString());
+                listContact =
+                        ContactsManager.getInstance()
+                                .getContacts(mSearchView.getQuery().toString());
             }
         }
 
@@ -257,7 +269,8 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
     }
 
     private void changeContactsToggle() {
-        if (onlyDisplayLinphoneContacts && !getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
+        if (onlyDisplayLinphoneContacts
+                && !getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
             allContacts.setEnabled(true);
             allContactsSelected.setVisibility(View.INVISIBLE);
             linphoneContacts.setEnabled(false);
@@ -319,7 +332,9 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS_LIST);
-            onlyDisplayLinphoneContacts = ContactsManager.getInstance().isLinphoneContactsPrefered() || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
+            onlyDisplayLinphoneContacts =
+                    ContactsManager.getInstance().isLinphoneContactsPrefered()
+                            || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
         }
         changeContactsToggle();
         invalidate();
@@ -333,10 +348,14 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
 
     @Override
     public void onContactsUpdated() {
-        if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != FragmentsAvailable.CONTACTS_LIST)
-            return;
+        if (!LinphoneActivity.isInstanciated()
+                || LinphoneActivity.instance().getCurrentFragment()
+                        != FragmentsAvailable.CONTACTS_LIST) return;
         if (mContactAdapter != null) {
-            mContactAdapter.updateDataSet(onlyDisplayLinphoneContacts ? ContactsManager.getInstance().getSIPContacts() : ContactsManager.getInstance().getContacts());
+            mContactAdapter.updateDataSet(
+                    onlyDisplayLinphoneContacts
+                            ? ContactsManager.getInstance().getSIPContacts()
+                            : ContactsManager.getInstance().getContacts());
             mContactAdapter.notifyDataSetChanged();
 
             if (mContactAdapter.getItemCount() > 0) {
@@ -345,7 +364,6 @@ public class ContactsListFragment extends Fragment implements OnItemClickListene
             }
         }
         contactsFetchInProgress.setVisibility(View.GONE);
-
     }
 
     public void invalidate() {

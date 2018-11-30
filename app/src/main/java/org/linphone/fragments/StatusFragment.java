@@ -26,7 +26,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,12 +35,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.core.content.ContextCompat;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.LinphoneActivity;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.core.Call;
@@ -53,6 +51,7 @@ import org.linphone.core.MediaEncryption;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 
 public class StatusFragment extends Fragment {
     private Handler refreshHandler = new Handler();
@@ -65,8 +64,8 @@ public class StatusFragment extends Fragment {
     private int mDisplayedQuality = -1;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.status, container, false);
 
         statusText = view.findViewById(R.id.status_text);
@@ -80,64 +79,71 @@ public class StatusFragment extends Fragment {
         // We create it once to not delay the first display
         populateSliderContent();
 
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onRegistrationStateChanged(final Core lc, final ProxyConfig proxy, final RegistrationState state, String smessage) {
-                if (!isAttached || !LinphoneService.isReady()) {
-                    return;
-                }
-
-                if (lc.getProxyConfigList() == null) {
-                    statusLed.setImageResource(R.drawable.led_disconnected);
-                    statusText.setText(getString(R.string.no_account));
-                } else {
-                    statusLed.setVisibility(View.VISIBLE);
-                }
-
-                if (lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().equals(proxy)) {
-                    statusLed.setImageResource(getStatusIconResource(state, true));
-                    statusText.setText(getStatusIconText(state));
-                } else if (lc.getDefaultProxyConfig() == null) {
-                    statusLed.setImageResource(getStatusIconResource(state, true));
-                    statusText.setText(getStatusIconText(state));
-                }
-
-                try {
-                    statusText.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            lc.refreshRegisters();
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onRegistrationStateChanged(
+                            final Core lc,
+                            final ProxyConfig proxy,
+                            final RegistrationState state,
+                            String smessage) {
+                        if (!isAttached || !LinphoneService.isReady()) {
+                            return;
                         }
-                    });
-                } catch (IllegalStateException ise) {
-                }
-            }
 
-            @Override
-            public void onNotifyReceived(Core lc, Event ev, String eventName, Content content) {
+                        if (lc.getProxyConfigList() == null) {
+                            statusLed.setImageResource(R.drawable.led_disconnected);
+                            statusText.setText(getString(R.string.no_account));
+                        } else {
+                            statusLed.setVisibility(View.VISIBLE);
+                        }
 
-                if (!content.getType().equals("application")) return;
-                if (!content.getSubtype().equals("simple-message-summary")) return;
+                        if (lc.getDefaultProxyConfig() != null
+                                && lc.getDefaultProxyConfig().equals(proxy)) {
+                            statusLed.setImageResource(getStatusIconResource(state, true));
+                            statusText.setText(getStatusIconText(state));
+                        } else if (lc.getDefaultProxyConfig() == null) {
+                            statusLed.setImageResource(getStatusIconResource(state, true));
+                            statusText.setText(getStatusIconText(state));
+                        }
 
-                if (content.getSize() == 0) return;
+                        try {
+                            statusText.setOnClickListener(
+                                    new OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            lc.refreshRegisters();
+                                        }
+                                    });
+                        } catch (IllegalStateException ise) {
+                        }
+                    }
 
-                int unreadCount = -1;
-                String data = content.getStringBuffer();
-                String[] voiceMail = data.split("voice-message: ");
-                final String[] intToParse = voiceMail[1].split("/", 0);
+                    @Override
+                    public void onNotifyReceived(
+                            Core lc, Event ev, String eventName, Content content) {
 
-                unreadCount = Integer.parseInt(intToParse[0]);
-                if (unreadCount > 0) {
-                    voicemailCount.setText(unreadCount);
-                    voicemail.setVisibility(View.VISIBLE);
-                    voicemailCount.setVisibility(View.VISIBLE);
-                } else {
-                    voicemail.setVisibility(View.GONE);
-                    voicemailCount.setVisibility(View.GONE);
-                }
-            }
+                        if (!content.getType().equals("application")) return;
+                        if (!content.getSubtype().equals("simple-message-summary")) return;
 
-        };
+                        if (content.getSize() == 0) return;
+
+                        int unreadCount = -1;
+                        String data = content.getStringBuffer();
+                        String[] voiceMail = data.split("voice-message: ");
+                        final String[] intToParse = voiceMail[1].split("/", 0);
+
+                        unreadCount = Integer.parseInt(intToParse[0]);
+                        if (unreadCount > 0) {
+                            voicemailCount.setText(unreadCount);
+                            voicemail.setVisibility(View.VISIBLE);
+                            voicemailCount.setVisibility(View.VISIBLE);
+                        } else {
+                            voicemail.setVisibility(View.GONE);
+                            voicemailCount.setVisibility(View.GONE);
+                        }
+                    }
+                };
 
         isAttached = true;
         Activity activity = getActivity();
@@ -174,15 +180,15 @@ public class StatusFragment extends Fragment {
         isAttached = false;
     }
 
-    //NORMAL STATUS BAR
+    // NORMAL STATUS BAR
 
     private void populateSliderContent() {
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
             voicemailCount.setVisibility(View.GONE);
 
             if (isInCall && isAttached) {
-                //Call call = LinphoneManager.getLc().getCurrentCall();
-                //initCallStatsRefresher(call, callStats);
+                // Call call = LinphoneManager.getLc().getCurrentCall();
+                // initCallStatsRefresher(call, callStats);
             } else if (!isInCall) {
                 voicemailCount.setVisibility(View.VISIBLE);
             }
@@ -208,7 +214,13 @@ public class StatusFragment extends Fragment {
     private int getStatusIconResource(RegistrationState state, boolean isDefaultAccount) {
         try {
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-            boolean defaultAccountConnected = (isDefaultAccount && lc != null && lc.getDefaultProxyConfig() != null && lc.getDefaultProxyConfig().getState() == RegistrationState.Ok) || !isDefaultAccount;
+            boolean defaultAccountConnected =
+                    (isDefaultAccount
+                                    && lc != null
+                                    && lc.getDefaultProxyConfig() != null
+                                    && lc.getDefaultProxyConfig().getState()
+                                            == RegistrationState.Ok)
+                            || !isDefaultAccount;
             if (state == RegistrationState.Ok && defaultAccountConnected) {
                 return R.drawable.led_connected;
             } else if (state == RegistrationState.Progress) {
@@ -227,13 +239,15 @@ public class StatusFragment extends Fragment {
 
     private String getStatusIconText(RegistrationState state) {
         Context context = getActivity();
-        if (!isAttached && LinphoneActivity.isInstanciated())
-            context = LinphoneActivity.instance();
-        else if (!isAttached && LinphoneService.isReady())
-            context = LinphoneService.instance();
+        if (!isAttached && LinphoneActivity.isInstanciated()) context = LinphoneActivity.instance();
+        else if (!isAttached && LinphoneService.isReady()) context = LinphoneService.instance();
 
         try {
-            if (state == RegistrationState.Ok && LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig().getState() == RegistrationState.Ok) {
+            if (state == RegistrationState.Ok
+                    && LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                                    .getDefaultProxyConfig()
+                                    .getState()
+                            == RegistrationState.Ok) {
                 return context.getString(R.string.status_connected);
             } else if (state == RegistrationState.Progress) {
                 return context.getString(R.string.status_in_progress);
@@ -249,27 +263,28 @@ public class StatusFragment extends Fragment {
         return context.getString(R.string.status_not_connected);
     }
 
-    //INCALL STATUS BAR
+    // INCALL STATUS BAR
     private void startCallQuality() {
         callQuality.setVisibility(View.VISIBLE);
-        refreshHandler.postDelayed(mCallQualityUpdater = new Runnable() {
-            Call mCurrentCall = LinphoneManager.getLc()
-                    .getCurrentCall();
+        refreshHandler.postDelayed(
+                mCallQualityUpdater =
+                        new Runnable() {
+                            Call mCurrentCall = LinphoneManager.getLc().getCurrentCall();
 
-            public void run() {
-                if (mCurrentCall == null) {
-                    mCallQualityUpdater = null;
-                    return;
-                }
-                float newQuality = mCurrentCall.getCurrentQuality();
-                updateQualityOfSignalIcon(newQuality);
+                            public void run() {
+                                if (mCurrentCall == null) {
+                                    mCallQualityUpdater = null;
+                                    return;
+                                }
+                                float newQuality = mCurrentCall.getCurrentQuality();
+                                updateQualityOfSignalIcon(newQuality);
 
-                if (isInCall) {
-                    refreshHandler.postDelayed(this, 1000);
-                } else
-                    mCallQualityUpdater = null;
-            }
-        }, 1000);
+                                if (isInCall) {
+                                    refreshHandler.postDelayed(this, 1000);
+                                } else mCallQualityUpdater = null;
+                            }
+                        },
+                1000);
     }
 
     void updateQualityOfSignalIcon(float quality) {
@@ -278,24 +293,19 @@ public class StatusFragment extends Fragment {
         if (iQuality == mDisplayedQuality) return;
         if (quality >= 4) // Good Quality
         {
-            callQuality.setImageResource(
-                    R.drawable.call_quality_indicator_4);
+            callQuality.setImageResource(R.drawable.call_quality_indicator_4);
         } else if (quality >= 3) // Average quality
         {
-            callQuality.setImageResource(
-                    R.drawable.call_quality_indicator_3);
+            callQuality.setImageResource(R.drawable.call_quality_indicator_3);
         } else if (quality >= 2) // Low quality
         {
-            callQuality.setImageResource(
-                    R.drawable.call_quality_indicator_2);
+            callQuality.setImageResource(R.drawable.call_quality_indicator_2);
         } else if (quality >= 1) // Very low quality
         {
-            callQuality.setImageResource(
-                    R.drawable.call_quality_indicator_1);
+            callQuality.setImageResource(R.drawable.call_quality_indicator_1);
         } else // Worst quality
         {
-            callQuality.setImageResource(
-                    R.drawable.call_quality_indicator_0);
+            callQuality.setImageResource(R.drawable.call_quality_indicator_0);
         }
         mDisplayedQuality = iQuality;
     }
@@ -326,7 +336,8 @@ public class StatusFragment extends Fragment {
                     statusLed.setImageResource(R.drawable.led_disconnected);
                     statusText.setText(getString(R.string.no_account));
                 } else {
-                    statusLed.setImageResource(getStatusIconResource(lc.getDefaultProxyConfig().getState(), true));
+                    statusLed.setImageResource(
+                            getStatusIconResource(lc.getDefaultProxyConfig().getState(), true));
                     statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
                 }
             }
@@ -357,15 +368,19 @@ public class StatusFragment extends Fragment {
             MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
 
             if (isVideoEnabled) {
-                //background.setVisibility(View.GONE);
+                // background.setVisibility(View.GONE);
             } else {
-                //background.setVisibility(View.VISIBLE);
+                // background.setVisibility(View.VISIBLE);
             }
 
             encryption.setVisibility(View.VISIBLE);
-            if (mediaEncryption == MediaEncryption.SRTP || (mediaEncryption == MediaEncryption.ZRTP && call.getAuthenticationTokenVerified()) || mediaEncryption == MediaEncryption.DTLS) {
+            if (mediaEncryption == MediaEncryption.SRTP
+                    || (mediaEncryption == MediaEncryption.ZRTP
+                            && call.getAuthenticationTokenVerified())
+                    || mediaEncryption == MediaEncryption.DTLS) {
                 encryption.setImageResource(R.drawable.security_ok);
-            } else if (mediaEncryption == MediaEncryption.ZRTP && !call.getAuthenticationTokenVerified()) {
+            } else if (mediaEncryption == MediaEncryption.ZRTP
+                    && !call.getAuthenticationTokenVerified()) {
                 encryption.setImageResource(R.drawable.security_pending);
             } else {
                 encryption.setImageResource(R.drawable.security_ko);
@@ -376,12 +391,13 @@ public class StatusFragment extends Fragment {
             }
 
             if (mediaEncryption == MediaEncryption.ZRTP) {
-                encryption.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showZRTPDialog(call);
-                    }
-                });
+                encryption.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showZRTPDialog(call);
+                            }
+                        });
             } else {
                 encryption.setOnClickListener(null);
             }
@@ -414,7 +430,10 @@ public class StatusFragment extends Fragment {
             Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
             d.setAlpha(200);
             ZRTPdialog.setContentView(R.layout.dialog);
-            ZRTPdialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+            ZRTPdialog.getWindow()
+                    .setLayout(
+                            WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.MATCH_PARENT);
             ZRTPdialog.getWindow().setBackgroundDrawable(d);
             String zrtpToRead, zrtpToListen;
 
@@ -450,29 +469,31 @@ public class StatusFragment extends Fragment {
             icon.setVisibility(View.VISIBLE);
             icon.setImageResource(R.drawable.security_2_indicator);
 
-            delete.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (call != null) {
-                        call.setAuthenticationTokenVerified(false);
-                        if (encryption != null) {
-                            encryption.setImageResource(R.drawable.security_ko);
+            delete.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (call != null) {
+                                call.setAuthenticationTokenVerified(false);
+                                if (encryption != null) {
+                                    encryption.setImageResource(R.drawable.security_ko);
+                                }
+                            }
+                            ZRTPdialog.dismiss();
                         }
-                    }
-                    ZRTPdialog.dismiss();
-                }
-            });
+                    });
 
-            accept.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    call.setAuthenticationTokenVerified(true);
-                    if (encryption != null) {
-                        encryption.setImageResource(R.drawable.security_ok);
-                    }
-                    ZRTPdialog.dismiss();
-                }
-            });
+            accept.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            call.setAuthenticationTokenVerified(true);
+                            if (encryption != null) {
+                                encryption.setImageResource(R.drawable.security_ok);
+                            }
+                            ZRTPdialog.dismiss();
+                        }
+                    });
             ZRTPdialog.show();
         }
     }

@@ -25,7 +25,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 @TargetApi(8)
-public class CompatibilityScaleGestureDetector extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+public class CompatibilityScaleGestureDetector
+        extends ScaleGestureDetector.SimpleOnScaleGestureListener {
     private ScaleGestureDetector detector;
     private CompatibilityScaleGestureListener listener;
 

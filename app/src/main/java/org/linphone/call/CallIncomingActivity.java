@@ -26,36 +26,32 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.core.app.ActivityCompat;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
-import org.linphone.LinphoneService;
-import org.linphone.utils.ImageUtils;
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
+import androidx.core.app.ActivityCompat;
+import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
-import org.linphone.utils.LinphoneGenericActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
-import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneGenericActivity;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.CallIncomingAnswerButton;
 import org.linphone.views.CallIncomingButtonListener;
 import org.linphone.views.CallIncomingDeclineButton;
-
-import java.util.ArrayList;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
     private static CallIncomingActivity instance;
@@ -95,7 +91,10 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         contactPicture = findViewById(R.id.contact_picture);
 
         // set this flag so this activity will stay in front of the keyguard
-        int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+        int flags =
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
         acceptUnlock = findViewById(R.id.acceptUnlock);
@@ -106,14 +105,19 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         acceptIcon = findViewById(R.id.acceptIcon);
         lookupCurrentCall();
 
-        if (LinphonePreferences.instance() != null && mCall != null && mCall.getRemoteParams() != null &&
-                LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests() &&
-                mCall.getRemoteParams().videoEnabled()) {
+        if (LinphonePreferences.instance() != null
+                && mCall != null
+                && mCall.getRemoteParams() != null
+                && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
+                && mCall.getRemoteParams().videoEnabled()) {
             acceptIcon.setImageResource(R.drawable.call_video_start);
         }
 
         mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        boolean doNotUseSliders = getResources().getBoolean(R.bool.do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked);
+        boolean doNotUseSliders =
+                getResources()
+                        .getBoolean(
+                                R.bool.do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked);
         if (doNotUseSliders && !mKeyguardManager.inKeyguardRestrictedInputMode()) {
             accept.setSliderMode(false);
             decline.setSliderMode(false);
@@ -123,33 +127,43 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             accept.setDeclineButton(decline);
             decline.setAnswerButton(accept);
         }
-        accept.setListener(new CallIncomingButtonListener() {
-            @Override
-            public void onAction() {
-                answer();
-            }
-        });
-        decline.setListener(new CallIncomingButtonListener() {
-            @Override
-            public void onAction() {
-                decline();
-            }
-        });
+        accept.setListener(
+                new CallIncomingButtonListener() {
+                    @Override
+                    public void onAction() {
+                        answer();
+                    }
+                });
+        decline.setListener(
+                new CallIncomingButtonListener() {
+                    @Override
+                    public void onAction() {
+                        decline();
+                    }
+                });
 
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onCallStateChanged(Core lc, Call call, State state, String message) {
-                if (call == mCall && State.End == state) {
-                    finish();
-                } else if (state == State.Connected) {
-                    startActivity(new Intent(CallIncomingActivity.this, CallActivity.class));
-                } else if (state == State.StreamsRunning) {
-                    Log.e("CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = " + LinphoneManager.getInstance().isSpeakerEnabled());
-                    // The following should not be needed except some devices need it (e.g. Galaxy S).
-                    LinphoneManager.getInstance().enableSpeaker(LinphoneManager.getInstance().isSpeakerEnabled());
-                }
-            }
-        };
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core lc, Call call, State state, String message) {
+                        if (call == mCall && State.End == state) {
+                            finish();
+                        } else if (state == State.Connected) {
+                            startActivity(
+                                    new Intent(CallIncomingActivity.this, CallActivity.class));
+                        } else if (state == State.StreamsRunning) {
+                            Log.e(
+                                    "CallIncommingActivity - onCreate -  State.StreamsRunning - speaker = "
+                                            + LinphoneManager.getInstance().isSpeakerEnabled());
+                            // The following should not be needed except some devices need it (e.g.
+                            // Galaxy S).
+                            LinphoneManager.getInstance()
+                                    .enableSpeaker(
+                                            LinphoneManager.getInstance().isSpeakerEnabled());
+                        }
+                    }
+                };
 
         super.onCreate(savedInstanceState);
         instance = this;
@@ -170,17 +184,17 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         // Only one call ringing at a time is allowed
         lookupCurrentCall();
         if (mCall == null) {
-            //The incoming call no longer exists.
+            // The incoming call no longer exists.
             Log.d("Couldn't find incoming call");
             finish();
             return;
         }
 
-
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
-            ImageUtils.setImagePictureFromUri(this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(
+                    this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
             name.setText(contact.getFullName());
         } else {
             name.setText(LinphoneUtils.getAddressDisplayName(address));
@@ -211,7 +225,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (LinphoneManager.isInstanciated() && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
+        if (LinphoneManager.isInstanciated()
+                && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME)) {
             LinphoneManager.getLc().terminateCall(mCall);
             finish();
         }
@@ -260,20 +275,36 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private void checkAndRequestCallPermissions() {
         ArrayList<String> permissionsList = new ArrayList<String>();
 
-        int recordAudio = getPackageManager().checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
-        Log.i("[Permission] Record audio permission is " + (recordAudio == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-        int camera = getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
-        Log.i("[Permission] Camera permission is " + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        int recordAudio =
+                getPackageManager()
+                        .checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
+        Log.i(
+                "[Permission] Record audio permission is "
+                        + (recordAudio == PackageManager.PERMISSION_GRANTED
+                                ? "granted"
+                                : "denied"));
+        int camera =
+                getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+        Log.i(
+                "[Permission] Camera permission is "
+                        + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
         if (recordAudio != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
+            if (LinphonePreferences.instance()
+                            .firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                            this, Manifest.permission.RECORD_AUDIO)) {
                 Log.i("[Permission] Asking for record audio");
                 permissionsList.add(Manifest.permission.RECORD_AUDIO);
             }
         }
-        if (LinphonePreferences.instance().shouldInitiateVideoCall() || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
+        if (LinphonePreferences.instance().shouldInitiateVideoCall()
+                || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
-                if (LinphonePreferences.instance().firstTimeAskingForPermission(Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                if (LinphonePreferences.instance()
+                                .firstTimeAskingForPermission(Manifest.permission.CAMERA)
+                        || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this, Manifest.permission.CAMERA)) {
                     Log.i("[Permission] Asking for camera");
                     permissionsList.add(Manifest.permission.CAMERA);
                 }
@@ -288,9 +319,16 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
         for (int i = 0; i < permissions.length; i++) {
-            Log.i("[Permission] " + permissions[i] + " is " + (grantResults[i] == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+            Log.i(
+                    "[Permission] "
+                            + permissions[i]
+                            + " is "
+                            + (grantResults[i] == PackageManager.PERMISSION_GRANTED
+                                    ? "granted"
+                                    : "denied"));
         }
     }
 }

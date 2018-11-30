@@ -19,22 +19,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -43,7 +36,13 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -65,18 +64,8 @@ import org.linphone.views.AsyncBitmap;
 import org.linphone.views.BitmapWorkerTask;
 import org.linphone.views.ContactAvatar;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-
-public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldViewHolder> implements ChatMessagesGenericAdapter {
+public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldViewHolder>
+        implements ChatMessagesGenericAdapter {
 
     private static int MARGIN_BETWEEN_MESSAGES = 10;
     private static int SIDE_MARGIN = 100;
@@ -90,7 +79,13 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
 
     private ChatMessageViewHolderClickListener mClickListener;
 
-    public ChatMessagesOldAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolderClickListener clickListener) {
+    public ChatMessagesOldAdapter(
+            ChatMessagesFragment fragment,
+            SelectableHelper helper,
+            int itemResource,
+            EventLog[] history,
+            ArrayList<LinphoneContact> participants,
+            ChatMessageViewHolderClickListener clickListener) {
         super(helper);
         mFragment = fragment;
         mContext = mFragment.getActivity();
@@ -99,51 +94,55 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
         Collections.reverse(mHistory);
         mParticipants = participants;
         mClickListener = clickListener;
-        mListener = new ChatMessageListenerStub() {
-            @Override
-            public void onFileTransferProgressIndication(ChatMessage message, Content content, int offset, int total) {
-                ChatMessageOldViewHolder holder = (ChatMessageOldViewHolder) message.getUserData();
-                if (holder == null) return;
+        mListener =
+                new ChatMessageListenerStub() {
+                    @Override
+                    public void onFileTransferProgressIndication(
+                            ChatMessage message, Content content, int offset, int total) {
+                        ChatMessageOldViewHolder holder =
+                                (ChatMessageOldViewHolder) message.getUserData();
+                        if (holder == null) return;
 
-                if (offset == total) {
-                    holder.fileTransferProgressBar.setVisibility(View.GONE);
-                    holder.fileTransferAction.setVisibility(View.GONE);
-                    holder.fileTransferLayout.setVisibility(View.GONE);
+                        if (offset == total) {
+                            holder.fileTransferProgressBar.setVisibility(View.GONE);
+                            holder.fileTransferAction.setVisibility(View.GONE);
+                            holder.fileTransferLayout.setVisibility(View.GONE);
 
-                    displayAttachedFile(message, holder);
-                } else {
-                    holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
-                    holder.fileTransferProgressBar.setProgress(offset * 100 / total);
-                }
-            }
-
-            @Override
-            public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
-                if (state == ChatMessage.State.FileTransferDone) {
-                    if (!message.isOutgoing()) {
-                        message.setAppdata(message.getFileTransferFilepath());
+                            displayAttachedFile(message, holder);
+                        } else {
+                            holder.fileTransferProgressBar.setVisibility(View.VISIBLE);
+                            holder.fileTransferProgressBar.setProgress(offset * 100 / total);
+                        }
                     }
-                    message.setFileTransferFilepath(null); // Not needed anymore, will help differenciate between InProgress states for file transfer / message sending
-                }
-                for (int i = 0; i < mHistory.size(); i++) {
-                    EventLog log = mHistory.get(i);
-                    if (log.getType() == EventLog.Type.ConferenceChatMessage && log.getChatMessage() == message) {
-                        notifyItemChanged(i);
-                        break;
-                    }
-                }
 
-            }
-        };
+                    @Override
+                    public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
+                        if (state == ChatMessage.State.FileTransferDone) {
+                            if (!message.isOutgoing()) {
+                                message.setAppdata(message.getFileTransferFilepath());
+                            }
+                            message.setFileTransferFilepath(
+                                    null); // Not needed anymore, will help differenciate between
+                            // InProgress states for file transfer / message sending
+                        }
+                        for (int i = 0; i < mHistory.size(); i++) {
+                            EventLog log = mHistory.get(i);
+                            if (log.getType() == EventLog.Type.ConferenceChatMessage
+                                    && log.getChatMessage() == message) {
+                                notifyItemChanged(i);
+                                break;
+                            }
+                        }
+                    }
+                };
     }
 
     @Override
     public ChatMessageOldViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(mItemResource, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(mItemResource, parent, false);
         ChatMessageOldViewHolder VH = new ChatMessageOldViewHolder(mContext, v, mClickListener);
 
-        //Allows onLongClick ContextMenu on bubbles
+        // Allows onLongClick ContextMenu on bubbles
         mFragment.registerForContextMenu(v);
         v.setTag(VH);
         return VH;
@@ -176,7 +175,9 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
             holder.bubbleLayout.setVisibility(View.VISIBLE);
             final ChatMessage message = event.getChatMessage();
 
-            if (position > 0 && mContext.getResources().getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
+            if (position > 0
+                    && mContext.getResources()
+                            .getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
                 EventLog previousEvent = (EventLog) getItem(position - 1);
                 if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
                     ChatMessage previousMessage = previousEvent.getChatMessage();
@@ -192,7 +193,10 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
             holder.messageId = message.getMessageId();
             message.setUserData(holder);
 
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
 
             ChatMessage.State status = message.getState();
             Address remoteSender = message.getFromAddress();
@@ -206,7 +210,9 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     holder.messageSendingInProgress.setVisibility(View.VISIBLE);
                 }
 
-                if (!message.isSecured() && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory && status != ChatMessage.State.InProgress) {
+                if (!message.isSecured()
+                        && LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory
+                        && status != ChatMessage.State.InProgress) {
                     holder.messageStatus.setVisibility(View.VISIBLE);
                     holder.messageStatus.setImageResource(R.drawable.chat_unsecure);
                 }
@@ -233,20 +239,31 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
                 }
 
-                //layoutParams allow bubbles alignment during selection mode
+                // layoutParams allow bubbles alignment during selection mode
                 if (isEditionEnabled()) {
                     layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-                    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES / 2, 0, MARGIN_BETWEEN_MESSAGES / 2);
+                    layoutParams.setMargins(
+                            SIDE_MARGIN,
+                            MARGIN_BETWEEN_MESSAGES / 2,
+                            0,
+                            MARGIN_BETWEEN_MESSAGES / 2);
                 } else {
                     layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES / 2, 0, MARGIN_BETWEEN_MESSAGES / 2);
+                    layoutParams.setMargins(
+                            SIDE_MARGIN,
+                            MARGIN_BETWEEN_MESSAGES / 2,
+                            0,
+                            MARGIN_BETWEEN_MESSAGES / 2);
                 }
 
                 holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_outgoing);
                 Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font3);
-                Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
-                holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
-                ContactAvatar.setAvatarMask(holder.avatarLayout, R.drawable.avatar_chat_mask_outgoing);
+                Compatibility.setTextAppearance(
+                        holder.fileTransferAction, mContext, R.style.font15);
+                holder.fileTransferAction.setBackgroundResource(
+                        R.drawable.resizable_confirm_delete_button);
+                ContactAvatar.setAvatarMask(
+                        holder.avatarLayout, R.drawable.avatar_chat_mask_outgoing);
             } else {
                 for (LinphoneContact c : mParticipants) {
                     if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
@@ -257,16 +274,25 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
 
                 if (isEditionEnabled()) {
                     layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-                    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES / 2, 0, MARGIN_BETWEEN_MESSAGES / 2);
+                    layoutParams.setMargins(
+                            SIDE_MARGIN,
+                            MARGIN_BETWEEN_MESSAGES / 2,
+                            0,
+                            MARGIN_BETWEEN_MESSAGES / 2);
                 } else {
                     layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    layoutParams.setMargins(0, MARGIN_BETWEEN_MESSAGES / 2, SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES / 2);
+                    layoutParams.setMargins(
+                            0,
+                            MARGIN_BETWEEN_MESSAGES / 2,
+                            SIDE_MARGIN,
+                            MARGIN_BETWEEN_MESSAGES / 2);
                 }
 
                 holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
                 Compatibility.setTextAppearance(holder.contactName, mContext, R.style.font9);
                 Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
-                holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
+                holder.fileTransferAction.setBackgroundResource(
+                        R.drawable.resizable_assistant_button);
                 ContactAvatar.setAvatarMask(holder.avatarLayout, R.drawable.avatar_chat_mask);
             }
 
@@ -284,7 +310,11 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                 displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
                 ContactAvatar.displayAvatar(displayName, holder.avatarLayout);
             }
-            holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
+            holder.contactName.setText(
+                    LinphoneUtils.timestampToHumanDate(
+                                    mContext, message.getTime(), R.string.messages_date_format)
+                            + " - "
+                            + displayName);
 
             if (message.hasTextContent()) {
                 String msg = message.getTextContent();
@@ -320,42 +350,62 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     holder.fileTransferAction.setVisibility(View.GONE);
                 } else {
                     holder.fileTransferAction.setText(mContext.getString(R.string.accept));
-                    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
-                                v.setEnabled(false);
-                                String filename = message.getFileTransferInformation().getName();
-                                File file = new File(FileUtils.getStorageDirectory(mContext), filename);
-                                int prefix = 1;
-                                while (file.exists()) {
-                                    file = new File(FileUtils.getStorageDirectory(mContext), prefix + "_" + filename);
-                                    Log.w("File with that name already exists, renamed to " + prefix + "_" + filename);
-                                    prefix += 1;
-                                }
-                                message.setListener(mListener);
-                                message.setFileTransferFilepath(file.getPath());
-                                message.downloadFile();
+                    holder.fileTransferAction.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (mContext.getPackageManager()
+                                                    .checkPermission(
+                                                            Manifest.permission
+                                                                    .WRITE_EXTERNAL_STORAGE,
+                                                            mContext.getPackageName())
+                                            == PackageManager.PERMISSION_GRANTED) {
+                                        v.setEnabled(false);
+                                        String filename =
+                                                message.getFileTransferInformation().getName();
+                                        File file =
+                                                new File(
+                                                        FileUtils.getStorageDirectory(mContext),
+                                                        filename);
+                                        int prefix = 1;
+                                        while (file.exists()) {
+                                            file =
+                                                    new File(
+                                                            FileUtils.getStorageDirectory(mContext),
+                                                            prefix + "_" + filename);
+                                            Log.w(
+                                                    "File with that name already exists, renamed to "
+                                                            + prefix
+                                                            + "_"
+                                                            + filename);
+                                            prefix += 1;
+                                        }
+                                        message.setListener(mListener);
+                                        message.setFileTransferFilepath(file.getPath());
+                                        message.downloadFile();
 
-                            } else {
-                                Log.w("WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-                                LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
-                            }
-                        }
-                    });
+                                    } else {
+                                        Log.w(
+                                                "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+                                        LinphoneActivity.instance()
+                                                .checkAndRequestExternalStoragePermission();
+                                    }
+                                }
+                            });
                 }
             } else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
                 message.setListener(mListener); // add the listener for file upload progress display
                 holder.messageSendingInProgress.setVisibility(View.GONE);
                 holder.fileTransferLayout.setVisibility(View.VISIBLE);
                 holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
-                holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        message.cancelFileTransfer();
-                        notifyItemChanged(holder.getAdapterPosition());
-                    }
-                });
+                holder.fileTransferAction.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                message.cancelFileTransfer();
+                                notifyItemChanged(holder.getAdapterPosition());
+                            }
+                        });
             }
 
             holder.bubbleLayout.setLayoutParams(layoutParams);
@@ -371,7 +421,8 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
             }
             String displayName = "";
             if (address != null) {
-                LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+                LinphoneContact contact =
+                        ContactsManager.getInstance().findContactFromAddress(address);
                 if (contact != null) {
                     displayName = contact.getFullName();
                 } else {
@@ -387,43 +438,62 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     holder.eventMessage.setText(mContext.getString(R.string.conference_destroyed));
                     break;
                 case ConferenceParticipantAdded:
-                    holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.participant_added)
+                                    .replace("%s", displayName));
                     break;
                 case ConferenceParticipantRemoved:
-                    holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.participant_removed)
+                                    .replace("%s", displayName));
                     break;
                 case ConferenceSubjectChanged:
-                    holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.subject_changed)
+                                    .replace("%s", event.getSubject()));
                     break;
                 case ConferenceParticipantSetAdmin:
-                    holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.admin_set).replace("%s", displayName));
                     break;
                 case ConferenceParticipantUnsetAdmin:
-                    holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.admin_unset).replace("%s", displayName));
                     break;
                 case ConferenceParticipantDeviceAdded:
-                    holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.device_added).replace("%s", displayName));
                     break;
                 case ConferenceParticipantDeviceRemoved:
-                    holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.device_removed).replace("%s", displayName));
                     break;
                 case ConferenceSecurityEvent:
-                    holder.eventMessage.setTextColor(mContext.getResources().getColor(R.color.colorI));
+                    holder.eventMessage.setTextColor(
+                            mContext.getResources().getColor(R.color.colorI));
                     holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
                     holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
 
                     switch (event.getSecurityEventType()) {
                         case EncryptionIdentityKeyChanged:
-                            holder.eventMessage.setText(mContext.getString(R.string.lime_identity_key_changed).replace("%s", displayName));
+                            holder.eventMessage.setText(
+                                    mContext.getString(R.string.lime_identity_key_changed)
+                                            .replace("%s", displayName));
                             break;
                         case ManInTheMiddleDetected:
-                            holder.eventMessage.setText(mContext.getString(R.string.man_in_the_middle_detected).replace("%s", displayName));
+                            holder.eventMessage.setText(
+                                    mContext.getString(R.string.man_in_the_middle_detected)
+                                            .replace("%s", displayName));
                             break;
                         case SecurityLevelDowngraded:
-                            holder.eventMessage.setText(mContext.getString(R.string.security_level_downgraded).replace("%s", displayName));
+                            holder.eventMessage.setText(
+                                    mContext.getString(R.string.security_level_downgraded)
+                                            .replace("%s", displayName));
                             break;
                         case ParticipantMaxDeviceCountExceeded:
-                            holder.eventMessage.setText(mContext.getString(R.string.participant_max_count_exceeded).replace("%s", displayName));
+                            holder.eventMessage.setText(
+                                    mContext.getString(R.string.participant_max_count_exceeded)
+                                            .replace("%s", displayName));
                             break;
                         case None:
                         default:
@@ -432,7 +502,10 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     break;
                 case None:
                 default:
-                    holder.eventMessage.setText(mContext.getString(R.string.unexpected_event).replace("%s", displayName).replace("%i", String.valueOf(event.getType().toInt())));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.unexpected_event)
+                                    .replace("%s", displayName)
+                                    .replace("%i", String.valueOf(event.getType().toInt())));
                     break;
             }
         }
@@ -490,9 +563,11 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
 
     private void loadBitmap(String path, ImageView imageView) {
         if (cancelPotentialWork(path, imageView)) {
-            mDefaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
+            mDefaultBitmap =
+                    BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
             BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView, mDefaultBitmap);
-            final AsyncBitmap asyncBitmap = new AsyncBitmap(mContext.getResources(), mDefaultBitmap, task);
+            final AsyncBitmap asyncBitmap =
+                    new AsyncBitmap(mContext.getResources(), mDefaultBitmap, task);
             imageView.setImageDrawable(asyncBitmap);
             task.execute(path);
         }
@@ -505,13 +580,21 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
         if (path.startsWith("file://")) {
             path = path.substring("file://".length());
             file = new File(path);
-            contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
+            contentUri =
+                    FileProvider.getUriForFile(
+                            mContext,
+                            mContext.getResources().getString(R.string.file_provider),
+                            file);
         } else if (path.startsWith("content://")) {
             contentUri = Uri.parse(path);
         } else {
             file = new File(path);
             try {
-                contentUri = FileProvider.getUriForFile(mContext, mContext.getResources().getString(R.string.file_provider), file);
+                contentUri =
+                        FileProvider.getUriForFile(
+                                mContext,
+                                mContext.getResources().getString(R.string.file_provider),
+                                file);
             } catch (Exception e) {
                 contentUri = Uri.parse(path);
             }
@@ -552,12 +635,13 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
             } else {
                 holder.openFileButton.setVisibility(View.VISIBLE);
                 holder.openFileButton.setTag(appData);
-                holder.openFileButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openFile((String) v.getTag());
-                    }
-                });
+                holder.openFileButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                openFile((String) v.getTag());
+                            }
+                        });
             }
         }
     }

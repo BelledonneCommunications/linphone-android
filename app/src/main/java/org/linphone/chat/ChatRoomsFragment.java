@@ -19,22 +19,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
+import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
+
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.LinphoneActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -47,14 +52,10 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.SelectableHelper;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
-
-public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListener, ChatRoomViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class ChatRoomsFragment extends Fragment
+        implements ContactsUpdatedListener,
+                ChatRoomViewHolder.ClickListener,
+                SelectableHelper.DeleteListener {
 
     private RecyclerView mChatRoomsList;
     private ImageView mNewDiscussionButton, mNewGroupDiscussionButton, mBackToCallButton;
@@ -69,7 +70,8 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
     private TextView mNoChatHistory;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
@@ -85,7 +87,9 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
         mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
         mSelectionHelper = new SelectableHelper(view, this);
-        mChatRoomsAdapter = new ChatRoomsAdapter(mContext, R.layout.chatlist_cell, mRooms, this, mSelectionHelper);
+        mChatRoomsAdapter =
+                new ChatRoomsAdapter(
+                        mContext, R.layout.chatlist_cell, mRooms, this, mSelectionHelper);
 
         mChatRoomsList.setAdapter(mChatRoomsAdapter);
         mSelectionHelper.setAdapter(mChatRoomsAdapter);
@@ -94,66 +98,81 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
         mChatRoomsList.setLayoutManager(layoutManager);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mChatRoomsList.getContext(),
-                ((LinearLayoutManager) layoutManager).getOrientation());
-        dividerItemDecoration.setDrawable(getActivity().getApplicationContext().getResources().getDrawable(R.drawable.divider));
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(
+                        mChatRoomsList.getContext(),
+                        ((LinearLayoutManager) layoutManager).getOrientation());
+        dividerItemDecoration.setDrawable(
+                getActivity()
+                        .getApplicationContext()
+                        .getResources()
+                        .getDrawable(R.drawable.divider));
         mChatRoomsList.addItemDecoration(dividerItemDecoration);
 
         mWaitLayout.setVisibility(View.GONE);
 
-        mNewDiscussionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, false, false);
-            }
-        });
-
-        mNewGroupDiscussionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinphoneActivity.instance().goToChatCreator(null, null, null, false, null, true, false);
-            }
-        });
-
-        mBackToCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinphoneActivity.instance().resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
-            }
-        });
-
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
-                refreshChatRoomsList();
-            }
-
-            @Override
-            public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
-                if (state == ChatRoom.State.Created) {
-                    refreshChatRoomsList();
-                }
-            }
-        };
-
-        mChatRoomListener = new ChatRoomListenerStub() {
-            @Override
-            public void onStateChanged(ChatRoom room, ChatRoom.State state) {
-                super.onStateChanged(room, state);
-                if (state == ChatRoom.State.Deleted || state == ChatRoom.State.TerminationFailed) {
-                    mChatRoomDeletionPendingCount -= 1;
-
-                    if (state == ChatRoom.State.TerminationFailed) {
-                        //TODO error message
+        mNewDiscussionButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneActivity.instance()
+                                .goToChatCreator(null, null, null, false, null, false, false);
                     }
+                });
 
-                    if (mChatRoomDeletionPendingCount == 0) {
-                        mWaitLayout.setVisibility(View.GONE);
+        mNewGroupDiscussionButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneActivity.instance()
+                                .goToChatCreator(null, null, null, false, null, true, false);
+                    }
+                });
+
+        mBackToCallButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneActivity.instance()
+                                .resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                    }
+                });
+
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onMessageReceived(Core lc, ChatRoom cr, ChatMessage message) {
                         refreshChatRoomsList();
                     }
-                }
-            }
-        };
+
+                    @Override
+                    public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
+                        if (state == ChatRoom.State.Created) {
+                            refreshChatRoomsList();
+                        }
+                    }
+                };
+
+        mChatRoomListener =
+                new ChatRoomListenerStub() {
+                    @Override
+                    public void onStateChanged(ChatRoom room, ChatRoom.State state) {
+                        super.onStateChanged(room, state);
+                        if (state == ChatRoom.State.Deleted
+                                || state == ChatRoom.State.TerminationFailed) {
+                            mChatRoomDeletionPendingCount -= 1;
+
+                            if (state == ChatRoom.State.TerminationFailed) {
+                                // TODO error message
+                            }
+
+                            if (mChatRoomDeletionPendingCount == 0) {
+                                mWaitLayout.setVisibility(View.GONE);
+                                refreshChatRoomsList();
+                            }
+                        }
+                    }
+                };
         return view;
     }
 
@@ -178,7 +197,8 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
 
     private void refreshChatRoomsList() {
         mChatRoomsAdapter.refresh();
-        mNoChatHistory.setVisibility(mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        mNoChatHistory.setVisibility(
+                mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public void displayFirstChat() {
@@ -220,7 +240,8 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
         refreshChatRoomsList();
 
         ProxyConfig lpc = lc.getDefaultProxyConfig();
-        mNewGroupDiscussionButton.setVisibility((lpc != null && lpc.getConferenceFactoryUri() != null) ? View.VISIBLE : View.GONE);
+        mNewGroupDiscussionButton.setVisibility(
+                (lpc != null && lpc.getConferenceFactoryUri() != null) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -247,7 +268,8 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
                     if (message.getAppdata() != null && !message.isOutgoing()) {
                         File file = new File(message.getAppdata());
                         if (file.exists()) {
-                            file.delete(); // Delete downloaded file from incoming message that will be deleted
+                            file.delete(); // Delete downloaded file from incoming message that
+                            // will be deleted
                         }
                     }
                 }
@@ -259,13 +281,14 @@ public class ChatRoomsFragment extends Fragment implements ContactsUpdatedListen
         if (mChatRoomDeletionPendingCount > 0) {
             mWaitLayout.setVisibility(View.VISIBLE);
         }
-        LinphoneActivity.instance().displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
+        LinphoneActivity.instance()
+                .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 
     @Override
     public void onContactsUpdated() {
-        if (!LinphoneActivity.isInstanciated() || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST)
-            return;
+        if (!LinphoneActivity.isInstanciated()
+                || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST) return;
 
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null) {

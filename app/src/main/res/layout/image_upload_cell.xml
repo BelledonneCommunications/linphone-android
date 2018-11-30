@@ -7,16 +7,16 @@
 
     <ImageView
         android:id="@+id/pendingImageForUpload"
-        android:adjustViewBounds="true"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true" />
 
     <ImageView
         android:id="@+id/remove"
-        android:src="@drawable/clean_field"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_alignTop="@id/pendingImageForUpload"
         android:layout_alignRight="@id/pendingImageForUpload"
-        android:layout_alignTop="@id/pendingImageForUpload"/>
+        android:src="@drawable/clean_field" />
 
 </RelativeLayout>

@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,15 +32,13 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.ImageView;
-
-import org.linphone.R;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.mediastream.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.linphone.R;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.mediastream.Log;
 
 public class ImageUtils {
 
@@ -65,8 +62,8 @@ public class ImageUtils {
         return null;
     }
 
-
-    public static void setImagePictureFromUri(Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
+    public static void setImagePictureFromUri(
+            Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
         if (pictureUri == null && thumbnailUri == null) {
             view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
             return;
@@ -82,7 +79,9 @@ public class ImageUtils {
             } catch (IOException e) {
                 if (thumbnailUri != null) {
                     try {
-                        bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), thumbnailUri);
+                        bm =
+                                MediaStore.Images.Media.getBitmap(
+                                        c.getContentResolver(), thumbnailUri);
                     } catch (IOException ie) {
                     }
                 }
@@ -100,7 +99,9 @@ public class ImageUtils {
         Bitmap roundBm;
         if (fromPictureUri != null) {
             try {
-                bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), fromPictureUri);
+                bm =
+                        MediaStore.Images.Media.getBitmap(
+                                context.getContentResolver(), fromPictureUri);
             } catch (Exception e) {
                 bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.topbar_avatar);
             }
@@ -118,7 +119,8 @@ public class ImageUtils {
     }
 
     public static Bitmap getRoundBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap output =
+                Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;
@@ -128,7 +130,8 @@ public class ImageUtils {
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+        canvas.drawCircle(
+                bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
@@ -136,10 +139,13 @@ public class ImageUtils {
     }
 
     public static float dpToPixels(Context context, float dp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     public static float pixelsToDp(Context context, float pixels) {
-        return pixels / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return pixels
+                / ((float) context.getResources().getDisplayMetrics().densityDpi
+                        / DisplayMetrics.DENSITY_DEFAULT);
     }
 }

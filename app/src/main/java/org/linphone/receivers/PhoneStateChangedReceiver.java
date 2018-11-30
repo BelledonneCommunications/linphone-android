@@ -23,22 +23,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
-
 import org.linphone.LinphoneManager;
 import org.linphone.core.Core;
 
-/**
- * Pause current SIP calls when GSM phone rings or is active.
- */
+/** Pause current SIP calls when GSM phone rings or is active. */
 public class PhoneStateChangedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String extraState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
-        if (!LinphoneManager.isInstanciated())
-            return;
+        if (!LinphoneManager.isInstanciated()) return;
 
-        if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState) || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
+        if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(extraState)
+                || TelephonyManager.EXTRA_STATE_RINGING.equals(extraState)) {
             LinphoneManager.getInstance().setCallGsmON(true);
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
             lc.pauseAllCalls();

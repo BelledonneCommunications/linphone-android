@@ -1,154 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:background="@color/colorH"
-	android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorH"
+    android:orientation="vertical">
 
-	<LinearLayout
-		android:id="@+id/top_bar"
-		android:orientation="horizontal"
-		android:background="@color/colorF"
-		android:layout_width="match_parent"
-		android:layout_height="60dp">
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorF"
+        android:orientation="horizontal">
 
-		<RelativeLayout
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2">
 
-			<ImageView
-				android:id="@+id/all_contacts"
-				android:src="@drawable/contacts_all"
-				android:background="@drawable/toolbar_button"
-				android:contentDescription="@string/content_description_all_contacts"
-				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/all_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_all_contacts"
+                android:padding="15dp"
+                android:src="@drawable/contacts_all" />
 
-			<View
-				android:id="@+id/all_contacts_select"
-				android:background="@color/colorA"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:layout_alignParentBottom="true"/>
-		</RelativeLayout>
+            <View
+                android:id="@+id/all_contacts_select"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorA" />
+        </RelativeLayout>
 
-		<RelativeLayout
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2">
 
-			<ImageView
-				android:id="@+id/linphone_contacts"
-				android:src="@drawable/contacts_sip"
-				android:background="@drawable/toolbar_button"
-				android:contentDescription="@string/content_description_linphone_contacts"
-				android:gravity="center"
-				android:padding="15dp"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/linphone_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/toolbar_button"
+                android:contentDescription="@string/content_description_linphone_contacts"
+                android:gravity="center"
+                android:padding="15dp"
+                android:src="@drawable/contacts_sip" />
 
-			<View
-				android:id="@+id/linphone_contacts_select"
-				android:background="@color/colorA"
-				android:layout_width="match_parent"
-				android:layout_height="5dp"
-				android:visibility="gone"
-				android:layout_alignParentBottom="true"/>
-		</RelativeLayout>
+            <View
+                android:id="@+id/linphone_contacts_select"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorA"
+                android:visibility="gone" />
+        </RelativeLayout>
 
-		<View
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2" />
 
-		<ImageView
-			android:id="@+id/newContact"
-			android:src="@drawable/contact_add"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_new_contact"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2"
-			android:padding="15dp"/>
+        <ImageView
+            android:id="@+id/newContact"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="@drawable/toolbar_button"
+            android:contentDescription="@string/content_description_new_contact"
+            android:padding="15dp"
+            android:src="@drawable/contact_add" />
 
-		<ImageView
-			android:id="@+id/edit"
-			android:src="@drawable/delete"
-			android:background="@drawable/toolbar_button"
-			android:contentDescription="@string/content_description_edit_list"
-			android:layout_width="0dp"
-			android:layout_height="match_parent"
-			android:layout_weight="0.2"
-			android:padding="15dp"/>
-	</LinearLayout>
+        <ImageView
+            android:id="@+id/edit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="@drawable/toolbar_button"
+            android:contentDescription="@string/content_description_edit_list"
+            android:padding="15dp"
+            android:src="@drawable/delete" />
+    </LinearLayout>
 
-	<include layout="@layout/edit_list"/>
+    <include layout="@layout/edit_list" />
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_margin="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
 
-		<SearchView
-			android:id="@+id/searchField"
-			android:layout_width="match_parent"
-			android:layout_height="40dp"
-			android:gravity="center"
-			android:paddingRight="5dp"
+        <SearchView
+            android:id="@+id/searchField"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/resizable_textfield"
+            android:gravity="center"
             android:iconifiedByDefault="false"
+            android:inputType="textPersonName"
+            android:paddingRight="5dp"
             android:queryBackground="@android:color/transparent"
             android:queryHint="@string/chat_room_creation_filter_hint"
-            android:textColor="@android:color/black"
-            android:background="@drawable/resizable_textfield"
-			android:inputType="textPersonName"/>
+            android:textColor="@android:color/black" />
 
-	</RelativeLayout>
+    </RelativeLayout>
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-		<!--android:fastScrollAlwaysVisible="true"-->
-		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/contactsList"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:divider="@color/colorE"
+        <!--android:fastScrollAlwaysVisible="true"-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/colorE"
 
-			android:dividerHeight="1dp" />
-		
-		<ProgressBar
-			android:id="@+id/contactsFetchInProgress"
-			style="?android:attr/progressBarStyle"
-			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:visibility="gone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+            android:dividerHeight="1dp" />
 
-		<TextView
-			android:id="@+id/noSipContact"
-			android:text="@string/no_sip_contact"
-			style="@style/font6"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_centerVertical="true"/>
+        <ProgressBar
+            android:id="@+id/contactsFetchInProgress"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
 
-		<TextView
-			android:id="@+id/noContact"
-			android:text="@string/no_contact"
-			android:visibility="gone"
-			style="@style/font6"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/noSipContact"
+            style="@style/font6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/no_sip_contact"
+            android:visibility="gone" />
 
-	</RelativeLayout>
+        <TextView
+            android:id="@+id/noContact"
+            style="@style/font6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/no_contact"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
 </LinearLayout>

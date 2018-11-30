@@ -26,19 +26,22 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
-import org.linphone.core.CoreException;
 import org.linphone.core.ProxyConfig;
+import org.linphone.settings.LinphonePreferences;
 
 @SuppressLint("AppCompatCustomView")
 public class CallButton extends ImageView implements OnClickListener, AddressAware {
 
     private AddressText mAddress;
+
+    public CallButton(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setOnClickListener(this);
+    }
 
     public void setAddressWidget(AddressText a) {
         mAddress = a;
@@ -49,11 +52,6 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
     }
 
     public void resetClickListener() {
-        setOnClickListener(this);
-    }
-
-    public CallButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
         setOnClickListener(this);
     }
 
@@ -87,8 +85,13 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
     }
 
     protected void onWrongDestinationAddress() {
-        Toast.makeText(getContext()
-                , String.format(getResources().getString(R.string.warning_wrong_destination_address), mAddress.getText().toString())
-                , Toast.LENGTH_LONG).show();
+        Toast.makeText(
+                        getContext(),
+                        String.format(
+                                getResources()
+                                        .getString(R.string.warning_wrong_destination_address),
+                                mAddress.getText().toString()),
+                        Toast.LENGTH_LONG)
+                .show();
     }
 }

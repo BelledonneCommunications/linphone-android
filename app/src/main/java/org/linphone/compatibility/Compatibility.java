@@ -27,7 +27,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
 import android.widget.TextView;
-
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.Notifiable;
 
@@ -47,29 +46,39 @@ public class Compatibility {
         }
     }
 
-    public static Notification createSimpleNotification(Context context, String title, String text, PendingIntent intent) {
+    public static Notification createSimpleNotification(
+            Context context, String title, String text, PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createSimpleNotification(context, title, text, intent);
         }
         return ApiTwentyOnePlus.createSimpleNotification(context, title, text, intent);
     }
 
-    public static Notification createMissedCallNotification(Context context, String title, String text, PendingIntent intent) {
+    public static Notification createMissedCallNotification(
+            Context context, String title, String text, PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createMissedCallNotification(context, title, text, intent);
         }
         return ApiTwentyOnePlus.createMissedCallNotification(context, title, text, intent);
     }
 
-    public static Notification createMessageNotification(Context context, Notifiable notif, String msgSender, String msg, Bitmap contactIcon, PendingIntent intent) {
+    public static Notification createMessageNotification(
+            Context context,
+            Notifiable notif,
+            String msgSender,
+            String msg,
+            Bitmap contactIcon,
+            PendingIntent intent) {
         if (Version.sdkAboveOrEqual(28)) {
-            return ApiTwentyEightPlus.createMessageNotification(context, notif, contactIcon, intent);
+            return ApiTwentyEightPlus.createMessageNotification(
+                    context, notif, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createMessageNotification(context, notif, contactIcon, intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
             return ApiTwentyFourPlus.createMessageNotification(context, notif, contactIcon, intent);
         }
-        return ApiTwentyOnePlus.createMessageNotification(context, notif.getMessages().size(), msgSender, msg, contactIcon, intent);
+        return ApiTwentyOnePlus.createMessageNotification(
+                context, notif.getMessages().size(), msgSender, msg, contactIcon, intent);
     }
 
     public static Notification createRepliedNotification(Context context, String reply) {
@@ -81,20 +90,73 @@ public class Compatibility {
         return null;
     }
 
-    public static Notification createInCallNotification(Context context, int callId, boolean showAnswerAction, String title, String msg, int iconID, Bitmap contactIcon, String contactName, PendingIntent intent) {
+    public static Notification createInCallNotification(
+            Context context,
+            int callId,
+            boolean showAnswerAction,
+            String title,
+            String msg,
+            int iconID,
+            Bitmap contactIcon,
+            String contactName,
+            PendingIntent intent) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createInCallNotification(context, callId, showAnswerAction, msg, iconID, contactIcon, contactName, intent);
+            return ApiTwentySixPlus.createInCallNotification(
+                    context,
+                    callId,
+                    showAnswerAction,
+                    msg,
+                    iconID,
+                    contactIcon,
+                    contactName,
+                    intent);
         } else if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
-            return ApiTwentyFourPlus.createInCallNotification(context, callId, showAnswerAction, msg, iconID, contactIcon, contactName, intent);
+            return ApiTwentyFourPlus.createInCallNotification(
+                    context,
+                    callId,
+                    showAnswerAction,
+                    msg,
+                    iconID,
+                    contactIcon,
+                    contactName,
+                    intent);
         }
-        return ApiTwentyOnePlus.createInCallNotification(context, title, msg, iconID, contactIcon, contactName, intent);
+        return ApiTwentyOnePlus.createInCallNotification(
+                context, title, msg, iconID, contactIcon, contactName, intent);
     }
 
-    public static Notification createNotification(Context context, String title, String message, int icon, int iconLevel, Bitmap largeIcon, PendingIntent intent, boolean isOngoingEvent, int priority) {
+    public static Notification createNotification(
+            Context context,
+            String title,
+            String message,
+            int icon,
+            int iconLevel,
+            Bitmap largeIcon,
+            PendingIntent intent,
+            boolean isOngoingEvent,
+            int priority) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            return ApiTwentySixPlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent, priority);
+            return ApiTwentySixPlus.createNotification(
+                    context,
+                    title,
+                    message,
+                    icon,
+                    iconLevel,
+                    largeIcon,
+                    intent,
+                    isOngoingEvent,
+                    priority);
         }
-        return ApiTwentyOnePlus.createNotification(context, title, message, icon, iconLevel, largeIcon, intent, isOngoingEvent, priority);
+        return ApiTwentyOnePlus.createNotification(
+                context,
+                title,
+                message,
+                icon,
+                iconLevel,
+                largeIcon,
+                intent,
+                isOngoingEvent,
+                priority);
     }
 
     public static boolean canDrawOverlays(Context context) {
@@ -120,7 +182,8 @@ public class Compatibility {
         }
     }
 
-    public static void setFragmentTransactionReorderingAllowed(FragmentTransaction transaction, boolean allowed) {
+    public static void setFragmentTransactionReorderingAllowed(
+            FragmentTransaction transaction, boolean allowed) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             ApiTwentySixPlus.setFragmentTransactionReorderingAllowed(transaction, allowed);
         }

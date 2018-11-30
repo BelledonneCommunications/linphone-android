@@ -22,15 +22,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
-
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -38,12 +41,10 @@ import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class RecordingListFragment extends Fragment implements AdapterView.OnItemClickListener, RecordingViewHolder.ClickListener, SelectableHelper.DeleteListener {
+public class RecordingListFragment extends Fragment
+        implements AdapterView.OnItemClickListener,
+                RecordingViewHolder.ClickListener,
+                SelectableHelper.DeleteListener {
     private RecyclerView recordingList;
     private List<Recording> recordings;
     private TextView noRecordings;
@@ -53,8 +54,8 @@ public class RecordingListFragment extends Fragment implements AdapterView.OnIte
     private SelectableHelper selectableHelper;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recordings_list, container, false);
 
         context = getActivity().getApplicationContext();
@@ -66,9 +67,10 @@ public class RecordingListFragment extends Fragment implements AdapterView.OnIte
         layoutManager = new LinearLayoutManager(context);
         recordingList.setLayoutManager(layoutManager);
 
-        //Divider between items
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recordingList.getContext(),
-                layoutManager.getOrientation());
+        // Divider between items
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(
+                        recordingList.getContext(), layoutManager.getOrientation());
         dividerItemDecoration.setDrawable(context.getResources().getDrawable(R.drawable.divider));
         recordingList.addItemDecoration(dividerItemDecoration);
 
@@ -94,9 +96,9 @@ public class RecordingListFragment extends Fragment implements AdapterView.OnIte
         if (directory.exists() && directory.isDirectory()) {
             File[] existingRecordings = directory.listFiles();
 
-            for(Recording r : recordings) {
+            for (Recording r : recordings) {
                 boolean exists = false;
-                for(File f : existingRecordings) {
+                for (File f : existingRecordings) {
                     if (f.getPath().equals(r.getRecordPath())) {
                         exists = true;
                         break;
@@ -117,9 +119,9 @@ public class RecordingListFragment extends Fragment implements AdapterView.OnIte
         if (directory.exists() && directory.isDirectory()) {
             File[] existingRecordings = directory.listFiles();
 
-            for(File f : existingRecordings) {
+            for (File f : existingRecordings) {
                 boolean exists = false;
-                for(Recording r : recordings) {
+                for (Recording r : recordings) {
                     if (r.getRecordPath().equals(f.getPath())) {
                         exists = true;
                         break;
@@ -141,7 +143,8 @@ public class RecordingListFragment extends Fragment implements AdapterView.OnIte
     public void onResume() {
         super.onResume();
 
-        // This is necessary, without it you won't be able to remove recordings as you won't be allowed to.
+        // This is necessary, without it you won't be able to remove recordings as you won't be
+        // allowed to.
         LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
 
         LinphoneManager.getInstance().setAudioManagerModeNormal();
@@ -155,7 +158,9 @@ public class RecordingListFragment extends Fragment implements AdapterView.OnIte
         searchForRecordings();
 
         hideRecordingListAndDisplayMessageIfEmpty();
-        recordingAdapter = new RecordingAdapter(getActivity().getApplicationContext(), recordings, this, selectableHelper);
+        recordingAdapter =
+                new RecordingAdapter(
+                        getActivity().getApplicationContext(), recordings, this, selectableHelper);
         recordingList.setAdapter(recordingAdapter);
         selectableHelper.setAdapter(recordingAdapter);
         selectableHelper.setDialogMessage(R.string.recordings_delete_dialog);

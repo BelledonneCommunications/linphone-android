@@ -23,14 +23,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.LinphoneService;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.LinphoneUtils;
 
 /*
  * Purpose of this receiver is to disable keep alives when device is on idle

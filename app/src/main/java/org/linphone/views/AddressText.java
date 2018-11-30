@@ -25,7 +25,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.EditText;
-
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.R;
 import org.linphone.fragments.DialerFragment;
@@ -65,8 +64,7 @@ public class AddressText extends EditText implements AddressType {
     }
 
     @Override
-    protected void onTextChanged(CharSequence text, int start, int before,
-                                 int after) {
+    protected void onTextChanged(CharSequence text, int start, int before, int after) {
         clearDisplayedName();
 
         refitText(getWidth(), getHeight());
@@ -114,8 +112,7 @@ public class AddressText extends EditText implements AddressType {
 
         float size = getOptimizedTextSize(getHintText(), textWidth, textHeight);
         float entrySize = getOptimizedTextSize(getText().toString(), textWidth, textHeight);
-        if (entrySize < size)
-            size = entrySize;
+        if (entrySize < size) size = entrySize;
         setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
     }
 

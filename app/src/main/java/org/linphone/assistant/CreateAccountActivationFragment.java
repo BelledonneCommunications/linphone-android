@@ -27,25 +27,29 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
+import org.linphone.settings.LinphonePreferences;
 
-public class CreateAccountActivationFragment extends Fragment implements OnClickListener, AccountCreatorListener {
+public class CreateAccountActivationFragment extends Fragment
+        implements OnClickListener, AccountCreatorListener {
     private String username, password;
     private Button checkAccount;
     private TextView email;
     private AccountCreator accountCreator;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.assistant_account_creation_email_activation, container, false);
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view =
+                inflater.inflate(
+                        R.layout.assistant_account_creation_email_activation, container, false);
 
-        accountCreator = LinphoneManager.getLc().createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
+        accountCreator =
+                LinphoneManager.getLc()
+                        .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         accountCreator.setListener(this);
 
         username = getArguments().getString("Username");
@@ -72,55 +76,63 @@ public class CreateAccountActivationFragment extends Fragment implements OnClick
     }
 
     @Override
-    public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onIsAccountExist(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onCreateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onCreateAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onActivateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onActivateAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onLinkAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onLinkAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onActivateAlias(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onActivateAlias(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onIsAccountActivated(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
+    public void onIsAccountActivated(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {
         if (AssistantActivity.instance() == null) {
             return;
         }
         if (status.equals(AccountCreator.Status.AccountNotActivated)) {
-            Toast.makeText(getActivity(), getString(R.string.assistant_account_not_validated), Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                            getActivity(),
+                            getString(R.string.assistant_account_not_validated),
+                            Toast.LENGTH_LONG)
+                    .show();
         } else if (status.equals(AccountCreator.Status.AccountActivated)) {
             AssistantActivity.instance().linphoneLogIn(accountCreator);
             AssistantActivity.instance().isAccountVerified(username);
         } else {
-            Toast.makeText(getActivity(), getString(R.string.wizard_server_unavailable), Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                            getActivity(),
+                            getString(R.string.wizard_server_unavailable),
+                            Toast.LENGTH_LONG)
+                    .show();
         }
         checkAccount.setEnabled(true);
     }
 
     @Override
-    public void onRecoverAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onRecoverAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onIsAccountLinked(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onIsAccountLinked(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onIsAliasUsed(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-    }
+    public void onIsAliasUsed(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     @Override
-    public void onUpdateAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-
-    }
+    public void onUpdateAccount(
+            AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 }

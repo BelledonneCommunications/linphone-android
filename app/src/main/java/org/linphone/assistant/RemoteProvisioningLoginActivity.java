@@ -25,13 +25,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
@@ -58,20 +57,28 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
             domain.setEnabled(false);
         }
 
-        mListener = new CoreListenerStub() {
-            @Override
-            public void onConfiguringStatus(Core lc, final ConfiguringState state, String message) {
-                if (state == ConfiguringState.Successful) {
-                    //TODO
-                } else if (state == ConfiguringState.Failed) {
-                    Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
-                }
-            }
-        };
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onConfiguringStatus(
+                            Core lc, final ConfiguringState state, String message) {
+                        if (state == ConfiguringState.Successful) {
+                            // TODO
+                        } else if (state == ConfiguringState.Failed) {
+                            Toast.makeText(
+                                            RemoteProvisioningLoginActivity.this,
+                                            R.string.remote_provisioning_failure,
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    }
+                };
     }
 
     private void cancelWizard(boolean bypassCheck) {
-        if (bypassCheck || getResources().getBoolean(R.bool.allow_cancel_remote_provisioning_login_activity)) {
+        if (bypassCheck
+                || getResources()
+                        .getBoolean(R.bool.allow_cancel_remote_provisioning_login_activity)) {
             LinphonePreferences.instance().disableProvisioningLoginView();
             setResult(bypassCheck ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
             finish();
@@ -80,13 +87,17 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
     private boolean storeAccount(String username, String password, String domain) {
         XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
-        xmlRpcHelper.getRemoteProvisioningFilenameAsync(new XmlRpcListenerBase() {
-            @Override
-            public void onRemoteProvisioningFilenameSent(String result) {
-                LinphonePreferences.instance().setRemoteProvisioningUrl(result);
-                LinphoneManager.getInstance().restartCore();
-            }
-        }, username.toString(), password.toString(), domain.toString());
+        xmlRpcHelper.getRemoteProvisioningFilenameAsync(
+                new XmlRpcListenerBase() {
+                    @Override
+                    public void onRemoteProvisioningFilenameSent(String result) {
+                        LinphonePreferences.instance().setRemoteProvisioningUrl(result);
+                        LinphoneManager.getInstance().restartCore();
+                    }
+                },
+                username.toString(),
+                password.toString(),
+                domain.toString());
 
         LinphonePreferences.instance().firstLaunchSuccessful();
         setResult(Activity.RESULT_OK);
@@ -120,7 +131,10 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
             cancelWizard(false);
         }
         if (id == R.id.assistant_connect) {
-            storeAccount(login.getText().toString(), password.getText().toString(), domain.getText().toString());
+            storeAccount(
+                    login.getText().toString(),
+                    password.getText().toString(),
+                    domain.getText().toString());
         }
     }
 

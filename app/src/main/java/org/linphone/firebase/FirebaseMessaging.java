@@ -19,21 +19,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.content.Intent;
+import static android.content.Intent.ACTION_MAIN;
 
+import android.content.Intent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.mediastream.Log;
 import org.linphone.utils.LinphoneUtils;
 
-import static android.content.Intent.ACTION_MAIN;
-
 public class FirebaseMessaging extends FirebaseMessagingService {
-    public FirebaseMessaging() {
-    }
+    public FirebaseMessaging() {}
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -46,16 +43,19 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             intent.putExtra("PushNotification", true);
             startService(intent);
         } else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-            LinphoneUtils.dispatchOnUIThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.i("[Push Notification] Push notification received with LinphoneManager still alive");
-                    if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-                        LinphoneManager.getLc().setNetworkReachable(false);
-                        LinphoneManager.getLc().setNetworkReachable(true);
-                    }
-                }
-            });
+            LinphoneUtils.dispatchOnUIThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.i(
+                                    "[Push Notification] Push notification received with LinphoneManager still alive");
+                            if (LinphoneManager.isInstanciated()
+                                    && LinphoneManager.getLc().getCallsNb() == 0) {
+                                LinphoneManager.getLc().setNetworkReachable(false);
+                                LinphoneManager.getLc().setNetworkReachable(true);
+                            }
+                        }
+                    });
         }
     }
 }

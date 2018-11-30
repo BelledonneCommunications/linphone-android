@@ -3,10 +3,8 @@ package org.linphone.utils;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-
-import org.linphone.mediastream.Log;
-
 import java.io.File;
+import org.linphone.mediastream.Log;
 
 public class LinphoneMediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
     private MediaScannerConnection mMediaConnection;

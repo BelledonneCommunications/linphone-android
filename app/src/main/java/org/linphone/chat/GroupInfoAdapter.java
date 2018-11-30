@@ -19,8 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.chat;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +26,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
 import org.linphone.views.ContactAvatar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.ViewHolder> {
 
@@ -63,7 +61,8 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     private boolean mHideAdminFeatures;
     private ChatRoom mChatRoom;
 
-    public GroupInfoAdapter(List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
+    public GroupInfoAdapter(
+            List<ContactAddress> items, boolean hideAdminFeatures, boolean isCreation) {
         mItems = items;
         mHideAdminFeatures = hideAdminFeatures || isCreation;
     }
@@ -71,7 +70,9 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_infos_cell, parent, false);
+        View v =
+                LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.chat_infos_cell, parent, false);
         return new ViewHolder(v);
     }
 
@@ -80,8 +81,10 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
         final ContactAddress ca = (ContactAddress) getItem(position);
         LinphoneContact c = ca.getContact();
 
-        holder.name.setText((c.getFullName() != null) ? c.getFullName() :
-                (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
+        holder.name.setText(
+                (c.getFullName() != null)
+                        ? c.getFullName()
+                        : (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
 
         if (c != null) {
             ContactAvatar.displayAvatar(c, holder.avatarLayout);
@@ -89,42 +92,47 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
             ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
         }
 
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDeleteListener != null) {
-                    mDeleteListener.onClick(view);
-                }
-            }
-        });
+        holder.delete.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mDeleteListener != null) {
+                            mDeleteListener.onClick(view);
+                        }
+                    }
+                });
         holder.delete.setTag(ca);
 
         holder.isAdmin.setVisibility(ca.isAdmin() ? View.VISIBLE : View.GONE);
         holder.isNotAdmin.setVisibility(ca.isAdmin() ? View.GONE : View.VISIBLE);
 
-        holder.isAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.isNotAdmin.setVisibility(View.VISIBLE);
-                holder.isAdmin.setVisibility(View.GONE);
-                ca.setAdmin(false);
-            }
-        });
+        holder.isAdmin.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        holder.isNotAdmin.setVisibility(View.VISIBLE);
+                        holder.isAdmin.setVisibility(View.GONE);
+                        ca.setAdmin(false);
+                    }
+                });
 
-        holder.isNotAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.isNotAdmin.setVisibility(View.GONE);
-                holder.isAdmin.setVisibility(View.VISIBLE);
-                ca.setAdmin(true);
-            }
-        });
+        holder.isNotAdmin.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        holder.isNotAdmin.setVisibility(View.GONE);
+                        holder.isAdmin.setVisibility(View.VISIBLE);
+                        ca.setAdmin(true);
+                    }
+                });
 
         holder.delete.setVisibility(View.VISIBLE);
         if (mHideAdminFeatures) {
             holder.delete.setVisibility(View.INVISIBLE);
-            holder.isAdmin.setOnClickListener(null); // Do not allow not admin to remove it's rights but display admins
-            holder.isNotAdmin.setVisibility(View.GONE); // Hide not admin button for not admin participants
+            holder.isAdmin.setOnClickListener(
+                    null); // Do not allow not admin to remove it's rights but display admins
+            holder.isNotAdmin.setVisibility(
+                    View.GONE); // Hide not admin button for not admin participants
         } else if (mChatRoom != null) {
             boolean found = false;
             for (Participant p : mChatRoom.getParticipants()) {
@@ -134,7 +142,9 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
                 }
             }
             if (!found) {
-                holder.isNotAdmin.setVisibility(View.GONE); // Hide not admin button for participant not yet added so even if user click it it won't have any effect
+                holder.isNotAdmin.setVisibility(
+                        View.GONE); // Hide not admin button for participant not yet added so
+                // even if user click it it won't have any effect
             }
         }
     }

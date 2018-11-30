@@ -20,15 +20,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
-
+import androidx.annotation.Nullable;
 import org.linphone.R;
 
-public class CallIncomingDeclineButton extends LinearLayout implements View.OnClickListener, View.OnTouchListener {
+public class CallIncomingDeclineButton extends LinearLayout
+        implements View.OnClickListener, View.OnTouchListener {
     private LinearLayout mRoot;
     private boolean mUseSliderMode = false;
     private CallIncomingButtonListener mListener;
@@ -47,7 +47,8 @@ public class CallIncomingDeclineButton extends LinearLayout implements View.OnCl
         init();
     }
 
-    public CallIncomingDeclineButton(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CallIncomingDeclineButton(
+            Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

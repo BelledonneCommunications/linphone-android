@@ -20,16 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package org.linphone.chat;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.linphone.utils.LinphoneUtils;
+import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -39,9 +34,11 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Content;
 import org.linphone.core.Participant;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
-public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+public class ChatRoomViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener, View.OnLongClickListener {
     public TextView lastMessageView;
     public TextView date;
     public TextView displayName;
@@ -82,7 +79,11 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                 }
             }
             lastMessageView.setText(getSender(mRoom) + messageContent);
-            date.setText(LinphoneUtils.timestampToHumanDate(mContext, mRoom.getLastUpdateTime(), R.string.messages_list_date_format));
+            date.setText(
+                    LinphoneUtils.timestampToHumanDate(
+                            mContext,
+                            mRoom.getLastUpdateTime(),
+                            R.string.messages_list_date_format));
         } else {
             date.setText("");
             lastMessageView.setText("");
@@ -108,18 +109,24 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
 
     public String getSender(ChatRoom mRoom) {
         if (mRoom.getLastMessageInHistory() != null) {
-            LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getLastMessageInHistory().getFromAddress());
+            LinphoneContact contact =
+                    ContactsManager.getInstance()
+                            .findContactFromAddress(
+                                    mRoom.getLastMessageInHistory().getFromAddress());
             if (contact != null) {
                 return (contact.getFullName() + mContext.getString(R.string.separator));
             }
-            return (LinphoneUtils.getAddressDisplayName(mRoom.getLastMessageInHistory().getFromAddress()) + mContext.getString(R.string.separator));
+            return (LinphoneUtils.getAddressDisplayName(
+                            mRoom.getLastMessageInHistory().getFromAddress())
+                    + mContext.getString(R.string.separator));
         }
         return null;
     }
 
     public String getContact(ChatRoom mRoom) {
         Address contactAddress = mRoom.getPeerAddress();
-        if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt()) && mRoom.getParticipants().length > 0) {
+        if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+                && mRoom.getParticipants().length > 0) {
             contactAddress = mRoom.getParticipants()[0].getAddress();
         }
 
@@ -138,11 +145,15 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             LinphoneContact contact = null;
             if (mRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {
-                contact = ContactsManager.getInstance().findContactFromAddress(mRoom.getPeerAddress());
+                contact =
+                        ContactsManager.getInstance()
+                                .findContactFromAddress(mRoom.getPeerAddress());
             } else {
                 Participant[] participants = mRoom.getParticipants();
                 if (participants != null && participants.length > 0) {
-                    contact = ContactsManager.getInstance().findContactFromAddress(participants[0].getAddress());
+                    contact =
+                            ContactsManager.getInstance()
+                                    .findContactFromAddress(participants[0].getAddress());
                 }
             }
             if (contact != null) {
@@ -156,9 +167,9 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder implements View.
                 if (mRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
                     Participant[] participants = mRoom.getParticipants();
                     if (participants.length > 0) {
-                    remoteAddr = participants[0].getAddress();
-                } else {
-                        //TODO: error
+                        remoteAddr = participants[0].getAddress();
+                    } else {
+                        // TODO: error
                     }
                 } else {
                     remoteAddr = mRoom.getPeerAddress();

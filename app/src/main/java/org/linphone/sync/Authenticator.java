@@ -33,35 +33,27 @@ public class Authenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public Bundle editProperties(
-            AccountAuthenticatorResponse r, String s) {
+    public Bundle editProperties(AccountAuthenticatorResponse r, String s) {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Bundle addAccount(
-            AccountAuthenticatorResponse r,
-            String s,
-            String s2,
-            String[] strings,
-            Bundle bundle) throws NetworkErrorException {
+            AccountAuthenticatorResponse r, String s, String s2, String[] strings, Bundle bundle)
+            throws NetworkErrorException {
         return null;
     }
 
     @Override
-    public Bundle confirmCredentials(
-            AccountAuthenticatorResponse r,
-            Account account,
-            Bundle bundle) throws NetworkErrorException {
+    public Bundle confirmCredentials(AccountAuthenticatorResponse r, Account account, Bundle bundle)
+            throws NetworkErrorException {
         return null;
     }
 
     @Override
     public Bundle getAuthToken(
-            AccountAuthenticatorResponse r,
-            Account account,
-            String s,
-            Bundle bundle) throws NetworkErrorException {
+            AccountAuthenticatorResponse r, Account account, String s, Bundle bundle)
+            throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
 
@@ -72,16 +64,14 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
     @Override
     public Bundle updateCredentials(
-            AccountAuthenticatorResponse r,
-            Account account,
-            String s, Bundle bundle) throws NetworkErrorException {
+            AccountAuthenticatorResponse r, Account account, String s, Bundle bundle)
+            throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Bundle hasFeatures(
-            AccountAuthenticatorResponse r,
-            Account account, String[] strings) throws NetworkErrorException {
+    public Bundle hasFeatures(AccountAuthenticatorResponse r, Account account, String[] strings)
+            throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
 }

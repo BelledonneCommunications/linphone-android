@@ -28,18 +28,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.R;
+import org.linphone.settings.LinphonePreferences;
 
 public class RemoteProvisioningFragment extends Fragment implements OnClickListener, TextWatcher {
     private EditText remoteProvisioningUrl;
     private Button apply;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_remote_provisioning, container, false);
 
         remoteProvisioningUrl = view.findViewById(R.id.assistant_remote_provisioning_url);
@@ -66,9 +65,7 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -76,7 +73,5 @@ public class RemoteProvisioningFragment extends Fragment implements OnClickListe
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-
-    }
+    public void afterTextChanged(Editable s) {}
 }

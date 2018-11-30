@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ContactsSource
-        xmlns:android="http://schemas.android.com/apk/res/android">
+<ContactsSource xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ContactsDataKind
-        android:mimeType="vnd.android.cursor.item/${applicationId}.profile"
-        android:icon="@drawable/linphone_logo"
-        android:summaryColumn="data2"
         android:detailColumn="data3"
-        android:detailSocialSummary="true"/>
+        android:detailSocialSummary="true"
+        android:icon="@drawable/linphone_logo"
+        android:mimeType="vnd.android.cursor.item/${applicationId}.profile"
+        android:summaryColumn="data2" />
 
 </ContactsSource>

@@ -1,53 +1,55 @@
 package org.linphone.history;
 
 /*
- HistoryAdapter.java
- Copyright (C) 2018  Belledonne Communications, Grenoble, France
+HistoryAdapter.java
+Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
+import androidx.annotation.NonNull;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 import org.linphone.LinphoneActivity;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
-import org.linphone.views.ContactAvatar;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
+import org.linphone.views.ContactAvatar;
 
 public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private List<CallLog> mLogs;
     private Context mContext;
     private HistoryViewHolder.ClickListener clickListener;
 
-    public HistoryAdapter(Context aContext, List<CallLog> logs, HistoryViewHolder.ClickListener listener, SelectableHelper helper) {
+    public HistoryAdapter(
+            Context aContext,
+            List<CallLog> logs,
+            HistoryViewHolder.ClickListener listener,
+            SelectableHelper helper) {
         super(helper);
         this.mLogs = logs;
         this.mContext = aContext;
@@ -65,9 +67,10 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_cell, parent, false);
+        View v =
+                LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.history_cell, parent, false);
         return new HistoryViewHolder(v, clickListener);
-
     }
 
     @Override
@@ -130,18 +133,17 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
         }
 
         holder.detail.setVisibility(isEditionEnabled() ? View.INVISIBLE : View.VISIBLE);
-        holder.detail.setOnClickListener(!isEditionEnabled() ?
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (LinphoneActivity.isInstanciated()) {
-                            LinphoneActivity.instance().displayHistoryDetail(sipUri, log);
+        holder.detail.setOnClickListener(
+                !isEditionEnabled()
+                        ? new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (LinphoneActivity.isInstanciated()) {
+                                    LinphoneActivity.instance().displayHistoryDetail(sipUri, log);
+                                }
+                            }
                         }
-                    }
-                }
-                :
-                null
-        );
+                        : null);
     }
 
     @Override
@@ -157,7 +159,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
         } else if (isYesterday(cal)) {
             return mContext.getString(R.string.yesterday);
         } else {
-            dateFormat = new SimpleDateFormat(mContext.getResources().getString(R.string.history_date_format));
+            dateFormat =
+                    new SimpleDateFormat(
+                            mContext.getResources().getString(R.string.history_date_format));
         }
 
         return dateFormat.format(cal.getTime());
@@ -168,9 +172,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
             return false;
         }
 
-        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
-                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 
     private boolean isToday(Calendar cal) {

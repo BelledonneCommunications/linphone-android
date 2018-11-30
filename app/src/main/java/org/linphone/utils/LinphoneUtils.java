@@ -38,7 +38,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -57,29 +63,19 @@ import org.linphone.mediastream.Log;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.settings.LinphonePreferences;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-
-/**
- * Helpers.
- */
+/** Helpers. */
 public final class LinphoneUtils {
     private static Context context = null;
     private static Handler mHandler = new Handler(Looper.getMainLooper());
 
-    private LinphoneUtils() {
-
-    }
+    private LinphoneUtils() {}
 
     public static String getDeviceName(Context context) {
         String name = null;
         if (Build.VERSION.SDK_INT > 17) {
-            name = Settings.Global.getString(context.getContentResolver(), Settings.Global.DEVICE_NAME);
+            name =
+                    Settings.Global.getString(
+                            context.getContentResolver(), Settings.Global.DEVICE_NAME);
         }
         if (name == null) {
             name = BluetoothAdapter.getDefaultAdapter().getName();
@@ -99,30 +95,38 @@ public final class LinphoneUtils {
             Factory.instance().setDebugMode(isDebugEnabled, appName);
         } else {
             Factory.instance().setDebugMode(isDebugEnabled, appName);
-            Factory.instance().enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
-            Factory.instance().getLoggingService().setListener(new LoggingServiceListener() {
-                @Override
-                public void onLogMessageWritten(LoggingService logService, String domain, LogLevel lev, String message) {
-                    switch (lev) {
-                        case Debug:
-                            android.util.Log.d(domain, message);
-                            break;
-                        case Message:
-                            android.util.Log.i(domain, message);
-                            break;
-                        case Warning:
-                            android.util.Log.w(domain, message);
-                            break;
-                        case Error:
-                            android.util.Log.e(domain, message);
-                            break;
-                        case Fatal:
-                        default:
-                            android.util.Log.wtf(domain, message);
-                            break;
-                    }
-                }
-            });
+            Factory.instance()
+                    .enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
+            Factory.instance()
+                    .getLoggingService()
+                    .setListener(
+                            new LoggingServiceListener() {
+                                @Override
+                                public void onLogMessageWritten(
+                                        LoggingService logService,
+                                        String domain,
+                                        LogLevel lev,
+                                        String message) {
+                                    switch (lev) {
+                                        case Debug:
+                                            android.util.Log.d(domain, message);
+                                            break;
+                                        case Message:
+                                            android.util.Log.i(domain, message);
+                                            break;
+                                        case Warning:
+                                            android.util.Log.w(domain, message);
+                                            break;
+                                        case Error:
+                                            android.util.Log.e(domain, message);
+                                            break;
+                                        case Fatal:
+                                        default:
+                                            android.util.Log.wtf(domain, message);
+                                            break;
+                                    }
+                                }
+                            });
         }
     }
 
@@ -130,8 +134,10 @@ public final class LinphoneUtils {
         mHandler.post(r);
     }
 
-    //private static final String sipAddressRegExp = "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
-    //private static final String strictSipAddressRegExp = "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
+    // private static final String sipAddressRegExp =
+    // "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
+    // private static final String strictSipAddressRegExp =
+    // "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
     public static boolean isSipAddress(String numberOrAddress) {
         Factory.instance().createAddress(numberOrAddress);
@@ -167,11 +173,9 @@ public final class LinphoneUtils {
     }
 
     public static String getUsernameFromAddress(String address) {
-        if (address.contains("sip:"))
-            address = address.replace("sip:", "");
+        if (address.contains("sip:")) address = address.replace("sip:", "");
 
-        if (address.contains("@"))
-            address = address.split("@")[0];
+        if (address.contains("@")) address = address.split("@")[0];
 
         return address;
     }
@@ -181,9 +185,8 @@ public final class LinphoneUtils {
             return false; // continue
         }
 
-        activity.startActivity(new Intent()
-                .setAction(Intent.ACTION_MAIN)
-                .addCategory(Intent.CATEGORY_HOME));
+        activity.startActivity(
+                new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME));
         return true;
     }
 
@@ -198,7 +201,10 @@ public final class LinphoneUtils {
 
             SimpleDateFormat dateFormat;
             if (isToday(cal)) {
-                dateFormat = new SimpleDateFormat(context.getResources().getString(R.string.today_date_format), Locale.getDefault());
+                dateFormat =
+                        new SimpleDateFormat(
+                                context.getResources().getString(R.string.today_date_format),
+                                Locale.getDefault());
             } else {
                 dateFormat = new SimpleDateFormat(format, Locale.getDefault());
             }
@@ -218,14 +224,15 @@ public final class LinphoneUtils {
             return false;
         }
 
-        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
-                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
+                && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 
     public static boolean onKeyVolumeAdjust(int keyCode) {
         if (!((keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
-                && (Hacks.needSoftvolume()) || Build.VERSION.SDK_INT >= 15)) {
+                        && (Hacks.needSoftvolume())
+                || Build.VERSION.SDK_INT >= 15)) {
             return false; // continue
         }
 
@@ -257,11 +264,11 @@ public final class LinphoneUtils {
 
         Call.State state = call.getState();
 
-        return state == Call.State.Connected ||
-                state == Call.State.Updating ||
-                state == Call.State.UpdatedByRemote ||
-                state == Call.State.StreamsRunning ||
-                state == Call.State.Resuming;
+        return state == Call.State.Connected
+                || state == Call.State.Updating
+                || state == Call.State.UpdatedByRemote
+                || state == Call.State.StreamsRunning
+                || state == Call.State.Resuming;
     }
 
     public static boolean isCallEstablished(Call call) {
@@ -271,16 +278,19 @@ public final class LinphoneUtils {
 
         Call.State state = call.getState();
 
-        return isCallRunning(call) ||
-                state == Call.State.Paused ||
-                state == Call.State.PausedByRemote ||
-                state == Call.State.Pausing;
+        return isCallRunning(call)
+                || state == Call.State.Paused
+                || state == Call.State.PausedByRemote
+                || state == Call.State.Pausing;
     }
 
     public static boolean isHighBandwidthConnection(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
-        return (info != null && info.isConnected() && isConnectionFast(info.getType(), info.getSubtype()));
+        return (info != null
+                && info.isConnected()
+                && isConnectionFast(info.getType(), info.getSubtype()));
     }
 
     private static boolean isConnectionFast(int type, int subType) {
@@ -292,7 +302,7 @@ public final class LinphoneUtils {
                     return false;
             }
         }
-        //in doubt, assume connection is good.
+        // in doubt, assume connection is good.
         return true;
     }
 
@@ -313,7 +323,10 @@ public final class LinphoneUtils {
                     return username.split("@")[0];
                 }
             } else {
-                if (domain.equals(LinphoneManager.getInstance().getContext().getString(R.string.default_domain))) {
+                if (domain.equals(
+                        LinphoneManager.getInstance()
+                                .getContext()
+                                .getString(R.string.default_domain))) {
                     return username.split("@")[0];
                 }
             }
@@ -335,7 +348,12 @@ public final class LinphoneUtils {
             if (lpc != null) {
                 sipAddress = sipAddress + "@" + lpc.getDomain();
             } else {
-                sipAddress = sipAddress + "@" + LinphoneManager.getInstance().getContext().getString(R.string.default_domain);
+                sipAddress =
+                        sipAddress
+                                + "@"
+                                + LinphoneManager.getInstance()
+                                        .getContext()
+                                        .getString(R.string.default_domain);
             }
         }
         return sipAddress;
@@ -430,8 +448,7 @@ public final class LinphoneUtils {
                     || status.equals(AccountCreator.Status.AccountAlreadyActivated)
                     || status.equals(AccountCreator.Status.AccountActivated)
                     || status.equals(AccountCreator.Status.AccountNotCreated)
-                    || status.equals(AccountCreator.Status.RequestOk))
-                return "";
+                    || status.equals(AccountCreator.Status.RequestOk)) return "";
         }
         return null;
     }
@@ -471,24 +488,37 @@ public final class LinphoneUtils {
         }
         if (text.contains("http://")) {
             int indexHttp = text.indexOf("http://");
-            int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+            int indexFinHttp =
+                    text.indexOf(" ", indexHttp) == -1
+                            ? text.length()
+                            : text.indexOf(" ", indexHttp);
             String link = text.substring(indexHttp, indexFinHttp);
             String linkWithoutScheme = link.replace("http://", "");
-            text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+            text =
+                    text.replaceFirst(
+                            Pattern.quote(link),
+                            "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
         }
         if (text.contains("https://")) {
             int indexHttp = text.indexOf("https://");
-            int indexFinHttp = text.indexOf(" ", indexHttp) == -1 ? text.length() : text.indexOf(" ", indexHttp);
+            int indexFinHttp =
+                    text.indexOf(" ", indexHttp) == -1
+                            ? text.length()
+                            : text.indexOf(" ", indexHttp);
             String link = text.substring(indexHttp, indexFinHttp);
             String linkWithoutScheme = link.replace("https://", "");
-            text = text.replaceFirst(Pattern.quote(link), "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
+            text =
+                    text.replaceFirst(
+                            Pattern.quote(link),
+                            "<a href=\"" + link + "\">" + linkWithoutScheme + "</a>");
         }
 
         return Html.fromHtml(text);
     }
 
     public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm =
+                (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = activity.getCurrentFocus();
         if (view == null) {
             view = new View(activity);
@@ -502,4 +532,3 @@ public final class LinphoneUtils {
         return context;
     }
 }
-

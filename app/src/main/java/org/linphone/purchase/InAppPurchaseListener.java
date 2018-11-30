@@ -21,9 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import java.util.ArrayList;
 
 public interface InAppPurchaseListener {
-    /**
-     * Callback called when the in-app purchase listener is connected and available for queries
-     */
+    /** Callback called when the in-app purchase listener is connected and available for queries */
     void onServiceAvailableForQueries();
 
     /**

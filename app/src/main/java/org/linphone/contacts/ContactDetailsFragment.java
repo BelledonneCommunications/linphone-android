@@ -25,7 +25,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,13 +34,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
-import org.linphone.LinphoneManager;
-import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
-import org.linphone.utils.LinphoneUtils;
-import org.linphone.R;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
@@ -52,6 +47,9 @@ import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ImageUtils;
+import org.linphone.utils.LinphoneUtils;
 
 public class ContactDetailsFragment extends Fragment implements OnClickListener {
     private LinphoneContact contact;
@@ -64,49 +62,68 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
 
-    private OnClickListener dialListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (LinphoneActivity.isInstanciated()) {
-                String tag = (String) v.getTag();
-                LinphoneActivity.instance().setAddresGoToDialerAndCall(tag, contact.getFullName(), contact.getPhotoUri());
-            }
-        }
-    };
+    private OnClickListener dialListener =
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (LinphoneActivity.isInstanciated()) {
+                        String tag = (String) v.getTag();
+                        LinphoneActivity.instance()
+                                .setAddresGoToDialerAndCall(
+                                        tag, contact.getFullName(), contact.getPhotoUri());
+                    }
+                }
+            };
 
-    private OnClickListener chatListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (LinphoneActivity.isInstanciated()) {
-                String tag = (String) v.getTag();
-                Core lc = LinphoneManager.getLc();
-                Address participant = Factory.instance().createAddress(tag);
-                ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
-                boolean isSecured = v.getId() == R.id.contact_chat_secured;
+    private OnClickListener chatListener =
+            new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (LinphoneActivity.isInstanciated()) {
+                        String tag = (String) v.getTag();
+                        Core lc = LinphoneManager.getLc();
+                        Address participant = Factory.instance().createAddress(tag);
+                        ProxyConfig defaultProxyConfig = lc.getDefaultProxyConfig();
+                        boolean isSecured = v.getId() == R.id.contact_chat_secured;
 
-                if (defaultProxyConfig != null) {
-                    ChatRoom room = lc.findOneToOneChatRoom(defaultProxyConfig.getContact(), participant, isSecured);
-                    if (room != null) {
-                        LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
-                    } else {
-                        if (defaultProxyConfig.getConferenceFactoryUri() != null && (isSecured || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
-                            mWaitLayout.setVisibility(View.VISIBLE);
-                            mChatRoom = lc.createClientGroupChatRoom(getString(R.string.dummy_group_chat_subject), !isSecured, isSecured);
-                            mChatRoom.addListener(mChatRoomCreationListener);
-                            Address participants[] = new Address[1];
-                            participants[0] = participant;
-                            mChatRoom.addParticipants(participants);
-                        } else {
-                            room = lc.getChatRoom(participant);
-                            LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+                        if (defaultProxyConfig != null) {
+                            ChatRoom room =
+                                    lc.findOneToOneChatRoom(
+                                            defaultProxyConfig.getContact(),
+                                            participant,
+                                            isSecured);
+                            if (room != null) {
+                                LinphoneActivity.instance()
+                                        .goToChat(room.getPeerAddress().asStringUriOnly(), null);
+                            } else {
+                                if (defaultProxyConfig.getConferenceFactoryUri() != null
+                                        && (isSecured
+                                                || !LinphonePreferences.instance()
+                                                        .useBasicChatRoomFor1To1())) {
+                                    mWaitLayout.setVisibility(View.VISIBLE);
+                                    mChatRoom =
+                                            lc.createClientGroupChatRoom(
+                                                    getString(R.string.dummy_group_chat_subject),
+                                                    !isSecured,
+                                                    isSecured);
+                                    mChatRoom.addListener(mChatRoomCreationListener);
+                                    Address participants[] = new Address[1];
+                                    participants[0] = participant;
+                                    mChatRoom.addParticipants(participants);
+                                } else {
+                                    room = lc.getChatRoom(participant);
+                                    LinphoneActivity.instance()
+                                            .goToChat(
+                                                    room.getPeerAddress().asStringUriOnly(), null);
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    };
+            };
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         contact = (LinphoneContact) getArguments().getSerializable("Contact");
 
         this.inflater = inflater;
@@ -141,19 +158,24 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
             back.setOnClickListener(this);
         }
 
-        mChatRoomCreationListener = new ChatRoomListenerStub() {
-            @Override
-            public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-                if (newState == ChatRoom.State.Created) {
-                    mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().goToChat(cr.getPeerAddress().asStringUriOnly(), null);
-                } else if (newState == ChatRoom.State.CreationFailed) {
-                    mWaitLayout.setVisibility(View.GONE);
-                    LinphoneActivity.instance().displayChatRoomError();
-                    Log.e("Group chat room for address " + cr.getPeerAddress() + " has failed !");
-                }
-            }
-        };
+        mChatRoomCreationListener =
+                new ChatRoomListenerStub() {
+                    @Override
+                    public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
+                        if (newState == ChatRoom.State.Created) {
+                            mWaitLayout.setVisibility(View.GONE);
+                            LinphoneActivity.instance()
+                                    .goToChat(cr.getPeerAddress().asStringUriOnly(), null);
+                        } else if (newState == ChatRoom.State.CreationFailed) {
+                            mWaitLayout.setVisibility(View.GONE);
+                            LinphoneActivity.instance().displayChatRoomError();
+                            Log.e(
+                                    "Group chat room for address "
+                                            + cr.getPeerAddress()
+                                            + " has failed !");
+                        }
+                    }
+                };
 
         return view;
     }
@@ -175,7 +197,11 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
     private void displayContact(LayoutInflater inflater, View view) {
         ImageView contactPicture = view.findViewById(R.id.contact_picture);
         if (contact.hasPhoto()) {
-            ImageUtils.setImagePictureFromUri(getActivity(), contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ImageUtils.setImagePictureFromUri(
+                    getActivity(),
+                    contactPicture,
+                    contact.getPhotoUri(),
+                    contact.getThumbnailUri());
         } else {
             contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
         }
@@ -191,7 +217,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
             View v = inflater.inflate(R.layout.contact_control_row, null);
 
             String value = noa.getValue();
-            String displayednumberOrAddress = LinphoneUtils.getDisplayableUsernameFromAddress(value);
+            String displayednumberOrAddress =
+                    LinphoneUtils.getDisplayableUsernameFromAddress(value);
 
             TextView label = v.findViewById(R.id.address_label);
             if (noa.isSIPAddress()) {
@@ -205,7 +232,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
             TextView tv = v.findViewById(R.id.numeroOrAddress);
             tv.setText(displayednumberOrAddress);
             tv.setSelected(true);
-
 
             ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
             if (lpc != null) {
@@ -221,27 +247,32 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
                     v.findViewById(R.id.friendLinphone).setVisibility(View.VISIBLE);
                 } else {
-                    if (getResources().getBoolean(R.bool.hide_numbers_and_addresses_without_presence)) {
+                    if (getResources()
+                            .getBoolean(R.bool.hide_numbers_and_addresses_without_presence)) {
                         skip = true;
                     }
                 }
             }
 
             v.findViewById(R.id.inviteFriend).setVisibility(View.GONE);
-            if (!noa.isSIPAddress() && v.findViewById(R.id.friendLinphone).getVisibility() == View.GONE) {
+            if (!noa.isSIPAddress()
+                    && v.findViewById(R.id.friendLinphone).getVisibility() == View.GONE) {
                 v.findViewById(R.id.inviteFriend).setVisibility(View.VISIBLE);
                 v.findViewById(R.id.inviteFriend).setTag(noa.getNormalizedPhone());
-                v.findViewById(R.id.inviteFriend).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String number = (String)v.getTag();
-                        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
-                        smsIntent.putExtra("address", number);
-                        smsIntent.setData(Uri.parse("smsto:" + number));
-                        smsIntent.putExtra("sms_body", getString(R.string.invite_friend_text));
-                        startActivity(smsIntent);
-                    }
-                });
+                v.findViewById(R.id.inviteFriend)
+                        .setOnClickListener(
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String number = (String) v.getTag();
+                                        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                                        smsIntent.putExtra("address", number);
+                                        smsIntent.setData(Uri.parse("smsto:" + number));
+                                        smsIntent.putExtra(
+                                                "sms_body", getString(R.string.invite_friend_text));
+                                        startActivity(smsIntent);
+                                    }
+                                });
             }
 
             String contactAddress = contact.getPresenceModelForUriOrTel(noa.getValue());
@@ -266,8 +297,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 v.findViewById(R.id.contact_chat_secured).setTag(value);
             }
 
-
-            if (v.findViewById(R.id.friendLinphone).getVisibility() == View.VISIBLE /* TODO Does contact have LIME capability ?*/
+            if (v.findViewById(R.id.friendLinphone).getVisibility()
+                            == View.VISIBLE /* TODO Does contact have LIME capability ?*/
                     && lpc.getConferenceFactoryUri() != null) {
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.VISIBLE);
             } else {
@@ -303,26 +334,28 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
         if (id == R.id.editContact) {
             ContactsManager.getInstance().editContact(getActivity(), contact, null);
         } else if (id == R.id.deleteContact) {
-            final Dialog dialog = LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
+            final Dialog dialog =
+                    LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
             Button delete = dialog.findViewById(R.id.dialog_delete_button);
             Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
 
-            delete.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    contact.delete();
-                    LinphoneActivity.instance().displayContacts(false);
-                    dialog.dismiss();
-                }
-            });
+            delete.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            contact.delete();
+                            LinphoneActivity.instance().displayContacts(false);
+                            dialog.dismiss();
+                        }
+                    });
 
-            cancel.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-
-                }
-            });
+            cancel.setOnClickListener(
+                    new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
             dialog.show();
         } else if (id == R.id.back) {
             getFragmentManager().popBackStackImmediate();

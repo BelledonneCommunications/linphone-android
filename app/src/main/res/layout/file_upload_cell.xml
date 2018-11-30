@@ -8,18 +8,18 @@
 
     <TextView
         android:id="@+id/pendingFileForUpload"
-        android:textAlignment="center"
-        android:gravity="center"
         style="@style/font25"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAlignment="center" />
 
     <ImageView
         android:id="@+id/remove"
-        android:src="@drawable/clean_field"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"/>
+        android:src="@drawable/clean_field" />
 
 </RelativeLayout>

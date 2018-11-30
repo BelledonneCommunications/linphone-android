@@ -20,13 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.linphone.mediastream.Log;
-import org.linphone.utils.LinphoneUtils;
+import androidx.annotation.NonNull;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -34,15 +35,12 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.EventLog;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder> implements ChatMessagesGenericAdapter {
+public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder>
+        implements ChatMessagesGenericAdapter {
     public static int MAX_TIME_TO_GROUP_MESSAGES = 60;
 
     private Context mContext;
@@ -55,7 +53,13 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
 
     private ChatMessageViewHolderClickListener mClickListener;
 
-    public ChatMessagesAdapter(ChatMessagesFragment fragment, SelectableHelper helper, int itemResource, EventLog[] history, ArrayList<LinphoneContact> participants, ChatMessageViewHolderClickListener clickListener) {
+    public ChatMessagesAdapter(
+            ChatMessagesFragment fragment,
+            SelectableHelper helper,
+            int itemResource,
+            EventLog[] history,
+            ArrayList<LinphoneContact> participants,
+            ChatMessageViewHolderClickListener clickListener) {
         super(helper);
         mFragment = fragment;
         mContext = mFragment.getActivity();
@@ -69,11 +73,10 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
 
     @Override
     public ChatMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(mItemResource, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(mItemResource, parent, false);
         ChatMessageViewHolder VH = new ChatMessageViewHolder(mContext, v, mClickListener);
 
-        //Allows onLongClick ContextMenu on bubbles
+        // Allows onLongClick ContextMenu on bubbles
         mFragment.registerForContextMenu(v);
         v.setTag(VH);
         return VH;
@@ -100,26 +103,32 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 holder.deleteMessage.setTag(position);
             }
 
-            if ((message.isOutgoing() && message.getState() != ChatMessage.State.Displayed) || (!message.isOutgoing() && message.isFileTransfer())) {
+            if ((message.isOutgoing() && message.getState() != ChatMessage.State.Displayed)
+                    || (!message.isOutgoing() && message.isFileTransfer())) {
                 if (!mTransientMessages.contains(message)) {
                     mTransientMessages.add(message);
                 }
-                message.setUserData(holder); // This only works if JAVA object is kept, hence the transient list
-                message.setListener(new ChatMessageListenerStub() {
-                    @Override
-                    public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
-                        ChatMessageViewHolder holder = (ChatMessageViewHolder) message.getUserData();
-                        if (holder != null) {
-                            notifyItemChanged(holder.getAdapterPosition());
-                        } else {
-                            // Just in case, better to refresh the whole view than to miss an update
-                            notifyDataSetChanged();
-                        }
-                        if (state == ChatMessage.State.Displayed) {
-                            mTransientMessages.remove(message);
-                        }
-                    }
-                });
+                message.setUserData(
+                        holder); // This only works if JAVA object is kept, hence the transient list
+                message.setListener(
+                        new ChatMessageListenerStub() {
+                            @Override
+                            public void onMsgStateChanged(
+                                    ChatMessage message, ChatMessage.State state) {
+                                ChatMessageViewHolder holder =
+                                        (ChatMessageViewHolder) message.getUserData();
+                                if (holder != null) {
+                                    notifyItemChanged(holder.getAdapterPosition());
+                                } else {
+                                    // Just in case, better to refresh the whole view than to miss
+                                    // an update
+                                    notifyDataSetChanged();
+                                }
+                                if (state == ChatMessage.State.Displayed) {
+                                    mTransientMessages.remove(message);
+                                }
+                            }
+                        });
             }
 
             LinphoneContact contact = null;
@@ -147,7 +156,8 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
             }
             String displayName = "";
             if (address != null) {
-                LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
+                LinphoneContact contact =
+                        ContactsManager.getInstance().findContactFromAddress(address);
                 if (contact != null) {
                     displayName = contact.getFullName();
                 } else {
@@ -166,47 +176,65 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                     break;
                 case ConferenceParticipantAdded:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.participant_added).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.participant_added)
+                                    .replace("%s", displayName));
                     break;
                 case ConferenceParticipantRemoved:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.participant_removed).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.participant_removed)
+                                    .replace("%s", displayName));
                     break;
                 case ConferenceSubjectChanged:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.subject_changed).replace("%s", event.getSubject()));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.subject_changed)
+                                    .replace("%s", event.getSubject()));
                     break;
                 case ConferenceParticipantSetAdmin:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.admin_set).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.admin_set).replace("%s", displayName));
                     break;
                 case ConferenceParticipantUnsetAdmin:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.admin_unset).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.admin_unset).replace("%s", displayName));
                     break;
                 case ConferenceParticipantDeviceAdded:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.device_added).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.device_added).replace("%s", displayName));
                     break;
                 case ConferenceParticipantDeviceRemoved:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.device_removed).replace("%s", displayName));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.device_removed).replace("%s", displayName));
                     break;
                 case ConferenceSecurityEvent:
                     holder.securityEventLayout.setVisibility(View.VISIBLE);
 
                     switch (event.getSecurityEventType()) {
                         case EncryptionIdentityKeyChanged:
-                            holder.securityEventMessage.setText(mContext.getString(R.string.lime_identity_key_changed).replace("%s", displayName));
+                            holder.securityEventMessage.setText(
+                                    mContext.getString(R.string.lime_identity_key_changed)
+                                            .replace("%s", displayName));
                             break;
                         case ManInTheMiddleDetected:
-                            holder.securityEventMessage.setText(mContext.getString(R.string.man_in_the_middle_detected).replace("%s", displayName));
+                            holder.securityEventMessage.setText(
+                                    mContext.getString(R.string.man_in_the_middle_detected)
+                                            .replace("%s", displayName));
                             break;
                         case SecurityLevelDowngraded:
-                            holder.securityEventMessage.setText(mContext.getString(R.string.security_level_downgraded).replace("%s", displayName));
+                            holder.securityEventMessage.setText(
+                                    mContext.getString(R.string.security_level_downgraded)
+                                            .replace("%s", displayName));
                             break;
                         case ParticipantMaxDeviceCountExceeded:
-                            holder.securityEventMessage.setText(mContext.getString(R.string.participant_max_count_exceeded).replace("%s", displayName));
+                            holder.securityEventMessage.setText(
+                                    mContext.getString(R.string.participant_max_count_exceeded)
+                                            .replace("%s", displayName));
                             break;
                         case None:
                         default:
@@ -216,7 +244,10 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 case None:
                 default:
                     holder.eventLayout.setVisibility(View.VISIBLE);
-                    holder.eventMessage.setText(mContext.getString(R.string.unexpected_event).replace("%s", displayName).replace("%i", String.valueOf(event.getType().toInt())));
+                    holder.eventMessage.setText(
+                            mContext.getString(R.string.unexpected_event)
+                                    .replace("%s", displayName)
+                                    .replace("%i", String.valueOf(event.getType().toInt())));
                     break;
             }
         }
@@ -274,22 +305,29 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         notifyItemRemoved(i);
     }
 
-    private void changeBackgroundDependingOnPreviousAndNextEvents(ChatMessage message, ChatMessageViewHolder holder, int position) {
+    private void changeBackgroundDependingOnPreviousAndNextEvents(
+            ChatMessage message, ChatMessageViewHolder holder, int position) {
         boolean hasPrevious = false, hasNext = false;
 
-        // Do not forget history is reversed, so previous in order is next in list display and chronology !
-        if (position > 0 && mContext.getResources().getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
+        // Do not forget history is reversed, so previous in order is next in list display and
+        // chronology !
+        if (position > 0
+                && mContext.getResources()
+                        .getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
             EventLog previousEvent = (EventLog) getItem(position - 1);
             if (previousEvent.getType() == EventLog.Type.ConferenceChatMessage) {
                 ChatMessage previousMessage = previousEvent.getChatMessage();
                 if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
-                    if (previousMessage.getTime() - message.getTime() < MAX_TIME_TO_GROUP_MESSAGES) {
+                    if (previousMessage.getTime() - message.getTime()
+                            < MAX_TIME_TO_GROUP_MESSAGES) {
                         hasPrevious = true;
                     }
                 }
             }
         }
-        if (position < mHistory.size() - 1 && mContext.getResources().getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
+        if (position < mHistory.size() - 1
+                && mContext.getResources()
+                        .getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
             EventLog nextEvent = (EventLog) getItem(position + 1);
             if (nextEvent.getType() == EventLog.Type.ConferenceChatMessage) {
                 ChatMessage nextMessage = nextEvent.getChatMessage();

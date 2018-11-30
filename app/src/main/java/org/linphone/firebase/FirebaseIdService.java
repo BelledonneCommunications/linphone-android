@@ -21,7 +21,6 @@ package org.linphone.firebase;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
@@ -30,13 +29,16 @@ public class FirebaseIdService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         final String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        android.util.Log.i("FirebaseIdService", "[Push Notification] Refreshed token: " + refreshedToken);
+        android.util.Log.i(
+                "FirebaseIdService", "[Push Notification] Refreshed token: " + refreshedToken);
 
-        LinphoneUtils.dispatchOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                LinphonePreferences.instance().setPushNotificationRegistrationID(refreshedToken);
-            }
-        });
+        LinphoneUtils.dispatchOnUIThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        LinphonePreferences.instance()
+                                .setPushNotificationRegistrationID(refreshedToken);
+                    }
+                });
     }
 }
