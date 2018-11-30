@@ -92,6 +92,7 @@
     <string name="assistant_generic_account">Use SIP account</string>
     <string name="assistant_remote_provisioning_title">Fetch remote configuration</string>
     <string name="assistant_fetch_apply">Fetch and apply</string>
+    <string name="assistant_launch_qrcode">QRCode</string>
     <string name="assistant_login">Login</string>
     <string name="assistant_ec_calibration">Echo canceler calibration in progress</string>
     <string name="assistant_remote_provisioning_login">Enter your login</string>

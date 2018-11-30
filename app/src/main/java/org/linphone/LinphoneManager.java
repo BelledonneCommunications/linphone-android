@@ -1450,6 +1450,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     @Override
     public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {}
 
+    @Override
+    public void onQrcodeFound(Core lc, String result) {}
+
     public void onCallEncryptionChanged(
             Core lc, Call call, boolean encrypted, String authenticationToken) {}
 
@@ -2016,8 +2019,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             mUnreadChatsPerRoom.put(key, 1);
         }
     }
-
-    public void onQrcodeFound(Core lc, String something) {}
 
     public interface AddressType {
         CharSequence getText();

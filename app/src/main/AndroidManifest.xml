@@ -47,6 +47,7 @@
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
