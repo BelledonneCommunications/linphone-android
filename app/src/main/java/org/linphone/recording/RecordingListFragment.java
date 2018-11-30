@@ -56,7 +56,7 @@ public class RecordingListFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.recordings, container, false);
+        View view = inflater.inflate(R.layout.recordings_list, container, false);
 
         context = getActivity().getApplicationContext();
         selectableHelper = new SelectableHelper(view, this);
