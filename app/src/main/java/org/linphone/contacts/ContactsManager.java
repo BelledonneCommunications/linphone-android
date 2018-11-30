@@ -457,6 +457,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             mAndroidContactsCache = new HashMap<>();
             mContactsFetchedOnce = true;
 
+            if (mContext == null) {
+                mContext = LinphoneService.instance().getApplicationContext();
+            }
+
             if (LinphonePreferences.instance() != null
                     && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
                 String rls = getString(R.string.rls_uri);
