@@ -65,6 +65,7 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
@@ -162,7 +163,7 @@ public class ChatMessagesFragment extends Fragment
                             if (oneParticipantOneDevice) {
                                 ParticipantDevice device =
                                         mChatRoom.getParticipants()[0].getDevices()[0];
-                                LinphoneManager.getLc().inviteAddress(device.getAddress());
+                                CallManager.getInstance().inviteAddress(device.getAddress());
                             } else {
                                 LinphoneActivity.instance()
                                         .goToContactDevicesInfos(getRemoteSipUri());
@@ -860,7 +861,7 @@ public class ChatMessagesFragment extends Fragment
                         if (oneParticipantOneDevice) {
                             ParticipantDevice device =
                                     mChatRoom.getParticipants()[0].getDevices()[0];
-                            LinphoneManager.getLc().inviteAddress(device.getAddress());
+                            CallManager.getInstance().inviteAddress(device.getAddress());
                         } else {
                             LinphoneActivity.instance().goToContactDevicesInfos(getRemoteSipUri());
                         }

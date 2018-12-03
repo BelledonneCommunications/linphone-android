@@ -569,22 +569,16 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                         LinphoneService.instance().getApplicationContext());
 
         if (mLc.isNetworkReachable()) {
-            try {
-                if (Version.isVideoCapable()) {
-                    boolean prefVideoEnable = mPrefs.isVideoEnabled();
-                    boolean prefInitiateWithVideo = mPrefs.shouldInitiateVideoCall();
-                    CallManager.getInstance()
-                            .inviteAddress(
-                                    lAddress,
-                                    prefVideoEnable && prefInitiateWithVideo,
-                                    isLowBandwidthConnection);
-                } else {
-                    CallManager.getInstance()
-                            .inviteAddress(lAddress, false, isLowBandwidthConnection);
-                }
-
-            } catch (CoreException e) {
-                return;
+            if (Version.isVideoCapable()) {
+                boolean prefVideoEnable = mPrefs.isVideoEnabled();
+                boolean prefInitiateWithVideo = mPrefs.shouldInitiateVideoCall();
+                CallManager.getInstance()
+                        .inviteAddress(
+                                lAddress,
+                                prefVideoEnable && prefInitiateWithVideo,
+                                isLowBandwidthConnection);
+            } else {
+                CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
             }
         } else if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance()

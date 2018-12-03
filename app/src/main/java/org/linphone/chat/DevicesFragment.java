@@ -32,6 +32,7 @@ import java.util.Arrays;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -82,7 +83,7 @@ public class DevicesFragment extends Fragment {
                             long l) {
                         ParticipantDevice device =
                                 (ParticipantDevice) mAdapter.getChild(groupPosition, childPosition);
-                        LinphoneManager.getLc().inviteAddress(device.getAddress());
+                        CallManager.getInstance().inviteAddress(device.getAddress());
                         return false;
                     }
                 });
@@ -98,7 +99,7 @@ public class DevicesFragment extends Fragment {
                             // in this case groups are childs, so call on click
                             ParticipantDevice device =
                                     (ParticipantDevice) mAdapter.getGroup(groupPosition);
-                            LinphoneManager.getLc().inviteAddress(device.getAddress());
+                            CallManager.getInstance().inviteAddress(device.getAddress());
                             return true;
                         }
                         return false;

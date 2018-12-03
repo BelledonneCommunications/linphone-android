@@ -20,13 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.LinphoneUtils;
 
 /** Handle call updating, reinvites. */
 public class CallManager {
@@ -44,8 +45,15 @@ public class CallManager {
         return BandwidthManager.getInstance();
     }
 
-    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth)
-            throws CoreException {
+    public void inviteAddress(Address lAddress) {
+        boolean isLowBandwidthConnection =
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneService.instance().getApplicationContext());
+
+        inviteAddress(lAddress, false, isLowBandwidthConnection);
+    }
+
+    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) {
         Core lc = LinphoneManager.getLc();
 
         CallParams params = lc.createCallParams(null);
