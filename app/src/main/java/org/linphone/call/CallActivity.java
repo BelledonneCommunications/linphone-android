@@ -679,7 +679,11 @@ public class CallActivity extends LinphoneGenericActivity
                 !getResources().getBoolean(R.bool.disable_options_in_call)
                         && (addCall.isEnabled() || transfer.isEnabled()));
 
-        recordCall.setEnabled(!LinphoneManager.getLc().soundResourcesLocked());
+        Call currentCall = LinphoneManager.getLc().getCurrentCall();
+
+        recordCall.setEnabled(
+                !LinphoneManager.getLc().soundResourcesLocked()
+                        && currentCall.getCurrentParams().getRecordFile() != null);
         recordCall.setImageResource(
                 isRecording ? R.drawable.options_rec_selected : R.drawable.options_rec_default);
 
@@ -687,13 +691,11 @@ public class CallActivity extends LinphoneGenericActivity
         recording.setVisibility(isRecording ? View.VISIBLE : View.GONE);
 
         video.setEnabled(
-                LinphoneManager.getLc().getCurrentCall() != null
+                currentCall != null
                         && LinphonePreferences.instance().isVideoEnabled()
-                        && !LinphoneManager.getLc().getCurrentCall().mediaInProgress());
+                        && !currentCall.mediaInProgress());
 
-        pause.setEnabled(
-                LinphoneManager.getLc().getCurrentCall() != null
-                        && !LinphoneManager.getLc().getCurrentCall().mediaInProgress());
+        pause.setEnabled(currentCall != null && !currentCall.mediaInProgress());
 
         micro.setEnabled(true);
         speaker.setEnabled(!isTablet());
