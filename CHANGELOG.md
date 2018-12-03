@@ -10,10 +10,6 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [Incomming]
-- feature: call recording.
-- feature: QR code configuration.
-
 ## [4.1] - 2018-xx-xx
 
 ### Improvements
@@ -35,6 +31,8 @@ Group changes to describe their impact on the project, as follows:
 - Reply to received chat message in notification.
 - Answer or hangup calls in notification.
 - Option to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications.
+- Call recording
+- Get remote provisioning URL from QR code scan
 
 ## [4.0.1] - 2018-06-26
 
