@@ -35,7 +35,7 @@ excludePackage.add('**/LICENSE.txt')
 repositories {
     maven {
         // Switch to release for releases !
-        url "https://gitlab.linphone.org/BC/public/maven_repository/raw/master"
+        url "https://gitlab.linphone.org/BC/public/maven_repository/raw/tmp/lime_v2"
     }
 }
 
