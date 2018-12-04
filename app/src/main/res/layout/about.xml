@@ -48,13 +48,13 @@
             android:text="@string/about_version" />
 
         <TextView
-            android:id="@+id/about_liblinphone_version"
+            android:id="@+id/about_liblinphone_sdk_version"
             style="@style/font12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/about_liblinphone_version" />
+            android:text="@string/about_liblinphone_sdk_version" />
 
     </LinearLayout>
 

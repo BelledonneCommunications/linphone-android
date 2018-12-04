@@ -56,11 +56,15 @@ public class AboutFragment extends Fragment implements OnClickListener {
         View view = inflater.inflate(R.layout.about, container, false);
 
         TextView aboutVersion = view.findViewById(R.id.about_android_version);
-        TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_version);
+        TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_sdk_version);
         aboutLiblinphoneVersion.setText(
                 String.format(
-                        getString(R.string.about_liblinphone_version),
-                        LinphoneManager.getLc().getVersion()));
+                        getString(R.string.about_liblinphone_sdk_version),
+                        getString(R.string.linphone_sdk_version)
+                                + " ("
+                                + getString(R.string.linphone_sdk_branch)
+                                + ")"));
+        // We can't access a library's BuildConfig, so we have to set it as a resource
         aboutVersion.setText(
                 String.format(
                         getString(R.string.about_version),
