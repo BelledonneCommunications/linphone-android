@@ -811,9 +811,13 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         String deviceName = LinphoneUtils.getDeviceName(mServiceContext);
         String appName = mServiceContext.getResources().getString(R.string.user_agent);
         String androidVersion = BuildConfig.VERSION_NAME;
-        String coreVersion = mLc.getVersion();
-        String userAgent = appName + "/" + androidVersion + " (" + deviceName + ") LinphoneCore";
-        mLc.setUserAgent(userAgent, coreVersion);
+        String userAgent = appName + "/" + androidVersion + " (" + deviceName + ") LinphoneSDK";
+        mLc.setUserAgent(
+                userAgent,
+                getString(R.string.linphone_sdk_version)
+                        + " ("
+                        + getString(R.string.linphone_sdk_branch)
+                        + ")");
 
         mLc.checkForUpdate(androidVersion);
 
