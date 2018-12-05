@@ -1,7 +1,7 @@
 package org.linphone.history;
 
 /*
-HistoryListFragment.java
+HistoryFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -47,16 +47,16 @@ import org.linphone.core.CallLog;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.SelectableHelper;
 
-public class HistoryListFragment extends Fragment
+public class HistoryFragment extends Fragment
         implements OnClickListener,
                 OnItemClickListener,
                 HistoryViewHolder.ClickListener,
                 ContactsUpdatedListener,
                 SelectableHelper.DeleteListener {
-    private RecyclerView historyList;
-    private TextView noCallHistory, noMissedCallHistory;
-    private ImageView missedCalls, allCalls;
-    private View allCallsSelected, missedCallsSelected;
+    private RecyclerView mHistoryList;
+    private TextView mNoCallHistory, mNoMissedCallHistory;
+    private ImageView mMissedCalls, mAllCalls;
+    private View mAllCallsSelected, mMissedCallsSelected;
     private boolean mOnlyDisplayMissedCalls;
     private List<CallLog> mLogs;
     private HistoryAdapter mHistoryAdapter;
@@ -71,31 +71,31 @@ public class HistoryListFragment extends Fragment
         mContext = getActivity().getApplicationContext();
         mSelectionHelper = new SelectableHelper(view, this);
 
-        noCallHistory = view.findViewById(R.id.no_call_history);
-        noMissedCallHistory = view.findViewById(R.id.no_missed_call_history);
+        mNoCallHistory = view.findViewById(R.id.no_call_history);
+        mNoMissedCallHistory = view.findViewById(R.id.no_missed_call_history);
 
-        historyList = view.findViewById(R.id.history_list);
+        mHistoryList = view.findViewById(R.id.history_list);
 
         mLayoutManager = new LinearLayoutManager(mContext);
-        historyList.setLayoutManager(mLayoutManager);
+        mHistoryList.setLayoutManager(mLayoutManager);
         // Divider between items
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(
-                        historyList.getContext(), mLayoutManager.getOrientation());
+                        mHistoryList.getContext(), mLayoutManager.getOrientation());
         dividerItemDecoration.setDrawable(mContext.getResources().getDrawable(R.drawable.divider));
-        historyList.addItemDecoration(dividerItemDecoration);
+        mHistoryList.addItemDecoration(dividerItemDecoration);
 
-        allCalls = view.findViewById(R.id.all_calls);
-        allCalls.setOnClickListener(this);
+        mAllCalls = view.findViewById(R.id.all_calls);
+        mAllCalls.setOnClickListener(this);
 
-        allCallsSelected = view.findViewById(R.id.all_calls_select);
+        mAllCallsSelected = view.findViewById(R.id.all_calls_select);
 
-        missedCalls = view.findViewById(R.id.missed_calls);
-        missedCalls.setOnClickListener(this);
+        mMissedCalls = view.findViewById(R.id.missed_calls);
+        mMissedCalls.setOnClickListener(this);
 
-        missedCallsSelected = view.findViewById(R.id.missed_calls_select);
+        mMissedCallsSelected = view.findViewById(R.id.missed_calls_select);
 
-        allCalls.setEnabled(false);
+        mAllCalls.setEnabled(false);
         mOnlyDisplayMissedCalls = false;
 
         return view;
@@ -134,20 +134,20 @@ public class HistoryListFragment extends Fragment
 
     private void hideHistoryListAndDisplayMessageIfEmpty() {
         removeNotMissedCallsFromLogs();
-        noCallHistory.setVisibility(View.GONE);
-        noMissedCallHistory.setVisibility(View.GONE);
+        mNoCallHistory.setVisibility(View.GONE);
+        mNoMissedCallHistory.setVisibility(View.GONE);
 
         if (mLogs.isEmpty()) {
             if (mOnlyDisplayMissedCalls) {
-                noMissedCallHistory.setVisibility(View.VISIBLE);
+                mNoMissedCallHistory.setVisibility(View.VISIBLE);
             } else {
-                noCallHistory.setVisibility(View.VISIBLE);
+                mNoCallHistory.setVisibility(View.VISIBLE);
             }
-            historyList.setVisibility(View.GONE);
+            mHistoryList.setVisibility(View.GONE);
         } else {
-            noCallHistory.setVisibility(View.GONE);
-            noMissedCallHistory.setVisibility(View.GONE);
-            historyList.setVisibility(View.VISIBLE);
+            mNoCallHistory.setVisibility(View.GONE);
+            mNoMissedCallHistory.setVisibility(View.GONE);
+            mHistoryList.setVisibility(View.VISIBLE);
         }
     }
 
@@ -166,7 +166,7 @@ public class HistoryListFragment extends Fragment
         mHistoryAdapter =
                 new HistoryAdapter(
                         getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
-        historyList.setAdapter(mHistoryAdapter);
+        mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
     }
@@ -182,7 +182,7 @@ public class HistoryListFragment extends Fragment
         if (!LinphoneActivity.isInstanciated()
                 || LinphoneActivity.instance().getCurrentFragment()
                         != FragmentsAvailable.HISTORY_LIST) return;
-        HistoryAdapter adapter = (HistoryAdapter) historyList.getAdapter();
+        HistoryAdapter adapter = (HistoryAdapter) mHistoryList.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -193,23 +193,23 @@ public class HistoryListFragment extends Fragment
         int id = v.getId();
 
         if (id == R.id.all_calls) {
-            allCalls.setEnabled(false);
-            allCallsSelected.setVisibility(View.VISIBLE);
-            missedCallsSelected.setVisibility(View.INVISIBLE);
-            missedCalls.setEnabled(true);
+            mAllCalls.setEnabled(false);
+            mAllCallsSelected.setVisibility(View.VISIBLE);
+            mMissedCallsSelected.setVisibility(View.INVISIBLE);
+            mMissedCalls.setEnabled(true);
             mOnlyDisplayMissedCalls = false;
             refresh();
         }
         if (id == R.id.missed_calls) {
-            allCalls.setEnabled(true);
-            allCallsSelected.setVisibility(View.INVISIBLE);
-            missedCallsSelected.setVisibility(View.VISIBLE);
-            missedCalls.setEnabled(false);
+            mAllCalls.setEnabled(true);
+            mAllCallsSelected.setVisibility(View.INVISIBLE);
+            mMissedCallsSelected.setVisibility(View.VISIBLE);
+            mMissedCalls.setEnabled(false);
             mOnlyDisplayMissedCalls = true;
         }
         hideHistoryListAndDisplayMessageIfEmpty();
         mHistoryAdapter = new HistoryAdapter(mContext, mLogs, this, mSelectionHelper);
-        historyList.setAdapter(mHistoryAdapter);
+        mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
     }

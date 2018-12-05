@@ -23,12 +23,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class NotifiableMessage {
-    String mMessage;
-    String mSender;
-    long mTime;
-    Bitmap mSenderBitmap;
-    Uri mFilePath;
-    String mFileMime;
+    private String mMessage;
+    private String mSender;
+    private long mTime;
+    private Bitmap mSenderBitmap;
+    private Uri mFilePath;
+    private String mFileMime;
 
     public NotifiableMessage(
             String message, String sender, long time, Uri filePath, String fileMime) {

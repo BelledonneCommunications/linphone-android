@@ -41,8 +41,8 @@ public class LinphoneLauncherActivity extends Activity {
 
     private Handler mHandler;
     private ServiceWaitThread mServiceThread;
-    private String addressToCall;
-    private Uri uriToResolve;
+    private String mAddressToCall;
+    private Uri mUriToResolve;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +60,23 @@ public class LinphoneLauncherActivity extends Activity {
             String action = intent.getAction();
             if (Intent.ACTION_CALL.equals(action)) {
                 if (intent.getData() != null) {
-                    addressToCall = intent.getData().toString();
-                    addressToCall = addressToCall.replace("%40", "@");
-                    addressToCall = addressToCall.replace("%3A", ":");
-                    if (addressToCall.startsWith("sip:")) {
-                        addressToCall = addressToCall.substring("sip:".length());
-                    } else if (addressToCall.startsWith("tel:")) {
-                        addressToCall = addressToCall.substring("tel:".length());
+                    mAddressToCall = intent.getData().toString();
+                    mAddressToCall = mAddressToCall.replace("%40", "@");
+                    mAddressToCall = mAddressToCall.replace("%3A", ":");
+                    if (mAddressToCall.startsWith("sip:")) {
+                        mAddressToCall = mAddressToCall.substring("sip:".length());
+                    } else if (mAddressToCall.startsWith("tel:")) {
+                        mAddressToCall = mAddressToCall.substring("tel:".length());
                     }
                 }
             } else if (Intent.ACTION_VIEW.equals(action)) {
                 if (LinphoneService.isReady()) {
-                    addressToCall =
+                    mAddressToCall =
                             ContactsManager.getInstance()
                                     .getAddressOrNumberForAndroidContact(
                                             getContentResolver(), intent.getData());
                 } else {
-                    uriToResolve = intent.getData();
+                    mUriToResolve = intent.getData();
                 }
             }
         }
@@ -153,22 +153,22 @@ public class LinphoneLauncherActivity extends Activity {
                                 }
                             }
                         }
-                        if (uriToResolve != null) {
-                            addressToCall =
+                        if (mUriToResolve != null) {
+                            mAddressToCall =
                                     ContactsManager.getInstance()
                                             .getAddressOrNumberForAndroidContact(
-                                                    getContentResolver(), uriToResolve);
+                                                    getContentResolver(), mUriToResolve);
                             Log.i(
                                     "LinphoneLauncher",
-                                    "Intent has uri to resolve : " + uriToResolve.toString());
-                            uriToResolve = null;
+                                    "Intent has uri to resolve : " + mUriToResolve.toString());
+                            mUriToResolve = null;
                         }
-                        if (addressToCall != null) {
-                            newIntent.putExtra("SipUriOrNumber", addressToCall);
+                        if (mAddressToCall != null) {
+                            newIntent.putExtra("SipUriOrNumber", mAddressToCall);
                             Log.i(
                                     "LinphoneLauncher",
-                                    "Intent has address to call : " + addressToCall);
-                            addressToCall = null;
+                                    "Intent has address to call : " + mAddressToCall);
+                            mAddressToCall = null;
                         }
                         startActivity(newIntent);
                         if (classToStart == LinphoneActivity.class

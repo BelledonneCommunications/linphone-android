@@ -32,7 +32,7 @@ import android.widget.ImageView;
 public class EraseButton extends ImageView
         implements AddressAware, OnClickListener, OnLongClickListener, TextWatcher {
 
-    private AddressText address;
+    private AddressText mAddress;
 
     public EraseButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,24 +41,24 @@ public class EraseButton extends ImageView
     }
 
     public void onClick(View v) {
-        if (address.getText().length() > 0) {
-            int lBegin = address.getSelectionStart();
+        if (mAddress.getText().length() > 0) {
+            int lBegin = mAddress.getSelectionStart();
             if (lBegin == -1) {
-                lBegin = address.getEditableText().length() - 1;
+                lBegin = mAddress.getEditableText().length() - 1;
             }
             if (lBegin > 0) {
-                address.getEditableText().delete(lBegin - 1, lBegin);
+                mAddress.getEditableText().delete(lBegin - 1, lBegin);
             }
         }
     }
 
     public boolean onLongClick(View v) {
-        address.getEditableText().clear();
+        mAddress.getEditableText().clear();
         return true;
     }
 
     public void setAddressWidget(AddressText view) {
-        address = view;
+        mAddress = view;
         view.addTextChangedListener(this);
     }
 

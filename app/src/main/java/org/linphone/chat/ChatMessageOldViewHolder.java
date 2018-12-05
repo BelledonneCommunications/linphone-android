@@ -35,7 +35,6 @@ import org.linphone.core.ChatMessage;
 public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener {
     public String messageId;
-    public Context mContext;
     public ChatMessage message;
     public LinearLayout eventLayout;
     public TextView eventMessage;
@@ -63,6 +62,8 @@ public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder
     public Button openFileButton;
 
     public CheckBox delete;
+
+    private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
 
     public ChatMessageOldViewHolder(

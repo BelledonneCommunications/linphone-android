@@ -32,7 +32,7 @@ import java.util.List;
 import org.linphone.R;
 
 public class InAppPurchaseListFragment extends Fragment implements AdapterView.OnItemClickListener {
-    private ListView inappList;
+    private ListView mInappList;
     private LayoutInflater mInflater;
     private List<Purchasable> mPurchasableItems;
 
@@ -43,11 +43,11 @@ public class InAppPurchaseListFragment extends Fragment implements AdapterView.O
         View view = inflater.inflate(R.layout.in_app_list, container, false);
 
         mPurchasableItems = InAppPurchaseActivity.instance().getPurchasedItems();
-        inappList = view.findViewById(R.id.inapp_list);
+        mInappList = view.findViewById(R.id.inapp_list);
 
         if (mPurchasableItems != null) {
-            inappList.setAdapter(new InAppListAdapter());
-            inappList.setOnItemClickListener(this);
+            mInappList.setAdapter(new InAppListAdapter());
+            mInappList.setOnItemClickListener(this);
         }
         return view;
     }

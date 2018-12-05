@@ -32,16 +32,16 @@ import org.linphone.utils.LinphoneUtils;
 /** Handle call updating, reinvites. */
 public class CallManager {
 
-    private static CallManager instance;
+    private static CallManager sInstance;
+
+    public static final synchronized CallManager getInstance() {
+        if (sInstance == null) sInstance = new CallManager();
+        return sInstance;
+    }
 
     private CallManager() {}
 
-    public static final synchronized CallManager getInstance() {
-        if (instance == null) instance = new CallManager();
-        return instance;
-    }
-
-    private BandwidthManager bm() {
+    private BandwidthManager getBandwidthManager() {
         return BandwidthManager.getInstance();
     }
 
@@ -57,7 +57,7 @@ public class CallManager {
         Core lc = LinphoneManager.getLc();
 
         CallParams params = lc.createCallParams(null);
-        bm().updateWithProfileSettings(lc, params);
+        getBandwidthManager().updateWithProfileSettings(lc, params);
 
         if (videoEnabled && params.videoEnabled()) {
             params.enableVideo(true);
@@ -96,7 +96,7 @@ public class CallManager {
         if (params.videoEnabled()) return false;
 
         // Check if video possible regarding bandwidth limitations
-        bm().updateWithProfileSettings(lc, params);
+        getBandwidthManager().updateWithProfileSettings(lc, params);
 
         // Abort if not enough bandwidth...
         if (!params.videoEnabled()) {
@@ -121,7 +121,7 @@ public class CallManager {
             return;
         }
         CallParams params = lc.createCallParams(lCall);
-        bm().updateWithProfileSettings(lc, params);
+        getBandwidthManager().updateWithProfileSettings(lc, params);
         lc.updateCall(lCall, null);
     }
 }

@@ -87,29 +87,35 @@ public class AssistantActivity extends Activity
                 AccountCreatorListener {
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 201;
     private static final int PERMISSIONS_REQUEST_CAMERA = 202;
-    private static AssistantActivity instance;
+
+    private static AssistantActivity sInstance;
+
     public DialPlan country;
     public String phone_number;
     public String email;
-    private ImageView back, cancel;
-    private AssistantFragmentsEnum currentFragment;
-    private AssistantFragmentsEnum lastFragment;
-    private AssistantFragmentsEnum firstFragment;
-    private Fragment fragment;
+
+    private ImageView mBack, mCancel;
+    private AssistantFragmentsEnum mCurrentFragment;
+    private AssistantFragmentsEnum mLastFragment;
+    private AssistantFragmentsEnum mFirstFragment;
+    private Fragment mFragment;
     private LinphonePreferences mPrefs;
-    private boolean accountCreated = false, newAccount = false, isLink = false, fromPref = false;
+    private boolean mAccountCreated = false,
+            mNewAccount = false,
+            mIsLink = false,
+            mFromPref = false;
     private CoreListenerStub mListener;
-    private Address address;
-    private StatusFragment status;
-    private ProgressDialog progress;
-    private Dialog dialog;
-    private boolean remoteProvisioningInProgress;
-    private boolean echoCancellerAlreadyDone;
+    private Address mAddress;
+    private StatusFragment mStatus;
+    private ProgressDialog mProgress;
+    private Dialog mDialog;
+    private boolean mRemoteProvisioningInProgress;
+    private boolean mEchoCancellerAlreadyDone;
     private AccountCreator mAccountCreator;
-    private CountryListAdapter countryListAdapter;
+    private CountryListAdapter mCountryListAdapter;
 
     public static AssistantActivity instance() {
-        return instance;
+        return sInstance;
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,16 +129,16 @@ public class AssistantActivity extends Activity
         initUI();
 
         if (getIntent().getBooleanExtra("LinkPhoneNumber", false)) {
-            isLink = true;
-            if (getIntent().getBooleanExtra("FromPref", false)) fromPref = true;
+            mIsLink = true;
+            if (getIntent().getBooleanExtra("FromPref", false)) mFromPref = true;
             displayCreateAccount();
         } else {
-            firstFragment =
+            mFirstFragment =
                     getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment)
                             ? AssistantFragmentsEnum.LINPHONE_LOGIN
                             : AssistantFragmentsEnum.WELCOME;
-            if (firstFragment == AssistantFragmentsEnum.WELCOME) {
-                firstFragment =
+            if (mFirstFragment == AssistantFragmentsEnum.WELCOME) {
+                mFirstFragment =
                         getResources()
                                         .getBoolean(
                                                 R.bool.assistant_use_create_linphone_account_as_first_fragment)
@@ -142,21 +148,21 @@ public class AssistantActivity extends Activity
 
             if (findViewById(R.id.fragment_container) != null) {
                 if (savedInstanceState == null) {
-                    display(firstFragment);
+                    display(mFirstFragment);
                 } else {
-                    currentFragment =
+                    mCurrentFragment =
                             (AssistantFragmentsEnum)
                                     savedInstanceState.getSerializable("CurrentFragment");
                 }
             }
         }
         if (savedInstanceState != null && savedInstanceState.containsKey("echoCanceller")) {
-            echoCancellerAlreadyDone = savedInstanceState.getBoolean("echoCanceller");
+            mEchoCancellerAlreadyDone = savedInstanceState.getBoolean("echoCanceller");
         } else {
-            echoCancellerAlreadyDone = false;
+            mEchoCancellerAlreadyDone = false;
         }
         mPrefs = LinphonePreferences.instance();
-        status.enableSideMenu(false);
+        mStatus.enableSideMenu(false);
 
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             mAccountCreator =
@@ -165,14 +171,14 @@ public class AssistantActivity extends Activity
             mAccountCreator.setListener(this);
         }
 
-        countryListAdapter = new CountryListAdapter(getApplicationContext());
+        mCountryListAdapter = new CountryListAdapter(getApplicationContext());
         mListener =
                 new CoreListenerStub() {
 
                     @Override
                     public void onConfiguringStatus(
                             Core lc, final ConfiguringState state, String message) {
-                        if (progress != null) progress.dismiss();
+                        if (mProgress != null) mProgress.dismiss();
                         if (state == ConfiguringState.Successful) {
                             goToLinphoneActivity();
                         } else if (state == ConfiguringState.Failed) {
@@ -187,18 +193,18 @@ public class AssistantActivity extends Activity
                     @Override
                     public void onRegistrationStateChanged(
                             Core lc, ProxyConfig cfg, RegistrationState state, String smessage) {
-                        if (remoteProvisioningInProgress) {
-                            if (progress != null) progress.dismiss();
+                        if (mRemoteProvisioningInProgress) {
+                            if (mProgress != null) mProgress.dismiss();
                             if (state == RegistrationState.Ok) {
-                                remoteProvisioningInProgress = false;
+                                mRemoteProvisioningInProgress = false;
                                 success();
                             }
-                        } else if (accountCreated && !newAccount) {
-                            if (address != null
-                                    && address.asString()
+                        } else if (mAccountCreated && !mNewAccount) {
+                            if (mAddress != null
+                                    && mAddress.asString()
                                             .equals(cfg.getIdentityAddress().asString())) {
                                 if (state == RegistrationState.Ok) {
-                                    if (progress != null) progress.dismiss();
+                                    if (mProgress != null) mProgress.dismiss();
                                     if (getResources()
                                                     .getBoolean(R.bool.use_phone_number_validation)
                                             && cfg.getDomain()
@@ -210,20 +216,20 @@ public class AssistantActivity extends Activity
                                         success();
                                     }
                                 } else if (state == RegistrationState.Failed) {
-                                    if (progress != null) progress.dismiss();
-                                    if (dialog == null || !dialog.isShowing()) {
-                                        dialog = createErrorDialog(cfg, smessage);
-                                        dialog.setCancelable(false);
-                                        dialog.show();
+                                    if (mProgress != null) mProgress.dismiss();
+                                    if (mDialog == null || !mDialog.isShowing()) {
+                                        mDialog = createErrorDialog(cfg, smessage);
+                                        mDialog.setCancelable(false);
+                                        mDialog.show();
                                     }
                                 } else if (!(state == RegistrationState.Progress)) {
-                                    if (progress != null) progress.dismiss();
+                                    if (mProgress != null) mProgress.dismiss();
                                 }
                             }
                         }
                     }
                 };
-        instance = this;
+        sInstance = this;
     }
 
     @Override
@@ -248,13 +254,13 @@ public class AssistantActivity extends Activity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable("CurrentFragment", currentFragment);
-        outState.putBoolean("echoCanceller", echoCancellerAlreadyDone);
+        outState.putSerializable("CurrentFragment", mCurrentFragment);
+        outState.putBoolean("echoCanceller", mEchoCancellerAlreadyDone);
         super.onSaveInstanceState(outState);
     }
 
     public void updateStatusFragment(StatusFragment fragment) {
-        status = fragment;
+        mStatus = fragment;
     }
 
     private AccountCreator loadAccountCreator(ProxyConfig cfg) {
@@ -274,10 +280,10 @@ public class AssistantActivity extends Activity
     }
 
     private void initUI() {
-        back = findViewById(R.id.back);
-        back.setOnClickListener(this);
-        cancel = findViewById(R.id.assistant_cancel);
-        cancel.setOnClickListener(this);
+        mBack = findViewById(R.id.back);
+        mBack.setOnClickListener(this);
+        mCancel = findViewById(R.id.assistant_cancel);
+        mCancel.setOnClickListener(this);
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -309,11 +315,11 @@ public class AssistantActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        if (isLink) {
+        if (mIsLink) {
             return;
         }
         boolean firstLaunch = LinphonePreferences.instance().isFirstLaunch();
-        if (currentFragment == firstFragment) {
+        if (mCurrentFragment == mFirstFragment) {
             LinphonePreferences.instance().firstLaunchSuccessful();
             if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
                 moveTaskToBack(true);
@@ -322,21 +328,21 @@ public class AssistantActivity extends Activity
                 if (firstLaunch) startActivity(new Intent().setClass(this, LinphoneActivity.class));
                 finish();
             }
-        } else if (currentFragment == AssistantFragmentsEnum.LOGIN
-                || currentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
-                || currentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
-                || currentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
+        } else if (mCurrentFragment == AssistantFragmentsEnum.LOGIN
+                || mCurrentFragment == AssistantFragmentsEnum.LINPHONE_LOGIN
+                || mCurrentFragment == AssistantFragmentsEnum.CREATE_ACCOUNT
+                || mCurrentFragment == AssistantFragmentsEnum.REMOTE_PROVISIONING) {
             displayMenu();
-        } else if (currentFragment == AssistantFragmentsEnum.WELCOME) {
+        } else if (mCurrentFragment == AssistantFragmentsEnum.WELCOME) {
             if (firstLaunch) startActivity(new Intent().setClass(this, LinphoneActivity.class));
             finish();
-        } else if (currentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER) {
-            if (lastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)) {
+        } else if (mCurrentFragment == AssistantFragmentsEnum.COUNTRY_CHOOSER) {
+            if (mLastFragment.equals(AssistantFragmentsEnum.LINPHONE_LOGIN)) {
                 displayLoginLinphone(null, null);
             } else {
                 displayCreateAccount();
             }
-        } else if (currentFragment == AssistantFragmentsEnum.QRCODE_READER) {
+        } else if (mCurrentFragment == AssistantFragmentsEnum.QRCODE_READER) {
             displayRemoteProvisioning("");
         }
     }
@@ -421,9 +427,9 @@ public class AssistantActivity extends Activity
             EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
             fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
             changeFragment(fragment);
-            currentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
-            back.setVisibility(View.VISIBLE);
-            cancel.setEnabled(false);
+            mCurrentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
+            mBack.setVisibility(View.VISIBLE);
+            mCancel.setEnabled(false);
         } else {
             checkAndRequestAudioPermission();
         }
@@ -442,7 +448,7 @@ public class AssistantActivity extends Activity
         identity = identity.replace("?", accountCreator.getUsername());
         Address addr = Factory.instance().createAddress(identity);
         addr.setDisplayName(accountCreator.getUsername());
-        address = addr;
+        mAddress = addr;
         proxyConfig.edit();
 
         proxyConfig.setIdentityAddress(addr);
@@ -479,10 +485,10 @@ public class AssistantActivity extends Activity
         LinphoneManager.getInstance()
                 .subscribeFriendList(getResources().getBoolean(R.bool.use_friendlist_subscription));
 
-        if (!newAccount) {
+        if (!mNewAccount) {
             displayRegistrationInProgressDialog();
         }
-        accountCreated = true;
+        mAccountCreated = true;
     }
 
     public void linphoneLogIn(AccountCreator accountCreator) {
@@ -521,52 +527,52 @@ public class AssistantActivity extends Activity
     }
 
     public void displayMenu() {
-        fragment = new WelcomeFragment();
-        changeFragment(fragment);
+        mFragment = new WelcomeFragment();
+        changeFragment(mFragment);
         country = null;
-        currentFragment = AssistantFragmentsEnum.WELCOME;
-        back.setVisibility(View.INVISIBLE);
+        mCurrentFragment = AssistantFragmentsEnum.WELCOME;
+        mBack.setVisibility(View.INVISIBLE);
     }
 
     public void displayLoginGeneric() {
-        fragment = new LoginFragment();
-        changeFragment(fragment);
-        currentFragment = AssistantFragmentsEnum.LOGIN;
-        back.setVisibility(View.VISIBLE);
+        mFragment = new LoginFragment();
+        changeFragment(mFragment);
+        mCurrentFragment = AssistantFragmentsEnum.LOGIN;
+        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayLoginLinphone(String username, String password) {
-        fragment = new LinphoneLoginFragment();
+        mFragment = new LinphoneLoginFragment();
         Bundle extras = new Bundle();
         extras.putString("Phone", null);
         extras.putString("Dialcode", null);
         extras.putString("Username", username);
         extras.putString("Password", password);
-        fragment.setArguments(extras);
-        changeFragment(fragment);
-        currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
-        back.setVisibility(View.VISIBLE);
+        mFragment.setArguments(extras);
+        changeFragment(mFragment);
+        mCurrentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
+        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayCreateAccount() {
-        fragment = new CreateAccountFragment();
+        mFragment = new CreateAccountFragment();
         Bundle extra = new Bundle();
-        extra.putBoolean("LinkPhoneNumber", isLink);
-        extra.putBoolean("LinkFromPref", fromPref);
-        fragment.setArguments(extra);
-        changeFragment(fragment);
-        currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
-        back.setVisibility(View.VISIBLE);
+        extra.putBoolean("LinkPhoneNumber", mIsLink);
+        extra.putBoolean("LinkFromPref", mFromPref);
+        mFragment.setArguments(extra);
+        changeFragment(mFragment);
+        mCurrentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
+        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayRemoteProvisioning(String url) {
-        fragment = new RemoteProvisioningFragment();
+        mFragment = new RemoteProvisioningFragment();
         Bundle extra = new Bundle();
         extra.putString("RemoteUrl", url);
-        fragment.setArguments(extra);
-        changeFragment(fragment);
-        currentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
-        back.setVisibility(View.VISIBLE);
+        mFragment.setArguments(extra);
+        changeFragment(mFragment);
+        mCurrentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
+        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayQRCodeReader() {
@@ -574,19 +580,19 @@ public class AssistantActivity extends Activity
                 != PackageManager.PERMISSION_GRANTED) {
             checkAndRequestVideoPermission();
         } else {
-            fragment = new QrCodeFragment();
-            changeFragment(fragment);
-            currentFragment = AssistantFragmentsEnum.QRCODE_READER;
-            back.setVisibility(View.VISIBLE);
+            mFragment = new QrCodeFragment();
+            changeFragment(mFragment);
+            mCurrentFragment = AssistantFragmentsEnum.QRCODE_READER;
+            mBack.setVisibility(View.VISIBLE);
         }
     }
 
     public void displayCountryChooser() {
-        fragment = new CountryListFragment();
-        changeFragment(fragment);
-        lastFragment = currentFragment;
-        currentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
-        back.setVisibility(View.VISIBLE);
+        mFragment = new CountryListFragment();
+        changeFragment(mFragment);
+        mLastFragment = mCurrentFragment;
+        mCurrentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
+        mBack.setVisibility(View.VISIBLE);
     }
 
     private void launchDownloadCodec() {
@@ -598,9 +604,9 @@ public class AssistantActivity extends Activity
                     && !downloadHelper.isCodecFound()) {
                 CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
                 changeFragment(codecFragment);
-                currentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
-                back.setVisibility(View.VISIBLE);
-                cancel.setEnabled(false);
+                mCurrentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
+                mBack.setVisibility(View.VISIBLE);
+                mCancel.setEnabled(false);
             } else goToLinphoneActivity();
         } else {
             goToLinphoneActivity();
@@ -609,13 +615,6 @@ public class AssistantActivity extends Activity
 
     public void endDownloadCodec() {
         goToLinphoneActivity();
-    }
-
-    public String getPhoneWithCountry() {
-        if (country == null || phone_number == null) return "";
-        String phoneNumberWithCountry =
-                country.getCountryCallingCode() + phone_number.replace("\\D", "");
-        return phoneNumberWithCountry;
     }
 
     public void saveCreatedAccount(
@@ -632,7 +631,7 @@ public class AssistantActivity extends Activity
         domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
 
         String identity = "sip:" + username + "@" + domain;
-        address = Factory.instance().createAddress(identity);
+        mAddress = Factory.instance().createAddress(identity);
 
         AccountBuilder builder =
                 new AccountBuilder(LinphoneManager.getLc())
@@ -657,10 +656,10 @@ public class AssistantActivity extends Activity
 
         try {
             builder.saveNewAccount();
-            if (!newAccount) {
+            if (!mNewAccount) {
                 displayRegistrationInProgressDialog();
             }
-            accountCreated = true;
+            mAccountCreated = true;
         } catch (CoreException e) {
             Log.e(e);
         }
@@ -668,37 +667,39 @@ public class AssistantActivity extends Activity
 
     public void displayRegistrationInProgressDialog() {
         if (LinphoneManager.getLc().isNetworkReachable()) {
-            progress = ProgressDialog.show(this, null, null);
+            mProgress = ProgressDialog.show(this, null, null);
             Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
             d.setAlpha(200);
-            progress.getWindow()
+            mProgress
+                    .getWindow()
                     .setLayout(
                             WindowManager.LayoutParams.MATCH_PARENT,
                             WindowManager.LayoutParams.MATCH_PARENT);
-            progress.getWindow().setBackgroundDrawable(d);
-            progress.setContentView(R.layout.progress_dialog);
-            progress.show();
+            mProgress.getWindow().setBackgroundDrawable(d);
+            mProgress.setContentView(R.layout.progress_dialog);
+            mProgress.show();
         }
     }
 
     public void displayRemoteProvisioningInProgressDialog() {
-        remoteProvisioningInProgress = true;
+        mRemoteProvisioningInProgress = true;
 
-        progress = ProgressDialog.show(this, null, null);
+        mProgress = ProgressDialog.show(this, null, null);
         Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
         d.setAlpha(200);
-        progress.getWindow()
+        mProgress
+                .getWindow()
                 .setLayout(
                         WindowManager.LayoutParams.MATCH_PARENT,
                         WindowManager.LayoutParams.MATCH_PARENT);
-        progress.getWindow().setBackgroundDrawable(d);
-        progress.setContentView(R.layout.progress_dialog);
-        progress.show();
+        mProgress.getWindow().setBackgroundDrawable(d);
+        mProgress.setContentView(R.layout.progress_dialog);
+        mProgress.show();
     }
 
     public void displayAssistantConfirm(String username, String password, String email) {
         CreateAccountActivationFragment fragment = new CreateAccountActivationFragment();
-        newAccount = true;
+        mNewAccount = true;
         Bundle extras = new Bundle();
         extras.putString("Username", username);
         extras.putString("Password", password);
@@ -706,38 +707,38 @@ public class AssistantActivity extends Activity
         fragment.setArguments(extras);
         changeFragment(fragment);
 
-        currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
-        back.setVisibility(View.INVISIBLE);
+        mCurrentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
+        mBack.setVisibility(View.INVISIBLE);
     }
 
     public void displayAssistantCodeConfirm(
             String username, String phone, String dialcode, boolean recoverAccount) {
         CreateAccountCodeActivationFragment fragment = new CreateAccountCodeActivationFragment();
-        newAccount = true;
+        mNewAccount = true;
         Bundle extras = new Bundle();
         extras.putString("Username", username);
         extras.putString("Phone", phone);
         extras.putString("Dialcode", dialcode);
         extras.putBoolean("RecoverAccount", recoverAccount);
-        extras.putBoolean("LinkAccount", isLink);
+        extras.putBoolean("LinkAccount", mIsLink);
         fragment.setArguments(extras);
         changeFragment(fragment);
 
-        currentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
-        back.setVisibility(View.INVISIBLE);
+        mCurrentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
+        mBack.setVisibility(View.INVISIBLE);
     }
 
     public void displayAssistantLinphoneLogin(String phone, String dialcode) {
         LinphoneLoginFragment fragment = new LinphoneLoginFragment();
-        newAccount = true;
+        mNewAccount = true;
         Bundle extras = new Bundle();
         extras.putString("Phone", phone);
         extras.putString("Dialcode", dialcode);
         fragment.setArguments(extras);
         changeFragment(fragment);
 
-        currentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
-        back.setVisibility(View.VISIBLE);
+        mCurrentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
+        mBack.setVisibility(View.VISIBLE);
     }
 
     public void isAccountVerified(String username) {
@@ -803,8 +804,8 @@ public class AssistantActivity extends Activity
         if (lc != null) {
             lc.addListener(mListener);
         }
-        if (status != null) {
-            status.setCoreListener();
+        if (mStatus != null) {
+            mStatus.setCoreListener();
         }
     }
 
@@ -834,7 +835,7 @@ public class AssistantActivity extends Activity
         if (status.equals(AccountCreator.Status.AccountExistWithAlias)) {
             success();
         } else {
-            isLink = true;
+            mIsLink = true;
             displayCreateAccount();
         }
         if (mAccountCreator != null) mAccountCreator.setListener(null);
@@ -877,13 +878,13 @@ public class AssistantActivity extends Activity
             AccountCreator accountCreator, AccountCreator.Status status, String resp) {}
 
     public CountryListAdapter getCountryListAdapter() {
-        return countryListAdapter;
+        return mCountryListAdapter;
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (currentFragment == AssistantFragmentsEnum.QRCODE_READER) {
+        if (mCurrentFragment == AssistantFragmentsEnum.QRCODE_READER) {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
@@ -902,7 +903,7 @@ public class AssistantActivity extends Activity
         public CountryListAdapter(Context ctx) {
             context = ctx;
             allCountries = Factory.instance().getDialPlans();
-            filteredCountries = new ArrayList<DialPlan>(Arrays.asList(allCountries));
+            filteredCountries = new ArrayList<>(Arrays.asList(allCountries));
         }
 
         public void setInflater(LayoutInflater inf) {
@@ -944,10 +945,10 @@ public class AssistantActivity extends Activity
 
             DialPlan c = filteredCountries.get(position);
 
-            TextView name = (TextView) view.findViewById(R.id.country_name);
+            TextView name = view.findViewById(R.id.country_name);
             name.setText(c.getCountry());
 
-            TextView dial_code = (TextView) view.findViewById(R.id.country_prefix);
+            TextView dial_code = view.findViewById(R.id.country_prefix);
             if (context != null)
                 dial_code.setText(
                         String.format(

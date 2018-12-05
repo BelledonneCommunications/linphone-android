@@ -39,8 +39,9 @@ import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-    private final WeakReference<ImageView> imageViewReference;
     public String path;
+
+    private final WeakReference<ImageView> mImageViewReference;
     private Context mContext;
     private Bitmap mDefaultBitmap;
 
@@ -49,7 +50,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         mDefaultBitmap = defaultBitmap;
         path = null;
         // Use a WeakReference to ensure the ImageView can be garbage collected
-        imageViewReference = new WeakReference<>(imageView);
+        mImageViewReference = new WeakReference<>(imageView);
     }
 
     public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
@@ -93,7 +94,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 bm = BitmapFactory.decodeFile(path);
             }
 
-            ImageView imageView = imageViewReference.get();
+            ImageView imageView = mImageViewReference.get();
 
             try {
                 // Rotate the bitmap if possible/needed, using EXIF data
@@ -145,8 +146,8 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             bitmap.recycle();
             bitmap = null;
         }
-        if (imageViewReference != null && bitmap != null) {
-            final ImageView imageView = imageViewReference.get();
+        if (mImageViewReference != null && bitmap != null) {
+            final ImageView imageView = mImageViewReference.get();
             final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
             if (this == bitmapWorkerTask && imageView != null) {
                 imageView.setImageBitmap(bitmap);

@@ -28,35 +28,35 @@ import android.widget.Button;
 import org.linphone.R;
 
 public class WelcomeFragment extends Fragment implements OnClickListener {
-    private Button createAccount, logLinphoneAccount, logGenericAccount, remoteProvisioning;
+    private Button mCreateAccount, mLogLinphoneAccount, mLogGenericAccount, mRemoteProvisioning;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_welcome, container, false);
 
-        createAccount = view.findViewById(R.id.create_account);
-        createAccount.setOnClickListener(this);
+        mCreateAccount = view.findViewById(R.id.create_account);
+        mCreateAccount.setOnClickListener(this);
 
-        logLinphoneAccount = view.findViewById(R.id.login_linphone);
+        mLogLinphoneAccount = view.findViewById(R.id.login_linphone);
         if (getResources().getBoolean(R.bool.hide_linphone_accounts_in_assistant)) {
-            logLinphoneAccount.setVisibility(View.GONE);
+            mLogLinphoneAccount.setVisibility(View.GONE);
         } else {
-            logLinphoneAccount.setOnClickListener(this);
+            mLogLinphoneAccount.setOnClickListener(this);
         }
 
-        logGenericAccount = view.findViewById(R.id.login_generic);
+        mLogGenericAccount = view.findViewById(R.id.login_generic);
         if (getResources().getBoolean(R.bool.hide_generic_accounts_in_assistant)) {
-            logGenericAccount.setVisibility(View.GONE);
+            mLogGenericAccount.setVisibility(View.GONE);
         } else {
-            logGenericAccount.setOnClickListener(this);
+            mLogGenericAccount.setOnClickListener(this);
         }
 
-        remoteProvisioning = view.findViewById(R.id.remote_provisioning);
+        mRemoteProvisioning = view.findViewById(R.id.remote_provisioning);
         if (getResources().getBoolean(R.bool.hide_remote_provisioning_in_assistant)) {
-            remoteProvisioning.setVisibility(View.GONE);
+            mRemoteProvisioning.setVisibility(View.GONE);
         } else {
-            remoteProvisioning.setOnClickListener(this);
+            mRemoteProvisioning.setOnClickListener(this);
         }
 
         return view;

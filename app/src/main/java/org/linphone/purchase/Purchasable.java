@@ -25,81 +25,81 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 public class Purchasable {
-    private String id, title, description, price;
-    private long expire;
-    private String purchasePayload, purchasePayloadSignature;
-    private String userData;
+    private String mId, mTitle, mDescription, mPrice;
+    private long mExpire;
+    private String mPurchasePayload, mPurchasePayloadSignature;
+    private String mUserData;
 
     public Purchasable(String id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public String getId() {
-        return id;
+        return mId;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public Purchasable setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
         return this;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
     }
 
     public Purchasable setDescription(String description) {
-        this.description = description;
+        this.mDescription = description;
         return this;
     }
 
     public String getPrice() {
-        return price;
+        return mPrice;
     }
 
     public Purchasable setPrice(String price) {
-        this.price = price;
+        this.mPrice = price;
         return this;
     }
 
     public long getExpire() {
-        return expire;
+        return mExpire;
     }
 
     public Purchasable setExpire(long expire) {
-        this.expire = expire;
+        this.mExpire = expire;
         return this;
     }
 
     public String getExpireDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
-        Date date = new Date(expire);
+        Date date = new Date(mExpire);
         return dateFormat.format(date);
     }
 
     public Purchasable setPayloadAndSignature(String payload, String signature) {
-        this.purchasePayload = payload;
-        this.purchasePayloadSignature = signature;
+        this.mPurchasePayload = payload;
+        this.mPurchasePayloadSignature = signature;
         return this;
     }
 
     public String getPayload() {
-        return this.purchasePayload;
+        return this.mPurchasePayload;
     }
 
     public String getPayloadSignature() {
-        return this.purchasePayloadSignature;
+        return this.mPurchasePayloadSignature;
     }
 
     public String getUserData() {
-        return this.userData;
+        return this.mUserData;
     }
 
     public Purchasable setUserData(String data) {
-        this.userData = data;
+        this.mUserData = data;
         return this;
     }
 }

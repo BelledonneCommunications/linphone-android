@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Notifiable {
-    int mNotificationId;
-    List<NotifiableMessage> mMessages;
-    boolean mIsGroup;
-    String mGroupTitle;
-    String mLocalIdentity;
-    String mMyself;
+    private int mNotificationId;
+    private List<NotifiableMessage> mMessages;
+    private boolean mIsGroup;
+    private String mGroupTitle;
+    private String mLocalIdentity;
+    private String mMyself;
 
     public Notifiable(int id) {
         mNotificationId = id;

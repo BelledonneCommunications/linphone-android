@@ -38,6 +38,7 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder
     public RelativeLayout CallContact;
     public LinearLayout separator;
     public TextView separatorText;
+
     private ClickListener mListener;
 
     public HistoryViewHolder(View view, ClickListener listener) {

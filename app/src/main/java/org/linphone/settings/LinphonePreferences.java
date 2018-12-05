@@ -52,24 +52,25 @@ import org.linphone.utils.LinphoneUtils;
 
 public class LinphonePreferences {
     private static final int LINPHONE_CORE_RANDOM_PORT = -1;
-    private static LinphonePreferences instance;
+    private static LinphonePreferences sInstance;
+
     private Context mContext;
-    private String basePath;
+    private String mBasePath;
     // Tunnel settings
-    private TunnelConfig tunnelConfig = null;
+    private TunnelConfig mTunnelConfig = null;
 
     private LinphonePreferences() {}
 
     public static final synchronized LinphonePreferences instance() {
-        if (instance == null) {
-            instance = new LinphonePreferences();
+        if (sInstance == null) {
+            sInstance = new LinphonePreferences();
         }
-        return instance;
+        return sInstance;
     }
 
     public void setContext(Context c) {
         mContext = c;
-        basePath = mContext.getFilesDir().getAbsolutePath();
+        mBasePath = mContext.getFilesDir().getAbsolutePath();
     }
 
     private String getString(int key) {
@@ -93,7 +94,7 @@ public class LinphonePreferences {
         }
 
         if (!LinphoneManager.isInstanciated()) {
-            File linphonerc = new File(basePath + "/.linphonerc");
+            File linphonerc = new File(mBasePath + "/.linphonerc");
             if (linphonerc.exists()) {
                 return Factory.instance().createConfig(linphonerc.getAbsolutePath());
             } else if (mContext != null) {
@@ -114,13 +115,9 @@ public class LinphonePreferences {
                 return Factory.instance().createConfigFromString(text.toString());
             }
         } else {
-            return Factory.instance().createConfig(LinphoneManager.getInstance().mConfigFile);
+            return Factory.instance().createConfig(LinphoneManager.getInstance().configFile);
         }
         return null;
-    }
-
-    public void removePreviousVersionAuthInfoRemoval() {
-        getConfig().setBool("sip", "store_auth_info", true);
     }
 
     // App settings
@@ -136,15 +133,6 @@ public class LinphonePreferences {
         String ringtone = getConfig().getString("app", "ringtone", defaultRingtone);
         if (ringtone == null || ringtone.length() == 0) ringtone = defaultRingtone;
         return ringtone;
-    }
-
-    public void setRingtone(String ringtonePath) {
-        getConfig().setString("app", "ringtone", ringtonePath);
-    }
-    // End of app settings
-
-    public boolean shouldAutomaticallyAcceptFriendsRequests() {
-        return false; // TODO
     }
 
     // Accounts settings
@@ -324,10 +312,6 @@ public class LinphonePreferences {
         setAccountPassword(n, password, null);
     }
 
-    public void setAccountHa1(int n, String ha1) {
-        setAccountPassword(n, null, ha1);
-    }
-
     private void setAccountPassword(int n, String password, String ha1) {
         if (getLc() == null) return;
         String user = getAccountUsername(n);
@@ -385,11 +369,6 @@ public class LinphonePreferences {
         } catch (Exception e) {
             Log.e(e);
         }
-    }
-
-    public String getAccountStunServer(int n) {
-        if (getProxyConfig(n) == null || getProxyConfig(n).getNatPolicy() == null) return "";
-        return getProxyConfig(n).getNatPolicy().getStunServer();
     }
 
     public void setAccountDomain(int n, String domain) {
@@ -661,13 +640,6 @@ public class LinphonePreferences {
         return getConfig().getInt("sound", "ec_delay", -1);
     }
 
-    public boolean isEchoConfigurationUpdated() {
-        return getConfig().getBool("app", "ec_updated", false);
-    }
-
-    public void echoConfigurationUpdated() {
-        getConfig().setBool("app", "ec_updated", true);
-    }
     // End of audio settings
 
     // Video settings
@@ -796,16 +768,6 @@ public class LinphonePreferences {
         getLc().setIncTimeout(timeout);
     }
 
-    public int getInCallTimeout() {
-        if (getLc() == null) return 0;
-        return getLc().getInCallTimeout();
-    }
-
-    public void setInCallTimeout(int timeout) {
-        if (getLc() == null) return;
-        getLc().setInCallTimeout(timeout);
-    }
-
     public String getVoiceMailUri() {
         return getConfig().getString("app", "voice_mail", null);
     }
@@ -890,11 +852,6 @@ public class LinphonePreferences {
 
         if (stun != null && !stun.isEmpty()) {}
         getLc().setNatPolicy(nat);
-    }
-
-    public boolean isUpnpEnabled() {
-        NatPolicy nat = getOrCreateNatPolicy();
-        return nat.upnpEnabled();
     }
 
     public void setUpnpEnabled(boolean enabled) {
@@ -1169,15 +1126,15 @@ public class LinphonePreferences {
         if (getLc() == null) return null;
         if (getLc().tunnelAvailable()) {
             Tunnel tunnel = getLc().getTunnel();
-            if (tunnelConfig == null) {
+            if (mTunnelConfig == null) {
                 TunnelConfig servers[] = tunnel.getServers();
                 if (servers.length > 0) {
-                    tunnelConfig = servers[0];
+                    mTunnelConfig = servers[0];
                 } else {
-                    tunnelConfig = Factory.instance().createTunnelConfig();
+                    mTunnelConfig = Factory.instance().createTunnelConfig();
                 }
             }
-            return tunnelConfig;
+            return mTunnelConfig;
         } else {
             return null;
         }
@@ -1240,10 +1197,6 @@ public class LinphonePreferences {
         }
     }
 
-    public void firstRemoteProvisioningSuccessful() {
-        getConfig().setBool("app", "first_remote_provisioning", false);
-    }
-
     public boolean isFirstRemoteProvisioning() {
         return getConfig().getBool("app", "first_remote_provisioning", true);
     }
@@ -1264,14 +1217,6 @@ public class LinphonePreferences {
 
     public void setCodecBitrateLimit(int bitrate) {
         getConfig().setInt("audio", "codec_bitrate_limit", bitrate);
-    }
-
-    public void contactsMigrationDone() {
-        getConfig().setBool("app", "contacts_migration_done", true);
-    }
-
-    public boolean isContactsMigrationDone() {
-        return getConfig().getBool("app", "contacts_migration_done", false);
     }
 
     public String getInAppPurchaseValidatingServerUrl() {
@@ -1437,10 +1382,6 @@ public class LinphonePreferences {
         return getConfig().getBool("app", "bis_feature", true);
     }
 
-    public void enableBisFeature(boolean enable) {
-        getConfig().setBool("app", "bis_feature", enable);
-    }
-
     public boolean isAutoAnswerEnabled() {
         return getConfig().getBool("app", "auto_answer", false);
     }
@@ -1463,14 +1404,6 @@ public class LinphonePreferences {
 
     public void disableFriendsStorage() {
         getConfig().setBool("misc", "store_friends", false);
-    }
-
-    public void enableFriendsStorage() {
-        getConfig().setBool("misc", "store_friends", true);
-    }
-
-    public boolean isFriendsStorageEnabled() {
-        return getConfig().getBool("misc", "store_friends", true);
     }
 
     public boolean useBasicChatRoomFor1To1() {
@@ -1496,15 +1429,11 @@ public class LinphonePreferences {
         private String tempHa1;
         private String tempDomain;
         private String tempProxy;
-        private String tempRealm;
         private String tempPrefix;
         private boolean tempOutboundProxy;
-        private String tempContactsParams;
         private String tempExpire;
         private TransportType tempTransport;
-        private boolean tempAvpfEnabled = false;
         private int tempAvpfRRInterval = 0;
-        private String tempQualityReportingCollector;
         private boolean tempQualityReportingEnabled = false;
         private int tempQualityReportingInterval = 0;
         private boolean tempEnabled = true;
@@ -1554,11 +1483,6 @@ public class LinphonePreferences {
             return this;
         }
 
-        public AccountBuilder setContactParameters(String contactParams) {
-            tempContactsParams = contactParams;
-            return this;
-        }
-
         public AccountBuilder setExpires(String expire) {
             tempExpire = expire;
             return this;
@@ -1569,23 +1493,8 @@ public class LinphonePreferences {
             return this;
         }
 
-        public AccountBuilder setAvpfEnabled(boolean enable) {
-            tempAvpfEnabled = enable;
-            return this;
-        }
-
         public AccountBuilder setAvpfRrInterval(int interval) {
             tempAvpfRRInterval = interval;
-            return this;
-        }
-
-        public AccountBuilder setRealm(String realm) {
-            tempRealm = realm;
-            return this;
-        }
-
-        public AccountBuilder setQualityReportingCollector(String collector) {
-            tempQualityReportingCollector = collector;
             return this;
         }
 
@@ -1594,23 +1503,8 @@ public class LinphonePreferences {
             return this;
         }
 
-        public AccountBuilder setQualityReportingEnabled(boolean enable) {
-            tempQualityReportingEnabled = enable;
-            return this;
-        }
-
-        public AccountBuilder setQualityReportingInterval(int interval) {
-            tempQualityReportingInterval = interval;
-            return this;
-        }
-
         public AccountBuilder setEnabled(boolean enable) {
             tempEnabled = enable;
-            return this;
-        }
-
-        public AccountBuilder setNoDefault(boolean yesno) {
-            tempNoDefault = yesno;
             return this;
         }
 
@@ -1666,7 +1560,6 @@ public class LinphonePreferences {
             prxCfg.setRoute(route);
             prxCfg.enableRegister(tempEnabled);
 
-            if (tempContactsParams != null) prxCfg.setContactUriParameters(tempContactsParams);
             if (tempExpire != null) {
                 prxCfg.setExpires(Integer.parseInt(tempExpire));
             }
@@ -1674,7 +1567,6 @@ public class LinphonePreferences {
             prxCfg.setAvpfMode(AVPFMode.Enabled);
             prxCfg.setAvpfRrInterval(tempAvpfRRInterval);
             prxCfg.enableQualityReporting(tempQualityReportingEnabled);
-            prxCfg.setQualityReportingCollector(tempQualityReportingCollector);
             prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
 
             String regId = LinphonePreferences.instance().getPushNotificationRegistrationID();
@@ -1695,8 +1587,6 @@ public class LinphonePreferences {
                 prxCfg.setDialPrefix(tempPrefix);
             }
 
-            if (tempRealm != null) prxCfg.setRealm(tempRealm);
-
             AuthInfo authInfo =
                     Factory.instance()
                             .createAuthInfo(
@@ -1704,7 +1594,7 @@ public class LinphonePreferences {
                                     tempUserId,
                                     tempPassword,
                                     tempHa1,
-                                    tempRealm,
+                                    null,
                                     tempDomain);
 
             lc.addProxyConfig(prxCfg);

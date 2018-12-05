@@ -29,8 +29,8 @@ import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 
 public class ContactSelectView extends View {
-    private TextView contactName;
-    private ImageView deleteContact;
+    private TextView mContactName;
+    private ImageView mDeleteContact;
 
     public ContactSelectView(Context context) {
         super(context);
@@ -40,22 +40,22 @@ public class ContactSelectView extends View {
 
         View view = inflater.inflate(R.layout.contact_selected, null);
 
-        contactName = view.findViewById(R.id.sipUri);
-        deleteContact = view.findViewById(R.id.contactChatDelete);
+        mContactName = view.findViewById(R.id.sipUri);
+        mDeleteContact = view.findViewById(R.id.contactChatDelete);
     }
 
     public void setContactName(ContactAddress ca) {
         if (ca.getContact() != null) {
-            contactName.setText(ca.getContact().getFirstName());
+            mContactName.setText(ca.getContact().getFirstName());
         } else {
             LinphoneManager.getLc()
                     .createFriendWithAddress(ca.getAddressAsDisplayableString())
                     .getName();
-            contactName.setText(ca.getAddressAsDisplayableString());
+            mContactName.setText(ca.getAddressAsDisplayableString());
         }
     }
 
     public void setListener(OnClickListener listener) {
-        deleteContact.setOnClickListener(listener);
+        mDeleteContact.setOnClickListener(listener);
     }
 }

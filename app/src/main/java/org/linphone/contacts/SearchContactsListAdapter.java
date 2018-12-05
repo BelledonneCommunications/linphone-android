@@ -46,9 +46,9 @@ public class SearchContactsListAdapter
     @SuppressWarnings("unused")
     private static final String TAG = SearchContactsListAdapter.class.getSimpleName();
 
-    private List<ContactAddress> contacts;
-    private List<ContactAddress> contactsSelected;
-    private ProgressBar progressBar;
+    private List<ContactAddress> mContacts;
+    private List<ContactAddress> mContactsSelected;
+    private ProgressBar mProgressBar;
     private boolean mOnlySipContact = false;
     private ViewHolder.ClickListener mListener;
     private boolean mHideSelectionMark;
@@ -61,14 +61,14 @@ public class SearchContactsListAdapter
             boolean hideSelectionMark) {
         mHideSelectionMark = hideSelectionMark;
         mListener = clickListener;
-        progressBar = pB;
+        mProgressBar = pB;
         setContactsSelectedList(null);
         setContactsList(contactsList);
         mPreviousSearch = null;
     }
 
     public List<ContactAddress> getContacts() {
-        return contacts;
+        return mContacts;
     }
 
     public void setOnlySipContact(boolean enable) {
@@ -156,7 +156,7 @@ public class SearchContactsListAdapter
     }
 
     private boolean contactIsSelected(ContactAddress ca) {
-        for (ContactAddress c : contactsSelected) {
+        for (ContactAddress c : mContactsSelected) {
             Address addr = c.getAddress();
             if (addr.getUsername() != null && ca.getAddress() != null) {
                 if (addr.asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0)
@@ -171,14 +171,14 @@ public class SearchContactsListAdapter
     }
 
     public List<ContactAddress> getContactsSelectedList() {
-        return contactsSelected;
+        return mContactsSelected;
     }
 
     public void setContactsSelectedList(List<ContactAddress> contactsList) {
         if (contactsList == null) {
-            contactsSelected = new ArrayList<>();
+            mContactsSelected = new ArrayList<>();
         } else {
-            contactsSelected = contactsList;
+            mContactsSelected = contactsList;
         }
     }
 
@@ -221,7 +221,7 @@ public class SearchContactsListAdapter
             }
         }
 
-        for (ContactAddress caS : contactsSelected) {
+        for (ContactAddress caS : mContactsSelected) {
             for (ContactAddress ca : list) {
                 if (ca.equals(caS)) ca.setSelect(true);
             }
@@ -231,24 +231,24 @@ public class SearchContactsListAdapter
 
     public void setContactsList(List<ContactAddress> contactsList) {
         if (contactsList == null) {
-            contacts = getContactsList();
-            if (progressBar != null) progressBar.setVisibility(View.GONE);
+            mContacts = getContactsList();
+            if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
         } else {
-            contacts = contactsList;
+            mContacts = contactsList;
         }
     }
 
     public int getCount() {
-        return contacts.size();
+        return mContacts.size();
     }
 
     public ContactAddress getItem(int position) {
-        return contacts.get(position);
+        return mContacts.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return contacts.size();
+        return mContacts.size();
     }
 
     public void searchContacts(String search, RecyclerView resultContactsSearch) {
@@ -333,7 +333,7 @@ public class SearchContactsListAdapter
             }
         }
 
-        contacts = result;
+        mContacts = result;
         resultContactsSearch.setAdapter(this);
         notifyDataSetChanged();
     }

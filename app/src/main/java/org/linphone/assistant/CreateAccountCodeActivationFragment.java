@@ -39,14 +39,14 @@ import org.linphone.settings.LinphonePreferences;
 
 public class CreateAccountCodeActivationFragment extends Fragment
         implements AccountCreatorListener {
-    private String username, phone, dialcode;
-    private TextView title, phonenumber;
-    private EditText code;
-    private boolean recoverAccount = false, linkAccount = false;
-    private int code_length, accountNumber;
-    private ImageView back;
-    private Button checkAccount;
-    private AccountCreator accountCreator;
+    private String mUsername, mPhone, mDialcode;
+    private TextView mTitle, mPhonenumber;
+    private EditText mCode;
+    private boolean mRecoverAccount = false, mLinkAccount = false;
+    private int mCodeLength, mAccountNumber;
+    private ImageView mBack;
+    private Button mCheckAccount;
+    private AccountCreator mAccountCreator;
 
     @Override
     public View onCreateView(
@@ -55,36 +55,36 @@ public class CreateAccountCodeActivationFragment extends Fragment
                 inflater.inflate(
                         R.layout.assistant_account_creation_code_activation, container, false);
 
-        username = getArguments().getString("Username");
-        phone = getArguments().getString("Phone");
-        dialcode = getArguments().getString("Dialcode");
-        recoverAccount = getArguments().getBoolean("RecoverAccount");
-        linkAccount = getArguments().getBoolean("LinkAccount");
-        accountNumber = getArguments().getInt("AccountNumber");
+        mUsername = getArguments().getString("Username");
+        mPhone = getArguments().getString("Phone");
+        mDialcode = getArguments().getString("Dialcode");
+        mRecoverAccount = getArguments().getBoolean("RecoverAccount");
+        mLinkAccount = getArguments().getBoolean("LinkAccount");
+        mAccountNumber = getArguments().getInt("AccountNumber");
 
-        code_length = LinphonePreferences.instance().getCodeLength();
-        accountCreator =
+        mCodeLength = LinphonePreferences.instance().getCodeLength();
+        mAccountCreator =
                 LinphoneManager.getLc()
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-        accountCreator.setListener(this);
-        accountCreator.setUsername(username);
-        accountCreator.setPhoneNumber(phone, dialcode);
+        mAccountCreator.setListener(this);
+        mAccountCreator.setUsername(mUsername);
+        mAccountCreator.setPhoneNumber(mPhone, mDialcode);
 
-        back = view.findViewById(R.id.back);
-        if (back != null) back.setVisibility(Button.INVISIBLE);
+        mBack = view.findViewById(R.id.back);
+        if (mBack != null) mBack.setVisibility(Button.INVISIBLE);
 
-        title = view.findViewById(R.id.title_account_activation);
-        if (linkAccount) {
-            title.setText(getString(R.string.assistant_link_account));
-        } else if (recoverAccount) {
-            title.setText(getString(R.string.assistant_linphone_account));
+        mTitle = view.findViewById(R.id.title_account_activation);
+        if (mLinkAccount) {
+            mTitle.setText(getString(R.string.assistant_link_account));
+        } else if (mRecoverAccount) {
+            mTitle.setText(getString(R.string.assistant_linphone_account));
         }
 
-        phonenumber = view.findViewById(R.id.send_phone_number);
-        phonenumber.setText(accountCreator.getPhoneNumber());
+        mPhonenumber = view.findViewById(R.id.send_phone_number);
+        mPhonenumber.setText(mAccountCreator.getPhoneNumber());
 
-        code = view.findViewById(R.id.assistant_code);
-        code.addTextChangedListener(
+        mCode = view.findViewById(R.id.assistant_code);
+        mCode.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void beforeTextChanged(
@@ -95,23 +95,23 @@ public class CreateAccountCodeActivationFragment extends Fragment
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        if (s.length() == code_length) {
-                            checkAccount.setEnabled(true);
+                        if (s.length() == mCodeLength) {
+                            mCheckAccount.setEnabled(true);
                         } else {
-                            checkAccount.setEnabled(false);
+                            mCheckAccount.setEnabled(false);
                         }
                     }
                 });
 
-        checkAccount = view.findViewById(R.id.assistant_check);
-        checkAccount.setEnabled(false);
-        checkAccount.setOnClickListener(
+        mCheckAccount = view.findViewById(R.id.assistant_check);
+        mCheckAccount.setEnabled(false);
+        mCheckAccount.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        checkAccount.setEnabled(false);
-                        accountCreator.setActivationCode(code.getText().toString());
-                        if (linkAccount) {
+                        mCheckAccount.setEnabled(false);
+                        mAccountCreator.setActivationCode(mCode.getText().toString());
+                        if (mLinkAccount) {
                             linkAccount();
                         } else {
                             activateAccount();
@@ -123,17 +123,17 @@ public class CreateAccountCodeActivationFragment extends Fragment
     }
 
     private void linkAccount() {
-        accountCreator.setUsername(
-                LinphonePreferences.instance().getAccountUsername(accountNumber));
-        accountCreator.setHa1(LinphonePreferences.instance().getAccountHa1(accountNumber));
-        accountCreator.activateAlias();
+        mAccountCreator.setUsername(
+                LinphonePreferences.instance().getAccountUsername(mAccountNumber));
+        mAccountCreator.setHa1(LinphonePreferences.instance().getAccountHa1(mAccountNumber));
+        mAccountCreator.activateAlias();
     }
 
     private void activateAccount() {
-        if (accountCreator.getUsername() == null) {
-            accountCreator.setUsername(accountCreator.getPhoneNumber());
+        if (mAccountCreator.getUsername() == null) {
+            mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
         }
-        accountCreator.activateAccount();
+        mAccountCreator.activateAccount();
     }
 
     @Override
@@ -151,17 +151,17 @@ public class CreateAccountCodeActivationFragment extends Fragment
             return;
         }
         if (status.equals(AccountCreator.Status.AccountActivated)) {
-            checkAccount.setEnabled(true);
+            mCheckAccount.setEnabled(true);
             if (accountCreator.getUsername() != null) {
                 AssistantActivity.instance().linphoneLogIn(accountCreator);
-                if (!recoverAccount) {
+                if (!mRecoverAccount) {
                     AssistantActivity.instance().isAccountVerified(accountCreator.getUsername());
                 } else {
                     AssistantActivity.instance().success();
                 }
             } else {
                 AssistantActivity.instance().linphoneLogIn(accountCreator);
-                if (!recoverAccount) {
+                if (!mRecoverAccount) {
                     AssistantActivity.instance().isAccountVerified(accountCreator.getPhoneNumber());
                 } else {
                     AssistantActivity.instance().success();
@@ -179,7 +179,7 @@ public class CreateAccountCodeActivationFragment extends Fragment
                             getString(R.string.assistant_error_confirmation_code),
                             Toast.LENGTH_LONG)
                     .show();
-            AssistantActivity.instance().displayAssistantLinphoneLogin(phone, dialcode);
+            AssistantActivity.instance().displayAssistantLinphoneLogin(mPhone, mDialcode);
         }
     }
 
@@ -196,7 +196,7 @@ public class CreateAccountCodeActivationFragment extends Fragment
         if (status.equals(AccountCreator.Status.AccountActivated)) {
             LinphonePreferences.instance()
                     .setPrefix(
-                            accountNumber,
+                            mAccountNumber,
                             org.linphone.core.Utils.getPrefixFromE164(
                                     accountCreator.getPhoneNumber()));
             LinphonePreferences.instance().setLinkPopupTime("");

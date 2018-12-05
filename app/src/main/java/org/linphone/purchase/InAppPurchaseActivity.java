@@ -39,36 +39,37 @@ import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 public class InAppPurchaseActivity extends Activity
         implements InAppPurchaseListener, OnClickListener {
-    private static InAppPurchaseActivity instance;
-    private InAppPurchaseHelper inAppPurchaseHelper;
-    private ImageView cancel, back;
-    private ProgressBar inProgress;
+    private static InAppPurchaseActivity sInstance;
 
-    private List<Purchasable> purchasedItems;
-    private Fragment fragment;
+    private InAppPurchaseHelper mInAppPurchaseHelper;
+    private ImageView mCancel, mBack;
+    private ProgressBar mInProgress;
+
+    private List<Purchasable> mPurchasedItems;
+    private Fragment mFragment;
     private Handler mHandler = new Handler();
 
     public static InAppPurchaseActivity instance() {
-        return instance;
+        return sInstance;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        inAppPurchaseHelper = new InAppPurchaseHelper(this, this);
+        mInAppPurchaseHelper = new InAppPurchaseHelper(this, this);
         setContentView(R.layout.in_app);
 
-        inProgress = findViewById(R.id.purchaseItemsFetchInProgress);
-        inProgress.setVisibility(View.VISIBLE);
+        mInProgress = findViewById(R.id.purchaseItemsFetchInProgress);
+        mInProgress.setVisibility(View.VISIBLE);
 
-        back = findViewById(R.id.back);
-        back.setOnClickListener(this);
-        back.setVisibility(View.INVISIBLE);
-        cancel = findViewById(R.id.cancel);
-        cancel.setOnClickListener(this);
+        mBack = findViewById(R.id.back);
+        mBack.setOnClickListener(this);
+        mBack.setVisibility(View.INVISIBLE);
+        mCancel = findViewById(R.id.cancel);
+        mCancel.setOnClickListener(this);
 
-        instance = this;
+        sInstance = this;
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -78,44 +79,44 @@ public class InAppPurchaseActivity extends Activity
     }
 
     public void displayInappList() {
-        fragment = new InAppPurchaseListFragment();
-        changeFragment(fragment);
+        mFragment = new InAppPurchaseListFragment();
+        changeFragment(mFragment);
     }
 
     public void displayPurchase(Purchasable item) {
         Bundle extra = new Bundle();
         extra.putString("item_id", item.getId());
-        fragment = new InAppPurchaseFragment();
-        fragment.setArguments(extra);
-        changeFragment(fragment);
+        mFragment = new InAppPurchaseFragment();
+        mFragment.setArguments(extra);
+        changeFragment(mFragment);
     }
 
     public void buyInapp(String username, Purchasable item) {
         LinphonePreferences.instance().setInAppPurchasedItem(item);
-        inAppPurchaseHelper.purchaseItemAsync(item.getId(), username);
+        mInAppPurchaseHelper.purchaseItemAsync(item.getId(), username);
     }
 
     public String getGmailAccount() {
-        return inAppPurchaseHelper.getGmailAccount();
+        return mInAppPurchaseHelper.getGmailAccount();
     }
 
     @Override
     protected void onDestroy() {
-        instance = null;
-        inAppPurchaseHelper.destroy();
+        sInstance = null;
+        mInAppPurchaseHelper.destroy();
         super.onDestroy();
     }
 
     public List<Purchasable> getPurchasedItems() {
 
-        if (purchasedItems == null || purchasedItems.size() == 0) {
+        if (mPurchasedItems == null || mPurchasedItems.size() == 0) {
             Log.w("nul");
         }
-        return purchasedItems;
+        return mPurchasedItems;
     }
 
     public Purchasable getPurchasedItem(String id) {
-        for (Purchasable item : purchasedItems) {
+        for (Purchasable item : mPurchasedItems) {
             if (item.getId().equals(id)) {
                 return item;
             }
@@ -125,32 +126,32 @@ public class InAppPurchaseActivity extends Activity
 
     @Override
     public void onServiceAvailableForQueries() {
-        // email.setText(inAppPurchaseHelper.getGmailAccount());
+        // email.setText(mInAppPurchaseHelper.getGmailAccount());
         // email.setEnabled(false);
 
-        // inAppPurchaseHelper.getPurchasedItemsAsync();
-        inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
+        // mInAppPurchaseHelper.getPurchasedItemsAsync();
+        mInAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
     }
 
     @Override
     public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
         // purchasableItemsLayout.removeAllViews();
-        inProgress.setVisibility(View.GONE);
-        purchasedItems = new ArrayList<>();
+        mInProgress.setVisibility(View.GONE);
+        mPurchasedItems = new ArrayList<>();
         for (Purchasable item : items) {
-            purchasedItems.add(item);
+            mPurchasedItems.add(item);
         }
         displayInappList();
     }
 
     @Override
     public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
-        purchasedItems = items;
+        mPurchasedItems = items;
 
         if (items == null || items.size() == 0) {
-            inAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
+            mInAppPurchaseHelper.getAvailableItemsForPurchaseAsync();
         } else {
-            for (Purchasable purchasedItem : purchasedItems) {
+            for (Purchasable purchasedItem : mPurchasedItems) {
                 Log.d(
                         "[In-app purchase] Found already bought item, expires "
                                 + purchasedItem.getExpireDate());
@@ -194,7 +195,7 @@ public class InAppPurchaseActivity extends Activity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        inAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data);
+        mInAppPurchaseHelper.parseAndVerifyPurchaseItemResultAsync(requestCode, resultCode, data);
     }
 
     @Override
@@ -207,7 +208,7 @@ public class InAppPurchaseActivity extends Activity
                 new Runnable() {
                     @Override
                     public void run() {
-                        inProgress.setVisibility(View.GONE);
+                        mInProgress.setVisibility(View.GONE);
                         Toast.makeText(InAppPurchaseActivity.this, error, Toast.LENGTH_LONG).show();
                     }
                 });

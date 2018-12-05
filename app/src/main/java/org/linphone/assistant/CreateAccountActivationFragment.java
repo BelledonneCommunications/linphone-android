@@ -35,10 +35,10 @@ import org.linphone.settings.LinphonePreferences;
 
 public class CreateAccountActivationFragment extends Fragment
         implements OnClickListener, AccountCreatorListener {
-    private String username, password;
-    private Button checkAccount;
-    private TextView email;
-    private AccountCreator accountCreator;
+    private String mUsername, mPassword;
+    private Button mCheckAccount;
+    private TextView mEmail;
+    private AccountCreator mAccountCreator;
 
     @Override
     public View onCreateView(
@@ -47,22 +47,22 @@ public class CreateAccountActivationFragment extends Fragment
                 inflater.inflate(
                         R.layout.assistant_account_creation_email_activation, container, false);
 
-        accountCreator =
+        mAccountCreator =
                 LinphoneManager.getLc()
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-        accountCreator.setListener(this);
+        mAccountCreator.setListener(this);
 
-        username = getArguments().getString("Username");
-        password = getArguments().getString("Password");
+        mUsername = getArguments().getString("Username");
+        mPassword = getArguments().getString("Password");
 
-        accountCreator.setUsername(username);
-        accountCreator.setPassword(password);
+        mAccountCreator.setUsername(mUsername);
+        mAccountCreator.setPassword(mPassword);
 
-        email = view.findViewById(R.id.send_email);
-        email.setText(getArguments().getString("Email"));
+        mEmail = view.findViewById(R.id.send_email);
+        mEmail.setText(getArguments().getString("Email"));
 
-        checkAccount = view.findViewById(R.id.assistant_check);
-        checkAccount.setOnClickListener(this);
+        mCheckAccount = view.findViewById(R.id.assistant_check);
+        mCheckAccount.setOnClickListener(this);
         return view;
     }
 
@@ -70,8 +70,8 @@ public class CreateAccountActivationFragment extends Fragment
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.assistant_check) {
-            checkAccount.setEnabled(false);
-            accountCreator.isAccountActivated();
+            mCheckAccount.setEnabled(false);
+            mAccountCreator.isAccountActivated();
         }
     }
 
@@ -109,7 +109,7 @@ public class CreateAccountActivationFragment extends Fragment
                     .show();
         } else if (status.equals(AccountCreator.Status.AccountActivated)) {
             AssistantActivity.instance().linphoneLogIn(accountCreator);
-            AssistantActivity.instance().isAccountVerified(username);
+            AssistantActivity.instance().isAccountVerified(mUsername);
         } else {
             Toast.makeText(
                             getActivity(),
@@ -117,7 +117,7 @@ public class CreateAccountActivationFragment extends Fragment
                             Toast.LENGTH_LONG)
                     .show();
         }
-        checkAccount.setEnabled(true);
+        mCheckAccount.setEnabled(true);
     }
 
     @Override

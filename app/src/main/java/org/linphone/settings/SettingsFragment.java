@@ -71,12 +71,12 @@ public class SettingsFragment extends PreferencesListFragment {
     private LinphonePreferences mPrefs;
     private Handler mHandler = new Handler();
     private CoreListenerStub mListener;
-    private PreferenceScreen currentPreferenceScreen;
-    private Preference.OnPreferenceClickListener prefClickListener =
+    private PreferenceScreen mCurrentPreferenceScreen;
+    private Preference.OnPreferenceClickListener mPrefClickListener =
             new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    currentPreferenceScreen = (PreferenceScreen) preference;
+                    mCurrentPreferenceScreen = (PreferenceScreen) preference;
                     return false;
                 }
             };
@@ -96,9 +96,9 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     public void closePreferenceScreen() {
-        if (currentPreferenceScreen != null && currentPreferenceScreen.getDialog() != null) {
-            currentPreferenceScreen.getDialog().dismiss();
-            currentPreferenceScreen = null;
+        if (mCurrentPreferenceScreen != null && mCurrentPreferenceScreen.getDialog() != null) {
+            mCurrentPreferenceScreen.getDialog().dismiss();
+            mCurrentPreferenceScreen = null;
         }
     }
 
@@ -192,19 +192,19 @@ public class SettingsFragment extends PreferencesListFragment {
     // Sets listener for each preference to update the matching value in linphonecore
     private void setListeners() {
         findPreference(getString(R.string.pref_tunnel_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
         findPreference(getString(R.string.pref_audio_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
         findPreference(getString(R.string.pref_video_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
         findPreference(getString(R.string.pref_call_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
         findPreference(getString(R.string.pref_chat_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
         findPreference(getString(R.string.pref_network_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
         findPreference(getString(R.string.pref_advanced_key))
-                .setOnPreferenceClickListener(prefClickListener);
+                .setOnPreferenceClickListener(mPrefClickListener);
 
         setTunnelPreferencesListener();
         setAudioPreferencesListener();

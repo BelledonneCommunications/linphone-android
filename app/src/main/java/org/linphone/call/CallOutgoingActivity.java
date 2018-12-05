@@ -53,20 +53,20 @@ import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
-    private static CallOutgoingActivity instance;
+    private static CallOutgoingActivity sInstance;
 
-    private TextView name, number;
-    private ImageView contactPicture, micro, speaker, hangUp;
+    private TextView mName, mNumber;
+    private ImageView mContactPicture, mMicro, mSpeaker, mHangUp;
     private Call mCall;
     private CoreListenerStub mListener;
-    private boolean isMicMuted, isSpeakerEnabled;
+    private boolean mIsMicMuted, mIsSpeakerEnabled;
 
     public static CallOutgoingActivity instance() {
-        return instance;
+        return sInstance;
     }
 
     public static boolean isInstanciated() {
-        return instance != null;
+        return sInstance != null;
     }
 
     @Override
@@ -80,17 +80,17 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.call_outgoing);
 
-        name = findViewById(R.id.contact_name);
-        number = findViewById(R.id.contact_number);
-        contactPicture = findViewById(R.id.contact_picture);
+        mName = findViewById(R.id.contact_name);
+        mNumber = findViewById(R.id.contact_number);
+        mContactPicture = findViewById(R.id.contact_picture);
 
-        isMicMuted = false;
-        isSpeakerEnabled = false;
+        mIsMicMuted = false;
+        mIsSpeakerEnabled = false;
 
-        micro = findViewById(R.id.micro);
-        micro.setOnClickListener(this);
-        speaker = findViewById(R.id.speaker);
-        speaker.setOnClickListener(this);
+        mMicro = findViewById(R.id.micro);
+        mMicro.setOnClickListener(this);
+        mSpeaker = findViewById(R.id.speaker);
+        mSpeaker.setOnClickListener(this);
 
         // set this flag so this activity will stay in front of the keyguard
         int flags =
@@ -99,8 +99,8 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
-        hangUp = findViewById(R.id.outgoing_hang_up);
-        hangUp.setOnClickListener(this);
+        mHangUp = findViewById(R.id.outgoing_hang_up);
+        mHangUp.setOnClickListener(this);
 
         mListener =
                 new CoreListenerStub() {
@@ -156,13 +156,13 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         }
                     }
                 };
-        instance = this;
+        sInstance = this;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        instance = this;
+        sInstance = this;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.addListener(mListener);
@@ -200,12 +200,12 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
             ImageUtils.setImagePictureFromUri(
-                    this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-            name.setText(contact.getFullName());
+                    this, mContactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            mName.setText(contact.getFullName());
         } else {
-            name.setText(LinphoneUtils.getAddressDisplayName(address));
+            mName.setText(LinphoneUtils.getAddressDisplayName(address));
         }
-        number.setText(address.asStringUriOnly());
+        mNumber.setText(address.asStringUriOnly());
     }
 
     @Override
@@ -226,7 +226,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        instance = null;
+        sInstance = null;
     }
 
     @Override
@@ -234,22 +234,22 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         int id = v.getId();
 
         if (id == R.id.micro) {
-            isMicMuted = !isMicMuted;
-            if (isMicMuted) {
-                micro.setImageResource(R.drawable.micro_selected);
+            mIsMicMuted = !mIsMicMuted;
+            if (mIsMicMuted) {
+                mMicro.setImageResource(R.drawable.micro_selected);
             } else {
-                micro.setImageResource(R.drawable.micro_default);
+                mMicro.setImageResource(R.drawable.micro_default);
             }
-            LinphoneManager.getLc().enableMic(!isMicMuted);
+            LinphoneManager.getLc().enableMic(!mIsMicMuted);
         }
         if (id == R.id.speaker) {
-            isSpeakerEnabled = !isSpeakerEnabled;
-            if (isSpeakerEnabled) {
-                speaker.setImageResource(R.drawable.speaker_selected);
+            mIsSpeakerEnabled = !mIsSpeakerEnabled;
+            if (mIsSpeakerEnabled) {
+                mSpeaker.setImageResource(R.drawable.speaker_selected);
             } else {
-                speaker.setImageResource(R.drawable.speaker_default);
+                mSpeaker.setImageResource(R.drawable.speaker_default);
             }
-            LinphoneManager.getInstance().enableSpeaker(isSpeakerEnabled);
+            LinphoneManager.getInstance().enableSpeaker(mIsSpeakerEnabled);
         }
         if (id == R.id.outgoing_hang_up) {
             decline();

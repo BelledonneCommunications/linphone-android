@@ -54,13 +54,13 @@ import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class StatusFragment extends Fragment {
-    private Handler refreshHandler = new Handler();
-    private TextView statusText, voicemailCount;
-    private ImageView statusLed, callQuality, encryption, menu, voicemail;
+    private Handler mRefreshHandler = new Handler();
+    private TextView mStatusText, mVoicemailCount;
+    private ImageView mStatusLed, mCallQuality, mEncryption, mMenu, mVoicemail;
     private Runnable mCallQualityUpdater;
-    private boolean isInCall, isAttached = false;
+    private boolean mIsInCall, mIsAttached = false;
     private CoreListenerStub mListener;
-    private Dialog ZRTPdialog = null;
+    private Dialog mZrtpDialog = null;
     private int mDisplayedQuality = -1;
 
     @Override
@@ -68,13 +68,13 @@ public class StatusFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.status, container, false);
 
-        statusText = view.findViewById(R.id.status_text);
-        statusLed = view.findViewById(R.id.status_led);
-        callQuality = view.findViewById(R.id.call_quality);
-        encryption = view.findViewById(R.id.encryption);
-        menu = view.findViewById(R.id.side_menu_button);
-        voicemail = view.findViewById(R.id.voicemail);
-        voicemailCount = view.findViewById(R.id.voicemail_count);
+        mStatusText = view.findViewById(R.id.status_text);
+        mStatusLed = view.findViewById(R.id.status_led);
+        mCallQuality = view.findViewById(R.id.call_quality);
+        mEncryption = view.findViewById(R.id.encryption);
+        mMenu = view.findViewById(R.id.side_menu_button);
+        mVoicemail = view.findViewById(R.id.voicemail);
+        mVoicemailCount = view.findViewById(R.id.voicemail_count);
 
         // We create it once to not delay the first display
         populateSliderContent();
@@ -87,28 +87,28 @@ public class StatusFragment extends Fragment {
                             final ProxyConfig proxy,
                             final RegistrationState state,
                             String smessage) {
-                        if (!isAttached || !LinphoneService.isReady()) {
+                        if (!mIsAttached || !LinphoneService.isReady()) {
                             return;
                         }
 
                         if (lc.getProxyConfigList() == null) {
-                            statusLed.setImageResource(R.drawable.led_disconnected);
-                            statusText.setText(getString(R.string.no_account));
+                            mStatusLed.setImageResource(R.drawable.led_disconnected);
+                            mStatusText.setText(getString(R.string.no_account));
                         } else {
-                            statusLed.setVisibility(View.VISIBLE);
+                            mStatusLed.setVisibility(View.VISIBLE);
                         }
 
                         if (lc.getDefaultProxyConfig() != null
                                 && lc.getDefaultProxyConfig().equals(proxy)) {
-                            statusLed.setImageResource(getStatusIconResource(state, true));
-                            statusText.setText(getStatusIconText(state));
+                            mStatusLed.setImageResource(getStatusIconResource(state, true));
+                            mStatusText.setText(getStatusIconText(state));
                         } else if (lc.getDefaultProxyConfig() == null) {
-                            statusLed.setImageResource(getStatusIconResource(state, true));
-                            statusText.setText(getStatusIconText(state));
+                            mStatusLed.setImageResource(getStatusIconResource(state, true));
+                            mStatusText.setText(getStatusIconText(state));
                         }
 
                         try {
-                            statusText.setOnClickListener(
+                            mStatusText.setOnClickListener(
                                     new OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -135,28 +135,28 @@ public class StatusFragment extends Fragment {
 
                         unreadCount = Integer.parseInt(intToParse[0]);
                         if (unreadCount > 0) {
-                            voicemailCount.setText(unreadCount);
-                            voicemail.setVisibility(View.VISIBLE);
-                            voicemailCount.setVisibility(View.VISIBLE);
+                            mVoicemailCount.setText(unreadCount);
+                            mVoicemail.setVisibility(View.VISIBLE);
+                            mVoicemailCount.setVisibility(View.VISIBLE);
                         } else {
-                            voicemail.setVisibility(View.GONE);
-                            voicemailCount.setVisibility(View.GONE);
+                            mVoicemail.setVisibility(View.GONE);
+                            mVoicemailCount.setVisibility(View.GONE);
                         }
                     }
                 };
 
-        isAttached = true;
+        mIsAttached = true;
         Activity activity = getActivity();
 
         if (activity instanceof LinphoneActivity) {
             ((LinphoneActivity) activity).updateStatusFragment(this);
-            isInCall = false;
+            mIsInCall = false;
         } else if (activity instanceof CallActivity) {
             ((CallActivity) activity).updateStatusFragment(this);
-            isInCall = true;
+            mIsInCall = true;
         } else if (activity instanceof AssistantActivity) {
             ((AssistantActivity) activity).updateStatusFragment(this);
-            isInCall = false;
+            mIsInCall = false;
         }
 
         return view;
@@ -177,38 +177,38 @@ public class StatusFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        isAttached = false;
+        mIsAttached = false;
     }
 
     // NORMAL STATUS BAR
 
     private void populateSliderContent() {
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
-            voicemailCount.setVisibility(View.GONE);
+            mVoicemailCount.setVisibility(View.GONE);
 
-            if (isInCall && isAttached) {
+            if (mIsInCall && mIsAttached) {
                 // Call call = LinphoneManager.getLc().getCurrentCall();
                 // initCallStatsRefresher(call, callStats);
-            } else if (!isInCall) {
-                voicemailCount.setVisibility(View.VISIBLE);
+            } else if (!mIsInCall) {
+                mVoicemailCount.setVisibility(View.VISIBLE);
             }
 
             if (LinphoneManager.getLc().getProxyConfigList().length == 0) {
-                statusLed.setImageResource(R.drawable.led_disconnected);
-                statusText.setText(getString(R.string.no_account));
+                mStatusLed.setImageResource(R.drawable.led_disconnected);
+                mStatusText.setText(getString(R.string.no_account));
             }
         }
     }
 
     public void resetAccountStatus() {
         if (LinphoneManager.getLc().getProxyConfigList().length == 0) {
-            statusLed.setImageResource(R.drawable.led_disconnected);
-            statusText.setText(getString(R.string.no_account));
+            mStatusLed.setImageResource(R.drawable.led_disconnected);
+            mStatusText.setText(getString(R.string.no_account));
         }
     }
 
     public void enableSideMenu(boolean enabled) {
-        menu.setEnabled(enabled);
+        mMenu.setEnabled(enabled);
     }
 
     private int getStatusIconResource(RegistrationState state, boolean isDefaultAccount) {
@@ -239,8 +239,9 @@ public class StatusFragment extends Fragment {
 
     private String getStatusIconText(RegistrationState state) {
         Context context = getActivity();
-        if (!isAttached && LinphoneActivity.isInstanciated()) context = LinphoneActivity.instance();
-        else if (!isAttached && LinphoneService.isReady()) context = LinphoneService.instance();
+        if (!mIsAttached && LinphoneActivity.isInstanciated())
+            context = LinphoneActivity.instance();
+        else if (!mIsAttached && LinphoneService.isReady()) context = LinphoneService.instance();
 
         try {
             if (state == RegistrationState.Ok
@@ -265,8 +266,8 @@ public class StatusFragment extends Fragment {
 
     // INCALL STATUS BAR
     private void startCallQuality() {
-        callQuality.setVisibility(View.VISIBLE);
-        refreshHandler.postDelayed(
+        mCallQuality.setVisibility(View.VISIBLE);
+        mRefreshHandler.postDelayed(
                 mCallQualityUpdater =
                         new Runnable() {
                             Call mCurrentCall = LinphoneManager.getLc().getCurrentCall();
@@ -279,8 +280,8 @@ public class StatusFragment extends Fragment {
                                 float newQuality = mCurrentCall.getCurrentQuality();
                                 updateQualityOfSignalIcon(newQuality);
 
-                                if (isInCall) {
-                                    refreshHandler.postDelayed(this, 1000);
+                                if (mIsInCall) {
+                                    mRefreshHandler.postDelayed(this, 1000);
                                 } else mCallQualityUpdater = null;
                             }
                         },
@@ -293,19 +294,19 @@ public class StatusFragment extends Fragment {
         if (iQuality == mDisplayedQuality) return;
         if (quality >= 4) // Good Quality
         {
-            callQuality.setImageResource(R.drawable.call_quality_indicator_4);
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_4);
         } else if (quality >= 3) // Average quality
         {
-            callQuality.setImageResource(R.drawable.call_quality_indicator_3);
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_3);
         } else if (quality >= 2) // Low quality
         {
-            callQuality.setImageResource(R.drawable.call_quality_indicator_2);
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_2);
         } else if (quality >= 1) // Very low quality
         {
-            callQuality.setImageResource(R.drawable.call_quality_indicator_1);
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_1);
         } else // Worst quality
         {
-            callQuality.setImageResource(R.drawable.call_quality_indicator_0);
+            mCallQuality.setImageResource(R.drawable.call_quality_indicator_0);
         }
         mDisplayedQuality = iQuality;
     }
@@ -323,27 +324,27 @@ public class StatusFragment extends Fragment {
             }
 
             Call call = lc.getCurrentCall();
-            if (isInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
+            if (mIsInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
                 if (call != null) {
                     startCallQuality();
                     refreshStatusItems(call, call.getCurrentParams().videoEnabled());
                 }
-                menu.setVisibility(View.INVISIBLE);
-                callQuality.setVisibility(View.VISIBLE);
+                mMenu.setVisibility(View.INVISIBLE);
+                mCallQuality.setVisibility(View.VISIBLE);
 
                 // We are obviously connected
                 if (lc.getDefaultProxyConfig() == null) {
-                    statusLed.setImageResource(R.drawable.led_disconnected);
-                    statusText.setText(getString(R.string.no_account));
+                    mStatusLed.setImageResource(R.drawable.led_disconnected);
+                    mStatusText.setText(getString(R.string.no_account));
                 } else {
-                    statusLed.setImageResource(
+                    mStatusLed.setImageResource(
                             getStatusIconResource(lc.getDefaultProxyConfig().getState(), true));
-                    statusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+                    mStatusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
                 }
             }
         } else {
-            statusText.setVisibility(View.VISIBLE);
-            encryption.setVisibility(View.GONE);
+            mStatusText.setVisibility(View.VISIBLE);
+            mEncryption.setVisibility(View.GONE);
         }
     }
 
@@ -357,14 +358,14 @@ public class StatusFragment extends Fragment {
         }
 
         if (mCallQualityUpdater != null) {
-            refreshHandler.removeCallbacks(mCallQualityUpdater);
+            mRefreshHandler.removeCallbacks(mCallQualityUpdater);
             mCallQualityUpdater = null;
         }
     }
 
     public void refreshStatusItems(final Call call, boolean isVideoEnabled) {
         if (call != null) {
-            voicemailCount.setVisibility(View.GONE);
+            mVoicemailCount.setVisibility(View.GONE);
             MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
 
             if (isVideoEnabled) {
@@ -373,25 +374,25 @@ public class StatusFragment extends Fragment {
                 // background.setVisibility(View.VISIBLE);
             }
 
-            encryption.setVisibility(View.VISIBLE);
+            mEncryption.setVisibility(View.VISIBLE);
             if (mediaEncryption == MediaEncryption.SRTP
                     || (mediaEncryption == MediaEncryption.ZRTP
                             && call.getAuthenticationTokenVerified())
                     || mediaEncryption == MediaEncryption.DTLS) {
-                encryption.setImageResource(R.drawable.security_ok);
+                mEncryption.setImageResource(R.drawable.security_ok);
             } else if (mediaEncryption == MediaEncryption.ZRTP
                     && !call.getAuthenticationTokenVerified()) {
-                encryption.setImageResource(R.drawable.security_pending);
+                mEncryption.setImageResource(R.drawable.security_pending);
             } else {
-                encryption.setImageResource(R.drawable.security_ko);
-                // Do not show the unsecure icon if user doesn't want to do call encryption
+                mEncryption.setImageResource(R.drawable.security_ko);
+                // Do not show the unsecure icon if user doesn't want to do call mEncryption
                 if (LinphonePreferences.instance().getMediaEncryption() == MediaEncryption.None) {
-                    encryption.setVisibility(View.GONE);
+                    mEncryption.setVisibility(View.GONE);
                 }
             }
 
             if (mediaEncryption == MediaEncryption.ZRTP) {
-                encryption.setOnClickListener(
+                mEncryption.setOnClickListener(
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -399,7 +400,7 @@ public class StatusFragment extends Fragment {
                             }
                         });
             } else {
-                encryption.setOnClickListener(null);
+                mEncryption.setOnClickListener(null);
             }
         }
     }
@@ -410,7 +411,7 @@ public class StatusFragment extends Fragment {
             return;
         }
 
-        if (ZRTPdialog == null || !ZRTPdialog.isShowing()) {
+        if (mZrtpDialog == null || !mZrtpDialog.isShowing()) {
             String token = call.getAuthenticationToken();
 
             if (token == null) {
@@ -422,19 +423,20 @@ public class StatusFragment extends Fragment {
                 return;
             }
 
-            ZRTPdialog = new Dialog(getActivity());
-            ZRTPdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-            ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-            ZRTPdialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            mZrtpDialog = new Dialog(getActivity());
+            mZrtpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mZrtpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+            mZrtpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            mZrtpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
             d.setAlpha(200);
-            ZRTPdialog.setContentView(R.layout.dialog);
-            ZRTPdialog.getWindow()
+            mZrtpDialog.setContentView(R.layout.dialog);
+            mZrtpDialog
+                    .getWindow()
                     .setLayout(
                             WindowManager.LayoutParams.MATCH_PARENT,
                             WindowManager.LayoutParams.MATCH_PARENT);
-            ZRTPdialog.getWindow().setBackgroundDrawable(d);
+            mZrtpDialog.getWindow().setBackgroundDrawable(d);
             String zrtpToRead, zrtpToListen;
 
             if (call.getDir().equals(Call.Dir.Incoming)) {
@@ -445,27 +447,27 @@ public class StatusFragment extends Fragment {
                 zrtpToRead = token.substring(2);
             }
 
-            TextView localSas = ZRTPdialog.findViewById(R.id.zrtp_sas_local);
+            TextView localSas = mZrtpDialog.findViewById(R.id.zrtp_sas_local);
             localSas.setText(zrtpToRead.toUpperCase());
-            TextView remoteSas = ZRTPdialog.findViewById(R.id.zrtp_sas_remote);
+            TextView remoteSas = mZrtpDialog.findViewById(R.id.zrtp_sas_remote);
             remoteSas.setText(zrtpToListen.toUpperCase());
-            TextView message = ZRTPdialog.findViewById(R.id.dialog_message);
+            TextView message = mZrtpDialog.findViewById(R.id.dialog_message);
             message.setVisibility(View.GONE);
-            ZRTPdialog.findViewById(R.id.dialog_zrtp_layout).setVisibility(View.VISIBLE);
+            mZrtpDialog.findViewById(R.id.dialog_zrtp_layout).setVisibility(View.VISIBLE);
 
-            TextView title = ZRTPdialog.findViewById(R.id.dialog_title);
+            TextView title = mZrtpDialog.findViewById(R.id.dialog_title);
             title.setText(getString(R.string.zrtp_dialog_title));
             title.setVisibility(View.VISIBLE);
 
-            Button delete = ZRTPdialog.findViewById(R.id.dialog_delete_button);
+            Button delete = mZrtpDialog.findViewById(R.id.dialog_delete_button);
             delete.setText(R.string.deny);
-            Button cancel = ZRTPdialog.findViewById(R.id.dialog_cancel_button);
+            Button cancel = mZrtpDialog.findViewById(R.id.dialog_cancel_button);
             cancel.setVisibility(View.GONE);
-            Button accept = ZRTPdialog.findViewById(R.id.dialog_ok_button);
+            Button accept = mZrtpDialog.findViewById(R.id.dialog_ok_button);
             accept.setVisibility(View.VISIBLE);
             accept.setText(R.string.accept);
 
-            ImageView icon = ZRTPdialog.findViewById(R.id.dialog_icon);
+            ImageView icon = mZrtpDialog.findViewById(R.id.dialog_icon);
             icon.setVisibility(View.VISIBLE);
             icon.setImageResource(R.drawable.security_2_indicator);
 
@@ -475,11 +477,11 @@ public class StatusFragment extends Fragment {
                         public void onClick(View view) {
                             if (call != null) {
                                 call.setAuthenticationTokenVerified(false);
-                                if (encryption != null) {
-                                    encryption.setImageResource(R.drawable.security_ko);
+                                if (mEncryption != null) {
+                                    mEncryption.setImageResource(R.drawable.security_ko);
                                 }
                             }
-                            ZRTPdialog.dismiss();
+                            mZrtpDialog.dismiss();
                         }
                     });
 
@@ -488,13 +490,13 @@ public class StatusFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             call.setAuthenticationTokenVerified(true);
-                            if (encryption != null) {
-                                encryption.setImageResource(R.drawable.security_ok);
+                            if (mEncryption != null) {
+                                mEncryption.setImageResource(R.drawable.security_ok);
                             }
-                            ZRTPdialog.dismiss();
+                            mZrtpDialog.dismiss();
                         }
                     });
-            ZRTPdialog.show();
+            mZrtpDialog.show();
         }
     }
 }

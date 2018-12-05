@@ -32,9 +32,9 @@ import org.linphone.fragments.DialerFragment;
 @SuppressLint("AppCompatCustomView")
 public class AddressText extends EditText implements AddressType {
 
-    private String displayedName;
+    private String mDisplayedName;
     private Paint mTestPaint;
-    private DialerFragment dialer;
+    private DialerFragment mDialer;
 
     public AddressText(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,15 +44,15 @@ public class AddressText extends EditText implements AddressType {
     }
 
     public void clearDisplayedName() {
-        displayedName = null;
+        mDisplayedName = null;
     }
 
     public String getDisplayedName() {
-        return displayedName;
+        return mDisplayedName;
     }
 
     public void setDisplayedName(String displayedName) {
-        this.displayedName = displayedName;
+        this.mDisplayedName = displayedName;
     }
 
     private String getHintText() {
@@ -69,8 +69,8 @@ public class AddressText extends EditText implements AddressType {
 
         refitText(getWidth(), getHeight());
 
-        if (dialer != null) {
-            dialer.enableDisableAddContact();
+        if (mDialer != null) {
+            mDialer.enableDisableAddContact();
         }
 
         super.onTextChanged(text, start, before, after);
@@ -126,6 +126,6 @@ public class AddressText extends EditText implements AddressType {
     }
 
     public void setDialerFragment(DialerFragment dialerFragment) {
-        dialer = dialerFragment;
+        mDialer = dialerFragment;
     }
 }

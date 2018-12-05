@@ -26,26 +26,26 @@ import android.widget.ImageView;
 import org.linphone.R;
 
 public class LedPreference extends Preference {
-    private int ledDrawable;
+    private int mLedDrawable;
 
     public LedPreference(Context context) {
         super(context);
-        ledDrawable = R.drawable.led_disconnected;
-        this.setWidgetLayoutResource(R.layout.preference_led);
+        mLedDrawable = R.drawable.led_disconnected;
+        setWidgetLayoutResource(R.layout.preference_led);
     }
 
     @Override
     protected void onBindView(final View view) {
         super.onBindView(view);
 
-        final ImageView imageView = (ImageView) view.findViewById(R.id.led);
+        final ImageView imageView = view.findViewById(R.id.led);
         if (imageView != null) {
-            imageView.setImageResource(ledDrawable);
+            imageView.setImageResource(mLedDrawable);
         }
     }
 
     public void setLed(int led) {
-        ledDrawable = led;
+        mLedDrawable = led;
         notifyChanged();
     }
 }

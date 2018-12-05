@@ -28,7 +28,7 @@ public class BandwidthManager {
     public static final int LOW_RESOLUTION = 1;
     public static final int LOW_BANDWIDTH = 2;
 
-    private static BandwidthManager instance;
+    private static BandwidthManager sInstance;
 
     private int currentProfile = HIGH_RESOLUTION;
 
@@ -40,8 +40,8 @@ public class BandwidthManager {
     }
 
     public static final synchronized BandwidthManager getInstance() {
-        if (instance == null) instance = new BandwidthManager();
-        return instance;
+        if (sInstance == null) sInstance = new BandwidthManager();
+        return sInstance;
     }
 
     public void updateWithProfileSettings(Core lc, CallParams callParams) {

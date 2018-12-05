@@ -44,11 +44,11 @@ import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class AboutFragment extends Fragment implements OnClickListener {
-    View sendLogButton = null;
-    View resetLogButton = null;
-    CoreListenerStub mListener;
-    private ProgressDialog progress;
-    private boolean uploadInProgress;
+    private View mSendLogButton = null;
+    private View mResetLogButton = null;
+    private CoreListenerStub mListener;
+    private ProgressDialog mProgress;
+    private boolean mUploadInProgress;
 
     @Override
     public View onCreateView(
@@ -70,14 +70,14 @@ public class AboutFragment extends Fragment implements OnClickListener {
                         getString(R.string.about_version),
                         BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
 
-        sendLogButton = view.findViewById(R.id.send_log);
-        sendLogButton.setOnClickListener(this);
-        sendLogButton.setVisibility(
+        mSendLogButton = view.findViewById(R.id.send_log);
+        mSendLogButton.setOnClickListener(this);
+        mSendLogButton.setVisibility(
                 LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-        resetLogButton = view.findViewById(R.id.reset_log);
-        resetLogButton.setOnClickListener(this);
-        resetLogButton.setVisibility(
+        mResetLogButton = view.findViewById(R.id.reset_log);
+        mResetLogButton.setOnClickListener(this);
+        mResetLogButton.setVisibility(
                 LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
         mListener =
@@ -93,8 +93,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
                             displayUploadLogsInProgress();
                         } else if (state == LogCollectionUploadState.Delivered
                                 || state == LogCollectionUploadState.NotDelivered) {
-                            uploadInProgress = false;
-                            if (progress != null) progress.dismiss();
+                            mUploadInProgress = false;
+                            if (mProgress != null) mProgress.dismiss();
                             if (state == LogCollectionUploadState.Delivered) {
                                 sendLogs(LinphoneService.instance().getApplicationContext(), info);
                             }
@@ -106,21 +106,22 @@ public class AboutFragment extends Fragment implements OnClickListener {
     }
 
     private void displayUploadLogsInProgress() {
-        if (uploadInProgress) {
+        if (mUploadInProgress) {
             return;
         }
-        uploadInProgress = true;
+        mUploadInProgress = true;
 
-        progress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
+        mProgress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
         Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorE));
         d.setAlpha(200);
-        progress.getWindow()
+        mProgress
+                .getWindow()
                 .setLayout(
                         WindowManager.LayoutParams.MATCH_PARENT,
                         WindowManager.LayoutParams.MATCH_PARENT);
-        progress.getWindow().setBackgroundDrawable(d);
-        progress.setContentView(R.layout.progress_dialog);
-        progress.show();
+        mProgress.getWindow().setBackgroundDrawable(d);
+        mProgress.setContentView(R.layout.progress_dialog);
+        mProgress.show();
     }
 
     private void sendLogs(Context context, String info) {
@@ -169,11 +170,11 @@ public class AboutFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         if (LinphoneActivity.isInstanciated()) {
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-            if (v == sendLogButton) {
+            if (v == mSendLogButton) {
                 if (lc != null) {
                     lc.uploadLogCollection();
                 }
-            } else if (v == resetLogButton) {
+            } else if (v == mResetLogButton) {
                 if (lc != null) {
                     lc.resetLogCollection();
                 }

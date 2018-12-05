@@ -27,8 +27,6 @@ import android.view.ViewGroup;
 import org.linphone.R;
 
 public class CallAudioFragment extends Fragment {
-    private CallActivity incallActvityInstance;
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,14 +37,11 @@ public class CallAudioFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        incallActvityInstance = (CallActivity) getActivity();
+        CallActivity incallActvityInstance = (CallActivity) getActivity();
 
         if (incallActvityInstance != null) {
             incallActvityInstance.bindAudioFragment(this);
-        }
-
-        // Just to be sure we have incall controls
-        if (incallActvityInstance != null) {
+            // Just to be sure we have incall controls
             incallActvityInstance.removeCallbacks();
         }
     }

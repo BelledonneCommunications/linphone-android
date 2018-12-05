@@ -39,19 +39,16 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2JNIView {
-    private WindowManager wm;
-    private WindowManager.LayoutParams params;
-    private DisplayMetrics metrics;
-    private float x;
-    private float y;
-    private float touchX;
-    private float touchY;
-    private boolean dragEnabled;
-    private AndroidVideoWindowImpl androidVideoWindowImpl;
+    private WindowManager mWindowManager;
+    private WindowManager.LayoutParams mParams;
+    private DisplayMetrics mMetrics;
+    private float mX, mY, mTouchX, mTouchY;
+    private boolean mDragEnabled;
+    private AndroidVideoWindowImpl mAndroidVideoWindowImpl;
 
     public LinphoneOverlay(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
-        wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
         int LAYOUT_FLAG;
         if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
@@ -60,18 +57,18 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
         }
 
-        params =
+        mParams =
                 new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.WRAP_CONTENT,
                         WindowManager.LayoutParams.WRAP_CONTENT,
                         LAYOUT_FLAG,
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                         PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP | Gravity.LEFT;
-        metrics = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(metrics);
+        mParams.gravity = Gravity.TOP | Gravity.LEFT;
+        mMetrics = new DisplayMetrics();
+        mWindowManager.getDefaultDisplay().getMetrics(mMetrics);
 
-        androidVideoWindowImpl =
+        mAndroidVideoWindowImpl =
                 new AndroidVideoWindowImpl(
                         this,
                         null,
@@ -92,9 +89,9 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
 
         Call call = LinphoneManager.getLc().getCurrentCall();
         CallParams callParams = call.getCurrentParams();
-        params.width = callParams.getReceivedVideoDefinition().getWidth();
-        params.height = callParams.getReceivedVideoDefinition().getHeight();
-        LinphoneManager.getLc().setNativeVideoWindowId(androidVideoWindowImpl);
+        mParams.width = callParams.getReceivedVideoDefinition().getWidth();
+        mParams.height = callParams.getReceivedVideoDefinition().getHeight();
+        LinphoneManager.getLc().setNativeVideoWindowId(mAndroidVideoWindowImpl);
 
         setOnClickListener(
                 new OnClickListener() {
@@ -111,7 +108,7 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
                 new OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        dragEnabled = true;
+                        mDragEnabled = true;
                         return true;
                     }
                 });
@@ -126,27 +123,27 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
     }
 
     public void destroy() {
-        androidVideoWindowImpl.release();
+        mAndroidVideoWindowImpl.release();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        x = event.getRawX();
-        y = event.getRawY();
+        mX = event.getRawX();
+        mY = event.getRawY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touchX = event.getX();
-                touchY = event.getY();
+                mTouchX = event.getX();
+                mTouchY = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (dragEnabled) {
+                if (mDragEnabled) {
                     updateViewPostion();
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                touchX = touchY = 0;
-                dragEnabled = false;
+                mTouchX = mTouchY = 0;
+                mDragEnabled = false;
                 break;
             default:
                 break;
@@ -155,16 +152,18 @@ public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2J
     }
 
     private void updateViewPostion() {
-        params.x =
-                Math.min(Math.max(0, (int) (x - touchX)), metrics.widthPixels - getMeasuredWidth());
-        params.y =
+        mParams.x =
                 Math.min(
-                        Math.max(0, (int) (y - touchY)),
-                        metrics.heightPixels - getMeasuredHeight());
-        wm.updateViewLayout(this, params);
+                        Math.max(0, (int) (mX - mTouchX)),
+                        mMetrics.widthPixels - getMeasuredWidth());
+        mParams.y =
+                Math.min(
+                        Math.max(0, (int) (mY - mTouchY)),
+                        mMetrics.heightPixels - getMeasuredHeight());
+        mWindowManager.updateViewLayout(this, mParams);
     }
 
     public WindowManager.LayoutParams getWindowManagerLayoutParams() {
-        return params;
+        return mParams;
     }
 }

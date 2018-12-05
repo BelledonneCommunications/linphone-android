@@ -37,28 +37,28 @@ import org.linphone.core.tools.OpenH264DownloadHelperListener;
 
 public class CodecDownloaderFragment extends Fragment {
     private Handler mHandler = new Handler();
-    private TextView question;
-    private TextView downloading;
-    private TextView downloaded;
-    private Button yes;
-    private Button no;
-    private Button ok;
-    private ProgressBar bar;
-    private TextView downloadingInfo;
+    private TextView mQuestion;
+    private TextView mDownloading;
+    private TextView mDownloaded;
+    private Button mYes;
+    private Button mNo;
+    private Button mOk;
+    private ProgressBar mProgressBar;
+    private TextView mDownloadingInfo;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.assistant_codec_downloader, container, false);
 
-        question = view.findViewById(R.id.question);
-        downloading = view.findViewById(R.id.downloading);
-        downloaded = view.findViewById(R.id.downloaded);
-        yes = view.findViewById(R.id.answerYes);
-        no = view.findViewById(R.id.answerNo);
-        ok = view.findViewById(R.id.answerOk);
-        bar = view.findViewById(R.id.progressBar);
-        downloadingInfo = view.findViewById(R.id.downloadingInfo);
+        mQuestion = view.findViewById(R.id.question);
+        mDownloading = view.findViewById(R.id.downloading);
+        mDownloaded = view.findViewById(R.id.downloaded);
+        mYes = view.findViewById(R.id.answerYes);
+        mNo = view.findViewById(R.id.answerNo);
+        mOk = view.findViewById(R.id.answerOk);
+        mProgressBar = view.findViewById(R.id.progressBar);
+        mDownloadingInfo = view.findViewById(R.id.downloadingInfo);
 
         final OpenH264DownloadHelper codecDownloader =
                 LinphoneManager.getInstance().getOpenH264DownloadHelper();
@@ -73,15 +73,15 @@ public class CodecDownloaderFragment extends Fragment {
                                     public void run() {
                                         if (current <= max) {
                                             hideAllItems();
-                                            downloadingInfo.setText(current + " / " + max);
-                                            downloadingInfo.setVisibility(View.VISIBLE);
-                                            downloading.setVisibility(View.VISIBLE);
-                                            bar.setMax(max);
-                                            bar.setProgress(current);
-                                            bar.setVisibility(View.VISIBLE);
+                                            mDownloadingInfo.setText(current + " / " + max);
+                                            mDownloadingInfo.setVisibility(View.VISIBLE);
+                                            mDownloading.setVisibility(View.VISIBLE);
+                                            mProgressBar.setMax(max);
+                                            mProgressBar.setProgress(current);
+                                            mProgressBar.setVisibility(View.VISIBLE);
                                         } else {
                                             hideAllItems();
-                                            downloaded.setVisibility(View.VISIBLE);
+                                            mDownloaded.setVisibility(View.VISIBLE);
                                             if (Build.VERSION.SDK_INT
                                                     >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                                                 enabledH264(true);
@@ -107,9 +107,9 @@ public class CodecDownloaderFragment extends Fragment {
                                     @Override
                                     public void run() {
                                         hideAllItems();
-                                        downloaded.setText("Sorry an error has occurred.");
-                                        downloaded.setVisibility(View.VISIBLE);
-                                        ok.setVisibility(View.VISIBLE);
+                                        mDownloaded.setText("Sorry an error has occurred.");
+                                        mDownloaded.setVisibility(View.VISIBLE);
+                                        mOk.setVisibility(View.VISIBLE);
                                         enabledH264(false);
                                         AssistantActivity.instance().endDownloadCodec();
                                     }
@@ -119,17 +119,17 @@ public class CodecDownloaderFragment extends Fragment {
 
         codecDownloader.setOpenH264HelperListener(codecListener);
 
-        yes.setOnClickListener(
+        mYes.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         hideAllItems();
-                        bar.setVisibility(View.VISIBLE);
+                        mProgressBar.setVisibility(View.VISIBLE);
                         codecDownloader.downloadCodec();
                     }
                 });
 
-        no.setOnClickListener(
+        mNo.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -140,39 +140,40 @@ public class CodecDownloaderFragment extends Fragment {
         hideAllItems();
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey("question"))
-                question.setVisibility((Integer) savedInstanceState.getSerializable("question"));
-            else question.setVisibility(View.VISIBLE);
+            if (savedInstanceState.containsKey("mQuestion"))
+                mQuestion.setVisibility((Integer) savedInstanceState.getSerializable("mQuestion"));
+            else mQuestion.setVisibility(View.VISIBLE);
 
-            if (savedInstanceState.containsKey("yes"))
-                yes.setVisibility((Integer) savedInstanceState.getSerializable("yes"));
-            else yes.setVisibility(View.VISIBLE);
+            if (savedInstanceState.containsKey("mYes"))
+                mYes.setVisibility((Integer) savedInstanceState.getSerializable("mYes"));
+            else mYes.setVisibility(View.VISIBLE);
 
-            if (savedInstanceState.containsKey("no"))
-                no.setVisibility((Integer) savedInstanceState.getSerializable("no"));
-            else no.setVisibility(View.VISIBLE);
+            if (savedInstanceState.containsKey("mNo"))
+                mNo.setVisibility((Integer) savedInstanceState.getSerializable("mNo"));
+            else mNo.setVisibility(View.VISIBLE);
 
-            if (savedInstanceState.containsKey("downloading"))
-                downloading.setVisibility(
-                        (Integer) savedInstanceState.getSerializable("downloading"));
+            if (savedInstanceState.containsKey("mDownloading"))
+                mDownloading.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("mDownloading"));
 
-            if (savedInstanceState.containsKey("downloaded"))
-                downloaded.setVisibility(
-                        (Integer) savedInstanceState.getSerializable("downloaded"));
+            if (savedInstanceState.containsKey("mDownloaded"))
+                mDownloaded.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("mDownloaded"));
 
             if (savedInstanceState.containsKey("context_bar"))
-                bar.setVisibility((Integer) savedInstanceState.getSerializable("context_bar"));
+                mProgressBar.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("context_bar"));
 
-            if (savedInstanceState.containsKey("downloadingInfo"))
-                downloadingInfo.setVisibility(
-                        (Integer) savedInstanceState.getSerializable("downloadingInfo"));
+            if (savedInstanceState.containsKey("mDownloadingInfo"))
+                mDownloadingInfo.setVisibility(
+                        (Integer) savedInstanceState.getSerializable("mDownloadingInfo"));
 
-            if (savedInstanceState.containsKey("ok"))
-                ok.setVisibility((Integer) savedInstanceState.getSerializable("ok"));
+            if (savedInstanceState.containsKey("mOk"))
+                mOk.setVisibility((Integer) savedInstanceState.getSerializable("mOk"));
         } else {
-            yes.setVisibility(View.VISIBLE);
-            question.setVisibility(View.VISIBLE);
-            no.setVisibility(View.VISIBLE);
+            mYes.setVisibility(View.VISIBLE);
+            mQuestion.setVisibility(View.VISIBLE);
+            mNo.setVisibility(View.VISIBLE);
         }
 
         return view;
@@ -180,28 +181,30 @@ public class CodecDownloaderFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (question != null) outState.putSerializable("question", question.getVisibility());
-        if (downloading != null)
-            outState.putSerializable("downloading", downloading.getVisibility());
-        if (downloaded != null) outState.putSerializable("downloaded", downloaded.getVisibility());
-        if (yes != null) outState.putSerializable("yes", yes.getVisibility());
-        if (no != null) outState.putSerializable("no", no.getVisibility());
-        if (ok != null) outState.putSerializable("ok", ok.getVisibility());
-        if (bar != null) outState.putSerializable("context_bar", bar.getVisibility());
-        if (downloadingInfo != null)
-            outState.putSerializable("downloadingInfo", downloadingInfo.getVisibility());
+        if (mQuestion != null) outState.putSerializable("mQuestion", mQuestion.getVisibility());
+        if (mDownloading != null)
+            outState.putSerializable("mDownloading", mDownloading.getVisibility());
+        if (mDownloaded != null)
+            outState.putSerializable("mDownloaded", mDownloaded.getVisibility());
+        if (mYes != null) outState.putSerializable("mYes", mYes.getVisibility());
+        if (mNo != null) outState.putSerializable("mNo", mNo.getVisibility());
+        if (mOk != null) outState.putSerializable("mOk", mOk.getVisibility());
+        if (mProgressBar != null)
+            outState.putSerializable("context_bar", mProgressBar.getVisibility());
+        if (mDownloadingInfo != null)
+            outState.putSerializable("mDownloadingInfo", mDownloadingInfo.getVisibility());
         super.onSaveInstanceState(outState);
     }
 
     private void hideAllItems() {
-        if (question != null) question.setVisibility(View.INVISIBLE);
-        if (downloading != null) downloading.setVisibility(View.INVISIBLE);
-        if (downloaded != null) downloaded.setVisibility(View.INVISIBLE);
-        if (yes != null) yes.setVisibility(View.INVISIBLE);
-        if (no != null) no.setVisibility(View.INVISIBLE);
-        if (ok != null) ok.setVisibility(View.INVISIBLE);
-        if (bar != null) bar.setVisibility(View.INVISIBLE);
-        if (downloadingInfo != null) downloadingInfo.setVisibility(View.INVISIBLE);
+        if (mQuestion != null) mQuestion.setVisibility(View.INVISIBLE);
+        if (mDownloading != null) mDownloading.setVisibility(View.INVISIBLE);
+        if (mDownloaded != null) mDownloaded.setVisibility(View.INVISIBLE);
+        if (mYes != null) mYes.setVisibility(View.INVISIBLE);
+        if (mNo != null) mNo.setVisibility(View.INVISIBLE);
+        if (mOk != null) mOk.setVisibility(View.INVISIBLE);
+        if (mProgressBar != null) mProgressBar.setVisibility(View.INVISIBLE);
+        if (mDownloadingInfo != null) mDownloadingInfo.setVisibility(View.INVISIBLE);
     }
 
     private void enabledH264(boolean enable) {

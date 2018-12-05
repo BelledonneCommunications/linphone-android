@@ -36,13 +36,13 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.settings.LinphonePreferences;
 
 public class InAppPurchaseFragment extends Fragment implements View.OnClickListener {
-    private LinearLayout usernameLayout;
-    private EditText username, email;
-    private TextView errorMessage;
+    private LinearLayout mUsernameLayout;
+    private EditText mUsername, mEmail;
+    private TextView mErrorMessage;
 
-    private boolean usernameOk = false, emailOk = false;
-    private String defaultUsername, defaultEmail;
-    private Button buyItemButton;
+    private boolean mUsernameOk = false, mEmailOk = false;
+    private String mDefaultUsername, mDefaultEmail;
+    private Button mBuyItemButton;
 
     @Override
     public View onCreateView(
@@ -54,41 +54,41 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
         String id = getArguments().getString("item_id");
         Purchasable item = InAppPurchaseActivity.instance().getPurchasedItem(id);
-        buyItemButton = view.findViewById(R.id.inapp_button);
+        mBuyItemButton = view.findViewById(R.id.inapp_button);
 
         displayBuySubscriptionButton(item);
 
-        defaultEmail = InAppPurchaseActivity.instance().getGmailAccount();
-        defaultUsername =
+        mDefaultEmail = InAppPurchaseActivity.instance().getGmailAccount();
+        mDefaultUsername =
                 LinphonePreferences.instance()
                         .getAccountUsername(
                                 LinphonePreferences.instance().getDefaultAccountIndex());
 
-        usernameLayout = view.findViewById(R.id.username_layout);
-        username = view.findViewById(R.id.username);
+        mUsernameLayout = view.findViewById(R.id.username_layout);
+        mUsername = view.findViewById(R.id.username);
         if (!getResources().getBoolean(R.bool.hide_username_in_inapp)) {
-            usernameLayout.setVisibility(View.VISIBLE);
-            username.setText(
+            mUsernameLayout.setVisibility(View.VISIBLE);
+            mUsername.setText(
                     LinphonePreferences.instance()
                             .getAccountUsername(
                                     LinphonePreferences.instance().getDefaultAccountIndex()));
 
-            addUsernameHandler(username, errorMessage);
+            addUsernameHandler(mUsername, mErrorMessage);
         } else {
-            if (defaultUsername != null) {
-                usernameLayout.setVisibility(View.GONE);
-                usernameOk = true;
+            if (mDefaultUsername != null) {
+                mUsernameLayout.setVisibility(View.GONE);
+                mUsernameOk = true;
             }
         }
 
-        email = view.findViewById(R.id.email);
-        if (defaultEmail != null) {
-            email.setText(defaultEmail);
-            emailOk = true;
+        mEmail = view.findViewById(R.id.email);
+        if (mDefaultEmail != null) {
+            mEmail.setText(mDefaultEmail);
+            mEmailOk = true;
         }
 
-        buyItemButton.setEnabled(emailOk && usernameOk);
-        errorMessage = view.findViewById(R.id.username_error);
+        mBuyItemButton.setEnabled(mEmailOk && mUsernameOk);
+        mErrorMessage = view.findViewById(R.id.username_error);
 
         return view;
     }
@@ -102,15 +102,15 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
                             CharSequence s, int start, int count, int after) {}
 
                     public void onTextChanged(CharSequence s, int start, int count, int after) {
-                        usernameOk = false;
+                        mUsernameOk = false;
                         String username = s.toString();
                         if (isUsernameCorrect(username)) {
-                            usernameOk = true;
+                            mUsernameOk = true;
                             errorMessage.setText("");
                         } else {
                             errorMessage.setText(R.string.wizard_username_incorrect);
                         }
-                        if (buyItemButton != null) buyItemButton.setEnabled(usernameOk);
+                        if (mBuyItemButton != null) mBuyItemButton.setEnabled(mUsernameOk);
                     }
                 });
     }
@@ -121,10 +121,10 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
     }
 
     private void displayBuySubscriptionButton(Purchasable item) {
-        buyItemButton.setText("Buy account (" + item.getPrice() + ")");
-        buyItemButton.setTag(item);
-        buyItemButton.setOnClickListener(this);
-        buyItemButton.setEnabled(usernameOk && emailOk);
+        mBuyItemButton.setText("Buy account (" + item.getPrice() + ")");
+        mBuyItemButton.setTag(item);
+        mBuyItemButton.setOnClickListener(this);
+        mBuyItemButton.setEnabled(mUsernameOk && mEmailOk);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
     }
 
     private String getUsername() {
-        String username = this.username.getText().toString();
+        String username = this.mUsername.getText().toString();
         ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
         username = lpc.normalizePhoneNumber(username);
         return username.toLowerCase(Locale.getDefault());

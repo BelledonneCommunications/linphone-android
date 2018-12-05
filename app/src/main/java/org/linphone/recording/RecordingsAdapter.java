@@ -36,9 +36,9 @@ import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
 public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
-    private List<Recording> recordings;
-    private Context context;
-    private RecordingViewHolder.ClickListener clickListener;
+    private List<Recording> mRecordings;
+    private Context mContext;
+    private RecordingViewHolder.ClickListener mClickListener;
 
     public RecordingsAdapter(
             Context context,
@@ -47,14 +47,14 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
             SelectableHelper helper) {
         super(helper);
 
-        this.recordings = recordings;
-        this.context = context;
-        this.clickListener = listener;
+        mRecordings = recordings;
+        mContext = context;
+        mClickListener = listener;
     }
 
     @Override
     public Object getItem(int position) {
-        return recordings.get(position);
+        return mRecordings.get(position);
     }
 
     @NonNull
@@ -63,13 +63,13 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
         View v =
                 LayoutInflater.from(viewGroup.getContext())
                         .inflate(R.layout.recording_cell, viewGroup, false);
-        return new RecordingViewHolder(v, clickListener);
+        return new RecordingViewHolder(v, mClickListener);
     }
 
     @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(@NonNull final RecordingViewHolder viewHolder, int i) {
-        final Recording record = recordings.get(i);
+        final Recording record = mRecordings.get(i);
 
         viewHolder.name.setSelected(true); // For automated horizontal scrolling of long texts
 
@@ -80,7 +80,7 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
         viewHolder.select.setChecked(isSelected(i));
 
         if (i > 0) {
-            Recording previousRecord = recordings.get(i - 1);
+            Recording previousRecord = mRecordings.get(i - 1);
             Date previousRecordDate = previousRecord.getRecordDate();
             Calendar previousRecordTime = Calendar.getInstance();
             previousRecordTime.setTime(previousRecordDate);
@@ -198,20 +198,20 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
 
     @Override
     public int getItemCount() {
-        return recordings.size();
+        return mRecordings.size();
     }
 
     @SuppressLint("SimpleDateFormat")
     private String DateToHumanDate(Calendar cal) {
         SimpleDateFormat dateFormat;
         if (isToday(cal)) {
-            return context.getString(R.string.today);
+            return mContext.getString(R.string.today);
         } else if (isYesterday(cal)) {
-            return context.getString(R.string.yesterday);
+            return mContext.getString(R.string.yesterday);
         } else {
             dateFormat =
                     new SimpleDateFormat(
-                            context.getResources().getString(R.string.history_date_format));
+                            mContext.getResources().getString(R.string.history_date_format));
         }
 
         return dateFormat.format(cal.getTime());

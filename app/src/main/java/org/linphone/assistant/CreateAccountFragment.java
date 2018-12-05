@@ -55,82 +55,83 @@ import org.linphone.utils.LinphoneUtils;
 public class CreateAccountFragment extends Fragment
         implements CompoundButton.OnCheckedChangeListener, OnClickListener, AccountCreatorListener {
     private final Pattern UPPER_CASE_REGEX = Pattern.compile("[A-Z]");
-    private EditText phoneNumberEdit,
-            usernameEdit,
-            passwordEdit,
-            passwordConfirmEdit,
-            emailEdit,
-            dialCode;
-    private TextView phoneNumberError,
-            passwordError,
-            passwordConfirmError,
-            emailError,
-            assisstantTitle,
-            sipUri,
-            skip,
-            instruction;
-    private ImageView phoneNumberInfo;
-    private boolean passwordOk = false;
-    private boolean emailOk = false;
-    private boolean confirmPasswordOk = false;
-    private boolean linkAccount = false;
-    private Button createAccount, selectCountry;
-    private CheckBox useUsername, useEmail;
-    private String addressSip = "";
-    private int countryCode;
-    private LinearLayout phoneNumberLayout,
-            usernameLayout,
-            emailLayout,
-            passwordLayout,
-            passwordConfirmLayout;
-    private AccountCreator accountCreator;
+
+    private EditText mPhoneNumberEdit,
+            mUsernameEdit,
+            mPasswordEdit,
+            mPasswordConfirmEdit,
+            mEmailEdit,
+            mDialCode;
+    private TextView mPhoneNumberError,
+            mPasswordError,
+            mPasswordConfirmError,
+            mEmailError,
+            mAssisstantTitle,
+            mSipUri,
+            mSkip,
+            mInstruction;
+    private ImageView mPhoneNumberInfo;
+    private boolean mPasswordOk = false;
+    private boolean mEmailOk = false;
+    private boolean mConfirmPasswordOk = false;
+    private boolean mLinkAccount = false;
+    private Button mCreateAccount, mSelectCountry;
+    private CheckBox mUseUsername, mUseEmail;
+    private String mAddressSip = "";
+    private int mCountryCode;
+    private LinearLayout mPhoneNumberLayout,
+            mUsernameLayout,
+            mEmailLayout,
+            mPasswordLayout,
+            mPasswordConfirmLayout;
+    private AccountCreator mAccountCreator;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.assistant_account_creation, container, false);
 
-        // Initialize accountCreator
-        accountCreator =
+        // Initialize mAccountCreator
+        mAccountCreator =
                 LinphoneManager.getLc()
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
-        accountCreator.setListener(this);
+        mAccountCreator.setListener(this);
 
-        instruction = view.findViewById(R.id.message_create_account);
+        mInstruction = view.findViewById(R.id.message_create_account);
 
-        createAccount = view.findViewById(R.id.assistant_create);
+        mCreateAccount = view.findViewById(R.id.assistant_create);
 
-        phoneNumberLayout = view.findViewById(R.id.phone_number_layout);
-        usernameLayout = view.findViewById(R.id.username_layout);
-        emailLayout = view.findViewById(R.id.email_layout);
-        passwordLayout = view.findViewById(R.id.password_layout);
-        passwordConfirmLayout = view.findViewById(R.id.password_confirm_layout);
+        mPhoneNumberLayout = view.findViewById(R.id.phone_number_layout);
+        mUsernameLayout = view.findViewById(R.id.username_layout);
+        mEmailLayout = view.findViewById(R.id.email_layout);
+        mPasswordLayout = view.findViewById(R.id.password_layout);
+        mPasswordConfirmLayout = view.findViewById(R.id.password_confirm_layout);
 
-        useUsername = view.findViewById(R.id.use_username);
-        useEmail = view.findViewById(R.id.use_email);
+        mUseUsername = view.findViewById(R.id.use_username);
+        mUseEmail = view.findViewById(R.id.use_email);
 
-        usernameEdit = view.findViewById(R.id.username);
+        mUsernameEdit = view.findViewById(R.id.username);
 
-        phoneNumberError = view.findViewById(R.id.phone_number_error);
-        phoneNumberEdit = view.findViewById(R.id.phone_number);
-        sipUri = view.findViewById(R.id.sip_uri);
+        mPhoneNumberError = view.findViewById(R.id.phone_number_error);
+        mPhoneNumberEdit = view.findViewById(R.id.phone_number);
+        mSipUri = view.findViewById(R.id.sip_uri);
 
-        phoneNumberInfo = view.findViewById(R.id.info_phone_number);
+        mPhoneNumberInfo = view.findViewById(R.id.info_phone_number);
 
-        selectCountry = view.findViewById(R.id.select_country);
-        dialCode = view.findViewById(R.id.dial_code);
-        assisstantTitle = view.findViewById(R.id.assistant_title);
+        mSelectCountry = view.findViewById(R.id.select_country);
+        mDialCode = view.findViewById(R.id.dial_code);
+        mAssisstantTitle = view.findViewById(R.id.assistant_title);
 
-        passwordError = view.findViewById(R.id.password_error);
-        passwordEdit = view.findViewById(R.id.password);
+        mPasswordError = view.findViewById(R.id.password_error);
+        mPasswordEdit = view.findViewById(R.id.password);
 
-        passwordConfirmError = view.findViewById(R.id.confirm_password_error);
-        passwordConfirmEdit = view.findViewById(R.id.confirm_password);
+        mPasswordConfirmError = view.findViewById(R.id.confirm_password_error);
+        mPasswordConfirmEdit = view.findViewById(R.id.confirm_password);
 
-        emailError = view.findViewById(R.id.email_error);
-        emailEdit = view.findViewById(R.id.email);
+        mEmailError = view.findViewById(R.id.email_error);
+        mEmailEdit = view.findViewById(R.id.email);
 
-        skip = view.findViewById(R.id.assistant_skip);
+        mSkip = view.findViewById(R.id.assistant_skip);
 
         // Phone number
         if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
@@ -142,21 +143,21 @@ public class CreateAccountFragment extends Fragment
                                     .getApplicationContext()
                                     .getSystemService(Context.TELEPHONY_SERVICE);
             String countryIso = tm.getNetworkCountryIso();
-            countryCode = org.linphone.core.Utils.getCccFromIso(countryIso.toUpperCase());
+            mCountryCode = org.linphone.core.Utils.getCccFromIso(countryIso.toUpperCase());
 
-            phoneNumberLayout.setVisibility(View.VISIBLE);
+            mPhoneNumberLayout.setVisibility(View.VISIBLE);
 
-            phoneNumberInfo.setOnClickListener(this);
-            selectCountry.setOnClickListener(this);
+            mPhoneNumberInfo.setOnClickListener(this);
+            mSelectCountry.setOnClickListener(this);
 
             String previousPhone = AssistantActivity.instance().phone_number;
             if (previousPhone != null) {
-                phoneNumberEdit.setText(previousPhone);
+                mPhoneNumberEdit.setText(previousPhone);
             }
             DialPlan c = AssistantActivity.instance().country;
             if (c != null) {
-                selectCountry.setText(c.getCountry());
-                dialCode.setText(
+                mSelectCountry.setText(c.getCountry());
+                mDialCode.setText(
                         c.getCountryCallingCode().contains("+")
                                 ? c.getCountryCallingCode()
                                 : "+" + c.getCountryCallingCode());
@@ -164,10 +165,10 @@ public class CreateAccountFragment extends Fragment
                 c =
                         AssistantActivity.instance()
                                 .getCountryListAdapter()
-                                .getCountryFromCountryCode(String.valueOf(countryCode));
+                                .getCountryFromCountryCode(String.valueOf(mCountryCode));
                 if (c != null) {
-                    selectCountry.setText(c.getCountry());
-                    dialCode.setText(
+                    mSelectCountry.setText(c.getCountry());
+                    mDialCode.setText(
                             c.getCountryCallingCode().contains("+")
                                     ? c.getCountryCallingCode()
                                     : "+" + c.getCountryCallingCode());
@@ -176,18 +177,18 @@ public class CreateAccountFragment extends Fragment
 
             // Allow user to enter a username instead use the phone number as username
             if (getResources().getBoolean(R.bool.assistant_allow_username)) {
-                useUsername.setVisibility(View.VISIBLE);
-                useUsername.setOnCheckedChangeListener(this);
+                mUseUsername.setVisibility(View.VISIBLE);
+                mUseUsername.setOnCheckedChangeListener(this);
             }
-            addPhoneNumberHandler(phoneNumberEdit, null);
-            addPhoneNumberHandler(dialCode, null);
+            addPhoneNumberHandler(mPhoneNumberEdit, null);
+            addPhoneNumberHandler(mDialCode, null);
         }
 
         // Password & email address
         if (getResources().getBoolean(R.bool.isTablet)
                 || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
-            useEmail.setVisibility(View.VISIBLE);
-            useEmail.setOnCheckedChangeListener(this);
+            mUseEmail.setVisibility(View.VISIBLE);
+            mUseEmail.setOnCheckedChangeListener(this);
 
             if (getResources().getBoolean(R.bool.pre_fill_email_in_assistant)) {
                 Account[] accounts =
@@ -196,55 +197,55 @@ public class CreateAccountFragment extends Fragment
                 for (Account account : accounts) {
                     if (isEmailCorrect(account.name)) {
                         String possibleEmail = account.name;
-                        emailEdit.setText(possibleEmail);
-                        accountCreator.setEmail(possibleEmail);
-                        emailOk = true;
+                        mEmailEdit.setText(possibleEmail);
+                        mAccountCreator.setEmail(possibleEmail);
+                        mEmailOk = true;
                         break;
                     }
                 }
             }
 
-            addPasswordHandler(passwordEdit, null);
-            addConfirmPasswordHandler(passwordEdit, passwordConfirmEdit, null);
-            addEmailHandler(emailEdit, null);
+            addPasswordHandler(mPasswordEdit, null);
+            addConfirmPasswordHandler(mPasswordEdit, mPasswordConfirmEdit, null);
+            addEmailHandler(mEmailEdit, null);
         }
 
         // Hide phone number and display username/email/password
         if (!getResources().getBoolean(R.bool.use_phone_number_validation)) {
-            useEmail.setVisibility(View.GONE);
-            useUsername.setVisibility(View.GONE);
+            mUseEmail.setVisibility(View.GONE);
+            mUseUsername.setVisibility(View.GONE);
 
-            usernameLayout.setVisibility(View.VISIBLE);
-            passwordLayout.setVisibility(View.VISIBLE);
-            passwordConfirmLayout.setVisibility(View.VISIBLE);
-            emailLayout.setVisibility(View.VISIBLE);
+            mUsernameLayout.setVisibility(View.VISIBLE);
+            mPasswordLayout.setVisibility(View.VISIBLE);
+            mPasswordConfirmLayout.setVisibility(View.VISIBLE);
+            mEmailLayout.setVisibility(View.VISIBLE);
         }
 
         // Link account with phone number
         if (getArguments().getBoolean("LinkPhoneNumber")) {
-            linkAccount = true;
-            useEmail.setVisibility(View.GONE);
-            useUsername.setVisibility(View.GONE);
+            mLinkAccount = true;
+            mUseEmail.setVisibility(View.GONE);
+            mUseUsername.setVisibility(View.GONE);
 
-            usernameLayout.setVisibility(View.GONE);
-            passwordLayout.setVisibility(View.GONE);
-            passwordConfirmLayout.setVisibility(View.GONE);
-            emailLayout.setVisibility(View.GONE);
+            mUsernameLayout.setVisibility(View.GONE);
+            mPasswordLayout.setVisibility(View.GONE);
+            mPasswordConfirmLayout.setVisibility(View.GONE);
+            mEmailLayout.setVisibility(View.GONE);
 
-            skip.setVisibility(View.VISIBLE);
-            skip.setOnClickListener(this);
+            mSkip.setVisibility(View.VISIBLE);
+            mSkip.setOnClickListener(this);
 
-            createAccount.setText(getResources().getString(R.string.link_account));
-            assisstantTitle.setText(getResources().getString(R.string.link_account));
+            mCreateAccount.setText(getResources().getString(R.string.link_account));
+            mAssisstantTitle.setText(getResources().getString(R.string.link_account));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            accountCreator.setLanguage(Locale.getDefault().toLanguageTag());
+            mAccountCreator.setLanguage(Locale.getDefault().toLanguageTag());
         }
 
-        addUsernameHandler(usernameEdit, null);
+        addUsernameHandler(mUsernameEdit, null);
 
-        createAccount.setEnabled(true);
-        createAccount.setOnClickListener(this);
+        mCreateAccount.setEnabled(true);
+        mCreateAccount.setOnClickListener(this);
 
         return view;
     }
@@ -252,12 +253,12 @@ public class CreateAccountFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        accountCreator.setListener(null);
+        mAccountCreator.setListener(null);
     }
 
     private String getUsername() {
-        if (usernameEdit != null) {
-            String username = usernameEdit.getText().toString();
+        if (mUsernameEdit != null) {
+            String username = mUsernameEdit.getText().toString();
             return username.toLowerCase(Locale.getDefault());
         }
         return null;
@@ -267,42 +268,42 @@ public class CreateAccountFragment extends Fragment
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.use_username) {
             if (isChecked) {
-                usernameLayout.setVisibility(View.VISIBLE);
+                mUsernameLayout.setVisibility(View.VISIBLE);
                 onTextChanged2();
             } else {
-                usernameLayout.setVisibility(View.GONE);
-                accountCreator.setUsername(null);
+                mUsernameLayout.setVisibility(View.GONE);
+                mAccountCreator.setUsername(null);
                 onTextChanged2();
             }
         } else if (buttonView.getId() == R.id.use_email) {
             if (isChecked) {
-                dialCode.setBackgroundResource(R.drawable.resizable_textfield);
-                phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
-                useUsername.setEnabled(false);
-                dialCode.setEnabled(false);
-                selectCountry.setEnabled(false);
-                phoneNumberEdit.setEnabled(false);
-                emailLayout.setVisibility(View.VISIBLE);
-                passwordLayout.setVisibility(View.VISIBLE);
-                passwordConfirmLayout.setVisibility(View.VISIBLE);
-                usernameLayout.setVisibility(View.VISIBLE);
-                useUsername.setVisibility(CheckBox.GONE);
-                phoneNumberLayout.setVisibility(LinearLayout.GONE);
-                instruction.setText(getString(R.string.assistant_create_account_part_email));
+                mDialCode.setBackgroundResource(R.drawable.resizable_textfield);
+                mPhoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
+                mUseUsername.setEnabled(false);
+                mDialCode.setEnabled(false);
+                mSelectCountry.setEnabled(false);
+                mPhoneNumberEdit.setEnabled(false);
+                mEmailLayout.setVisibility(View.VISIBLE);
+                mPasswordLayout.setVisibility(View.VISIBLE);
+                mPasswordConfirmLayout.setVisibility(View.VISIBLE);
+                mUsernameLayout.setVisibility(View.VISIBLE);
+                mUseUsername.setVisibility(CheckBox.GONE);
+                mPhoneNumberLayout.setVisibility(LinearLayout.GONE);
+                mInstruction.setText(getString(R.string.assistant_create_account_part_email));
             } else {
-                if (!useUsername.isChecked()) {
-                    usernameLayout.setVisibility(View.GONE);
+                if (!mUseUsername.isChecked()) {
+                    mUsernameLayout.setVisibility(View.GONE);
                 }
-                useUsername.setEnabled(true);
-                dialCode.setEnabled(true);
-                selectCountry.setEnabled(true);
-                phoneNumberEdit.setEnabled(true);
-                emailLayout.setVisibility(View.GONE);
-                passwordLayout.setVisibility(View.GONE);
-                passwordConfirmLayout.setVisibility(View.GONE);
-                useUsername.setVisibility(CheckBox.VISIBLE);
-                phoneNumberLayout.setVisibility(LinearLayout.VISIBLE);
-                instruction.setText(getString(R.string.assistant_create_account_part_1));
+                mUseUsername.setEnabled(true);
+                mDialCode.setEnabled(true);
+                mSelectCountry.setEnabled(true);
+                mPhoneNumberEdit.setEnabled(true);
+                mEmailLayout.setVisibility(View.GONE);
+                mPasswordLayout.setVisibility(View.GONE);
+                mPasswordConfirmLayout.setVisibility(View.GONE);
+                mUseUsername.setVisibility(CheckBox.VISIBLE);
+                mPhoneNumberLayout.setVisibility(LinearLayout.VISIBLE);
+                mInstruction.setText(getString(R.string.assistant_create_account_part_1));
             }
         }
     }
@@ -319,7 +320,7 @@ public class CreateAccountFragment extends Fragment
                 AssistantActivity.instance().success();
             }
         } else if (id == R.id.info_phone_number) {
-            if (linkAccount) {
+            if (mLinkAccount) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle(getString(R.string.phone_number_info_title))
                         .setMessage(
@@ -336,22 +337,22 @@ public class CreateAccountFragment extends Fragment
                         .show();
             }
         } else if (id == R.id.assistant_create) {
-            createAccount.setEnabled(false);
-            if (linkAccount) {
+            mCreateAccount.setEnabled(false);
+            if (mLinkAccount) {
                 addAlias();
             } else {
-                if (useEmail.isChecked()) accountCreator.setPhoneNumber(null, null);
+                if (mUseEmail.isChecked()) mAccountCreator.setPhoneNumber(null, null);
                 if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
                     LinphoneManager.getLc()
                             .getConfig()
                             .loadFromXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
-                    accountCreator.isAccountExist();
+                    mAccountCreator.isAccountExist();
                 } else {
                     LinphoneUtils.displayErrorAlert(
                             LinphoneUtils.errorForUsernameStatus(
                                     AccountCreator.UsernameStatus.TooShort),
                             AssistantActivity.instance());
-                    createAccount.setEnabled(true);
+                    mCreateAccount.setEnabled(true);
                 }
             }
         }
@@ -367,88 +368,90 @@ public class CreateAccountFragment extends Fragment
     }
 
     private void addAlias() {
-        accountCreator.setUsername(
+        mAccountCreator.setUsername(
                 LinphonePreferences.instance()
                         .getAccountUsername(
                                 LinphonePreferences.instance().getDefaultAccountIndex()));
         int status =
-                accountCreator.setPhoneNumber(
-                        phoneNumberEdit.getText().toString(),
-                        LinphoneUtils.getCountryCode(dialCode));
+                mAccountCreator.setPhoneNumber(
+                        mPhoneNumberEdit.getText().toString(),
+                        LinphoneUtils.getCountryCode(mDialCode));
         boolean isOk = status == AccountCreator.PhoneNumberStatus.Ok.toInt();
         if (isOk) {
-            accountCreator.linkAccount();
+            mAccountCreator.linkAccount();
         } else {
-            createAccount.setEnabled(true);
+            mCreateAccount.setEnabled(true);
             LinphoneUtils.displayErrorAlert(
                     LinphoneUtils.errorForPhoneNumberStatus(status), AssistantActivity.instance());
             LinphoneUtils.displayError(
-                    isOk, phoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
+                    isOk, mPhoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
         }
     }
 
     private void createAccount() {
         if ((getResources().getBoolean(R.bool.isTablet)
                         || !getResources().getBoolean(R.bool.use_phone_number_validation))
-                && useEmail.isChecked()) {
+                && mUseEmail.isChecked()) {
             AccountCreator.EmailStatus emailStatus;
             AccountCreator.PasswordStatus passwordStatus;
 
-            passwordStatus = accountCreator.setPassword(passwordEdit.getText().toString());
-            emailStatus = accountCreator.setEmail(emailEdit.getText().toString());
+            passwordStatus = mAccountCreator.setPassword(mPasswordEdit.getText().toString());
+            emailStatus = mAccountCreator.setEmail(mEmailEdit.getText().toString());
 
-            if (!emailOk) {
+            if (!mEmailOk) {
                 LinphoneUtils.displayError(
-                        false, emailError, LinphoneUtils.errorForEmailStatus(emailStatus));
+                        false, mEmailError, LinphoneUtils.errorForEmailStatus(emailStatus));
                 LinphoneUtils.displayErrorAlert(
                         LinphoneUtils.errorForEmailStatus(emailStatus),
                         AssistantActivity.instance());
-            } else if (!passwordOk) {
+            } else if (!mPasswordOk) {
                 LinphoneUtils.displayError(
-                        false, passwordError, LinphoneUtils.errorForPasswordStatus(passwordStatus));
+                        false,
+                        mPasswordError,
+                        LinphoneUtils.errorForPasswordStatus(passwordStatus));
                 LinphoneUtils.displayErrorAlert(
                         LinphoneUtils.errorForPasswordStatus(passwordStatus),
                         AssistantActivity.instance());
-            } else if (!confirmPasswordOk) {
+            } else if (!mConfirmPasswordOk) {
                 String msg;
-                if (passwordConfirmEdit
+                if (mPasswordConfirmEdit
                         .getText()
                         .toString()
-                        .equals(passwordEdit.getText().toString())) {
+                        .equals(mPasswordEdit.getText().toString())) {
                     msg = getString(R.string.wizard_password_incorrect);
                 } else {
                     msg = getString(R.string.wizard_passwords_unmatched);
                 }
-                LinphoneUtils.displayError(false, passwordError, msg);
+                LinphoneUtils.displayError(false, mPasswordError, msg);
                 LinphoneUtils.displayErrorAlert(msg, AssistantActivity.instance());
             } else {
-                accountCreator.createAccount();
+                mAccountCreator.createAccount();
             }
         } else {
-            if (phoneNumberEdit.length() > 0 || dialCode.length() > 1) {
+            if (mPhoneNumberEdit.length() > 0 || mDialCode.length() > 1) {
                 int phoneStatus;
                 boolean isOk;
                 phoneStatus =
-                        accountCreator.setPhoneNumber(
-                                phoneNumberEdit.getText().toString(),
-                                LinphoneUtils.getCountryCode(dialCode));
+                        mAccountCreator.setPhoneNumber(
+                                mPhoneNumberEdit.getText().toString(),
+                                LinphoneUtils.getCountryCode(mDialCode));
                 isOk = phoneStatus == AccountCreator.PhoneNumberStatus.Ok.toInt();
-                if (!useUsername.isChecked() && accountCreator.getUsername() == null) {
-                    accountCreator.setUsername(accountCreator.getPhoneNumber());
+                if (!mUseUsername.isChecked() && mAccountCreator.getUsername() == null) {
+                    mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
                 } else {
-                    accountCreator.setUsername(usernameEdit.getText().toString());
-                    accountCreator.setPhoneNumber(
-                            phoneNumberEdit.getText().toString(), dialCode.getText().toString());
+                    mAccountCreator.setUsername(mUsernameEdit.getText().toString());
+                    mAccountCreator.setPhoneNumber(
+                            mPhoneNumberEdit.getText().toString(), mDialCode.getText().toString());
                 }
                 if (isOk) {
-                    accountCreator.createAccount();
+                    mAccountCreator.createAccount();
                 } else {
                     LinphoneUtils.displayErrorAlert(
                             LinphoneUtils.errorForPhoneNumberStatus(phoneStatus),
                             AssistantActivity.instance());
                     LinphoneUtils.displayError(
                             isOk,
-                            phoneNumberError,
+                            mPhoneNumberError,
                             LinphoneUtils.errorForPhoneNumberStatus(phoneStatus));
                 }
             } else {
@@ -457,93 +460,93 @@ public class CreateAccountFragment extends Fragment
                         AssistantActivity.instance());
             }
         }
-        createAccount.setEnabled(true);
+        mCreateAccount.setEnabled(true);
     }
 
     private int getPhoneNumberStatus() {
         int status =
-                accountCreator.setPhoneNumber(
-                        phoneNumberEdit.getText().toString(),
-                        LinphoneUtils.getCountryCode(dialCode));
-        addressSip = accountCreator.getPhoneNumber();
+                mAccountCreator.setPhoneNumber(
+                        mPhoneNumberEdit.getText().toString(),
+                        LinphoneUtils.getCountryCode(mDialCode));
+        mAddressSip = mAccountCreator.getPhoneNumber();
         return status;
     }
 
     public void onTextChanged2() {
         String msg = "";
-        accountCreator.setUsername(getUsername());
+        mAccountCreator.setUsername(getUsername());
 
-        if (!useEmail.isChecked()
+        if (!mUseEmail.isChecked()
                 && getResources().getBoolean(R.bool.use_phone_number_validation)) {
             int status = getPhoneNumberStatus();
             boolean isOk = (status == AccountCreator.PhoneNumberStatus.Ok.toInt());
             LinphoneUtils.displayError(
-                    isOk, phoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
+                    isOk, mPhoneNumberError, LinphoneUtils.errorForPhoneNumberStatus(status));
 
             // Username or phone number
             if (getResources().getBoolean(R.bool.assistant_allow_username)
-                    && useUsername.isChecked()) {
-                addressSip = getUsername();
+                    && mUseUsername.isChecked()) {
+                mAddressSip = getUsername();
             }
 
             if (!isOk) {
                 if (status == AccountCreator.PhoneNumberStatus.InvalidCountryCode.toInt()) {
-                    dialCode.setBackgroundResource(R.drawable.resizable_textfield_error);
-                    phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
+                    mDialCode.setBackgroundResource(R.drawable.resizable_textfield_error);
+                    mPhoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
                 } else {
-                    dialCode.setBackgroundResource(R.drawable.resizable_textfield);
-                    phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield_error);
+                    mDialCode.setBackgroundResource(R.drawable.resizable_textfield);
+                    mPhoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield_error);
                 }
 
             } else {
-                dialCode.setBackgroundResource(R.drawable.resizable_textfield);
-                phoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
-                if (!linkAccount && addressSip.length() > 0) {
+                mDialCode.setBackgroundResource(R.drawable.resizable_textfield);
+                mPhoneNumberEdit.setBackgroundResource(R.drawable.resizable_textfield);
+                if (!mLinkAccount && mAddressSip.length() > 0) {
                     msg =
                             getResources()
                                             .getString(
                                                     R.string
                                                             .assistant_create_account_phone_number_address)
                                     + " <"
-                                    + addressSip
+                                    + mAddressSip
                                     + "@"
                                     + getResources().getString(R.string.default_domain)
                                     + ">";
                 }
             }
         } else {
-            addressSip = getUsername();
-            if (addressSip.length() > 0) {
+            mAddressSip = getUsername();
+            if (mAddressSip.length() > 0) {
                 msg =
                         getResources()
                                         .getString(
                                                 R.string
                                                         .assistant_create_account_phone_number_address)
                                 + " <sip:"
-                                + addressSip
+                                + mAddressSip
                                 + "@"
                                 + getResources().getString(R.string.default_domain)
                                 + ">";
             }
         }
-        sipUri.setText(msg);
+        mSipUri.setText(msg);
     }
 
     private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
         field.addTextChangedListener(
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
-                        if (field.equals(dialCode)) {
+                        if (field.equals(mDialCode)) {
                             DialPlan c =
                                     AssistantActivity.instance()
                                             .getCountryListAdapter()
                                             .getCountryFromCountryCode(
-                                                    dialCode.getText().toString());
+                                                    mDialCode.getText().toString());
                             if (c != null) {
                                 AssistantActivity.instance().country = c;
-                                selectCountry.setText(c.getCountry());
+                                mSelectCountry.setText(c.getCountry());
                             } else {
-                                selectCountry.setText(R.string.select_your_country);
+                                mSelectCountry.setText(R.string.select_your_country);
                             }
                         }
                     }
@@ -585,15 +588,17 @@ public class CreateAccountFragment extends Fragment
         field.addTextChangedListener(
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
-                        emailOk = false;
+                        mEmailOk = false;
                         AccountCreator.EmailStatus status =
-                                accountCreator.setEmail(field.getText().toString());
+                                mAccountCreator.setEmail(field.getText().toString());
                         if (status.equals(AccountCreator.EmailStatus.Ok)) {
-                            emailOk = true;
-                            LinphoneUtils.displayError(emailOk, emailError, "");
+                            mEmailOk = true;
+                            LinphoneUtils.displayError(mEmailOk, mEmailError, "");
                         } else {
                             LinphoneUtils.displayError(
-                                    emailOk, emailError, LinphoneUtils.errorForEmailStatus(status));
+                                    mEmailOk,
+                                    mEmailError,
+                                    LinphoneUtils.errorForEmailStatus(status));
                         }
                     }
 
@@ -608,16 +613,16 @@ public class CreateAccountFragment extends Fragment
         TextWatcher passwordListener =
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
-                        passwordOk = false;
+                        mPasswordOk = false;
                         AccountCreator.PasswordStatus status =
-                                accountCreator.setPassword(field1.getText().toString());
+                                mAccountCreator.setPassword(field1.getText().toString());
                         if (isPasswordCorrect(field1.getText().toString())) {
-                            passwordOk = true;
-                            LinphoneUtils.displayError(passwordOk, passwordError, "");
+                            mPasswordOk = true;
+                            LinphoneUtils.displayError(mPasswordOk, mPasswordError, "");
                         } else {
                             LinphoneUtils.displayError(
-                                    passwordOk,
-                                    passwordError,
+                                    mPasswordOk,
+                                    mPasswordError,
                                     LinphoneUtils.errorForPasswordStatus(status));
                         }
                     }
@@ -636,22 +641,22 @@ public class CreateAccountFragment extends Fragment
         TextWatcher passwordListener =
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
-                        confirmPasswordOk = false;
+                        mConfirmPasswordOk = false;
                         if (field1.getText().toString().equals(field2.getText().toString())) {
-                            confirmPasswordOk = true;
+                            mConfirmPasswordOk = true;
                             if (!isPasswordCorrect(field1.getText().toString())) {
                                 LinphoneUtils.displayError(
-                                        passwordOk,
-                                        passwordError,
+                                        mPasswordOk,
+                                        mPasswordError,
                                         getString(R.string.wizard_password_incorrect));
                             } else {
                                 LinphoneUtils.displayError(
-                                        confirmPasswordOk, passwordConfirmError, "");
+                                        mConfirmPasswordOk, mPasswordConfirmError, "");
                             }
                         } else {
                             LinphoneUtils.displayError(
-                                    confirmPasswordOk,
-                                    passwordConfirmError,
+                                    mConfirmPasswordOk,
+                                    mPasswordConfirmError,
                                     getString(R.string.wizard_passwords_unmatched));
                         }
                     }
@@ -668,8 +673,8 @@ public class CreateAccountFragment extends Fragment
     @Override
     public void onIsAccountExist(AccountCreator accountCreator, final Status status, String resp) {
         if (status.equals(Status.AccountExist) || status.equals(Status.AccountExistWithAlias)) {
-            if (useEmail.isChecked()) {
-                createAccount.setEnabled(true);
+            if (mUseEmail.isChecked()) {
+                mCreateAccount.setEnabled(true);
                 LinphoneUtils.displayErrorAlert(
                         LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
             } else {
@@ -686,23 +691,23 @@ public class CreateAccountFragment extends Fragment
     @Override
     public void onCreateAccount(AccountCreator accountCreator, Status status, String resp) {
         if (status.equals(Status.AccountCreated)) {
-            if (useEmail.isChecked()
+            if (mUseEmail.isChecked()
                     || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
                 AssistantActivity.instance()
                         .displayAssistantConfirm(
                                 getUsername(),
-                                passwordEdit.getText().toString(),
-                                emailEdit.getText().toString());
+                                mPasswordEdit.getText().toString(),
+                                mEmailEdit.getText().toString());
             } else {
                 AssistantActivity.instance()
                         .displayAssistantCodeConfirm(
                                 getUsername(),
-                                phoneNumberEdit.getText().toString(),
-                                LinphoneUtils.getCountryCode(dialCode),
+                                mPhoneNumberEdit.getText().toString(),
+                                LinphoneUtils.getCountryCode(mDialCode),
                                 false);
             }
         } else {
-            createAccount.setEnabled(true);
+            mCreateAccount.setEnabled(true);
             LinphoneUtils.displayErrorAlert(
                     LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
         }
@@ -720,8 +725,8 @@ public class CreateAccountFragment extends Fragment
             AssistantActivity.instance()
                     .displayAssistantCodeConfirm(
                             getUsername(),
-                            phoneNumberEdit.getText().toString(),
-                            LinphoneUtils.getCountryCode(dialCode),
+                            mPhoneNumberEdit.getText().toString(),
+                            LinphoneUtils.getCountryCode(mDialCode),
                             false);
         }
     }
@@ -735,8 +740,8 @@ public class CreateAccountFragment extends Fragment
             AssistantActivity.instance()
                     .displayAssistantCodeConfirm(
                             getUsername(),
-                            phoneNumberEdit.getText().toString(),
-                            LinphoneUtils.getCountryCode(dialCode),
+                            mPhoneNumberEdit.getText().toString(),
+                            LinphoneUtils.getCountryCode(mDialCode),
                             false);
         }
     }
@@ -749,12 +754,12 @@ public class CreateAccountFragment extends Fragment
         if (status.equals(Status.AccountNotActivated)) {
             if (getResources().getBoolean(R.bool.isTablet)
                     || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
-                // accountCreator.activateAccount(); // Resend email TODO
+                // mAccountCreator.activateAccount(); // Resend email TODO
             } else {
                 accountCreator.recoverAccount(); // Resend SMS
             }
         } else {
-            createAccount.setEnabled(true);
+            mCreateAccount.setEnabled(true);
             LinphoneUtils.displayErrorAlert(
                     LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
         }
@@ -769,11 +774,11 @@ public class CreateAccountFragment extends Fragment
             AssistantActivity.instance()
                     .displayAssistantCodeConfirm(
                             getUsername(),
-                            phoneNumberEdit.getText().toString(),
-                            dialCode.getText().toString(),
+                            mPhoneNumberEdit.getText().toString(),
+                            mDialCode.getText().toString(),
                             false);
         } else {
-            createAccount.setEnabled(true);
+            mCreateAccount.setEnabled(true);
             // SMS error
             LinphoneUtils.displayErrorAlert(
                     getString(R.string.request_failed), AssistantActivity.instance());
@@ -789,18 +794,18 @@ public class CreateAccountFragment extends Fragment
             return;
         }
         if (status.equals(Status.AliasIsAccount) || status.equals(Status.AliasExist)) {
-            if (accountCreator.getPhoneNumber() != null
-                    && accountCreator.getUsername() != null
-                    && accountCreator.getPhoneNumber().compareTo(accountCreator.getUsername())
+            if (mAccountCreator.getPhoneNumber() != null
+                    && mAccountCreator.getUsername() != null
+                    && mAccountCreator.getPhoneNumber().compareTo(mAccountCreator.getUsername())
                             == 0) {
-                accountCreator.isAccountActivated();
+                mAccountCreator.isAccountActivated();
             } else {
-                createAccount.setEnabled(true);
+                mCreateAccount.setEnabled(true);
                 LinphoneUtils.displayErrorAlert(
                         LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
             }
         } else {
-            accountCreator.isAccountActivated();
+            mAccountCreator.isAccountActivated();
         }
     }
 

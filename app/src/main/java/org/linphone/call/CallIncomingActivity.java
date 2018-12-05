@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
@@ -54,25 +53,23 @@ import org.linphone.views.CallIncomingButtonListener;
 import org.linphone.views.CallIncomingDeclineButton;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
-    private static CallIncomingActivity instance;
+    private static CallIncomingActivity sInstance;
 
-    private TextView name, number;
-    private ImageView contactPicture, acceptIcon;
-    private CallIncomingAnswerButton accept;
-    private CallIncomingDeclineButton decline;
+    private TextView mName, mNumber;
+    private ImageView mContactPicture, mAcceptIcon;
+    private CallIncomingAnswerButton mAccept;
+    private CallIncomingDeclineButton mDecline;
     private Call mCall;
     private CoreListenerStub mListener;
-    private LinearLayout acceptUnlock;
-    private LinearLayout declineUnlock;
-    private boolean alreadyAcceptedOrDeniedCall;
+    private boolean mAlreadyAcceptedOrDeniedCall;
     private KeyguardManager mKeyguardManager;
 
     public static CallIncomingActivity instance() {
-        return instance;
+        return sInstance;
     }
 
     public static boolean isInstanciated() {
-        return instance != null;
+        return sInstance != null;
     }
 
     @Override
@@ -86,9 +83,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.call_incoming);
 
-        name = findViewById(R.id.contact_name);
-        number = findViewById(R.id.contact_number);
-        contactPicture = findViewById(R.id.contact_picture);
+        mName = findViewById(R.id.contact_name);
+        mNumber = findViewById(R.id.contact_number);
+        mContactPicture = findViewById(R.id.contact_picture);
 
         // set this flag so this activity will stay in front of the keyguard
         int flags =
@@ -97,12 +94,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
         getWindow().addFlags(flags);
 
-        acceptUnlock = findViewById(R.id.acceptUnlock);
-        declineUnlock = findViewById(R.id.declineUnlock);
-
-        accept = findViewById(R.id.answer_button);
-        decline = findViewById(R.id.decline_button);
-        acceptIcon = findViewById(R.id.acceptIcon);
+        mAccept = findViewById(R.id.answer_button);
+        mDecline = findViewById(R.id.decline_button);
+        mAcceptIcon = findViewById(R.id.acceptIcon);
         lookupCurrentCall();
 
         if (LinphonePreferences.instance() != null
@@ -110,7 +104,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                 && mCall.getRemoteParams() != null
                 && LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()
                 && mCall.getRemoteParams().videoEnabled()) {
-            acceptIcon.setImageResource(R.drawable.call_video_start);
+            mAcceptIcon.setImageResource(R.drawable.call_video_start);
         }
 
         mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
@@ -119,22 +113,22 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                         .getBoolean(
                                 R.bool.do_not_use_sliders_to_answer_hangup_call_if_phone_unlocked);
         if (doNotUseSliders && !mKeyguardManager.inKeyguardRestrictedInputMode()) {
-            accept.setSliderMode(false);
-            decline.setSliderMode(false);
+            mAccept.setSliderMode(false);
+            mDecline.setSliderMode(false);
         } else {
-            accept.setSliderMode(true);
-            decline.setSliderMode(true);
-            accept.setDeclineButton(decline);
-            decline.setAnswerButton(accept);
+            mAccept.setSliderMode(true);
+            mDecline.setSliderMode(true);
+            mAccept.setDeclineButton(mDecline);
+            mDecline.setAnswerButton(mAccept);
         }
-        accept.setListener(
+        mAccept.setListener(
                 new CallIncomingButtonListener() {
                     @Override
                     public void onAction() {
                         answer();
                     }
                 });
-        decline.setListener(
+        mDecline.setListener(
                 new CallIncomingButtonListener() {
                     @Override
                     public void onAction() {
@@ -166,19 +160,19 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                 };
 
         super.onCreate(savedInstanceState);
-        instance = this;
+        sInstance = this;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        instance = this;
+        sInstance = this;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.addListener(mListener);
         }
 
-        alreadyAcceptedOrDeniedCall = false;
+        mAlreadyAcceptedOrDeniedCall = false;
         mCall = null;
 
         // Only one call ringing at a time is allowed
@@ -194,12 +188,12 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
             ImageUtils.setImagePictureFromUri(
-                    this, contactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
-            name.setText(contact.getFullName());
+                    this, mContactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            mName.setText(contact.getFullName());
         } else {
-            name.setText(LinphoneUtils.getAddressDisplayName(address));
+            mName.setText(LinphoneUtils.getAddressDisplayName(address));
         }
-        number.setText(address.asStringUriOnly());
+        mNumber.setText(address.asStringUriOnly());
     }
 
     @Override
@@ -220,7 +214,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        instance = null;
+        sInstance = null;
     }
 
     @Override
@@ -245,20 +239,20 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     }
 
     private void decline() {
-        if (alreadyAcceptedOrDeniedCall) {
+        if (mAlreadyAcceptedOrDeniedCall) {
             return;
         }
-        alreadyAcceptedOrDeniedCall = true;
+        mAlreadyAcceptedOrDeniedCall = true;
 
         LinphoneManager.getLc().terminateCall(mCall);
         finish();
     }
 
     private void answer() {
-        if (alreadyAcceptedOrDeniedCall) {
+        if (mAlreadyAcceptedOrDeniedCall) {
             return;
         }
-        alreadyAcceptedOrDeniedCall = true;
+        mAlreadyAcceptedOrDeniedCall = true;
 
         if (!LinphoneManager.getInstance().acceptCall(mCall)) {
             // the above method takes care of Samsung Galaxy S

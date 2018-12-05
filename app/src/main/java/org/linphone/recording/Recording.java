@@ -36,6 +36,7 @@ import org.linphone.mediastream.Log;
 public class Recording implements PlayerListener, Comparable<Recording> {
     public static final Pattern RECORD_PATTERN =
             Pattern.compile(".*/(.*)_(\\d{2}-\\d{2}-\\d{4}-\\d{2}-\\d{2}-\\d{2})\\..*");
+
     private String mRecordPath, mName;
     private Date mRecordDate;
     private Player mPlayer;

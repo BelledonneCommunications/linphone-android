@@ -61,8 +61,6 @@ import org.linphone.views.BitmapWorkerTask;
 import org.linphone.views.ContactAvatar;
 
 public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private Context mContext;
-
     public ChatMessage message;
 
     public LinearLayout eventLayout;
@@ -85,6 +83,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     public CheckBox deleteEvent;
     public CheckBox deleteMessage;
+
+    private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
 
     public ChatMessageViewHolder(

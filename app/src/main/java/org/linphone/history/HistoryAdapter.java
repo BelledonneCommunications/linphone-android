@@ -43,7 +43,7 @@ import org.linphone.views.ContactAvatar;
 public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private List<CallLog> mLogs;
     private Context mContext;
-    private HistoryViewHolder.ClickListener clickListener;
+    private HistoryViewHolder.ClickListener mClickListener;
 
     public HistoryAdapter(
             Context aContext,
@@ -51,9 +51,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
             HistoryViewHolder.ClickListener listener,
             SelectableHelper helper) {
         super(helper);
-        this.mLogs = logs;
-        this.mContext = aContext;
-        this.clickListener = listener;
+        mLogs = logs;
+        mContext = aContext;
+        mClickListener = listener;
     }
 
     public int getCount() {
@@ -70,7 +70,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
         View v =
                 LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.history_cell, parent, false);
-        return new HistoryViewHolder(v, clickListener);
+        return new HistoryViewHolder(v, mClickListener);
     }
 
     @Override

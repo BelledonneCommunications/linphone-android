@@ -73,39 +73,40 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         "data4", // Normalized phone number
     };
 
-    private static ContactsManager instance;
-    private static ArrayList<ContactsUpdatedListener> contactsUpdatedListeners;
+    private static ContactsManager sInstance;
+    private static ArrayList<ContactsUpdatedListener> sContactsUpdatedListeners;
+
     private List<LinphoneContact> mContacts, mSipContacts;
-    private MagicSearch magicSearch;
-    private Bitmap defaultAvatar;
+    private MagicSearch mMagicSearch;
+    private Bitmap mDefaultAvatar;
     private boolean mContactsFetchedOnce = false;
     private Context mContext;
     private AsyncContactsLoader mLoadContactTask;
 
     private ContactsManager() {
-        super(LinphoneService.instance().mHandler);
-        defaultAvatar =
+        super(LinphoneService.instance().handler);
+        mDefaultAvatar =
                 BitmapFactory.decodeResource(
                         LinphoneService.instance().getResources(), R.drawable.avatar);
-        contactsUpdatedListeners = new ArrayList<>();
+        sContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            magicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
+            mMagicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
         }
     }
 
     public static void addContactsListener(ContactsUpdatedListener listener) {
-        contactsUpdatedListeners.add(listener);
+        sContactsUpdatedListeners.add(listener);
     }
 
     public static void removeContactsListener(ContactsUpdatedListener listener) {
-        contactsUpdatedListeners.remove(listener);
+        sContactsUpdatedListeners.remove(listener);
     }
 
     public static final ContactsManager getInstance() {
-        if (instance == null) instance = new ContactsManager();
-        return instance;
+        if (sInstance == null) sInstance = new ContactsManager();
+        return sInstance;
     }
 
     public static String getAddressOrNumberForAndroidContact(
@@ -145,12 +146,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 list.setListener(null);
             }
         }
-        defaultAvatar.recycle();
-        instance = null;
+        mDefaultAvatar.recycle();
+        sInstance = null;
     }
 
     public MagicSearch getMagicSearch() {
-        return magicSearch;
+        return mMagicSearch;
     }
 
     public boolean contactsFetchedOnce() {
@@ -158,7 +159,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public Bitmap getDefaultAvatarBitmap() {
-        return defaultAvatar;
+        return mDefaultAvatar;
     }
 
     @Override
@@ -382,7 +383,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         for (Friend lf : friends) {
             boolean newContact = ContactsManager.getInstance().refreshSipContact(lf);
             if (newContact) {
-                for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+                for (ContactsUpdatedListener listener : sContactsUpdatedListeners) {
                     listener.onContactsUpdated();
                 }
             }
@@ -626,7 +627,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
         @Override
         protected void onPostExecute(AsyncContactsData data) {
-            for (ContactsUpdatedListener listener : contactsUpdatedListeners) {
+            for (ContactsUpdatedListener listener : sContactsUpdatedListeners) {
                 listener.onContactsUpdated();
             }
             for (LinphoneContact contact : data.contacts) {

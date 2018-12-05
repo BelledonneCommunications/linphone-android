@@ -42,22 +42,22 @@ import org.linphone.settings.LinphonePreferences;
 
 public class RemoteProvisioningActivity extends Activity {
     private Handler mHandler = new Handler();
-    private String configUriParam = null;
-    private ProgressBar spinner;
+    private String mConfigUriParam = null;
+    private ProgressBar mSpinner;
     private CoreListenerStub mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remote_provisioning);
-        spinner = findViewById(R.id.spinner);
+        mSpinner = findViewById(R.id.spinner);
 
         mListener =
                 new CoreListenerStub() {
                     @Override
                     public void onConfiguringStatus(
                             Core lc, final ConfiguringState state, String message) {
-                        if (spinner != null) spinner.setVisibility(View.GONE);
+                        if (mSpinner != null) mSpinner.setVisibility(View.GONE);
                         if (state == ConfiguringState.Successful) {
                             goToLinphoneActivity();
                         } else if (state == ConfiguringState.Failed) {
@@ -113,18 +113,19 @@ public class RemoteProvisioningActivity extends Activity {
                                 if (openUri != null) {
                                     // We expect something like
                                     // linphone-config://http://linphone.org/config.xml
-                                    configUriParam =
+                                    mConfigUriParam =
                                             openUri.getEncodedSchemeSpecificPart()
                                                     .substring(2); // Removes the linphone-config://
                                     try {
-                                        configUriParam = URLDecoder.decode(configUriParam, "UTF-8");
+                                        mConfigUriParam =
+                                                URLDecoder.decode(mConfigUriParam, "UTF-8");
                                     } catch (UnsupportedEncodingException e) {
                                         Log.e(e);
                                     }
-                                    Log.d("Using config uri: " + configUriParam);
+                                    Log.d("Using config uri: " + mConfigUriParam);
                                 }
 
-                                if (configUriParam == null) {
+                                if (mConfigUriParam == null) {
                                     if (!LinphonePreferences.instance()
                                             .isFirstRemoteProvisioning()) {
                                         mHandler.post(
@@ -167,7 +168,7 @@ public class RemoteProvisioningActivity extends Activity {
                                                     @Override
                                                     public void run() {
                                                         setRemoteProvisioningAddressAndRestart(
-                                                                configUriParam);
+                                                                mConfigUriParam);
                                                     }
                                                 });
                                     }
@@ -185,7 +186,7 @@ public class RemoteProvisioningActivity extends Activity {
                         R.string.accept,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                setRemoteProvisioningAddressAndRestart(configUriParam);
+                                setRemoteProvisioningAddressAndRestart(mConfigUriParam);
                             }
                         })
                 .setNegativeButton(
@@ -199,7 +200,7 @@ public class RemoteProvisioningActivity extends Activity {
     }
 
     private void setRemoteProvisioningAddressAndRestart(final String configUri) {
-        if (spinner != null) spinner.setVisibility(View.VISIBLE);
+        if (mSpinner != null) mSpinner.setVisibility(View.VISIBLE);
 
         LinphonePreferences.instance().setContext(this); // Needed, else the next call will crash
         LinphonePreferences.instance().setRemoteProvisioningUrl(configUri);

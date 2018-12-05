@@ -29,13 +29,11 @@ import org.linphone.settings.LinphonePreferences;
 
 public class OutgoingCallReceiver extends BroadcastReceiver {
     private static final String TAG = "CallHandler";
-    private final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
-
-    private LinphonePreferences mPrefs;
+    private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mPrefs = LinphonePreferences.instance();
+        LinphonePreferences mPrefs = LinphonePreferences.instance();
         Log.e(TAG, "===>>>> Linphone OutgoingCallReceiver ");
         if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
             Log.e(TAG, "===>>>> Linphone OutgoingCallReceiver : ACTION_NEW_OUTGOING_CALL");

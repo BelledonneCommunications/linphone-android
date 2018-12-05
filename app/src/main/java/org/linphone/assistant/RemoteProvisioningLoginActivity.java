@@ -35,8 +35,8 @@ import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
-    private EditText login, password, domain;
-    private Button connect;
+    private EditText mLogin, mPassword, mDomain;
+    private Button mConnect;
     private CoreListenerStub mListener;
 
     @Override
@@ -44,17 +44,17 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.assistant_remote_provisioning_login);
 
-        login = findViewById(R.id.assistant_username);
-        password = findViewById(R.id.assistant_password);
-        domain = findViewById(R.id.assistant_domain);
+        mLogin = findViewById(R.id.assistant_username);
+        mPassword = findViewById(R.id.assistant_password);
+        mDomain = findViewById(R.id.assistant_domain);
 
-        connect = findViewById(R.id.assistant_connect);
-        connect.setOnClickListener(this);
+        mConnect = findViewById(R.id.assistant_connect);
+        mConnect.setOnClickListener(this);
 
         String defaultDomain = getIntent().getStringExtra("Domain");
         if (defaultDomain != null) {
-            domain.setText(defaultDomain);
-            domain.setEnabled(false);
+            mDomain.setText(defaultDomain);
+            mDomain.setEnabled(false);
         }
 
         mListener =
@@ -132,9 +132,9 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
         }
         if (id == R.id.assistant_connect) {
             storeAccount(
-                    login.getText().toString(),
-                    password.getText().toString(),
-                    domain.getText().toString());
+                    mLogin.getText().toString(),
+                    mPassword.getText().toString(),
+                    mDomain.getText().toString());
         }
     }
 

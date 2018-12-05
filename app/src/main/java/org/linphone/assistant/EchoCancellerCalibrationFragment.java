@@ -43,9 +43,9 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
     private Handler mHandler = new Handler();
     private boolean mSendEcCalibrationResult = false;
     private CoreListenerStub mListener;
-    private XmlRpcSession xmlRpcSession;
-    private XmlRpcRequest xmlRpcRequest;
-    private Runnable runFinished;
+    private XmlRpcSession mXmlRpcSession;
+    private XmlRpcRequest mXmlRpcRequest;
+    private Runnable mRunFinished;
 
     @Override
     public View onCreateView(
@@ -66,19 +66,19 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
                         }
                     }
                 };
-        runFinished =
+        mRunFinished =
                 new Runnable() {
                     public void run() {
                         AssistantActivity.instance().isEchoCalibrationFinished();
                     }
                 };
 
-        xmlRpcSession =
+        mXmlRpcSession =
                 LinphoneManager.getLcIfManagerNotDestroyedOrNull()
                         .createXmlRpcSession(LinphonePreferences.instance().getXmlrpcUrl());
-        xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.None, "add_ec_calibration_result");
-        xmlRpcRequest.setListener(this);
+        mXmlRpcRequest =
+                mXmlRpcSession.createRequest(XmlRpcArgType.None, "add_ec_calibration_result");
+        mXmlRpcRequest.setListener(this);
 
         try {
             LinphoneManager.getLc().addListener(mListener);
@@ -96,7 +96,7 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
 
     @Override
     public void onResponse(XmlRpcRequest request) {
-        mHandler.post(runFinished);
+        mHandler.post(mRunFinished);
     }
 
     private void sendEcCalibrationResult(EcCalibratorStatus status, int delayMs) {
@@ -113,11 +113,11 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
                         + "ms"
                         + " hasBuiltInEchoCanceler "
                         + hasBuiltInEchoCanceler);
-        xmlRpcRequest.addStringArg(Build.MANUFACTURER);
-        xmlRpcRequest.addStringArg(Build.MODEL);
-        xmlRpcRequest.addStringArg(status.toString());
-        xmlRpcRequest.addIntArg(delayMs);
-        xmlRpcRequest.addIntArg(hasBuiltInEchoCanceler ? 1 : 0);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcRequest.addStringArg(Build.MANUFACTURER);
+        mXmlRpcRequest.addStringArg(Build.MODEL);
+        mXmlRpcRequest.addStringArg(status.toString());
+        mXmlRpcRequest.addIntArg(delayMs);
+        mXmlRpcRequest.addIntArg(hasBuiltInEchoCanceler ? 1 : 0);
+        mXmlRpcSession.sendRequest(mXmlRpcRequest);
     }
 }

@@ -71,23 +71,25 @@ public final class LinphoneService extends Service {
      */
     public static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
 
-    private static LinphoneService instance;
-    public Handler mHandler = new Handler();
+    private static LinphoneService sInstance;
+
+    public Handler handler = new Handler();
+
     private boolean mTestDelayElapsed = true;
     private CoreListenerStub mListener;
     private WindowManager mWindowManager;
     private LinphoneOverlay mOverlay;
     private Application.ActivityLifecycleCallbacks mActivityCallbacks;
     private NotificationsManager mNotificationManager;
-    private String incomingReceivedActivityName;
-    private Class<? extends Activity> incomingReceivedActivity = LinphoneActivity.class;
+    private String mIncomingReceivedActivityName;
+    private Class<? extends Activity> mIncomingReceivedActivity = LinphoneActivity.class;
 
     public static boolean isReady() {
-        return instance != null && instance.mTestDelayElapsed;
+        return sInstance != null && sInstance.mTestDelayElapsed;
     }
 
     public static LinphoneService instance() {
-        if (isReady()) return instance;
+        if (isReady()) return sInstance;
 
         throw new RuntimeException("LinphoneService not instantiated yet");
     }
@@ -97,7 +99,7 @@ public final class LinphoneService extends Service {
     }
 
     public Class<? extends Activity> getIncomingReceivedActivity() {
-        return incomingReceivedActivity;
+        return mIncomingReceivedActivity;
     }
 
     public void setCurrentlyDisplayedChatRoom(String address) {
@@ -144,14 +146,14 @@ public final class LinphoneService extends Service {
             Log.i("[Push Notification] LinphoneService started because of a push");
         }
 
-        if (instance != null) {
+        if (sInstance != null) {
             Log.w("Attempt to start the LinphoneService but it is already running !");
             return START_REDELIVER_INTENT;
         }
 
         LinphoneManager.createAndStart(this);
 
-        instance = this; // instance is ready once linphone manager has been created
+        sInstance = this; // sInstance is ready once linphone manager has been created
         mNotificationManager = new NotificationsManager(this);
         LinphoneManager.getLc()
                 .addListener(
@@ -160,7 +162,7 @@ public final class LinphoneService extends Service {
                                     @Override
                                     public void onCallStateChanged(
                                             Core lc, Call call, Call.State state, String message) {
-                                        if (instance == null) {
+                                        if (sInstance == null) {
                                             Log.i(
                                                     "Service not ready, discarding call state change to ",
                                                     state.toString());
@@ -224,7 +226,7 @@ public final class LinphoneService extends Service {
 
         if (!mTestDelayElapsed) {
             // Only used when testing. Simulates a 5 seconds delay for launching service
-            mHandler.postDelayed(
+            handler.postDelayed(
                     new Runnable() {
                         @Override
                         public void run() {
@@ -273,11 +275,11 @@ public final class LinphoneService extends Service {
         dumpDeviceInformation();
         dumpInstalledLinphoneInformation();
 
-        incomingReceivedActivityName =
+        mIncomingReceivedActivityName =
                 LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
         try {
-            incomingReceivedActivity =
-                    (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
+            mIncomingReceivedActivity =
+                    (Class<? extends Activity>) Class.forName(mIncomingReceivedActivityName);
         } catch (ClassNotFoundException e) {
             Log.e(e);
         }
@@ -371,7 +373,7 @@ public final class LinphoneService extends Service {
             lc.removeListener(mListener);
         }
 
-        instance = null;
+        sInstance = null;
         LinphoneManager.destroy();
 
         // Make sure our notification is gone.
@@ -389,10 +391,10 @@ public final class LinphoneService extends Service {
     @SuppressWarnings("unchecked")
     public void setActivityToLaunchOnIncomingReceived(String activityName) {
         try {
-            incomingReceivedActivity = (Class<? extends Activity>) Class.forName(activityName);
-            incomingReceivedActivityName = activityName;
+            mIncomingReceivedActivity = (Class<? extends Activity>) Class.forName(activityName);
+            mIncomingReceivedActivityName = activityName;
             LinphonePreferences.instance()
-                    .setActivityToLaunchOnIncomingReceived(incomingReceivedActivityName);
+                    .setActivityToLaunchOnIncomingReceived(mIncomingReceivedActivityName);
         } catch (ClassNotFoundException e) {
             Log.e(e);
         }
@@ -402,7 +404,7 @@ public final class LinphoneService extends Service {
         // wakeup linphone
         startActivity(
                 new Intent()
-                        .setClass(this, incomingReceivedActivity)
+                        .setClass(this, mIncomingReceivedActivity)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
@@ -464,7 +466,7 @@ public final class LinphoneService extends Service {
 
         void startInactivityChecker() {
             if (mLastChecker != null) mLastChecker.cancel();
-            LinphoneService.this.mHandler.postDelayed(
+            LinphoneService.this.handler.postDelayed(
                     (mLastChecker = new InactivityChecker()), 2000);
         }
 

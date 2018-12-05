@@ -60,23 +60,19 @@ import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
-import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.settings.LinphonePreferences;
 
 /** Helpers. */
 public final class LinphoneUtils {
-    private static Context context = null;
-    private static Handler mHandler = new Handler(Looper.getMainLooper());
+    private static Context sContext = null;
+    private static Handler sHandler = new Handler(Looper.getMainLooper());
 
     private LinphoneUtils() {}
 
     public static String getDeviceName(Context context) {
-        String name = null;
-        if (Build.VERSION.SDK_INT > 17) {
-            name =
-                    Settings.Global.getString(
-                            context.getContentResolver(), Settings.Global.DEVICE_NAME);
-        }
+        String name =
+                Settings.Global.getString(
+                        context.getContentResolver(), Settings.Global.DEVICE_NAME);
         if (name == null) {
             name = BluetoothAdapter.getDefaultAdapter().getName();
         }
@@ -131,7 +127,7 @@ public final class LinphoneUtils {
     }
 
     public static void dispatchOnUIThread(Runnable r) {
-        mHandler.post(r);
+        sHandler.post(r);
     }
 
     // private static final String sipAddressRegExp =
@@ -230,12 +226,6 @@ public final class LinphoneUtils {
     }
 
     public static boolean onKeyVolumeAdjust(int keyCode) {
-        if (!((keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
-                        && (Hacks.needSoftvolume())
-                || Build.VERSION.SDK_INT >= 15)) {
-            return false; // continue
-        }
-
         if (!LinphoneService.isReady()) {
             Log.i("Couldn't change softvolume has service is not running");
             return true;
@@ -527,8 +517,8 @@ public final class LinphoneUtils {
     }
 
     private static Context getContext() {
-        if (context == null && LinphoneManager.isInstanciated())
-            context = LinphoneManager.getInstance().getContext();
-        return context;
+        if (sContext == null && LinphoneManager.isInstanciated())
+            sContext = LinphoneManager.getInstance().getContext();
+        return sContext;
     }
 }

@@ -44,10 +44,10 @@ public class XmlRpcHelper {
     public static final String CLIENT_ERROR_INVALID_SERVER_URL = "INVALID_SERVER_URL";
     public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
 
-    private XmlRpcSession xmlRpcSession;
+    private XmlRpcSession mXmlRpcSession;
 
     public XmlRpcHelper() {
-        xmlRpcSession =
+        mXmlRpcSession =
                 LinphoneManager.getLcIfManagerNotDestroyedOrNull()
                         .createXmlRpcSession(
                                 LinphonePreferences.instance()
@@ -57,7 +57,7 @@ public class XmlRpcHelper {
     public void createAccountAsync(
             final XmlRpcListener listener, String username, String email, String password) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "create_account");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "create_account");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -79,13 +79,13 @@ public class XmlRpcHelper {
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(email);
         xmlRpcRequest.addStringArg(password == null ? "" : password);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void getAccountExpireAsync(
             final XmlRpcListener listener, String username, String password) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "get_account_expiration");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "get_account_expiration");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -106,7 +106,7 @@ public class XmlRpcHelper {
                 });
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(password);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void updateAccountExpireAsync(
@@ -117,7 +117,7 @@ public class XmlRpcHelper {
             String payload,
             String signature) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "update_expiration_date");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "update_expiration_date");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -141,13 +141,13 @@ public class XmlRpcHelper {
         xmlRpcRequest.addStringArg(domain);
         xmlRpcRequest.addStringArg(payload);
         xmlRpcRequest.addStringArg(signature);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void activateAccountAsync(
             final XmlRpcListener listener, String username, String password) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "activate_account");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "activate_account");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -168,12 +168,12 @@ public class XmlRpcHelper {
                 });
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(password);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void isAccountActivatedAsync(final XmlRpcListener listener, String username) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "check_account_activated");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "check_account_activated");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -195,13 +195,13 @@ public class XmlRpcHelper {
                     }
                 });
         xmlRpcRequest.addStringArg(username);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void isTrialAccountAsync(
             final XmlRpcListener listener, String username, String password) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "is_account_trial");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "is_account_trial");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -220,12 +220,12 @@ public class XmlRpcHelper {
                 });
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(password);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void isAccountAsync(final XmlRpcListener listener, String username) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "check_account_activated");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "check_account_activated");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -247,13 +247,13 @@ public class XmlRpcHelper {
                     }
                 });
         xmlRpcRequest.addStringArg(username);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void changeAccountEmailAsync(
             final XmlRpcListener listener, String username, String password, String newEmail) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "change_email");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "change_email");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -276,7 +276,7 @@ public class XmlRpcHelper {
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(password);
         xmlRpcRequest.addStringArg(newEmail);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void changeAccountPasswordAsync(
@@ -285,7 +285,7 @@ public class XmlRpcHelper {
             String oldPassword,
             String newPassword) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "change_password");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "change_password");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -308,7 +308,7 @@ public class XmlRpcHelper {
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(oldPassword);
         xmlRpcRequest.addStringArg(newPassword);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void changeAccountHashPasswordAsync(
@@ -317,7 +317,7 @@ public class XmlRpcHelper {
             String oldPassword,
             String newPassword) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "change_hash");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "change_hash");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -340,13 +340,13 @@ public class XmlRpcHelper {
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(oldPassword);
         xmlRpcRequest.addStringArg(newPassword);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void sendRecoverPasswordLinkByEmailAsync(
             final XmlRpcListener listener, String usernameOrEmail) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(
+                mXmlRpcSession.createRequest(
                         XmlRpcArgType.String, "send_reset_account_password_email");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
@@ -368,13 +368,13 @@ public class XmlRpcHelper {
                     }
                 });
         xmlRpcRequest.addStringArg(usernameOrEmail);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void sendActivateAccountLinkByEmailAsync(
             final XmlRpcListener listener, String usernameOrEmail) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "resend_activation_email");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "resend_activation_email");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -395,12 +395,12 @@ public class XmlRpcHelper {
                     }
                 });
         xmlRpcRequest.addStringArg(usernameOrEmail);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void sendUsernameByEmailAsync(final XmlRpcListener listener, String email) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "recover_username_from_email");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "recover_username_from_email");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -421,13 +421,13 @@ public class XmlRpcHelper {
                     }
                 });
         xmlRpcRequest.addStringArg(email);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void verifySignatureAsync(
             final XmlRpcListener listener, String payload, String signature) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(XmlRpcArgType.String, "check_payload_signature");
+                mXmlRpcSession.createRequest(XmlRpcArgType.String, "check_payload_signature");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
                     @Override
@@ -450,13 +450,13 @@ public class XmlRpcHelper {
                 });
         xmlRpcRequest.addStringArg(payload);
         xmlRpcRequest.addStringArg(signature);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 
     public void getRemoteProvisioningFilenameAsync(
             final XmlRpcListener listener, String username, String domain, String password) {
         XmlRpcRequest xmlRpcRequest =
-                xmlRpcSession.createRequest(
+                mXmlRpcSession.createRequest(
                         XmlRpcArgType.String, "get_remote_provisioning_filename");
         xmlRpcRequest.setListener(
                 new XmlRpcRequestListener() {
@@ -480,6 +480,6 @@ public class XmlRpcHelper {
         xmlRpcRequest.addStringArg(username);
         xmlRpcRequest.addStringArg(domain);
         xmlRpcRequest.addStringArg(password);
-        xmlRpcSession.sendRequest(xmlRpcRequest);
+        mXmlRpcSession.sendRequest(xmlRpcRequest);
     }
 }

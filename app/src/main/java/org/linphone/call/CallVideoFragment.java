@@ -52,8 +52,8 @@ public class CallVideoFragment extends Fragment
     private float mZoomFactor = 1.f;
     private float mZoomCenterX, mZoomCenterY;
     private CompatibilityScaleGestureDetector mScaleDetector;
-    private CallActivity inCallActivity;
-    private int previewX, previewY;
+    private CallActivity mInCallActivity;
+    private int mPreviewX, mPreviewY;
 
     @SuppressWarnings("deprecation")
     // Warning useless because value is ignored and automatically set by new APIs.
@@ -81,8 +81,8 @@ public class CallVideoFragment extends Fragment
                         }
 
                         mGestureDetector.onTouchEvent(event);
-                        if (inCallActivity != null) {
-                            inCallActivity.displayVideoCallControlsIfHidden();
+                        if (mInCallActivity != null) {
+                            mInCallActivity.displayVideoCallControlsIfHidden();
                         }
                         return true;
                     }
@@ -94,8 +94,8 @@ public class CallVideoFragment extends Fragment
                     public boolean onTouch(View view, MotionEvent motionEvent) {
                         switch (motionEvent.getAction()) {
                             case MotionEvent.ACTION_DOWN:
-                                previewX = (int) motionEvent.getX();
-                                previewY = (int) motionEvent.getY();
+                                mPreviewX = (int) motionEvent.getX();
+                                mPreviewY = (int) motionEvent.getY();
                                 break;
                             case MotionEvent.ACTION_MOVE:
                                 int x = (int) motionEvent.getX();
@@ -108,8 +108,8 @@ public class CallVideoFragment extends Fragment
                                         0); // Clears the rule, as there is no removeRule until API
                                 // 17.
                                 lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                                int left = lp.leftMargin + (x - previewX);
-                                int top = lp.topMargin + (y - previewY);
+                                int left = lp.leftMargin + (x - mPreviewX);
+                                int top = lp.topMargin + (y - mPreviewY);
                                 lp.leftMargin = left;
                                 lp.topMargin = top;
                                 view.setLayoutParams(lp);
@@ -124,9 +124,9 @@ public class CallVideoFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
-        inCallActivity = (CallActivity) getActivity();
-        if (inCallActivity != null) {
-            inCallActivity.bindVideoFragment(this);
+        mInCallActivity = (CallActivity) getActivity();
+        if (mInCallActivity != null) {
+            mInCallActivity.bindVideoFragment(this);
         }
     }
 
@@ -206,8 +206,8 @@ public class CallVideoFragment extends Fragment
             LinphoneService.instance().destroyOverlay();
         }
 
-        mGestureDetector = new GestureDetector(inCallActivity, this);
-        mScaleDetector = new CompatibilityScaleGestureDetector(inCallActivity);
+        mGestureDetector = new GestureDetector(mInCallActivity, this);
+        mScaleDetector = new CompatibilityScaleGestureDetector(mInCallActivity);
         mScaleDetector.setOnScaleListener(this);
 
         resizePreview();
@@ -307,7 +307,7 @@ public class CallVideoFragment extends Fragment
 
     @Override
     public void onDestroy() {
-        inCallActivity = null;
+        mInCallActivity = null;
 
         mCaptureView = null;
         if (mVideoView != null) {

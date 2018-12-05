@@ -34,7 +34,7 @@ import org.linphone.LinphoneService;
 import org.linphone.call.CallActivity;
 
 public class BluetoothManager extends BroadcastReceiver {
-    private static BluetoothManager instance;
+    private static BluetoothManager sInstance;
 
     private Context mContext;
     private AudioManager mAudioManager;
@@ -42,24 +42,24 @@ public class BluetoothManager extends BroadcastReceiver {
     private BluetoothHeadset mBluetoothHeadset;
     private BluetoothDevice mBluetoothDevice;
     private BluetoothProfile.ServiceListener mProfileListener;
-    private boolean isBluetoothConnected;
-    private boolean isScoConnected;
+    private boolean mIsBluetoothConnected;
+    private boolean mIsScoConnected;
 
     public BluetoothManager() {
-        isBluetoothConnected = false;
+        mIsBluetoothConnected = false;
         if (!ensureInit()) {
             android.util.Log.w(
                     "BluetoothManager",
                     "[Bluetooth] Manager tried to init but LinphoneService not ready yet...");
         }
-        instance = this;
+        sInstance = this;
     }
 
     public static BluetoothManager getInstance() {
-        if (instance == null) {
-            instance = new BluetoothManager();
+        if (sInstance == null) {
+            sInstance = new BluetoothManager();
         }
-        return instance;
+        return sInstance;
     }
 
     public void initBluetooth() {
@@ -85,7 +85,7 @@ public class BluetoothManager extends BroadcastReceiver {
     }
 
     private void startBluetooth() {
-        if (isBluetoothConnected) {
+        if (mIsBluetoothConnected) {
             android.util.Log.e("BluetoothManager", "[Bluetooth] Already started, skipping...");
             return;
         }
@@ -107,14 +107,14 @@ public class BluetoothManager extends BroadcastReceiver {
                                 android.util.Log.d(
                                         "BluetoothManager", "[Bluetooth] Headset connected");
                                 mBluetoothHeadset = (BluetoothHeadset) proxy;
-                                isBluetoothConnected = true;
+                                mIsBluetoothConnected = true;
                             }
                         }
 
                         public void onServiceDisconnected(int profile) {
                             if (profile == BluetoothProfile.HEADSET) {
                                 mBluetoothHeadset = null;
-                                isBluetoothConnected = false;
+                                mIsBluetoothConnected = false;
                                 android.util.Log.d(
                                         "BluetoothManager", "[Bluetooth] Headset disconnected");
                                 LinphoneManager.getInstance().routeAudioToReceiver();
@@ -211,7 +211,7 @@ public class BluetoothManager extends BroadcastReceiver {
     public boolean isUsingBluetoothAudioRoute() {
         return mBluetoothHeadset != null
                 && mBluetoothHeadset.isAudioConnected(mBluetoothDevice)
-                && isScoConnected;
+                && mIsScoConnected;
     }
 
     public boolean isBluetoothHeadsetAvailable() {
@@ -251,7 +251,7 @@ public class BluetoothManager extends BroadcastReceiver {
 
             // Hack to ensure bluetooth sco is really stopped
             int retries = 0;
-            while (isScoConnected && retries < 10) {
+            while (mIsScoConnected && retries < 10) {
                 retries++;
 
                 try {
@@ -268,7 +268,7 @@ public class BluetoothManager extends BroadcastReceiver {
 
     public void stopBluetooth() {
         android.util.Log.w("BluetoothManager", "[Bluetooth] Stopping...");
-        isBluetoothConnected = false;
+        mIsBluetoothConnected = false;
 
         disableBluetoothSCO();
 
@@ -310,15 +310,15 @@ public class BluetoothManager extends BroadcastReceiver {
             if (state == AudioManager.SCO_AUDIO_STATE_CONNECTED) {
                 android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: connected");
                 //				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
-                isScoConnected = true;
+                mIsScoConnected = true;
             } else if (state == AudioManager.SCO_AUDIO_STATE_DISCONNECTED) {
                 android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: disconnected");
                 //				LinphoneManager.getInstance().audioStateChanged(AudioState.SPEAKER);
-                isScoConnected = false;
+                mIsScoConnected = false;
             } else if (state == AudioManager.SCO_AUDIO_STATE_CONNECTING) {
                 android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: connecting");
                 //				LinphoneManager.getInstance().audioStateChanged(AudioState.BLUETOOTH);
-                isScoConnected = true;
+                mIsScoConnected = true;
             } else {
                 android.util.Log.d("BluetoothManager", "[Bluetooth] SCO state: " + state);
             }

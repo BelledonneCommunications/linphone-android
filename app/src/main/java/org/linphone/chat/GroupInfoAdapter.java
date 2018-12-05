@@ -22,10 +22,6 @@ package org.linphone.chat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -37,25 +33,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
 import org.linphone.views.ContactAvatar;
 
-public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.ViewHolder> {
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public RelativeLayout avatarLayout;
-        public ImageView delete;
-        public LinearLayout isAdmin;
-        public LinearLayout isNotAdmin;
-
-        public ViewHolder(View view) {
-            super(view);
-            name = view.findViewById(R.id.name);
-            avatarLayout = view.findViewById(R.id.avatar_layout);
-            delete = view.findViewById(R.id.delete);
-            isAdmin = view.findViewById(R.id.isAdminLayout);
-            isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
-        }
-    }
-
+public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> {
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
@@ -69,15 +47,15 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoAdapter.View
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GroupInfoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v =
                 LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.chat_infos_cell, parent, false);
-        return new ViewHolder(v);
+        return new GroupInfoViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final GroupInfoViewHolder holder, int position) {
         final ContactAddress ca = (ContactAddress) getItem(position);
         LinphoneContact c = ca.getContact();
 

@@ -24,34 +24,34 @@ import java.io.Serializable;
 public class LinphoneNumberOrAddress implements Serializable, Comparable<LinphoneNumberOrAddress> {
     private static final long serialVersionUID = -2301689469730072896L;
 
-    private boolean isSIPAddress;
-    private String value, oldValueForUpdatePurpose;
-    private String normalizedPhone;
+    private boolean mIsSIPAddress;
+    private String mValue, mOldValueForUpdatePurpose;
+    private String mNormalizedPhone;
 
     public LinphoneNumberOrAddress(String v, boolean isSIP) {
-        value = v;
-        isSIPAddress = isSIP;
-        oldValueForUpdatePurpose = null;
-        normalizedPhone = null;
+        mValue = v;
+        mIsSIPAddress = isSIP;
+        mOldValueForUpdatePurpose = null;
+        mNormalizedPhone = null;
     }
 
     public LinphoneNumberOrAddress(String v, String normalizedV) {
-        value = v;
-        normalizedPhone = normalizedV != null ? normalizedV : v;
-        isSIPAddress = false;
-        oldValueForUpdatePurpose = null;
+        mValue = v;
+        mNormalizedPhone = normalizedV != null ? normalizedV : v;
+        mIsSIPAddress = false;
+        mOldValueForUpdatePurpose = null;
     }
 
     public LinphoneNumberOrAddress(String v, boolean isSip, String old) {
         this(v, isSip);
-        oldValueForUpdatePurpose = old;
+        mOldValueForUpdatePurpose = old;
     }
 
     @Override
     public int compareTo(LinphoneNumberOrAddress noa) {
-        if (value != null) {
+        if (mValue != null) {
             if (noa.isSIPAddress() && isSIPAddress()) {
-                return value.compareTo(noa.getValue());
+                return mValue.compareTo(noa.getValue());
             } else if (!noa.isSIPAddress() && !isSIPAddress()) {
                 return getNormalizedPhone().compareTo(noa.getNormalizedPhone());
             }
@@ -67,26 +67,26 @@ public class LinphoneNumberOrAddress implements Serializable, Comparable<Linphon
     }
 
     public boolean isSIPAddress() {
-        return isSIPAddress;
+        return mIsSIPAddress;
     }
 
     public String getOldValue() {
-        return oldValueForUpdatePurpose;
+        return mOldValueForUpdatePurpose;
     }
 
     public void setOldValue(String v) {
-        oldValueForUpdatePurpose = v;
+        mOldValueForUpdatePurpose = v;
     }
 
     public String getValue() {
-        return value;
+        return mValue;
     }
 
     public void setValue(String v) {
-        value = v;
+        mValue = v;
     }
 
     public String getNormalizedPhone() {
-        return normalizedPhone != null ? normalizedPhone : value;
+        return mNormalizedPhone != null ? mNormalizedPhone : mValue;
     }
 }

@@ -35,28 +35,28 @@ import org.linphone.core.DialPlan;
 
 public class CountryListFragment extends Fragment
         implements AdapterView.OnItemClickListener, View.OnClickListener {
-    private ListView list;
-    private EditText search;
-    private ImageView clearSearchField;
-    private AssistantActivity.CountryListAdapter adapter;
+    private ListView mList;
+    private EditText mSearch;
+    private ImageView mClearSearchField;
+    private AssistantActivity.CountryListAdapter mAdapter;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.assistant_country_list, container, false);
-        adapter = AssistantActivity.instance().getCountryListAdapter();
-        adapter.setInflater(inflater);
+        mAdapter = AssistantActivity.instance().getCountryListAdapter();
+        mAdapter.setInflater(inflater);
 
-        search = view.findViewById(R.id.search_country);
-        clearSearchField = view.findViewById(R.id.clearSearchField);
-        clearSearchField.setOnClickListener(this);
+        mSearch = view.findViewById(R.id.search_country);
+        mClearSearchField = view.findViewById(R.id.clearSearchField);
+        mClearSearchField.setOnClickListener(this);
 
-        list = view.findViewById(R.id.countryList);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(this);
+        mList = view.findViewById(R.id.countryList);
+        mList.setAdapter(mAdapter);
+        mList.setOnItemClickListener(this);
 
-        search.addTextChangedListener(
+        mSearch.addTextChangedListener(
                 new TextWatcher() {
                     @Override
                     public void beforeTextChanged(
@@ -64,13 +64,13 @@ public class CountryListFragment extends Fragment
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        adapter.getFilter().filter(s);
+                        mAdapter.getFilter().filter(s);
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {}
                 });
-        search.setText("");
+        mSearch.setText("");
 
         return view;
     }
@@ -85,7 +85,7 @@ public class CountryListFragment extends Fragment
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.clearSearchField) {
-            search.setText("");
+            mSearch.setText("");
         }
     }
 }

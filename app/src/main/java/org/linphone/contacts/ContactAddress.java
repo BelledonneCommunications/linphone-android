@@ -26,14 +26,14 @@ import org.linphone.core.Factory;
 import org.linphone.core.SearchResult;
 
 public class ContactAddress implements Serializable {
-    private LinphoneContact contact;
-    private SearchResult result;
-    private String address;
-    private String phoneNumber;
-    private boolean isLinphoneContact;
-    private boolean isSelect = false;
-    private boolean isAdmin = false;
-    private transient View view;
+    private LinphoneContact mContact;
+    private SearchResult mResult;
+    private String mAddress;
+    private String mPhoneNumber;
+    private boolean mIsLinphoneContact;
+    private boolean mIsSelect = false;
+    private boolean mIsAdmin = false;
+    private transient View mView;
 
     public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
         init(c, a, pn, isLC);
@@ -41,56 +41,58 @@ public class ContactAddress implements Serializable {
 
     public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
         init(c, a, pn, isLC);
-        this.isAdmin = isAdmin;
+        mIsAdmin = isAdmin;
     }
 
     public boolean isAdmin() {
-        return isAdmin;
+        return mIsAdmin;
     }
 
     public void setAdmin(boolean admin) {
-        isAdmin = admin;
+        mIsAdmin = admin;
     }
 
     public boolean isSelect() {
-        return isSelect;
+        return mIsSelect;
     }
 
     public void setSelect(boolean select) {
-        isSelect = select;
+        mIsSelect = select;
     }
 
     public View getView() {
-        return view;
+        return mView;
     }
 
     public void setView(View v) {
-        view = v;
+        mView = v;
     }
 
     public LinphoneContact getContact() {
-        return contact;
+        return mContact;
     }
 
     public SearchResult getResult() {
-        return result;
+        return mResult;
     }
 
     public void setResult(SearchResult result) {
-        this.result = result;
+        this.mResult = result;
     }
 
     public String getAddressAsDisplayableString() {
         Address addr = getAddress();
         if (addr != null && addr.getUsername() != null) return addr.asStringUriOnly();
-        return address;
+        return mAddress;
     }
 
     public Address getAddress() {
         String presence =
-                contact.getPresenceModelForUriOrTel(
-                        (phoneNumber != null && !phoneNumber.isEmpty()) ? phoneNumber : address);
-        Address addr = Factory.instance().createAddress(presence != null ? presence : address);
+                mContact.getPresenceModelForUriOrTel(
+                        (mPhoneNumber != null && !mPhoneNumber.isEmpty())
+                                ? mPhoneNumber
+                                : mAddress);
+        Address addr = Factory.instance().createAddress(presence != null ? presence : mAddress);
         // Remove the user=phone URI param if existing, it will break everything otherwise
         if (addr.hasUriParam("user")) {
             addr.removeUriParam("user");
@@ -99,8 +101,8 @@ public class ContactAddress implements Serializable {
     }
 
     public String getDisplayName() {
-        if (address != null) {
-            Address addr = Factory.instance().createAddress(address);
+        if (mAddress != null) {
+            Address addr = Factory.instance().createAddress(mAddress);
             if (addr != null) {
                 return addr.getDisplayName();
             }
@@ -109,8 +111,8 @@ public class ContactAddress implements Serializable {
     }
 
     public String getUsername() {
-        if (address != null) {
-            Address addr = Factory.instance().createAddress(address);
+        if (mAddress != null) {
+            Address addr = Factory.instance().createAddress(mAddress);
             if (addr != null) {
                 return addr.getUsername();
             }
@@ -119,18 +121,18 @@ public class ContactAddress implements Serializable {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        return mPhoneNumber;
     }
 
     public boolean isLinphoneContact() {
-        return isLinphoneContact;
+        return mIsLinphoneContact;
     }
 
     private void init(LinphoneContact c, String a, String pn, boolean isLC) {
-        contact = c;
-        address = a;
-        phoneNumber = pn;
-        isLinphoneContact = isLC;
+        mContact = c;
+        mAddress = a;
+        mPhoneNumber = pn;
+        mIsLinphoneContact = isLC;
     }
 
     @Override
