@@ -50,7 +50,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
     private View mView;
     private ImageView mContactPicture, mCallDirection;
     private TextView mContactName, mContactAddress, mTime, mDate;
-    private String mSipUri, mDisplayName, mPictureUri;
+    private String mSipUri, mDisplayName;
     private RelativeLayout mWaitLayout;
     private LinphoneContact mContact;
     private ChatRoom mChatRoom;
@@ -61,7 +61,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mSipUri = getArguments().getString("SipUri");
         mDisplayName = getArguments().getString("DisplayName");
-        mPictureUri = getArguments().getString("PictureUri");
         String status = getArguments().getString("Call.Status");
         String callTime = getArguments().getString("CallTime");
         String callDate = getArguments().getString("CallDate");
@@ -183,19 +182,13 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
     }
 
     public void changeDisplayedHistory(
-            String sipUri,
-            String displayName,
-            String pictureUri,
-            String status,
-            String callTime,
-            String callDate) {
+            String sipUri, String displayName, String status, String callTime, String callDate) {
         if (displayName == null) {
             displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
         }
 
-        this.mSipUri = sipUri;
-        this.mDisplayName = displayName;
-        this.mPictureUri = pictureUri;
+        mSipUri = sipUri;
+        mDisplayName = displayName;
         displayHistory(status, callTime, callDate);
     }
 

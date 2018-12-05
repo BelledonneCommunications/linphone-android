@@ -91,8 +91,6 @@ public class AssistantActivity extends Activity
     private static AssistantActivity sInstance;
 
     public DialPlan country;
-    public String phone_number;
-    public String email;
 
     private ImageView mBack, mCancel;
     private AssistantFragmentsEnum mCurrentFragment;

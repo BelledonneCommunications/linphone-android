@@ -45,7 +45,6 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
     public final TextView unreadMessages;
     public final CheckBox delete;
     public final RelativeLayout avatarLayout;
-    public ChatRoom room;
 
     private final Context mContext;
     private final ClickListener mListener;
@@ -67,8 +66,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
     }
 
     public void bindChatRoom(ChatRoom room) {
-        this.room = room;
-        ChatMessage lastMessage = this.room.getLastMessageInHistory();
+        ChatMessage lastMessage = room.getLastMessageInHistory();
 
         if (lastMessage != null) {
             StringBuilder messageContent = new StringBuilder();
@@ -79,20 +77,20 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
                     messageContent.insert(0, c.getStringBuffer() + " ");
                 }
             }
-            lastMessageView.setText(getSender(this.room) + messageContent);
+            lastMessageView.setText(getSender(room) + messageContent);
             date.setText(
                     LinphoneUtils.timestampToHumanDate(
                             mContext,
-                            this.room.getLastUpdateTime(),
+                            room.getLastUpdateTime(),
                             R.string.messages_list_date_format));
         } else {
             date.setText("");
             lastMessageView.setText("");
         }
 
-        displayName.setText(getContact(this.room));
-        unreadMessages.setText(String.valueOf(this.room.getUnreadMessagesCount()));
-        getAvatar(this.room);
+        displayName.setText(getContact(room));
+        unreadMessages.setText(String.valueOf(room.getUnreadMessagesCount()));
+        getAvatar(room);
     }
 
     public void onClick(View v) {

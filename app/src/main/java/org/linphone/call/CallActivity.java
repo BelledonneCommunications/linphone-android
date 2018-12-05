@@ -1686,7 +1686,7 @@ public class CallActivity extends LinphoneGenericActivity
         int count = LinphoneManager.getInstance().getUnreadMessageCount();
 
         if (count > 0) {
-            mMissedChats.setText(count + "");
+            mMissedChats.setText(String.valueOf(count));
             mMissedChats.setVisibility(View.VISIBLE);
         } else {
             mMissedChats.clearAnimation();

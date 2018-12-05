@@ -190,7 +190,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                 }
             }
 
-            holder.messageId = message.getMessageId();
             message.setUserData(holder);
 
             RelativeLayout.LayoutParams layoutParams =

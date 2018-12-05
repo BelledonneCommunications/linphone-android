@@ -29,12 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
-import org.linphone.core.ChatMessage;
 
 public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener {
-    public String messageId;
-    public ChatMessage message;
     public final LinearLayout eventLayout;
     public final TextView eventMessage;
 

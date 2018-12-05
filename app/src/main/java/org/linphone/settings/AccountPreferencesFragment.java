@@ -27,7 +27,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceScreen;
 import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -335,7 +334,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PreferenceScreen screen = getPreferenceScreen();
         mN = getArguments().getInt("Account", 0);
         if (mN == mPrefs.getAccountCount()) {
             mIsNewAccount = true;

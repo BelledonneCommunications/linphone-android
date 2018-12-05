@@ -150,10 +150,6 @@ public class CreateAccountFragment extends Fragment
             mPhoneNumberInfo.setOnClickListener(this);
             mSelectCountry.setOnClickListener(this);
 
-            String previousPhone = AssistantActivity.instance().phone_number;
-            if (previousPhone != null) {
-                mPhoneNumberEdit.setText(previousPhone);
-            }
             DialPlan c = AssistantActivity.instance().country;
             if (c != null) {
                 mSelectCountry.setText(c.getCountry());

@@ -97,7 +97,6 @@ public class NotificationsManager {
                         R.mipmap.ic_launcher,
                         bm,
                         pendingIntent,
-                        true,
                         Notification.PRIORITY_MIN);
 
         if (isServiceNotificationDisplayed()) {

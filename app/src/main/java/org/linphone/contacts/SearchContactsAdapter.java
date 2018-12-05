@@ -71,10 +71,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         mOnlySipContact = enable;
     }
 
-    public void setListener(SearchContactViewHolder.ClickListener listener) {
-        mListener = listener;
-    }
-
     @NonNull
     @Override
     public SearchContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

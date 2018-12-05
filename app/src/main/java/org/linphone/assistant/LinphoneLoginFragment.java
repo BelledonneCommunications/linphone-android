@@ -143,11 +143,6 @@ public class LinphoneLoginFragment extends Fragment
             mSelectCountry.setOnClickListener(this);
             mPhoneNumberInfo.setOnClickListener(this);
 
-            String previousPhone = AssistantActivity.instance().phone_number;
-            if (previousPhone != null) {
-                mPhoneNumberEdit.setText(previousPhone);
-            }
-
             // Allow user to enter a mUsername instead use the mPhone number as mUsername
             if (getResources().getBoolean(R.bool.assistant_allow_username)) {
                 mUseUsername.setVisibility(View.VISIBLE);

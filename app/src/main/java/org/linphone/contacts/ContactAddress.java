@@ -23,11 +23,9 @@ import android.view.View;
 import java.io.Serializable;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
-import org.linphone.core.SearchResult;
 
 public class ContactAddress implements Serializable {
     private LinphoneContact mContact;
-    private SearchResult mResult;
     private String mAddress;
     private String mPhoneNumber;
     private boolean mIsLinphoneContact;
@@ -70,10 +68,6 @@ public class ContactAddress implements Serializable {
 
     public LinphoneContact getContact() {
         return mContact;
-    }
-
-    public void setResult(SearchResult result) {
-        this.mResult = result;
     }
 
     public String getAddressAsDisplayableString() {

@@ -146,7 +146,6 @@ import org.linphone.utils.MediaScannerListener;
 public class LinphoneManager implements CoreListener, SensorEventListener, AccountCreatorListener {
 
     private static final int LINPHONE_VOLUME_STREAM = STREAM_VOICE_CALL;
-    private static final int dbStep = 4;
 
     private static LinphoneManager sInstance;
     private static boolean sExited;
@@ -361,7 +360,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 new OpenH264DownloadHelperListener() {
                     ProgressDialog progress;
                     final int ctxt = 0;
-                    int box = 1;
 
                     @Override
                     public void OnProgress(final int current, final int max) {
@@ -672,7 +670,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
     }
 
-    private final synchronized void destroyCore() {
+    private synchronized void destroyCore() {
         sExited = true;
         ContactsManagerDestroy();
         BluetoothManagerDestroy();

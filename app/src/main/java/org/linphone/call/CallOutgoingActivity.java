@@ -53,17 +53,11 @@ import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
-    private static CallOutgoingActivity sInstance;
-
     private TextView mName, mNumber;
     private ImageView mContactPicture, mMicro, mSpeaker, mHangUp;
     private Call mCall;
     private CoreListenerStub mListener;
     private boolean mIsMicMuted, mIsSpeakerEnabled;
-
-    public static boolean isInstanciated() {
-        return sInstance != null;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +145,11 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         }
                     }
                 };
-        sInstance = this;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sInstance = this;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.addListener(mListener);
@@ -216,12 +208,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
             lc.removeListener(mListener);
         }
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sInstance = null;
     }
 
     @Override

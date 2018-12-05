@@ -29,7 +29,6 @@ public class Purchasable {
     private String mTitle;
     private String mDescription;
     private String mPrice;
-    private long mExpire;
     private String mPurchasePayload, mPurchasePayloadSignature;
     private String mUserData;
 
@@ -70,7 +69,7 @@ public class Purchasable {
 
     public String getExpireDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault());
-        Date date = new Date(mExpire);
+        Date date = new Date(0);
         return dateFormat.format(date);
     }
 

@@ -30,8 +30,6 @@ abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
     private int mPreviousTotalItemCount = 0;
     // True if we are still waiting for the last set of data to load.
     private boolean mLoading = true;
-    // Sets the starting page index
-    private final int mStartingPageIndex = 0;
 
     private final LinearLayoutManager mLayoutManager;
 

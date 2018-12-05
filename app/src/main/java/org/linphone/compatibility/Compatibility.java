@@ -148,7 +148,6 @@ public class Compatibility {
             int iconLevel,
             Bitmap largeIcon,
             PendingIntent intent,
-            boolean isOngoingEvent,
             int priority) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createNotification(

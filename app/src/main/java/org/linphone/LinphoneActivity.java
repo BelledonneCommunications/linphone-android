@@ -616,7 +616,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 && mCurrentFragment == FragmentsAvailable.HISTORY_DETAIL) {
             HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
             historyDetailFragment.changeDisplayedHistory(
-                    sipUri, displayName, pictureUri, status, callTime, callDate);
+                    sipUri, displayName, status, callTime, callDate);
         } else {
             Bundle extras = new Bundle();
             extras.putString("SipUri", sipUri);
