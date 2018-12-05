@@ -30,15 +30,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import org.linphone.R;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
 public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
-    private List<Recording> mRecordings;
-    private Context mContext;
-    private RecordingViewHolder.ClickListener mClickListener;
+    private final List<Recording> mRecordings;
+    private final Context mContext;
+    private final RecordingViewHolder.ClickListener mClickListener;
 
     public RecordingsAdapter(
             Context context,
@@ -119,6 +120,7 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
         int position = record.getCurrentPosition();
         viewHolder.currentPosition.setText(
                 String.format(
+                        Locale.getDefault(),
                         "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(position),
                         TimeUnit.MILLISECONDS.toSeconds(position)
@@ -128,6 +130,7 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
         int duration = record.getDuration();
         viewHolder.duration.setText(
                 String.format(
+                        Locale.getDefault(),
                         "%02d:%02d",
                         TimeUnit.MILLISECONDS.toMinutes(duration),
                         TimeUnit.MILLISECONDS.toSeconds(duration)
@@ -154,6 +157,7 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
                             int currentPosition = record.getCurrentPosition();
                             viewHolder.currentPosition.setText(
                                     String.format(
+                                            Locale.getDefault(),
                                             "%02d:%02d",
                                             TimeUnit.MILLISECONDS.toMinutes(currentPosition),
                                             TimeUnit.MILLISECONDS.toSeconds(currentPosition)
@@ -176,6 +180,7 @@ public class RecordingsAdapter extends SelectableAdapter<RecordingViewHolder> {
                     public void currentPositionChanged(int currentPosition) {
                         viewHolder.currentPosition.setText(
                                 String.format(
+                                        Locale.getDefault(),
                                         "%02d:%02d",
                                         TimeUnit.MILLISECONDS.toMinutes(currentPosition),
                                         TimeUnit.MILLISECONDS.toSeconds(currentPosition)

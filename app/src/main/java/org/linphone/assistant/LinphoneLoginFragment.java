@@ -195,13 +195,13 @@ public class LinphoneLoginFragment extends Fragment
             mAccountCreator.setLanguage(Locale.getDefault().toLanguageTag());
         }
 
-        addPhoneNumberHandler(mDialCode, null);
-        addPhoneNumberHandler(mPhoneNumberEdit, null);
+        addPhoneNumberHandler(mDialCode);
+        addPhoneNumberHandler(mPhoneNumberEdit);
 
         return view;
     }
 
-    public void linphoneLogIn() {
+    private void linphoneLogIn() {
         if (mLogin.getText() == null
                 || mLogin.length() == 0
                 || mPassword.getText() == null
@@ -222,7 +222,7 @@ public class LinphoneLoginFragment extends Fragment
                 mPhoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(mDialCode));
     }
 
-    private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
+    private void addPhoneNumberHandler(final EditText field) {
         field.addTextChangedListener(
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
@@ -253,8 +253,7 @@ public class LinphoneLoginFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        if (mUseUsername != null && mUseUsername.isChecked()) mRecoverAccount = false;
-        else mRecoverAccount = true;
+        mRecoverAccount = mUseUsername == null || !mUseUsername.isChecked();
     }
 
     @Override
@@ -305,7 +304,7 @@ public class LinphoneLoginFragment extends Fragment
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-    public void onTextChanged2() {
+    private void onTextChanged2() {
         int status = getPhoneNumberStatus();
         boolean isOk = status == AccountCreator.PhoneNumberStatus.Ok.toInt();
         LinphoneUtils.displayError(

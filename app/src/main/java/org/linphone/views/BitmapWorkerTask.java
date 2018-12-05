@@ -31,7 +31,6 @@ import android.provider.MediaStore;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import org.linphone.mediastream.Log;
@@ -42,8 +41,8 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     public String path;
 
     private final WeakReference<ImageView> mImageViewReference;
-    private Context mContext;
-    private Bitmap mDefaultBitmap;
+    private final Context mContext;
+    private final Bitmap mDefaultBitmap;
 
     public BitmapWorkerTask(Context context, ImageView imageView, Bitmap defaultBitmap) {
         mContext = context;
@@ -85,8 +84,6 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                     bm =
                             MediaStore.Images.Media.getBitmap(
                                     mContext.getContentResolver(), Uri.parse(path));
-                } catch (FileNotFoundException e) {
-                    Log.e(e);
                 } catch (IOException e) {
                     Log.e(e);
                 }

@@ -32,6 +32,7 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.call.CallActivity;
+import org.linphone.mediastream.Log;
 
 public class BluetoothManager extends BroadcastReceiver {
     private static BluetoothManager sInstance;
@@ -181,6 +182,7 @@ public class BluetoothManager extends BroadcastReceiver {
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
+                    Log.e(e);
                 }
 
                 if (mAudioManager != null) {
@@ -257,6 +259,7 @@ public class BluetoothManager extends BroadcastReceiver {
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
+                    Log.e(e);
                 }
 
                 mAudioManager.stopBluetoothSco();
@@ -266,7 +269,7 @@ public class BluetoothManager extends BroadcastReceiver {
         }
     }
 
-    public void stopBluetooth() {
+    private void stopBluetooth() {
         android.util.Log.w("BluetoothManager", "[Bluetooth] Stopping...");
         mIsBluetoothConnected = false;
 
@@ -295,6 +298,7 @@ public class BluetoothManager extends BroadcastReceiver {
                 mContext.unregisterReceiver(this);
                 android.util.Log.d("BluetoothManager", "[Bluetooth] Receiver stopped");
             } catch (Exception e) {
+                Log.e(e);
             }
         } catch (Exception e) {
             android.util.Log.e("BluetoothManager", e.getMessage());

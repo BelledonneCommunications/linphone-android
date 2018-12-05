@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import java.util.ArrayList;
 
-public interface InAppPurchaseListener {
+interface InAppPurchaseListener {
     /** Callback called when the in-app purchase listener is connected and available for queries */
     void onServiceAvailableForQueries();
 
@@ -45,12 +45,8 @@ public interface InAppPurchaseListener {
      */
     void onPurchasedItemConfirmationQueryFinished(boolean success);
 
-    /**
-     * Callback called when the account has been recovered (or not)
-     *
-     * @param success true if the recover has been successful, false otherwise
-     */
-    void onRecoverAccountSuccessful(boolean success);
+    /** Callback called when the account has been recovered (or not) */
+    void onRecoverAccountSuccessful();
 
     /**
      * Callback called when the account has been activated (or not)

@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.XmlRpcArgType;
@@ -40,7 +39,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpcRequestListener {
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private boolean mSendEcCalibrationResult = false;
     private CoreListenerStub mListener;
     private XmlRpcSession mXmlRpcSession;
@@ -80,13 +79,8 @@ public class EchoCancellerCalibrationFragment extends Fragment implements XmlRpc
                 mXmlRpcSession.createRequest(XmlRpcArgType.None, "add_ec_calibration_result");
         mXmlRpcRequest.setListener(this);
 
-        try {
-            LinphoneManager.getLc().addListener(mListener);
-            LinphoneManager.getInstance().startEcCalibration();
-        } catch (CoreException e) {
-            Log.e(e, "Unable to calibrate EC");
-            AssistantActivity.instance().isEchoCalibrationFinished();
-        }
+        LinphoneManager.getLc().addListener(mListener);
+        LinphoneManager.getInstance().startEcCalibration();
         return view;
     }
 

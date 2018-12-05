@@ -155,14 +155,14 @@ public class CreateAccountCodeActivationFragment extends Fragment
             if (accountCreator.getUsername() != null) {
                 AssistantActivity.instance().linphoneLogIn(accountCreator);
                 if (!mRecoverAccount) {
-                    AssistantActivity.instance().isAccountVerified(accountCreator.getUsername());
+                    AssistantActivity.instance().isAccountVerified();
                 } else {
                     AssistantActivity.instance().success();
                 }
             } else {
                 AssistantActivity.instance().linphoneLogIn(accountCreator);
                 if (!mRecoverAccount) {
-                    AssistantActivity.instance().isAccountVerified(accountCreator.getPhoneNumber());
+                    AssistantActivity.instance().isAccountVerified();
                 } else {
                     AssistantActivity.instance().success();
                 }

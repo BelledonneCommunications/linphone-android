@@ -36,7 +36,7 @@ import org.linphone.core.tools.OpenH264DownloadHelper;
 import org.linphone.core.tools.OpenH264DownloadHelperListener;
 
 public class CodecDownloaderFragment extends Fragment {
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private TextView mQuestion;
     private TextView mDownloading;
     private TextView mDownloaded;

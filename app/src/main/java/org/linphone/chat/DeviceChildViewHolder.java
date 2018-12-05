@@ -24,9 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import org.linphone.R;
 
-public class DeviceChildViewHolder {
-    public TextView deviceName;
-    public ImageView securityLevel;
+class DeviceChildViewHolder {
+    public final TextView deviceName;
+    public final ImageView securityLevel;
 
     public DeviceChildViewHolder(View v) {
         deviceName = v.findViewById(R.id.name);

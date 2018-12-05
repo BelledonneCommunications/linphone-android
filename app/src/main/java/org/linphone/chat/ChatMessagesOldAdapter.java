@@ -67,17 +67,17 @@ import org.linphone.views.ContactAvatar;
 public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldViewHolder>
         implements ChatMessagesGenericAdapter {
 
-    private static int MARGIN_BETWEEN_MESSAGES = 10;
-    private static int SIDE_MARGIN = 100;
-    private Context mContext;
+    private static final int MARGIN_BETWEEN_MESSAGES = 10;
+    private static final int SIDE_MARGIN = 100;
+    private final Context mContext;
     private List<EventLog> mHistory;
     private List<LinphoneContact> mParticipants;
-    private int mItemResource;
+    private final int mItemResource;
     private Bitmap mDefaultBitmap;
-    private ChatMessagesFragment mFragment;
-    private ChatMessageListenerStub mListener;
+    private final ChatMessagesFragment mFragment;
+    private final ChatMessageListenerStub mListener;
 
-    private ChatMessageViewHolderClickListener mClickListener;
+    private final ChatMessageViewHolderClickListener mClickListener;
 
     public ChatMessagesOldAdapter(
             ChatMessagesFragment fragment,
@@ -140,7 +140,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
     @Override
     public ChatMessageOldViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(mItemResource, parent, false);
-        ChatMessageOldViewHolder VH = new ChatMessageOldViewHolder(mContext, v, mClickListener);
+        ChatMessageOldViewHolder VH = new ChatMessageOldViewHolder(v, mClickListener);
 
         // Allows onLongClick ContextMenu on bubbles
         mFragment.registerForContextMenu(v);
@@ -548,10 +548,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
         mHistory.clear();
     }
 
-    public int getCount() {
-        return mHistory.size();
-    }
-
     public Object getItem(int i) {
         return mHistory.get(i);
     }
@@ -652,7 +648,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
         if (bitmapWorkerTask != null) {
             final String bitmapData = bitmapWorkerTask.path;
             // If bitmapData is not yet set or it differs from the new data
-            if (bitmapData == null || bitmapData != path) {
+            if (bitmapData == null || !bitmapData.equals(path)) {
                 // Cancel previous task
                 bitmapWorkerTask.cancel(true);
             } else {

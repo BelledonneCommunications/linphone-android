@@ -32,7 +32,7 @@ import org.linphone.R;
 
 public class Numpad extends LinearLayout implements AddressAware {
 
-    private boolean mPlayDtmf;
+    private final boolean mPlayDtmf;
 
     public Numpad(Context context, boolean playDtmf) {
         super(context);
@@ -51,10 +51,6 @@ public class Numpad extends LinearLayout implements AddressAware {
         setLongClickable(true);
     }
 
-    public void setPlayDtmf(boolean sendDtmf) {
-        this.mPlayDtmf = sendDtmf;
-    }
-
     @Override
     protected final void onFinishInflate() {
         for (Digit v : retrieveChildren(this, Digit.class)) {
@@ -69,7 +65,7 @@ public class Numpad extends LinearLayout implements AddressAware {
         }
     }
 
-    private final <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
+    private <T> Collection<T> retrieveChildren(ViewGroup viewGroup, Class<T> clazz) {
         final Collection<T> views = new ArrayList<>();
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {

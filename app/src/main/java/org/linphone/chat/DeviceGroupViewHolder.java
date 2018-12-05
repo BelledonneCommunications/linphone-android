@@ -25,10 +25,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import org.linphone.R;
 
-public class DeviceGroupViewHolder {
-    public RelativeLayout avatarLayout;
-    public TextView participantName;
-    public ImageView groupExpander;
+class DeviceGroupViewHolder {
+    public final RelativeLayout avatarLayout;
+    public final TextView participantName;
+    public final ImageView groupExpander;
 
     public DeviceGroupViewHolder(View v) {
         avatarLayout = v.findViewById(R.id.avatar_layout);

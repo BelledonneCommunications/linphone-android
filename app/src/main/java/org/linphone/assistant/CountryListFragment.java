@@ -77,8 +77,7 @@ public class CountryListFragment extends Fragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        DialPlan c = (DialPlan) view.getTag();
-        AssistantActivity.instance().country = c;
+        AssistantActivity.instance().country = (DialPlan) view.getTag();
         AssistantActivity.instance().onBackPressed();
     }
 

@@ -104,7 +104,7 @@ public class RecordingsFragment extends Fragment
         }
     }
 
-    public void removeDeletedRecordings() {
+    private void removeDeletedRecordings() {
         String recordingsDirectory = FileUtils.getRecordingsDirectory(mContext);
         File directory = new File(recordingsDirectory);
 
@@ -127,7 +127,7 @@ public class RecordingsFragment extends Fragment
         }
     }
 
-    public void searchForRecordings() {
+    private void searchForRecordings() {
         String recordingsDirectory = FileUtils.getRecordingsDirectory(mContext);
         File directory = new File(recordingsDirectory);
 

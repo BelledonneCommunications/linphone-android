@@ -35,7 +35,7 @@ public class NetworkManager extends BroadcastReceiver {
         Boolean lNoConnectivity =
                 intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
         if (LinphoneManager.isInstanciated()) {
-            LinphoneManager.getInstance().connectivityChanged(cm, lNoConnectivity);
+            LinphoneManager.getInstance().connectivityChanged();
         }
     }
 }

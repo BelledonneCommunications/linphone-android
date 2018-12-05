@@ -33,7 +33,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.Participant;
 import org.linphone.views.ContactAvatar;
 
-public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> {
+class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> {
     private List<ContactAddress> mItems;
     private View.OnClickListener mDeleteListener;
     private boolean mHideAdminFeatures;
@@ -136,11 +136,7 @@ public class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> 
         mChatRoom = room;
     }
 
-    public int getCount() {
-        return mItems.size();
-    }
-
-    public Object getItem(int i) {
+    private Object getItem(int i) {
         return mItems.get(i);
     }
 

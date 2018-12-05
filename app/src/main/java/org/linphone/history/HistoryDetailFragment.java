@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -217,11 +216,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             getFragmentManager().popBackStackImmediate();
         }
         if (id == R.id.call) {
-            LinphoneActivity.instance()
-                    .setAddresGoToDialerAndCall(
-                            mSipUri,
-                            mDisplayName,
-                            mPictureUri == null ? null : Uri.parse(mPictureUri));
+            LinphoneActivity.instance().setAddresGoToDialerAndCall(mSipUri, mDisplayName);
         } else if (id == R.id.chat) {
             Core lc = LinphoneManager.getLc();
             Address participant = Factory.instance().createAddress(mSipUri);

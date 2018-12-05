@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         android:background="@color/colorH"
-        android:visibility="gone"></RelativeLayout>
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/address_bar"

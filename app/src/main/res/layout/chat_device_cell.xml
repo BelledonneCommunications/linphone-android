@@ -22,7 +22,6 @@
             android:layout_marginLeft="55dp"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/security_level"
-            android:layout_toRightOf="@+id/avatar"
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1" />

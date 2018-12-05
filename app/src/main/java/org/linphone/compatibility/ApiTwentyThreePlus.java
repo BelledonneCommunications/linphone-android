@@ -23,7 +23,7 @@ import android.annotation.TargetApi;
 import android.widget.TextView;
 
 @TargetApi(23)
-public class ApiTwentyThreePlus {
+class ApiTwentyThreePlus {
     public static void setTextAppearance(TextView textview, int style) {
         textview.setTextAppearance(style);
     }

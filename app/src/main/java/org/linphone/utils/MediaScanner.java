@@ -26,7 +26,7 @@ import java.io.File;
 import org.linphone.mediastream.Log;
 
 public class MediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
-    private MediaScannerConnection mMediaConnection;
+    private final MediaScannerConnection mMediaConnection;
     private boolean mIsConnected;
     private File mFileWaitingForScan;
     private MediaScannerListener mListener;
@@ -52,7 +52,7 @@ public class MediaScanner implements MediaScannerConnection.MediaScannerConnecti
         scanFile(file, FileUtils.getMimeFromFile(file.getAbsolutePath()), listener);
     }
 
-    public void scanFile(File file, String mime, MediaScannerListener listener) {
+    private void scanFile(File file, String mime, MediaScannerListener listener) {
         mListener = listener;
 
         if (!mIsConnected) {

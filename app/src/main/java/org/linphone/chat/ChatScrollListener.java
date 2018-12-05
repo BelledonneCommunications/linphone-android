@@ -22,20 +22,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
+abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before mLoading more.
-    private int mVisibleThreshold = 5;
-    // The current offset index of data you have loaded
-    private int mCurrentPage = 0;
+    private final int mVisibleThreshold = 5;
     // The total number of items in the dataset after the last load
     private int mPreviousTotalItemCount = 0;
     // True if we are still waiting for the last set of data to load.
     private boolean mLoading = true;
     // Sets the starting page index
-    private int mStartingPageIndex = 0;
+    private final int mStartingPageIndex = 0;
 
-    private LinearLayoutManager mLayoutManager;
+    private final LinearLayoutManager mLayoutManager;
 
     public ChatScrollListener(LinearLayoutManager layoutManager) {
         mLayoutManager = layoutManager;
@@ -46,7 +44,7 @@ public abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
     // but first we check if we are waiting for the previous load to finish.
     @Override
     public void onScrolled(RecyclerView view, int dx, int dy) {
-        int lastVisibleItemPosition = 0;
+        int lastVisibleItemPosition;
         int totalItemCount = mLayoutManager.getItemCount();
 
         lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
@@ -54,7 +52,6 @@ public abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state
         if (totalItemCount < mPreviousTotalItemCount) {
-            this.mCurrentPage = this.mStartingPageIndex;
             this.mPreviousTotalItemCount = totalItemCount;
             if (totalItemCount == 0) {
                 this.mLoading = true;
@@ -73,12 +70,11 @@ public abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
         if (!mLoading && (lastVisibleItemPosition + mVisibleThreshold) > totalItemCount) {
-            mCurrentPage++;
-            onLoadMore(mCurrentPage, totalItemCount, view);
+            onLoadMore(totalItemCount);
             mLoading = true;
         }
     }
 
     // Defines the process for actually mLoading more data based on page
-    public abstract void onLoadMore(int page, int totalItemsCount, RecyclerView view);
+    protected abstract void onLoadMore(int totalItemsCount);
 }

@@ -62,20 +62,19 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
 
-    private OnClickListener mDialListener =
+    private final OnClickListener mDialListener =
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (LinphoneActivity.isInstanciated()) {
                         String tag = (String) v.getTag();
                         LinphoneActivity.instance()
-                                .setAddresGoToDialerAndCall(
-                                        tag, mContact.getFullName(), mContact.getPhotoUri());
+                                .setAddresGoToDialerAndCall(tag, mContact.getFullName());
                     }
                 }
             };
 
-    private OnClickListener mChatListener =
+    private final OnClickListener mChatListener =
             new OnClickListener() {
                 @Override
                 public void onClick(View v) {

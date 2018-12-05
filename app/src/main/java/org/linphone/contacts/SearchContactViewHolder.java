@@ -1,7 +1,7 @@
-package org.linphone.chat;
+package org.linphone.contacts;
 
 /*
-GroupInfoViewHolder.java
+SearchContactViewHolder.java
 Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -21,25 +21,40 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
 
-public class GroupInfoViewHolder extends RecyclerView.ViewHolder {
+public class SearchContactViewHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener {
     public final TextView name;
+    public final TextView address;
+    public final ImageView linphoneContact;
+    public final ImageView isSelect;
     public final RelativeLayout avatarLayout;
-    public final ImageView delete;
-    public final LinearLayout isAdmin;
-    public final LinearLayout isNotAdmin;
 
-    public GroupInfoViewHolder(View view) {
+    private final ClickListener mListener;
+
+    public SearchContactViewHolder(View view, ClickListener listener) {
         super(view);
-        name = view.findViewById(R.id.name);
+        name = view.findViewById(R.id.contact_name);
+        address = view.findViewById(R.id.contact_address);
+        linphoneContact = view.findViewById(R.id.contact_linphone);
+        isSelect = view.findViewById(R.id.contact_is_select);
         avatarLayout = view.findViewById(R.id.avatar_layout);
-        delete = view.findViewById(R.id.delete);
-        isAdmin = view.findViewById(R.id.isAdminLayout);
-        isNotAdmin = view.findViewById(R.id.isNotAdminLayout);
+        mListener = listener;
+        view.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mListener != null) {
+            mListener.onItemClicked(getAdapterPosition());
+        }
+    }
+
+    public interface ClickListener {
+        void onItemClicked(int position);
     }
 }

@@ -40,7 +40,7 @@ import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
 
 @TargetApi(24)
-public class ApiTwentyFourPlus {
+class ApiTwentyFourPlus {
 
     public static Notification createRepliedNotification(Context context, String reply) {
         return new Notification.Builder(context)

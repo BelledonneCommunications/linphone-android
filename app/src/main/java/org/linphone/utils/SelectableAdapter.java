@@ -26,11 +26,11 @@ import java.util.List;
 
 public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH> {
-    private SparseBooleanArray mSelectedItems;
+    private final SparseBooleanArray mSelectedItems;
     private boolean mIsEditionEnabled = false;
-    private SelectableHelper mListHelper;
+    private final SelectableHelper mListHelper;
 
-    public SelectableAdapter(SelectableHelper helper) {
+    protected SelectableAdapter(SelectableHelper helper) {
         mSelectedItems = new SparseBooleanArray();
         mListHelper = helper;
     }
@@ -52,7 +52,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
      * @param position Position of the item to check
      * @return true if the item is selected, false otherwise
      */
-    public boolean isSelected(int position) {
+    protected boolean isSelected(int position) {
         return getSelectedItems().contains(position);
     }
 

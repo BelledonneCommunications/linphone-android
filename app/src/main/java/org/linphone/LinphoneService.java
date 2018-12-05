@@ -69,11 +69,11 @@ public final class LinphoneService extends Service {
     /* Listener needs to be implemented in the Service as it calls
      * setLatestEventInfo and startActivity() which needs a context.
      */
-    public static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
+    private static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
 
     private static LinphoneService sInstance;
 
-    public Handler handler = new Handler();
+    public final Handler handler = new Handler();
 
     private boolean mTestDelayElapsed = true;
     private CoreListenerStub mListener;
@@ -108,7 +108,7 @@ public final class LinphoneService extends Service {
         }
     }
 
-    protected void onBackgroundMode() {
+    private void onBackgroundMode() {
         Log.i("App has entered background mode");
         if (LinphonePreferences.instance() != null
                 && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
@@ -120,7 +120,7 @@ public final class LinphoneService extends Service {
         }
     }
 
-    protected void onForegroundMode() {
+    private void onForegroundMode() {
         Log.i("App has left background mode");
         if (LinphonePreferences.instance() != null
                 && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
@@ -316,7 +316,7 @@ public final class LinphoneService extends Service {
         sb.append("SDK=").append(Build.VERSION.SDK_INT).append("\n");
         sb.append("Supported ABIs=");
         for (String abi : Version.getCpuAbis()) {
-            sb.append(abi + ", ");
+            sb.append(abi).append(", ");
         }
         sb.append("\n");
         Log.i(sb.toString());
@@ -327,6 +327,7 @@ public final class LinphoneService extends Service {
         try {
             info = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (NameNotFoundException nnfe) {
+            Log.e(nnfe);
         }
 
         if (info != null) {
@@ -400,7 +401,7 @@ public final class LinphoneService extends Service {
         }
     }
 
-    protected void onIncomingReceived() {
+    private void onIncomingReceived() {
         // wakeup linphone
         startActivity(
                 new Intent()
@@ -412,7 +413,7 @@ public final class LinphoneService extends Service {
     After two days of hard work I ended with the following class, that does the job more or less reliabily.
     */
     class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
-        private ArrayList<Activity> activities = new ArrayList<>();
+        private final ArrayList<Activity> activities = new ArrayList<>();
         private boolean mActive = false;
         private int mRunningActivities = 0;
         private InactivityChecker mLastChecker;
@@ -459,9 +460,7 @@ public final class LinphoneService extends Service {
         @Override
         public synchronized void onActivityDestroyed(Activity activity) {
             Log.i("Activity destroyed:" + activity);
-            if (activities.contains(activity)) {
-                activities.remove(activity);
-            }
+            activities.remove(activity);
         }
 
         void startInactivityChecker() {
@@ -488,7 +487,7 @@ public final class LinphoneService extends Service {
         class InactivityChecker implements Runnable {
             private boolean isCanceled;
 
-            public void cancel() {
+            void cancel() {
                 isCanceled = true;
             }
 

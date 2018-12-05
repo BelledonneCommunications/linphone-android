@@ -129,7 +129,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                         }
                         return -1;
                     }
-                    return ((Integer) noas1.size()).compareTo(noas2.size());
+                    return Integer.compare(noas1.size(), noas2.size());
                 }
                 return -1;
             }
@@ -307,7 +307,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         return mPhotoUri;
     }
 
-    public void setPhotoUri(Uri uri) {
+    private void setPhotoUri(Uri uri) {
         if (uri.equals(mPhotoUri)) return;
         mPhotoUri = uri;
     }
@@ -316,7 +316,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         return mThumbnailUri;
     }
 
-    public void setThumbnailUri(Uri uri) {
+    private void setThumbnailUri(Uri uri) {
         if (uri.equals(mThumbnailUri)) return;
         mThumbnailUri = uri;
     }
@@ -884,7 +884,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         return null;
     }
 
-    public void getAndroidIds() {
+    private void getAndroidIds() {
         mAndroidRawId = findRawContactID();
         if (LinphoneManager.getInstance()
                 .getContext()
@@ -1124,9 +1124,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                         .build());
 
         if (mChangesToCommit2.size() > 0) {
-            for (ContentProviderOperation cpo : mChangesToCommit2) {
-                batch.add(cpo);
-            }
+            batch.addAll(mChangesToCommit2);
         }
 
         try {

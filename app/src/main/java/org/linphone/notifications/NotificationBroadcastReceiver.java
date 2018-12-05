@@ -45,7 +45,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         final int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
         final String localyIdentity = intent.getStringExtra(Compatibility.INTENT_LOCAL_IDENTITY);
 
-        if (intent.getAction() == Compatibility.INTENT_REPLY_NOTIF_ACTION) {
+        if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)) {
             final String reply = getMessageText(intent).toString();
             if (reply == null) {
                 Log.e("Couldn't get reply text");
@@ -113,8 +113,8 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                             }
                         }
                     });
-        } else if (intent.getAction() == Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION
-                || intent.getAction() == Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION) {
+        } else if (intent.getAction().equals(Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION)
+                || intent.getAction().equals(Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION)) {
             String remoteAddr =
                     LinphoneService.instance()
                             .getNotificationManager()
@@ -131,7 +131,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 return;
             }
 
-            if (intent.getAction() == Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION) {
+            if (intent.getAction().equals(Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION)) {
                 call.accept();
             } else {
                 call.terminate();

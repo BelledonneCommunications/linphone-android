@@ -21,13 +21,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 public class XmlRpcListenerBase implements XmlRpcListener {
     @Override
-    public void onError(String error) {
+    public void onError() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onAccountCreated(String result) {
+    public void onAccountCreated() {
         // TODO Auto-generated method stub
 
     }
@@ -39,13 +39,13 @@ public class XmlRpcListenerBase implements XmlRpcListener {
     }
 
     @Override
-    public void onAccountActivated(String result) {
+    public void onAccountActivated() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onAccountActivatedFetched(boolean isActivated) {
+    public void onAccountActivatedFetched() {
         // TODO Auto-generated method stub
 
     }
@@ -57,37 +57,37 @@ public class XmlRpcListenerBase implements XmlRpcListener {
     }
 
     @Override
-    public void onAccountFetched(boolean isExisting) {
+    public void onAccountFetched() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onAccountEmailChanged(String result) {
+    public void onAccountEmailChanged() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onAccountPasswordChanged(String result) {
+    public void onAccountPasswordChanged() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onRecoverPasswordLinkSent(String result) {
+    public void onRecoverPasswordLinkSent() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onActivateAccountLinkSent(String result) {
+    public void onActivateAccountLinkSent() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onAccountExpireUpdated(String result) {
+    public void onAccountExpireUpdated() {
         // TODO Auto-generated method stub
 
     }
@@ -99,7 +99,7 @@ public class XmlRpcListenerBase implements XmlRpcListener {
     }
 
     @Override
-    public void onUsernameSent(String result) {
+    public void onUsernameSent() {
         // TODO Auto-generated method stub
 
     }

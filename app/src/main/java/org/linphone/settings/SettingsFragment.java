@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -48,7 +49,6 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.Factory;
@@ -69,10 +69,10 @@ import org.linphone.views.LedPreference;
 
 public class SettingsFragment extends PreferencesListFragment {
     private LinphonePreferences mPrefs;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private CoreListenerStub mListener;
     private PreferenceScreen mCurrentPreferenceScreen;
-    private Preference.OnPreferenceClickListener mPrefClickListener =
+    private final Preference.OnPreferenceClickListener mPrefClickListener =
             new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -445,8 +445,8 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     private void initMediaEncryptionPreference(ListPreference pref) {
-        List<CharSequence> entries = new ArrayList<CharSequence>();
-        List<CharSequence> values = new ArrayList<CharSequence>();
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> values = new ArrayList<>();
         entries.add(getString(R.string.pref_none));
         values.add(getString(R.string.pref_media_encryption_key_none));
 
@@ -493,8 +493,8 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     private void initializePreferredVideoSizePreferences(ListPreference pref) {
-        List<CharSequence> entries = new ArrayList<CharSequence>();
-        List<CharSequence> values = new ArrayList<CharSequence>();
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> values = new ArrayList<>();
         for (VideoDefinition vd : Factory.instance().getSupportedVideoDefinitions()) {
             entries.add(vd.getName());
             values.add(vd.getName());
@@ -508,8 +508,8 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     private void initializePreferredVideoFpsPreferences(ListPreference pref) {
-        List<CharSequence> entries = new ArrayList<CharSequence>();
-        List<CharSequence> values = new ArrayList<CharSequence>();
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> values = new ArrayList<>();
         entries.add(getString(R.string.pref_none));
         values.add("0");
         for (int i = 5; i <= 30; i += 5) {
@@ -582,13 +582,7 @@ public class SettingsFragment extends PreferencesListFragment {
                 codec.setTitle(pt.getMimeType());
                 /* Special case */
                 if (pt.getMimeType().equals("mpeg4-generic")) {
-                    if (android.os.Build.VERSION.SDK_INT < 16) {
-                        /* Make sure AAC is disabled */
-                        pt.enable(false);
-                        continue;
-                    } else {
-                        codec.setTitle("AAC-ELD");
-                    }
+                    codec.setTitle("AAC-ELD");
                 }
 
                 codec.setSummary(pt.getClockRate() + " Hz");
@@ -733,34 +727,22 @@ public class SettingsFragment extends PreferencesListFragment {
 
     public void startEchoTester() {
         Preference preference = findPreference(getString(R.string.pref_echo_tester_key));
-        try {
-            if (LinphoneManager.getInstance().startEchoTester() > 0) {
-                preference.setSummary("Is running");
-            }
-        } catch (CoreException e) {
-            e.printStackTrace();
+        if (LinphoneManager.getInstance().startEchoTester() > 0) {
+            preference.setSummary("Is running");
         }
     }
 
-    public void stopEchoTester() {
+    private void stopEchoTester() {
         Preference preference = findPreference(getString(R.string.pref_echo_tester_key));
-        try {
-            if (LinphoneManager.getInstance().stopEchoTester() > 0) {
-                preference.setSummary("Is stopped");
-            }
-        } catch (CoreException e) {
-            e.printStackTrace();
+        if (LinphoneManager.getInstance().stopEchoTester() > 0) {
+            preference.setSummary("Is stopped");
         }
     }
 
     public void startEchoCancellerCalibration() {
-        try {
-            if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
-            LinphoneManager.getLc().addListener(mListener);
-            LinphoneManager.getInstance().startEcCalibration();
-        } catch (CoreException e) {
-            Log.e(e);
-        }
+        if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
+        LinphoneManager.getLc().addListener(mListener);
+        LinphoneManager.getInstance().startEcCalibration();
     }
 
     public void echoCalibrationFail() {
@@ -891,20 +873,7 @@ public class SettingsFragment extends PreferencesListFragment {
                                                                 mCodecDownloader.downloadCodec();
                                                         }
                                                     });
-                                    builder.setNegativeButton(
-                                                    "No",
-                                                    new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(
-                                                                DialogInterface dialog, int which) {
-                                                            if (which
-                                                                    == DialogInterface
-                                                                            .BUTTON_NEGATIVE) {
-                                                                // Disable H264
-                                                            }
-                                                        }
-                                                    })
-                                            .show();
+                                    builder.setNegativeButton("No", null).show();
                                 }
                             }
                             pt.enable(enable);
@@ -915,7 +884,7 @@ public class SettingsFragment extends PreferencesListFragment {
             codecs.addPreference(codec);
         }
         // Adding OpenH264 button on device < 5.1
-        if (mCodecDownloader.isOpenH264DownloadEnabled() && !h264IsHere) {
+        if (OpenH264DownloadHelper.isOpenH264DownloadEnabled() && !h264IsHere) {
             final CheckBoxPreference codec = new CheckBoxPreference(getActivity());
             codec.setTitle("OpenH264");
             codec.setSummary(mCodecDownloader.getLicenseMessage());
@@ -925,7 +894,7 @@ public class SettingsFragment extends PreferencesListFragment {
                         @Override
                         public boolean onPreferenceChange(Preference preference, Object newValue) {
                             boolean enable = (Boolean) newValue;
-                            if (mCodecDownloader.isOpenH264DownloadEnabled()) {
+                            if (OpenH264DownloadHelper.isOpenH264DownloadEnabled()) {
                                 if (enable
                                         && Version.getCpuAbis().contains("armeabi-v7a")
                                         && !Version.getCpuAbis().contains("x86")
@@ -1401,19 +1370,23 @@ public class SettingsFragment extends PreferencesListFragment {
                             @Override
                             public boolean onPreferenceClick(Preference preference) {
                                 synchronized (SettingsFragment.this) {
-                                    Context context = SettingsFragment.this.getActivity();
-                                    Intent i = new Intent();
-                                    i.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
-                                    i.putExtra(
-                                            Settings.EXTRA_APP_PACKAGE, context.getPackageName());
-                                    i.putExtra(
-                                            Settings.EXTRA_CHANNEL_ID,
-                                            context.getString(R.string.notification_channel_id));
-                                    i.addCategory(Intent.CATEGORY_DEFAULT);
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                                    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                    context.startActivity(i);
+                                    if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+                                        Context context = SettingsFragment.this.getActivity();
+                                        Intent i = new Intent();
+                                        i.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                                        i.putExtra(
+                                                Settings.EXTRA_APP_PACKAGE,
+                                                context.getPackageName());
+                                        i.putExtra(
+                                                Settings.EXTRA_CHANNEL_ID,
+                                                context.getString(
+                                                        R.string.notification_channel_id));
+                                        i.addCategory(Intent.CATEGORY_DEFAULT);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                                        context.startActivity(i);
+                                    }
                                     return true;
                                 }
                             }
@@ -1631,6 +1604,7 @@ public class SettingsFragment extends PreferencesListFragment {
                                 try {
                                     port = Integer.parseInt(newValue.toString());
                                 } catch (NumberFormatException nfe) {
+                                    Log.e(nfe);
                                 }
 
                                 mPrefs.setSipPort(port);

@@ -1,7 +1,7 @@
 package org.linphone.contacts;
 
 /*
-ContactsListFragment.java
+ContactsFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -42,10 +42,10 @@ import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.SelectableHelper;
 
-public class ContactsListFragment extends Fragment
+public class ContactsFragment extends Fragment
         implements OnItemClickListener,
                 ContactsUpdatedListener,
-                ContactsListAdapter.ViewHolder.ClickListener,
+                ContactViewHolder.ClickListener,
                 SelectableHelper.DeleteListener {
     private RecyclerView mContactsList;
     private TextView mNoSipContact, mNoContact;
@@ -60,7 +60,7 @@ public class ContactsListFragment extends Fragment
     private LinearLayoutManager mLayoutManager;
     private Context mContext;
     private SelectableHelper mSelectionHelper;
-    private ContactsListAdapter mContactAdapter;
+    private ContactsAdapter mContactAdapter;
 
     @Override
     public View onCreateView(
@@ -183,7 +183,7 @@ public class ContactsListFragment extends Fragment
         if (mContactsList != null
                 && mContactsList.getAdapter() != null
                 && mContactsList.getAdapter().getItemCount() > 0) {
-            ContactsListAdapter mAdapt = (ContactsListAdapter) mContactsList.getAdapter();
+            ContactsAdapter mAdapt = (ContactsAdapter) mContactsList.getAdapter();
             LinphoneActivity.instance().displayContact((LinphoneContact) mAdapt.getItem(0), false);
         } else {
             LinphoneActivity.instance().displayEmptyFragment();
@@ -210,7 +210,7 @@ public class ContactsListFragment extends Fragment
             isEditionEnabled = true;
         }
 
-        mContactAdapter = new ContactsListAdapter(mContext, listContact, this, mSelectionHelper);
+        mContactAdapter = new ContactsAdapter(mContext, listContact, this, mSelectionHelper);
 
         //		mContactsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         mSelectionHelper.setAdapter(mContactAdapter);
@@ -228,7 +228,7 @@ public class ContactsListFragment extends Fragment
         mNoContact.setVisibility(View.GONE);
         mContactsList.setVisibility(View.VISIBLE);
         boolean isEditionEnabled = false;
-        if (mSearchView.getQuery().toString() == "") {
+        if (mSearchView.getQuery().toString().equals("")) {
             if (mOnlyDisplayLinphoneContacts) {
                 listContact = ContactsManager.getInstance().getSIPContacts();
             } else {
@@ -250,7 +250,7 @@ public class ContactsListFragment extends Fragment
             isEditionEnabled = true;
         }
 
-        mContactAdapter = new ContactsListAdapter(mContext, listContact, this, mSelectionHelper);
+        mContactAdapter = new ContactsAdapter(mContext, listContact, this, mSelectionHelper);
 
         mSelectionHelper.setAdapter(mContactAdapter);
 
@@ -366,7 +366,7 @@ public class ContactsListFragment extends Fragment
         mContactsFetchInProgress.setVisibility(View.GONE);
     }
 
-    public void invalidate() {
+    private void invalidate() {
         if (mSearchView != null && mSearchView.getQuery().toString().length() > 0) {
             searchContacts(mSearchView.getQuery().toString());
         } else {

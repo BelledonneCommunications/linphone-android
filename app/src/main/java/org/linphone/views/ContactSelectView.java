@@ -29,8 +29,8 @@ import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 
 public class ContactSelectView extends View {
-    private TextView mContactName;
-    private ImageView mDeleteContact;
+    private final TextView mContactName;
+    private final ImageView mDeleteContact;
 
     public ContactSelectView(Context context) {
         super(context);

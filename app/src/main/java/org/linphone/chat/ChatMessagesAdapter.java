@@ -41,17 +41,17 @@ import org.linphone.utils.SelectableHelper;
 
 public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder>
         implements ChatMessagesGenericAdapter {
-    public static int MAX_TIME_TO_GROUP_MESSAGES = 60;
+    private static final int MAX_TIME_TO_GROUP_MESSAGES = 60;
 
-    private Context mContext;
+    private final Context mContext;
     private List<EventLog> mHistory;
     private List<LinphoneContact> mParticipants;
-    private int mItemResource;
-    private ChatMessagesFragment mFragment;
+    private final int mItemResource;
+    private final ChatMessagesFragment mFragment;
 
-    private List<ChatMessage> mTransientMessages;
+    private final List<ChatMessage> mTransientMessages;
 
-    private ChatMessageViewHolderClickListener mClickListener;
+    private final ChatMessageViewHolderClickListener mClickListener;
 
     public ChatMessagesAdapter(
             ChatMessagesFragment fragment,
@@ -290,10 +290,6 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         }
         mTransientMessages.clear();
         mHistory.clear();
-    }
-
-    public int getCount() {
-        return mHistory.size();
     }
 
     public Object getItem(int i) {

@@ -75,17 +75,15 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
                 };
     }
 
-    private void cancelWizard(boolean bypassCheck) {
-        if (bypassCheck
-                || getResources()
-                        .getBoolean(R.bool.allow_cancel_remote_provisioning_login_activity)) {
+    private void cancelWizard() {
+        if (getResources().getBoolean(R.bool.allow_cancel_remote_provisioning_login_activity)) {
             LinphonePreferences.instance().disableProvisioningLoginView();
-            setResult(bypassCheck ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+            setResult(Activity.RESULT_CANCELED);
             finish();
         }
     }
 
-    private boolean storeAccount(String username, String password, String domain) {
+    private void storeAccount(String username, String password, String domain) {
         XmlRpcHelper xmlRpcHelper = new XmlRpcHelper();
         xmlRpcHelper.getRemoteProvisioningFilenameAsync(
                 new XmlRpcListenerBase() {
@@ -95,14 +93,13 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
                         LinphoneManager.getInstance().restartCore();
                     }
                 },
-                username.toString(),
-                password.toString(),
-                domain.toString());
+                username,
+                password,
+                domain);
 
         LinphonePreferences.instance().firstLaunchSuccessful();
         setResult(Activity.RESULT_OK);
         finish();
-        return true;
     }
 
     @Override
@@ -128,7 +125,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
         int id = v.getId();
 
         if (id == R.id.cancel) {
-            cancelWizard(false);
+            cancelWizard();
         }
         if (id == R.id.assistant_connect) {
             storeAccount(
@@ -140,6 +137,6 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 
     @Override
     public void onBackPressed() {
-        cancelWizard(false);
+        cancelWizard();
     }
 }

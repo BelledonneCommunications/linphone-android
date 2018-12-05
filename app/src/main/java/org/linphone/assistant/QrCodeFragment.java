@@ -66,12 +66,12 @@ public class QrCodeFragment extends Fragment {
         }
     }
 
-    private void setBackCamera(boolean useBackCamera) {
+    private void setBackCamera() {
         int camId = 0;
         AndroidCameraConfiguration.AndroidCamera[] cameras =
                 AndroidCameraConfiguration.retrieveCameras();
         for (AndroidCameraConfiguration.AndroidCamera androidCamera : cameras) {
-            if (androidCamera.frontFacing == !useBackCamera) camId = androidCamera.id;
+            if (!androidCamera.frontFacing) camId = androidCamera.id;
         }
         String[] devices = LinphoneManager.getLc().getVideoDevicesList();
         String newDevice = devices[camId];
@@ -79,7 +79,7 @@ public class QrCodeFragment extends Fragment {
     }
 
     private void launchQrcodeReader() {
-        setBackCamera(true);
+        setBackCamera();
 
         enableQrcodeReader(true);
     }

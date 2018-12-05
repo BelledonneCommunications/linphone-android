@@ -109,7 +109,7 @@ public class CreateAccountActivationFragment extends Fragment
                     .show();
         } else if (status.equals(AccountCreator.Status.AccountActivated)) {
             AssistantActivity.instance().linphoneLogIn(accountCreator);
-            AssistantActivity.instance().isAccountVerified(mUsername);
+            AssistantActivity.instance().isAccountVerified();
         } else {
             Toast.makeText(
                             getActivity(),

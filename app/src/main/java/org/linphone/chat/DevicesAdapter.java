@@ -36,8 +36,8 @@ import org.linphone.core.ParticipantDevice;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
-public class DevicesAdapter extends BaseExpandableListAdapter {
-    private Context mContext;
+class DevicesAdapter extends BaseExpandableListAdapter {
+    private final Context mContext;
     private List<Participant> mParticipants;
     private boolean mOnlyDisplayChildsAsGroups;
 

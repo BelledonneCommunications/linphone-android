@@ -180,8 +180,8 @@ public class CreateAccountFragment extends Fragment
                 mUseUsername.setVisibility(View.VISIBLE);
                 mUseUsername.setOnCheckedChangeListener(this);
             }
-            addPhoneNumberHandler(mPhoneNumberEdit, null);
-            addPhoneNumberHandler(mDialCode, null);
+            addPhoneNumberHandler(mPhoneNumberEdit);
+            addPhoneNumberHandler(mDialCode);
         }
 
         // Password & email address
@@ -205,9 +205,9 @@ public class CreateAccountFragment extends Fragment
                 }
             }
 
-            addPasswordHandler(mPasswordEdit, null);
-            addConfirmPasswordHandler(mPasswordEdit, mPasswordConfirmEdit, null);
-            addEmailHandler(mEmailEdit, null);
+            addPasswordHandler(mPasswordEdit);
+            addConfirmPasswordHandler(mPasswordEdit, mPasswordConfirmEdit);
+            addEmailHandler(mEmailEdit);
         }
 
         // Hide phone number and display username/email/password
@@ -242,7 +242,7 @@ public class CreateAccountFragment extends Fragment
             mAccountCreator.setLanguage(Locale.getDefault().toLanguageTag());
         }
 
-        addUsernameHandler(mUsernameEdit, null);
+        addUsernameHandler(mUsernameEdit);
 
         mCreateAccount.setEnabled(true);
         mCreateAccount.setOnClickListener(this);
@@ -472,7 +472,7 @@ public class CreateAccountFragment extends Fragment
         return status;
     }
 
-    public void onTextChanged2() {
+    private void onTextChanged2() {
         String msg = "";
         mAccountCreator.setUsername(getUsername());
 
@@ -532,7 +532,7 @@ public class CreateAccountFragment extends Fragment
         mSipUri.setText(msg);
     }
 
-    private void addPhoneNumberHandler(final EditText field, final ImageView icon) {
+    private void addPhoneNumberHandler(final EditText field) {
         field.addTextChangedListener(
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
@@ -560,7 +560,7 @@ public class CreateAccountFragment extends Fragment
                 });
     }
 
-    private void addUsernameHandler(final EditText field, final ImageView icon) {
+    private void addUsernameHandler(final EditText field) {
         field.addTextChangedListener(
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
@@ -584,7 +584,7 @@ public class CreateAccountFragment extends Fragment
                 });
     }
 
-    private void addEmailHandler(final EditText field, final ImageView icon) {
+    private void addEmailHandler(final EditText field) {
         field.addTextChangedListener(
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
@@ -609,7 +609,7 @@ public class CreateAccountFragment extends Fragment
                 });
     }
 
-    private void addPasswordHandler(final EditText field1, final ImageView icon) {
+    private void addPasswordHandler(final EditText field1) {
         TextWatcher passwordListener =
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {
@@ -636,8 +636,7 @@ public class CreateAccountFragment extends Fragment
         field1.addTextChangedListener(passwordListener);
     }
 
-    private void addConfirmPasswordHandler(
-            final EditText field1, final EditText field2, final ImageView icon) {
+    private void addConfirmPasswordHandler(final EditText field1, final EditText field2) {
         TextWatcher passwordListener =
                 new TextWatcher() {
                     public void afterTextChanged(Editable s) {

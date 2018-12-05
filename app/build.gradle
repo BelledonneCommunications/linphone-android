@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
-def getPackageName() {
+static def getPackageName() {
     return "org.linphone"
 }
 
-def firebaseEnabled() {
+static def firebaseEnabled() {
     File googleFile = new File('app/google-services.json')
     return googleFile.exists()
 }
 
-def isLocalAarAvailable() {
+static def isLocalAarAvailable() {
     File debugAar = new File('linphone-sdk-android/linphone-sdk-android-debug.aar')
     File releaseAar = new File('linphone-sdk-android/linphone-sdk-android-release.aar')
     return debugAar.exists() || releaseAar.exists()
@@ -103,9 +103,9 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.android.billingclient:billing:1.2'
-    implementation 'org.apache.commons:commons-compress:1.16.1'
+    implementation 'org.apache.commons:commons-compress:1.18'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'

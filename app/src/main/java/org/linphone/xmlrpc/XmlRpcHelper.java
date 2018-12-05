@@ -44,7 +44,7 @@ public class XmlRpcHelper {
     public static final String CLIENT_ERROR_INVALID_SERVER_URL = "INVALID_SERVER_URL";
     public static final String CLIENT_ERROR_SERVER_NOT_REACHABLE = "SERVER_NOT_REACHABLE";
 
-    private XmlRpcSession mXmlRpcSession;
+    private final XmlRpcSession mXmlRpcSession;
 
     public XmlRpcHelper() {
         mXmlRpcSession =
@@ -66,13 +66,13 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
-                            listener.onAccountCreated(result);
+                            listener.onAccountCreated();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -94,13 +94,13 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
                             listener.onAccountExpireFetched(result);
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -126,13 +126,13 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
-                            listener.onAccountExpireUpdated(result);
+                            listener.onAccountExpireUpdated();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -156,13 +156,13 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
-                            listener.onAccountActivated(result);
+                            listener.onAccountActivated();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -181,16 +181,16 @@ public class XmlRpcHelper {
                         String result = request.getStringResponse();
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if ("OK".equals(result)) {
-                                listener.onAccountActivatedFetched(true);
+                                listener.onAccountActivatedFetched();
                                 return;
                             } else if (!"ERROR_ACCOUNT_NOT_ACTIVATED".equals(result)) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                             }
-                            listener.onAccountActivatedFetched(false);
+                            listener.onAccountActivatedFetched();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -209,12 +209,12 @@ public class XmlRpcHelper {
                         String result = request.getStringResponse();
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (!"NOK".equals(result) && !"OK".equals(result)) {
-                                listener.onError(result);
+                                listener.onError();
                             }
                             listener.onTrialAccountFetched("OK".equals(result));
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -233,16 +233,16 @@ public class XmlRpcHelper {
                         String result = request.getStringResponse();
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if ("OK".equals(result)) {
-                                listener.onAccountFetched(true);
+                                listener.onAccountFetched();
                                 return;
                             } else if (!"ERROR_ACCOUNT_DOESNT_EXIST".equals(result)) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                             }
-                            listener.onAccountFetched(false);
+                            listener.onAccountFetched();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -262,14 +262,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
-                            listener.onAccountEmailChanged(result);
+                            listener.onAccountEmailChanged();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -294,14 +294,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
-                            listener.onAccountPasswordChanged(result);
+                            listener.onAccountPasswordChanged();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -326,14 +326,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
-                            listener.onAccountPasswordChanged(result);
+                            listener.onAccountPasswordChanged();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -356,14 +356,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
-                            listener.onRecoverPasswordLinkSent(result);
+                            listener.onRecoverPasswordLinkSent();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -383,14 +383,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
-                            listener.onActivateAccountLinkSent(result);
+                            listener.onActivateAccountLinkSent();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -409,14 +409,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
-                            listener.onUsernameSent(result);
+                            listener.onUsernameSent();
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -437,14 +437,14 @@ public class XmlRpcHelper {
                             Log.w(result);
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
                             listener.onSignatureVerified("OK".equals(result));
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });
@@ -466,14 +466,14 @@ public class XmlRpcHelper {
                         if (request.getStatus() == XmlRpcStatus.Ok) {
                             if (result.startsWith("ERROR_")) {
                                 Log.e(result);
-                                listener.onError(result);
+                                listener.onError();
                                 return;
                             }
 
                             listener.onRemoteProvisioningFilenameSent(result);
                         } else if (request.getStatus() == XmlRpcStatus.Failed) {
                             Log.e(result);
-                            listener.onError(result);
+                            listener.onError();
                         }
                     }
                 });

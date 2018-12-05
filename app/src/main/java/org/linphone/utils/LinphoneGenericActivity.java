@@ -37,7 +37,6 @@ public class LinphoneGenericActivity extends Activity {
         if (!LinphoneService.isReady() || !LinphoneManager.isInstanciated()) {
             finish();
             startActivity(getIntent().setClass(this, LinphoneLauncherActivity.class));
-            return;
         }
     }
 }

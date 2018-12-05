@@ -30,15 +30,16 @@ import org.linphone.LinphoneActivity;
 import org.linphone.R;
 
 public class SelectableHelper {
-    private ImageView mEditButton,
-            mSelectAllButton,
-            mDeselectAllButton,
-            mDeleteSelectionButton,
-            mCancelButton;
-    private LinearLayout mEditTopBar, mTopBar;
+    private final ImageView mEditButton;
+    private final ImageView mSelectAllButton;
+    private final ImageView mDeselectAllButton;
+    private final ImageView mDeleteSelectionButton;
+    private final ImageView mCancelButton;
+    private final LinearLayout mEditTopBar;
+    private final LinearLayout mTopBar;
     private SelectableAdapter<RecyclerView.ViewHolder> mAdapter;
-    private DeleteListener mDeleteListener;
-    private Context mContext;
+    private final DeleteListener mDeleteListener;
+    private final Context mContext;
     private int mDialogDeleteMessageResourceId;
 
     public SelectableHelper(View view, DeleteListener listener) {
@@ -159,7 +160,7 @@ public class SelectableHelper {
         }
     }
 
-    public void quitEditionMode() {
+    private void quitEditionMode() {
         mAdapter.enableEdition(false);
         mTopBar.setVisibility(View.VISIBLE);
         mEditTopBar.setVisibility(View.GONE);

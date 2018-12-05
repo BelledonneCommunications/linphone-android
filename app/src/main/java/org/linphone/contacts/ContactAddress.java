@@ -72,10 +72,6 @@ public class ContactAddress implements Serializable {
         return mContact;
     }
 
-    public SearchResult getResult() {
-        return mResult;
-    }
-
     public void setResult(SearchResult result) {
         this.mResult = result;
     }
@@ -140,8 +136,8 @@ public class ContactAddress implements Serializable {
         if (other == null) return false;
         if (other == this) return true;
         if (!(other instanceof ContactAddress)) return false;
-        if (((ContactAddress) other).getAddressAsDisplayableString()
-                == this.getAddressAsDisplayableString()) return true;
-        return false;
+        return ((ContactAddress) other)
+                .getAddressAsDisplayableString()
+                .equals(getAddressAsDisplayableString());
     }
 }

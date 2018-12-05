@@ -19,34 +19,34 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-public interface XmlRpcListener {
-    void onError(String error);
+interface XmlRpcListener {
+    void onError();
 
-    void onAccountCreated(String result);
+    void onAccountCreated();
 
     void onAccountExpireFetched(String result);
 
-    void onAccountExpireUpdated(String result);
+    void onAccountExpireUpdated();
 
-    void onAccountActivated(String result);
+    void onAccountActivated();
 
-    void onAccountActivatedFetched(boolean isActivated);
+    void onAccountActivatedFetched();
 
     void onTrialAccountFetched(boolean isTrial);
 
-    void onAccountFetched(boolean isExisting);
+    void onAccountFetched();
 
-    void onAccountEmailChanged(String result);
+    void onAccountEmailChanged();
 
-    void onAccountPasswordChanged(String result);
+    void onAccountPasswordChanged();
 
-    void onRecoverPasswordLinkSent(String result);
+    void onRecoverPasswordLinkSent();
 
-    void onActivateAccountLinkSent(String result);
+    void onActivateAccountLinkSent();
 
     void onSignatureVerified(boolean success);
 
-    void onUsernameSent(String result);
+    void onUsernameSent();
 
     void onRemoteProvisioningFilenameSent(String result);
 }

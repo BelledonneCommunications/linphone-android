@@ -61,10 +61,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     private CoreListenerStub mListener;
     private boolean mIsMicMuted, mIsSpeakerEnabled;
 
-    public static CallOutgoingActivity instance() {
-        return sInstance;
-    }
-
     public static boolean isInstanciated() {
         return sInstance != null;
     }
@@ -152,7 +148,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
                         if (LinphoneManager.getLc().getCallsNb() == 0) {
                             finish();
-                            return;
                         }
                     }
                 };
@@ -266,7 +261,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         return super.onKeyDown(keyCode, event);
     }
 
-    public void displayCustomToast(final String message, final int duration) {
+    private void displayCustomToast(final String message, final int duration) {
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toastRoot));
 
@@ -286,7 +281,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
     }
 
     private void checkAndRequestCallPermissions() {
-        ArrayList<String> permissionsList = new ArrayList<String>();
+        ArrayList<String> permissionsList = new ArrayList<>();
 
         int recordAudio =
                 getPackageManager()

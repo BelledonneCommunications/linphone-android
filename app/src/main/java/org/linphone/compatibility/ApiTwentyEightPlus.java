@@ -40,7 +40,7 @@ import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
 
 @TargetApi(28)
-public class ApiTwentyEightPlus {
+class ApiTwentyEightPlus {
     public static Notification createMessageNotification(
             Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
         String replyLabel = context.getResources().getString(R.string.notification_reply_label);

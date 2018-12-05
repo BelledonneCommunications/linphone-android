@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Notifiable {
-    private int mNotificationId;
+    private final int mNotificationId;
     private List<NotifiableMessage> mMessages;
     private boolean mIsGroup;
     private String mGroupTitle;

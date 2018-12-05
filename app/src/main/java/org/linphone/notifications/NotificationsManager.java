@@ -39,6 +39,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
+import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ImageUtils;
@@ -49,11 +50,12 @@ public class NotificationsManager {
     private static final int MISSED_CALLS_NOTIF_ID = 2;
     private static final int IN_APP_NOTIF_ID = 3;
 
-    private Context mContext;
-    private NotificationManager mNM;
-    private HashMap<String, Notifiable> mChatNotifMap, mCallNotifMap;
+    private final Context mContext;
+    private final NotificationManager mNM;
+    private final HashMap<String, Notifiable> mChatNotifMap;
+    private final HashMap<String, Notifiable> mCallNotifMap;
     private int mLastNotificationId;
-    private Notification mServiceNotification;
+    private final Notification mServiceNotification;
 
     public NotificationsManager(Context context) {
         mContext = context;
@@ -80,6 +82,7 @@ public class NotificationsManager {
         try {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
         } catch (Exception e) {
+            Log.e(e);
         }
 
         PendingIntent pendingIntent =
@@ -126,7 +129,7 @@ public class NotificationsManager {
         }
     }
 
-    public boolean isServiceNotificationDisplayed() {
+    private boolean isServiceNotificationDisplayed() {
         return LinphonePreferences.instance().getServiceNotificationVisibility();
     }
 
@@ -327,7 +330,6 @@ public class NotificationsManager {
                         mContext,
                         notif.getNotificationId(),
                         showAnswerAction,
-                        mContext.getString(R.string.service_name),
                         mContext.getString(notificationTextId),
                         iconId,
                         bm,

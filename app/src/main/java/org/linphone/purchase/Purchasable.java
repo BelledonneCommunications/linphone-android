@@ -25,7 +25,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 public class Purchasable {
-    private String mId, mTitle, mDescription, mPrice;
+    private final String mId;
+    private String mTitle;
+    private String mDescription;
+    private String mPrice;
     private long mExpire;
     private String mPurchasePayload, mPurchasePayloadSignature;
     private String mUserData;
@@ -62,15 +65,6 @@ public class Purchasable {
 
     public Purchasable setPrice(String price) {
         this.mPrice = price;
-        return this;
-    }
-
-    public long getExpire() {
-        return mExpire;
-    }
-
-    public Purchasable setExpire(long expire) {
-        this.mExpire = expire;
         return this;
     }
 

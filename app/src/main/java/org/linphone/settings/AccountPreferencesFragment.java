@@ -48,7 +48,7 @@ import org.linphone.utils.LinphoneUtils;
 public class AccountPreferencesFragment extends PreferencesListFragment
         implements AccountCreatorListener {
     private int mN;
-    private OnPreferenceClickListener linkAccountListener =
+    private final OnPreferenceClickListener linkAccountListener =
             new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -62,8 +62,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                 }
             };
     private boolean mIsNewAccount = false;
-    private LinphonePreferences mPrefs;
-    private OnPreferenceChangeListener mAvpfRRIntervalChangedListener =
+    private final LinphonePreferences mPrefs;
+    private final OnPreferenceChangeListener mAvpfRRIntervalChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -74,6 +74,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                             return false;
                         }
                     } catch (NumberFormatException nfe) {
+                        Log.e(nfe);
                     }
                     if (mIsNewAccount) {
                         // TODO
@@ -84,7 +85,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mEscapeChangedListener =
+    private final OnPreferenceChangeListener mEscapeChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -97,7 +98,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mPushNotificationListener =
+    private final OnPreferenceChangeListener mPushNotificationListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -110,7 +111,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mIceChangedListener =
+    private final OnPreferenceChangeListener mIceChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -123,7 +124,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mStunTurnChangedListener =
+    private final OnPreferenceChangeListener mStunTurnChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -137,7 +138,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                 }
             };
     private EditTextPreference mProxyPreference;
-    private OnPreferenceChangeListener mTransportChangedListener =
+    private final OnPreferenceChangeListener mTransportChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -160,7 +161,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
             };
     private ListPreference mTransportPreference;
     private AccountBuilder mBuilder;
-    private OnPreferenceChangeListener mUsernameChangedListener =
+    private final OnPreferenceChangeListener mUsernameChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -174,7 +175,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mUseridChangedListener =
+    private final OnPreferenceChangeListener mUseridChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -187,7 +188,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mPasswordChangedListener =
+    private final OnPreferenceChangeListener mPasswordChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -200,7 +201,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mDomainChangedListener =
+    private final OnPreferenceChangeListener mDomainChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -214,7 +215,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mDisplayNameChangedListener =
+    private final OnPreferenceChangeListener mDisplayNameChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -227,7 +228,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mProxyChangedListener =
+    private final OnPreferenceChangeListener mProxyChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -247,7 +248,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mOutboundProxyChangedListener =
+    private final OnPreferenceChangeListener mOutboundProxyChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -259,7 +260,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mExpiresChangedListener =
+    private final OnPreferenceChangeListener mExpiresChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -272,7 +273,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mPrefixChangedListener =
+    private final OnPreferenceChangeListener mPrefixChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -286,7 +287,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mAvpfChangedListener =
+    private final OnPreferenceChangeListener mAvpfChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -297,7 +298,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                     return true;
                 }
             };
-    private OnPreferenceChangeListener mDisableChangedListener =
+    private final OnPreferenceChangeListener mDisableChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -317,7 +318,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
         mPrefs = LinphonePreferences.instance();
     }
 
-    public static boolean isEditTextEmpty(String s) {
+    private static boolean isEditTextEmpty(String s) {
         return s.equals(""); // really empty.
     }
 
@@ -340,7 +341,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
             mIsNewAccount = true;
             mBuilder = new AccountBuilder(LinphoneManager.getLc());
         }
-        initAccountPreferencesFields(screen);
+        initAccountPreferencesFields();
 
         // Force hide keyboard
         getActivity()
@@ -348,7 +349,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-    private void initAccountPreferencesFields(PreferenceScreen parent) {
+    private void initAccountPreferencesFields() {
         boolean isDefaultAccount = mPrefs.getDefaultAccountIndex() == mN;
         NatPolicy natPolicy = null;
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
@@ -531,8 +532,8 @@ public class AccountPreferencesFragment extends PreferencesListFragment
     }
 
     private void initializeTransportPreference(ListPreference pref) {
-        List<CharSequence> entries = new ArrayList<CharSequence>();
-        List<CharSequence> values = new ArrayList<CharSequence>();
+        List<CharSequence> entries = new ArrayList<>();
+        List<CharSequence> values = new ArrayList<>();
         entries.add(getString(R.string.pref_transport_udp));
         values.add(getString(R.string.pref_transport_udp_key));
         entries.add(getString(R.string.pref_transport_tcp));

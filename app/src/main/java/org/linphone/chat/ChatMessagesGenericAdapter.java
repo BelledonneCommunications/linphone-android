@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.EventLog;
 
-public interface ChatMessagesGenericAdapter {
+interface ChatMessagesGenericAdapter {
     void addToHistory(EventLog log);
 
     void addAllToHistory(ArrayList<EventLog> logs);

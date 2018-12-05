@@ -42,7 +42,7 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
-public class InAppPurchaseHelper {
+class InAppPurchaseHelper {
     public static final int API_VERSION = 3;
     public static final int ACTIVITY_RESULT_CODE_PURCHASE_ITEM = 11089;
 
@@ -90,12 +90,12 @@ public class InAppPurchaseHelper {
     public static final String CLIENT_ERROR_BILLING_SERVICE_UNAVAILABLE =
             "BILLING_SERVICE_UNAVAILABLE";
 
-    private Context mContext;
-    private InAppPurchaseListener mListener;
+    private final Context mContext;
+    private final InAppPurchaseListener mListener;
     private IInAppBillingService mService;
-    private ServiceConnection mServiceConn;
-    private Handler mHandler = new Handler();
-    private String mGmailAccount;
+    private final ServiceConnection mServiceConn;
+    private final Handler mHandler = new Handler();
+    private final String mGmailAccount;
 
     public InAppPurchaseHelper(Activity context, InAppPurchaseListener listener) {
         mContext = context;
@@ -320,8 +320,7 @@ public class InAppPurchaseHelper {
 
         for (Account account : accounts) {
             if (isEmailCorrect(account.name)) {
-                String possibleEmail = account.name;
-                return possibleEmail;
+                return account.name;
             }
         }
 
@@ -333,7 +332,7 @@ public class InAppPurchaseHelper {
         return emailPattern.matcher(email).matches();
     }
 
-    private Purchasable verifySignature(String payload, String signature) {
+    private Purchasable verifySignature() {
         // TODO FIXME rework to be async
         /*XmlRpcHelper helper = new XmlRpcHelper();
         if (helper.verifySignature(payload, signature)) {

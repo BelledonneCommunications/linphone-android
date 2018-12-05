@@ -337,8 +337,6 @@ public class ContactEditorFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (LinphoneActivity.isInstanciated()) {}
-
         // Force hide keyboard
         getActivity()
                 .getWindow()
@@ -465,6 +463,7 @@ public class ContactEditorFragment extends Fragment {
         } catch (Exception e) {
             Log.e(e);
         }
+        c.close();
         return value;
     }
 
@@ -535,15 +534,6 @@ public class ContactEditorFragment extends Fragment {
 
     private View displayNumberOrAddress(
             final LinearLayout controls, String numberOrAddress, boolean isSIP) {
-        return displayNumberOrAddress(controls, numberOrAddress, isSIP, false);
-    }
-
-    @SuppressLint("InflateParams")
-    private View displayNumberOrAddress(
-            final LinearLayout controls,
-            String numberOrAddress,
-            boolean isSIP,
-            boolean forceAddNumber) {
         String displayNumberOrAddress = numberOrAddress;
         if (isSIP) {
             if (mFirstSipAddressIndex == -1) {
@@ -554,21 +544,14 @@ public class ContactEditorFragment extends Fragment {
         }
         if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP)
                 || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
-            if (forceAddNumber)
-                isSIP = !isSIP; // If number can't be displayed because we hide a sort of number,
-            // change that category
-            else return null;
+            return null;
         }
 
         LinphoneNumberOrAddress tempNounoa;
-        if (forceAddNumber) {
-            tempNounoa = new LinphoneNumberOrAddress(null, isSIP);
+        if (mIsNewContact || mNewSipOrNumberToAdd != null) {
+            tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSIP);
         } else {
-            if (mIsNewContact || mNewSipOrNumberToAdd != null) {
-                tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSIP);
-            } else {
-                tempNounoa = new LinphoneNumberOrAddress(null, isSIP, numberOrAddress);
-            }
+            tempNounoa = new LinphoneNumberOrAddress(null, isSIP, numberOrAddress);
         }
         final LinphoneNumberOrAddress nounoa = tempNounoa;
         mNumbersAndAddresses.add(nounoa);
@@ -594,9 +577,6 @@ public class ContactEditorFragment extends Fragment {
                     @Override
                     public void afterTextChanged(Editable s) {}
                 });
-        if (forceAddNumber) {
-            nounoa.setValue(noa.getText().toString());
-        }
 
         ImageView delete = view.findViewById(R.id.delete_field);
         if ((getResources().getBoolean(R.bool.allow_only_one_phone_number) && !isSIP)

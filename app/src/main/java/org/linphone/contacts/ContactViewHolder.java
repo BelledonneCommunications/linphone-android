@@ -1,7 +1,7 @@
-package org.linphone.recording;
+package org.linphone.contacts;
 
 /*
-RecordingViewHolder.java
+ContactViewHolder.java
 Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -23,38 +23,33 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
 
-public class RecordingViewHolder extends RecyclerView.ViewHolder
+public class ContactViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
-    public final ImageView playButton;
+    public final CheckBox delete;
+    public final ImageView linphoneFriend;
     public final TextView name;
-    public final TextView date;
-    public final TextView currentPosition;
-    public final TextView duration;
-    public final SeekBar progressionBar;
-    public final CheckBox select;
     public final LinearLayout separator;
     public final TextView separatorText;
+    public final RelativeLayout avatarLayout;
+    public final TextView organization;
+    private final ClickListener mListener;
 
-    private final RecordingViewHolder.ClickListener mListener;
-
-    public RecordingViewHolder(View view, RecordingViewHolder.ClickListener listener) {
+    public ContactViewHolder(View view, ClickListener listener) {
         super(view);
 
-        playButton = view.findViewById(R.id.record_play);
-        name = view.findViewById(R.id.record_name);
-        date = view.findViewById(R.id.record_date);
-        currentPosition = view.findViewById(R.id.record_current_time);
-        duration = view.findViewById(R.id.record_duration);
-        progressionBar = view.findViewById(R.id.record_progression_bar);
-        select = view.findViewById(R.id.delete);
+        delete = view.findViewById(R.id.delete);
+        linphoneFriend = view.findViewById(R.id.friendLinphone);
+        name = view.findViewById(R.id.name);
         separator = view.findViewById(R.id.separator);
         separatorText = view.findViewById(R.id.separator_text);
-
+        avatarLayout = view.findViewById(R.id.avatar_layout);
+        organization = view.findViewById(R.id.contactOrganization);
+        // friendStatus = view.findViewById(R.id.friendStatus);
         mListener = listener;
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
@@ -67,8 +62,7 @@ public class RecordingViewHolder extends RecyclerView.ViewHolder
         }
     }
 
-    @Override
-    public boolean onLongClick(View view) {
+    public boolean onLongClick(View v) {
         if (mListener != null) {
             return mListener.onItemLongClicked(getAdapterPosition());
         }

@@ -1,7 +1,7 @@
 package org.linphone.contacts;
 
 /*
-ContactsListAdapter.java
+ContactsAdapter.java
 Copyright (C) 2018  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -23,14 +23,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,20 +35,20 @@ import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 import org.linphone.views.ContactAvatar;
 
-public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.ViewHolder>
+public class ContactsAdapter extends SelectableAdapter<ContactViewHolder>
         implements SectionIndexer {
     private List<LinphoneContact> mContacts;
     private String[] mSections;
     private ArrayList<String> mSectionsList;
     private Map<String, Integer> mMap = new LinkedHashMap<>();
-    private ViewHolder.ClickListener mClickListener;
-    private Context mContext;
+    private final ContactViewHolder.ClickListener mClickListener;
+    private final Context mContext;
     private boolean mIsSearchMode;
 
-    ContactsListAdapter(
+    ContactsAdapter(
             Context context,
             List<LinphoneContact> contactsList,
-            ViewHolder.ClickListener clickListener,
+            ContactViewHolder.ClickListener clickListener,
             SelectableHelper helper) {
         super(helper);
         mContext = context;
@@ -64,15 +58,15 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v =
                 LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.contact_cell, parent, false);
-        return new ViewHolder(v, mClickListener);
+        return new ContactViewHolder(v, mClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ContactViewHolder holder, final int position) {
         LinphoneContact contact = (LinphoneContact) getItem(position);
 
         holder.name.setText(contact.getFullName());
@@ -175,54 +169,5 @@ public class ContactsListAdapter extends SelectableAdapter<ContactsListAdapter.V
         }
         String letter = fullName.substring(0, 1).toUpperCase(Locale.getDefault());
         return mSectionsList.indexOf(letter);
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener, View.OnLongClickListener {
-        public CheckBox delete;
-        public ImageView linphoneFriend;
-        public TextView name;
-        public LinearLayout separator;
-        public TextView separatorText;
-        public RelativeLayout avatarLayout;
-        public TextView organization;
-        // public ImageView friendStatus;
-        private ClickListener mListener;
-
-        private ViewHolder(View view, ClickListener listener) {
-            super(view);
-
-            delete = view.findViewById(R.id.delete);
-            linphoneFriend = view.findViewById(R.id.friendLinphone);
-            name = view.findViewById(R.id.name);
-            separator = view.findViewById(R.id.separator);
-            separatorText = view.findViewById(R.id.separator_text);
-            avatarLayout = view.findViewById(R.id.avatar_layout);
-            organization = view.findViewById(R.id.contactOrganization);
-            // friendStatus = view.findViewById(R.id.friendStatus);
-            mListener = listener;
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onItemClicked(getAdapterPosition());
-            }
-        }
-
-        public boolean onLongClick(View v) {
-            if (mListener != null) {
-                return mListener.onItemLongClicked(getAdapterPosition());
-            }
-            return false;
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-
-            boolean onItemLongClicked(int position);
-        }
     }
 }

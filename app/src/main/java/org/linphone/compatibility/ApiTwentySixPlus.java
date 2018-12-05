@@ -34,16 +34,35 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.provider.Settings;
 import org.linphone.R;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
 import org.linphone.notifications.NotificationBroadcastReceiver;
 
 @TargetApi(26)
-public class ApiTwentySixPlus {
+class ApiTwentySixPlus {
+    public static String getDeviceName(Context context) {
+        String name =
+                Settings.Global.getString(
+                        context.getContentResolver(), Settings.Global.DEVICE_NAME);
+        if (name == null) {
+            name = BluetoothAdapter.getDefaultAdapter().getName();
+        }
+        if (name == null) {
+            name = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
+        }
+        if (name == null) {
+            name = Build.MANUFACTURER + " " + Build.MODEL;
+        }
+        return name;
+    }
+
     public static Notification createRepliedNotification(Context context, String reply) {
         return new Notification.Builder(
                         context, context.getString(R.string.notification_channel_id))
@@ -213,7 +232,6 @@ public class ApiTwentySixPlus {
             int level,
             Bitmap largeIcon,
             PendingIntent intent,
-            boolean isOngoingEvent,
             int priority) {
 
         if (largeIcon != null) {

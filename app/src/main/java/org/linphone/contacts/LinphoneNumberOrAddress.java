@@ -24,9 +24,9 @@ import java.io.Serializable;
 public class LinphoneNumberOrAddress implements Serializable, Comparable<LinphoneNumberOrAddress> {
     private static final long serialVersionUID = -2301689469730072896L;
 
-    private boolean mIsSIPAddress;
+    private final boolean mIsSIPAddress;
     private String mValue, mOldValueForUpdatePurpose;
-    private String mNormalizedPhone;
+    private final String mNormalizedPhone;
 
     public LinphoneNumberOrAddress(String v, boolean isSIP) {
         mValue = v;

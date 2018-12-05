@@ -101,7 +101,7 @@ public class HistoryFragment extends Fragment
         return view;
     }
 
-    public void refresh() {
+    private void refresh() {
         mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
     }
 
@@ -122,7 +122,7 @@ public class HistoryFragment extends Fragment
 
     private void removeNotMissedCallsFromLogs() {
         if (mOnlyDisplayMissedCalls) {
-            List<CallLog> missedCalls = new ArrayList<CallLog>();
+            List<CallLog> missedCalls = new ArrayList<>();
             for (CallLog log : mLogs) {
                 if (log.getStatus() == Call.Status.Missed) {
                     missedCalls.add(log);
@@ -248,7 +248,7 @@ public class HistoryFragment extends Fragment
                 }
                 LinphoneActivity.instance()
                         .setAddresGoToDialerAndCall(
-                                address.asStringUriOnly(), address.getDisplayName(), null);
+                                address.asStringUriOnly(), address.getDisplayName());
             }
         }
     }

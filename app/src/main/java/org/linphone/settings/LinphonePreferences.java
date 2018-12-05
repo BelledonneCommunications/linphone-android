@@ -61,7 +61,7 @@ public class LinphonePreferences {
 
     private LinphonePreferences() {}
 
-    public static final synchronized LinphonePreferences instance() {
+    public static synchronized LinphonePreferences instance() {
         if (sInstance == null) {
             sInstance = new LinphonePreferences();
         }
@@ -147,8 +147,7 @@ public class LinphonePreferences {
         ProxyConfig prxCfg = getProxyConfig(n);
         if (prxCfg == null) return null;
         Address addr = prxCfg.getIdentityAddress();
-        AuthInfo authInfo = getLc().findAuthInfo(null, addr.getUsername(), addr.getDomain());
-        return authInfo;
+        return getLc().findAuthInfo(null, addr.getUsername(), addr.getDomain());
     }
 
     /**
@@ -207,7 +206,7 @@ public class LinphonePreferences {
         }
     }
 
-    public TransportType getAccountTransport(int n) {
+    private TransportType getAccountTransport(int n) {
         TransportType transport = null;
         ProxyConfig proxyConfig = getProxyConfig(n);
 
@@ -303,16 +302,12 @@ public class LinphonePreferences {
         return authInfo == null ? null : authInfo.getUserid();
     }
 
-    public String getAccountRealm(int n) {
+    private String getAccountRealm(int n) {
         AuthInfo authInfo = getAuthInfo(n);
         return authInfo == null ? null : authInfo.getRealm();
     }
 
     public void setAccountPassword(int n, String password) {
-        setAccountPassword(n, password, null);
-    }
-
-    private void setAccountPassword(int n, String password, String ha1) {
         if (getLc() == null) return;
         String user = getAccountUsername(n);
         String domain = getAccountDomain(n);
@@ -327,7 +322,7 @@ public class LinphonePreferences {
                         .removeAuthInfo(LinphoneManager.getLc().getAuthInfoList()[n]);
             }
             AuthInfo authInfo =
-                    Factory.instance().createAuthInfo(user, userid, password, ha1, realm, domain);
+                    Factory.instance().createAuthInfo(user, userid, password, null, realm, domain);
             LinphoneManager.getLc().addAuthInfo(authInfo);
         }
     }
@@ -422,8 +417,7 @@ public class LinphonePreferences {
     }
 
     public String getAccountProxy(int n) {
-        String proxy = getProxyConfig(n).getServerAddr();
-        return proxy;
+        return getProxyConfig(n).getServerAddr();
     }
 
     public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
@@ -442,13 +436,6 @@ public class LinphonePreferences {
         return getProxyConfig(n).getRoute() != null;
     }
 
-    public void setAccountContactParameters(int n, String contactParams) {
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        prxCfg.setContactUriParameters(contactParams);
-        prxCfg.done();
-    }
-
     public String getExpires(int n) {
         return String.valueOf(getProxyConfig(n).getExpires());
     }
@@ -460,6 +447,7 @@ public class LinphonePreferences {
             prxCfg.setExpires(Integer.parseInt(expire));
             prxCfg.done();
         } catch (NumberFormatException nfe) {
+            Log.e(nfe);
         }
     }
 
@@ -496,6 +484,7 @@ public class LinphonePreferences {
             prxCfg.setAvpfRrInterval(Integer.parseInt(interval));
             prxCfg.done();
         } catch (NumberFormatException nfe) {
+            Log.e(nfe);
         }
     }
 
@@ -798,7 +787,7 @@ public class LinphonePreferences {
         useRandomPort(enabled, true);
     }
 
-    public void useRandomPort(boolean enabled, boolean apply) {
+    private void useRandomPort(boolean enabled, boolean apply) {
         getConfig().setBool("app", "random_port", enabled);
         if (apply) {
             if (enabled) {
@@ -850,7 +839,6 @@ public class LinphonePreferences {
         NatPolicy nat = getOrCreateNatPolicy();
         nat.setStunServer(stun);
 
-        if (stun != null && !stun.isEmpty()) {}
         getLc().setNatPolicy(nat);
     }
 
@@ -1017,7 +1005,7 @@ public class LinphonePreferences {
         }
     }
 
-    public String getPushNotificationRegistrationID() {
+    private String getPushNotificationRegistrationID() {
         return getConfig().getString("app", "push_notification_regid", null);
     }
 
@@ -1185,7 +1173,7 @@ public class LinphonePreferences {
 
     public boolean isProvisioningLoginViewEnabled() {
 
-        return (getConfig() != null) ? getConfig().getBool("app", "show_login_view", false) : false;
+        return (getConfig() != null) && getConfig().getBool("app", "show_login_view", false);
     }
     // End of tunnel settings
 
@@ -1230,11 +1218,7 @@ public class LinphonePreferences {
                 getConfig().getString("in-app-purchase", "purchase_item_signature", null);
         String username = getConfig().getString("in-app-purchase", "purchase_item_username", null);
 
-        Purchasable item =
-                new Purchasable(id)
-                        .setPayloadAndSignature(payload, signature)
-                        .setUserData(username);
-        return item;
+        return new Purchasable(id).setPayloadAndSignature(payload, signature).setUserData(username);
     }
 
     public void setInAppPurchasedItem(Purchasable item) {
@@ -1249,7 +1233,7 @@ public class LinphonePreferences {
     }
 
     public ArrayList<String> getInAppPurchasables() {
-        ArrayList<String> purchasables = new ArrayList<String>();
+        ArrayList<String> purchasables = new ArrayList<>();
         String list = getConfig().getString("in-app-purchase", "purchasable_items_ids", null);
         if (list != null) {
             for (String purchasable : list.split(";")) {
@@ -1344,7 +1328,7 @@ public class LinphonePreferences {
         return firstTimeAskingForPermission(permission, true);
     }
 
-    public boolean firstTimeAskingForPermission(String permission, boolean toggle) {
+    private boolean firstTimeAskingForPermission(String permission, boolean toggle) {
         boolean firstTime = getConfig().getBool("app", permission, true);
         if (toggle) {
             permissionHasBeenAsked(permission);
@@ -1352,7 +1336,7 @@ public class LinphonePreferences {
         return firstTime;
     }
 
-    public void permissionHasBeenAsked(String permission) {
+    private void permissionHasBeenAsked(String permission) {
         getConfig().setBool("app", permission, false);
     }
 
@@ -1421,7 +1405,7 @@ public class LinphonePreferences {
     }
 
     public static class AccountBuilder {
-        private Core lc;
+        private final Core lc;
         private String tempUsername;
         private String tempDisplayName;
         private String tempUserId;
@@ -1434,10 +1418,10 @@ public class LinphonePreferences {
         private String tempExpire;
         private TransportType tempTransport;
         private int tempAvpfRRInterval = 0;
-        private boolean tempQualityReportingEnabled = false;
-        private int tempQualityReportingInterval = 0;
+        private final boolean tempQualityReportingEnabled = false;
+        private final int tempQualityReportingInterval = 0;
         private boolean tempEnabled = true;
-        private boolean tempNoDefault = false;
+        private final boolean tempNoDefault = false;
 
         public AccountBuilder(Core lc) {
             this.lc = lc;

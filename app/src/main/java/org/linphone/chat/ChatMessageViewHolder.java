@@ -61,28 +61,27 @@ import org.linphone.views.BitmapWorkerTask;
 import org.linphone.views.ContactAvatar;
 
 public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    public ChatMessage message;
 
-    public LinearLayout eventLayout;
-    public TextView eventMessage;
+    public final LinearLayout eventLayout;
+    public final TextView eventMessage;
 
-    public LinearLayout securityEventLayout;
-    public TextView securityEventMessage;
+    public final LinearLayout securityEventLayout;
+    public final TextView securityEventMessage;
 
-    public View rightAnchor;
-    public RelativeLayout bubbleLayout;
-    public LinearLayout background;
-    public RelativeLayout avatarLayout;
+    public final View rightAnchor;
+    public final RelativeLayout bubbleLayout;
+    public final LinearLayout background;
+    public final RelativeLayout avatarLayout;
 
-    public ProgressBar sendInProgress;
-    public TextView timeText;
-    public ImageView outgoingImdn;
-    public TextView messageText;
+    public final ProgressBar sendInProgress;
+    public final TextView timeText;
+    public final ImageView outgoingImdn;
+    public final TextView messageText;
 
-    public FlexboxLayout pictures;
+    public final FlexboxLayout pictures;
 
-    public CheckBox deleteEvent;
-    public CheckBox deleteMessage;
+    public final CheckBox deleteEvent;
+    public final CheckBox deleteMessage;
 
     private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
@@ -356,7 +355,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         if (bitmapWorkerTask != null) {
             final String bitmapData = bitmapWorkerTask.path;
             // If bitmapData is not yet set or it differs from the new data
-            if (bitmapData == null || bitmapData != path) {
+            if (bitmapData == null || !bitmapData.equals(path)) {
                 // Cancel previous task
                 bitmapWorkerTask.cancel(true);
             } else {

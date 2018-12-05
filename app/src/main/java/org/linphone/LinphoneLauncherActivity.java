@@ -72,9 +72,8 @@ public class LinphoneLauncherActivity extends Activity {
             } else if (Intent.ACTION_VIEW.equals(action)) {
                 if (LinphoneService.isReady()) {
                     mAddressToCall =
-                            ContactsManager.getInstance()
-                                    .getAddressOrNumberForAndroidContact(
-                                            getContentResolver(), intent.getData());
+                            ContactsManager.getAddressOrNumberForAndroidContact(
+                                    getContentResolver(), intent.getData());
                 } else {
                     mUriToResolve = intent.getData();
                 }
@@ -91,17 +90,7 @@ public class LinphoneLauncherActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-    }
-
-    protected void onServiceReady() {
+    private void onServiceReady() {
         final Class<? extends Activity> classToStart;
         /*if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
         	classToStart = TutorialLauncherActivity.class;
@@ -128,12 +117,11 @@ public class LinphoneLauncherActivity extends Activity {
                             newIntent.setData(intent.getData());
                             if (Intent.ACTION_SEND.equals(action) && type != null) {
                                 if (("text/plain").equals(type)
-                                        && (String) intent.getStringExtra(Intent.EXTRA_TEXT)
-                                                != null) {
+                                        && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
                                     stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
                                     newIntent.putExtra("msgShared", stringFileShared);
                                 } else {
-                                    fileUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                                    fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                                     stringUriFileShared =
                                             FileUtils.getFilePath(getBaseContext(), fileUri);
                                     newIntent.putExtra("fileShared", stringUriFileShared);
@@ -155,9 +143,8 @@ public class LinphoneLauncherActivity extends Activity {
                         }
                         if (mUriToResolve != null) {
                             mAddressToCall =
-                                    ContactsManager.getInstance()
-                                            .getAddressOrNumberForAndroidContact(
-                                                    getContentResolver(), mUriToResolve);
+                                    ContactsManager.getAddressOrNumberForAndroidContact(
+                                            getContentResolver(), mUriToResolve);
                             Log.i(
                                     "LinphoneLauncher",
                                     "Intent has uri to resolve : " + mUriToResolve.toString());

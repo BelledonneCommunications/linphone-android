@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,40 +35,37 @@ public class ChatMessageOldViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener {
     public String messageId;
     public ChatMessage message;
-    public LinearLayout eventLayout;
-    public TextView eventMessage;
+    public final LinearLayout eventLayout;
+    public final TextView eventMessage;
 
-    public RelativeLayout bubbleLayout;
-    public LinearLayout separatorLayout;
-    public LinearLayout background;
-    public RelativeLayout avatarLayout;
-    public TextView contactName;
+    public final RelativeLayout bubbleLayout;
+    public final LinearLayout separatorLayout;
+    public final LinearLayout background;
+    public final RelativeLayout avatarLayout;
+    public final TextView contactName;
 
-    public ImageView messageStatus;
-    public ProgressBar messageSendingInProgress;
-    public LinearLayout imdmLayout;
-    public ImageView imdmIcon;
-    public TextView imdmLabel;
+    public final ImageView messageStatus;
+    public final ProgressBar messageSendingInProgress;
+    public final LinearLayout imdmLayout;
+    public final ImageView imdmIcon;
+    public final TextView imdmLabel;
 
-    public TextView messageText;
-    public ImageView messageImage;
+    public final TextView messageText;
+    public final ImageView messageImage;
 
-    public RelativeLayout fileTransferLayout;
-    public ProgressBar fileTransferProgressBar;
-    public Button fileTransferAction;
+    public final RelativeLayout fileTransferLayout;
+    public final ProgressBar fileTransferProgressBar;
+    public final Button fileTransferAction;
 
-    public TextView fileName;
-    public Button openFileButton;
+    public final TextView fileName;
+    public final Button openFileButton;
 
-    public CheckBox delete;
+    public final CheckBox delete;
 
-    private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
 
-    public ChatMessageOldViewHolder(
-            Context context, View view, ChatMessageViewHolderClickListener listener) {
+    public ChatMessageOldViewHolder(View view, ChatMessageViewHolderClickListener listener) {
         this(view);
-        mContext = context;
         mListener = listener;
         view.setOnClickListener(this);
     }

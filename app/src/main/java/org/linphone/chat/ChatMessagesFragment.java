@@ -99,7 +99,7 @@ public class ChatMessagesFragment extends Fragment
     private static final int ADD_PHOTO = 1337;
     private static final int MESSAGES_PER_PAGE = 20;
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
     private ImageView mAttachImageButton, mSendMessageButton;
     private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
@@ -192,7 +192,7 @@ public class ChatMessagesFragment extends Fragment
                     public void onClick(View view) {
                         LinphoneActivity.instance()
                                 .setAddresGoToDialerAndCall(
-                                        mRemoteParticipantAddress.asString(), null, null);
+                                        mRemoteParticipantAddress.asString(), null);
                     }
                 });
 
@@ -232,9 +232,7 @@ public class ChatMessagesFragment extends Fragment
                                         mRemoteSipAddress.asString(),
                                         participants,
                                         mChatRoom.getSubject(),
-                                        mChatRoom.getMe() != null
-                                                ? mChatRoom.getMe().isAdmin()
-                                                : false,
+                                        mChatRoom.getMe() != null && mChatRoom.getMe().isAdmin(),
                                         false,
                                         null,
                                         mChatRoom.hasCapability(
@@ -305,7 +303,7 @@ public class ChatMessagesFragment extends Fragment
         mChatScrollListener =
                 new ChatScrollListener(layoutManager) {
                     @Override
-                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    public void onLoadMore(int totalItemsCount) {
                         loadMoreData(totalItemsCount);
                     }
                 };
@@ -644,13 +642,13 @@ public class ChatMessagesFragment extends Fragment
                 .removeOnGlobalLayoutListener(mKeyboardListener);
     }
 
-    public void showKeyboardVisibleMode() {
+    private void showKeyboardVisibleMode() {
         LinphoneActivity.instance().hideTabBar(true);
         LinphoneActivity.instance().hideStatusBar();
         mTopBar.setVisibility(View.GONE);
     }
 
-    public void hideKeyboardVisibleMode() {
+    private void hideKeyboardVisibleMode() {
         LinphoneActivity.instance()
                 .hideTabBar(
                         getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views));
@@ -883,11 +881,11 @@ public class ChatMessagesFragment extends Fragment
         dialog.show();
     }
 
-    public void scrollToBottom() {
+    private void scrollToBottom() {
         mChatEventsList.getLayoutManager().scrollToPosition(0);
     }
 
-    public String getRemoteSipUri() {
+    private String getRemoteSipUri() {
         return mRemoteSipUri;
     }
 
@@ -911,7 +909,7 @@ public class ChatMessagesFragment extends Fragment
         super.onSaveInstanceState(outState);
     }
 
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    private void onRestoreInstanceState(Bundle savedInstanceState) {
         String files[] = savedInstanceState.getStringArray("Files");
         if (files.length > 0) {
             for (String file : files) {
@@ -1352,8 +1350,7 @@ public class ChatMessagesFragment extends Fragment
 
     // This is a workaround to prevent a crash from happening while rotating the device
     private class LinphoneLinearLayoutManager extends LinearLayoutManager {
-        public LinphoneLinearLayoutManager(
-                Context context, int orientation, boolean reverseLayout) {
+        LinphoneLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
             super(context, orientation, reverseLayout);
         }
 

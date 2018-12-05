@@ -62,7 +62,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private RelativeLayout mAddParticipantsLayout;
     private Address mGroupChatRoomAddress;
     private EditText mSubjectField;
-    private LayoutInflater mInflater;
 
     private RecyclerView mParticipantsList;
 
@@ -84,7 +83,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mInflater = inflater;
         View view = inflater.inflate(R.layout.chat_infos, container, false);
 
         if (getArguments() == null || getArguments().isEmpty()) {

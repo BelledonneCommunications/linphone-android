@@ -39,12 +39,12 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.AndroidVideoWindowImpl;
 
 public class LinphoneOverlay extends org.linphone.mediastream.video.display.GL2JNIView {
-    private WindowManager mWindowManager;
-    private WindowManager.LayoutParams mParams;
-    private DisplayMetrics mMetrics;
+    private final WindowManager mWindowManager;
+    private final WindowManager.LayoutParams mParams;
+    private final DisplayMetrics mMetrics;
     private float mX, mY, mTouchX, mTouchY;
     private boolean mDragEnabled;
-    private AndroidVideoWindowImpl mAndroidVideoWindowImpl;
+    private final AndroidVideoWindowImpl mAndroidVideoWindowImpl;
 
     public LinphoneOverlay(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);

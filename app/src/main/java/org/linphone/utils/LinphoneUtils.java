@@ -21,15 +21,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
@@ -65,25 +62,9 @@ import org.linphone.settings.LinphonePreferences;
 /** Helpers. */
 public final class LinphoneUtils {
     private static Context sContext = null;
-    private static Handler sHandler = new Handler(Looper.getMainLooper());
+    private static final Handler sHandler = new Handler(Looper.getMainLooper());
 
     private LinphoneUtils() {}
-
-    public static String getDeviceName(Context context) {
-        String name =
-                Settings.Global.getString(
-                        context.getContentResolver(), Settings.Global.DEVICE_NAME);
-        if (name == null) {
-            name = BluetoothAdapter.getDefaultAdapter().getName();
-        }
-        if (name == null) {
-            name = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
-        }
-        if (name == null) {
-            name = Build.MANUFACTURER + " " + Build.MODEL;
-        }
-        return name;
-    }
 
     public static void initLoggingService(boolean isDebugEnabled, String appName) {
         if (!LinphonePreferences.instance().useJavaLogger()) {
@@ -135,7 +116,7 @@ public final class LinphoneUtils {
     // private static final String strictSipAddressRegExp =
     // "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
 
-    public static boolean isSipAddress(String numberOrAddress) {
+    private static boolean isSipAddress(String numberOrAddress) {
         Factory.instance().createAddress(numberOrAddress);
         return true;
     }
@@ -211,11 +192,11 @@ public final class LinphoneUtils {
         }
     }
 
-    static boolean isToday(Calendar cal) {
+    private static boolean isToday(Calendar cal) {
         return isSameDay(cal, Calendar.getInstance());
     }
 
-    static boolean isSameDay(Calendar cal1, Calendar cal2) {
+    private static boolean isSameDay(Calendar cal1, Calendar cal2) {
         if (cal1 == null || cal2 == null) {
             return false;
         }
@@ -237,7 +218,7 @@ public final class LinphoneUtils {
         return true;
     }
 
-    public static final List<Call> getCallsInState(Core lc, Collection<State> states) {
+    public static List<Call> getCallsInState(Core lc, Collection<State> states) {
         List<Call> foundCalls = new ArrayList<>();
         for (Call call : lc.getCalls()) {
             if (states.contains(call.getState())) {
@@ -247,7 +228,7 @@ public final class LinphoneUtils {
         return foundCalls;
     }
 
-    public static boolean isCallRunning(Call call) {
+    private static boolean isCallRunning(Call call) {
         if (call == null) {
             return false;
         }

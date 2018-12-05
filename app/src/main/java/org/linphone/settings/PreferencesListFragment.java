@@ -51,7 +51,7 @@ public class PreferencesListFragment extends ListFragment {
 
     private PreferenceManager mPreferenceManager;
     private ListView mPreferencesList;
-    private Handler mHandler =
+    private final Handler mHandler =
             new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
@@ -64,7 +64,7 @@ public class PreferencesListFragment extends ListFragment {
             };
     private int mXmlResID;
 
-    public PreferencesListFragment(int xmlId) {
+    PreferencesListFragment(int xmlId) {
         mXmlResID = xmlId;
     }
 
@@ -188,9 +188,7 @@ public class PreferencesListFragment extends ListFragment {
             Constructor<PreferenceManager> c =
                     PreferenceManager.class.getDeclaredConstructor(Activity.class, int.class);
             c.setAccessible(true);
-            PreferenceManager preferenceManager =
-                    c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
-            return preferenceManager;
+            return c.newInstance(this.getActivity(), FIRST_REQUEST_CODE);
         } catch (Exception e) {
             Log.e("[PreferencesListFragment] onCreatePreferenceManager " + e);
             return null;
@@ -202,7 +200,7 @@ public class PreferencesListFragment extends ListFragment {
      *
      * @return The {@link PreferenceManager}.
      */
-    public PreferenceManager getPreferenceManager() {
+    PreferenceManager getPreferenceManager() {
         return mPreferenceManager;
     }
 
@@ -211,7 +209,7 @@ public class PreferencesListFragment extends ListFragment {
      *
      * @return The {@link PreferenceScreen} that is the root of the preference hierarchy.
      */
-    public PreferenceScreen getPreferenceScreen() {
+    PreferenceScreen getPreferenceScreen() {
         try {
             Method m = PreferenceManager.class.getDeclaredMethod("getPreferenceScreen");
             m.setAccessible(true);
@@ -228,7 +226,7 @@ public class PreferencesListFragment extends ListFragment {
      *
      * @param preferenceScreen The root {@link PreferenceScreen} of the preference hierarchy.
      */
-    public void setPreferenceScreen(PreferenceScreen preferenceScreen) {
+    private void setPreferenceScreen(PreferenceScreen preferenceScreen) {
         try {
             Method m =
                     PreferenceManager.class.getDeclaredMethod(
@@ -249,7 +247,7 @@ public class PreferencesListFragment extends ListFragment {
      *
      * @param preferencesResId The XML resource ID to inflate.
      */
-    public void addPreferencesFromResource(int preferencesResId) {
+    private void addPreferencesFromResource(int preferencesResId) {
         try {
             Method m =
                     PreferenceManager.class.getDeclaredMethod(
@@ -278,7 +276,7 @@ public class PreferencesListFragment extends ListFragment {
      * @return The {@link Preference} with the key, or null.
      * @see PreferenceGroup#findPreference(CharSequence)
      */
-    public Preference findPreference(CharSequence key) {
+    Preference findPreference(CharSequence key) {
         if (mPreferenceManager == null) {
             Log.e("[PreferencesListFragment] PreferenceManager is null !");
             return null;

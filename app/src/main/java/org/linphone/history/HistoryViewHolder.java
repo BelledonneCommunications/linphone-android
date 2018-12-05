@@ -30,16 +30,15 @@ import org.linphone.R;
 
 public class HistoryViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
-    public TextView contact;
-    public ImageView detail;
-    public CheckBox select;
-    public ImageView callDirection;
-    public RelativeLayout avatarLayout;
-    public RelativeLayout CallContact;
-    public LinearLayout separator;
-    public TextView separatorText;
+    public final TextView contact;
+    public final ImageView detail;
+    public final CheckBox select;
+    public final ImageView callDirection;
+    public final RelativeLayout avatarLayout;
+    public final LinearLayout separator;
+    public final TextView separatorText;
 
-    private ClickListener mListener;
+    private final ClickListener mListener;
 
     public HistoryViewHolder(View view, ClickListener listener) {
         super(view);
@@ -48,7 +47,6 @@ public class HistoryViewHolder extends RecyclerView.ViewHolder
         select = view.findViewById(R.id.delete);
         callDirection = view.findViewById(R.id.icon);
         avatarLayout = view.findViewById(R.id.avatar_layout);
-        CallContact = view.findViewById(R.id.history_click);
         separator = view.findViewById(R.id.separator);
         separatorText = view.findViewById(R.id.separator_text);
         mListener = listener;

@@ -41,7 +41,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class RemoteProvisioningActivity extends Activity {
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private String mConfigUriParam = null;
     private ProgressBar mSpinner;
     private CoreListenerStub mListener;
@@ -90,11 +90,6 @@ public class RemoteProvisioningActivity extends Activity {
             lc.removeListener(mListener);
         }
         super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

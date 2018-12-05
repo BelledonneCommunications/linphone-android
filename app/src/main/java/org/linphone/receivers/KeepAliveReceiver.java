@@ -39,9 +39,7 @@ import org.linphone.utils.LinphoneUtils;
 public class KeepAliveReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!LinphoneService.isReady()) {
-            return;
-        } else {
+        if (LinphoneService.isReady()) {
             boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
             LinphoneUtils.initLoggingService(isDebugEnabled, context.getString(R.string.app_name));
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();

@@ -77,11 +77,11 @@ public class Digit extends Button implements AddressAware {
         setOnClickListener(lListener);
         setOnTouchListener(lListener);
 
-        if ("0+".equals(text)) {
+        if ("0+".equals(text.toString())) {
             setOnLongClickListener(lListener);
         }
 
-        if ("1".equals(text)) {
+        if ("1".equals(text.toString())) {
             setOnLongClickListener(lListener);
         }
     }
@@ -136,7 +136,7 @@ public class Digit extends Button implements AddressAware {
             }
         }
 
-        public void displayDebugPopup() {
+        void displayDebugPopup() {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
             alertDialog.setTitle(getContext().getString(R.string.debug_popup_title));
             if (LinphonePreferences.instance().isDebugEnabled()) {

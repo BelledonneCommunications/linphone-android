@@ -356,16 +356,16 @@ public class AssistantActivity extends Activity
         }
     }
 
-    public void checkAndRequestAudioPermission() {
+    private void checkAndRequestAudioPermission() {
         checkAndRequestPermission(
                 Manifest.permission.RECORD_AUDIO, PERMISSIONS_REQUEST_RECORD_AUDIO);
     }
 
-    public void checkAndRequestVideoPermission() {
+    private void checkAndRequestVideoPermission() {
         checkAndRequestPermission(Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
     }
 
-    public void checkAndRequestPermission(String permission, int result) {
+    private void checkAndRequestPermission(String permission, int result) {
         int permissionGranted = getPackageManager().checkPermission(permission, getPackageName());
         Log.i(
                 "[Permission] "
@@ -405,7 +405,7 @@ public class AssistantActivity extends Activity
                 break;
             case PERMISSIONS_REQUEST_RECORD_AUDIO:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    launchEchoCancellerCalibration(true);
+                    launchEchoCancellerCalibration();
                 } else {
                     isEchoCalibrationFinished();
                 }
@@ -413,7 +413,7 @@ public class AssistantActivity extends Activity
         }
     }
 
-    private void launchEchoCancellerCalibration(boolean sendEcCalibrationResult) {
+    private void launchEchoCancellerCalibration() {
         int recordAudio =
                 getPackageManager()
                         .checkPermission(Manifest.permission.RECORD_AUDIO, getPackageName());
@@ -425,7 +425,7 @@ public class AssistantActivity extends Activity
 
         if (recordAudio == PackageManager.PERMISSION_GRANTED) {
             EchoCancellerCalibrationFragment fragment = new EchoCancellerCalibrationFragment();
-            fragment.enableEcCalibrationResultSending(sendEcCalibrationResult);
+            fragment.enableEcCalibrationResultSending(true);
             changeFragment(fragment);
             mCurrentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
             mBack.setVisibility(View.VISIBLE);
@@ -435,7 +435,7 @@ public class AssistantActivity extends Activity
         }
     }
 
-    public void configureProxyConfig(AccountCreator accountCreator) {
+    private void configureProxyConfig(AccountCreator accountCreator) {
         Core lc = LinphoneManager.getLc();
         ProxyConfig proxyConfig = lc.createProxyConfig();
         AuthInfo authInfo;
@@ -526,7 +526,7 @@ public class AssistantActivity extends Activity
         }
     }
 
-    public void displayMenu() {
+    private void displayMenu() {
         mFragment = new WelcomeFragment();
         changeFragment(mFragment);
         country = null;
@@ -617,7 +617,7 @@ public class AssistantActivity extends Activity
         goToLinphoneActivity();
     }
 
-    public void saveCreatedAccount(
+    private void saveCreatedAccount(
             String username,
             String userid,
             String password,
@@ -665,7 +665,7 @@ public class AssistantActivity extends Activity
         }
     }
 
-    public void displayRegistrationInProgressDialog() {
+    private void displayRegistrationInProgressDialog() {
         if (LinphoneManager.getLc().isNetworkReachable()) {
             mProgress = ProgressDialog.show(this, null, null);
             Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
@@ -741,7 +741,7 @@ public class AssistantActivity extends Activity
         mBack.setVisibility(View.VISIBLE);
     }
 
-    public void isAccountVerified(String username) {
+    public void isAccountVerified() {
         Toast.makeText(this, getString(R.string.assistant_account_validated), Toast.LENGTH_LONG)
                 .show();
         hideKeyboard();
@@ -752,7 +752,7 @@ public class AssistantActivity extends Activity
         launchDownloadCodec();
     }
 
-    public Dialog createErrorDialog(ProxyConfig proxy, String message) {
+    private Dialog createErrorDialog(ProxyConfig proxy, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (message.equals("Forbidden")) {
             message = getString(R.string.assistant_error_bad_credentials);
@@ -784,7 +784,7 @@ public class AssistantActivity extends Activity
     public void success() {
         boolean needsEchoCalibration = LinphoneManager.getLc().isEchoCancellerCalibrationRequired();
         if (needsEchoCalibration && mPrefs.isFirstLaunch()) {
-            launchEchoCancellerCalibration(true);
+            launchEchoCancellerCalibration();
         } else {
             launchDownloadCodec();
         }
@@ -896,11 +896,11 @@ public class AssistantActivity extends Activity
     public class CountryListAdapter extends BaseAdapter implements Filterable {
 
         private LayoutInflater mInflater;
-        private DialPlan[] allCountries;
+        private final DialPlan[] allCountries;
         private List<DialPlan> filteredCountries;
-        private Context context;
+        private final Context context;
 
-        public CountryListAdapter(Context ctx) {
+        CountryListAdapter(Context ctx) {
             context = ctx;
             allCountries = Factory.instance().getDialPlans();
             filteredCountries = new ArrayList<>(Arrays.asList(allCountries));
@@ -964,7 +964,7 @@ public class AssistantActivity extends Activity
             return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
-                    ArrayList<DialPlan> filteredCountries = new ArrayList<DialPlan>();
+                    ArrayList<DialPlan> filteredCountries = new ArrayList<>();
                     for (DialPlan c : allCountries) {
                         if (c.getCountry().toLowerCase().contains(constraint)
                                 || c.getCountryCallingCode().contains(constraint)) {

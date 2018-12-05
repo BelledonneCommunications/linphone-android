@@ -35,7 +35,6 @@
             style="@style/font6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:gravity="top|left"
             android:lines="1" />
 
@@ -44,7 +43,6 @@
             style="@style/font2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:ellipsize="end"
             android:gravity="bottom|left"
             android:lines="1" />

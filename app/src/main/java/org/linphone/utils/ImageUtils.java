@@ -34,7 +34,6 @@ import android.util.TypedValue;
 import android.widget.ImageView;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -49,14 +48,13 @@ public class ImageUtils {
             url = new URL(uri.toString());
             is = url.openStream();
             return BitmapFactory.decodeStream(is);
-        } catch (MalformedURLException e) {
-            Log.e(e, e.getMessage());
         } catch (IOException e) {
             Log.e(e, e.getMessage());
         } finally {
             try {
                 is.close();
             } catch (IOException x) {
+                Log.e(x);
             }
         }
         return null;
@@ -83,6 +81,7 @@ public class ImageUtils {
                                 MediaStore.Images.Media.getBitmap(
                                         c.getContentResolver(), thumbnailUri);
                     } catch (IOException ie) {
+                        Log.e(ie);
                     }
                 }
             }
@@ -118,7 +117,7 @@ public class ImageUtils {
         return bm;
     }
 
-    public static Bitmap getRoundBitmap(Bitmap bitmap) {
+    private static Bitmap getRoundBitmap(Bitmap bitmap) {
         Bitmap output =
                 Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);

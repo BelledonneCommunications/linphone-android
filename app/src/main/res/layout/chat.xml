@@ -115,7 +115,7 @@
 
             <LinearLayout
                 android:id="@+id/file_upload_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -141,7 +141,7 @@
 
             <EditText
                 android:id="@+id/message"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"

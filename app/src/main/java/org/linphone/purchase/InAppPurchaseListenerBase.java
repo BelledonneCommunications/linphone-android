@@ -47,7 +47,7 @@ public class InAppPurchaseListenerBase implements InAppPurchaseListener {
     }
 
     @Override
-    public void onRecoverAccountSuccessful(boolean success) {
+    public void onRecoverAccountSuccessful() {
         // TODO Auto-generated method stub
 
     }

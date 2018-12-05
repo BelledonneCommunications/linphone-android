@@ -181,9 +181,4 @@ public class AboutFragment extends Fragment implements OnClickListener {
             }
         }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

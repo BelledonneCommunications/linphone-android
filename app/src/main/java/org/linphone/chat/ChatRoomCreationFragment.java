@@ -46,7 +46,8 @@ import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
-import org.linphone.contacts.SearchContactsListAdapter;
+import org.linphone.contacts.SearchContactViewHolder;
+import org.linphone.contacts.SearchContactsAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
@@ -59,7 +60,7 @@ import org.linphone.views.ContactSelectView;
 
 public class ChatRoomCreationFragment extends Fragment
         implements View.OnClickListener,
-                SearchContactsListAdapter.ViewHolder.ClickListener,
+                SearchContactViewHolder.ClickListener,
                 ContactsUpdatedListener {
     private RecyclerView mContactsList;
     private LinearLayout mContactsSelectedLayout;
@@ -71,7 +72,7 @@ public class ChatRoomCreationFragment extends Fragment
     private RelativeLayout mSearchLayout, mWaitLayout, mLinphoneContactsToggle, mAllContactsToggle;
     private SearchView mSearchField;
     private ProgressBar mContactsFetchInProgress;
-    private SearchContactsListAdapter mSearchAdapter;
+    private SearchContactsAdapter mSearchAdapter;
     private String mChatRoomSubject, mChatRoomAddress;
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
@@ -132,8 +133,8 @@ public class ChatRoomCreationFragment extends Fragment
         mContactsFetchInProgress.setVisibility(View.VISIBLE);
 
         mSearchAdapter =
-                new SearchContactsListAdapter(
-                        null, mContactsFetchInProgress, this, mCreateGroupChatRoom == false);
+                new SearchContactsAdapter(
+                        null, mContactsFetchInProgress, this, !mCreateGroupChatRoom);
 
         mSearchField = view.findViewById(R.id.searchField);
         mSearchField.setOnQueryTextListener(
@@ -214,8 +215,7 @@ public class ChatRoomCreationFragment extends Fragment
             updateListSelected();
         }
 
-        mOnlyDisplayLinphoneContacts =
-                ContactsManager.getInstance().getSIPContacts().size() > 0 ? true : false;
+        mOnlyDisplayLinphoneContacts = ContactsManager.getInstance().getSIPContacts().size() > 0;
         if (savedInstanceState != null) {
             mOnlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact", true);
         }
@@ -431,7 +431,7 @@ public class ChatRoomCreationFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mContactsSelected != null && mContactsSelected.size() > 0) {
-            ArrayList<String> listUri = new ArrayList<String>();
+            ArrayList<String> listUri = new ArrayList<>();
             for (ContactAddress ca : mContactsSelected) {
                 listUri.add(ca.getAddressAsDisplayableString());
             }
@@ -507,7 +507,7 @@ public class ChatRoomCreationFragment extends Fragment
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         ProxyConfig lpc = lc.getDefaultProxyConfig();
         boolean createEncryptedChatRoom = mSecurityToggle.isChecked();
-        if (lpc == null || lpc.getConferenceFactoryUri() == null || mCreateGroupChatRoom == false) {
+        if (lpc == null || lpc.getConferenceFactoryUri() == null || !mCreateGroupChatRoom) {
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
                 mChatRoom =
                         lc.findOneToOneChatRoom(lpc.getIdentityAddress(), ca.getAddress(), true);

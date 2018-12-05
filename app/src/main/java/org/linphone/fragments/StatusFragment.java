@@ -54,7 +54,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class StatusFragment extends Fragment {
-    private Handler mRefreshHandler = new Handler();
+    private final Handler mRefreshHandler = new Handler();
     private TextView mStatusText, mVoicemailCount;
     private ImageView mStatusLed, mCallQuality, mEncryption, mMenu, mVoicemail;
     private Runnable mCallQualityUpdater;
@@ -100,10 +100,10 @@ public class StatusFragment extends Fragment {
 
                         if (lc.getDefaultProxyConfig() != null
                                 && lc.getDefaultProxyConfig().equals(proxy)) {
-                            mStatusLed.setImageResource(getStatusIconResource(state, true));
+                            mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
                         } else if (lc.getDefaultProxyConfig() == null) {
-                            mStatusLed.setImageResource(getStatusIconResource(state, true));
+                            mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
                         }
 
@@ -116,6 +116,7 @@ public class StatusFragment extends Fragment {
                                         }
                                     });
                         } catch (IllegalStateException ise) {
+                            Log.e(ise);
                         }
                     }
 
@@ -128,7 +129,7 @@ public class StatusFragment extends Fragment {
 
                         if (content.getSize() == 0) return;
 
-                        int unreadCount = -1;
+                        int unreadCount;
                         String data = content.getStringBuffer();
                         String[] voiceMail = data.split("voice-message: ");
                         final String[] intToParse = voiceMail[1].split("/", 0);
@@ -211,16 +212,13 @@ public class StatusFragment extends Fragment {
         mMenu.setEnabled(enabled);
     }
 
-    private int getStatusIconResource(RegistrationState state, boolean isDefaultAccount) {
+    private int getStatusIconResource(RegistrationState state) {
         try {
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
             boolean defaultAccountConnected =
-                    (isDefaultAccount
-                                    && lc != null
-                                    && lc.getDefaultProxyConfig() != null
-                                    && lc.getDefaultProxyConfig().getState()
-                                            == RegistrationState.Ok)
-                            || !isDefaultAccount;
+                    (lc != null
+                            && lc.getDefaultProxyConfig() != null
+                            && lc.getDefaultProxyConfig().getState() == RegistrationState.Ok);
             if (state == RegistrationState.Ok && defaultAccountConnected) {
                 return R.drawable.led_connected;
             } else if (state == RegistrationState.Progress) {
@@ -270,7 +268,7 @@ public class StatusFragment extends Fragment {
         mRefreshHandler.postDelayed(
                 mCallQualityUpdater =
                         new Runnable() {
-                            Call mCurrentCall = LinphoneManager.getLc().getCurrentCall();
+                            final Call mCurrentCall = LinphoneManager.getLc().getCurrentCall();
 
                             public void run() {
                                 if (mCurrentCall == null) {
@@ -288,7 +286,7 @@ public class StatusFragment extends Fragment {
                 1000);
     }
 
-    void updateQualityOfSignalIcon(float quality) {
+    private void updateQualityOfSignalIcon(float quality) {
         int iQuality = (int) quality;
 
         if (iQuality == mDisplayedQuality) return;
@@ -327,7 +325,7 @@ public class StatusFragment extends Fragment {
             if (mIsInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
                 if (call != null) {
                     startCallQuality();
-                    refreshStatusItems(call, call.getCurrentParams().videoEnabled());
+                    refreshStatusItems(call);
                 }
                 mMenu.setVisibility(View.INVISIBLE);
                 mCallQuality.setVisibility(View.VISIBLE);
@@ -338,7 +336,7 @@ public class StatusFragment extends Fragment {
                     mStatusText.setText(getString(R.string.no_account));
                 } else {
                     mStatusLed.setImageResource(
-                            getStatusIconResource(lc.getDefaultProxyConfig().getState(), true));
+                            getStatusIconResource(lc.getDefaultProxyConfig().getState()));
                     mStatusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
                 }
             }
@@ -363,16 +361,10 @@ public class StatusFragment extends Fragment {
         }
     }
 
-    public void refreshStatusItems(final Call call, boolean isVideoEnabled) {
+    public void refreshStatusItems(final Call call) {
         if (call != null) {
             mVoicemailCount.setVisibility(View.GONE);
             MediaEncryption mediaEncryption = call.getCurrentParams().getMediaEncryption();
-
-            if (isVideoEnabled) {
-                // background.setVisibility(View.GONE);
-            } else {
-                // background.setVisibility(View.VISIBLE);
-            }
 
             mEncryption.setVisibility(View.VISIBLE);
             if (mediaEncryption == MediaEncryption.SRTP

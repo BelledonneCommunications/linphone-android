@@ -41,9 +41,9 @@ import org.linphone.utils.SelectableHelper;
 import org.linphone.views.ContactAvatar;
 
 public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
-    private List<CallLog> mLogs;
-    private Context mContext;
-    private HistoryViewHolder.ClickListener mClickListener;
+    private final List<CallLog> mLogs;
+    private final Context mContext;
+    private final HistoryViewHolder.ClickListener mClickListener;
 
     public HistoryAdapter(
             Context aContext,
@@ -54,10 +54,6 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
         mLogs = logs;
         mContext = aContext;
         mClickListener = listener;
-    }
-
-    public int getCount() {
-        return mLogs.size();
     }
 
     public Object getItem(int position) {

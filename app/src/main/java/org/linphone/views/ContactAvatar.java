@@ -33,8 +33,10 @@ import org.linphone.mediastream.Log;
 import org.linphone.utils.ImageUtils;
 
 class ContactAvatarHolder {
-    public ImageView contactPicture, avatarMask, securityLevel;
-    public TextView generatedAvatar;
+    public final ImageView contactPicture;
+    public final ImageView avatarMask;
+    public final ImageView securityLevel;
+    public final TextView generatedAvatar;
 
     public ContactAvatarHolder(View v) {
         contactPicture = v.findViewById(R.id.contact_picture);
@@ -54,11 +56,11 @@ public class ContactAvatar {
 
     private static String generateAvatar(String displayName) {
         String[] names = displayName.split(" ");
-        String generatedAvatarText = "";
+        StringBuilder generatedAvatarText = new StringBuilder();
         for (String name : names) {
-            generatedAvatarText += name.charAt(0);
+            generatedAvatarText.append(name.charAt(0));
         }
-        return generatedAvatarText.toUpperCase();
+        return generatedAvatarText.toString().toUpperCase();
     }
 
     private static void setSecurityLevel(ChatRoomSecurityLevel level, View v) {

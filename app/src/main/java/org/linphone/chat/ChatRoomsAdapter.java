@@ -34,10 +34,10 @@ import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
 public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
-    private Context mContext;
-    public List<ChatRoom> mRooms;
-    private int mItemResource;
-    private ChatRoomViewHolder.ClickListener mClickListener;
+    private final Context mContext;
+    private List<ChatRoom> mRooms;
+    private final int mItemResource;
+    private final ChatRoomViewHolder.ClickListener mClickListener;
 
     public ChatRoomsAdapter(
             Context context,

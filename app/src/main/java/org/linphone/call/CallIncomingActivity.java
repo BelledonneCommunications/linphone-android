@@ -267,7 +267,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     }
 
     private void checkAndRequestCallPermissions() {
-        ArrayList<String> permissionsList = new ArrayList<String>();
+        ArrayList<String> permissionsList = new ArrayList<>();
 
         int recordAudio =
                 getPackageManager()

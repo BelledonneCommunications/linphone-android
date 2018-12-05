@@ -33,7 +33,7 @@ import org.linphone.fragments.DialerFragment;
 public class AddressText extends EditText implements AddressType {
 
     private String mDisplayedName;
-    private Paint mTestPaint;
+    private final Paint mTestPaint;
     private DialerFragment mDialer;
 
     public AddressText(Context context, AttributeSet attrs) {

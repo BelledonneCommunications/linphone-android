@@ -39,16 +39,16 @@ import org.linphone.views.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
-    public TextView lastMessageView;
-    public TextView date;
-    public TextView displayName;
-    public TextView unreadMessages;
-    public CheckBox delete;
-    public RelativeLayout avatarLayout;
+    public final TextView lastMessageView;
+    public final TextView date;
+    public final TextView displayName;
+    public final TextView unreadMessages;
+    public final CheckBox delete;
+    public final RelativeLayout avatarLayout;
     public ChatRoom room;
 
-    private Context mContext;
-    private ClickListener mListener;
+    private final Context mContext;
+    private final ClickListener mListener;
 
     public ChatRoomViewHolder(Context context, View itemView, ClickListener listener) {
         super(itemView);
@@ -71,12 +71,12 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         ChatMessage lastMessage = this.room.getLastMessageInHistory();
 
         if (lastMessage != null) {
-            String messageContent = "";
+            StringBuilder messageContent = new StringBuilder();
             for (Content c : lastMessage.getContents()) {
                 if (c.isFile() || c.isFileTransfer()) {
-                    messageContent += c.getName() + " ";
+                    messageContent.append(c.getName()).append(" ");
                 } else if (c.isText()) {
-                    messageContent = c.getStringBuffer() + " " + messageContent;
+                    messageContent.insert(0, c.getStringBuffer() + " ");
                 }
             }
             lastMessageView.setText(getSender(this.room) + messageContent);

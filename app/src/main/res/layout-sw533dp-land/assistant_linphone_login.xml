@@ -195,32 +195,6 @@
             android:layout_weight="1"
             android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/display_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    style="@style/font13"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/assistant_display_name_optional"
-                    android:textAllCaps="true" />
-
-                <EditText
-                    android:id="@+id/assistant_display_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/resizable_textfield"
-                    android:contentDescription="@string/content_description_display_field"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:textColor="@color/colorB" />
-            </LinearLayout>
-
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"

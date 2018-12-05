@@ -127,15 +127,12 @@ public class FileUtils {
     private static boolean copyToFile(InputStream inputStream, File destFile) {
         if (inputStream == null || destFile == null) return false;
         try {
-            OutputStream out = new FileOutputStream(destFile);
-            try {
+            try (OutputStream out = new FileOutputStream(destFile)) {
                 byte[] buffer = new byte[4096];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) >= 0) {
                     out.write(buffer, 0, bytesRead);
                 }
-            } finally {
-                out.close();
             }
             return true;
         } catch (IOException e) {
@@ -143,7 +140,7 @@ public class FileUtils {
         }
     }
 
-    public static File createFile(Context context, String fileName) throws IOException {
+    private static File createFile(Context context, String fileName) {
         if (TextUtils.isEmpty(fileName)) fileName = getStartDate();
 
         if (!fileName.contains(".")) {
@@ -162,10 +159,9 @@ public class FileUtils {
         FriendList[] friendList = LinphoneManager.getLc().getFriendsLists();
         for (FriendList list : friendList) {
             for (Friend friend : list.getFriends()) {
-                if (friend.getRefKey().toString().equals(contactId)) {
+                if (friend.getRefKey().equals(contactId)) {
                     String contactVcard = friend.getVcard().asVcard4String();
-                    Uri path = createCvsFromString(contactVcard);
-                    return path;
+                    return createCvsFromString(contactVcard);
                 }
             }
         }

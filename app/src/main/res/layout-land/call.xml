@@ -154,7 +154,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
                     android:background="@color/colorH"
-                    android:orientation="vertical"></LinearLayout>
+                    android:orientation="vertical"/>
 
                 <LinearLayout
                     android:id="@+id/no_current_call"
@@ -196,6 +196,7 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:baselineAligned="false"
                 android:id="@+id/menu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -264,7 +265,6 @@
                     android:id="@+id/secondary_bar"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@id/main_bar"
                     android:layout_weight="0.5"
                     android:gravity="bottom"
                     android:minHeight="60dp"
@@ -434,7 +434,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/main_bar"
                 android:layout_marginBottom="60dp">
 
                 <org.linphone.views.Numpad

@@ -47,7 +47,7 @@ public class InAppPurchaseActivity extends Activity
 
     private List<Purchasable> mPurchasedItems;
     private Fragment mFragment;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
 
     public static InAppPurchaseActivity instance() {
         return sInstance;
@@ -78,7 +78,7 @@ public class InAppPurchaseActivity extends Activity
         transaction.commitAllowingStateLoss();
     }
 
-    public void displayInappList() {
+    private void displayInappList() {
         mFragment = new InAppPurchaseListFragment();
         changeFragment(mFragment);
     }
@@ -138,9 +138,7 @@ public class InAppPurchaseActivity extends Activity
         // purchasableItemsLayout.removeAllViews();
         mInProgress.setVisibility(View.GONE);
         mPurchasedItems = new ArrayList<>();
-        for (Purchasable item : items) {
-            mPurchasedItems.add(item);
-        }
+        mPurchasedItems.addAll(items);
         displayInappList();
     }
 
@@ -170,7 +168,7 @@ public class InAppPurchaseActivity extends Activity
             xmlRpcHelper.updateAccountExpireAsync(
                     new XmlRpcListenerBase() {
                         @Override
-                        public void onAccountExpireUpdated(String result) {
+                        public void onAccountExpireUpdated() {
                             // TODO
                         }
                     },
@@ -199,7 +197,7 @@ public class InAppPurchaseActivity extends Activity
     }
 
     @Override
-    public void onRecoverAccountSuccessful(boolean success) {}
+    public void onRecoverAccountSuccessful() {}
 
     @Override
     public void onError(final String error) {

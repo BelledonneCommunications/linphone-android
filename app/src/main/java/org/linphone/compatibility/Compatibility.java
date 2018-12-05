@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,6 +39,21 @@ public class Compatibility {
     public static final String INTENT_HANGUP_CALL_NOTIF_ACTION = "org.linphone.HANGUP_CALL_ACTION";
     public static final String INTENT_ANSWER_CALL_NOTIF_ACTION = "org.linphone.ANSWER_CALL_ACTION";
     public static final String INTENT_LOCAL_IDENTITY = "LOCAL_IDENTITY";
+
+    public static String getDeviceName(Context context) {
+        if (Version.sdkAboveOrEqual(25)) {
+            return ApiTwentySixPlus.getDeviceName(context);
+        }
+
+        String name = BluetoothAdapter.getDefaultAdapter().getName();
+        if (name == null) {
+            name = Settings.Secure.getString(context.getContentResolver(), "bluetooth_name");
+        }
+        if (name == null) {
+            name = Build.MANUFACTURER + " " + Build.MODEL;
+        }
+        return name;
+    }
 
     public static void createNotificationChannels(Context context) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
@@ -94,7 +110,6 @@ public class Compatibility {
             Context context,
             int callId,
             boolean showAnswerAction,
-            String title,
             String msg,
             int iconID,
             Bitmap contactIcon,
@@ -122,7 +137,7 @@ public class Compatibility {
                     intent);
         }
         return ApiTwentyOnePlus.createInCallNotification(
-                context, title, msg, iconID, contactIcon, contactName, intent);
+                context, msg, iconID, contactIcon, contactName, intent);
     }
 
     public static Notification createNotification(
@@ -137,26 +152,10 @@ public class Compatibility {
             int priority) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             return ApiTwentySixPlus.createNotification(
-                    context,
-                    title,
-                    message,
-                    icon,
-                    iconLevel,
-                    largeIcon,
-                    intent,
-                    isOngoingEvent,
-                    priority);
+                    context, title, message, icon, iconLevel, largeIcon, intent, priority);
         }
         return ApiTwentyOnePlus.createNotification(
-                context,
-                title,
-                message,
-                icon,
-                iconLevel,
-                largeIcon,
-                intent,
-                isOngoingEvent,
-                priority);
+                context, title, message, icon, iconLevel, largeIcon, intent, priority);
     }
 
     public static boolean canDrawOverlays(Context context) {

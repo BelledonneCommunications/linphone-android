@@ -20,17 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import org.linphone.core.CallParams;
-import org.linphone.core.Core;
 
 public class BandwidthManager {
 
-    public static final int HIGH_RESOLUTION = 0;
-    public static final int LOW_RESOLUTION = 1;
-    public static final int LOW_BANDWIDTH = 2;
+    private static final int HIGH_RESOLUTION = 0;
+    private static final int LOW_RESOLUTION = 1;
+    private static final int LOW_BANDWIDTH = 2;
 
     private static BandwidthManager sInstance;
 
-    private int currentProfile = HIGH_RESOLUTION;
+    private final int currentProfile = HIGH_RESOLUTION;
 
     private BandwidthManager() {
         // FIXME register a listener on NetworkManager to get notified of network state
@@ -39,12 +38,12 @@ public class BandwidthManager {
         // FIXME initially get those values
     }
 
-    public static final synchronized BandwidthManager getInstance() {
+    public static synchronized BandwidthManager getInstance() {
         if (sInstance == null) sInstance = new BandwidthManager();
         return sInstance;
     }
 
-    public void updateWithProfileSettings(Core lc, CallParams callParams) {
+    public void updateWithProfileSettings(CallParams callParams) {
         if (callParams != null) { // in call
             // Update video parm if
             if (!isVideoPossible()) { // NO VIDEO
@@ -57,7 +56,7 @@ public class BandwidthManager {
         }
     }
 
-    public boolean isVideoPossible() {
+    private boolean isVideoPossible() {
         return currentProfile != LOW_BANDWIDTH;
     }
 }

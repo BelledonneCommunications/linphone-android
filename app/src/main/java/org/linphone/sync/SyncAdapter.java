@@ -26,7 +26,7 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
+class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);

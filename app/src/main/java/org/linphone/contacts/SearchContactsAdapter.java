@@ -1,5 +1,7 @@
+package org.linphone.contacts;
+
 /*
-SearchContactsListAdapter.java
+SearchContactsAdapter.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -17,15 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.contacts;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -41,23 +38,22 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
 import org.linphone.views.ContactAvatar;
 
-public class SearchContactsListAdapter
-        extends RecyclerView.Adapter<SearchContactsListAdapter.ViewHolder> {
+public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactViewHolder> {
     @SuppressWarnings("unused")
-    private static final String TAG = SearchContactsListAdapter.class.getSimpleName();
+    private static final String TAG = SearchContactsAdapter.class.getSimpleName();
 
     private List<ContactAddress> mContacts;
     private List<ContactAddress> mContactsSelected;
-    private ProgressBar mProgressBar;
+    private final ProgressBar mProgressBar;
     private boolean mOnlySipContact = false;
-    private ViewHolder.ClickListener mListener;
-    private boolean mHideSelectionMark;
+    private SearchContactViewHolder.ClickListener mListener;
+    private final boolean mHideSelectionMark;
     private String mPreviousSearch;
 
-    public SearchContactsListAdapter(
+    public SearchContactsAdapter(
             List<ContactAddress> contactsList,
             ProgressBar pB,
-            ViewHolder.ClickListener clickListener,
+            SearchContactViewHolder.ClickListener clickListener,
             boolean hideSelectionMark) {
         mHideSelectionMark = hideSelectionMark;
         mListener = clickListener;
@@ -75,21 +71,21 @@ public class SearchContactsListAdapter
         mOnlySipContact = enable;
     }
 
-    public void setListener(ViewHolder.ClickListener listener) {
+    public void setListener(SearchContactViewHolder.ClickListener listener) {
         mListener = listener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v =
                 LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.search_contact_cell, parent, false);
-        return new ViewHolder(v, mListener);
+        return new SearchContactViewHolder(v, mListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SearchContactViewHolder holder, int position) {
         ContactAddress contact = getItem(position);
         final String a =
                 (contact.getAddressAsDisplayableString().isEmpty())
@@ -229,7 +225,7 @@ public class SearchContactsListAdapter
         return list;
     }
 
-    public void setContactsList(List<ContactAddress> contactsList) {
+    private void setContactsList(List<ContactAddress> contactsList) {
         if (contactsList == null) {
             mContacts = getContactsList();
             if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
@@ -238,11 +234,7 @@ public class SearchContactsListAdapter
         }
     }
 
-    public int getCount() {
-        return mContacts.size();
-    }
-
-    public ContactAddress getItem(int position) {
+    private ContactAddress getItem(int position) {
         return mContacts.get(position);
     }
 
@@ -336,37 +328,5 @@ public class SearchContactsListAdapter
         mContacts = result;
         resultContactsSearch.setAdapter(this);
         notifyDataSetChanged();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView name;
-        public TextView address;
-        public ImageView linphoneContact;
-        public ImageView isSelect;
-        public RelativeLayout avatarLayout;
-
-        private ClickListener mListener;
-
-        public ViewHolder(View view, ClickListener listener) {
-            super(view);
-            name = view.findViewById(R.id.contact_name);
-            address = view.findViewById(R.id.contact_address);
-            linphoneContact = view.findViewById(R.id.contact_linphone);
-            isSelect = view.findViewById(R.id.contact_is_select);
-            avatarLayout = view.findViewById(R.id.avatar_layout);
-            mListener = listener;
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onItemClicked(getAdapterPosition());
-            }
-        }
-
-        public interface ClickListener {
-            void onItemClicked(int position);
-        }
     }
 }
