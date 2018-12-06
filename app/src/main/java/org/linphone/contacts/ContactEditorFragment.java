@@ -151,13 +151,16 @@ public class ContactEditorFragment extends Fragment {
                             }
                             mContact = LinphoneContact.createContact();
                         }
+
                         mContact.setFirstNameAndLastName(
                                 mFirstName.getText().toString(),
                                 mLastName.getText().toString(),
                                 true);
+
                         if (mPhotoToAdd != null) {
                             mContact.setPhoto(mPhotoToAdd);
                         }
+
                         for (LinphoneNumberOrAddress noa : mNumbersAndAddresses) {
                             if (noa.isSIPAddress() && noa.getValue() != null) {
                                 noa.setValue(
@@ -165,7 +168,11 @@ public class ContactEditorFragment extends Fragment {
                             }
                             mContact.addOrUpdateNumberOrAddress(noa);
                         }
-                        mContact.setOrganization(mOrganization.getText().toString(), true);
+
+                        if (mIsNewContact && !mOrganization.getText().toString().isEmpty()) {
+                            mContact.setOrganization(mOrganization.getText().toString(), true);
+                        }
+
                         mContact.save();
                         getFragmentManager().popBackStackImmediate();
                     }

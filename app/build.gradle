@@ -52,7 +52,6 @@ android {
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
-        manifestPlaceholders = [absolutePackageName:getPackageName()]
     }
 
     applicationVariants.all { variant ->
@@ -79,12 +78,20 @@ android {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            resValue "string", "sync_account_type", getPackageName() + ".sync"
+            resValue "string", "file_provider", getPackageName() + ".provider"
+            resValue "string", "sync_mimetype", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
         }
         debug {
             applicationIdSuffix ".debug"
             debuggable true
             jniDebuggable true
             versionNameSuffix '-debug'
+
+            resValue "string", "sync_account_type", getPackageName() + ".sync"
+            resValue "string", "file_provider", getPackageName() + ".provider"
+            resValue "string", "sync_mimetype", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
         }
     }
 

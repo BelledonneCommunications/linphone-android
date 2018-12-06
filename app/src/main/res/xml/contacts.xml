@@ -5,7 +5,7 @@
         android:detailColumn="data3"
         android:detailSocialSummary="true"
         android:icon="@drawable/linphone_logo"
-        android:mimeType="vnd.android.cursor.item/${absolutePackageName}.profile"
+        android:mimeType="@string/sync_mimetype"
         android:summaryColumn="data2" />
 
 </ContactsSource>
