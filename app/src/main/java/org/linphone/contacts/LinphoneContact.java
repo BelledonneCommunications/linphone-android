@@ -703,6 +703,11 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         mAndroidLookupKey = lookupKey;
     }
 
+    public Uri getAndroidLookupUri() {
+        return ContactsContract.Contacts.getLookupUri(
+                Long.parseLong(getAndroidId()), getAndroidLookupKey());
+    }
+
     public Friend getFriend() {
         return mFriend;
     }

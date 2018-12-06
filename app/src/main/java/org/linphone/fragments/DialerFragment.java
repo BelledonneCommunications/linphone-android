@@ -246,8 +246,10 @@ public class DialerFragment extends Fragment {
             } else {
                 Uri contactUri = intent.getData();
                 String address =
-                        ContactsManager.getAddressOrNumberForAndroidContact(
-                                LinphoneService.instance().getContentResolver(), contactUri);
+                        ContactsManager.getInstance()
+                                .getAddressOrNumberForAndroidContact(
+                                        LinphoneService.instance().getContentResolver(),
+                                        contactUri);
                 if (address != null) {
                     mAddress.setText(address);
                 } else {

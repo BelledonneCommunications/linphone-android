@@ -40,17 +40,7 @@ import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
-class AsyncContactsData {
-    final List<LinphoneContact> contacts;
-    final List<LinphoneContact> sipContacts;
-
-    AsyncContactsData() {
-        contacts = new ArrayList<>();
-        sipContacts = new ArrayList<>();
-    }
-}
-
-class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
+class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.AsyncContactsData> {
     @SuppressLint("InlinedApi")
     private static final String[] PROJECTION = {
         ContactsContract.Data.CONTACT_ID,
@@ -64,7 +54,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
     };
 
     private Context mContext;
-    private HashMap<String, LinphoneContact> mAndroidContactsCache;
 
     public AsyncContactsLoader(Context context) {
         mContext = context;
@@ -72,8 +61,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
 
     @Override
     protected void onPreExecute() {
-        mAndroidContactsCache = new HashMap<>();
-
         if (mContext == null) {
             mContext = LinphoneService.instance().getApplicationContext();
         }
@@ -102,7 +89,10 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
                                 ContactsContract.Data.IN_VISIBLE_GROUP + " == 1",
                                 null,
                                 null);
+
+        HashMap<String, LinphoneContact> androidContactsCache = new HashMap<>();
         AsyncContactsData data = new AsyncContactsData();
+        List<String> nativeIds = new ArrayList<>();
 
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
@@ -114,7 +104,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
                     if (contact != null) {
                         contact.clearAddresses();
                         if (contact.getAndroidId() != null) {
-                            mAndroidContactsCache.put(contact.getAndroidId(), contact);
+                            androidContactsCache.put(contact.getAndroidId(), contact);
+                            nativeIds.add(contact.getAndroidId());
                         }
                     } else {
                         if (friend.getRefKey() != null) {
@@ -135,7 +126,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
         }
 
         if (c != null) {
-            List<String> nativeIds = new ArrayList<>();
             while (c.moveToNext()) {
                 if (isCancelled()) return data;
 
@@ -150,15 +140,16 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
                 String lookupKey =
                         c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
-                LinphoneContact contact = mAndroidContactsCache.get(id);
+                LinphoneContact contact = androidContactsCache.get(id);
                 if (contact == null) {
                     nativeIds.add(id);
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
                     contact.setAndroidLookupKey(lookupKey);
                     contact.setFullName(displayName);
-                    mAndroidContactsCache.put(id, contact);
+                    androidContactsCache.put(id, contact);
                 }
+
                 if (contact.getFullName() == null && displayName != null) {
                     contact.setFullName(displayName);
                 }
@@ -188,7 +179,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
                         String id = contact.getAndroidId();
                         if (id != null && !nativeIds.contains(id)) {
                             // Has been removed since last fetch
-                            mAndroidContactsCache.remove(id);
+                            androidContactsCache.remove(id);
                         }
                     }
                 }
@@ -196,7 +187,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
             nativeIds.clear();
         }
 
-        for (LinphoneContact contact : mAndroidContactsCache.values()) {
+        for (LinphoneContact contact : androidContactsCache.values()) {
             if (isCancelled()) return data;
 
             boolean hideContactsWithoutPresence =
@@ -233,7 +224,8 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
             }
             data.contacts.add(contact);
         }
-        mAndroidContactsCache.clear();
+
+        androidContactsCache.clear();
 
         Collections.sort(data.contacts);
         Collections.sort(data.sipContacts);
@@ -253,5 +245,15 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsData> {
 
         ContactsManager.getInstance().setContacts(data.contacts);
         ContactsManager.getInstance().setSipContacts(data.sipContacts);
+    }
+
+    class AsyncContactsData {
+        final List<LinphoneContact> contacts;
+        final List<LinphoneContact> sipContacts;
+
+        AsyncContactsData() {
+            contacts = new ArrayList<>();
+            sipContacts = new ArrayList<>();
+        }
     }
 }
