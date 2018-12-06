@@ -74,16 +74,17 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
     }
 
     public static LinphoneContact createContact() {
+        LinphoneContact contact = new LinphoneContact();
         if (ContactsManager.getInstance().hasContactsAccess()) {
-            return createAndroidContact();
+            contact.createAndroidContact();
+        } else {
+            contact.createFriend();
         }
-        return createFriend();
+        return contact;
     }
 
-    private static LinphoneContact createAndroidContact() {
-        LinphoneContact contact = new LinphoneContact();
-
-        contact.mChangesToCommit.add(
+    private void createAndroidContact() {
+        mChangesToCommit.add(
                 ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                         .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
                         .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
@@ -91,12 +92,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                                 ContactsContract.RawContacts.AGGREGATION_MODE,
                                 ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
                         .build());
-        contact.setAndroidId("0");
-
-        return contact;
+        setAndroidId("0");
     }
 
-    private static LinphoneContact createFriend() {
+    private void createFriend() {
         LinphoneContact contact = new LinphoneContact();
         Friend friend = LinphoneManager.getLc().createFriend();
         // Disable subscribes for now
@@ -104,7 +103,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         friend.setIncSubscribePolicy(SubscribePolicy.SPDeny);
         contact.mFriend = friend;
         friend.setUserData(contact);
-        return contact;
     }
 
     @Override
