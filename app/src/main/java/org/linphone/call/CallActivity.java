@@ -682,6 +682,7 @@ public class CallActivity extends LinphoneGenericActivity
 
         mRecordCall.setEnabled(
                 !LinphoneManager.getLc().soundResourcesLocked()
+                        && currentCall != null
                         && currentCall.getCurrentParams().getRecordFile() != null);
         mRecordCall.setImageResource(
                 mIsRecording ? R.drawable.options_rec_selected : R.drawable.options_rec_default);
@@ -1320,7 +1321,7 @@ public class CallActivity extends LinphoneGenericActivity
 
     private void handleViewIntent() {
         Intent intent = getIntent();
-        if (intent != null && intent.getAction().equals("android.intent.action.VIEW")) {
+        if (intent != null && "android.intent.action.VIEW".equals(intent.getAction())) {
             Call call = LinphoneManager.getLc().getCurrentCall();
             if (call != null && isVideoEnabled(call)) {
                 Player player = call.getPlayer();
