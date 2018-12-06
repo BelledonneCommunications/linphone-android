@@ -34,6 +34,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneActivity;
@@ -61,6 +62,7 @@ public class ContactsFragment extends Fragment
     private Context mContext;
     private SelectableHelper mSelectionHelper;
     private ContactsAdapter mContactAdapter;
+    private SwipeRefreshLayout mContactsRefresher;
 
     @Override
     public View onCreateView(
@@ -88,6 +90,15 @@ public class ContactsFragment extends Fragment
         mLinphoneContactsSelected = view.findViewById(R.id.linphone_contacts_select);
         mContactsFetchInProgress = view.findViewById(R.id.contactsFetchInProgress);
         mNewContact = view.findViewById(R.id.newContact);
+        mContactsRefresher = view.findViewById(R.id.contactsListRefresher);
+
+        mContactsRefresher.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        ContactsManager.getInstance().fetchContactsAsync();
+                    }
+                });
 
         mAllContacts.setOnClickListener(
                 new View.OnClickListener() {
@@ -364,6 +375,7 @@ public class ContactsFragment extends Fragment
             }
         }
         mContactsFetchInProgress.setVisibility(View.GONE);
+        mContactsRefresher.setRefreshing(false);
     }
 
     private void invalidate() {

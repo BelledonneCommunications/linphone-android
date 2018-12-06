@@ -776,7 +776,6 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                 && ContactsManager.getInstance().hasContactsAccess()
                 && mChangesToCommit.size() > 0) {
             try {
-                createLinphoneTagIfNeeded();
                 LinphoneService.instance()
                         .getContentResolver()
                         .applyBatch(ContactsContract.AUTHORITY, mChangesToCommit);
@@ -1077,7 +1076,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
         return result;
     }
 
-    private void createLinphoneTagIfNeeded() {
+    public void createLinphoneTagIfNeeded() {
         if (LinphoneManager.getInstance()
                 .getContext()
                 .getResources()

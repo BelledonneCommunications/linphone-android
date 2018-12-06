@@ -110,14 +110,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--android:fastScrollAlwaysVisible="true"-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/contactsList"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/contactsListRefresher"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/colorE"
+            android:layout_height="match_parent">
 
-            android:dividerHeight="1dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/contactsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/colorE"
+
+                android:dividerHeight="1dp" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <ProgressBar
             android:id="@+id/contactsFetchInProgress"
