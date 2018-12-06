@@ -267,17 +267,18 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         AccountManager accountManager =
                 (AccountManager) activity.getSystemService(Context.ACCOUNT_SERVICE);
 
-        Account[] accounts = accountManager.getAccountsByType(activity.getPackageName());
+        Account[] accounts =
+                accountManager.getAccountsByType(mContext.getString(R.string.sync_account_type));
 
         if (accounts != null && accounts.length == 0) {
             Account newAccount =
                     new Account(
                             mContext.getString(R.string.sync_account_name),
-                            activity.getPackageName());
+                            mContext.getString(R.string.sync_account_type));
             try {
                 accountManager.addAccountExplicitly(newAccount, null, null);
             } catch (Exception e) {
-                Log.e("[Contacts Manager] " + e);
+                Log.e("[Contacts Manager] Couldn't initialize sync account: " + e);
             }
         }
     }

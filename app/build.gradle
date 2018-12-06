@@ -52,6 +52,7 @@ android {
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
+        manifestPlaceholders = [absolutePackageName:getPackageName()]
     }
 
     applicationVariants.all { variant ->

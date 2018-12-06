@@ -776,10 +776,10 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
                 && ContactsManager.getInstance().hasContactsAccess()
                 && mChangesToCommit.size() > 0) {
             try {
+                createLinphoneTagIfNeeded();
                 LinphoneService.instance()
                         .getContentResolver()
                         .applyBatch(ContactsContract.AUTHORITY, mChangesToCommit);
-                createLinphoneTagIfNeeded();
             } catch (Exception e) {
                 Log.e(e);
             } finally {

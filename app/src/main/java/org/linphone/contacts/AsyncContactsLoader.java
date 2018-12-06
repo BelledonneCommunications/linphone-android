@@ -190,35 +190,32 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         for (LinphoneContact contact : androidContactsCache.values()) {
             if (isCancelled()) return data;
 
-            boolean hideContactsWithoutPresence =
-                    mContext.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence);
-            if (contact.hasAddress()) {
-                if (contact.getFullName() == null) {
-                    for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-                        if (noa.isSIPAddress()) {
-                            contact.setFullName(
-                                    LinphoneUtils.getAddressDisplayName(noa.getValue()));
-                            Log.w(
-                                    "[Contacts Manager] Couldn't find a display name for contact "
-                                            + contact.getFullName()
-                                            + ", used SIP address display name / username instead...");
-                            break;
-                        }
+            if (contact.getFullName() == null) {
+                for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                    if (noa.isSIPAddress()) {
+                        contact.setFullName(LinphoneUtils.getAddressDisplayName(noa.getValue()));
+                        Log.w(
+                                "[Contacts Manager] Couldn't find a display name for contact "
+                                        + contact.getFullName()
+                                        + ", used SIP address display name / username instead...");
+                        break;
                     }
                 }
-                if (hideContactsWithoutPresence) {
-                    if (contact.getFriend() != null) {
-                        for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-                            PresenceModel pm =
-                                    contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
-                            if (pm != null
-                                    && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
-                                data.sipContacts.add(contact);
-                                break;
-                            }
-                        }
+            }
+
+            if (contact.getFriend() != null) {
+                for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
+                    PresenceModel pm =
+                            contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
+                    if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                        data.sipContacts.add(contact);
+                        break;
                     }
-                } else {
+                }
+            }
+
+            if (!mContext.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
+                if (contact.hasAddress() && !data.sipContacts.contains(contact)) {
                     data.sipContacts.add(contact);
                 }
             }
