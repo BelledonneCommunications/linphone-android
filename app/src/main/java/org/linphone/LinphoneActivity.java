@@ -1405,8 +1405,15 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 getPackageManager()
                         .checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
         Log.i(
-                "[Permission] Contacts permission is "
+                "[Permission] Contacts read permission is "
                         + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
+        int wcontacts =
+                getPackageManager()
+                        .checkPermission(Manifest.permission.WRITE_CONTACTS, getPackageName());
+        Log.i(
+                "[Permission] Contacts write permission is "
+                        + (wcontacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
         int readPhone =
                 getPackageManager()
@@ -1441,12 +1448,21 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 permissionsList.add(Manifest.permission.READ_PHONE_STATE);
             }
         }
+        if (wcontacts != PackageManager.PERMISSION_GRANTED) {
+            if (LinphonePreferences.instance()
+                            .firstTimeAskingForPermission(Manifest.permission.WRITE_CONTACTS)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(
+                            this, Manifest.permission.WRITE_CONTACTS)) {
+                Log.i("[Permission] Asking for write contact");
+                permissionsList.add(Manifest.permission.WRITE_CONTACTS);
+            }
+        }
         if (contacts != PackageManager.PERMISSION_GRANTED) {
             if (LinphonePreferences.instance()
                             .firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS)
                     || ActivityCompat.shouldShowRequestPermissionRationale(
                             this, Manifest.permission.READ_CONTACTS)) {
-                Log.i("[Permission] Asking for mContacts");
+                Log.i("[Permission] Asking for read contact");
                 permissionsList.add(Manifest.permission.READ_CONTACTS);
             }
         } else {
