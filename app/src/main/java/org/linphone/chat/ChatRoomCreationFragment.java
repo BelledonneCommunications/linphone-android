@@ -262,7 +262,7 @@ public class ChatRoomCreationFragment extends Fragment
 
     @Override
     public void onResume() {
-        ContactsManager.addContactsListener(this);
+        ContactsManager.getInstance().addContactsListener(this);
         super.onResume();
 
         if (LinphoneActivity.isInstanciated()) {
@@ -282,7 +282,7 @@ public class ChatRoomCreationFragment extends Fragment
         if (mChatRoom != null) {
             mChatRoom.removeListener(mChatRoomCreationListener);
         }
-        ContactsManager.removeContactsListener(this);
+        ContactsManager.getInstance().removeContactsListener(this);
         super.onPause();
     }
 

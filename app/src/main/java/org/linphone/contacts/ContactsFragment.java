@@ -323,7 +323,7 @@ public class ContactsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        ContactsManager.addContactsListener(this);
+        ContactsManager.getInstance().addContactsListener(this);
 
         if (mEditConsumed) {
             mEditOnClick = false;
@@ -342,7 +342,7 @@ public class ContactsFragment extends Fragment
 
     @Override
     public void onPause() {
-        ContactsManager.removeContactsListener(this);
+        ContactsManager.getInstance().removeContactsListener(this);
         super.onPause();
     }
 

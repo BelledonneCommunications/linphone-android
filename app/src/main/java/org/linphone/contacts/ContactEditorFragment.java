@@ -189,11 +189,9 @@ public class ContactEditorFragment extends Fragment {
                 new TextWatcher() {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (mLastName.getText().length() > 0 || mFirstName.getText().length() > 0) {
-                            mOk.setEnabled(true);
-                        } else {
-                            mOk.setEnabled(false);
-                        }
+                        mOk.setEnabled(
+                                mLastName.getText().length() > 0
+                                        || mFirstName.getText().length() > 0);
                     }
 
                     @Override
@@ -209,11 +207,9 @@ public class ContactEditorFragment extends Fragment {
                 new TextWatcher() {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (mFirstName.getText().length() > 0 || mLastName.getText().length() > 0) {
-                            mOk.setEnabled(true);
-                        } else {
-                            mOk.setEnabled(false);
-                        }
+                        mOk.setEnabled(
+                                mFirstName.getText().length() > 0
+                                        || mLastName.getText().length() > 0);
                     }
 
                     @Override

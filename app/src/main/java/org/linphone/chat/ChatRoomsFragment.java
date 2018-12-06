@@ -220,7 +220,7 @@ public class ChatRoomsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        ContactsManager.addContactsListener(this);
+        ContactsManager.getInstance().addContactsListener(this);
 
         if (LinphoneManager.getLc().getCallsNb() > 0) {
             mBackToCallButton.setVisibility(View.VISIBLE);
@@ -250,7 +250,7 @@ public class ChatRoomsFragment extends Fragment
         if (lc != null) {
             lc.removeListener(mListener);
         }
-        ContactsManager.removeContactsListener(this);
+        ContactsManager.getInstance().removeContactsListener(this);
         mChatRoomsAdapter.clear();
         super.onPause();
     }

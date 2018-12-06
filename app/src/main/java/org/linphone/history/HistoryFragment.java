@@ -154,7 +154,7 @@ public class HistoryFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        ContactsManager.addContactsListener(this);
+        ContactsManager.getInstance().addContactsListener(this);
 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_LIST);
@@ -173,7 +173,7 @@ public class HistoryFragment extends Fragment
 
     @Override
     public void onPause() {
-        ContactsManager.removeContactsListener(this);
+        ContactsManager.getInstance().removeContactsListener(this);
         super.onPause();
     }
 

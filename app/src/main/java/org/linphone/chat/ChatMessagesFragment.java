@@ -346,7 +346,7 @@ public class ChatMessagesFragment extends Fragment
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(CHAT);
         }
-        ContactsManager.addContactsListener(this);
+        ContactsManager.getInstance().addContactsListener(this);
 
         addVirtualKeyboardVisiblityListener();
         // Force hide keyboard
@@ -381,7 +381,7 @@ public class ChatMessagesFragment extends Fragment
 
     @Override
     public void onPause() {
-        ContactsManager.removeContactsListener(this);
+        ContactsManager.getInstance().removeContactsListener(this);
         removeVirtualKeyboardVisiblityListener();
         LinphoneManager.getInstance().setCurrentChatRoomAddress(null);
         if (mChatRoom != null) mChatRoom.removeListener(this);
@@ -560,12 +560,14 @@ public class ChatMessagesFragment extends Fragment
         }
         if (item.getItemId() == R.id.add_to_contacts) {
             Address address = message.getFromAddress();
-            String uri = address.asStringUriOnly();
-            if (address != null && address.getDisplayName() != null)
+            if (address == null) return true;
+            String uri = address.getUsername() + "@" + address.getDomain(); // Get a clean address
+            if (address.getDisplayName() != null) {
                 LinphoneActivity.instance()
-                        .displayContactsForEdition(
-                                address.asStringUriOnly(), address.getDisplayName());
-            else LinphoneActivity.instance().displayContactsForEdition(uri);
+                        .displayContactsForEdition(uri, address.getDisplayName());
+            } else {
+                LinphoneActivity.instance().displayContactsForEdition(uri);
+            }
             return true;
         }
         return super.onContextItemSelected(item);

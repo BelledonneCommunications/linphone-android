@@ -1164,9 +1164,10 @@ public class LinphoneActivity extends LinphoneGenericActivity
         changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
     }
 
-    public void editContact(LinphoneContact contact) {
+    public void editContact(LinphoneContact contact, String sipUri) {
         Bundle extras = new Bundle();
         extras.putSerializable("Contact", contact);
+        extras.putString("NewSipAdress", sipUri);
         changeCurrentFragment(FragmentsAvailable.CONTACT_EDITOR, extras);
     }
 
