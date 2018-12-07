@@ -200,62 +200,6 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void setOrganization(String org) {
-        if (org == null || org.isEmpty()) {
-            if (mAndroidId == null) {
-                Log.e("[Contact] Can't set organization to null or empty for new contact");
-                return;
-            }
-        }
-        if (mAndroidId == null) {
-            Log.i("[Contact] Setting organization " + org + " to new contact.");
-            addChangesToCommit(
-                    ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                            .withValueBackReference(Data.RAW_CONTACT_ID, 0)
-                            .withValue(
-                                    Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
-                            .withValue(CommonDataKinds.Organization.COMPANY, org)
-                            .build());
-        } else {
-            Log.i("[Contact] Setting organization " + org + " to existing contact " + mAndroidId);
-            // TODO
-        }
-    }
-
-    protected void setPhoto(byte[] photo) {
-        if (photo == null) {
-            Log.e("[Contact] Can't set null picture.");
-            return;
-        }
-
-        if (mAndroidId == null) {
-            Log.i("[Contact] Setting picture to new contact.");
-            // TODO
-        } else {
-            Log.i("[Contact] Setting picture to existing contact " + mAndroidId);
-            // TODO
-        }
-    }
-
-    protected void removeNumberOrAddress(String noa) {
-        if (noa == null || noa.isEmpty()) {
-            Log.e("[Contact] Can't remove null or empty number or address.");
-            return;
-        }
-
-        if (mAndroidId == null) {
-            Log.i("[Contact] Removing number or address " + noa + " from new contact.");
-            // TODO
-        } else {
-            Log.i(
-                    "[Contact] Removing number or address "
-                            + noa
-                            + " from existing contact "
-                            + mAndroidId);
-            // TODO
-        }
-    }
-
     protected void addNumberOrAddress(String value, String oldValueToReplace, boolean isSIP) {
         if (value == null || value.isEmpty()) {
             Log.e("[Contact] Can't add null or empty number or address");
@@ -314,6 +258,62 @@ class AndroidContact implements Serializable {
                                 + mAndroidId);
                 // TODO
             }
+        }
+    }
+
+    protected void removeNumberOrAddress(String noa) {
+        if (noa == null || noa.isEmpty()) {
+            Log.e("[Contact] Can't remove null or empty number or address.");
+            return;
+        }
+
+        if (mAndroidId == null) {
+            Log.i("[Contact] Removing number or address " + noa + " from new contact.");
+            // TODO
+        } else {
+            Log.i(
+                    "[Contact] Removing number or address "
+                            + noa
+                            + " from existing contact "
+                            + mAndroidId);
+            // TODO
+        }
+    }
+
+    protected void setOrganization(String org) {
+        if (org == null || org.isEmpty()) {
+            if (mAndroidId == null) {
+                Log.e("[Contact] Can't set organization to null or empty for new contact");
+                return;
+            }
+        }
+        if (mAndroidId == null) {
+            Log.i("[Contact] Setting organization " + org + " to new contact.");
+            addChangesToCommit(
+                    ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                            .withValueBackReference(Data.RAW_CONTACT_ID, 0)
+                            .withValue(
+                                    Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                            .withValue(CommonDataKinds.Organization.COMPANY, org)
+                            .build());
+        } else {
+            Log.i("[Contact] Setting organization " + org + " to existing contact " + mAndroidId);
+            // TODO
+        }
+    }
+
+    protected void setPhoto(byte[] photo) {
+        if (photo == null) {
+            Log.e("[Contact] Can't set null picture.");
+            return;
+        }
+
+        if (mAndroidId == null) {
+            Log.i("[Contact] Setting picture to new contact.");
+            // TODO
+        } else {
+            Log.i("[Contact] Setting picture to existing contact " + mAndroidId);
+            // TODO
         }
     }
 

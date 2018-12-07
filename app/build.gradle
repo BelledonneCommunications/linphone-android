@@ -131,6 +131,18 @@ if (firebaseEnabled()) {
     apply plugin: 'com.google.gms.google-services'
 }
 
+task generateContactsXml(type: Copy) {
+    from 'contacts.xml'
+    into "src/main/res/xml/"
+    filter {
+        line -> line
+                .replaceAll('%%AUTO_GENERATED%%', 'This file has been automatically generated, do not edit or commit !')
+                .replaceAll('%%PACKAGE_NAME%%', getPackageName())
+
+    }
+}
+project.tasks['preBuild'].dependsOn 'generateContactsXml'
+
 apply plugin: "com.diffplug.gradle.spotless"
 spotless {
     java {
