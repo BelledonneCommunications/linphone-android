@@ -189,7 +189,7 @@ public class LinphoneContact implements Serializable, Comparable<LinphoneContact
     }
 
     private void addChangesToCommit(ContentProviderOperation operation) {
-        Log.e("Added operation " + operation);
+        Log.d("[Contact] Added operation " + operation);
         mChangesToCommit.add(operation);
     }
 

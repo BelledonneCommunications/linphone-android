@@ -52,6 +52,7 @@ android {
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
+        manifestPlaceholders = [sync_mimetype:"vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"]
     }
 
     applicationVariants.all { variant ->

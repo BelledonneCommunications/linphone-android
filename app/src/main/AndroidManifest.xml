@@ -92,11 +92,10 @@
                 <data android:scheme="imto" />
             </intent-filter>
             <intent-filter>
-                <data android:mimeType="@string/sync_mimetype" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="${sync_mimetype}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
