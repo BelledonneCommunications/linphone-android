@@ -42,13 +42,13 @@ import org.linphone.mediastream.Log;
 
 class AndroidContact implements Serializable {
     protected String mAndroidId, mAndroidRawId, mAndroidLookupKey;
-    protected boolean isAndroidIdLinphone;
+    protected boolean isAndroidRawIdLinphone;
 
     private transient ArrayList<ContentProviderOperation> mChangesToCommit;
 
     protected AndroidContact() {
         mChangesToCommit = new ArrayList<>();
-        isAndroidIdLinphone = false;
+        isAndroidRawIdLinphone = false;
     }
 
     protected String getAndroidId() {
@@ -88,20 +88,33 @@ class AndroidContact implements Serializable {
                 ContentProviderResult[] results =
                         contentResolver.applyBatch(ContactsContract.AUTHORITY, mChangesToCommit);
                 if (results != null && results.length > 0 && results[0] != null) {
-                    mAndroidRawId = String.valueOf(ContentUris.parseId(results[0].uri));
-                    Log.i("[Contact] Contact created with RAW ID " + mAndroidRawId);
+                    String rawId = String.valueOf(ContentUris.parseId(results[0].uri));
+                    if (mAndroidId == null) {
+                        Log.i("[Contact] Contact created with RAW ID " + rawId);
 
-                    final String[] projection =
-                            new String[] {ContactsContract.RawContacts.CONTACT_ID};
-                    final Cursor cursor =
-                            contentResolver.query(results[0].uri, projection, null, null, null);
-                    if (cursor != null) {
-                        cursor.moveToNext();
-                        long contactId = cursor.getLong(0);
-                        mAndroidId = String.valueOf(contactId);
-                        cursor.close();
-                        Log.i("[Contact] Contact created with ID " + mAndroidId);
+                        final String[] projection =
+                                new String[] {ContactsContract.RawContacts.CONTACT_ID};
+                        final Cursor cursor =
+                                contentResolver.query(results[0].uri, projection, null, null, null);
+                        if (cursor != null) {
+                            cursor.moveToNext();
+                            long contactId = cursor.getLong(0);
+                            mAndroidId = String.valueOf(contactId);
+                            cursor.close();
+                            Log.i("[Contact] Contact created with ID " + mAndroidId);
+                        }
+                    } else {
+                        if (rawId.equals(mAndroidRawId)) {
+                            Log.i("[Contact] Contact with RAW ID " + rawId + " updated");
+                        } else {
+                            Log.i(
+                                    "[Contact] Linphone RAW ID "
+                                            + rawId
+                                            + " created from existing RAW ID "
+                                            + mAndroidRawId);
+                        }
                     }
+                    mAndroidRawId = rawId;
                 }
             } catch (Exception e) {
                 Log.e("[Contact] Exception while saving changes: " + e);
@@ -131,7 +144,17 @@ class AndroidContact implements Serializable {
                                     RawContacts.AGGREGATION_MODE,
                                     RawContacts.AGGREGATION_MODE_DEFAULT)
                             .build());
-            isAndroidIdLinphone = true;
+            isAndroidRawIdLinphone = true;
+        } else {
+            Log.i("[Contact] Creating contact using default account type");
+            addChangesToCommit(
+                    ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
+                            .withValue(RawContacts.ACCOUNT_TYPE, null)
+                            .withValue(RawContacts.ACCOUNT_NAME, null)
+                            .withValue(
+                                    RawContacts.AGGREGATION_MODE,
+                                    RawContacts.AGGREGATION_MODE_DEFAULT)
+                            .build());
         }
     }
 
@@ -449,12 +472,64 @@ class AndroidContact implements Serializable {
                 .getContext()
                 .getResources()
                 .getBoolean(R.bool.use_linphone_tag)) {
-            // TODO
-            /*if (mLinphoneAndroidContactId == null && findLinphoneRawContactId() == null) {
-                createRawLinphoneContactFromExistingAndroidContact(fullName);
-                isAndroidIdLinphone = true;
-            }*/
+            if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
+                String linphoneRawId = findLinphoneRawContactId();
+                if (linphoneRawId == null) {
+                    Log.i("[Contact] Linphone RAW ID not found for contact " + mAndroidId);
+                    createRawLinphoneContactFromExistingAndroidContact(fullName);
+                } else {
+                    Log.i(
+                            "[Contact] Linphone RAW ID found for contact "
+                                    + mAndroidId
+                                    + " : "
+                                    + linphoneRawId);
+                    mAndroidRawId = linphoneRawId;
+                }
+                isAndroidRawIdLinphone = true;
+            }
         }
+    }
+
+    private void createRawLinphoneContactFromExistingAndroidContact(String fullName) {
+        addChangesToCommit(
+                ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                        .withValue(
+                                ContactsContract.RawContacts.ACCOUNT_TYPE,
+                                ContactsManager.getInstance().getString(R.string.sync_account_type))
+                        .withValue(
+                                ContactsContract.RawContacts.ACCOUNT_NAME,
+                                ContactsManager.getInstance().getString(R.string.sync_account_name))
+                        .withValue(
+                                ContactsContract.RawContacts.AGGREGATION_MODE,
+                                ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
+                        .build());
+
+        addChangesToCommit(
+                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                        .withValue(
+                                ContactsContract.Data.MIMETYPE,
+                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                        .withValue(
+                                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                fullName)
+                        .build());
+
+        addChangesToCommit(
+                ContentProviderOperation.newUpdate(
+                                ContactsContract.AggregationExceptions.CONTENT_URI)
+                        .withValue(
+                                ContactsContract.AggregationExceptions.TYPE,
+                                ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER)
+                        .withValue(
+                                ContactsContract.AggregationExceptions.RAW_CONTACT_ID1,
+                                mAndroidRawId)
+                        .withValueBackReference(
+                                ContactsContract.AggregationExceptions.RAW_CONTACT_ID2, 0)
+                        .build());
+
+        Log.i("[Contact] Creating linphone contact");
+        saveChangesCommited();
     }
 
     private String findLinphoneRawContactId() {
@@ -485,54 +560,4 @@ class AndroidContact implements Serializable {
         }
         return result;
     }
-
-    /*private void createRawLinphoneContactFromExistingAndroidContact(String fullName) {
-        ArrayList<ContentProviderOperation> batch = new ArrayList<>();
-
-        batch.add(
-                ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-                        .withValue(
-                                ContactsContract.RawContacts.ACCOUNT_TYPE,
-                                ContactsManager.getInstance().getString(R.string.sync_account_type))
-                        .withValue(
-                                ContactsContract.RawContacts.ACCOUNT_NAME,
-                                ContactsManager.getInstance().getString(R.string.sync_account_name))
-                        .withValue(
-                                ContactsContract.RawContacts.AGGREGATION_MODE,
-                                ContactsContract.RawContacts.AGGREGATION_MODE_DEFAULT)
-                        .build());
-
-        batch.add(
-                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                        .withValue(
-                                ContactsContract.Data.MIMETYPE,
-                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                        .withValue(
-                                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
-                                fullName)
-                        .build());
-
-        batch.add(
-                ContentProviderOperation.newUpdate(
-                                ContactsContract.AggregationExceptions.CONTENT_URI)
-                        .withValue(
-                                ContactsContract.AggregationExceptions.TYPE,
-                                ContactsContract.AggregationExceptions.TYPE_KEEP_TOGETHER)
-                        .withValue(
-                                ContactsContract.AggregationExceptions.RAW_CONTACT_ID1,
-                                mAndroidRawId)
-                        .withValueBackReference(
-                                ContactsContract.AggregationExceptions.RAW_CONTACT_ID2, 0)
-                        .build());
-        Log.i("[Contact] Creating linphone contact");
-
-        try {
-            LinphoneService.instance()
-                    .getContentResolver()
-                    .applyBatch(ContactsContract.AUTHORITY, batch);
-        } catch (Exception e) {
-            Log.e(e);
-        }
-    }*/
 }

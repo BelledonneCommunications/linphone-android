@@ -24,8 +24,10 @@ import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,6 +36,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -262,6 +265,31 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
     }
 
+    private void makeContactAccountVisible() {
+        ContentProviderClient client =
+                mContext.getContentResolver()
+                        .acquireContentProviderClient(ContactsContract.AUTHORITY_URI);
+        ContentValues values = new ContentValues();
+        values.put(
+                ContactsContract.Settings.ACCOUNT_NAME,
+                mContext.getString(R.string.sync_account_name));
+        values.put(
+                ContactsContract.Settings.ACCOUNT_TYPE,
+                mContext.getString(R.string.sync_account_type));
+        values.put(ContactsContract.Settings.UNGROUPED_VISIBLE, true);
+        try {
+            client.insert(
+                    ContactsContract.Settings.CONTENT_URI
+                            .buildUpon()
+                            .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
+                            .build(),
+                    values);
+            Log.i("[Contacts Manager] Contacts account made visible");
+        } catch (RemoteException e) {
+            Log.e("[Contacts Manager] Couldn't make contacts account visible: " + e);
+        }
+    }
+
     public void initializeSyncAccount(Activity activity) {
         initializeContactManager(activity);
         AccountManager accountManager =
@@ -277,10 +305,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                             mContext.getString(R.string.sync_account_type));
             try {
                 accountManager.addAccountExplicitly(newAccount, null, null);
+                Log.i("[Contacts Manager] Contact account added");
             } catch (Exception e) {
                 Log.e("[Contacts Manager] Couldn't initialize sync account: " + e);
             }
         }
+        makeContactAccountVisible();
     }
 
     public synchronized LinphoneContact findContactFromAddress(Address address) {
