@@ -91,7 +91,8 @@ public class ContactEditorFragment extends Fragment {
             Serializable obj = getArguments().getSerializable("Contact");
             if (obj != null) {
                 mContact = (LinphoneContact) obj;
-                mContact.createLinphoneTagIfNeeded();
+                mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded(
+                        mContact.getFullName());
                 mIsNewContact = false;
                 if (getArguments().getString("NewSipAdress") != null) {
                     mNewSipOrNumberToAdd = getArguments().getString("NewSipAdress");
@@ -175,6 +176,9 @@ public class ContactEditorFragment extends Fragment {
 
                         mContact.save();
                         getFragmentManager().popBackStackImmediate();
+                        if (mIsNewContact) {
+                            LinphoneActivity.instance().displayContact(mContact, false);
+                        }
                     }
                 });
 

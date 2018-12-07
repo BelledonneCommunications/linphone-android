@@ -267,7 +267,7 @@ public class LinphoneContact extends AndroidContact
     public void addOrUpdateNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa != null && noa.getValue() != null) {
 
-            addNumberOrAddress(noa.getValue(), noa.getOldValue());
+            addNumberOrAddress(noa.getValue(), noa.getOldValue(), noa.isSIPAddress());
 
             if (isFriend()) {
                 if (noa.isSIPAddress()) {

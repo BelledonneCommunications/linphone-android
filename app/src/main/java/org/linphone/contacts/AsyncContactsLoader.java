@@ -158,7 +158,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
                 } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(
                                 mime)
-                        || mContext.getString(R.string.sync_mimetype).equals(mime)) {
+                        || mContext.getString(R.string.linphone_address_mime_type).equals(mime)) {
                     contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
                 } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(
                         mime)) {

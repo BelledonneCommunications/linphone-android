@@ -95,7 +95,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="${sync_mimetype}" />
+                <data android:mimeType="${linphone_address_mime_type}" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
