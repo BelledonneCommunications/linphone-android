@@ -87,7 +87,10 @@ class AndroidContact implements Serializable {
                 ContentResolver contentResolver = LinphoneService.instance().getContentResolver();
                 ContentProviderResult[] results =
                         contentResolver.applyBatch(ContactsContract.AUTHORITY, mChangesToCommit);
-                if (results != null && results.length > 0 && results[0] != null) {
+                if (results != null
+                        && results.length > 0
+                        && results[0] != null
+                        && results[0].uri != null) {
                     String rawId = String.valueOf(ContentUris.parseId(results[0].uri));
                     if (mAndroidId == null) {
                         Log.i("[Contact] Contact created with RAW ID " + rawId);
@@ -196,7 +199,29 @@ class AndroidContact implements Serializable {
                             + ln
                             + " to existing contact "
                             + mAndroidId);
-            // TODO
+            String select =
+                    ContactsContract.Data.CONTACT_ID
+                            + "=? AND "
+                            + ContactsContract.Data.MIMETYPE
+                            + "=?";
+            String[] args =
+                    new String[] {
+                        getAndroidId(),
+                        ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
+                    };
+
+            addChangesToCommit(
+                    ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                            .withSelection(select, args)
+                            .withValue(
+                                    ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.StructuredName
+                                            .CONTENT_ITEM_TYPE)
+                            .withValue(
+                                    ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, fn)
+                            .withValue(
+                                    ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME, ln)
+                            .build());
         }
     }
 
@@ -256,31 +281,65 @@ class AndroidContact implements Serializable {
                                 + value
                                 + " to existing contact "
                                 + mAndroidId);
-                // TODO
             }
         }
     }
 
-    protected void removeNumberOrAddress(String noa) {
+    protected void removeNumberOrAddress(String noa, boolean isSIP) {
         if (noa == null || noa.isEmpty()) {
             Log.e("[Contact] Can't remove null or empty number or address.");
             return;
         }
 
         if (mAndroidId == null) {
-            Log.i("[Contact] Removing number or address " + noa + " from new contact.");
-            // TODO
+            Log.e("[Contact] Can't remove a number or address from non existing contact");
+            return;
         } else {
             Log.i(
                     "[Contact] Removing number or address "
                             + noa
                             + " from existing contact "
                             + mAndroidId);
-            // TODO
+            if (isSIP) {
+                String select =
+                        ContactsContract.Data.CONTACT_ID
+                                + "=? AND "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? AND data1=?";
+                String[] args =
+                        new String[] {
+                            mAndroidId,
+                            ContactsManager.getInstance()
+                                    .getString(R.string.linphone_address_mime_type),
+                            noa
+                        };
+
+                addChangesToCommit(
+                        ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                                .withSelection(select, args)
+                                .build());
+            } else {
+                String select =
+                        ContactsContract.Data.CONTACT_ID
+                                + "=? AND "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? AND data1=?";
+                String[] args =
+                        new String[] {
+                            mAndroidId,
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+                            noa
+                        };
+
+                addChangesToCommit(
+                        ContentProviderOperation.newDelete(ContactsContract.Data.CONTENT_URI)
+                                .withSelection(select, args)
+                                .build());
+            }
         }
     }
 
-    protected void setOrganization(String org) {
+    protected void setOrganization(String org, String previousValue) {
         if (org == null || org.isEmpty()) {
             if (mAndroidId == null) {
                 Log.e("[Contact] Can't set organization to null or empty for new contact");
@@ -297,8 +356,53 @@ class AndroidContact implements Serializable {
                             .withValue(CommonDataKinds.Organization.COMPANY, org)
                             .build());
         } else {
-            Log.i("[Contact] Setting organization " + org + " to existing contact " + mAndroidId);
-            // TODO
+            if (previousValue != null) {
+                String select =
+                        ContactsContract.Data.CONTACT_ID
+                                + "=? AND "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? AND "
+                                + ContactsContract.CommonDataKinds.Organization.COMPANY
+                                + "=?";
+                String[] args =
+                        new String[] {
+                            getAndroidId(),
+                            ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE,
+                            previousValue
+                        };
+
+                Log.i(
+                        "[Contact] Updating organization "
+                                + org
+                                + " to existing contact "
+                                + mAndroidId);
+                addChangesToCommit(
+                        ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
+                                .withSelection(select, args)
+                                .withValue(
+                                        ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.Organization
+                                                .CONTENT_ITEM_TYPE)
+                                .withValue(
+                                        ContactsContract.CommonDataKinds.Organization.COMPANY, org)
+                                .build());
+            } else {
+                Log.i(
+                        "[Contact] Setting organization "
+                                + org
+                                + " to existing contact "
+                                + mAndroidId);
+                addChangesToCommit(
+                        ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                                .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
+                                .withValue(
+                                        ContactsContract.Data.MIMETYPE,
+                                        ContactsContract.CommonDataKinds.Organization
+                                                .CONTENT_ITEM_TYPE)
+                                .withValue(
+                                        ContactsContract.CommonDataKinds.Organization.COMPANY, org)
+                                .build());
+            }
         }
     }
 
@@ -323,7 +427,11 @@ class AndroidContact implements Serializable {
                 .getContext()
                 .getResources()
                 .getBoolean(R.bool.use_linphone_tag)) {
-            // TODO
+            String linphoneRawId = findLinphoneRawContactId();
+            if (linphoneRawId != null) {
+                mAndroidRawId = linphoneRawId;
+                isAndroidRawIdLinphone = true;
+            }
         }
     }
 

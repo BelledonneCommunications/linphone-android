@@ -163,14 +163,27 @@ public class ContactEditorFragment extends Fragment {
                         }
 
                         for (LinphoneNumberOrAddress noa : mNumbersAndAddresses) {
-                            if (noa.isSIPAddress() && noa.getValue() != null) {
-                                noa.setValue(
-                                        LinphoneUtils.getFullAddressFromUsername(noa.getValue()));
+                            if (noa.getValue() == null || noa.getValue().isEmpty()) {
+                                if (noa.getOldValue() != null && !noa.getOldValue().isEmpty()) {
+                                    mContact.removeNumberOrAddress(noa);
+                                }
+                            } else {
+                                if (noa.getOldValue() != null
+                                        && !noa.getOldValue().isEmpty()
+                                        && noa.getOldValue().equals(noa.getValue())) {
+                                    continue;
+                                }
+
+                                if (noa.isSIPAddress()) {
+                                    noa.setValue(
+                                            LinphoneUtils.getFullAddressFromUsername(
+                                                    noa.getValue()));
+                                }
+                                mContact.addOrUpdateNumberOrAddress(noa);
                             }
-                            mContact.addOrUpdateNumberOrAddress(noa);
                         }
 
-                        if (mIsNewContact && !mOrganization.getText().toString().isEmpty()) {
+                        if (!mOrganization.getText().toString().isEmpty() || !mIsNewContact) {
                             mContact.setOrganization(mOrganization.getText().toString(), true);
                         }
 
@@ -559,7 +572,7 @@ public class ContactEditorFragment extends Fragment {
         if (mIsNewContact || mNewSipOrNumberToAdd != null) {
             tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSIP);
         } else {
-            tempNounoa = new LinphoneNumberOrAddress(null, isSIP, numberOrAddress);
+            tempNounoa = new LinphoneNumberOrAddress(numberOrAddress, isSIP, numberOrAddress);
         }
         final LinphoneNumberOrAddress nounoa = tempNounoa;
         mNumbersAndAddresses.add(nounoa);

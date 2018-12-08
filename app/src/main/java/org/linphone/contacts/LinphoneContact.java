@@ -119,6 +119,10 @@ public class LinphoneContact extends AndroidContact
         if (fn != null && fn.length() == 0 && ln != null && ln.length() == 0) return;
         if (fn != null && fn.equals(mFirstName) && ln != null && ln.equals(mLastName)) return;
 
+        if (commitChanges) {
+            setName(fn, ln);
+        }
+
         mFirstName = fn;
         mLastName = ln;
         if (mFullName == null) {
@@ -132,10 +136,6 @@ public class LinphoneContact extends AndroidContact
             } else if (mLastName != null && mLastName.length() > 0) {
                 mFullName = mLastName;
             }
-        }
-
-        if (commitChanges) {
-            setName(mFirstName, mLastName);
         }
     }
 
@@ -159,7 +159,7 @@ public class LinphoneContact extends AndroidContact
         if (org != null && org.equals(mOrganization)) return;
 
         if (commitChanges) {
-            setOrganization(org);
+            setOrganization(org, mOrganization);
         }
 
         mOrganization = org;
@@ -241,7 +241,7 @@ public class LinphoneContact extends AndroidContact
     public void removeNumberOrAddress(LinphoneNumberOrAddress noa) {
         if (noa != null && noa.getOldValue() != null) {
 
-            removeNumberOrAddress(noa.getOldValue());
+            removeNumberOrAddress(noa.getOldValue(), noa.isSIPAddress());
 
             if (isFriend()) {
                 if (noa.isSIPAddress()) {
