@@ -232,7 +232,7 @@ class AndroidContact implements Serializable {
         }
 
         if (oldValueToReplace != null) {
-            if (mAndroidId != null) {
+            if (mAndroidId == null) {
                 Log.e("[Contact] Can't update a number or address in non existing contact");
                 return;
             }
@@ -244,7 +244,63 @@ class AndroidContact implements Serializable {
                             + value
                             + " in contact "
                             + mAndroidId);
-            // TODO
+            if (isSIP) {
+                String select =
+                        ContactsContract.Data.CONTACT_ID
+                                + "=? AND ("
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? OR "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? OR "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=?) AND data1=?";
+                String[] args =
+                        new String[] {
+                            mAndroidId,
+                            "vnd.android.cursor.item/org.linphone.profile", // Old value
+                            ContactsManager.getInstance()
+                                    .getString(R.string.linphone_address_mime_type),
+                            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
+                            oldValueToReplace
+                        };
+
+                addChangesToCommit(
+                        ContentProviderOperation.newUpdate(Data.CONTENT_URI)
+                                .withSelection(select, args)
+                                .withValue(
+                                        Data.MIMETYPE,
+                                        ContactsManager.getInstance()
+                                                .getString(R.string.linphone_address_mime_type))
+                                .withValue("data1", value) // Value
+                                .withValue(
+                                        "data2",
+                                        ContactsManager.getInstance()
+                                                .getString(R.string.app_name)) // Summary
+                                .withValue("data3", value) // Detail
+                                .build());
+            } else {
+                String select =
+                        ContactsContract.Data.CONTACT_ID
+                                + "=? AND "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? AND data1=?";
+                String[] args =
+                        new String[] {
+                            mAndroidId,
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+                            oldValueToReplace
+                        };
+
+                addChangesToCommit(
+                        ContentProviderOperation.newUpdate(Data.CONTENT_URI)
+                                .withSelection(select, args)
+                                .withValue(Data.MIMETYPE, CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, value)
+                                .withValue(
+                                        ContactsContract.CommonDataKinds.Phone.TYPE,
+                                        CommonDataKinds.Phone.TYPE_MOBILE)
+                                .build());
+            }
         } else {
             if (mAndroidId == null) {
                 Log.i("[Contact] Adding number or address " + value + " to new contact.");
@@ -281,6 +337,33 @@ class AndroidContact implements Serializable {
                                 + value
                                 + " to existing contact "
                                 + mAndroidId);
+                if (isSIP) {
+                    addChangesToCommit(
+                            ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                    .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
+                                    .withValue(
+                                            Data.MIMETYPE,
+                                            ContactsManager.getInstance()
+                                                    .getString(R.string.linphone_address_mime_type))
+                                    .withValue("data1", value) // Value
+                                    .withValue(
+                                            "data2",
+                                            ContactsManager.getInstance()
+                                                    .getString(R.string.app_name)) // Summary
+                                    .withValue("data3", value) // Detail
+                                    .build());
+                } else {
+                    addChangesToCommit(
+                            ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                                    .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
+                                    .withValue(
+                                            Data.MIMETYPE, CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, value)
+                                    .withValue(
+                                            ContactsContract.CommonDataKinds.Phone.TYPE,
+                                            CommonDataKinds.Phone.TYPE_MOBILE)
+                                    .build());
+                }
             }
         }
     }
@@ -303,14 +386,20 @@ class AndroidContact implements Serializable {
             if (isSIP) {
                 String select =
                         ContactsContract.Data.CONTACT_ID
-                                + "=? AND "
+                                + "=? AND ("
                                 + ContactsContract.Data.MIMETYPE
-                                + "=? AND data1=?";
+                                + "=? OR "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=? OR "
+                                + ContactsContract.Data.MIMETYPE
+                                + "=?) AND data1=?";
                 String[] args =
                         new String[] {
                             mAndroidId,
+                            "vnd.android.cursor.item/org.linphone.profile", // Old value
                             ContactsManager.getInstance()
                                     .getString(R.string.linphone_address_mime_type),
+                            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
                             noa
                         };
 
