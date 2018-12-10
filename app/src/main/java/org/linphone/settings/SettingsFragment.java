@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -232,6 +233,10 @@ public class SettingsFragment extends PreferencesListFragment {
 
         if (!getResources().getBoolean(R.bool.enable_push_id)) {
             hidePreference(R.string.pref_push_notification_key);
+        }
+
+        if (!"huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER)) {
+            hidePreference(R.string.pref_huawei_protected_settings_key);
         }
 
         if (!Version.isVideoCapable()
@@ -1620,6 +1625,22 @@ public class SettingsFragment extends PreferencesListFragment {
                             public boolean onPreferenceChange(
                                     Preference preference, Object newValue) {
                                 mPrefs.setPushNotificationEnabled((Boolean) newValue);
+                                return true;
+                            }
+                        });
+
+        findPreference(getString(R.string.pref_huawei_protected_settings_key))
+                .setOnPreferenceClickListener(
+                        new OnPreferenceClickListener() {
+                            @Override
+                            public boolean onPreferenceClick(Preference preference) {
+                                LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                Intent intent = new Intent();
+                                intent.setComponent(
+                                        new ComponentName(
+                                                "com.huawei.systemmanager",
+                                                "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                                startActivity(intent);
                                 return true;
                             }
                         });

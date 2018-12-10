@@ -463,6 +463,8 @@
     <string name="pref_media_encryption">Media encryption</string>
     <string name="pref_push_notification">Enable push notifications</string>
     <string name="pref_ipv6_title">Allow IPv6</string>
+    <string name="pref_huawei_protected_settings_title">Huawei protected apps settings</string>
+    <string name="pref_huawei_protected_settings_desc">This app must be enabled in order to receive push notifications</string>
 
     <!-- Advanced settings -->
     <string name="pref_advanced_title">Advanced</string>

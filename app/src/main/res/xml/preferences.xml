@@ -348,6 +348,12 @@
                     android:persistent="false"
                     android:title="@string/pref_push_notification" />
 
+                <Preference
+                    android:key="@string/pref_huawei_protected_settings_key"
+                    android:persistent="false"
+                    android:summary="@string/pref_huawei_protected_settings_desc"
+                    android:title="@string/pref_huawei_protected_settings_title" />
+
                 <CheckBoxPreference
                     android:key="@string/pref_ipv6_key"
                     android:persistent="false"
