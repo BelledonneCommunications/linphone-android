@@ -155,6 +155,8 @@ public class LinphoneContact extends AndroidContact
     }
 
     public void setOrganization(String org, boolean commitChanges) {
+        if ((org == null || org.isEmpty()) && (mOrganization == null || mOrganization.isEmpty()))
+            return;
         if (org != null && org.equals(mOrganization)) return;
 
         if (commitChanges) {

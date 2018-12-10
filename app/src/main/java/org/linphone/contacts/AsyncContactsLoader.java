@@ -61,6 +61,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     @Override
     protected void onPreExecute() {
+        Log.i("[Contacts Manager] Synchronization started");
         if (mContext == null) {
             mContext = LinphoneService.instance().getApplicationContext();
         }
@@ -81,6 +82,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     @Override
     protected AsyncContactsData doInBackground(Void... params) {
+        Log.i("[Contacts Manager] Background synchronization started");
         Cursor c =
                 mContext.getContentResolver()
                         .query(
@@ -227,11 +229,13 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         Collections.sort(data.contacts);
         Collections.sort(data.sipContacts);
 
+        Log.i("[Contacts Manager] Background synchronization finished");
         return data;
     }
 
     @Override
     protected void onPostExecute(AsyncContactsData data) {
+
         for (ContactsUpdatedListener listener :
                 ContactsManager.getInstance().getContactsListeners()) {
             listener.onContactsUpdated();
@@ -249,6 +253,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
         ContactsManager.getInstance().setContacts(data.contacts);
         ContactsManager.getInstance().setSipContacts(data.sipContacts);
+        Log.i("[Contacts Manager] Synchronization finished");
     }
 
     class AsyncContactsData {

@@ -30,11 +30,8 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
-import androidx.core.util.Pair;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -77,7 +74,7 @@ class AndroidContact implements Serializable {
     }
 
     protected void addChangesToCommit(ContentProviderOperation operation) {
-        Log.d("[Contact] Added operation " + operation);
+        Log.i("[Contact] Added operation " + operation);
         mChangesToCommit.add(operation);
     }
 
@@ -107,17 +104,29 @@ class AndroidContact implements Serializable {
                             Log.i("[Contact] Contact created with ID " + mAndroidId);
                         }
                     } else {
-                        if (rawId.equals(mAndroidRawId)) {
-                            Log.i("[Contact] Contact with RAW ID " + rawId + " updated");
-                        } else {
+                        if (mAndroidRawId == null || !isAndroidRawIdLinphone) {
                             Log.i(
                                     "[Contact] Linphone RAW ID "
                                             + rawId
                                             + " created from existing RAW ID "
                                             + mAndroidRawId);
+                            mAndroidRawId = rawId;
+                            isAndroidRawIdLinphone = true;
                         }
+                        /*if (rawId.equals(mAndroidRawId)) {
+                            Log.i("[Contact] Contact with RAW ID " + rawId + " updated");
+                        } else {
+                            if (mAndroidRawId != null && isAndroidRawIdLinphone) {
+                                Log.w(
+                                        "[Contact] Linphone RAW ID "
+                                                + rawId
+                                                + " doesn't match existing RAW ID "
+                                                + mAndroidRawId);
+                            } else {
+
+                            }
+                        }*/
                     }
-                    mAndroidRawId = rawId;
                 }
             } catch (Exception e) {
                 Log.e("[Contact] Exception while saving changes: " + e);
@@ -198,7 +207,10 @@ class AndroidContact implements Serializable {
                             + " "
                             + ln
                             + " to existing contact "
-                            + mAndroidId);
+                            + mAndroidId
+                            + " ("
+                            + mAndroidRawId
+                            + ")");
             String select =
                     ContactsContract.Data.CONTACT_ID
                             + "=? AND "
@@ -243,7 +255,10 @@ class AndroidContact implements Serializable {
                             + " by "
                             + value
                             + " in contact "
-                            + mAndroidId);
+                            + mAndroidId
+                            + " ("
+                            + mAndroidRawId
+                            + ")");
             if (isSIP) {
                 String select =
                         ContactsContract.Data.CONTACT_ID
@@ -336,7 +351,10 @@ class AndroidContact implements Serializable {
                         "[Contact] Adding number or address "
                                 + value
                                 + " to existing contact "
-                                + mAndroidId);
+                                + mAndroidId
+                                + " ("
+                                + mAndroidRawId
+                                + ")");
                 if (isSIP) {
                     addChangesToCommit(
                             ContentProviderOperation.newInsert(Data.CONTENT_URI)
@@ -382,7 +400,10 @@ class AndroidContact implements Serializable {
                     "[Contact] Removing number or address "
                             + noa
                             + " from existing contact "
-                            + mAndroidId);
+                            + mAndroidId
+                            + " ("
+                            + mAndroidRawId
+                            + ")");
             if (isSIP) {
                 String select =
                         ContactsContract.Data.CONTACT_ID
@@ -461,7 +482,10 @@ class AndroidContact implements Serializable {
                         "[Contact] Updating organization "
                                 + org
                                 + " to existing contact "
-                                + mAndroidId);
+                                + mAndroidId
+                                + " ("
+                                + mAndroidRawId
+                                + ")");
                 addChangesToCommit(
                         ContentProviderOperation.newUpdate(ContactsContract.Data.CONTENT_URI)
                                 .withSelection(select, args)
@@ -477,7 +501,10 @@ class AndroidContact implements Serializable {
                         "[Contact] Setting organization "
                                 + org
                                 + " to existing contact "
-                                + mAndroidId);
+                                + mAndroidId
+                                + " ("
+                                + mAndroidRawId
+                                + ")");
                 addChangesToCommit(
                         ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                                 .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
@@ -509,7 +536,12 @@ class AndroidContact implements Serializable {
                             .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
                             .build());
         } else {
-            Log.i("[Contact] Setting picture to existing contact " + mAndroidId);
+            Log.i(
+                    "[Contact] Setting picture to existing contact "
+                            + mAndroidId
+                            + " ("
+                            + mAndroidRawId
+                            + ")");
             addChangesToCommit(
                     ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                             .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
@@ -521,83 +553,6 @@ class AndroidContact implements Serializable {
                             .withValue(ContactsContract.Data.IS_SUPER_PRIMARY, 1)
                             .build());
         }
-    }
-
-    protected void getAndroidIds() {
-        mAndroidRawId = findRawContactID();
-        if (LinphoneManager.getInstance()
-                .getContext()
-                .getResources()
-                .getBoolean(R.bool.use_linphone_tag)) {
-            String linphoneRawId = findLinphoneRawContactId();
-            if (linphoneRawId != null) {
-                mAndroidRawId = linphoneRawId;
-                isAndroidRawIdLinphone = true;
-            }
-        }
-    }
-
-    protected Pair<String, String> getContactNames() {
-        Pair<String, String> names = null;
-        ContentResolver resolver = LinphoneService.instance().getContentResolver();
-        String[] proj =
-                new String[] {
-                    ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
-                    ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME
-                };
-        String select =
-                ContactsContract.Data.CONTACT_ID
-                        + "=? AND "
-                        + ContactsContract.Data.MIMETYPE
-                        + "=?";
-        String[] args =
-                new String[] {
-                    mAndroidId, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE
-                };
-        Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, proj, select, args, null);
-        if (c != null) {
-            if (c.moveToFirst()) {
-                String fn =
-                        c.getString(
-                                c.getColumnIndex(
-                                        ContactsContract.CommonDataKinds.StructuredName
-                                                .GIVEN_NAME));
-                String ln =
-                        c.getString(
-                                c.getColumnIndex(
-                                        ContactsContract.CommonDataKinds.StructuredName
-                                                .FAMILY_NAME));
-                names = new Pair<>(fn, ln);
-            }
-            c.close();
-        }
-        return names;
-    }
-
-    protected String getNativeContactOrganization() {
-        String org = null;
-        ContentResolver resolver = LinphoneService.instance().getContentResolver();
-        String[] proj = new String[] {ContactsContract.CommonDataKinds.Organization.COMPANY};
-        String select =
-                ContactsContract.Data.CONTACT_ID
-                        + "=? AND "
-                        + ContactsContract.Data.MIMETYPE
-                        + "=?";
-        String[] args =
-                new String[] {
-                    mAndroidId, ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE
-                };
-        Cursor c = resolver.query(ContactsContract.Data.CONTENT_URI, proj, select, args, null);
-        if (c != null) {
-            if (c.moveToFirst()) {
-                org =
-                        c.getString(
-                                c.getColumnIndex(
-                                        ContactsContract.CommonDataKinds.Organization.COMPANY));
-            }
-            c.close();
-        }
-        return org;
     }
 
     protected String findRawContactID() {
@@ -622,67 +577,18 @@ class AndroidContact implements Serializable {
         return result;
     }
 
-    protected List<LinphoneNumberOrAddress> getAddressesAndNumbersForAndroidContact() {
-        List<LinphoneNumberOrAddress> result = new ArrayList<>();
-        ContentResolver resolver = LinphoneService.instance().getContentResolver();
-
-        String select =
-                ContactsContract.Data.CONTACT_ID
-                        + " =? AND ("
-                        + ContactsContract.Data.MIMETYPE
-                        + "=? OR "
-                        + ContactsContract.Data.MIMETYPE
-                        + "=? OR "
-                        + ContactsContract.Data.MIMETYPE
-                        + "=?)";
-        String[] projection =
-                new String[] {
-                    "data1", "data4", ContactsContract.Data.MIMETYPE
-                }; // PHONE_NUMBER == SIP_ADDRESS == "data1"...
-        Cursor c =
-                resolver.query(
-                        ContactsContract.Data.CONTENT_URI,
-                        projection,
-                        select,
-                        new String[] {
-                            mAndroidId,
-                            ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                            ContactsManager.getInstance()
-                                    .getString(R.string.linphone_address_mime_type)
-                        },
-                        null);
-        if (c != null) {
-            while (c.moveToNext()) {
-                String mime = c.getString(c.getColumnIndex(ContactsContract.Data.MIMETYPE));
-                if (mime != null && mime.length() > 0) {
-                    if (mime.equals(ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE)
-                            || mime.equals(
-                                    ContactsManager.getInstance()
-                                            .getString(R.string.linphone_address_mime_type))) {
-                        String number = c.getString(c.getColumnIndex("data1")); // SIP_ADDRESS
-                        result.add(new LinphoneNumberOrAddress(number, true));
-                    } else if (mime.equals(
-                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
-                        String number = c.getString(c.getColumnIndex("data1")); // PHONE_NUMBER
-                        String normalized_number =
-                                c.getString(c.getColumnIndex("data4")); // NORMALIZED_PHONE_NUMBER
-                        result.add(new LinphoneNumberOrAddress(number, normalized_number));
-                    }
-                }
-            }
-            c.close();
-        }
-        Collections.sort(result);
-        return result;
-    }
-
     protected void createRawLinphoneContactFromExistingAndroidContactIfNeeded(String fullName) {
         if (LinphoneManager.getInstance()
                 .getContext()
                 .getResources()
                 .getBoolean(R.bool.use_linphone_tag)) {
             if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
+                if (mAndroidRawId == null) {
+                    Log.i("[Contact] RAW ID not found for contact " + mAndroidId);
+                    mAndroidRawId = findRawContactID();
+                }
+                Log.i("[Contact] Found RAW ID for contact " + mAndroidId + " : " + mAndroidRawId);
+
                 String linphoneRawId = findLinphoneRawContactId();
                 if (linphoneRawId == null) {
                     Log.i("[Contact] Linphone RAW ID not found for contact " + mAndroidId);
@@ -715,17 +621,6 @@ class AndroidContact implements Serializable {
                         .build());
 
         addChangesToCommit(
-                ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-                        .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                        .withValue(
-                                ContactsContract.Data.MIMETYPE,
-                                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                        .withValue(
-                                ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
-                                fullName)
-                        .build());
-
-        addChangesToCommit(
                 ContentProviderOperation.newUpdate(
                                 ContactsContract.AggregationExceptions.CONTENT_URI)
                         .withValue(
@@ -738,7 +633,11 @@ class AndroidContact implements Serializable {
                                 ContactsContract.AggregationExceptions.RAW_CONTACT_ID2, 0)
                         .build());
 
-        Log.i("[Contact] Creating linphone contact");
+        Log.i(
+                "[Contact] Creating linphone RAW contact for contact "
+                        + mAndroidId
+                        + " linked with existing RAW contact "
+                        + mAndroidRawId);
         saveChangesCommited();
     }
 
