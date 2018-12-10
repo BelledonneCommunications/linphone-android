@@ -323,7 +323,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
         }
-        mContact.refresh();
+        // mContact.refresh();
         displayContact(mInflater, mView);
     }
 

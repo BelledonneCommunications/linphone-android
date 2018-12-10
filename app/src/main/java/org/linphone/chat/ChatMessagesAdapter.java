@@ -41,7 +41,7 @@ import org.linphone.utils.SelectableHelper;
 
 public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder>
         implements ChatMessagesGenericAdapter {
-    private static final int MAX_TIME_TO_GROUP_MESSAGES = 60;
+    private static final int MAX_TIME_TO_GROUP_MESSAGES = 300; // 5 minutes
 
     private final Context mContext;
     private List<EventLog> mHistory;

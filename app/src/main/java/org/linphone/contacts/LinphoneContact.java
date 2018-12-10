@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 import android.net.Uri;
-import androidx.core.util.Pair;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -430,7 +429,7 @@ public class LinphoneContact extends AndroidContact
 
     public void refresh() {
         mAddresses = new ArrayList<>();
-        if (isAndroidContact()) {
+        /*if (isAndroidContact()) {
             Pair<String, String> names = getContactNames();
             if (names != null) {
                 mFirstName = names.first;
@@ -444,7 +443,8 @@ public class LinphoneContact extends AndroidContact
             for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact()) {
                 addNumberOrAddress(noa);
             }
-        } else if (isFriend()) {
+        }*/
+        if (isFriend()) {
             mFullName = mFriend.getName();
             mLastName = mFriend.getVcard().getFamilyName();
             mFirstName = mFriend.getVcard().getGivenName();
