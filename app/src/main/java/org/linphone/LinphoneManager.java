@@ -1231,9 +1231,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         Log.i("New global state [", state, "]");
         if (state == GlobalState.On) {
             try {
-                Log.e("LinphoneManager", " onGlobalStateChanged ON");
                 initLiblinphone(lc);
-
             } catch (IllegalArgumentException iae) {
                 Log.e(iae);
             }

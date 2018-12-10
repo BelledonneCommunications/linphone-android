@@ -24,9 +24,7 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -37,7 +35,6 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
-import androidx.appcompat.app.AlertDialog;
 import java.util.ArrayList;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
@@ -257,11 +254,6 @@ public final class LinphoneService extends Service {
 
         BluetoothManager.getInstance().initBluetooth();
 
-        // For push notifications to work on Huawei device,
-        // app must be in "protected mode" in battery settings...
-        // https://stackoverflow.com/questions/31638986/protected-apps-setting-on-huawei-phones-and-how-to-handle-it
-        displayDialogIfDeviceIsHuawei();
-
         return START_REDELIVER_INTENT;
     }
 
@@ -417,45 +409,6 @@ public final class LinphoneService extends Service {
                 new Intent()
                         .setClass(this, mIncomingReceivedActivity)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
-
-    private void displayDialogIfDeviceIsHuawei() {
-        if ("huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER)) {
-            Log.w("[Service] Huawei device detected, asking for protected mode !");
-            if (!LinphonePreferences.instance().hasHuaweiDialogBeenPrompted()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.huawei_protected_app_dialog_title)
-                        .setMessage(R.string.huawei_protected_app_dialog_message)
-                        .setPositiveButton(
-                                R.string.huawei_protected_app_dialog_button_go_to_settings,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Log.w(
-                                                "[Service] Huawei device detected, user is going to battery settings :)");
-                                        LinphonePreferences.instance().huaweiDialogPrompted(true);
-                                        Intent intent = new Intent();
-                                        intent.setComponent(
-                                                new ComponentName(
-                                                        "com.huawei.systemmanager",
-                                                        "com.huawei.systemmanager.optimize.process.ProtectActivity"));
-                                        startActivity(intent);
-                                    }
-                                })
-                        .setNegativeButton(
-                                R.string.huawei_protected_app_dialog_button_later,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Log.w(
-                                                "[Service] Huawei device detected, user didn't go to battery settings :(");
-                                        LinphonePreferences.instance().huaweiDialogPrompted(true);
-                                    }
-                                })
-                        .create()
-                        .show();
-            }
-        }
     }
 
     /*Believe me or not, but knowing the application visibility state on Android is a nightmare.

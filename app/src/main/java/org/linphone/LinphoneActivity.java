@@ -27,6 +27,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -265,6 +266,13 @@ public class LinphoneActivity extends LinphoneGenericActivity
                                 displayCustomToast(
                                         getString(R.string.error_io_error), Toast.LENGTH_LONG);
                             }
+                        }
+
+                        if (state == RegistrationState.Ok) {
+                            // For push notifications to work on Huawei device,
+                            // app must be in "protected mode" in battery settings...
+                            // https://stackoverflow.com/questions/31638986/protected-apps-setting-on-huawei-phones-and-how-to-handle-it
+                            displayDialogIfDeviceIsHuawei();
                         }
                     }
 
@@ -1064,9 +1072,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     public void displayChatRoomError() {
-        final Dialog dialog =
-                LinphoneActivity.instance()
-                        .displayDialog(getString(R.string.chat_room_creation_failed));
+        final Dialog dialog = displayDialog(getString(R.string.chat_room_creation_failed));
         dialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
         Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
         cancel.setText(getString(R.string.ok));
@@ -2000,6 +2006,70 @@ public class LinphoneActivity extends LinphoneGenericActivity
             return cal1.get(Calendar.DAY_OF_YEAR) - cal2.get(Calendar.DAY_OF_YEAR);
         }
         return -1;
+    }
+
+    private void displayDialogIfDeviceIsHuawei() {
+        if ("huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER)) {
+            Log.w("[Hacks] Huawei device detected !");
+            if (!LinphonePreferences.instance().hasHuaweiDialogBeenPrompted()) {
+                Log.w("[Hacks] Huawei device detected, asking for protected mode !");
+
+                final Dialog dialog = new Dialog(this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
+                d.setAlpha(200);
+                dialog.setContentView(R.layout.dialog);
+                dialog.getWindow()
+                        .setLayout(
+                                WindowManager.LayoutParams.MATCH_PARENT,
+                                WindowManager.LayoutParams.MATCH_PARENT);
+                dialog.getWindow().setBackgroundDrawable(d);
+
+                TextView customText = dialog.findViewById(R.id.dialog_message);
+                customText.setText(R.string.huawei_protected_app_dialog_message);
+
+                TextView customTitle = dialog.findViewById(R.id.dialog_title);
+                customTitle.setText(R.string.huawei_protected_app_dialog_title);
+
+                Button accept = dialog.findViewById(R.id.dialog_ok_button);
+                accept.setVisibility(View.VISIBLE);
+                accept.setText(R.string.huawei_protected_app_dialog_button_go_to_settings);
+                accept.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.w(
+                                        "[Hacks] Huawei device detected, user is going to battery settings :)");
+                                LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                Intent intent = new Intent();
+                                intent.setComponent(
+                                        new ComponentName(
+                                                "com.huawei.systemmanager",
+                                                "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        });
+
+                Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+                cancel.setText(R.string.huawei_protected_app_dialog_button_later);
+                cancel.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.w(
+                                        "[Hacks] Huawei device detected, user didn't go to battery settings :(");
+                                LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                dialog.dismiss();
+                            }
+                        });
+
+                Button delete = dialog.findViewById(R.id.dialog_delete_button);
+                delete.setVisibility(View.GONE);
+
+                dialog.show();
+            }
+        }
     }
 
     private class LocalOrientationEventListener extends OrientationEventListener {
