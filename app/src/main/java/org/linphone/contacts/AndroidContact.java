@@ -390,13 +390,10 @@ class AndroidContact implements Serializable {
                                 + ContactsContract.Data.MIMETYPE
                                 + "=? OR "
                                 + ContactsContract.Data.MIMETYPE
-                                + "=? OR "
-                                + ContactsContract.Data.MIMETYPE
                                 + "=?) AND data1=?";
                 String[] args =
                         new String[] {
                             mAndroidId,
-                            "vnd.android.cursor.item/org.linphone.profile", // Old value
                             ContactsManager.getInstance()
                                     .getString(R.string.linphone_address_mime_type),
                             ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE,
@@ -503,10 +500,26 @@ class AndroidContact implements Serializable {
 
         if (mAndroidId == null) {
             Log.i("[Contact] Setting picture to new contact.");
-            // TODO
+            addChangesToCommit(
+                    ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(
+                                    ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+                            .build());
         } else {
             Log.i("[Contact] Setting picture to existing contact " + mAndroidId);
-            // TODO
+            addChangesToCommit(
+                    ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, mAndroidRawId)
+                            .withValue(
+                                    ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Photo.PHOTO, photo)
+                            .withValue(ContactsContract.Data.IS_PRIMARY, 1)
+                            .withValue(ContactsContract.Data.IS_SUPER_PRIMARY, 1)
+                            .build());
         }
     }
 
