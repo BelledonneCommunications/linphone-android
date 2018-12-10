@@ -306,11 +306,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             try {
                 accountManager.addAccountExplicitly(newAccount, null, null);
                 Log.i("[Contacts Manager] Contact account added");
+                makeContactAccountVisible();
             } catch (Exception e) {
                 Log.e("[Contacts Manager] Couldn't initialize sync account: " + e);
             }
         }
-        makeContactAccountVisible();
     }
 
     public synchronized LinphoneContact findContactFromAddress(Address address) {
