@@ -51,6 +51,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -2031,6 +2032,18 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 TextView customTitle = dialog.findViewById(R.id.dialog_title);
                 customTitle.setText(R.string.huawei_protected_app_dialog_title);
 
+                dialog.findViewById(R.id.dialog_do_not_ask_again_layout)
+                        .setVisibility(View.VISIBLE);
+                final CheckBox doNotAskAgain = dialog.findViewById(R.id.doNotAskAgain);
+                dialog.findViewById(R.id.doNotAskAgainLabel)
+                        .setOnClickListener(
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        doNotAskAgain.setChecked(!doNotAskAgain.isChecked());
+                                    }
+                                });
+
                 Button accept = dialog.findViewById(R.id.dialog_ok_button);
                 accept.setVisibility(View.VISIBLE);
                 accept.setText(R.string.huawei_protected_app_dialog_button_go_to_settings);
@@ -2040,7 +2053,10 @@ public class LinphoneActivity extends LinphoneGenericActivity
                             public void onClick(View v) {
                                 Log.w(
                                         "[Hacks] Huawei device detected, user is going to battery settings :)");
-                                LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                if (doNotAskAgain.isChecked()) {
+                                    LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                }
+
                                 Intent intent = new Intent();
                                 intent.setComponent(
                                         new ComponentName(
@@ -2059,7 +2075,9 @@ public class LinphoneActivity extends LinphoneGenericActivity
                             public void onClick(View v) {
                                 Log.w(
                                         "[Hacks] Huawei device detected, user didn't go to battery settings :(");
-                                LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                if (doNotAskAgain.isChecked()) {
+                                    LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                }
                                 dialog.dismiss();
                             }
                         });
