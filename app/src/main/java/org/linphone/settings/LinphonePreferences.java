@@ -1400,6 +1400,14 @@ public class LinphonePreferences {
         getLc().setMaxSizeForAutoDownloadIncomingFiles(size);
     }
 
+    public boolean hasHuaweiDialogBeenPrompted() {
+        return getConfig().getBool("app", "huawei_protected_mode_dialog", false);
+    }
+
+    public void huaweiDialogPrompted(boolean b) {
+        getConfig().setBool("app", "huawei_protected_mode_dialog", b);
+    }
+
     public static class AccountBuilder {
         private final Core lc;
         private String tempUsername;

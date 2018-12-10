@@ -489,6 +489,12 @@
     <string name="pref_audio_hacks_use_routing_api_title">Use routing API hack</string>
     <string name="pref_audio_hacks_use_galaxys_hack_title">Use Galaxy S audio hack</string>
 
+    <!-- Device specifics -->
+    <string name="huawei_protected_app_dialog_title">Huawei device detected!</string>
+    <string name="huawei_protected_app_dialog_message">It seems your device is a Huawei. In order for the app to be able to receive calls and messages while in background using push notifications, the protected toogle must be enabled in the settings.</string>
+    <string name="huawei_protected_app_dialog_button_go_to_settings">Go to settings</string>
+    <string name="huawei_protected_app_dialog_button_later">Later</string>
+
     <!-- Content description -->
     <string name="content_description_back">Back</string>
     <string name="content_description_dialer">Dialer</string>

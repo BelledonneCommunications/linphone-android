@@ -24,7 +24,9 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -35,6 +37,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
+import androidx.appcompat.app.AlertDialog;
 import java.util.ArrayList;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
@@ -109,7 +112,7 @@ public final class LinphoneService extends Service {
     }
 
     private void onBackgroundMode() {
-        Log.i("App has entered background mode");
+        Log.i("[Service] App has entered background mode");
         if (LinphonePreferences.instance() != null
                 && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             if (LinphoneManager.isInstanciated())
@@ -121,7 +124,7 @@ public final class LinphoneService extends Service {
     }
 
     private void onForegroundMode() {
-        Log.i("App has left background mode");
+        Log.i("[Service] App has left background mode");
         if (LinphonePreferences.instance() != null
                 && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             if (LinphoneManager.isInstanciated())
@@ -143,11 +146,11 @@ public final class LinphoneService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         if (intent.getBooleanExtra("PushNotification", false)) {
-            Log.i("[Push Notification] LinphoneService started because of a push");
+            Log.i("[Service] [Push Notification] LinphoneService started because of a push");
         }
 
         if (sInstance != null) {
-            Log.w("Attempt to start the LinphoneService but it is already running !");
+            Log.w("[Service] Attempt to start the LinphoneService but it is already running !");
             return START_REDELIVER_INTENT;
         }
 
@@ -164,7 +167,7 @@ public final class LinphoneService extends Service {
                                             Core lc, Call call, Call.State state, String message) {
                                         if (sInstance == null) {
                                             Log.i(
-                                                    "Service not ready, discarding call state change to ",
+                                                    "[Service] Service not ready, discarding call state change to ",
                                                     state.toString());
                                             return;
                                         }
@@ -254,6 +257,11 @@ public final class LinphoneService extends Service {
 
         BluetoothManager.getInstance().initBluetooth();
 
+        // For push notifications to work on Huawei device,
+        // app must be in "protected mode" in battery settings...
+        // https://stackoverflow.com/questions/31638986/protected-apps-setting-on-huawei-phones-and-how-to-handle-it
+        displayDialogIfDeviceIsHuawei();
+
         return START_REDELIVER_INTENT;
     }
 
@@ -331,9 +339,11 @@ public final class LinphoneService extends Service {
         }
 
         if (info != null) {
-            Log.i("Linphone version is ", info.versionName + " (" + info.versionCode + ")");
+            Log.i(
+                    "[Service] Linphone version is ",
+                    info.versionName + " (" + info.versionCode + ")");
         } else {
-            Log.i("Linphone version is unknown");
+            Log.i("[Service] Linphone version is unknown");
         }
     }
 
@@ -350,7 +360,7 @@ public final class LinphoneService extends Service {
                 lc.terminateAllCalls();
             }
 
-            Log.d("Task removed, stop service");
+            Log.d("[Service] Task removed, stop service");
 
             // If push is enabled, don't unregister account, otherwise do unregister
             if (LinphonePreferences.instance().isPushNotificationEnabled()) {
@@ -382,7 +392,7 @@ public final class LinphoneService extends Service {
 
         // This will prevent the app from crashing if the service gets killed in background mode
         if (LinphoneActivity.isInstanciated()) {
-            Log.w("Service is getting destroyed, finish LinphoneActivity");
+            Log.w("[Service] Service is getting destroyed, finish LinphoneActivity");
             LinphoneActivity.instance().finish();
         }
 
@@ -409,6 +419,45 @@ public final class LinphoneService extends Service {
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
+    private void displayDialogIfDeviceIsHuawei() {
+        if ("huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER)) {
+            Log.w("[Service] Huawei device detected, asking for protected mode !");
+            if (!LinphonePreferences.instance().hasHuaweiDialogBeenPrompted()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.huawei_protected_app_dialog_title)
+                        .setMessage(R.string.huawei_protected_app_dialog_message)
+                        .setPositiveButton(
+                                R.string.huawei_protected_app_dialog_button_go_to_settings,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Log.w(
+                                                "[Service] Huawei device detected, user is going to battery settings :)");
+                                        LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                        Intent intent = new Intent();
+                                        intent.setComponent(
+                                                new ComponentName(
+                                                        "com.huawei.systemmanager",
+                                                        "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                                        startActivity(intent);
+                                    }
+                                })
+                        .setNegativeButton(
+                                R.string.huawei_protected_app_dialog_button_later,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Log.w(
+                                                "[Service] Huawei device detected, user didn't go to battery settings :(");
+                                        LinphonePreferences.instance().huaweiDialogPrompted(true);
+                                    }
+                                })
+                        .create()
+                        .show();
+            }
+        }
+    }
+
     /*Believe me or not, but knowing the application visibility state on Android is a nightmare.
     After two days of hard work I ended with the following class, that does the job more or less reliabily.
     */
@@ -420,7 +469,7 @@ public final class LinphoneService extends Service {
 
         @Override
         public synchronized void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            Log.i("Activity created:" + activity);
+            Log.i("[Service] Activity created:" + activity);
             if (!activities.contains(activity)) activities.add(activity);
         }
 
@@ -431,27 +480,27 @@ public final class LinphoneService extends Service {
 
         @Override
         public synchronized void onActivityResumed(Activity activity) {
-            Log.i("Activity resumed:" + activity);
+            Log.i("[Service] Activity resumed:" + activity);
             if (activities.contains(activity)) {
                 mRunningActivities++;
-                Log.i("runningActivities=" + mRunningActivities);
+                Log.i("[Service] runningActivities=" + mRunningActivities);
                 checkActivity();
             }
         }
 
         @Override
         public synchronized void onActivityPaused(Activity activity) {
-            Log.i("Activity paused:" + activity);
+            Log.i("[Service] Activity paused:" + activity);
             if (activities.contains(activity)) {
                 mRunningActivities--;
-                Log.i("runningActivities=" + mRunningActivities);
+                Log.i("[Service] runningActivities=" + mRunningActivities);
                 checkActivity();
             }
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
-            Log.i("Activity stopped:" + activity);
+            Log.i("[Service] Activity stopped:" + activity);
         }
 
         @Override
@@ -459,7 +508,7 @@ public final class LinphoneService extends Service {
 
         @Override
         public synchronized void onActivityDestroyed(Activity activity) {
-            Log.i("Activity destroyed:" + activity);
+            Log.i("[Service] Activity destroyed:" + activity);
             activities.remove(activity);
         }
 
