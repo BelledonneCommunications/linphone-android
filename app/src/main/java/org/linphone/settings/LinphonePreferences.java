@@ -1400,12 +1400,12 @@ public class LinphonePreferences {
         getLc().setMaxSizeForAutoDownloadIncomingFiles(size);
     }
 
-    public boolean hasHuaweiDialogBeenPrompted() {
-        return getConfig().getBool("app", "huawei_protected_mode_dialog", false);
+    public boolean hasPowerSaverDialogBeenPrompted() {
+        return getConfig().getBool("app", "android_power_saver_dialog", false);
     }
 
-    public void huaweiDialogPrompted(boolean b) {
-        getConfig().setBool("app", "huawei_protected_mode_dialog", b);
+    public void powerSaverDialogPrompted(boolean b) {
+        getConfig().setBool("app", "android_power_saver_dialog", b);
     }
 
     public static class AccountBuilder {

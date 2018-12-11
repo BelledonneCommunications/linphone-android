@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,6 +63,7 @@ import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
+import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.LedPreference;
@@ -235,8 +235,8 @@ public class SettingsFragment extends PreferencesListFragment {
             hidePreference(R.string.pref_push_notification_key);
         }
 
-        if (!"huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER)) {
-            hidePreference(R.string.pref_huawei_protected_settings_key);
+        if (!DeviceUtils.hasDevicePowerManager(LinphoneActivity.instance())) {
+            hidePreference(R.string.pref_device_power_saver_settings_key);
         }
 
         if (!Version.isVideoCapable()
@@ -1629,17 +1629,15 @@ public class SettingsFragment extends PreferencesListFragment {
                             }
                         });
 
-        findPreference(getString(R.string.pref_huawei_protected_settings_key))
+        findPreference(getString(R.string.pref_device_power_saver_settings_key))
                 .setOnPreferenceClickListener(
                         new OnPreferenceClickListener() {
                             @Override
                             public boolean onPreferenceClick(Preference preference) {
-                                LinphonePreferences.instance().huaweiDialogPrompted(true);
-                                Intent intent = new Intent();
-                                intent.setComponent(
-                                        new ComponentName(
-                                                "com.huawei.systemmanager",
-                                                "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                                LinphonePreferences.instance().powerSaverDialogPrompted(true);
+                                Intent intent =
+                                        DeviceUtils.getDevicePowerManagerIntent(
+                                                LinphoneActivity.instance());
                                 startActivity(intent);
                                 return true;
                             }

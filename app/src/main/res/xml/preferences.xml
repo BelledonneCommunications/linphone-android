@@ -349,7 +349,7 @@
                     android:title="@string/pref_push_notification" />
 
                 <Preference
-                    android:key="@string/pref_huawei_protected_settings_key"
+                    android:key="@string/pref_device_power_saver_settings_key"
                     android:persistent="false"
                     android:summary="@string/pref_huawei_protected_settings_desc"
                     android:title="@string/pref_huawei_protected_settings_title" />

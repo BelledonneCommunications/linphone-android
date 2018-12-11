@@ -492,10 +492,10 @@
     <string name="pref_audio_hacks_use_galaxys_hack_title">Use Galaxy S audio hack</string>
 
     <!-- Device specifics -->
-    <string name="huawei_protected_app_dialog_title">Huawei device detected!</string>
-    <string name="huawei_protected_app_dialog_message">It seems your device is a Huawei. In order for the app to be able to receive calls and messages while in background using push notifications, the protected toogle must be enabled in the settings.</string>
-    <string name="huawei_protected_app_dialog_button_go_to_settings">Settings</string>
-    <string name="huawei_protected_app_dialog_button_later">Later</string>
+    <string name="device_power_saver_dialog_title">Power saver detected!</string>
+    <string name="device_power_saver_dialog_message">It seems your device has a power saver. In order for the app to be able to receive calls and messages while in background using push notifications, the app must be whitelisted.</string>
+    <string name="device_power_saver_dialog_button_go_to_settings">Settings</string>
+    <string name="device_power_saver_dialog_button_later">Later</string>
 
     <!-- Content description -->
     <string name="content_description_back">Back</string>

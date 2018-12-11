@@ -83,7 +83,7 @@
     <string name="pref_friendlist_subscribe_key">pref_friendlist_subscribe_key</string>
     <string name="pref_link_account_key">pref_link_account_key</string>
     <string name="pref_proxy_push_notif_key">pref_proxy_push_notif_key</string>
-    <string name="pref_huawei_protected_settings_key">pref_huawei_protected_settings_key</string>
+    <string name="pref_device_power_saver_settings_key">pref_huawei_protected_settings_key</string>
     <string name="pref_echo_cancellation_key">pref_echo_cancellation_key</string>
     <string name="pref_autostart_key">pref_autostart_key</string>
     <string name="pref_enable_outbound_proxy_key">Outbound proxy</string>
