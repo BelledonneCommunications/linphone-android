@@ -92,7 +92,7 @@ public class AssistantActivity extends Activity
 
     public DialPlan country;
 
-    private ImageView mBack, mCancel;
+    private ImageView mBack /*, mCancel*/;
     private AssistantFragmentsEnum mCurrentFragment;
     private AssistantFragmentsEnum mLastFragment;
     private AssistantFragmentsEnum mFirstFragment;
@@ -280,8 +280,8 @@ public class AssistantActivity extends Activity
     private void initUI() {
         mBack = findViewById(R.id.back);
         mBack.setOnClickListener(this);
-        mCancel = findViewById(R.id.assistant_cancel);
-        mCancel.setOnClickListener(this);
+        // mCancel = findViewById(R.id.assistant_cancel);
+        // mCancel.setOnClickListener(this);
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -296,7 +296,7 @@ public class AssistantActivity extends Activity
         int id = v.getId();
         boolean firstLaunch = LinphonePreferences.instance().isFirstLaunch();
 
-        if (id == R.id.assistant_cancel) {
+        /*if (id == R.id.assistant_cancel) {
             hideKeyboard();
             LinphonePreferences.instance().firstLaunchSuccessful();
             if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
@@ -305,9 +305,21 @@ public class AssistantActivity extends Activity
                 if (firstLaunch) startActivity(new Intent().setClass(this, LinphoneActivity.class));
                 finish();
             }
-        } else if (id == R.id.back) {
+        } else*/
+        if (id == R.id.back) {
             hideKeyboard();
-            onBackPressed();
+            if (mCurrentFragment == AssistantFragmentsEnum.WELCOME) {
+                LinphonePreferences.instance().firstLaunchSuccessful();
+                if (getResources().getBoolean(R.bool.assistant_cancel_move_to_back)) {
+                    moveTaskToBack(true);
+                } else {
+                    if (firstLaunch)
+                        startActivity(new Intent().setClass(this, LinphoneActivity.class));
+                    finish();
+                }
+            } else {
+                onBackPressed();
+            }
         }
     }
 
@@ -427,7 +439,7 @@ public class AssistantActivity extends Activity
             changeFragment(fragment);
             mCurrentFragment = AssistantFragmentsEnum.ECHO_CANCELLER_CALIBRATION;
             mBack.setVisibility(View.VISIBLE);
-            mCancel.setEnabled(false);
+            mBack.setEnabled(false);
         } else {
             checkAndRequestAudioPermission();
         }
@@ -529,14 +541,12 @@ public class AssistantActivity extends Activity
         changeFragment(mFragment);
         country = null;
         mCurrentFragment = AssistantFragmentsEnum.WELCOME;
-        mBack.setVisibility(View.INVISIBLE);
     }
 
     public void displayLoginGeneric() {
         mFragment = new LoginFragment();
         changeFragment(mFragment);
         mCurrentFragment = AssistantFragmentsEnum.LOGIN;
-        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayLoginLinphone(String username, String password) {
@@ -549,7 +559,6 @@ public class AssistantActivity extends Activity
         mFragment.setArguments(extras);
         changeFragment(mFragment);
         mCurrentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
-        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayCreateAccount() {
@@ -560,7 +569,6 @@ public class AssistantActivity extends Activity
         mFragment.setArguments(extra);
         changeFragment(mFragment);
         mCurrentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT;
-        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayRemoteProvisioning(String url) {
@@ -570,7 +578,6 @@ public class AssistantActivity extends Activity
         mFragment.setArguments(extra);
         changeFragment(mFragment);
         mCurrentFragment = AssistantFragmentsEnum.REMOTE_PROVISIONING;
-        mBack.setVisibility(View.VISIBLE);
     }
 
     public void displayQRCodeReader() {
@@ -581,7 +588,6 @@ public class AssistantActivity extends Activity
             mFragment = new QrCodeFragment();
             changeFragment(mFragment);
             mCurrentFragment = AssistantFragmentsEnum.QRCODE_READER;
-            mBack.setVisibility(View.VISIBLE);
         }
     }
 
@@ -590,7 +596,6 @@ public class AssistantActivity extends Activity
         changeFragment(mFragment);
         mLastFragment = mCurrentFragment;
         mCurrentFragment = AssistantFragmentsEnum.COUNTRY_CHOOSER;
-        mBack.setVisibility(View.VISIBLE);
     }
 
     private void launchDownloadCodec() {
@@ -603,8 +608,7 @@ public class AssistantActivity extends Activity
                 CodecDownloaderFragment codecFragment = new CodecDownloaderFragment();
                 changeFragment(codecFragment);
                 mCurrentFragment = AssistantFragmentsEnum.DOWNLOAD_CODEC;
-                mBack.setVisibility(View.VISIBLE);
-                mCancel.setEnabled(false);
+                mBack.setEnabled(false);
             } else goToLinphoneActivity();
         } else {
             goToLinphoneActivity();
@@ -706,7 +710,6 @@ public class AssistantActivity extends Activity
         changeFragment(fragment);
 
         mCurrentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_ACTIVATION;
-        mBack.setVisibility(View.INVISIBLE);
     }
 
     public void displayAssistantCodeConfirm(
@@ -723,7 +726,6 @@ public class AssistantActivity extends Activity
         changeFragment(fragment);
 
         mCurrentFragment = AssistantFragmentsEnum.CREATE_ACCOUNT_CODE_ACTIVATION;
-        mBack.setVisibility(View.INVISIBLE);
     }
 
     public void displayAssistantLinphoneLogin(String phone, String dialcode) {
@@ -736,7 +738,6 @@ public class AssistantActivity extends Activity
         changeFragment(fragment);
 
         mCurrentFragment = AssistantFragmentsEnum.LINPHONE_LOGIN;
-        mBack.setVisibility(View.VISIBLE);
     }
 
     public void isAccountVerified() {

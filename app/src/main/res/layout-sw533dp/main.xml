@@ -44,7 +44,7 @@
                     style="@style/font1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.6"
                     android:gravity="center"
                     android:maxLines="1"
                     android:padding="15dp" />

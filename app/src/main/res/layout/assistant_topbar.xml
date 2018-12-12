@@ -18,15 +18,21 @@
         android:src="@drawable/back" />
 
     <TextView
-        style="@style/font8"
+        style="@style/font1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.6"
-        android:background="@drawable/toolbar_button"
         android:gravity="center"
-        android:text="@string/assistant" />
+        android:maxLines="1"
+        android:padding="15dp"
+        android:text="@string/assistant"/>
 
-    <ImageView
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2" />
+
+    <!--<ImageView
         android:id="@+id/assistant_cancel"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -34,6 +40,6 @@
         android:background="@drawable/toolbar_button"
         android:contentDescription="@string/content_description_dialer_back"
         android:padding="15dp"
-        android:src="@drawable/dialer_back" />
+        android:src="@drawable/dialer_back" />-->
 
 </LinearLayout>
