@@ -1238,7 +1238,7 @@ public class CallActivity extends LinphoneGenericActivity
                         WindowManager.LayoutParams.MATCH_PARENT);
         mDialog.getWindow().setBackgroundDrawable(d);
 
-        TextView customText = mDialog.findViewById(R.id.customText);
+        TextView customText = mDialog.findViewById(R.id.dialog_message);
         customText.setText(getResources().getString(R.string.add_video_dialog));
         mDialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
         Button accept = mDialog.findViewById(R.id.dialog_ok_button);
