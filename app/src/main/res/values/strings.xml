@@ -21,6 +21,7 @@
     <string name="notification_replied_label">Sent reply: %s</string>
     <string name="notification_call_hangup_label">Hangup</string>
     <string name="notification_call_answer_label">Answer</string>
+    <string name="notification_mark_as_read_label">Mark as read</string>
 
     <!-- Common -->
     <string name="username">Username</string>

@@ -45,13 +45,8 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         final int notifId = intent.getIntExtra(Compatibility.INTENT_NOTIF_ID, 0);
         final String localyIdentity = intent.getStringExtra(Compatibility.INTENT_LOCAL_IDENTITY);
 
-        if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)) {
-            final String reply = getMessageText(intent).toString();
-            if (reply == null) {
-                Log.e("Couldn't get reply text");
-                onError(context, notifId);
-                return;
-            }
+        if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)
+                || intent.getAction().equals(Compatibility.INTENT_MARK_AS_READ_ACTION)) {
             String remoteSipAddr =
                     LinphoneService.instance()
                             .getNotificationManager()
@@ -59,21 +54,25 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             Core core = LinphoneManager.getLc();
             if (core == null) {
-                Log.e("Couldn't get Core instance");
+                Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 onError(context, notifId);
                 return;
             }
 
             Address remoteAddr = core.interpretUrl(remoteSipAddr);
             if (remoteAddr == null) {
-                Log.e("Couldn't interpret remote address " + remoteSipAddr);
+                Log.e(
+                        "[Notification Broadcast Receiver] Couldn't interpret remote address "
+                                + remoteSipAddr);
                 onError(context, notifId);
                 return;
             }
 
             Address localAddr = core.interpretUrl(localyIdentity);
             if (localAddr == null) {
-                Log.e("Couldn't interpret local address " + localyIdentity);
+                Log.e(
+                        "[Notification Broadcast Receiver] Couldn't interpret local address "
+                                + localyIdentity);
                 onError(context, notifId);
                 return;
             }
@@ -81,7 +80,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             ChatRoom room = core.findChatRoom(remoteAddr, localAddr);
             if (room == null) {
                 Log.e(
-                        "Couldn't find chat room for remote address "
+                        "[Notification Broadcast Receiver] Couldn't find chat room for remote address "
                                 + remoteSipAddr
                                 + " and local address "
                                 + localyIdentity);
@@ -95,24 +94,37 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                         .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
             }
 
-            ChatMessage msg = room.createMessage(reply);
-            msg.send();
-            msg.setListener(
-                    new ChatMessageListenerStub() {
-                        @Override
-                        public void onMsgStateChanged(ChatMessage msg, ChatMessage.State state) {
-                            if (state == ChatMessage.State.Delivered) {
-                                Notification replied =
-                                        Compatibility.createRepliedNotification(context, reply);
-                                LinphoneService.instance()
-                                        .getNotificationManager()
-                                        .sendNotification(notifId, replied);
-                            } else if (state == ChatMessage.State.NotDelivered) {
-                                Log.e("Couldn't send reply, message is not delivered");
-                                onError(context, notifId);
+            if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)) {
+                final String reply = getMessageText(intent).toString();
+                if (reply == null) {
+                    Log.e("[Notification Broadcast Receiver] Couldn't get reply text");
+                    onError(context, notifId);
+                    return;
+                }
+
+                ChatMessage msg = room.createMessage(reply);
+                msg.send();
+                msg.setListener(
+                        new ChatMessageListenerStub() {
+                            @Override
+                            public void onMsgStateChanged(
+                                    ChatMessage msg, ChatMessage.State state) {
+                                if (state == ChatMessage.State.Delivered) {
+                                    Notification replied =
+                                            Compatibility.createRepliedNotification(context, reply);
+                                    LinphoneService.instance()
+                                            .getNotificationManager()
+                                            .sendNotification(notifId, replied);
+                                } else if (state == ChatMessage.State.NotDelivered) {
+                                    Log.e(
+                                            "[Notification Broadcast Receiver] Couldn't send reply, message is not delivered");
+                                    onError(context, notifId);
+                                }
                             }
-                        }
-                    });
+                        });
+            } else {
+                LinphoneService.instance().getNotificationManager().dismissNotification(notifId);
+            }
         } else if (intent.getAction().equals(Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION)
                 || intent.getAction().equals(Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION)) {
             String remoteAddr =
@@ -122,12 +134,14 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             Core core = LinphoneManager.getLc();
             if (core == null) {
-                Log.e("Couldn't get Core instance");
+                Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 return;
             }
             Call call = core.findCallFromUri(remoteAddr);
             if (call == null) {
-                Log.e("Couldn't find call from remote address " + remoteAddr);
+                Log.e(
+                        "[Notification Broadcast Receiver] Couldn't find call from remote address "
+                                + remoteAddr);
                 return;
             }
 

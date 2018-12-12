@@ -20,53 +20,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
-import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
-import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
-import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
-import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Person;
-import android.app.RemoteInput;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import org.linphone.R;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
-import org.linphone.notifications.NotificationBroadcastReceiver;
 
 @TargetApi(28)
 class ApiTwentyEightPlus {
     public static Notification createMessageNotification(
             Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
-        String replyLabel = context.getResources().getString(R.string.notification_reply_label);
-        RemoteInput remoteInput =
-                new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
-
-        Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
-        replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
-        replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
-        replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
-
-        PendingIntent replyPendingIntent =
-                PendingIntent.getBroadcast(
-                        context,
-                        notif.getNotificationId(),
-                        replyIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification.Action action =
-                new Notification.Action.Builder(
-                                R.drawable.chat_send_over,
-                                context.getString(R.string.notification_reply_label),
-                                replyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .setAllowGeneratedReplies(true)
-                        .build();
 
         Person me = new Person.Builder().setName(notif.getMyself()).build();
         Notification.MessagingStyle style = new Notification.MessagingStyle(me);
@@ -105,7 +74,8 @@ class ApiTwentyEightPlus {
                 .setShowWhen(true)
                 .setColor(context.getColor(R.color.notification_color_led))
                 .setStyle(style)
-                .addAction(action)
+                .addAction(ApiTwentyFourPlus.getReplyMessageAction(context, notif))
+                .addAction(ApiTwentyFourPlus.getMarkMessageAsReadAction(context, notif))
                 .build();
     }
 }

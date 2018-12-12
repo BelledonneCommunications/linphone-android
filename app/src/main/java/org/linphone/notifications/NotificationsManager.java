@@ -361,4 +361,8 @@ public class NotificationsManager {
                         pendingIntent);
         sendNotification(IN_APP_NOTIF_ID, notif);
     }
+
+    public void dismissNotification(int notifId) {
+        mNM.cancel(notifId);
+    }
 }

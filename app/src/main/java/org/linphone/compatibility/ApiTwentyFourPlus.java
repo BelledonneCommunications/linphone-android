@@ -23,6 +23,7 @@ import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 import static org.linphone.compatibility.Compatibility.INTENT_ANSWER_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_HANGUP_CALL_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_LOCAL_IDENTITY;
+import static org.linphone.compatibility.Compatibility.INTENT_MARK_AS_READ_ACTION;
 import static org.linphone.compatibility.Compatibility.INTENT_NOTIF_ID;
 import static org.linphone.compatibility.Compatibility.INTENT_REPLY_NOTIF_ACTION;
 import static org.linphone.compatibility.Compatibility.KEY_TEXT_REPLY;
@@ -52,30 +53,6 @@ class ApiTwentyFourPlus {
 
     public static Notification createMessageNotification(
             Context context, Notifiable notif, Bitmap contactIcon, PendingIntent intent) {
-        String replyLabel = context.getResources().getString(R.string.notification_reply_label);
-        RemoteInput remoteInput =
-                new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
-
-        Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
-        replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
-        replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
-        replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
-
-        PendingIntent replyPendingIntent =
-                PendingIntent.getBroadcast(
-                        context,
-                        notif.getNotificationId(),
-                        replyIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification.Action action =
-                new Notification.Action.Builder(
-                                R.drawable.chat_send_over,
-                                context.getString(R.string.notification_reply_label),
-                                replyPendingIntent)
-                        .addRemoteInput(remoteInput)
-                        .setAllowGeneratedReplies(true)
-                        .build();
 
         Notification.MessagingStyle style = new Notification.MessagingStyle(notif.getMyself());
         for (NotifiableMessage message : notif.getMessages()) {
@@ -108,7 +85,8 @@ class ApiTwentyFourPlus {
                 .setShowWhen(true)
                 .setColor(context.getColor(R.color.notification_color_led))
                 .setStyle(style)
-                .addAction(action)
+                .addAction(getReplyMessageAction(context, notif))
+                .addAction(getMarkMessageAsReadAction(context, notif))
                 .build();
     }
 
@@ -121,14 +99,6 @@ class ApiTwentyFourPlus {
             Bitmap contactIcon,
             String contactName,
             PendingIntent intent) {
-
-        Intent hangupIntent = new Intent(context, NotificationBroadcastReceiver.class);
-        hangupIntent.setAction(INTENT_HANGUP_CALL_NOTIF_ACTION);
-        hangupIntent.putExtra(INTENT_NOTIF_ID, callId);
-
-        PendingIntent hangupPendingIntent =
-                PendingIntent.getBroadcast(
-                        context, callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder =
                 new Notification.Builder(context)
@@ -144,26 +114,101 @@ class ApiTwentyFourPlus {
                         .setWhen(System.currentTimeMillis())
                         .setShowWhen(true)
                         .setColor(context.getColor(R.color.notification_color_led))
-                        .addAction(
-                                R.drawable.call_hangup,
-                                context.getString(R.string.notification_call_hangup_label),
-                                hangupPendingIntent);
+                        .addAction(getCallDeclineAction(context, callId));
 
         if (showAnswerAction) {
-            Intent answerIntent = new Intent(context, NotificationBroadcastReceiver.class);
-            answerIntent.setAction(INTENT_ANSWER_CALL_NOTIF_ACTION);
-            answerIntent.putExtra(INTENT_NOTIF_ID, callId);
-
-            PendingIntent answerPendingIntent =
-                    PendingIntent.getBroadcast(
-                            context, callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            builder.addAction(
-                    R.drawable.call_audio_start,
-                    context.getString(R.string.notification_call_answer_label),
-                    answerPendingIntent);
+            builder.addAction(getCallAnswerAction(context, callId));
         }
 
         return builder.build();
+    }
+
+    public static Notification.Action getReplyMessageAction(Context context, Notifiable notif) {
+        String replyLabel = context.getResources().getString(R.string.notification_reply_label);
+        RemoteInput remoteInput =
+                new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel(replyLabel).build();
+
+        Intent replyIntent = new Intent(context, NotificationBroadcastReceiver.class);
+        replyIntent.setAction(INTENT_REPLY_NOTIF_ACTION);
+        replyIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
+        replyIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
+
+        PendingIntent replyPendingIntent =
+                PendingIntent.getBroadcast(
+                        context,
+                        notif.getNotificationId(),
+                        replyIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Action replyAction =
+                new Notification.Action.Builder(
+                                R.drawable.chat_send_over,
+                                context.getString(R.string.notification_reply_label),
+                                replyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .setAllowGeneratedReplies(true)
+                        .build();
+        return replyAction;
+    }
+
+    public static Notification.Action getMarkMessageAsReadAction(
+            Context context, Notifiable notif) {
+        Intent markAsReadIntent = new Intent(context, NotificationBroadcastReceiver.class);
+        markAsReadIntent.setAction(INTENT_MARK_AS_READ_ACTION);
+        markAsReadIntent.putExtra(INTENT_NOTIF_ID, notif.getNotificationId());
+        markAsReadIntent.putExtra(INTENT_LOCAL_IDENTITY, notif.getLocalIdentity());
+
+        PendingIntent markAsReadPendingIntent =
+                PendingIntent.getBroadcast(
+                        context,
+                        notif.getNotificationId(),
+                        markAsReadIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Action markAsReadAction =
+                new Notification.Action.Builder(
+                                R.drawable.chat_send_over,
+                                context.getString(R.string.notification_mark_as_read_label),
+                                markAsReadPendingIntent)
+                        .build();
+
+        return markAsReadAction;
+    }
+
+    public static Notification.Action getCallAnswerAction(Context context, int callId) {
+        Intent answerIntent = new Intent(context, NotificationBroadcastReceiver.class);
+        answerIntent.setAction(INTENT_ANSWER_CALL_NOTIF_ACTION);
+        answerIntent.putExtra(INTENT_NOTIF_ID, callId);
+
+        PendingIntent answerPendingIntent =
+                PendingIntent.getBroadcast(
+                        context, callId, answerIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Action answerAction =
+                new Notification.Action.Builder(
+                                R.drawable.call_audio_start,
+                                context.getString(R.string.notification_call_answer_label),
+                                answerPendingIntent)
+                        .build();
+
+        return answerAction;
+    }
+
+    public static Notification.Action getCallDeclineAction(Context context, int callId) {
+        Intent hangupIntent = new Intent(context, NotificationBroadcastReceiver.class);
+        hangupIntent.setAction(INTENT_HANGUP_CALL_NOTIF_ACTION);
+        hangupIntent.putExtra(INTENT_NOTIF_ID, callId);
+
+        PendingIntent hangupPendingIntent =
+                PendingIntent.getBroadcast(
+                        context, callId, hangupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Action declineAction =
+                new Notification.Action.Builder(
+                                R.drawable.call_hangup,
+                                context.getString(R.string.notification_call_hangup_label),
+                                hangupPendingIntent)
+                        .build();
+        return declineAction;
     }
 }
