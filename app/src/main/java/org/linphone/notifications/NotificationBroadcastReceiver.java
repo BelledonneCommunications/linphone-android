@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.RemoteInput;
 import android.content.BroadcastReceiver;
@@ -159,7 +158,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
         LinphoneService.instance().getNotificationManager().sendNotification(notifId, replyError);
     }
 
-    @TargetApi(20)
     private CharSequence getMessageText(Intent intent) {
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
