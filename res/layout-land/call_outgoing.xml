@@ -54,18 +54,19 @@
 
 				<ImageView
 					android:id="@+id/contact_picture"
-					android:src="@drawable/avatar"
-					android:contentDescription="@string/content_description_contact_picture"
-					android:layout_width="200dp"
-					android:layout_height="wrap_content"
-					android:adjustViewBounds="true"/>
-
-				<ImageView
-					android:src="@drawable/avatar_mask_border"
 					android:layout_width="200dp"
 					android:layout_height="wrap_content"
 					android:adjustViewBounds="true"
-					android:layout_alignParentTop="true"/>
+					android:contentDescription="@string/content_description_contact_picture"
+					android:src="@drawable/avatar_big_secure1" />
+
+				<ImageView
+					android:layout_width="200dp"
+					android:layout_height="wrap_content"
+					android:layout_alignParentTop="true"
+					android:adjustViewBounds="true"
+					android:src="@drawable/avatar_mask_border"
+					android:visibility="gone" />
 
 			</RelativeLayout>
 

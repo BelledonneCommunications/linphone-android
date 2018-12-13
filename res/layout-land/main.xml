@@ -110,16 +110,17 @@
 
 					<TextView
 						android:id="@+id/missed_calls"
-						style="@style/font18"
 						android:layout_width="20dp"
 						android:layout_height="20dp"
 						android:layout_alignParentEnd="true"
 						android:layout_alignParentRight="true"
-						android:layout_marginRight="5dp"
 						android:layout_marginTop="15dp"
+						android:layout_marginRight="5dp"
 						android:background="@drawable/history_chat_indicator"
 						android:gravity="center"
-						android:visibility="gone"/>
+						android:textAlignment="center"
+						android:textSize="15sp"
+						android:visibility="invisible" />
 
 				</RelativeLayout>
 
