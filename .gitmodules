@@ -125,4 +125,4 @@
 	url = git@gitlab.linphone.org:BC/public/lime.git
 [submodule "submodules/externals/decaf"]
 	path = submodules/externals/decaf
-	url = git://git.linphone.org/decaf.git
+	url = https://gitlab.linphone.org/BC/public/external/decaf.git
