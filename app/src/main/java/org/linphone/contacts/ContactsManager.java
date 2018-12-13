@@ -403,21 +403,18 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             if (lf.hasCapability(FriendCapability.GroupChat)
                     && !mGroupChatContacts.contains(contact)) {
                 mGroupChatContacts.add(contact);
-                Collections.sort(mGroupChatContacts);
                 Log.i("[Contacts Manager] Contact " + contact + " has group chat capability");
 
                 // Contact may only have LimeX3DH capability if it already has GroupChat capability
                 if (lf.hasCapability(FriendCapability.LimeX3Dh)
                         && !mLimeX3dhContacts.contains(contact)) {
                     mLimeX3dhContacts.add(contact);
-                    Collections.sort(mLimeX3dhContacts);
                     Log.i("[Contacts Manager] Contact " + contact + " has lime x3dh capability");
                 }
             }
 
             if (!mSipContacts.contains(contact)) {
                 mSipContacts.add(contact);
-                Collections.sort(mSipContacts);
                 return true;
             }
         }
@@ -468,12 +465,21 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     @Override
     public void onPresenceReceived(FriendList list, Friend[] friends) {
+        boolean updated = false;
         for (Friend lf : friends) {
             boolean newContact = ContactsManager.getInstance().refreshSipContact(lf);
             if (newContact) {
-                for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
-                    listener.onContactsUpdated();
-                }
+                updated = true;
+            }
+        }
+
+        if (updated) {
+            Collections.sort(mSipContacts);
+            Collections.sort(mGroupChatContacts);
+            Collections.sort(mLimeX3dhContacts);
+
+            for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
+                listener.onContactsUpdated();
             }
         }
     }
