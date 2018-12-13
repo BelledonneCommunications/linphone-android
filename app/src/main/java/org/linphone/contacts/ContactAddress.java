@@ -23,6 +23,7 @@ import android.view.View;
 import java.io.Serializable;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
+import org.linphone.core.FriendCapability;
 
 public class ContactAddress implements Serializable {
     private LinphoneContact mContact;
@@ -116,6 +117,10 @@ public class ContactAddress implements Serializable {
 
     public boolean isLinphoneContact() {
         return mIsLinphoneContact;
+    }
+
+    public boolean hasCapability(FriendCapability capability) {
+        return mContact.hasFriendCapability(capability);
     }
 
     private void init(LinphoneContact c, String a, String pn, boolean isLC) {

@@ -28,6 +28,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
+import org.linphone.core.FriendCapability;
 import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
@@ -486,5 +487,11 @@ public class LinphoneContact extends AndroidContact
         if (isFriend()) {
             deleteFriend();
         }
+    }
+
+    public boolean hasFriendCapability(FriendCapability capability) {
+        if (!isFriend()) return false;
+
+        return getFriend().hasCapability(capability);
     }
 }

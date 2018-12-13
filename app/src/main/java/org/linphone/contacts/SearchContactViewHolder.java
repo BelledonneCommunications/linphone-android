@@ -33,16 +33,20 @@ public class SearchContactViewHolder extends RecyclerView.ViewHolder
     public final ImageView linphoneContact;
     public final ImageView isSelect;
     public final RelativeLayout avatarLayout;
+    public final View disabled;
 
     private final ClickListener mListener;
 
     public SearchContactViewHolder(View view, ClickListener listener) {
         super(view);
+
         name = view.findViewById(R.id.contact_name);
         address = view.findViewById(R.id.contact_address);
         linphoneContact = view.findViewById(R.id.contact_linphone);
         isSelect = view.findViewById(R.id.contact_is_select);
         avatarLayout = view.findViewById(R.id.avatar_layout);
+        disabled = view.findViewById(R.id.disabled);
+
         mListener = listener;
         view.setOnClickListener(this);
     }

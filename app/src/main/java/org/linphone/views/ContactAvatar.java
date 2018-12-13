@@ -85,6 +85,16 @@ public class ContactAvatar {
         }
     }
 
+    private static void showHasLimeX3dhCapability(View v) {
+        ContactAvatarHolder holder = new ContactAvatarHolder(v);
+        if (holder.securityLevel != null) {
+            holder.securityLevel.setVisibility(View.VISIBLE);
+            holder.securityLevel.setImageResource(R.drawable.security_toogle_icon_green);
+        } else {
+            holder.securityLevel.setVisibility(View.GONE);
+        }
+    }
+
     public static void setAvatarMask(View v, int resourceId) {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.avatarMask.setImageResource(resourceId);
@@ -149,6 +159,14 @@ public class ContactAvatar {
             holder.generatedAvatar.setVisibility(View.VISIBLE);
         }
         holder.securityLevel.setVisibility(View.GONE);
+    }
+
+    public static void displayAvatar(
+            LinphoneContact contact, boolean hasLimeX3dhCapability, View v) {
+        displayAvatar(contact, v);
+        if (hasLimeX3dhCapability) {
+            showHasLimeX3dhCapability(v);
+        }
     }
 
     public static void displayAvatar(

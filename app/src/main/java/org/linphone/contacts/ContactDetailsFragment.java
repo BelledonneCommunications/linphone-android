@@ -42,6 +42,7 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.FriendCapability;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
@@ -297,9 +298,9 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 v.findViewById(R.id.contact_chat_secured).setTag(value);
             }
 
-            if (v.findViewById(R.id.friendLinphone).getVisibility()
-                            == View.VISIBLE /* TODO Does mContact have LIME capability ?*/
-                    && lpc.getConferenceFactoryUri() != null) {
+            if (v.findViewById(R.id.friendLinphone).getVisibility() == View.VISIBLE
+                    && lpc.getConferenceFactoryUri() != null
+                    && mContact.hasFriendCapability(FriendCapability.LimeX3Dh)) {
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.VISIBLE);
             } else {
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.GONE);

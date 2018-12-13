@@ -32,6 +32,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
+import org.linphone.core.FriendCapability;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
@@ -47,20 +48,23 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
     private final ProgressBar mProgressBar;
     private boolean mOnlySipContact = false;
     private SearchContactViewHolder.ClickListener mListener;
-    private final boolean mHideSelectionMark;
+    private final boolean mIsOnlyOnePersonSelection;
     private String mPreviousSearch;
+    private boolean mSecurityEnabled;
 
     public SearchContactsAdapter(
             List<ContactAddress> contactsList,
             ProgressBar pB,
             SearchContactViewHolder.ClickListener clickListener,
-            boolean hideSelectionMark) {
-        mHideSelectionMark = hideSelectionMark;
+            boolean hideSelectionMark,
+            boolean isSecurityEnabled) {
+        mIsOnlyOnePersonSelection = hideSelectionMark;
         mListener = clickListener;
         mProgressBar = pB;
         setContactsSelectedList(null);
         setContactsList(contactsList);
         mPreviousSearch = null;
+        mSecurityEnabled = isSecurityEnabled;
     }
 
     public List<ContactAddress> getContacts() {
@@ -69,6 +73,11 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
 
     public void setOnlySipContact(boolean enable) {
         mOnlySipContact = enable;
+    }
+
+    public void setSecurityEnabled(boolean enable) {
+        mSecurityEnabled = enable;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -113,12 +122,19 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
             holder.name.setVisibility(View.GONE);
         }
 
+        holder.disabled.setVisibility(View.GONE);
         if (c != null) {
             if (c.getFullName() == null && c.getFirstName() == null && c.getLastName() == null) {
                 c.setFullName(holder.name.getText().toString());
             }
-            ContactAvatar.displayAvatar(c, holder.avatarLayout);
-            // TODO get if contact has security capabilities
+            ContactAvatar.displayAvatar(
+                    c, c.hasFriendCapability(FriendCapability.LimeX3Dh), holder.avatarLayout);
+
+            if ((!mIsOnlyOnePersonSelection && !c.hasFriendCapability(FriendCapability.GroupChat))
+                    || (mSecurityEnabled && !c.hasFriendCapability(FriendCapability.LimeX3Dh))) {
+                // Disable row, contact doesn't have the required capabilities
+                holder.disabled.setVisibility(View.VISIBLE);
+            }
         } else {
             ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
         }
@@ -137,7 +153,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
             } else {
                 holder.isSelect.setVisibility(View.INVISIBLE);
             }
-            if (mHideSelectionMark) {
+            if (mIsOnlyOnePersonSelection) {
                 holder.isSelect.setVisibility(View.GONE);
             }
         }

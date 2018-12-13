@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +53,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.Core;
+import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Log;
@@ -134,7 +136,11 @@ public class ChatRoomCreationFragment extends Fragment
 
         mSearchAdapter =
                 new SearchContactsAdapter(
-                        null, mContactsFetchInProgress, this, !mCreateGroupChatRoom);
+                        null,
+                        mContactsFetchInProgress,
+                        this,
+                        !mCreateGroupChatRoom,
+                        mChatRoomEncrypted);
 
         mSearchField = view.findViewById(R.id.searchField);
         mSearchField.setOnQueryTextListener(
@@ -155,24 +161,32 @@ public class ChatRoomCreationFragment extends Fragment
         mAllContactsToggle = view.findViewById(R.id.layout_all_contacts);
 
         mSecurityToggle = view.findViewById(R.id.security_toogle);
+        mSecurityToggle.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        setSecurityEnabled(isChecked);
+                    }
+                });
         mSecurityToggleOn = view.findViewById(R.id.security_toogle_on);
         mSecurityToggleOff = view.findViewById(R.id.security_toogle_off);
         mSecurityToggleOn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mSecurityToggle.setChecked(true);
+                        setSecurityEnabled(true);
                     }
                 });
         mSecurityToggleOff.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mSecurityToggle.setChecked(false);
+                        setSecurityEnabled(false);
                     }
                 });
 
         mSecurityToggle.setChecked(mChatRoomEncrypted);
+        mSearchAdapter.setSecurityEnabled(mChatRoomEncrypted);
         ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
         if ((mChatRoomSubject != null && mChatRoomAddress != null)
                 || (lpc == null || lpc.getConferenceFactoryUri() == null)) {
@@ -236,7 +250,7 @@ public class ChatRoomCreationFragment extends Fragment
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance().displayChatRoomError();
                             Log.e(
-                                    "Group chat room for address "
+                                    "[Chat Room Creation] Group chat room for address "
                                             + cr.getPeerAddress()
                                             + " has failed !");
                         }
@@ -284,6 +298,30 @@ public class ChatRoomCreationFragment extends Fragment
         }
         ContactsManager.getInstance().removeContactsListener(this);
         super.onPause();
+    }
+
+    private void setSecurityEnabled(boolean enabled) {
+        mChatRoomEncrypted = enabled;
+        mSecurityToggle.setChecked(mChatRoomEncrypted);
+        mSearchAdapter.setSecurityEnabled(mChatRoomEncrypted);
+
+        if (enabled) {
+            // Remove all contacts added before LIME switch was set
+            // and that can stay because they don't have the capability
+            for (ContactAddress ca : mContactsSelected) {
+                mContactsSelectedLayout.removeAllViews();
+                if (ca.isSelect() && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
+                    mContactsSelected.remove(getIndexOfCa(ca, mContactsSelected));
+                }
+                for (ContactAddress contactAddress : mContactsSelected) {
+                    if (contactAddress.getView() != null) {
+                        mContactsSelectedLayout.addView(contactAddress.getView());
+                    }
+                }
+                mSearchAdapter.setContactsSelectedList(mContactsSelected);
+                mContactsSelectedLayout.invalidate();
+            }
+        }
     }
 
     private void displayChatCreation() {
@@ -507,6 +545,21 @@ public class ChatRoomCreationFragment extends Fragment
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         ProxyConfig lpc = lc.getDefaultProxyConfig();
         boolean createEncryptedChatRoom = mSecurityToggle.isChecked();
+
+        if (createEncryptedChatRoom && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
+            Log.w(
+                    "[Chat Room Creation] Contact "
+                            + ca.getContact()
+                            + " doesn't have LIME X3DH capability !");
+            return;
+        } else if (mCreateGroupChatRoom && !ca.hasCapability(FriendCapability.GroupChat)) {
+            Log.w(
+                    "[Chat Room Creation] Contact "
+                            + ca.getContact()
+                            + " doesn't have group chat capability !");
+            return;
+        }
+
         if (lpc == null || lpc.getConferenceFactoryUri() == null || !mCreateGroupChatRoom) {
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
                 mChatRoom =

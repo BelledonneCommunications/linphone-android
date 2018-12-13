@@ -23,4 +23,5 @@
 
     <color name="transparent">#00000000</color>
     <color name="linphone_launcher_icon_background">@color/colorA</color>
+    <color name="contact_disabled">#99ffffff</color>
 </resources>
