@@ -52,7 +52,9 @@ import org.linphone.receivers.BluetoothManager;
 import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.LinphoneGL2JNIViewOverlay;
 import org.linphone.views.LinphoneOverlay;
+import org.linphone.views.LinphoneTextureViewOverlay;
 
 /**
  * Linphone service, reacting to Incoming calls, ...<br>
@@ -290,19 +292,24 @@ public final class LinphoneService extends Service {
     public void createOverlay() {
         if (mOverlay != null) destroyOverlay();
 
-        Call call = LinphoneManager.getLc().getCurrentCall();
+        Core core = LinphoneManager.getLc();
+        Call call = core.getCurrentCall();
         if (call == null || !call.getCurrentParams().videoEnabled()) return;
 
-        mOverlay = new LinphoneOverlay(this);
+        if ("MSAndroidOpenGLDisplay".equals(core.getVideoDisplayFilter())) {
+            mOverlay = new LinphoneGL2JNIViewOverlay(this);
+        } else {
+            mOverlay = new LinphoneTextureViewOverlay(this);
+        }
         WindowManager.LayoutParams params = mOverlay.getWindowManagerLayoutParams();
         params.x = 0;
         params.y = 0;
-        mWindowManager.addView(mOverlay, params);
+        mOverlay.addToWindowManager(mWindowManager, params);
     }
 
     public void destroyOverlay() {
         if (mOverlay != null) {
-            mWindowManager.removeViewImmediate(mOverlay);
+            mOverlay.removeFromWindowManager(mWindowManager);
             mOverlay.destroy();
         }
         mOverlay = null;
