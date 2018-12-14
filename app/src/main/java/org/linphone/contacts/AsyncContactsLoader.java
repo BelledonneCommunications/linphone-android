@@ -111,7 +111,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                         }
                     } else {
                         if (friend.getRefKey() != null) {
-                            // Friend has a refkey and but no LinphoneContact => represents a
+                            // Friend has a refkey but no LinphoneContact => represents a
                             // native contact stored in db from a previous version of Linphone,
                             // remove it
                             list.removeFriend(friend);
