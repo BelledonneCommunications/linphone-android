@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -31,21 +30,20 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Address;
-import org.linphone.core.Factory;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
+import org.linphone.mediastream.Log;
 import org.linphone.views.ContactAvatar;
 
 public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactViewHolder> {
     @SuppressWarnings("unused")
     private static final String TAG = SearchContactsAdapter.class.getSimpleName();
 
-    private List<ContactAddress> mContacts;
+    private List<SearchResult> mContacts;
     private List<ContactAddress> mContactsSelected;
-    private final ProgressBar mProgressBar;
     private boolean mOnlySipContact = false;
     private SearchContactViewHolder.ClickListener mListener;
     private final boolean mIsOnlyOnePersonSelection;
@@ -53,21 +51,18 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
     private boolean mSecurityEnabled;
 
     public SearchContactsAdapter(
-            List<ContactAddress> contactsList,
-            ProgressBar pB,
             SearchContactViewHolder.ClickListener clickListener,
             boolean hideSelectionMark,
             boolean isSecurityEnabled) {
         mIsOnlyOnePersonSelection = hideSelectionMark;
         mListener = clickListener;
-        mProgressBar = pB;
         setContactsSelectedList(null);
-        setContactsList(contactsList);
         mPreviousSearch = null;
         mSecurityEnabled = isSecurityEnabled;
+        mContacts = new ArrayList<>();
     }
 
-    public List<ContactAddress> getContacts() {
+    public List<SearchResult> getContacts() {
         return mContacts;
     }
 
@@ -91,47 +86,59 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
 
     @Override
     public void onBindViewHolder(@NonNull SearchContactViewHolder holder, int position) {
-        ContactAddress contact = getItem(position);
-        final String a =
-                (contact.getAddressAsDisplayableString().isEmpty())
-                        ? contact.getPhoneNumber()
-                        : contact.getAddressAsDisplayableString();
-        LinphoneContact c = contact.getContact();
+        SearchResult searchResult = getItem(position);
 
-        String address = contact.getAddressAsDisplayableString();
-        if (c != null && c.getFullName() != null) {
-            if (address == null) address = c.getPresenceModelForUriOrTel(a);
+        LinphoneContact contact;
+        if (searchResult.getAddress() == null) {
+            contact =
+                    ContactsManager.getInstance()
+                            .findContactFromPhoneNumber(searchResult.getPhoneNumber());
+        } else {
+            contact =
+                    ContactsManager.getInstance().findContactFromAddress(searchResult.getAddress());
+        }
+
+        final String numberOrAddress =
+                (searchResult.getPhoneNumber() != null)
+                        ? searchResult.getPhoneNumber()
+                        : searchResult.getAddress().asStringUriOnly();
+
+        holder.name.setVisibility(View.GONE);
+        if (contact != null && contact.getFullName() != null) {
             holder.name.setVisibility(View.VISIBLE);
-            holder.name.setText(c.getFullName());
-        } else if (contact.getAddress() != null) {
-            if (contact.getAddress().getUsername() != null) {
+            holder.name.setText(contact.getFullName());
+        } else if (searchResult.getAddress() != null) {
+            if (searchResult.getAddress().getUsername() != null) {
                 holder.name.setVisibility(View.VISIBLE);
-                holder.name.setText(contact.getAddress().getUsername());
-            } else if (contact.getAddress().getDisplayName() != null) {
+                holder.name.setText(searchResult.getAddress().getUsername());
+            } else if (searchResult.getAddress().getDisplayName() != null) {
                 holder.name.setVisibility(View.VISIBLE);
-                holder.name.setText(contact.getAddress().getDisplayName());
+                holder.name.setText(searchResult.getAddress().getDisplayName());
             }
-        } else if (address != null) {
-            Address tmpAddr = Factory.instance().createAddress(address);
+        } else if (searchResult.getAddress() != null) {
             holder.name.setVisibility(View.VISIBLE);
             holder.name.setText(
-                    (tmpAddr.getDisplayName() != null)
-                            ? tmpAddr.getDisplayName()
-                            : tmpAddr.getUsername());
-        } else {
-            holder.name.setVisibility(View.GONE);
+                    (searchResult.getAddress().getDisplayName() != null)
+                            ? searchResult.getAddress().getDisplayName()
+                            : searchResult.getAddress().getUsername());
         }
 
         holder.disabled.setVisibility(View.GONE);
-        if (c != null) {
-            if (c.getFullName() == null && c.getFirstName() == null && c.getLastName() == null) {
-                c.setFullName(holder.name.getText().toString());
+        if (contact != null) {
+            if (contact.getFullName() == null
+                    && contact.getFirstName() == null
+                    && contact.getLastName() == null) {
+                contact.setFullName(holder.name.getText().toString());
             }
             ContactAvatar.displayAvatar(
-                    c, c.hasFriendCapability(FriendCapability.LimeX3Dh), holder.avatarLayout);
+                    contact,
+                    contact.hasFriendCapability(FriendCapability.LimeX3Dh),
+                    holder.avatarLayout);
 
-            if ((!mIsOnlyOnePersonSelection && !c.hasFriendCapability(FriendCapability.GroupChat))
-                    || (mSecurityEnabled && !c.hasFriendCapability(FriendCapability.LimeX3Dh))) {
+            if ((!mIsOnlyOnePersonSelection
+                            && !searchResult.hasCapability(FriendCapability.GroupChat))
+                    || (mSecurityEnabled
+                            && !searchResult.hasCapability(FriendCapability.LimeX3Dh))) {
                 // Disable row, contact doesn't have the required capabilities
                 holder.disabled.setVisibility(View.VISIBLE);
             }
@@ -139,16 +146,18 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
             ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
         }
 
-        holder.address.setText(a);
+        holder.address.setText(numberOrAddress);
         if (holder.linphoneContact != null) {
-            if (contact.isLinphoneContact() && c != null && c.isInFriendList() && address != null) {
+            holder.linphoneContact.setVisibility(View.GONE);
+            if (searchResult.getFriend() != null
+                    && contact != null
+                    && contact.getBasicStatusFromPresenceModelForUriOrTel(numberOrAddress)
+                            == PresenceBasicStatus.Open) {
                 holder.linphoneContact.setVisibility(View.VISIBLE);
-            } else {
-                holder.linphoneContact.setVisibility(View.GONE);
             }
         }
         if (holder.isSelect != null) {
-            if (contactIsSelected(contact)) {
+            if (contactIsSelected(searchResult)) {
                 holder.isSelect.setVisibility(View.VISIBLE);
             } else {
                 holder.isSelect.setVisibility(View.INVISIBLE);
@@ -163,15 +172,16 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return position;
     }
 
-    private boolean contactIsSelected(ContactAddress ca) {
+    private boolean contactIsSelected(SearchResult sr) {
         for (ContactAddress c : mContactsSelected) {
             Address addr = c.getAddress();
-            if (addr.getUsername() != null && ca.getAddress() != null) {
-                if (addr.asStringUriOnly().compareTo(ca.getAddress().asStringUriOnly()) == 0)
+            if (addr != null && sr.getAddress() != null) {
+                if (addr.weakEqual(sr.getAddress())) {
                     return true;
+                }
             } else {
-                if (c.getPhoneNumber() != null && ca.getPhoneNumber() != null) {
-                    if (c.getPhoneNumber().compareTo(ca.getPhoneNumber()) == 0) return true;
+                if (c.getPhoneNumber() != null && sr.getPhoneNumber() != null) {
+                    if (c.getPhoneNumber().compareTo(sr.getPhoneNumber()) == 0) return true;
                 }
             }
         }
@@ -190,63 +200,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         }
     }
 
-    public List<ContactAddress> getContactsList() {
-        List<ContactAddress> list = new ArrayList<>();
-        if (ContactsManager.getInstance().hasContacts()) {
-            List<LinphoneContact> contacts =
-                    mOnlySipContact
-                            ? ContactsManager.getInstance().getSIPContacts()
-                            : ContactsManager.getInstance().getContacts();
-            for (LinphoneContact contact : contacts) {
-                for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-                    if (!mOnlySipContact
-                            || (mOnlySipContact
-                                    && (noa.isSIPAddress()
-                                            || contact.getPresenceModelForUriOrTel(noa.getValue())
-                                                    != null))) {
-                        ContactAddress ca = null;
-                        if (noa.isSIPAddress()) {
-                            Address address = LinphoneManager.getLc().interpretUrl(noa.getValue());
-                            if (address != null) {
-                                ca =
-                                        new ContactAddress(
-                                                contact,
-                                                address.asString(),
-                                                "",
-                                                contact.isFriend());
-                            }
-                        } else {
-                            ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
-                            String number =
-                                    (prx != null)
-                                            ? prx.normalizePhoneNumber(noa.getValue())
-                                            : noa.getValue();
-                            ca = new ContactAddress(contact, "", number, contact.isFriend());
-                        }
-                        if (ca != null) list.add(ca);
-                    }
-                }
-            }
-        }
-
-        for (ContactAddress caS : mContactsSelected) {
-            for (ContactAddress ca : list) {
-                if (ca.equals(caS)) ca.setSelect(true);
-            }
-        }
-        return list;
-    }
-
-    private void setContactsList(List<ContactAddress> contactsList) {
-        if (contactsList == null) {
-            mContacts = getContactsList();
-            if (mProgressBar != null) mProgressBar.setVisibility(View.GONE);
-        } else {
-            mContacts = contactsList;
-        }
-    }
-
-    private ContactAddress getItem(int position) {
+    private SearchResult getItem(int position) {
         return mContacts.get(position);
     }
 
@@ -255,8 +209,8 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return mContacts.size();
     }
 
-    public void searchContacts(String search, RecyclerView resultContactsSearch) {
-        List<ContactAddress> result = new ArrayList<>();
+    public void searchContacts(String search) {
+        List<SearchResult> result = new ArrayList<>();
 
         if (mPreviousSearch != null) {
             if (mPreviousSearch.length() > search.length()) {
@@ -268,77 +222,39 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         String domain = "";
         ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
         if (prx != null) domain = prx.getDomain();
-        SearchResult[] results =
+        SearchResult[] searchResults =
                 ContactsManager.getInstance()
                         .getMagicSearch()
                         .getContactListFromFilter(search, mOnlySipContact ? domain : "");
-        for (SearchResult sr : results) {
-            boolean found = false;
-            LinphoneContact contact =
-                    ContactsManager.getInstance().findContactFromAddress(sr.getAddress());
-            if (contact == null) {
-                contact = new LinphoneContact();
+
+        for (SearchResult sr : searchResults) {
+            if (sr.getAddress() != null) {
+                Log.e("### " + sr.getPhoneNumber() + " / " + sr.getAddress().asString());
+            } else {
+                Log.e("### " + sr.getPhoneNumber());
+            }
+            if (LinphoneActivity.instance()
+                    .getResources()
+                    .getBoolean(R.bool.hide_sip_contacts_without_presence)) {
                 if (sr.getFriend() != null) {
-                    contact.setFriend(sr.getFriend());
-                    contact.refresh();
-                }
-            }
-            if (sr.getAddress() != null || sr.getPhoneNumber() != null) {
-                for (ContactAddress ca : result) {
-                    String normalizedPhoneNumber =
-                            (ca != null && ca.getPhoneNumber() != null && prx != null)
-                                    ? prx.normalizePhoneNumber(ca.getPhoneNumber())
-                                    : null;
-                    if ((sr.getAddress() != null
-                                    && ca.getAddress() != null
-                                    && ca.getAddress()
-                                            .asStringUriOnly()
-                                            .equals(sr.getAddress().asStringUriOnly()))
-                            || (sr.getPhoneNumber() != null
-                                    && normalizedPhoneNumber != null
-                                    && sr.getPhoneNumber().equals(normalizedPhoneNumber))) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                if (LinphoneActivity.instance()
-                        .getResources()
-                        .getBoolean(R.bool.hide_sip_contacts_without_presence)) {
-                    if (contact.getFriend() != null) {
-                        for (LinphoneNumberOrAddress noa : contact.getNumbersOrAddresses()) {
-                            PresenceModel pm =
-                                    contact.getFriend().getPresenceModelForUriOrTel(noa.getValue());
-                            if (pm != null
-                                    && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
-                                result.add(
-                                        new ContactAddress(
-                                                contact,
-                                                (sr.getAddress() != null)
-                                                        ? sr.getAddress().asStringUriOnly()
-                                                        : "",
-                                                sr.getPhoneNumber(),
-                                                contact.isFriend()));
-                                break;
-                            }
+                    PresenceModel pm =
+                            sr.getFriend()
+                                    .getPresenceModelForUriOrTel(sr.getAddress().asStringUriOnly());
+                    if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                        result.add(sr);
+                    } else {
+                        pm = sr.getFriend().getPresenceModelForUriOrTel(sr.getPhoneNumber());
+                        if (pm != null && pm.getBasicStatus().equals(PresenceBasicStatus.Open)) {
+                            result.add(sr);
                         }
                     }
-                } else {
-                    result.add(
-                            new ContactAddress(
-                                    contact,
-                                    (sr.getAddress() != null)
-                                            ? sr.getAddress().asStringUriOnly()
-                                            : "",
-                                    sr.getPhoneNumber(),
-                                    contact.isFriend()));
                 }
+            } else {
+                result.add(sr);
             }
         }
 
         mContacts = result;
-        resultContactsSearch.setAdapter(this);
         notifyDataSetChanged();
     }
 }

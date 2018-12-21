@@ -521,7 +521,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (!to.startsWith("sip:") || !to.contains("@")) {
             LinphoneContact contact = ContactsManager.getInstance().findContactFromPhoneNumber(to);
             if (contact != null) {
-                String alias = contact.getPresenceModelForUriOrTel(to);
+                String alias = contact.getContactFromPresenceModelForUriOrTel(to);
                 if (alias != null) {
                     to = alias;
                 }

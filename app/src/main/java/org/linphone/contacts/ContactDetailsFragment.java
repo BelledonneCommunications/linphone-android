@@ -276,7 +276,7 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                                 });
             }
 
-            String contactAddress = mContact.getPresenceModelForUriOrTel(noa.getValue());
+            String contactAddress = mContact.getContactFromPresenceModelForUriOrTel(noa.getValue());
             if (!mDisplayChatAddressOnly) {
                 v.findViewById(R.id.contact_call).setOnClickListener(mDialListener);
                 if (contactAddress != null) {
@@ -299,8 +299,8 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
             }
 
             if (v.findViewById(R.id.friendLinphone).getVisibility() == View.VISIBLE
-                    && lpc.getConferenceFactoryUri() != null
-                    && mContact.hasFriendCapability(FriendCapability.LimeX3Dh)) {
+                    && mContact.hasPresenceModelForUriOrTelCapability(
+                            noa.getValue(), FriendCapability.LimeX3Dh)) {
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.VISIBLE);
             } else {
                 v.findViewById(R.id.contact_chat_secured).setVisibility(View.GONE);

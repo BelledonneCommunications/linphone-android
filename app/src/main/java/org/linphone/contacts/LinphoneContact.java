@@ -403,11 +403,25 @@ public class LinphoneContact extends AndroidContact
         return false;
     }
 
-    public String getPresenceModelForUriOrTel(String uri) {
+    public String getContactFromPresenceModelForUriOrTel(String uri) {
         if (mFriend != null && mFriend.getPresenceModelForUriOrTel(uri) != null) {
             return mFriend.getPresenceModelForUriOrTel(uri).getContact();
         }
         return null;
+    }
+
+    public PresenceBasicStatus getBasicStatusFromPresenceModelForUriOrTel(String uri) {
+        if (mFriend != null && mFriend.getPresenceModelForUriOrTel(uri) != null) {
+            return mFriend.getPresenceModelForUriOrTel(uri).getBasicStatus();
+        }
+        return PresenceBasicStatus.Closed;
+    }
+
+    public boolean hasPresenceModelForUriOrTelCapability(String uri, FriendCapability capability) {
+        if (mFriend != null && mFriend.getPresenceModelForUriOrTel(uri) != null) {
+            return mFriend.getPresenceModelForUriOrTel(uri).hasCapability(capability);
+        }
+        return false;
     }
 
     private void createFriend() {

@@ -79,7 +79,7 @@ public class ContactAddress implements Serializable {
 
     public Address getAddress() {
         String presence =
-                mContact.getPresenceModelForUriOrTel(
+                mContact.getContactFromPresenceModelForUriOrTel(
                         (mPhoneNumber != null && !mPhoneNumber.isEmpty())
                                 ? mPhoneNumber
                                 : mAddress);
@@ -113,10 +113,6 @@ public class ContactAddress implements Serializable {
 
     public String getPhoneNumber() {
         return mPhoneNumber;
-    }
-
-    public boolean isLinphoneContact() {
-        return mIsLinphoneContact;
     }
 
     public boolean hasCapability(FriendCapability capability) {
