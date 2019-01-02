@@ -60,7 +60,7 @@ class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> {
         LinphoneContact c = ca.getContact();
 
         holder.name.setText(
-                (c.getFullName() != null)
+                (c != null && c.getFullName() != null)
                         ? c.getFullName()
                         : (ca.getDisplayName() != null) ? ca.getDisplayName() : ca.getUsername());
 

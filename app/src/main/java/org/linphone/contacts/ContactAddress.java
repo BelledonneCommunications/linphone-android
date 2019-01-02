@@ -78,11 +78,14 @@ public class ContactAddress implements Serializable {
     }
 
     public Address getAddress() {
-        String presence =
-                mContact.getContactFromPresenceModelForUriOrTel(
-                        (mPhoneNumber != null && !mPhoneNumber.isEmpty())
-                                ? mPhoneNumber
-                                : mAddress);
+        String presence = null;
+        if (mContact != null) {
+            presence =
+                    mContact.getContactFromPresenceModelForUriOrTel(
+                            (mPhoneNumber != null && !mPhoneNumber.isEmpty())
+                                    ? mPhoneNumber
+                                    : mAddress);
+        }
         Address addr = Factory.instance().createAddress(presence != null ? presence : mAddress);
         // Remove the user=phone URI param if existing, it will break everything otherwise
         if (addr.hasUriParam("user")) {
