@@ -40,13 +40,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.contacts.SearchContactViewHolder;
 import org.linphone.contacts.SearchContactsAdapter;
 import org.linphone.core.Address;
@@ -68,7 +68,6 @@ public class ChatRoomCreationFragment extends Fragment
     private RecyclerView mContactsList;
     private LinearLayout mContactsSelectedLayout;
     private HorizontalScrollView mContactsSelectLayout;
-    private ArrayList<ContactAddress> mContactsSelected;
     private ImageView mAllContactsButton, mLinphoneContactsButton, mBackButton, mNextButton;
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
@@ -91,14 +90,14 @@ public class ChatRoomCreationFragment extends Fragment
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.chat_create, container, false);
 
-        mContactsSelected = new ArrayList<>();
+        ArrayList<ContactAddress> selectedContacts = new ArrayList<>();
         mChatRoomSubject = null;
         mChatRoomAddress = null;
         mCreateGroupChatRoom = false;
 
         if (getArguments() != null) {
             if (getArguments().getSerializable("selectedContacts") != null) {
-                mContactsSelected =
+                selectedContacts =
                         (ArrayList<ContactAddress>)
                                 getArguments().getSerializable("selectedContacts");
             }
@@ -208,19 +207,16 @@ public class ChatRoomCreationFragment extends Fragment
         mContactsList.setLayoutManager(layoutManager);
 
         if (savedInstanceState != null
-                && savedInstanceState.getStringArrayList("mContactsSelected") != null) {
+                && savedInstanceState.getStringArrayList("selectedContacts") != null) {
             mContactsSelectedLayout.removeAllViews();
             // We need to get all contacts not only sip
-            // TODO
-            /*for (String uri : savedInstanceState.getStringArrayList("mContactsSelected")) {
-                for (ContactAddress ca : mSearchAdapter.getContactsList()) {
-                    if (ca.getAddressAsDisplayableString().compareTo(uri) == 0) {
-                        ca.setView(null);
-                        addSelectedContactAddress(ca);
-                        break;
-                    }
-                }
-            }*/
+            selectedContacts =
+                    (ArrayList<ContactAddress>)
+                            savedInstanceState.getSerializable("selectedContacts");
+        }
+
+        if (selectedContacts.size() != 0) {
+            mSearchAdapter.setContactsSelectedList(selectedContacts);
             updateList();
             updateListSelected();
         }
@@ -304,25 +300,23 @@ public class ChatRoomCreationFragment extends Fragment
         if (enabled) {
             // Remove all contacts added before LIME switch was set
             // and that can stay because they don't have the capability
-            for (ContactAddress ca : mContactsSelected) {
-                mContactsSelectedLayout.removeAllViews();
-                if (ca.isSelect() && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
-                    mContactsSelected.remove(getIndexOfCa(ca, mContactsSelected));
-                }
-                for (ContactAddress contactAddress : mContactsSelected) {
-                    if (contactAddress.getView() != null) {
-                        mContactsSelectedLayout.addView(contactAddress.getView());
+            mContactsSelectedLayout.removeAllViews();
+            for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
+                if (!ca.hasCapability(FriendCapability.LimeX3Dh)) {
+                    mSearchAdapter.toggleContactSelection(ca);
+                } else {
+                    if (ca.getView() != null) {
+                        mContactsSelectedLayout.addView(ca.getView());
                     }
                 }
-                mSearchAdapter.setContactsSelectedList(mContactsSelected);
-                mContactsSelectedLayout.invalidate();
             }
+            mContactsSelectedLayout.invalidate();
         }
     }
 
     private void displayChatCreation() {
         mNextButton.setVisibility(View.VISIBLE);
-        mNextButton.setEnabled(mContactsSelected.size() > 0);
+        mNextButton.setEnabled(mSearchAdapter.getContactsSelectedList().size() > 0);
 
         mContactsList.setVisibility(View.VISIBLE);
         mSearchLayout.setVisibility(View.VISIBLE);
@@ -369,9 +363,8 @@ public class ChatRoomCreationFragment extends Fragment
         }
 
         mContactsSelectedLayout.removeAllViews();
-        if (mContactsSelected.size() > 0) {
-            mSearchAdapter.setContactsSelectedList(mContactsSelected);
-            for (ContactAddress ca : mContactsSelected) {
+        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
+            for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
                 addSelectedContactAddress(ca);
             }
         }
@@ -383,26 +376,12 @@ public class ChatRoomCreationFragment extends Fragment
     }
 
     private void updateListSelected() {
-        if (mContactsSelected.size() > 0) {
+        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
             mContactsSelectLayout.invalidate();
             mNextButton.setEnabled(true);
         } else {
             mNextButton.setEnabled(false);
         }
-    }
-
-    private int getIndexOfCa(ContactAddress ca, List<ContactAddress> caList) {
-        for (int i = 0; i < caList.size(); i++) {
-            if (ca.getAddress() != null && ca.getAddress().getUsername() != null) {
-                if (caList.get(i)
-                                .getAddressAsDisplayableString()
-                                .compareTo(ca.getAddressAsDisplayableString())
-                        == 0) return i;
-            } else if (ca.getPhoneNumber() != null && caList.get(i).getPhoneNumber() != null) {
-                if (ca.getPhoneNumber().compareTo(caList.get(i).getPhoneNumber()) == 0) return i;
-            }
-        }
-        return -1;
     }
 
     private void resetAndResearch() {
@@ -436,44 +415,35 @@ public class ChatRoomCreationFragment extends Fragment
         mContactsSelectedLayout.invalidate();
     }
 
-    private void updateContactsClick(ContactAddress ca, List<ContactAddress> caSelectedList) {
-        ca.setSelect((getIndexOfCa(ca, caSelectedList) == -1));
-        if (ca.isSelect()) {
+    private void updateContactsClick(ContactAddress ca) {
+        boolean isSelected = mSearchAdapter.toggleContactSelection(ca);
+        if (isSelected) {
             ContactSelectView csv = new ContactSelectView(LinphoneActivity.instance());
             csv.setListener(this);
             csv.setContactName(ca);
-            mContactsSelected.add(ca);
             addSelectedContactAddress(ca);
         } else {
-            mContactsSelected.remove(getIndexOfCa(ca, mContactsSelected));
             mContactsSelectedLayout.removeAllViews();
-            for (ContactAddress contactAddress : mContactsSelected) {
+            for (ContactAddress contactAddress : mSearchAdapter.getContactsSelectedList()) {
                 if (contactAddress.getView() != null)
                     mContactsSelectedLayout.addView(contactAddress.getView());
             }
         }
-        mSearchAdapter.setContactsSelectedList(mContactsSelected);
         mContactsSelectedLayout.invalidate();
     }
 
     private void addOrRemoveContactFromSelection(ContactAddress ca) {
-        updateContactsClick(ca, mSearchAdapter.getContactsSelectedList());
+        updateContactsClick(ca);
         mSearchAdapter.notifyDataSetChanged();
         updateListSelected();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mContactsSelected != null && mContactsSelected.size() > 0) {
-            ArrayList<String> listUri = new ArrayList<>();
-            for (ContactAddress ca : mContactsSelected) {
-                listUri.add(ca.getAddressAsDisplayableString());
-            }
-            outState.putStringArrayList("mContactsSelected", listUri);
+        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
+            outState.putSerializable("mContactsSelected", mSearchAdapter.getContactsSelectedList());
         }
-
         outState.putBoolean("onlySipContact", mOnlyDisplayLinphoneContacts);
-
         super.onSaveInstanceState(outState);
     }
 
@@ -509,7 +479,7 @@ public class ChatRoomCreationFragment extends Fragment
                 LinphoneActivity.instance()
                         .goToChatGroupInfos(
                                 null,
-                                mContactsSelected,
+                                mSearchAdapter.getContactsSelectedList(),
                                 null,
                                 true,
                                 false,
@@ -519,7 +489,7 @@ public class ChatRoomCreationFragment extends Fragment
                 LinphoneActivity.instance()
                         .goToChatGroupInfos(
                                 mChatRoomAddress,
-                                mContactsSelected,
+                                mSearchAdapter.getContactsSelectedList(),
                                 mChatRoomSubject,
                                 true,
                                 true,
@@ -558,10 +528,23 @@ public class ChatRoomCreationFragment extends Fragment
         }
 
         if (lpc == null || lpc.getConferenceFactoryUri() == null || !mCreateGroupChatRoom) {
+            Address address = searchResult.getAddress();
+            if (address == null) {
+                Log.w(
+                        "[Chat Room Creation] Using search result without an address, trying with phone number...");
+                address = lc.interpretUrl(searchResult.getPhoneNumber());
+            }
+            if (address == null) {
+                Log.e("[Chat Room Creation] Can't create a chat room without a valid address !");
+                return;
+            }
+            if (lpc != null && lpc.getIdentityAddress().weakEqual(address)) {
+                Log.e("[Chat Room Creation] Can't create a 1-to-1 chat room with myself !");
+                return;
+            }
+
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
-                mChatRoom =
-                        lc.findOneToOneChatRoom(
-                                lpc.getIdentityAddress(), searchResult.getAddress(), true);
+                mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, true);
                 if (mChatRoom != null) {
                     LinphoneActivity.instance()
                             .goToChat(mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
@@ -573,16 +556,14 @@ public class ChatRoomCreationFragment extends Fragment
                                     createEncryptedChatRoom);
                     mChatRoom.addListener(mChatRoomCreationListener);
                     Address participants[] = new Address[1];
-                    participants[0] = searchResult.getAddress();
+                    participants[0] = address;
                     mChatRoom.addParticipants(participants);
                 }
             } else {
                 if (lpc != null
                         && lpc.getConferenceFactoryUri() != null
                         && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
-                    mChatRoom =
-                            lc.findOneToOneChatRoom(
-                                    lpc.getIdentityAddress(), searchResult.getAddress(), false);
+                    mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, false);
                     if (mChatRoom == null) {
                         mWaitLayout.setVisibility(View.VISIBLE);
                         mChatRoom =
@@ -590,7 +571,7 @@ public class ChatRoomCreationFragment extends Fragment
                                         getString(R.string.dummy_group_chat_subject), true);
                         mChatRoom.addListener(mChatRoomCreationListener);
                         Address participants[] = new Address[1];
-                        participants[0] = searchResult.getAddress();
+                        participants[0] = address;
                         mChatRoom.addParticipants(participants);
                     } else {
                         LinphoneActivity.instance()
@@ -598,24 +579,30 @@ public class ChatRoomCreationFragment extends Fragment
                                         mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                     }
                 } else {
-                    Address address = searchResult.getAddress();
-                    if (address == null) {
-                        Log.w("[Chat Room Creation] Using search result without an address...");
-                        address = lc.interpretUrl(searchResult.getPhoneNumber());
-                    }
-                    if (address != null) {
-                        ChatRoom chatRoom = lc.getChatRoom(address);
-                        LinphoneActivity.instance()
-                                .goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
-                    } else {
-                        Log.e(
-                                "[Chat Room Creation] Can't create a chat room without a valid address !");
-                    }
+                    ChatRoom chatRoom = lc.getChatRoom(address);
+                    LinphoneActivity.instance()
+                            .goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                 }
             }
         } else {
-            // TODO
-            // addOrRemoveContactFromSelection(searchResult);
+            LinphoneContact c =
+                    searchResult.getFriend() != null
+                            ? (LinphoneContact) searchResult.getFriend().getUserData()
+                            : null;
+            if (c == null) {
+                c = ContactsManager.getInstance().findContactFromAddress(searchResult.getAddress());
+                if (c == null) {
+                    c =
+                            ContactsManager.getInstance()
+                                    .findContactFromPhoneNumber(searchResult.getPhoneNumber());
+                }
+            }
+            addOrRemoveContactFromSelection(
+                    new ContactAddress(
+                            c,
+                            searchResult.getAddress().asStringUriOnly(),
+                            searchResult.getPhoneNumber(),
+                            searchResult.getFriend() != null));
         }
     }
 

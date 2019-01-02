@@ -344,6 +344,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) return null;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         ProxyConfig lpc = null;
         if (lc != null) {

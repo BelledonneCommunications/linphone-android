@@ -35,15 +35,11 @@ import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
-import org.linphone.mediastream.Log;
 import org.linphone.views.ContactAvatar;
 
 public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactViewHolder> {
-    @SuppressWarnings("unused")
-    private static final String TAG = SearchContactsAdapter.class.getSimpleName();
-
     private List<SearchResult> mContacts;
-    private List<ContactAddress> mContactsSelected;
+    private ArrayList<ContactAddress> mContactsSelected;
     private boolean mOnlySipContact = false;
     private SearchContactViewHolder.ClickListener mListener;
     private final boolean mIsOnlyOnePersonSelection;
@@ -157,7 +153,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
             }
         }
         if (holder.isSelect != null) {
-            if (contactIsSelected(searchResult)) {
+            if (isContactSelected(searchResult)) {
                 holder.isSelect.setVisibility(View.VISIBLE);
             } else {
                 holder.isSelect.setVisibility(View.INVISIBLE);
@@ -172,7 +168,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return position;
     }
 
-    private boolean contactIsSelected(SearchResult sr) {
+    public boolean isContactSelected(SearchResult sr) {
         for (ContactAddress c : mContactsSelected) {
             Address addr = c.getAddress();
             if (addr != null && sr.getAddress() != null) {
@@ -188,15 +184,25 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return false;
     }
 
-    public List<ContactAddress> getContactsSelectedList() {
+    public ArrayList<ContactAddress> getContactsSelectedList() {
         return mContactsSelected;
     }
 
-    public void setContactsSelectedList(List<ContactAddress> contactsList) {
+    public void setContactsSelectedList(ArrayList<ContactAddress> contactsList) {
         if (contactsList == null) {
             mContactsSelected = new ArrayList<>();
         } else {
             mContactsSelected = contactsList;
+        }
+    }
+
+    public boolean toggleContactSelection(ContactAddress ca) {
+        if (mContactsSelected.contains(ca)) {
+            mContactsSelected.remove(ca);
+            return false;
+        } else {
+            mContactsSelected.add(ca);
+            return true;
         }
     }
 
