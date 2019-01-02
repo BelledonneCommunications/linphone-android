@@ -441,7 +441,7 @@ public class ChatRoomCreationFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mSearchAdapter.getContactsSelectedList().size() > 0) {
-            outState.putSerializable("mContactsSelected", mSearchAdapter.getContactsSelectedList());
+            outState.putSerializable("selectedContacts", mSearchAdapter.getContactsSelectedList());
         }
         outState.putBoolean("onlySipContact", mOnlyDisplayLinphoneContacts);
         super.onSaveInstanceState(outState);
