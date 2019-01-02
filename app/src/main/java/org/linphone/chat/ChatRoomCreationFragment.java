@@ -598,9 +598,19 @@ public class ChatRoomCreationFragment extends Fragment
                                         mChatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
                     }
                 } else {
-                    ChatRoom chatRoom = lc.getChatRoom(searchResult.getAddress());
-                    LinphoneActivity.instance()
-                            .goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                    Address address = searchResult.getAddress();
+                    if (address == null) {
+                        Log.w("[Chat Room Creation] Using search result without an address...");
+                        address = lc.interpretUrl(searchResult.getPhoneNumber());
+                    }
+                    if (address != null) {
+                        ChatRoom chatRoom = lc.getChatRoom(address);
+                        LinphoneActivity.instance()
+                                .goToChat(chatRoom.getPeerAddress().asStringUriOnly(), mShareInfos);
+                    } else {
+                        Log.e(
+                                "[Chat Room Creation] Can't create a chat room without a valid address !");
+                    }
                 }
             }
         } else {

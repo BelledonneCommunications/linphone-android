@@ -228,11 +228,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                         .getContactListFromFilter(search, mOnlySipContact ? domain : "");
 
         for (SearchResult sr : searchResults) {
-            if (sr.getAddress() != null) {
-                Log.e("### " + sr.getPhoneNumber() + " / " + sr.getAddress().asString());
-            } else {
-                Log.e("### " + sr.getPhoneNumber());
-            }
             if (LinphoneActivity.instance()
                     .getResources()
                     .getBoolean(R.bool.hide_sip_contacts_without_presence)) {
