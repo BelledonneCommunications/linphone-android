@@ -130,6 +130,10 @@ public final class LinphoneUtils {
         return isSipAddress(numberOrAddress) && numberOrAddress.startsWith("sip:");
     }
 
+    public static String getDisplayableAddress(Address addr) {
+        return "sip:" + addr.getUsername() + "@" + addr.getDomain();
+    }
+
     public static String getAddressDisplayName(String uri) {
         Address lAddress;
         lAddress = Factory.instance().createAddress(uri);

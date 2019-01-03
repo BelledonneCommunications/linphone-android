@@ -151,7 +151,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         Address lAddress = Factory.instance().createAddress(mSipUri);
 
         if (lAddress != null) {
-            mContactAddress.setText(lAddress.asStringUriOnly());
+            mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
             mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
             if (mContact != null) {
                 mContactName.setText(mContact.getFullName());
