@@ -137,6 +137,15 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                             && !searchResult.hasCapability(FriendCapability.LimeX3Dh))) {
                 // Disable row, contact doesn't have the required capabilities
                 holder.disabled.setVisibility(View.VISIBLE);
+            } else if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
+                ProxyConfig lpc =
+                        LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig();
+                if (lpc != null
+                        && searchResult.getAddress() != null
+                        && lpc.getIdentityAddress().weakEqual(searchResult.getAddress())) {
+                    // Disable row, we can't use our own address in a group chat room
+                    holder.disabled.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
