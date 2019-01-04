@@ -302,7 +302,8 @@ public class ChatRoomCreationFragment extends Fragment
             // and that can stay because they don't have the capability
             mContactsSelectedLayout.removeAllViews();
             for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
-                if (!ca.hasCapability(FriendCapability.LimeX3Dh)) {
+                // If the ContactAddress doesn't have a contact keep it anyway
+                if (ca.getContact() != null && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
                     mSearchAdapter.toggleContactSelection(ca);
                 } else {
                     if (ca.getView() != null) {

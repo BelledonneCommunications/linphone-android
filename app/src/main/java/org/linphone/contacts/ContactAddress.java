@@ -119,7 +119,7 @@ public class ContactAddress implements Serializable {
     }
 
     public boolean hasCapability(FriendCapability capability) {
-        return mContact.hasFriendCapability(capability);
+        return mContact != null && mContact.hasFriendCapability(capability);
     }
 
     private void init(LinphoneContact c, String a, String pn, boolean isLC) {

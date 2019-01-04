@@ -192,7 +192,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         } else {
             mName.setText(LinphoneUtils.getAddressDisplayName(address));
         }
-        mNumber.setText(address.asStringUriOnly());
+        mNumber.setText(LinphoneUtils.getDisplayableAddress(address));
     }
 
     @Override

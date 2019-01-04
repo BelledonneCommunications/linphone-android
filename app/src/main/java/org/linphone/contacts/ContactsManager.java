@@ -86,6 +86,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             mMagicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
+            mMagicSearch.setLimitedSearch(false); // Do not limit the number of results
         }
     }
 
