@@ -66,11 +66,11 @@
 							android:id="@+id/encryption"
 							android:layout_width="70dp"
 							android:layout_height="60dp"
-							android:layout_toLeftOf="@+id/pause"
 							android:layout_toStartOf="@+id/pause"
+							android:layout_toLeftOf="@+id/pause"
 							android:contentDescription="@string/content_description_encryption"
 							android:src="@drawable/security_button1_over"
-							android:visibility="visible"/>
+							android:visibility="visible" />
 
 						<ImageView
 							android:id="@+id/pause"
@@ -171,15 +171,14 @@
 							android:layout_height="wrap_content"
 							android:layout_gravity="center"
 							android:gravity="center"
-							android:paddingTop="5dp"/>
+							android:paddingTop="5dp" />
 
 						<Chronometer
 							android:id="@+id/current_call_timer"
 							style="@style/font2"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							android:layout_gravity="center"
-							/>
+							android:layout_gravity="center" />
 					</LinearLayout>
 
 					<LinearLayout

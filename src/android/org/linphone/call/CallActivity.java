@@ -1008,6 +1008,7 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 
 	public void displayVideoCall(boolean display){
 		if(display) {
+			if (!isSpeakerEnabled) toggleSpeaker();
 			showStatusBar();
 			mControlsLayout.setVisibility(View.VISIBLE);
 			mActiveCallHeader.setVisibility(View.VISIBLE);
@@ -1018,11 +1019,12 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 				switchCamera.setVisibility(View.VISIBLE);
 			}
 		} else {
+			if (isSpeakerEnabled) toggleSpeaker();
 			hideStatusBar();
 			mControlsLayout.setVisibility(View.GONE);
 			mActiveCallHeader.setVisibility(View.GONE);
 			switchCamera.setVisibility(View.GONE);
-			callsList.setVisibility(View.GONE);
+			callsList.setVisibility(View.INVISIBLE);
 		}
 	}
 

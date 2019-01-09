@@ -177,34 +177,36 @@ public class SearchContactsListAdapter extends BaseAdapter {
 		String domain = "";
 		ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
 		if (prx != null) domain = prx.getDomain();
-		SearchResult[] results = ContactsManager.getInstance().getMagicSearch().getContactListFromFilter(search, mOnlySipContact ? domain  :"");
-		for (SearchResult sr : results) {
-			boolean found = false;
-			LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(sr.getAddress());
-			if (contact == null) {
-				contact = new LinphoneContact();
-				if (sr.getFriend() != null) {
-					contact.setFriend(sr.getFriend());
-					contact.refresh();
-				}
-			}
-			if (sr.getAddress() != null || sr.getPhoneNumber() != null) {
-				for (ContactAddress ca : result) {
-					String normalizedPhoneNumber = (ca != null && ca.getPhoneNumber() != null && prx != null) ? prx.normalizePhoneNumber(ca.getPhoneNumber()) : null;
-					if ((sr.getAddress() != null && ca.getAddress() != null
-							&& ca.getAddress().asStringUriOnly().equals(sr.getAddress().asStringUriOnly()))
-						|| (sr.getPhoneNumber() != null && normalizedPhoneNumber != null
-							&& sr.getPhoneNumber().equals(normalizedPhoneNumber))) {
-						found = true;
-						break;
+		if (ContactsManager.getInstance() != null && ContactsManager.getInstance().getMagicSearch() != null) {
+			SearchResult[] results = ContactsManager.getInstance().getMagicSearch().getContactListFromFilter(search, mOnlySipContact ? domain : "");
+			for (SearchResult sr : results) {
+				boolean found = false;
+				LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(sr.getAddress());
+				if (contact == null) {
+					contact = new LinphoneContact();
+					if (sr.getFriend() != null) {
+						contact.setFriend(sr.getFriend());
+						contact.refresh();
 					}
 				}
-			}
-			if (!found) {
-				result.add(new ContactAddress(contact,
-						(sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
-						sr.getPhoneNumber(),
-						contact.isFriend()));
+				if (sr.getAddress() != null || sr.getPhoneNumber() != null) {
+					for (ContactAddress ca : result) {
+						String normalizedPhoneNumber = (ca != null && ca.getPhoneNumber() != null && prx != null) ? prx.normalizePhoneNumber(ca.getPhoneNumber()) : null;
+						if ((sr.getAddress() != null && ca.getAddress() != null
+								&& ca.getAddress().asStringUriOnly().equals(sr.getAddress().asStringUriOnly()))
+								|| (sr.getPhoneNumber() != null && normalizedPhoneNumber != null
+								&& sr.getPhoneNumber().equals(normalizedPhoneNumber))) {
+							found = true;
+							break;
+						}
+					}
+				}
+				if (!found) {
+					result.add(new ContactAddress(contact,
+							(sr.getAddress() != null) ? sr.getAddress().asStringUriOnly() : "",
+							sr.getPhoneNumber(),
+							contact.isFriend()));
+				}
 			}
 		}
 

@@ -99,7 +99,7 @@ public class ImdnFragment extends Fragment {
 				if (LinphoneActivity.instance().isTablet()) {
 					LinphoneActivity.instance().goToChat(mRoomUri, null);
 				} else {
-					LinphoneActivity.instance().onBackPressed();
+					LinphoneActivity.instance().popBackStack();
 				}
 			}
 		});

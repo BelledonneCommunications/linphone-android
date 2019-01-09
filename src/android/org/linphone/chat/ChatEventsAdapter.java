@@ -30,6 +30,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -39,6 +40,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -307,6 +309,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
 			    //holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
 			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
+				holder.messageLayout.setGravity(Gravity.LEFT);
 		    } else {
 			    for (LinphoneContact c : mParticipants) {
 				    if (c != null && remoteSender!=null && c.hasAddress(remoteSender.asStringUriOnly())) {

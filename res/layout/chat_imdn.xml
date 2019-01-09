@@ -80,7 +80,7 @@
                     android:id="@+id/read_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorH"
+                    android:background="@color/colorF"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -88,13 +88,13 @@
                         style="@style/font27"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/displayed"/>
+                        android:text="@string/displayed" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:src="@drawable/message_read"/>
+                        android:src="@drawable/message_read" />
 
                 </LinearLayout>
 
@@ -108,7 +108,7 @@
                     android:id="@+id/delivered_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorH"
+                    android:background="@color/colorF"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -116,13 +116,13 @@
                         style="@style/font28"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/delivered"/>
+                        android:text="@string/delivered" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:src="@drawable/message_delivered"/>
+                        android:src="@drawable/message_delivered" />
 
                 </LinearLayout>
 
@@ -136,7 +136,7 @@
                     android:id="@+id/sent_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorH"
+                    android:background="@color/colorF"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -144,14 +144,14 @@
                         style="@style/font28"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sent"/>
+                        android:text="@string/sent" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:src="@drawable/message_delivered"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -165,7 +165,7 @@
                     android:id="@+id/undelivered_layout_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorH"
+                    android:background="@color/colorF"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -173,13 +173,13 @@
                         style="@style/font29"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/error"/>
+                        android:text="@string/error" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:src="@drawable/message_undelivered"/>
+                        android:src="@drawable/message_undelivered" />
 
                 </LinearLayout>
 

@@ -50,6 +50,7 @@ public class ChatBubbleViewHolder {
 	public ImageView imdmIcon;
 	public TextView imdmLabel;
 
+	public LinearLayout messageLayout;
 	public TextView messageText;
 	public TextView messageDate;
 	public ImageView messageImage;
@@ -81,6 +82,7 @@ public class ChatBubbleViewHolder {
 	    imdmIcon = view.findViewById(R.id.imdmIcon);
 	    imdmLabel = view.findViewById(R.id.imdmText);
 
+		messageLayout = view.findViewById(R.id.messageLayout);
 	    messageText = view.findViewById(R.id.message);
 		messageDate = view.findViewById(R.id.message_date);
 	    messageImage = view.findViewById(R.id.image);

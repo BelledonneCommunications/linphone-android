@@ -105,11 +105,12 @@
 				android:layout_marginLeft="10dp"
 				android:layout_toRightOf="@id/icon"
 				android:ellipsize="end"
+				android:gravity="center_vertical"
 				android:lineSpacingExtra="13.3sp"
 				android:lines="1"
 				android:maxLines="1"
 				android:textColor="#000000"
-				android:textSize="20sp"/>
+				android:textSize="20sp" />
 		</RelativeLayout>
 
 	</RelativeLayout>

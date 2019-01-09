@@ -184,12 +184,13 @@
                 </RelativeLayout>
 
 				<LinearLayout
+					android:id="@+id/messageLayout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_alignParentRight="true"
 					android:layout_gravity="right"
-					android:layout_marginBottom="2dp"
-					android:layout_marginTop="2dp">
+					android:layout_marginTop="2dp"
+					android:layout_marginBottom="2dp">
 
 					<TextView
 						android:id="@+id/message_date"
@@ -201,7 +202,7 @@
 						android:gravity="right"
 						android:orientation="horizontal"
 						android:textColor="#595959"
-						android:textSize="8.3sp"/>
+						android:textSize="8.3sp" />
 
 					<LinearLayout
 						android:id="@+id/imdmLayout"
@@ -219,7 +220,7 @@
 							android:layout_height="wrap_content"
 							android:paddingRight="3dp"
 							android:text="Displayed"
-							android:textSize="8.3sp"/>
+							android:textSize="8.3sp" />
 
 						<ImageView
 							android:id="@+id/imdmIcon"
@@ -227,7 +228,7 @@
 							android:layout_height="8dp"
 							android:layout_marginTop="2dp"
 							android:scaleType="fitCenter"
-							android:src="@drawable/chat_read"/>
+							android:src="@drawable/chat_read" />
 
 					</LinearLayout>
 				</LinearLayout>

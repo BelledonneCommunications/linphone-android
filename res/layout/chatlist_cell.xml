@@ -101,15 +101,15 @@
 				android:layout_height="25dp"
 				android:layout_alignBottom="@+id/sipUri"
 				android:layout_alignParentEnd="true"
+				android:layout_marginEnd="89dp"
 				android:layout_marginBottom="4dp"
-				android:layout_marginEnd="100dp"
 				android:background="@drawable/chat_list_indicator"
 				android:contentDescription="@string/content_description_unread_chat_message"
 				android:gravity="center"
 				android:maxLines="1"
 				android:textAlignment="center"
 				android:textColor="@color/colorH"
-				android:textSize="15sp"/>
+				android:textSize="15sp" />
 
 			<LinearLayout
 				android:id="@id/lastMessageLayout"
@@ -123,8 +123,18 @@
 					android:layout_width="11dp"
 					android:layout_height="11dp"
 					android:layout_gravity="center_vertical|center_horizontal|center"
+					android:layout_marginEnd="5dp"
 					android:foregroundGravity="center"
 					android:src="@drawable/chat_read"
+					android:visibility="gone" />
+
+				<ImageView
+					android:id="@+id/filesharing"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical|center_horizontal|center"
+					android:foregroundGravity="center"
+					android:src="@drawable/chat_file_message"
 					android:visibility="gone"/>
 
 				<TextView
@@ -134,26 +144,15 @@
 					android:textColor="#595959"
 					android:textSize="16.7sp"/>
 
-				<ImageView
-					android:id="@+id/filesharing"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="center_vertical|center_horizontal|center"
-					android:layout_marginStart="5dp"
-					android:foregroundGravity="center"
-					android:src="@drawable/chat_file_message"
-					android:visibility="gone"/>
-
 				<TextView
 					android:id="@+id/lastMessage"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginEnd="18dp"
-					android:layout_marginStart="5dp"
 					android:ellipsize="end"
 					android:maxLines="1"
 					android:textColor="#aeaeae"
-					android:textSize="16.7sp"/>
+					android:textSize="16.7sp" />
 
 			</LinearLayout>
 
