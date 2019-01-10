@@ -935,7 +935,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			Log.i("[Doze Mode]: unregister");
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 				try {
-					if(dozeModeEnabled)
+					if(mDozeReceiver != null)
 						mServiceContext.unregisterReceiver(mDozeReceiver);
 				} catch (IllegalArgumentException e) {
 					e.printStackTrace();

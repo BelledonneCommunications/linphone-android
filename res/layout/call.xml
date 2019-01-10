@@ -88,8 +88,8 @@
 						android:layout_alignParentStart="true"
 						android:layout_centerVertical="true"
 						android:gravity="center_vertical|center_horizontal"
-						android:paddingBottom="10dp"
-						android:paddingTop="10dp">
+						android:paddingTop="10dp"
+						android:paddingBottom="10dp">
 
 						<ImageView
 							android:id="@+id/contact_picture"
@@ -97,7 +97,7 @@
 							android:layout_height="wrap_content"
 							android:adjustViewBounds="true"
 							android:contentDescription="@string/content_description_contact_picture"
-							android:src="@drawable/avatar_big_secure1"/>
+							android:src="@drawable/avatar_big_secure1" />
 
 						<ImageView
 							android:id="@+id/mask"
@@ -106,7 +106,7 @@
 							android:adjustViewBounds="true"
 							android:contentDescription="@string/content_description_contact_picture"
 							android:src="@drawable/avatar_mask_border"
-							android:visibility="gone"/>
+							android:visibility="gone" />
 
 					</RelativeLayout>
 

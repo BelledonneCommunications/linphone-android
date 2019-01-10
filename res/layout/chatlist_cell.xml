@@ -133,9 +133,10 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_gravity="center_vertical|center_horizontal|center"
+					android:layout_marginRight="5dp"
 					android:foregroundGravity="center"
 					android:src="@drawable/chat_file_message"
-					android:visibility="gone"/>
+					android:visibility="gone" />
 
 				<TextView
 					android:id="@+id/lastMessageSender"

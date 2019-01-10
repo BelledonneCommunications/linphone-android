@@ -26,6 +26,7 @@ import org.linphone.LinphonePreferences;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.mediastream.Log;
@@ -33,6 +34,7 @@ import org.linphone.mediastream.Log;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,9 +93,36 @@ public class Digit extends Button implements AddressAware {
 	private class DialKeyListener implements OnClickListener, OnTouchListener, OnLongClickListener {
 		final char mKeyCode;
 		boolean mIsDtmfStarted;
+		CoreListenerStub mListener;
 
 		DialKeyListener() {
 			mKeyCode = Digit.this.getText().subSequence(0, 1).charAt(0);
+			mListener  =
+					new CoreListenerStub() {
+						@Override
+						public void onLogCollectionUploadProgressIndication(
+								Core lc, int offset, int total) {}
+
+						@Override
+						public void onLogCollectionUploadStateChanged(Core lc, Core.LogCollectionUploadState state, String info) {
+							if (state == Core.LogCollectionUploadState.Delivered) {
+								final String appName = LinphoneService.instance().getApplicationContext().getString(R.string.app_name);
+
+								Intent i = new Intent(Intent.ACTION_SEND);
+								i.putExtra(Intent.EXTRA_EMAIL, new String[]{ LinphoneService.instance().getApplicationContext().getString(R.string.about_bugreport_email) });
+								i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+								i.putExtra(Intent.EXTRA_TEXT, info);
+								i.setType("application/zip");
+
+								try {
+									LinphoneService.instance().getApplicationContext().startActivity(Intent.createChooser(i, "Send mail..."));
+									lc.removeListener(mListener);
+								} catch (android.content.ActivityNotFoundException ex) {
+									Log.e(ex);
+								}
+							}
+						}
+					};
 		}
 
 		private boolean linphoneServiceReady() {
@@ -144,6 +173,7 @@ public class Digit extends Button implements AddressAware {
 						if(which == 1) {
 							Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
 							if (lc != null) {
+								lc.addListener(mListener);
 								lc.uploadLogCollection();
 							}
 						}

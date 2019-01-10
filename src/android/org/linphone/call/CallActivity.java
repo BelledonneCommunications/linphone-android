@@ -1661,12 +1661,19 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 			}
 
 			boolean isConfPaused = false;
+			boolean callDisplayed = false;
 			for (Call call : LinphoneManager.getLc().getCalls()) {
 				if (call.getConference() != null && !isConferenceRunning) {
 					isConfPaused = true;
 					index++;
 				} else {
 					if (call != LinphoneManager.getLc().getCurrentCall() && !(call.getConference() != null)) {
+						if (!callDisplayed && LinphoneManager.getLc().getCurrentCall() == null) {
+							Address lAddress = call.getRemoteAddress();
+							TextView contactName = (TextView) findViewById(R.id.current_contact_name);
+							setContactInformation(contactName, contactPicture, lAddress);
+							callDisplayed = true;
+						}
 						displayPausedCalls(resources, call, index);
 						index++;
 					} else {

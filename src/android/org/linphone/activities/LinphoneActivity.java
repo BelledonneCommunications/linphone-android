@@ -1611,6 +1611,9 @@ public class LinphoneActivity extends LinphoneGenericActivity implements OnClick
 						return true;
 					}
 					break;
+				case MESSAGE_IMDN:
+					popBackStack();
+					return true;
 				case GROUP_CHAT:
 					LinphoneActivity.instance().goToChatList();
 					return true;
