@@ -3,6 +3,13 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
 
+	<View
+		android:id="@+id/rightAnchor"
+		android:layout_width="1dp"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentRight="true" />
+
 	<CheckBox
 		android:id="@+id/delete_message"
 		android:layout_width="30dp"
@@ -56,54 +63,25 @@
 
 	</LinearLayout>
 
-	<RelativeLayout
-		android:id="@+id/bubble"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_toLeftOf="@id/delete_message">
-
-		<LinearLayout
+	<LinearLayout
 		android:id="@+id/separator"
 		android:layout_width="100dp"
 		android:layout_height="10dp"
 		android:orientation="horizontal"/>
 
+	<RelativeLayout
+		android:id="@+id/bubble"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/rightAnchor">
+
         <LinearLayout
             android:id="@+id/background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/separator"
             android:orientation="horizontal">
 
-            <RelativeLayout
-                android:id="@+id/avatar_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/contact_picture"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/content_description_contact_picture"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:src="@drawable/avatar"/>
-
-                <ImageView
-                    android:id="@+id/mask"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:adjustViewBounds="true"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp"
-                    android:src="@drawable/avatar_chat_mask"
-                    android:visibility="gone"/>
-
-            </RelativeLayout>
-
-            <LinearLayout
+			<LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -187,10 +165,11 @@
 					android:id="@+id/messageLayout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_alignParentRight="true"
+					android:layout_alignLeft="@id/delete_message"
 					android:layout_gravity="right"
 					android:layout_marginTop="2dp"
-					android:layout_marginBottom="2dp">
+					android:layout_marginBottom="2dp"
+					android:gravity="right">
 
 					<TextView
 						android:id="@+id/message_date"

@@ -44,6 +44,8 @@ public class ChatBubbleViewHolder {
 	public ImageView contactPictureMask;
 	public TextView contactName;
 
+	public View rightAnchor;
+
 	public ImageView messageStatus;
 	public ProgressBar messageSendingInProgress;
 	public LinearLayout imdmLayout;
@@ -68,6 +70,8 @@ public class ChatBubbleViewHolder {
 	    eventLayout = view.findViewById(R.id.event);
 	    //eventTime = view.findViewById(R.id.event_date);
 	    eventMessage = view.findViewById(R.id.event_text);
+
+		rightAnchor = view.findViewById(R.id.rightAnchor);
 
 	    bubbleLayout = view.findViewById(R.id.bubble);
 	    separatorLayout = view.findViewById(R.id.separator);

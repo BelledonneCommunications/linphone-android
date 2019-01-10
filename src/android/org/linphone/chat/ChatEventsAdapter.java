@@ -185,6 +185,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
             holder = new ChatBubbleViewHolder(view);
             view.setTag(holder);
         }
+        int margin_top = MARGIN_BETWEEN_MESSAGES/2;
 
 	    view.setOnLongClickListener(new View.OnLongClickListener() {
 		    @Override
@@ -209,7 +210,8 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    holder.imdmLayout.setVisibility(View.INVISIBLE);
 	    holder.imdmIcon.setVisibility(View.INVISIBLE);
 	    holder.imdmLabel.setVisibility(View.INVISIBLE);
-	    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+		holder.rightAnchor.setVisibility(View.VISIBLE);
+	    //holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
 		    holder.delete.setOnCheckedChangeListener(null);
@@ -229,7 +231,9 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    ChatMessage previousMessage = previousEvent.getChatMessage();
 				    if (previousMessage.getFromAddress().weakEqual(message.getFromAddress())) {
 					    holder.separatorLayout.setVisibility(View.GONE);
-				    }
+				    } else {
+						margin_top = MARGIN_BETWEEN_MESSAGES*3;
+					}
 			    } else {
 			    	// No separator if previous event is not a message
 				    holder.separatorLayout.setVisibility(View.GONE);
@@ -297,10 +301,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
+				    layoutParams.setMargins(SIDE_MARGIN, margin_top, 0, MARGIN_BETWEEN_MESSAGES/2);
 			    } else {
 				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
+				    layoutParams.setMargins(SIDE_MARGIN, margin_top, 0, MARGIN_BETWEEN_MESSAGES/2);
 			    }
 
 			    holder.background.setBackgroundColor(0x26ff6600);
@@ -308,9 +312,12 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    holder.contactName.setVisibility(View.GONE);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font15);
 			    //holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
-			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
-				holder.messageLayout.setGravity(Gravity.LEFT);
+			    //holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 		    } else {
+				holder.rightAnchor.setVisibility(View.GONE);
+				holder.bubbleLayout.setGravity(Gravity.LEFT);
+				holder.delete.setGravity(Gravity.LEFT);
+				holder.imdmLayout.setVisibility(View.GONE);
 			    for (LinphoneContact c : mParticipants) {
 				    if (c != null && remoteSender!=null && c.hasAddress(remoteSender.asStringUriOnly())) {
 					    contact = c;
@@ -320,10 +327,10 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 
 			    if (isEditionEnabled()) {
 				    layoutParams.addRule(RelativeLayout.LEFT_OF, holder.delete.getId());
-				    layoutParams.setMargins(SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2, 0, MARGIN_BETWEEN_MESSAGES/2);
+				    layoutParams.setMargins(SIDE_MARGIN, margin_top, 0, MARGIN_BETWEEN_MESSAGES/2);
 			    } else {
 				    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-				    layoutParams.setMargins(0, MARGIN_BETWEEN_MESSAGES/2, SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2);
+				    layoutParams.setMargins(0, margin_top, SIDE_MARGIN, MARGIN_BETWEEN_MESSAGES/2);
 			    }
 
 			    holder.background.setBackgroundColor(0x19595959);
@@ -331,7 +338,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 			    holder.contactName.setVisibility(View.VISIBLE);
 			    Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
 			    //holder.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
-			    holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
+			    //holder.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 		    }
 
 		    if (contact == null) {
@@ -344,13 +351,13 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 			    }
 
-			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			    /*holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			    if (contact.hasPhoto()) {
 				    LinphoneUtils.setThumbnailPictureFromUri(LinphoneActivity.instance(), holder.contactPicture, contact.getThumbnailUri());
-			    }
+			    }*/
 		    } else {
 			    displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-			    holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			    //holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		    }
 		    holder.contactName.setText(displayName);
 		    if (message.hasTextContent()) {
