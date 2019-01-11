@@ -1348,6 +1348,7 @@ public class LinphonePreferences {
 
     public void enableDeviceRingtone(boolean enable) {
         getConfig().setBool("app", "device_ringtone", enable);
+        LinphoneManager.getInstance().enableDeviceRingtone(enable);
     }
 
     public boolean isIncomingCallVibrationEnabled() {

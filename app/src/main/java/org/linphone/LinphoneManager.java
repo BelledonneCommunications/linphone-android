@@ -217,7 +217,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mChatDatabaseFile = mBasePath + "/linphone-history.db";
         mCallLogDatabaseFile = mBasePath + "/linphone-log-history.db";
         mFriendsDatabaseFile = mBasePath + "/linphone-friends.db";
-        mRingSoundFile = mBasePath + "/ringtone.mkv";
+        mRingSoundFile = mBasePath + "/share/sounds/linphone/rings/notes_of_the_optimistic.mkv";
         mUserCertsPath = mBasePath + "/user-certs";
 
         mPrefs = LinphonePreferences.instance();
