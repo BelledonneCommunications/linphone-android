@@ -314,7 +314,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    }
 		    holder.contactName.setText(LinphoneUtils.timestampToHumanDate(mContext, message.getTime(), R.string.messages_date_format) + " - " + displayName);
 
-		    if (message.hasTextContent()) {
+		    if (message.hasTextContent() &&  message.getTextContent() != null) {
 			    String msg = message.getTextContent();
 			    Spanned text = LinphoneUtils.getTextWithHttpLinks(msg);
 			    holder.messageText.setText(text);
