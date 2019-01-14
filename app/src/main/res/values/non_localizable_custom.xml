@@ -11,6 +11,7 @@
     <bool name="force_use_of_linphone_friends">false</bool>
     <bool name="use_linphone_tag">true</bool>
     <bool name="hide_bottom_bar_on_second_level_views">true</bool>
+    <bool name="set_notification_bar_background_color_to_primary">true</bool>
 
     <!-- Time -->
     <string name="history_date_format">EEE, d MMM</string>
