@@ -1778,7 +1778,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	@Override
 	public void onNotifyPresenceReceivedForUriOrTel(Core lc, Friend lf, String uri_or_tel, PresenceModel presence_model) {
-
+		if (ContactsManager.getInstance() != null) {
+			ContactsManager.getInstance().fetchContactsAsync();
+		}
 	}
 
 	@Override
