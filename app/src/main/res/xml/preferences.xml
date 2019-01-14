@@ -351,8 +351,8 @@
                 <Preference
                     android:key="@string/pref_device_power_saver_settings_key"
                     android:persistent="false"
-                    android:summary="@string/pref_huawei_protected_settings_desc"
-                    android:title="@string/pref_huawei_protected_settings_title" />
+                    android:summary="@string/pref_protected_settings_desc"
+                    android:title="@string/pref_protected_settings_title" />
 
                 <CheckBoxPreference
                     android:key="@string/pref_ipv6_key"
