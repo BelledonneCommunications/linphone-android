@@ -322,17 +322,11 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		if (id == R.id.valider) {
 			displayRemoteProvisioningInProgressDialog();
 			ok.setEnabled(false);
-			if (qrcodeString != null
-					&& (qrcodeString.startsWith("http://")
-					|| qrcodeString.startsWith("https://"))) {
-				storeAccount(qrcodeString);
+			if (decryptQrcode()) {
+				storeAccount(remoteUrl);
 			} else {
-				if (decryptQrcode()) {
-					storeAccount(remoteUrl);
-				} else {
-					ok.setEnabled(true);
-					if (progress != null) progress.cancel();
-				}
+				ok.setEnabled(true);
+				if (progress != null) progress.cancel();
 			}
 		}
 	}
