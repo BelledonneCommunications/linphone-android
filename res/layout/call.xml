@@ -32,17 +32,17 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_alignParentTop="true"
-					android:layout_gravity="top"
+					android:layout_gravity="bottom"
 					android:orientation="vertical"
-					android:visibility="gone">
-				</LinearLayout>
+					android:visibility="gone"></LinearLayout>
 
 				<RelativeLayout
 					android:id="@+id/active_call"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_centerHorizontal="false"
+					android:layout_above="@+id/calls_list"
 					android:layout_centerInParent="false"
+					android:layout_centerHorizontal="false"
 					android:layout_centerVertical="false"
 					android:visibility="visible">
 
@@ -60,7 +60,7 @@
 							android:layout_alignParentLeft="true"
 							android:contentDescription="@string/content_description_switch_camera"
 							android:src="@drawable/switch_camera"
-							android:visibility="invisible"/>
+							android:visibility="invisible" />
 
 						<ImageView
 							android:id="@+id/encryption"
@@ -78,7 +78,7 @@
 							android:layout_height="60dp"
 							android:layout_alignParentRight="true"
 							android:contentDescription="@string/content_description_pause"
-							android:src="@drawable/pause_big_default"/>
+							android:src="@drawable/pause_big_default" />
 					</RelativeLayout>
 
 					<RelativeLayout
@@ -128,10 +128,10 @@
 								android:id="@+id/pause2"
 								android:layout_width="70dp"
 								android:layout_height="60dp"
-								android:layout_alignParentEnd="true"
 								android:layout_alignParentTop="true"
+								android:layout_alignParentEnd="true"
 								android:contentDescription="@string/content_description_pause"
-								android:src="@drawable/pause_big_default"/>
+								android:src="@drawable/pause_big_default" />
 						</RelativeLayout>
 
 						<ImageView
@@ -141,7 +141,7 @@
 							android:layout_centerHorizontal="true"
 							android:layout_centerVertical="true"
 							android:layout_gravity="center"
-							android:src="@drawable/waiting_time"/>
+							android:src="@drawable/waiting_time" />
 
 						<TextView
 							style="@style/font16"
@@ -150,7 +150,7 @@
 							android:layout_below="@+id/pause_logo"
 							android:layout_centerHorizontal="true"
 							android:layout_gravity="center"
-							android:text="@string/call_paused_by_remote"/>
+							android:text="@string/call_paused_by_remote" />
 
 					</RelativeLayout>
 
@@ -158,8 +158,7 @@
 						android:id="@+id/active_call_info"
 						android:layout_width="match_parent"
 						android:layout_height="80dp"
-						android:layout_above="@+id/calls_list"
-						android:layout_alignParentBottom="false"
+						android:layout_alignParentBottom="true"
 						android:alpha="0.8"
 						android:background="@color/colorH"
 						android:orientation="vertical">
@@ -181,41 +180,41 @@
 							android:layout_gravity="center" />
 					</LinearLayout>
 
-					<LinearLayout
-						android:id="@+id/calls_list"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_alignParentBottom="true"
-						android:layout_gravity="bottom"
-						android:background="@color/colorH"
-						android:orientation="vertical">
-					</LinearLayout>
-
 				</RelativeLayout>
+
+				<LinearLayout
+					android:id="@+id/calls_list"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_alignParentBottom="true"
+					android:layout_gravity="bottom"
+					android:background="@color/colorH"
+					android:orientation="vertical"/>
 
 				<LinearLayout
 					android:id="@+id/no_current_call"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:alpha="0"
+					android:layout_above="@+id/calls_list"
+					android:alpha="1"
 					android:background="#e6ff6600"
 					android:gravity="center_vertical"
 					android:orientation="vertical"
-					android:visibility="visible">
+					android:visibility="gone">
 
 					<ImageView
 						android:layout_width="115dp"
 						android:layout_height="115dp"
 						android:layout_gravity="center"
 						android:src="@drawable/waiting_time"
-						android:visibility="gone"/>
+						android:visibility="visible" />
 
 					<TextView
 						style="@style/font16"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_gravity="center"
-						android:text="@string/no_current_call"/>
+						android:text="@string/no_current_call" />
 				</LinearLayout>
 
 			</RelativeLayout>

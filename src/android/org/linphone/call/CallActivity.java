@@ -886,13 +886,13 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 	}
 
 	private void displayNoCurrentCall(boolean display){
-		/*if(!display) {
+		if(!display) {
 			mActiveCallHeader.setVisibility(View.VISIBLE);
 			mNoCurrentCall.setVisibility(View.GONE);
 		} else {
 			mActiveCallHeader.setVisibility(View.GONE);
 			mNoCurrentCall.setVisibility(View.VISIBLE);
-		}*/
+		}
 	}
 
 	private void displayCallPaused(boolean display){
@@ -1674,6 +1674,9 @@ public class CallActivity extends LinphoneGenericActivity implements OnClickList
 							setContactInformation(contactName, contactPicture, lAddress);
 							callDisplayed = true;
 						}
+						displayPausedCalls(resources, call, index);
+						index++;
+					} else if (call.getState() == State.Paused) {
 						displayPausedCalls(resources, call, index);
 						index++;
 					} else {

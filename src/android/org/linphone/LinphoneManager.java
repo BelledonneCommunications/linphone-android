@@ -1041,8 +1041,13 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private Vibrator mVibrator;
 
 	public void onNewSubscriptionRequested(Core lc, Friend lf, String url) {}
+
+	@Override
 	public void onNotifyPresenceReceived(Core lc, Friend lf) {
-		ContactsManager.getInstance().refreshSipContact(lf);
+		//ContactsManager.getInstance().refreshSipContact(lf);
+		if (ContactsManager.getInstance() != null) {
+			ContactsManager.getInstance().fetchContactsAsync();
+		}
 	}
 
 	@Override
