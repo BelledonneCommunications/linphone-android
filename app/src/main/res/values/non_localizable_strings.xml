@@ -235,4 +235,10 @@
     <string name="pref_android_app_notif_settings_key">pref_android_app_notif_settings_key</string>
     <string name="pref_turn_username_key">pref_turn_username_key</string>
     <string name="pref_turn_passwd_key">pref_turn_passwd_key</string>
+
+    <string-array name="pref_auto_download_policy_entries_labels">
+        <item>@string/pref_auto_download_disabled</item>
+        <item>@string/pref_auto_download_always</item>
+        <item>@string/pref_auto_download_under_size</item>
+    </string-array>
 </resources>

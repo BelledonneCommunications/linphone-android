@@ -60,7 +60,7 @@
     <string name="yes">Yes</string>
     <string name="link_account">Link your account</string>
     <string name="update_available">An update is available</string>
-    <string name="do_not_ask_again">Do not ask again</string>
+    <string name="do_not_ask_again">Do not show again</string>
     <string name="delete_contacts_text">Are you sure you want to delete these contacts?\nThey will be deleted from your phone as well!</string>
 
     <!-- Launch screen -->
@@ -177,7 +177,7 @@
     <string name="contact_last_name">Last name</string>
     <string name="contact_organization">Organization</string>
     <string name="invite_friend">Invite</string>
-    <string name="invite_friend_text">Hello, join me on Linphone! You can download it at http://www.linphone.org/technical-corner/linphone/downloads</string>
+    <string name="invite_friend_text">Hello, join me on Linphone! You can download it for free at http://www.linphone.org/technical-corner/linphone/downloads</string>
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>
@@ -229,9 +229,9 @@
     <string name="chat_room_you_are_now_admin">You are now admin</string>
     <string name="chat_room_you_are_no_longer_admin">You are no longer admin</string>
     <string name="chat_room_creation_failed">Chat room creation failed</string>
-    <string name="chat_room_leave_dialog">Do you really want to leave this conversation?</string>
+    <string name="chat_room_leave_dialog">Do you want to leave this conversation?</string>
     <string name="chat_room_leave_button">Leave</string>
-    <string name="chat_room_delete_dialog">Do you really want to delete and leave the selected conversations?</string>
+    <string name="chat_room_delete_dialog">Do you want to delete and leave the selected conversations?</string>
     <string name="separator">:&#160;</string>
     <string name="imdn_info">Delivery status</string>
     <string name="chat_room_devices">%s\'s devices</string>
@@ -239,8 +239,8 @@
     <string name="add_to_contacts">Add to contacts</string>
     <string name="lime_security_popup">Instant messages are end-to-end encrypted in secured conversations. It is possible to upgrade the security level of a conversation by authenticating participants. To do so, call the contact and follow the authentification process.</string>
     <string name="lime_identity_key_changed">LIME identity key changed for %s</string>
-    <string name="man_in_the_middle_detected">Man in the middle detected for %s</string>
-    <string name="security_level_downgraded">Security level downgraded because of %s</string>
+    <string name="man_in_the_middle_detected">Man-in-the-middle attack detected for %s</string>
+    <string name="security_level_downgraded">Security level decreased because of %s</string>
     <string name="participant_max_count_exceeded">Max participant count exceeded by %s</string>
     <string name="unexpected_event">Unexpected event %i for %s</string>
     <string name="download_file">Download</string>
@@ -293,8 +293,8 @@
     <string name="call">Call</string>
 
     <!-- Recordings -->
-    <string name="no_recordings">No recordings.</string>
-    <string name="recordings_delete_dialog">Do you really want to delete and leave the selected recordings?</string>
+    <string name="no_recordings">No recordings</string>
+    <string name="recordings_delete_dialog">Do you want to delete the selected recordings?</string>
 
     <!-- About -->
     <string name="menu_send_log">Send log</string>
@@ -435,15 +435,10 @@
     <string name="lime_encryption_entry_preferred">Preferred</string>
     <string name="lime_encryption_enable_zrtp">LIME requires ZRTP encryption.\nBy activating LIME you automatically activate ZRTP media encryption.</string>
     <string name="pref_auto_download_policy_title">Auto download incoming files policy</string>
-    <string name="pref_auto_download_max_size_title">Max size in bytes to auto download incoming files</string>
-    <string-array name="pref_auto_download_policy_entries_labels">
-        <item>@string/pref_auto_download_disabled</item>
-        <item>@string/pref_auto_download_always</item>
-        <item>@string/pref_auto_download_under_size</item>
-    </string-array>
+    <string name="pref_auto_download_max_size_title">Max size (in bytes)</string>
     <string name="pref_auto_download_disabled">Never</string>
     <string name="pref_auto_download_always">Always</string>
-    <string name="pref_auto_download_under_size">If lighter than given size (see below setting)</string>
+    <string name="pref_auto_download_under_size">If lighter than max size</string>
 
     <!-- Network settings -->
     <string name="pref_network_title">Network</string>
