@@ -1795,9 +1795,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	@Override
 	public void onIsAccountExist(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-		if (status.equals(AccountCreator.Status.AccountExist)) {
-			accountCreator.isAccountLinked();
-		}
+		//if (status.equals(AccountCreator.Status.AccountExist)) {
+		//	accountCreator.isAccountLinked();
+		//}
 	}
 
 	@Override
@@ -1808,9 +1808,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	@Override
 	public void onLinkAccount(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-		if (status.equals(AccountCreator.Status.AccountNotLinked)) {
-			askLinkWithPhoneNumber();
-		}
+		//if (status.equals(AccountCreator.Status.AccountNotLinked)) {
+		//	askLinkWithPhoneNumber();
+		//}
 	}
 
 	@Override
@@ -1824,9 +1824,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 	@Override
 	public void onIsAccountLinked(AccountCreator accountCreator, AccountCreator.Status status, String resp) {
-		if (status.equals(AccountCreator.Status.AccountNotLinked)) {
-			askLinkWithPhoneNumber();
-		}
+		//if (status.equals(AccountCreator.Status.AccountNotLinked)) {
+		//	askLinkWithPhoneNumber();
+		//}
 	}
 
 	@Override
