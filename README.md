@@ -57,6 +57,13 @@ This means that if you compile this project, you won't have push notification fe
 
 To enable them, just add your own ```google-services.json``` in the app folder, edit the ```res/values/non_localizable_custom.xml``` file set your key in ```push_sender_id```. Also ensure ```push_type``` is set to ```firebase```.
 
+## Translations
+
+We use transifex so the community can translate the strings of the app in their own language.
+
+Note for developpers: here's how to push and pull transifex files:
+tx pull -af / tx push -s -f --no-interactive
+
 # CONTRIBUTIONS
 
 In order to submit a patch for inclusion in linphone's source code:
