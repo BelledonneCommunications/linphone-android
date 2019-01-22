@@ -17,7 +17,7 @@
 	<string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
 	<string name="inapp_popup_date_format">yyyy/MM/dd</string>
 	<string name="inapp_popup_date_day">dd</string>
-	<string name="messages_date_format">yyyy/dd</string>
+	<string name="messages_date_format">MM/yyyy</string>
 	<string name="messages_list_date_format">dd/MM</string>
 	<string name="today_date_format">dd/MM - HH:mm</string>
     <string name="today_date_format2">HH:mm</string>
