@@ -183,6 +183,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 	private boolean mProximitySensingEnabled;
 	private boolean handsetON = false;
 	private Address mCurrentChatRoomAddress;
+	private FriendList savedList;
 
 	public String wizardLoginViewDomain = null;
 	private LinphoneMediaScanner mMediaScanner;
@@ -1143,7 +1144,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 			//Obiane spec
 			String linphoneRcPath = mServiceContext.getFilesDir().getAbsolutePath() + "/.linphonerc";
 			String linphoneRcBack = mServiceContext.getFilesDir().getAbsolutePath() + "/linphonerc.back";
-			FriendList savedList = lc.getDefaultFriendList();
+			savedList = lc.getDefaultFriendList();
 			if (savedList != null && savedList.getFriends() != null && savedList.getFriends().length > 0) {
 				try {
 					InputStream rc = new FileInputStream(linphoneRcPath);
@@ -1676,6 +1677,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				wizardLoginViewDomain = (addr != null) ? addr.getDomain() : "";
 			}
 			prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
+			if (savedList != null) lc.removeFriendList(savedList);
 			File backup = new File(linphoneRcBack);
 			if (backup.exists()) backup.delete();
 		} else if (state == ConfiguringState.Failed) {
