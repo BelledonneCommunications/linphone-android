@@ -1070,7 +1070,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
             Call call = LinphoneManager.getLc().getCalls()[0];
-            if (call.getState() == Call.State.IncomingReceived) {
+            if (call.getState() == Call.State.IncomingReceived
+                    || call.getState() == State.IncomingEarlyMedia) {
                 startActivity(new Intent(LinphoneActivity.this, CallIncomingActivity.class));
             } else {
                 startIncallActivity();
@@ -1399,7 +1400,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 Call call = LinphoneManager.getLc().getCalls()[0];
                 Call.State onCallStateChanged = call.getState();
 
-                if (onCallStateChanged == State.IncomingReceived) {
+                if (onCallStateChanged == State.IncomingReceived
+                        || onCallStateChanged == State.IncomingEarlyMedia) {
                     startActivity(new Intent(this, CallIncomingActivity.class));
                 } else if (onCallStateChanged == State.OutgoingInit
                         || onCallStateChanged == State.OutgoingProgress

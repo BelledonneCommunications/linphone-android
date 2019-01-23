@@ -203,7 +203,8 @@ public final class LinphoneService extends Service {
                                             mNotificationManager.displayCallNotification(call);
                                         }
 
-                                        if (state == Call.State.IncomingReceived) {
+                                        if (state == Call.State.IncomingReceived
+                                                || state == State.IncomingEarlyMedia) {
                                             if (!LinphoneManager.getInstance().getCallGsmON())
                                                 onIncomingReceived();
                                         }
