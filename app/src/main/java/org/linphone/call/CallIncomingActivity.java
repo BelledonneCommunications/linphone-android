@@ -27,6 +27,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private CoreListenerStub mListener;
     private boolean mAlreadyAcceptedOrDeniedCall;
     private KeyguardManager mKeyguardManager;
+    private TextureView mVideoDisplay;
 
     public static CallIncomingActivity instance() {
         return sInstance;
@@ -88,6 +90,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
         mName = findViewById(R.id.contact_name);
         mNumber = findViewById(R.id.contact_number);
+        mVideoDisplay = findViewById(R.id.videoSurface);
 
         mAccept = findViewById(R.id.answer_button);
         mDecline = findViewById(R.id.decline_button);
@@ -189,6 +192,10 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             mName.setText(displayName);
         }
         mNumber.setText(address.asStringUriOnly());
+
+        if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
+            mCall.getCore().setNativeVideoWindowId(mVideoDisplay);
+        }
     }
 
     @Override
@@ -225,7 +232,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private void lookupCurrentCall() {
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             for (Call call : LinphoneManager.getLc().getCalls()) {
-                if (State.IncomingReceived == call.getState()) {
+                if (State.IncomingReceived == call.getState()
+                        || State.IncomingEarlyMedia == call.getState()) {
                     mCall = call;
                     break;
                 }
