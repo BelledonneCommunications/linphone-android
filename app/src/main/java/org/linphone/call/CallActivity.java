@@ -209,7 +209,7 @@ public class CallActivity extends LinphoneGenericActivity
                             return;
                         }
 
-                        if (state == State.IncomingReceived) {
+                        if (state == State.IncomingReceived || state == State.IncomingEarlyMedia) {
                             // This scenario will be handled by the Service listener
                             return;
                         } else if (state == State.Paused
