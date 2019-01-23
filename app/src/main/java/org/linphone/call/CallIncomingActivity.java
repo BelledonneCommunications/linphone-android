@@ -215,9 +215,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         if (lc != null) {
             lc.removeListener(mListener);
         }
-        if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
-            mCall.getCore().setNativeVideoWindowId(null);
-        }
         super.onPause();
     }
 
