@@ -210,7 +210,7 @@ public class CallActivity extends LinphoneGenericActivity
                             return;
                         }
 
-                        if (state == State.IncomingReceived) {
+                        if (state == State.IncomingReceived || state == State.IncomingEarlyMedia) {
                             startIncomingCallActivity();
                             return;
                         } else if (state == State.Paused

@@ -727,6 +727,14 @@ public class LinphonePreferences {
     // End of video settings
 
     // Call settings
+    public boolean acceptIncomingEarlyMedia() {
+        return getConfig().getBool("sip", "incoming_calls_early_media", false);
+    }
+
+    public void setAcceptIncomingEarlyMedia(boolean accept) {
+        getConfig().setBool("sip", "incoming_calls_early_media", accept);
+    }
+
     public boolean useRfc2833Dtmfs() {
         if (getLc() == null) return false;
         return getLc().getUseRfc2833ForDtmf();

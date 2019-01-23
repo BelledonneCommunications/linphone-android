@@ -219,6 +219,11 @@
                     android:persistent="false"
                     android:title="@string/pref_incoming_call_timeout_title" />
 
+                <CheckBoxPreference
+                    android:key="@string/pref_accept_early_media_key"
+                    android:persistent="false"
+                    android:title="@string/pref_accept_early_media" />
+
                 <EditTextPreference
                     android:key="@string/pref_voice_mail_key"
                     android:persistent="false"

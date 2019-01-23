@@ -1289,7 +1289,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
         }
 
-        if (state == State.IncomingReceived && getCallGsmON()) {
+        if ((state == State.IncomingReceived || state == State.IncomingEarlyMedia)
+                && getCallGsmON()) {
             if (mCore != null) {
                 mCore.declineCall(call, Reason.Busy);
             }

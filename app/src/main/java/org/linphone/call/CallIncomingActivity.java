@@ -27,6 +27,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private CoreListenerStub mListener;
     private boolean mAlreadyAcceptedOrDeniedCall;
     private KeyguardManager mKeyguardManager;
+    private TextureView mVideoDisplay;
 
     public static CallIncomingActivity instance() {
         return sInstance;
@@ -86,6 +88,7 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mName = findViewById(R.id.contact_name);
         mNumber = findViewById(R.id.contact_number);
         mContactPicture = findViewById(R.id.contact_picture);
+        mVideoDisplay = findViewById(R.id.videoSurface);
 
         // set this flag so this activity will stay in front of the keyguard
         int flags =
@@ -194,6 +197,10 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             mName.setText(LinphoneUtils.getAddressDisplayName(address));
         }
         mNumber.setText(address.asStringUriOnly());
+
+        if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
+            mCall.getCore().setNativeVideoWindowId(mVideoDisplay);
+        }
     }
 
     @Override
@@ -207,6 +214,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.removeListener(mListener);
+        }
+        if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
+            mCall.getCore().setNativeVideoWindowId(null);
         }
         super.onPause();
     }
@@ -230,7 +240,8 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private void lookupCurrentCall() {
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             for (Call call : LinphoneManager.getLc().getCalls()) {
-                if (State.IncomingReceived == call.getState()) {
+                if (State.IncomingReceived == call.getState()
+                        || State.IncomingEarlyMedia == call.getState()) {
                     mCall = call;
                     break;
                 }

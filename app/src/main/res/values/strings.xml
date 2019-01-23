@@ -424,6 +424,7 @@
     <string name="pref_call_timeout_title">Call timeout (in seconds)</string>
     <string name="pref_voice_mail">Voice mail URI</string>
     <string name="pref_dialer_call">Use Linphone as default phone app</string>
+    <string name="pref_accept_early_media">Accept early-media</string>
 
     <!-- Chat settings -->
     <string name="pref_chat_title">Chat</string>

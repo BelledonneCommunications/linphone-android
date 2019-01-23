@@ -1102,6 +1102,9 @@ public class SettingsFragment extends PreferencesListFragment {
                         findPreference(getString(R.string.pref_incoming_call_timeout_key));
         EditTextPreference autoAnswerTime =
                 (EditTextPreference) findPreference(getString(R.string.pref_auto_answer_time_key));
+        CheckBoxPreference earlyMedia =
+                (CheckBoxPreference)
+                        findPreference(getString(R.string.pref_accept_early_media_key));
 
         rfc2833.setChecked(mPrefs.useRfc2833Dtmfs());
         sipInfo.setChecked(mPrefs.useSipInfoDtmfs());
@@ -1112,6 +1115,7 @@ public class SettingsFragment extends PreferencesListFragment {
         incTimeout.setSummary(String.valueOf(mPrefs.getIncTimeout()));
         autoAnswerTime.setText(String.valueOf(mPrefs.getAutoAnswerTime()));
         autoAnswerTime.setSummary(String.valueOf(mPrefs.getAutoAnswerTime()));
+        earlyMedia.setChecked(mPrefs.acceptIncomingEarlyMedia());
         if (mPrefs.isAutoAnswerEnabled()) {
             autoAnswerTime.setEnabled(true);
         } else {
@@ -1292,6 +1296,18 @@ public class SettingsFragment extends PreferencesListFragment {
                                 String value = (String) newValue;
                                 mPrefs.setAutoAnswerTime(Integer.valueOf(value));
                                 preference.setSummary(value);
+                                return true;
+                            }
+                        });
+
+        findPreference(getString(R.string.pref_accept_early_media_key))
+                .setOnPreferenceChangeListener(
+                        new OnPreferenceChangeListener() {
+                            @Override
+                            public boolean onPreferenceChange(
+                                    Preference preference, Object newValue) {
+                                boolean accept = (Boolean) newValue;
+                                mPrefs.setAcceptIncomingEarlyMedia(accept);
                                 return true;
                             }
                         });
