@@ -132,16 +132,18 @@ public class StatusFragment extends Fragment {
                         int unreadCount;
                         String data = content.getStringBuffer();
                         String[] voiceMail = data.split("voice-message: ");
-                        final String[] intToParse = voiceMail[1].split("/", 0);
+                        if (voiceMail.length >= 2) {
+                            final String[] intToParse = voiceMail[1].split("/", 0);
 
-                        unreadCount = Integer.parseInt(intToParse[0]);
-                        if (unreadCount > 0) {
-                            mVoicemailCount.setText(unreadCount);
-                            mVoicemail.setVisibility(View.VISIBLE);
-                            mVoicemailCount.setVisibility(View.VISIBLE);
-                        } else {
-                            mVoicemail.setVisibility(View.GONE);
-                            mVoicemailCount.setVisibility(View.GONE);
+                            unreadCount = Integer.parseInt(intToParse[0]);
+                            if (unreadCount > 0) {
+                                mVoicemailCount.setText(unreadCount);
+                                mVoicemail.setVisibility(View.VISIBLE);
+                                mVoicemailCount.setVisibility(View.VISIBLE);
+                            } else {
+                                mVoicemail.setVisibility(View.GONE);
+                                mVoicemailCount.setVisibility(View.GONE);
+                            }
                         }
                     }
                 };
