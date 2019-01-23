@@ -131,6 +131,7 @@
         <item>@string/pref_auto_download_policy_always_key</item>
         <item>@string/pref_auto_download_policy_size_key</item>
     </string-array>
+    <string name="pref_accept_early_media_key">pref_accept_early_media_key</string>
 
     <string name="push_reg_id_key" translatable="false">push_reg_id_key</string>
     <string name="push_sender_id_key" translatable="false">push_sender_id_key</string>
