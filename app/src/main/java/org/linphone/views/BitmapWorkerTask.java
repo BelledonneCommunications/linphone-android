@@ -43,6 +43,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> mImageViewReference;
     private final Context mContext;
     private final Bitmap mDefaultBitmap;
+    private final int mImageViewHeight;
 
     public BitmapWorkerTask(Context context, ImageView imageView, Bitmap defaultBitmap) {
         mContext = context;
@@ -50,6 +51,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         path = null;
         // Use a WeakReference to ensure the ImageView can be garbage collected
         mImageViewReference = new WeakReference<>(imageView);
+        mImageViewHeight = imageView.getMeasuredHeight();
     }
 
     public static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
@@ -103,7 +105,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                 int pictureOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
                 if (pictureOrientation == 6 || pictureOrientation == 3 || pictureOrientation == 8) {
                     if (imageView != null) {
-                        float factor = (float) imageView.getMeasuredHeight() / height;
+                        float factor = (float) mImageViewHeight / height;
                         matrix.postScale(factor, factor);
                     }
                     if (pictureOrientation == 6) {
@@ -125,7 +127,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
             if (thumbnail == null && bm != null) {
                 if (imageView == null) return bm;
-                thumbnail = scaleToFitHeight(bm, imageView.getMeasuredHeight());
+                thumbnail = scaleToFitHeight(bm, mImageViewHeight);
                 if (thumbnail != bm) {
                     bm.recycle();
                 }

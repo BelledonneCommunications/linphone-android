@@ -1503,7 +1503,6 @@ public class LinphonePreferences {
          * @throws CoreException
          */
         public void saveNewAccount() throws CoreException {
-
             if (tempUsername == null
                     || tempUsername.length() < 1
                     || tempDomain == null

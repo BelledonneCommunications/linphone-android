@@ -183,9 +183,9 @@
     <string name="no_chat_history">No conversations</string>
     <string name="delete_conversation">Do you want to delete selected conversation?</string>
     <string name="delete_message">Do you want to delete selected message?</string>
-    <string name="remote_composing">Remote is writing...</string>
-    <string name="remote_composing_single">%s is writing...</string>
-    <string name="remote_composing_multiple">%s are writing...</string>
+    <string name="remote_composing">Remote is writing…</string>
+    <string name="remote_composing_single">%s is writing…</string>
+    <string name="remote_composing_multiple">%s are writing…</string>
     <string name="share_picture_size_small">Small</string>
     <string name="share_picture_size_medium">Medium</string>
     <string name="share_picture_size_large">Large</string>
@@ -195,7 +195,7 @@
     <string name="image_picker_title">Select source</string>
     <string name="image_saved">Image saved</string>
     <string name="image_not_saved">Error, image not saved</string>
-    <string name="wait">Please wait...</string>
+    <string name="wait">Please wait…</string>
     <string name="image_transfert_error">An error occurred during the file transfer</string>
     <string name="message_not_encrypted">This message is not encrypted</string>
     <string name="message_cant_be_decrypted">You have received an encrypted message you are unable to decrypt from %s\nYou need to call your correspondant in order to exchange your ZRTP keys if you want to decrypt the future messages you will receive.</string>
@@ -325,7 +325,7 @@
     <string name="error_unauthorized">Unauthorized</string>
     <string name="error_io_error">Network error</string>
     <string name="download_image_failed">Download failed. Please check your network connection or try again later.</string>
-    <string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile...</string>
+    <string name="remote_provisioning_failure">Failed to download or apply remote provisioning profile…</string>
     <string name="remote_provisioning_again_title">Remote provisioning</string>
     <string name="remote_provisioning_again_message">Do you want to change the provisioning URI?</string>
 

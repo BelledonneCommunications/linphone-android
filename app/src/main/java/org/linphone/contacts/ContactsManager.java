@@ -309,6 +309,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         } catch (RemoteException e) {
             Log.e("[Contacts Manager] Couldn't make contacts account visible: " + e);
         }
+        client.close();
     }
 
     public void initializeSyncAccount(Activity activity) {
