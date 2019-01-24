@@ -129,15 +129,18 @@ public class StatusFragment extends Fragment {
 
                         if (content.getSize() == 0) return;
 
-                        int unreadCount;
-                        String data = content.getStringBuffer();
+                        int unreadCount = 0;
+                        String data = content.getStringBuffer().toLowerCase();
                         String[] voiceMail = data.split("voice-message: ");
                         if (voiceMail.length >= 2) {
                             final String[] intToParse = voiceMail[1].split("/", 0);
+                            try {
+                                unreadCount = Integer.parseInt(intToParse[0]);
+                            } catch (NumberFormatException nfe) {
 
-                            unreadCount = Integer.parseInt(intToParse[0]);
+                            }
                             if (unreadCount > 0) {
-                                mVoicemailCount.setText(unreadCount);
+                                mVoicemailCount.setText(String.valueOf(unreadCount));
                                 mVoicemail.setVisibility(View.VISIBLE);
                                 mVoicemailCount.setVisibility(View.VISIBLE);
                             } else {
