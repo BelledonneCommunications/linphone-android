@@ -34,6 +34,10 @@ RUN echo "y" | sdkmanager "platforms;android-28" "build-tools;28.0.0" "extras;an
 # Accept Android SDK licenses
 RUN yes | sdkmanager --licenses
 
+RUN echo y | android update sdk --no-ui --all --filter platform-tools
+RUN echo y | android update sdk --no-ui --all --filter android-28
+RUN echo y | android update sdk --no-ui --all --filter build-tools-28.0.3
+
 # Configure user bc
 RUN useradd -ms /bin/bash bc && \
     echo 'bc:cotcot' | chpasswd && \

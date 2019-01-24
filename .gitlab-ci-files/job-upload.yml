@@ -1,0 +1,12 @@
+job-android-upload:
+
+  stage: deploy
+  tags: [ "deploy" ]
+
+  only:
+    - schedules
+  dependencies:
+    - job-android
+
+  script:
+    - echo "TODO"
