@@ -1,4 +1,4 @@
-.job-android:
+job-android:
 
   stage: build
   tags: [ "docker-android" ]
