@@ -1,0 +1,20 @@
+.job-android:
+
+  stage: build
+  tags: [ "docker-android" ]
+
+  script:
+    - sdkmanager
+    - ./gradlew app:assembleDebug
+
+  artifacts:
+    paths:
+      - ./app/build/outputs/apk/debug/linphone-android-debug-*.apk
+    when: always
+    expire_in: 1 week
+
+
+.scheduled-job-android:
+  extends: .job-android
+  only:
+    - schedules
