@@ -2,6 +2,7 @@ job-android:
 
   stage: build
   tags: [ "docker-android" ]
+  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-android:25.2.5
 
   script:
     - sdkmanager
