@@ -113,9 +113,10 @@ public class Digit extends Button implements AddressAware {
 								i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
 								i.putExtra(Intent.EXTRA_TEXT, info);
 								i.setType("application/zip");
+								i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 								try {
-									LinphoneService.instance().getApplicationContext().startActivity(Intent.createChooser(i, "Send mail..."));
+									LinphoneService.instance().getApplicationContext().startActivity(Intent.createChooser(i, "Send mail...").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 									lc.removeListener(mListener);
 								} catch (android.content.ActivityNotFoundException ex) {
 									Log.e(ex);

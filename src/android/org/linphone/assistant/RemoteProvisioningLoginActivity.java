@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import org.linphone.LinphoneManager;
 import org.linphone.LinphonePreferences;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 import org.linphone.core.AuthInfo;
@@ -27,6 +28,7 @@ import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
+import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
@@ -35,7 +37,9 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
@@ -69,6 +73,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import static android.os.SystemClock.sleep;
+import static org.linphone.core.LogCollectionState.*;
 
 public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
 	private static RemoteProvisioningLoginActivity instance;
@@ -81,6 +86,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private LinearLayout bottom;
 	private RelativeLayout layout_button;
 	private CoreListenerStub mListener;
+	private CoreListenerStub mListener2;
 	private SurfaceView mQrcodeView;
 	private ImageView mImageMask;
 	private AndroidVideoWindowImpl androidVideoWindowImpl;
@@ -89,6 +95,58 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 	private boolean backCamera = true;
 	private int PERMISSION_CAMERA = 108;
 
+	//temp to trouble shoot provisionning issues
+	public void displayDebugPopup(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+		mListener2 = new CoreListenerStub() {
+			@Override
+			public void onLogCollectionUploadStateChanged(Core lc, Core.LogCollectionUploadState state, String info) {
+				if (state == Core.LogCollectionUploadState.Delivered) {
+					final String appName = LinphoneService.instance().getApplicationContext().getString(R.string.app_name);
+
+					Intent i = new Intent(Intent.ACTION_SEND);
+					i.putExtra(Intent.EXTRA_EMAIL, new String[]{ LinphoneService.instance().getApplicationContext().getString(R.string.about_bugreport_email) });
+					i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+					i.putExtra(Intent.EXTRA_TEXT, info);
+					i.setType("application/zip");
+					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+					try {
+						LinphoneService.instance().getApplicationContext().startActivity(Intent.createChooser(i, "Send mail...").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+					} catch (android.content.ActivityNotFoundException ex) {
+						Log.e(ex);
+					}
+				} else if (state == Core.LogCollectionUploadState.NotDelivered) {
+					Toast.makeText(RemoteProvisioningLoginActivity.this, "Error, do not managed to send logs", Toast.LENGTH_LONG).show();
+				}
+			}
+		};
+
+		alertDialog.setTitle("Sorry, an unexpected error occured, please help us troubleshooting.");
+		if(LinphonePreferences.instance().isDebugEnabled()) {
+			alertDialog.setItems(getResources().getStringArray(R.array.popup_send_log_2), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					if(which == 0) {
+						Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+						if (lc != null) {
+							lc.uploadLogCollection();
+							lc.addListener(mListener2);
+						}
+					}
+				}
+			});
+
+		} else {
+			alertDialog.setItems(getResources().getStringArray(R.array.popup_enable_log), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					if(which == 0) {
+						LinphonePreferences.instance().setDebugEnabled(true);
+					}
+				}
+			});
+		}
+		alertDialog.show();
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -144,9 +202,18 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 			@Override
 			public void onConfiguringStatus(Core lc, final ConfiguringState state, String message) {
 				if (state == ConfiguringState.Successful) {
-					//TODO
+					//in case of obiane, we can make sure configuration is ok starting from this point
+					LinphonePreferences.instance().firstLaunchSuccessful();
+					LinphonePreferences.instance().getConfig().sync();
+					startActivity(new Intent().setClass(RemoteProvisioningLoginActivity.this, LinphoneActivity.class).setData(getIntent().getData()));
+					finish();
 				} else if (state == ConfiguringState.Failed) {
+					//to make sure we do not retry by acident
+					LinphonePreferences.instance().setRemoteProvisioningUrl(null);
+					LinphonePreferences.instance().getConfig().sync();
 					Toast.makeText(RemoteProvisioningLoginActivity.this, R.string.remote_provisioning_failure, Toast.LENGTH_LONG).show();
+
+					instance.displayDebugPopup();
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -408,12 +475,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 		LinphoneManager.getLc().addAuthInfo(auth);
 
 		LinphonePreferences.instance().setRemoteProvisioningUrl(url);
-
-		//TODO
-		LinphoneManager.getLc().iterate();
-		sleep(1000);
-		LinphoneManager.getLc().iterate();
-		//TODO
+		LinphonePreferences.instance().getConfig().sync();
 
 		LinphoneManager.getInstance().restartCore();
 		LinphoneManager.getLc().addListener(mListener);

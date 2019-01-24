@@ -1,11 +1,10 @@
 [net]
-download_bw=512
-upload_bw=512
+download_bw=0
+upload_bw=0
 
 [sip]
 contact="Linphone Android" <sip:linphone.android@unknown-host>
 use_info=0
-use_ipv6=0
 keepalive_period=30000
 
 [video]
@@ -14,12 +13,13 @@ size=vga
 [app]
 tunnel=disabled
 push_notification=1
-debug=0
+debug=1
+debug_popup_magic=#1234
 
 [tunnel]
 host=
 port=443
 
 [misc]
-log_collection_upload_server_url=https://www.linphone.org:444/lft.php
-file_transfer_server_url=https://www.linphone.org:444/lft.php
+lfile_transfer_server_url=https://sip1.msiorange.com/file_sharing/upload.php
+ log_collection_upload_server_url=https://sip1.msiorange.com/file_sharing/upload.php

@@ -4,10 +4,6 @@
 #Paths to resources must be set from LinphoneManager, after creating LinphoneCore.
 [net]
 mtu=1300
-#Because dynamic bitrate adaption can increase bitrate, we must allow "no limit"
-download_bw=0
-upload_bw=0
-force_ice_disablement=0
 
 [sip]
 guess_hostname=1
@@ -20,11 +16,6 @@ use_cpim=1
 linphone_specs=groupchat
 
 [rtp]
-audio_rtp_port=7076
-video_rtp_port=9078
-audio_jitt_comp=60
-video_jitt_comp=60
-nortp_timeout=30
 disable_upnp=1
 
 [sound]
@@ -39,13 +30,12 @@ ec_calibrator_cool_tones=1
 [misc]
 max_calls=10
 history_max_size=100
-store_friends=0
 
 [app]
 activation_code_length=4
 show_login_view=1
 friendlist_subscription_enabled=1
-debug_popup_magic=#1234
+
 
 [assistant]
 password_max_length=-1

@@ -578,22 +578,24 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		try {
 			mTimer.cancel();
 			destroyLinphoneCore();
-			try {
-				InputStream backup = new FileInputStream(linphoneRcBack);
-				if (backup != null) {
-					File rcfile = new File(linphoneRcPath);
-					if (rcfile.exists()) {
-						LinphoneUtils.copyToFile(backup, rcfile);
-					}
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
 		}
 		catch (RuntimeException e) {
 			Log.e(e);
 		}
 		finally {
+			try {
+				File backupFile = new File(linphoneRcBack);
+				if (backupFile.exists()) {
+					InputStream backup = new FileInputStream(backupFile);
+					File rcfile = new File(linphoneRcPath);
+					if (rcfile.exists()) {
+						LinphoneUtils.copyToFile(backup, rcfile);
+					}
+					backupFile.delete();
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 			try {
 				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
 					mServiceContext.unregisterReceiver(mNetworkReceiver);
@@ -620,7 +622,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				dozeManager(false);
 			} catch (IllegalArgumentException iae) {
 				Log.e(iae);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				Log.e(e);
 			}
 			mLc = null;
@@ -634,11 +636,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		sExited = false;
 	}
 
-	private synchronized void startLibLinphone(Context c) {
+	 private synchronized void startLibLinphone(Context c, Config config) {
+
 		try {
-			copyAssetsFromPackage();
 			//traces alway start with traces enable to not missed first initialization
-			mLc = Factory.instance().createCore(mConfigFile, mLinphoneFactoryConfigFile, c);
+			mLc = Factory.instance().createCoreWithConfig(config, c);
 			mLc.addListener(this);
 			mLc.start();
 			TimerTask lTask = new TimerTask() {
@@ -662,6 +664,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 		}
 	}
 
+	private synchronized void startLibLinphone(Context c) {
+		try {
+			copyAssetsFromPackage();
+			startLibLinphone(c, Factory.instance().createConfigWithFactory(mConfigFile, mLinphoneFactoryConfigFile));
+		} catch (Exception e) {
+			Log.e(e, "Cannot start linphone");
+		}
+	}
 	private void initPushNotificationsService() {
 		if (getString(R.string.push_type).equals("google")) {
 			try {
@@ -1670,6 +1680,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
 		LinphonePreferences prefs = LinphonePreferences.instance();
 		final String linphoneRcBack = mServiceContext.getFilesDir().getAbsolutePath() + "/linphonerc.back";
+		//Obiane spec
+		if (state != ConfiguringState.Failed) {
+			File backup = new File(linphoneRcBack);
+			if (backup.exists()) backup.delete();
+			if (savedList != null) lc.removeFriendList(savedList);
+		}
 		if (state == ConfiguringState.Successful) {
 			if (prefs.isProvisioningLoginViewEnabled()) {
 				ProxyConfig proxyConfig = lc.createProxyConfig();
@@ -1677,9 +1693,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 				wizardLoginViewDomain = (addr != null) ? addr.getDomain() : "";
 			}
 			prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
-			if (savedList != null) lc.removeFriendList(savedList);
-			File backup = new File(linphoneRcBack);
-			if (backup.exists()) backup.delete();
 		} else if (state == ConfiguringState.Failed) {
 			final CoreListener listener = this;
 			Handler mainHandler = new Handler(mServiceContext.getMainLooper());
@@ -1693,14 +1706,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 					destroyCore();
 					Config cfg = Factory.instance().createConfig(linphoneRcPath);
 					cfg.setString("misc", "config-uri", "");
-					cfg.sync();
-					startLibLinphone(mServiceContext);
+					startLibLinphone(mServiceContext, cfg);
 					sExited = false;
 					mLc.setProvisioningUri(remoteProvisioning);
-					File backup = new File(linphoneRcBack);
-					if (backup.exists()) {
-						backup.delete();
-					}
+
 					if (ContactsManager.getInstance() != null) ContactsManager.getInstance().fetchContactsAsync();
 				}
 			};

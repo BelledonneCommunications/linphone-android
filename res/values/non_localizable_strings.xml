@@ -216,6 +216,12 @@
 		<item>Cancel</item>
 	</string-array>
 
+	<string-array name="popup_send_log_2">
+		<item>Send logs</item>
+		<item>Cancel</item>
+	</string-array>
+
+
 	<string name="pref_use_lime_encryption_key">pref_use_lime_encryption_key</string>
 	<string name="pref_device_ringtone_key">pref_device_ringtone_key</string>
 	<string name="pref_auto_answer_key">pref_auto_answer_key</string>
