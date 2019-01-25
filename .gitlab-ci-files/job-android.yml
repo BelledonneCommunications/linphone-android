@@ -10,7 +10,8 @@ job-android:
 
   script:
     - sdkmanager
-    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH .
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:ANDROID_GOOGLE_SERVICES_PATH app/
     - echo $ANDROID_SIGNING_PROPERTIES > keystore.properies
     - ./gradlew assembleDebug
     - ./gradlew assembleRelease
