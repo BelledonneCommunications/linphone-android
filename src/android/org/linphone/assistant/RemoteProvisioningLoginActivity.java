@@ -207,7 +207,7 @@ public class RemoteProvisioningLoginActivity extends Activity implements OnClick
 					LinphonePreferences.instance().getConfig().sync();
 					startActivity(new Intent().setClass(RemoteProvisioningLoginActivity.this, LinphoneActivity.class).setData(getIntent().getData()));
 					finish();
-				} else if (state == ConfiguringState.Failed) {
+				} else {
 					//to make sure we do not retry by acident
 					LinphonePreferences.instance().setRemoteProvisioningUrl(null);
 					LinphonePreferences.instance().getConfig().sync();
