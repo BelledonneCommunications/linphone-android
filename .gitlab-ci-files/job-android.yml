@@ -8,7 +8,7 @@ job-android:
     - sdkmanager
     - ./gradlew app:assembleDebug
     - echo $ID_RSA > id_rsa
-    - echo yes | scp -i id_rsa $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH .
+    - scp -oStrictHostKeyChecking=no -i id_rsa $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH .
     - echo $ANDROID_SIGNING_PROPERTIES > app/keystore.properies
     - ./gradlew app:assembleRelease
 
