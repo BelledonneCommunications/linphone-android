@@ -6,11 +6,12 @@ job-android:
 
   script:
     - sdkmanager
-    - ./gradlew app:assembleDebug
-    - echo $ID_RSA > id_rsa
+    - echo $SCP_PRIVATE_KEY > id_rsa
     - chmod go-rwx id_rsa
-    - scp -oStrictHostKeyChecking=no -i id_rsa $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH .
+    - echp $SCP_PRIVATE_KEY
+    - scp -oStrictHostKeyChecking=no -i ./id_rsa $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
     - echo $ANDROID_SIGNING_PROPERTIES > app/keystore.properies
+    - ./gradlew app:assembleDebug
     - ./gradlew app:assembleRelease
 
   artifacts:
