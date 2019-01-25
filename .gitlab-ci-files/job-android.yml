@@ -12,7 +12,10 @@ job-android:
     - sdkmanager
     - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
     - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_GOOGLE_SERVICES_PATH app/
-    - echo $ANDROID_SIGNING_PROPERTIES > keystore.properties
+    - echo storePassword=$ANDROID_KEYSTORE_PASSWORD > keystore.properties
+    - echo keyPassword=$ANDROID_KEYSTORE_KEY_PASSWORD >> keystore.properties
+    - echo keyAlias=$ANDROID_KEYSTORE_KEY_ALIAS >> keystore.properties
+    - echo storeFile=$ANDROID_KEYSTORE_FILE >> keystore.properties
     - ./gradlew assembleDebug
     - ./gradlew assembleRelease
 
