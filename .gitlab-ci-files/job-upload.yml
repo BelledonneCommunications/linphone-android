@@ -9,4 +9,4 @@ job-android-upload:
     - job-android
 
   script:
-    - echo "TODO"
+    - cd app/build/outputs/apk/ && rsync ./debug/*.apk $DEPLOY_SERVER:$ANDROID_DEPLOY_DIRECTORY
