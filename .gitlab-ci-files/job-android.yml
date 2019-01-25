@@ -8,7 +8,8 @@ job-android:
     - sdkmanager
     - echo $SCP_PRIVATE_KEY > id_rsa
     - chmod go-rwx id_rsa
-    - echp $SCP_PRIVATE_KEY
+    - echo $SCP_PRIVATE_KEY
+    - cat ./id_rsa
     - scp -oStrictHostKeyChecking=no -i ./id_rsa $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
     - echo $ANDROID_SIGNING_PROPERTIES > app/keystore.properies
     - ./gradlew app:assembleDebug
