@@ -7,6 +7,9 @@ job-android:
   script:
     - sdkmanager
     - ./gradlew app:assembleDebug
+    - rsync $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH .
+    - echo $ANDROID_SIGNING_PROPERTIES > app/keystore.properies
+    - ./gradlew app:assembleRelease
 
   artifacts:
     paths:
