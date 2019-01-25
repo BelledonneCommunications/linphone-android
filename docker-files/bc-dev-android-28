@@ -19,7 +19,7 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 
 # Install common general tools
 RUN apt-get update && \
-    apt-get install -y curl nano sudo unzip vim wget openjdk-8-jdk-headless && \
+    apt-get install -y curl nano sudo unzip vim wget openjdk-8-jdk-headless rsync ssh && \
     apt-get clean
 
 # Get the Android tools
@@ -29,7 +29,15 @@ RUN wget https://dl.google.com/android/repository/tools_r$ANDROID_SDK-linux.zip 
 ENV PATH $ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH
 
 # Get the Android SDK
-RUN echo "y" | sdkmanager "platforms;android-28" "build-tools;28.0.0" "extras;android;m2repository" "extras;google;m2repository" "platform-tools" "tools"
+RUN echo "y" | sdkmanager "platforms;android-28" "build-tools;28.0.3" "extras;android;m2repository" "extras;google;m2repository" "platform-tools" "tools"
+
+# Accept Android SDK licenses
+RUN yes | sdkmanager --licenses
+
+# Update if needed
+RUN echo y | android update sdk --no-ui --all --filter platform-tools
+RUN echo y | android update sdk --no-ui --all --filter android-28
+RUN echo y | android update sdk --no-ui --all --filter build-tools-28.0.3
 
 # Configure user bc
 RUN useradd -ms /bin/bash bc && \
