@@ -10,14 +10,15 @@ job-android:
 
   script:
     - sdkmanager
-    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
-    - echo $ANDROID_SIGNING_PROPERTIES > app/keystore.properies
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH .
+    - echo $ANDROID_SIGNING_PROPERTIES > keystore.properies
     - ./gradlew app:assembleDebug
     - ./gradlew app:assembleRelease
 
   artifacts:
     paths:
       - ./app/build/outputs/apk/debug/linphone-android-debug-*.apk
+      - ./app/build/outputs/apk/release/linphone-android-release-*.apk
     when: always
     expire_in: 1 week
 
