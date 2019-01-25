@@ -40,7 +40,8 @@ def submoduleDir = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/j2se',
                     'submodules/linphone/java/common',
                     'submodules/linphone/java/impl',
-                    'submodules/linphone/coreapi/help/examples/java']
+                    'submodules/linphone/coreapi/help/examples/java'
+		    'submodules/linphone/wrappers/java/classes/tools']
 
 
 def excludePackage = []
@@ -49,6 +50,13 @@ excludePackage.add('**/gdb.*')
 excludePackage.add('**/libopenh264**')
 excludePackage.add('**/**tester**')
 excludePackage.add('**/LICENSE.txt')
+
+
+def excludeFiles = []
+excludeFiles.add(''**/mediastream/MediastreamerActivity.java')
+excludeFiles.add('H264Helper.java')
+excludeFiles.add('OpenH264DownloadHelper.java')
+excludeFiles.add('OpenH264DownloadHelperListener.java')
 
 android {
     defaultConfig {
@@ -74,7 +82,7 @@ android {
             jniLibs.srcDirs = ['libs']
             assets.srcDirs = ["${buildDir}/sdk-assets/assets/"]
             
-            java.excludes = ['**/mediastream/MediastreamerActivity.java']
+            java.excludes = excludeFiles
 
             // Exclude some useless files
             packagingOptions {

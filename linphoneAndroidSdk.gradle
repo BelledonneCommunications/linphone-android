@@ -36,6 +36,7 @@ def srcDirs = ['submodules/mediastreamer2/java/src',
                     'submodules/linphone/java/common',
                     'submodules/linphone/java/impl',
                     'submodules/linphone/coreapi/help/examples/java',
+		    'submodules/linphone/wrappers/java/classes/tools/',
                     'src/android']
 
 def excludeFiles = []
@@ -44,6 +45,9 @@ def excludeFiles = []
 excludeFiles.add('**/Firebase*')
 excludeFiles.add('**/gcm*')
 excludeFiles.add('**/mediastream/MediastreamerActivity.java')
+excludeFiles.add('H264Helper.java')
+excludeFiles.add('OpenH264DownloadHelper.java')
+excludeFiles.add('OpenH264DownloadHelperListener.java')
 
 def excludePackage = []
 
