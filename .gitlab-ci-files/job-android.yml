@@ -4,13 +4,13 @@ job-android:
   tags: [ "docker-android" ]
   image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android:28
 
+  before_script:
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+
   script:
     - sdkmanager
-    - echo $SCP_PRIVATE_KEY > id_rsa
-    - chmod go-rwx id_rsa
-    - echo $SCP_PRIVATE_KEY
-    - cat ./id_rsa
-    - scp -oStrictHostKeyChecking=no -i ./id_rsa $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
     - echo $ANDROID_SIGNING_PROPERTIES > app/keystore.properies
     - ./gradlew app:assembleDebug
     - ./gradlew app:assembleRelease
