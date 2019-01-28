@@ -125,7 +125,7 @@ public class ImdnFragment extends Fragment {
 		mBubble.messageStatus.setVisibility(View.GONE);
 		mBubble.messageSendingInProgress.setVisibility(View.GONE);
 		mBubble.imdmLayout.setVisibility(View.INVISIBLE);
-		mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+		//mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 		mMessage = mRoom.findMessage(mMessageId);
 		mListener = new ChatMessageListenerStub() {
@@ -144,13 +144,13 @@ public class ImdnFragment extends Fragment {
 			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
 			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
 			mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_confirm_delete_button);
-			mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
+			//mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask_outgoing);
 		} else {
 			mBubble.background.setBackgroundColor(0x19595959);
 			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font9);
 			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font8);
 			mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
-			mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
+			//mBubble.contactPictureMask.setImageResource(R.drawable.avatar_chat_mask);
 		}
 
 		return view;
@@ -206,13 +206,13 @@ public class ImdnFragment extends Fragment {
 				displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
 			}
 
-			mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			/*mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 			if (contact.hasPhoto()) {
 				LinphoneUtils.setThumbnailPictureFromUri(getActivity(), mBubble.contactPicture, contact.getThumbnailUri());
-			}
+			}*/
 		} else {
 			displayName = LinphoneUtils.getAddressDisplayName(remoteSender);
-			mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+			//mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 		}
 		mBubble.contactName.setText(LinphoneUtils.timestampToHumanDate(getActivity(), mMessage.getTime(), R.string.messages_date_format, true) + " - " + displayName);
 

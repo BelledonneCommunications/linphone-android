@@ -165,7 +165,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			contact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 			ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
 			Address ourUri = (prx != null) ? prx.getIdentityAddress() : null;
-			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, contact.getFriend().getAddress());
+			ChatRoomSecurityLevel securityLevel = getSecurityLevelForSipUri(LinphoneManager.getLc(), ourUri, (contact != null) ? contact.getFriend().getAddress() : lAddress);
 			if (securityLevel == ChatRoomSecurityLevel.Safe) {
 				contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
 			} else if (securityLevel == ChatRoomSecurityLevel.Unsafe) {
