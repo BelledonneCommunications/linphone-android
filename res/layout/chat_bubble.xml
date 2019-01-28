@@ -99,14 +99,23 @@
                     android:textStyle="bold"/>
 
 				<RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center">
 
-                    <TextView
-                        android:id="@+id/file_name"
-                        style="@style/font26"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+					<TextView
+						android:id="@+id/file_name"
+						style="@style/font25"
+						android:layout_width="55dp"
+						android:layout_height="55dp"
+						android:layout_centerHorizontal="true"
+						android:layout_centerVertical="false"
+						android:background="@drawable/chat_list_indicator"
+						android:gravity="center"
+						android:maxLines="1"
+						android:text="FILE"
+						android:textAlignment="center" />
+
 
 					<ImageView
 						android:id="@+id/image"
@@ -114,19 +123,22 @@
 						android:layout_height="150dp"
 						android:layout_below="@id/file_name"
 						android:layout_centerHorizontal="true"
-						android:scaleType="centerInside"/>
+						android:layout_centerVertical="true"
+						android:gravity="center"
+						android:scaleType="centerInside" />
 
 					<Button
 						android:id="@+id/open_file"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_below="@id/file_name"
-						android:layout_centerVertical="true"
+						android:layout_centerHorizontal="true"
+						android:gravity="center"
 						android:text="@string/open"
 						android:textAppearance="@style/font8"
-						android:visibility="gone"/>
+						android:visibility="gone" />
 
-                </RelativeLayout>
+				</RelativeLayout>
 
                 <TextView
                     android:id="@+id/message"

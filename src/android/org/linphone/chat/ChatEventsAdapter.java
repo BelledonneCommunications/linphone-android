@@ -388,7 +388,8 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
 					    @Override
 					    public void onClick(View v) {
-						    if (mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+						    if (LinphoneManager.getLc() != null && LinphoneManager.getLc().isNetworkReachable()
+									&& mContext.getPackageManager().checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, mContext.getPackageName()) == PackageManager.PERMISSION_GRANTED) {
 							    v.setEnabled(false);
 							    String filename = message.getFileTransferInformation().getName();
 							    String directory_path = Environment.getExternalStorageDirectory() + "/" + mContext.getString(R.string.app_name);
@@ -581,13 +582,21 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		Content fileContent = message.getFileTransferInformation();
 		String appData = fileContent.getFilePath();
 		if (fileContent != null && fileContent.isFile() && appData != null) {
+			String extension = (LinphoneUtils.getExtensionFromFileName(message.getFileTransferInformation().getName()));
+			if(extension != null) extension = extension.toUpperCase();
+			else extension = "FILE";
+
+			if (extension.length() > 4) extension = extension.substring(0, 3);
+
 			LinphoneUtils.scanFile(message);
-			holder.fileName.setText(fileContent.getName());
+			holder.fileName.setText(extension);
 			if (LinphoneUtils.isExtensionImage(appData)) {
 				holder.messageImage.setVisibility(View.VISIBLE);
 				loadBitmap(appData, holder.messageImage);
 				holder.messageImage.setTag(appData);
+				holder.fileName.setVisibility(View.GONE);
 			} else {
+				holder.fileName.setVisibility(View.VISIBLE);
 				holder.openFileButton.setVisibility(View.VISIBLE);
 				holder.openFileButton.setTag(appData);
 				holder.openFileButton.setOnClickListener(new View.OnClickListener() {

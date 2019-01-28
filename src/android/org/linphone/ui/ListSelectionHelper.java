@@ -30,7 +30,7 @@ import org.linphone.R;
 import org.linphone.activities.LinphoneActivity;
 
 public class ListSelectionHelper {
-	private ImageView mEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton, mCancelButton;
+	private ImageView mEditButton, mSelectAllButton, mDeselectAllButton, mDeleteSelectionButton, mCancelButton, mCreateChat;
 	private LinearLayout mEditTopBar, mTopBar;
 	private ListSelectionAdapter mAdapter;
 	private DeleteListener mDeleteListener;
@@ -51,11 +51,13 @@ public class ListSelectionHelper {
 
 		mEditTopBar = view.findViewById(R.id.edit_list);
 		mTopBar = view.findViewById(R.id.top_bar);
+		mCreateChat = view.findViewById(R.id.new_discussion);
 
 		mCancelButton = view.findViewById(R.id.cancel);
 		mCancelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if (mCreateChat != null) mCreateChat.setVisibility(View.VISIBLE);
 				quitEditionMode();
 			}
 		});
@@ -68,6 +70,7 @@ public class ListSelectionHelper {
 					mAdapter.enableEdition(true);
 					mTopBar.setVisibility(View.GONE);
 					mEditTopBar.setVisibility(View.VISIBLE);
+					if (mCreateChat != null) mCreateChat.setVisibility(View.GONE);
 				}
 			}
 		});
@@ -102,6 +105,7 @@ public class ListSelectionHelper {
 					public void onClick(View view) {
 						mDeleteListener.onDeleteSelection(getSelectedObjects());
 						dialog.dismiss();
+						if (mCreateChat != null) mCreateChat.setVisibility(View.VISIBLE);
 						quitEditionMode();
 					}
 				});
@@ -110,6 +114,7 @@ public class ListSelectionHelper {
 					@Override
 					public void onClick(View view) {
 						dialog.dismiss();
+						if (mCreateChat != null) mCreateChat.setVisibility(View.VISIBLE);
 						quitEditionMode();
 					}
 				});
