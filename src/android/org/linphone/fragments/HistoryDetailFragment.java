@@ -173,7 +173,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 			} else if (securityLevel == ChatRoomSecurityLevel.Encrypted) {
 				contactPicture.setImageResource(R.drawable.avatar_medium_secure1);
 			} else {
-				ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), contact.getFriend().getAddress().asStringUriOnly());
+				ZrtpPeerStatus zrtpStatus = getZrtpStatus(LinphoneManager.getLc(), (contact != null) ? contact.getFriend().getAddress().asStringUriOnly() : lAddress.asStringUriOnly());
 				if (zrtpStatus == ZrtpPeerStatus.Valid) {
 					contactPicture.setImageResource(R.drawable.avatar_medium_secure2);
 				} else if (zrtpStatus == ZrtpPeerStatus.Invalid) {
