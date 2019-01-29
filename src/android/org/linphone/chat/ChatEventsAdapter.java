@@ -597,14 +597,21 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 				holder.fileName.setVisibility(View.GONE);
 			} else {
 				holder.fileName.setVisibility(View.VISIBLE);
-				holder.openFileButton.setVisibility(View.VISIBLE);
+				holder.fileName.setTag(appData);
+				holder.fileName.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						openFile((String) v.getTag());
+					}
+				});
+				/*holder.openFileButton.setVisibility(View.VISIBLE);
 				holder.openFileButton.setTag(appData);
 				holder.openFileButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						openFile((String) v.getTag());
 					}
-				});
+				});*/
 			}
 		}
 		notifyDataSetChanged();
