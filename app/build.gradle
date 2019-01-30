@@ -30,6 +30,22 @@ excludePackage.add('**/libopenh264**')
 excludePackage.add('**/**tester**')
 excludePackage.add('**/LICENSE.txt')
 
+
+def gitVersion = new ByteArrayOutputStream()
+
+task getGitVersion {
+    exec {
+        commandLine 'git', 'describe', '--always'
+        standardOutput = gitVersion
+    }
+    doLast {
+        gitVersion = gitVersion.toString().trim()
+        println("Git version: " + gitVersion)
+    }
+}
+
+project.tasks['preBuild'].dependsOn 'getGitVersion'
+
 /////////////////////////
 
 repositories {
@@ -57,7 +73,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "linphone-android-${variant.buildType.name}-${defaultConfig.versionName}.apk"
+            outputFileName = "linphone-android-${variant.buildType.name}-${gitVersion.toString().trim()}.apk"
         }
     }
 
