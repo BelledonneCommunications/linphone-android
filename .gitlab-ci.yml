@@ -9,8 +9,7 @@ job-android:
     CMAKE_GENERATOR: Ninja
 
   script:
-    - which sdkmanager
-    - yes | sdkmanager "build-tools;27.0.3"
+    - yes | /opt/android-sdk-linux/tools/bin/sdkmanager "build-tools;27.0.3"
     - ./prepare.py
     - make
     - cp bin/outputs/apk/debug/linphone-android-obiane-debug.apk android-obiane.apk
