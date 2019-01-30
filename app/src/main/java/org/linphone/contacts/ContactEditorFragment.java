@@ -189,7 +189,7 @@ public class ContactEditorFragment extends Fragment {
 
                         mContact.save();
                         getFragmentManager().popBackStackImmediate();
-                        if (mIsNewContact) {
+                        if (mIsNewContact || LinphoneActivity.instance().isTablet()) {
                             LinphoneActivity.instance().displayContact(mContact, false);
                         }
                     }
