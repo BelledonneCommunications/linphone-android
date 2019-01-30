@@ -9,6 +9,7 @@ job-android:
     CMAKE_GENERATOR: Ninja
 
   script:
+    - which sdkmanager
     - yes | sdkmanager "build-tools;27.0.3"
     - ./prepare.py
     - make
