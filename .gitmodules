@@ -122,7 +122,7 @@
 	url = https://gitlab.linphone.org/BC/public/external/zxing-cpp.git
 [submodule "submodules/lime"]
 	path = submodules/lime
-	url = git@gitlab.linphone.org:BC/public/lime.git
+	url = https://gitlab.linphone.org/BC/public/lime.git
 [submodule "submodules/externals/decaf"]
 	path = submodules/externals/decaf
 	url = https://gitlab.linphone.org/BC/public/external/decaf.git
