@@ -9,7 +9,7 @@ job-android:
 
   script:
     - sdkmanager
-    - ./prepapre.py
+    - ./prepare.py
     - make
     - cp bin/outputs/apk/debug/linphone-android-obiane-debug.apk android-obiane.apk
     - make unsigned
