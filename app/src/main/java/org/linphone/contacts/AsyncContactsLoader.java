@@ -235,12 +235,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
     @Override
     protected void onPostExecute(AsyncContactsData data) {
-
-        for (ContactsUpdatedListener listener :
-                ContactsManager.getInstance().getContactsListeners()) {
-            listener.onContactsUpdated();
-        }
-
         for (LinphoneContact contact : data.contacts) {
             contact.createOrUpdateFriendFromNativeContact();
         }
@@ -255,6 +249,11 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
         ContactsManager.getInstance().setContacts(data.contacts);
         ContactsManager.getInstance().setSipContacts(data.sipContacts);
+
+        for (ContactsUpdatedListener listener :
+                ContactsManager.getInstance().getContactsListeners()) {
+            listener.onContactsUpdated();
+        }
         Log.i("[Contacts Manager] Synchronization finished");
     }
 

@@ -113,19 +113,6 @@ class AndroidContact implements Serializable {
                             mAndroidRawId = rawId;
                             isAndroidRawIdLinphone = true;
                         }
-                        /*if (rawId.equals(mAndroidRawId)) {
-                            Log.i("[Contact] Contact with RAW ID " + rawId + " updated");
-                        } else {
-                            if (mAndroidRawId != null && isAndroidRawIdLinphone) {
-                                Log.w(
-                                        "[Contact] Linphone RAW ID "
-                                                + rawId
-                                                + " doesn't match existing RAW ID "
-                                                + mAndroidRawId);
-                            } else {
-
-                            }
-                        }*/
                     }
                 }
             } catch (Exception e) {

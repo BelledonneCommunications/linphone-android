@@ -52,7 +52,8 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
 
-public class ContactDetailsFragment extends Fragment implements OnClickListener {
+public class ContactDetailsFragment extends Fragment
+        implements OnClickListener, ContactsUpdatedListener {
     private LinphoneContact mContact;
     private ImageView mEditContact, mDeleteContact, mBack;
     private TextView mOrganization;
@@ -178,14 +179,6 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
                 };
 
         return mView;
-    }
-
-    @Override
-    public void onPause() {
-        if (mChatRoom != null) {
-            mChatRoom.removeListener(mChatRoomCreationListener);
-        }
-        super.onPause();
     }
 
     public void changeDisplayedContact(LinphoneContact newContact) {
@@ -318,14 +311,32 @@ public class ContactDetailsFragment extends Fragment implements OnClickListener 
     }
 
     @Override
+    public void onContactsUpdated() {
+        LinphoneContact contact =
+                ContactsManager.getInstance().findContactFromAndroidId(mContact.getAndroidId());
+        if (contact != null) {
+            changeDisplayedContact(contact);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
+        ContactsManager.getInstance().addContactsListener(this);
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DETAIL);
         }
-        // mContact.refresh();
         displayContact(mInflater, mView);
+    }
+
+    @Override
+    public void onPause() {
+        if (mChatRoom != null) {
+            mChatRoom.removeListener(mChatRoomCreationListener);
+        }
+        ContactsManager.getInstance().removeContactsListener(this);
+        super.onPause();
     }
 
     @Override

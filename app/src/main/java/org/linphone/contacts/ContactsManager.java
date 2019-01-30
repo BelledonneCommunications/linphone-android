@@ -335,6 +335,17 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
     }
 
+    public synchronized LinphoneContact findContactFromAndroidId(String androidId) {
+        if (androidId == null) return null;
+
+        for (LinphoneContact c : getContacts()) {
+            if (c.getAndroidId() != null && c.getAndroidId().equals(androidId)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
     public synchronized LinphoneContact findContactFromAddress(Address address) {
         if (address == null) return null;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -480,10 +491,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             Collections.sort(mSipContacts);
             Collections.sort(mGroupChatContacts);
             Collections.sort(mLimeX3dhContacts);
+        }
 
-            for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
-                listener.onContactsUpdated();
-            }
+        for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {
+            listener.onContactsUpdated();
         }
     }
 }

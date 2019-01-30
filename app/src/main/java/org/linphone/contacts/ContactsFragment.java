@@ -360,8 +360,9 @@ public class ContactsFragment extends Fragment
     @Override
     public void onContactsUpdated() {
         if (!LinphoneActivity.isInstanciated()
-                || LinphoneActivity.instance().getCurrentFragment()
-                        != FragmentsAvailable.CONTACTS_LIST) return;
+                || (LinphoneActivity.instance().getCurrentFragment()
+                                != FragmentsAvailable.CONTACTS_LIST
+                        && !LinphoneActivity.instance().isTablet())) return;
         if (mContactAdapter != null) {
             mContactAdapter.updateDataSet(
                     mOnlyDisplayLinphoneContacts
