@@ -1,0 +1,27 @@
+job-android:
+
+  stage: build
+  tags: [ "docker-android" ]
+
+  image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-android:r16b
+  variables:
+    CMAKE_GENERATOR: Ninja
+
+  script:
+    - sdkmanager
+    - ./prepapre.py
+    - make
+    - cp bin/outputs/apk/debug/linphone-android-obiane-debug.apk android-obiane.apk
+    - make unsigned
+    - cp bin/outputs/apk/packaged/linphone-android-obiane-packaged-unsigned.apk android-obiane-unsigned.apk
+
+  artifacts:
+    paths:
+      - android-obiane-unsigned.apk
+      - android-obiane.apk
+    when: always
+    expire_in: 1 week
+
+
+stages:
+ - build
