@@ -74,8 +74,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
                 view.setTag(holder);
             }
 
-            Address deviceAddress = device.getAddress();
-            holder.deviceName.setText(deviceAddress.getUriParam("gr")); // TODO
+            holder.deviceName.setText(device.getName());
 
             ChatRoomSecurityLevel level = device.getSecurityLevel();
             switch (level) {
@@ -150,8 +149,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
             view.setTag(holder);
         }
 
-        Address deviceAddress = device.getAddress();
-        holder.deviceName.setText(deviceAddress.getUriParam("gr")); // TODO
+        holder.deviceName.setText(device.getName());
 
         ChatRoomSecurityLevel level = device.getSecurityLevel();
         switch (level) {
