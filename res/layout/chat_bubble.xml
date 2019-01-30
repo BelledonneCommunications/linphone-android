@@ -117,6 +117,18 @@
 						android:textAlignment="center"
 						android:visibility="gone" />
 
+					<ImageView
+						android:id="@+id/file_transfer_image"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_below="@id/file_name"
+						android:layout_centerHorizontal="true"
+						android:layout_centerVertical="true"
+						android:gravity="center"
+						android:scaleType="centerInside"
+						android:src="@drawable/chat_attachment_over"
+						android:visibility="gone" />
+
 
 					<ImageView
 						android:id="@+id/image"
@@ -150,29 +162,32 @@
                     android:textColor="#595959"
                     android:textSize="13.3sp"/>
 
-                <RelativeLayout
-                    android:id="@+id/file_transfer_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
+				<RelativeLayout
+					android:id="@+id/file_transfer_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:visibility="gone">
 
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:layout_width="150dp"
-                        android:layout_height="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
-                        android:paddingRight="5dp"/>
+					<ProgressBar
+						android:id="@+id/progress_bar"
+						style="@android:style/Widget.ProgressBar.Horizontal"
+						android:layout_width="150dp"
+						android:layout_height="5dp"
+						android:layout_marginTop="10dp"
+						android:layout_marginBottom="10dp"
+						android:paddingRight="5dp" />
 
 					<Button
 						android:id="@+id/file_transfer_action"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_below="@id/progress_bar"
-						android:textAppearance="@style/font8"/>
+						android:layout_centerInParent="true"
+						android:gravity="center"
+						android:textAppearance="@style/font8" />
 
-                </RelativeLayout>
+				</RelativeLayout>
 
 				<LinearLayout
 					android:id="@+id/messageLayout"

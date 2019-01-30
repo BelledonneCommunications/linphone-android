@@ -126,6 +126,7 @@ public class ImdnFragment extends Fragment {
 		mBubble.messageStatus.setVisibility(View.GONE);
 		mBubble.messageSendingInProgress.setVisibility(View.GONE);
 		mBubble.imdmLayout.setVisibility(View.INVISIBLE);
+		mBubble.fileTransferImage.setVisibility(View.GONE);
 		//mBubble.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 		mMessage = mRoom.findMessage(mMessageId);
@@ -338,16 +339,22 @@ public class ImdnFragment extends Fragment {
 		Content fileContent = message.getFileTransferInformation();
 		String appData = fileContent.getFilePath();
 		if (fileContent != null && fileContent.isFile() && appData != null) {
-			String extension = (LinphoneUtils.getExtensionFromFileName(message.getFileTransferInformation().getName()));
-			if(extension != null) extension = extension.toUpperCase();
-			else extension = "FILE";
+		    if (message.getExternalBodyUrl() == null) {
+                String extension = (LinphoneUtils.getExtensionFromFileName(message.getFileTransferInformation().getName()));
+                if (extension != null) extension = extension.toUpperCase();
+                else extension = "FILE";
 
-			if (extension.length() > 4) extension = extension.substring(0, 3);
+                if (extension.length() > 4) extension = extension.substring(0, 3);
 
-			LinphoneUtils.scanFile(message);
-			holder.fileName.setText(extension);
-				holder.fileName.setVisibility(View.VISIBLE);
-				holder.fileName.setTag(appData);
+                LinphoneUtils.scanFile(message);
+                holder.fileName.setText(extension);
+                holder.fileName.setVisibility(View.VISIBLE);
+                holder.fileName.setTag(appData);
+            } else {
+		        holder.fileName.setText("");
+		        holder.fileName.setVisibility(View.GONE);
+		        holder.fileTransferImage.setVisibility(View.VISIBLE);
+            }
 		}
 	}
 }

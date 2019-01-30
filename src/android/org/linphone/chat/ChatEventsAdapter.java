@@ -211,6 +211,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 	    holder.imdmIcon.setVisibility(View.INVISIBLE);
 	    holder.imdmLabel.setVisibility(View.INVISIBLE);
 		holder.rightAnchor.setVisibility(View.VISIBLE);
+		holder.fileTransferImage.setVisibility(View.GONE);
 	    //holder.contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
 
 	    if (isEditionEnabled()) {
@@ -371,19 +372,21 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    String externalBodyUrl = message.getExternalBodyUrl();
 		    Content fileTransferContent = message.getFileTransferInformation();
 
-		    if (fileTransferContent != null && fileTransferContent.isFile()) { // Something to display
+		    if (fileTransferContent != null && externalBodyUrl == null && fileTransferContent.isFile()) { // Something to display
 				displayAttachedFile(message, holder);
 		    }
 
 		    if (externalBodyUrl != null) { // Incoming file transfer not yet downloaded
-			    holder.fileName.setVisibility(View.VISIBLE);
-			    holder.fileName.setText(fileTransferContent.getName());
+				holder.fileName.setText("");
+				holder.fileName.setVisibility(View.GONE);
+				holder.fileTransferImage.setVisibility(View.VISIBLE);
 
 			    holder.fileTransferLayout.setVisibility(View.VISIBLE);
 			    holder.fileTransferProgressBar.setVisibility(View.GONE);
 			    if (message.isFileTransferInProgress()) { // Incoming file transfer in progress
 				    holder.fileTransferAction.setVisibility(View.GONE);
 			    } else {
+					holder.fileTransferAction.setVisibility(View.VISIBLE);
 				    holder.fileTransferAction.setText(mContext.getString(R.string.accept));
 				    holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
 					    @Override
@@ -416,6 +419,7 @@ public class ChatEventsAdapter extends ListSelectionAdapter {
 		    } else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
 				message.setListener(mListener); // add the listener for file upload progress display
 				holder.messageSendingInProgress.setVisibility(View.GONE);
+				holder.fileTransferAction.setVisibility(View.VISIBLE);
 				holder.fileTransferLayout.setVisibility(View.VISIBLE);
 				holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
 				holder.fileTransferAction.setOnClickListener(new View.OnClickListener() {
