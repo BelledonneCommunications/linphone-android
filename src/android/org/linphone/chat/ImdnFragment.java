@@ -44,6 +44,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.Content;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
 import org.linphone.core.PresenceActivity;
@@ -134,12 +135,12 @@ public class ImdnFragment extends Fragment {
 				refreshInfo();
 			}
 		};
-		mMessage.setListener(mListener);
+		if (mMessage != null) mMessage.setListener(mListener);
 
 		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		layoutParams.setMargins(100, 10, 10, 10);
-		if (mMessage.isOutgoing()) {
+		if (mMessage != null && mMessage.isOutgoing()) {
 			mBubble.background.setBackgroundColor(0x26ff6600);
 			Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font3);
 			Compatibility.setTextAppearance(mBubble.fileTransferAction, getActivity(), R.style.font15);
@@ -224,11 +225,10 @@ public class ImdnFragment extends Fragment {
 			mBubble.messageText.setVisibility(View.VISIBLE);
 		}
 
-		String appData = (mMessage.getContents().length > 0) ? mMessage.getContents()[0].getFilePath() : "";
-		if (appData != null) { // Something to display
-			mBubble.fileName.setVisibility(View.VISIBLE);
-			mBubble.fileName.setText(LinphoneUtils.getNameFromFilePath(appData));
-			// We purposely chose not to display the image
+		Content fileTransferContent = mMessage.getFileTransferInformation();
+
+		if (fileTransferContent != null && fileTransferContent.isFile()) { // Something to display
+			displayAttachedFile(mMessage, mBubble);
 		}
 
 		mRead.removeAllViews();
@@ -329,6 +329,25 @@ public class ImdnFragment extends Fragment {
 
 			mUndelivered.addView(v);
 			first = false;
+		}
+	}
+
+	private void displayAttachedFile(ChatMessage message, ChatBubbleViewHolder holder) {
+		holder.fileName.setVisibility(View.VISIBLE);
+
+		Content fileContent = message.getFileTransferInformation();
+		String appData = fileContent.getFilePath();
+		if (fileContent != null && fileContent.isFile() && appData != null) {
+			String extension = (LinphoneUtils.getExtensionFromFileName(message.getFileTransferInformation().getName()));
+			if(extension != null) extension = extension.toUpperCase();
+			else extension = "FILE";
+
+			if (extension.length() > 4) extension = extension.substring(0, 3);
+
+			LinphoneUtils.scanFile(message);
+			holder.fileName.setText(extension);
+				holder.fileName.setVisibility(View.VISIBLE);
+				holder.fileName.setTag(appData);
 		}
 	}
 }

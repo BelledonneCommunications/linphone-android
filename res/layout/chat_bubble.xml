@@ -114,7 +114,8 @@
 						android:gravity="center"
 						android:maxLines="1"
 						android:text="FILE"
-						android:textAlignment="center" />
+						android:textAlignment="center"
+						android:visibility="gone" />
 
 
 					<ImageView
