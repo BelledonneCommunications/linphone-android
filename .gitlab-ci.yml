@@ -5,6 +5,7 @@ job-android:
 
   image: gitlab.linphone.org:4567/bc/public/linphone-sdk/bc-dev-android:r16b
   variables:
+    GIT_SUBMODULE_STRATEGY: recursive
     CMAKE_GENERATOR: Ninja
 
   script:
