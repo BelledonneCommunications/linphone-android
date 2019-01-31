@@ -8,7 +8,13 @@ job-android:
     GIT_SUBMODULE_STRATEGY: recursive
     CMAKE_GENERATOR: Ninja
 
+  before_script:
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+
+
   script:
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_DEBUG_KEYSTORE_PATH ~/.android
     - ./prepare.py
     - make
     - cp bin/outputs/apk/debug/linphone-android-obiane-debug.apk android-obiane.apk
