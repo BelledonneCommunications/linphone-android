@@ -208,7 +208,7 @@ public class ContactsFragment extends Fragment
             return;
         }
         changeContactsToggle();
-        mContactAdapter.setmIsSearchMode(true);
+        mContactAdapter.setIsSearchMode(true);
 
         List<LinphoneContact> listContact;
 
@@ -239,7 +239,8 @@ public class ContactsFragment extends Fragment
         mNoContact.setVisibility(View.GONE);
         mContactsList.setVisibility(View.VISIBLE);
         boolean isEditionEnabled = false;
-        if (mSearchView.getQuery().toString().equals("")) {
+        String query = mSearchView.getQuery().toString();
+        if (query.equals("")) {
             if (mOnlyDisplayLinphoneContacts) {
                 listContact = ContactsManager.getInstance().getSIPContacts();
             } else {
@@ -247,13 +248,9 @@ public class ContactsFragment extends Fragment
             }
         } else {
             if (mOnlyDisplayLinphoneContacts) {
-                listContact =
-                        ContactsManager.getInstance()
-                                .getSIPContacts(mSearchView.getQuery().toString());
+                listContact = ContactsManager.getInstance().getSIPContacts(query);
             } else {
-                listContact =
-                        ContactsManager.getInstance()
-                                .getContacts(mSearchView.getQuery().toString());
+                listContact = ContactsManager.getInstance().getContacts(query);
             }
         }
 

@@ -112,7 +112,7 @@ public class ContactsAdapter extends SelectableAdapter<ContactViewHolder>
         return mContacts.get(position);
     }
 
-    public void setmIsSearchMode(boolean set) {
+    public void setIsSearchMode(boolean set) {
         mIsSearchMode = set;
     }
 

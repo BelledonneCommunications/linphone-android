@@ -119,7 +119,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                             // No refkey so it's a standalone contact
                             contact = new LinphoneContact();
                             contact.setFriend(friend);
-                            contact.refresh();
+                            contact.syncValuesFromFriend();
                             data.contacts.add(contact);
                         }
                     }

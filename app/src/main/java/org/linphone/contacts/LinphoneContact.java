@@ -444,24 +444,9 @@ public class LinphoneContact extends AndroidContact
         setPhotoUri(getContactPictureUri());
     }
 
-    public void refresh() {
-        mAddresses = new ArrayList<>();
-        /*if (isAndroidContact()) {
-            Pair<String, String> names = getContactNames();
-            if (names != null) {
-                mFirstName = names.first;
-                mLastName = names.second;
-            }
-
-            mOrganization = getNativeContactOrganization();
-            getAndroidIds();
-
-            mHasSipAddress = false;
-            for (LinphoneNumberOrAddress noa : getAddressesAndNumbersForAndroidContact()) {
-                addNumberOrAddress(noa);
-            }
-        }*/
+    public void syncValuesFromFriend() {
         if (isFriend()) {
+            mAddresses = new ArrayList<>();
             mFullName = mFriend.getName();
             mLastName = mFriend.getVcard().getFamilyName();
             mFirstName = mFriend.getVcard().getGivenName();
