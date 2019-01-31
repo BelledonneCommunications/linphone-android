@@ -2,8 +2,8 @@
 <manifest package="org.linphone"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:installLocation="auto"
-          android:versionCode="2080"
-          android:versionName="2.0.8">
+          android:versionCode="2090"
+          android:versionName="2.0.9">
 
     <uses-sdk
         android:minSdkVersion="26"
