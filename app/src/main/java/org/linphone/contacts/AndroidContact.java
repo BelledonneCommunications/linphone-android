@@ -579,7 +579,7 @@ class AndroidContact implements Serializable {
                 String linphoneRawId = findLinphoneRawContactId();
                 if (linphoneRawId == null) {
                     Log.i("[Contact] Linphone RAW ID not found for contact " + mAndroidId);
-                    createRawLinphoneContactFromExistingAndroidContact(fullName);
+                    createRawLinphoneContactFromExistingAndroidContact();
                 } else {
                     Log.i(
                             "[Contact] Linphone RAW ID found for contact "
@@ -593,7 +593,7 @@ class AndroidContact implements Serializable {
         }
     }
 
-    private void createRawLinphoneContactFromExistingAndroidContact(String fullName) {
+    private void createRawLinphoneContactFromExistingAndroidContact() {
         addChangesToCommit(
                 ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
                         .withValue(

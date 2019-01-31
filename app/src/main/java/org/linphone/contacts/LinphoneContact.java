@@ -19,12 +19,17 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
@@ -475,8 +480,59 @@ public class LinphoneContact extends AndroidContact
         }
     }
 
+    public void syncValuesFromAndroidContact(Context context) {
+        Cursor c =
+                context.getContentResolver()
+                        .query(
+                                ContactsContract.Data.CONTENT_URI,
+                                AsyncContactsLoader.PROJECTION,
+                                ContactsContract.Data.IN_VISIBLE_GROUP
+                                        + " == 1 AND "
+                                        + ContactsContract.Data.CONTACT_ID
+                                        + " == "
+                                        + mAndroidId,
+                                null,
+                                null);
+        if (c != null) {
+            mAddresses = new ArrayList<>();
+            while (c.moveToNext()) {
+                syncValuesFromAndroidCusor(c);
+            }
+            c.close();
+        }
+    }
+
+    public void syncValuesFromAndroidCusor(Cursor c) {
+        String displayName =
+                c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME_PRIMARY));
+        String mime = c.getString(c.getColumnIndex(ContactsContract.Data.MIMETYPE));
+        String data1 = c.getString(c.getColumnIndex("data1"));
+        String data2 = c.getString(c.getColumnIndex("data2"));
+        String data3 = c.getString(c.getColumnIndex("data3"));
+        String data4 = c.getString(c.getColumnIndex("data4"));
+        String lookupKey = c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+
+        setAndroidLookupKey(lookupKey);
+        setFullName(displayName);
+
+        if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
+            addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
+        } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime)
+                || LinphoneManager.getInstance()
+                        .getContext()
+                        .getString(R.string.linphone_address_mime_type)
+                        .equals(mime)) {
+            addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
+        } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(mime)) {
+            setOrganization(data1, false);
+        } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(mime)) {
+            setFirstNameAndLastName(data2, data3, false);
+        }
+    }
+
     public void save() {
         saveChangesCommited();
+        syncValuesFromAndroidContact(LinphoneActivity.instance());
         createOrUpdateFriend();
     }
 

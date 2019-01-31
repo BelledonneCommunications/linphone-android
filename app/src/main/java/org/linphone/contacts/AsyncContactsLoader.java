@@ -42,7 +42,7 @@ import org.linphone.utils.LinphoneUtils;
 
 class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.AsyncContactsData> {
     @SuppressLint("InlinedApi")
-    private static final String[] PROJECTION = {
+    public static final String[] PROJECTION = {
         ContactsContract.Data.CONTACT_ID,
         ContactsContract.Contacts.LOOKUP_KEY,
         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
@@ -132,13 +132,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 if (isCancelled()) return data;
 
                 String id = c.getString(c.getColumnIndex(ContactsContract.Data.CONTACT_ID));
-                String displayName =
-                        c.getString(c.getColumnIndex(ContactsContract.Data.DISPLAY_NAME_PRIMARY));
-                String mime = c.getString(c.getColumnIndex(ContactsContract.Data.MIMETYPE));
-                String data1 = c.getString(c.getColumnIndex("data1"));
-                String data2 = c.getString(c.getColumnIndex("data2"));
-                String data3 = c.getString(c.getColumnIndex("data3"));
-                String data4 = c.getString(c.getColumnIndex("data4"));
                 String lookupKey =
                         c.getString(c.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 
@@ -148,27 +141,10 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
                     contact.setAndroidLookupKey(lookupKey);
-                    contact.setFullName(displayName);
                     androidContactsCache.put(id, contact);
                 }
 
-                if (contact.getFullName() == null && displayName != null) {
-                    contact.setFullName(displayName);
-                }
-
-                if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
-                    contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
-                } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(
-                                mime)
-                        || mContext.getString(R.string.linphone_address_mime_type).equals(mime)) {
-                    contact.addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
-                } else if (ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE.equals(
-                        mime)) {
-                    contact.setOrganization(data1, false);
-                } else if (ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE.equals(
-                        mime)) {
-                    contact.setFirstNameAndLastName(data2, data3, false);
-                }
+                contact.syncValuesFromAndroidCusor(c);
             }
             c.close();
 

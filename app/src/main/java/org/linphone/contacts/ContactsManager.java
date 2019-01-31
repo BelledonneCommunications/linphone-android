@@ -21,9 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -67,6 +67,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private boolean mContactsFetchedOnce = false;
     private Context mContext;
     private AsyncContactsLoader mLoadContactTask;
+    private boolean mInitialized = false;
 
     public static ContactsManager getInstance() {
         if (sInstance == null) sInstance = new ContactsManager();
@@ -281,6 +282,21 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     public void initializeContactManager(Context context) {
         mContext = context;
 
+        if (!mInitialized) {
+            if (mContext.getResources().getBoolean(R.bool.use_linphone_tag)) {
+                if (mContext.getPackageManager()
+                                .checkPermission(
+                                        Manifest.permission.WRITE_SYNC_SETTINGS,
+                                        mContext.getPackageName())
+                        == PackageManager.PERMISSION_GRANTED) {
+                    if (LinphoneService.isReady()) {
+                        ContactsManager.getInstance().initializeSyncAccount();
+                        mInitialized = true;
+                    }
+                }
+            }
+        }
+
         if (mContext != null && getContacts().size() == 0 && hasContactsAccess()) {
             fetchContactsAsync();
         }
@@ -312,10 +328,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         client.close();
     }
 
-    public void initializeSyncAccount(Activity activity) {
-        initializeContactManager(activity);
+    private void initializeSyncAccount() {
         AccountManager accountManager =
-                (AccountManager) activity.getSystemService(Context.ACCOUNT_SERVICE);
+                (AccountManager) mContext.getSystemService(Context.ACCOUNT_SERVICE);
 
         Account[] accounts =
                 accountManager.getAccountsByType(mContext.getString(R.string.sync_account_type));
@@ -331,6 +346,16 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 makeContactAccountVisible();
             } catch (Exception e) {
                 Log.e("[Contacts Manager] Couldn't initialize sync account: " + e);
+            }
+        } else if (accounts != null) {
+            for (int i = 0; i < accounts.length; i++) {
+                Log.i(
+                        "[Contacts Manager] Found account with name \""
+                                + accounts[i].name
+                                + "\" and type \""
+                                + accounts[i].type
+                                + "\"");
+                makeContactAccountVisible();
             }
         }
     }

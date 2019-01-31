@@ -205,13 +205,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                                     Manifest.permission.WRITE_SYNC_SETTINGS, getPackageName())
                     != PackageManager.PERMISSION_GRANTED) {
                 checkSyncPermission();
-            } else {
-                if (LinphoneService.isReady())
-                    ContactsManager.getInstance().initializeSyncAccount(this);
             }
-        } else {
-            if (LinphoneService.isReady() && !ContactsManager.getInstance().contactsFetchedOnce())
-                ContactsManager.getInstance().initializeContactManager(this);
         }
 
         setContentView(R.layout.main);
@@ -1360,15 +1354,13 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 readContactsI = i;
         }
 
+        if (readContactsI >= 0
+                && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
+            ContactsManager.getInstance().enableContactsAccess();
+        }
         switch (requestCode) {
             case PERMISSIONS_REQUEST_SYNC:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ContactsManager.getInstance().initializeSyncAccount(this);
-                } else {
-                    if (!ContactsManager.getInstance().contactsFetchedOnce()) {
-                        ContactsManager.getInstance().initializeContactManager(this);
-                    }
-                }
+                ContactsManager.getInstance().initializeContactManager(this);
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -1387,13 +1379,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     ((SettingsFragment) mFragment).startEchoTester();
                 break;
-        }
-        if (readContactsI >= 0
-                && grantResults[readContactsI] == PackageManager.PERMISSION_GRANTED) {
-            ContactsManager.getInstance().enableContactsAccess();
-            if (!ContactsManager.getInstance().contactsFetchedOnce()) {
-                ContactsManager.getInstance().initializeContactManager(this);
-            }
         }
     }
 
@@ -1474,10 +1459,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 permissionsList.add(Manifest.permission.READ_CONTACTS);
             }
         } else {
-            if (!ContactsManager.getInstance().contactsFetchedOnce()) {
-                ContactsManager.getInstance().enableContactsAccess();
-                ContactsManager.getInstance().fetchContactsAsync();
-            }
+            ContactsManager.getInstance().enableContactsAccess();
         }
 
         if (permissionsList.size() > 0) {
@@ -1486,6 +1468,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
             ActivityCompat.requestPermissions(
                     this, permissions, PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE);
         }
+        ContactsManager.getInstance().initializeContactManager(this);
     }
 
     @Override

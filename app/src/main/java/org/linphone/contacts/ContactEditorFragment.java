@@ -188,6 +188,14 @@ public class ContactEditorFragment extends Fragment {
                         }
 
                         mContact.save();
+
+                        if (mIsNewContact) {
+                            // Ensure fetch will be done so the new contact appears in the contacts
+                            // list: contacts content observer may not be notified if contacts sync
+                            // is disabled at system level
+                            ContactsManager.getInstance().fetchContactsAsync();
+                        }
+
                         getFragmentManager().popBackStackImmediate();
                         if (mIsNewContact || LinphoneActivity.instance().isTablet()) {
                             LinphoneActivity.instance().displayContact(mContact, false);
