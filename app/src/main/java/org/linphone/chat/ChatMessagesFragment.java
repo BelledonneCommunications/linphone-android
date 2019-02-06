@@ -1098,9 +1098,6 @@ public class ChatMessagesFragment extends Fragment
     public void onConferenceAddressGeneration(ChatRoom cr) {}
 
     @Override
-    public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {}
-
-    @Override
     public void onParticipantRegistrationSubscriptionRequested(
             ChatRoom cr, Address participantAddr) {}
 
@@ -1307,10 +1304,6 @@ public class ChatMessagesFragment extends Fragment
 
     @Override
     public void onChatMessageShouldBeStored(ChatRoom cr, ChatMessage msg) {}
-
-    @Override
-    public void onParticipantsCapabilitiesChecked(
-            ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {}
 
     @Override
     public void onParticipantDeviceAdded(ChatRoom cr, EventLog event) {}

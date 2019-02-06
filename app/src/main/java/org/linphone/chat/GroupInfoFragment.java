@@ -519,10 +519,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     public void onChatMessageShouldBeStored(ChatRoom cr, ChatMessage msg) {}
 
     @Override
-    public void onParticipantsCapabilitiesChecked(
-            ChatRoom cr, Address deviceAddr, Address[] participantsAddr) {}
-
-    @Override
     public void onIsComposingReceived(ChatRoom cr, Address remoteAddr, boolean isComposing) {}
 
     @Override
@@ -553,9 +549,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
 
     @Override
     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {}
-
-    @Override
-    public void onParticipantDeviceFetchRequested(ChatRoom cr, Address addr) {}
 
     @Override
     public void onParticipantRegistrationSubscriptionRequested(
