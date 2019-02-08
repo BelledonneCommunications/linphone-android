@@ -255,13 +255,13 @@
             </intent-filter>
         </receiver>
 
-        <receiver
+        <!--<receiver
             android:name=".receivers.OutgoingCallReceiver"
             android:permission="android.permission.PROCESS_OUTGOING_CALLS">
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
         <receiver
             android:name=".receivers.AccountEnableReceiver"
