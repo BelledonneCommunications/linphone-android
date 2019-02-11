@@ -619,10 +619,10 @@ public class ChatMessagesFragment extends Fragment
                                 .getDecorView()
                                 .getWindowVisibleDisplayFrame(visibleArea);
 
-                        int heightDiff =
-                                getActivity().getWindow().getDecorView().getRootView().getHeight()
-                                        - (visibleArea.bottom - visibleArea.top);
-                        if (heightDiff > 200) {
+                        int screenHeight =
+                                getActivity().getWindow().getDecorView().getRootView().getHeight();
+                        int heightDiff = screenHeight - (visibleArea.bottom - visibleArea.top);
+                        if (heightDiff > screenHeight * 0.15) {
                             showKeyboardVisibleMode();
                         } else {
                             hideKeyboardVisibleMode();
@@ -642,6 +642,7 @@ public class ChatMessagesFragment extends Fragment
                 .getDecorView()
                 .getViewTreeObserver()
                 .removeOnGlobalLayoutListener(mKeyboardListener);
+        hideKeyboardVisibleMode();
     }
 
     private void showKeyboardVisibleMode() {
