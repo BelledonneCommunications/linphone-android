@@ -22,6 +22,7 @@ import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -185,6 +186,14 @@ public class Compatibility {
             FragmentTransaction transaction, boolean allowed) {
         if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
             ApiTwentySixPlus.setFragmentTransactionReorderingAllowed(transaction, allowed);
+        }
+    }
+
+    public static void closeContentProviderClient(ContentProviderClient client) {
+        if (Version.sdkAboveOrEqual(Version.API24_NOUGAT_70)) {
+            ApiTwentyFourPlus.closeContentProviderClient(client);
+        } else {
+            ApiTwentyOnePlus.closeContentProviderClient(client);
         }
     }
 }

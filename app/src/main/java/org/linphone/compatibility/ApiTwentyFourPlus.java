@@ -32,6 +32,7 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
+import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -210,5 +211,9 @@ class ApiTwentyFourPlus {
                                 hangupPendingIntent)
                         .build();
         return declineAction;
+    }
+
+    public static void closeContentProviderClient(ContentProviderClient client) {
+        client.close();
     }
 }

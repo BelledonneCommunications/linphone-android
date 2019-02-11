@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentProviderClient;
 import android.content.Context;
 import android.graphics.Bitmap;
 import androidx.core.content.ContextCompat;
@@ -192,5 +193,9 @@ class ApiTwentyOnePlus {
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setShowWhen(true)
                 .build();
+    }
+
+    public static void closeContentProviderClient(ContentProviderClient client) {
+        client.release();
     }
 }

@@ -46,6 +46,7 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
@@ -325,7 +326,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         } catch (RemoteException e) {
             Log.e("[Contacts Manager] Couldn't make contacts account visible: " + e);
         }
-        client.close();
+        Compatibility.closeContentProviderClient(client);
     }
 
     private void initializeSyncAccount() {
