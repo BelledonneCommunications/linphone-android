@@ -165,10 +165,10 @@ public class LinphoneLauncherActivity extends Activity {
                                 && (stringFileShared != null || fileUri != null)) {
                             if (stringFileShared != null) {
                                 LinphoneActivity.instance()
-                                        .displayChat(null, stringFileShared, null);
+                                        .displayChat(null, null, stringFileShared, null);
                             } else if (fileUri != null) {
                                 LinphoneActivity.instance()
-                                        .displayChat(null, null, stringUriFileShared);
+                                        .displayChat(null, null, null, stringUriFileShared);
                             }
                         }
                     }

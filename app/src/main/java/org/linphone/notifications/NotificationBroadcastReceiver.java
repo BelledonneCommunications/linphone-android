@@ -76,7 +76,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 return;
             }
 
-            ChatRoom room = core.findChatRoom(remoteAddr, localAddr);
+            ChatRoom room = core.getChatRoom(remoteAddr, localAddr);
             if (room == null) {
                 Log.e(
                         "[Notification Broadcast Receiver] Couldn't find chat room for remote address "

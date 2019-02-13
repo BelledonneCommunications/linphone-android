@@ -110,7 +110,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                         if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance()
-                                    .goToChat(cr.getPeerAddress().asStringUriOnly(), null);
+                                    .goToChat(
+                                            cr.getLocalAddress().asStringUriOnly(),
+                                            cr.getPeerAddress().asStringUriOnly(),
+                                            null);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance().displayChatRoomError();
@@ -217,7 +220,11 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                     lc.findOneToOneChatRoom(
                             lc.getDefaultProxyConfig().getContact(), participant, false);
             if (room != null) {
-                LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+                LinphoneActivity.instance()
+                        .goToChat(
+                                room.getLocalAddress().asStringUriOnly(),
+                                room.getPeerAddress().asStringUriOnly(),
+                                null);
             } else {
                 ProxyConfig lpc = lc.getDefaultProxyConfig();
                 if (lpc != null
@@ -232,7 +239,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                 } else {
                     room = lc.getChatRoom(participant);
                     LinphoneActivity.instance()
-                            .goToChat(room.getPeerAddress().asStringUriOnly(), null);
+                            .goToChat(
+                                    room.getLocalAddress().asStringUriOnly(),
+                                    room.getPeerAddress().asStringUriOnly(),
+                                    null);
                 }
             }
         } else if (id == R.id.add_contact) {

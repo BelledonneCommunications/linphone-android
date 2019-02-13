@@ -57,8 +57,8 @@ public class ImdnFragment extends Fragment {
     private ChatMessageViewHolder mBubble;
     private ViewGroup mContainer;
 
-    private String mRoomUri, mMessageId;
-    private Address mRoomAddr;
+    private String mLocalSipuri, mRoomUri, mMessageId;
+    private Address mLocalSipAddr, mRoomAddr;
     private ChatRoom mRoom;
     private ChatMessage mMessage;
     private ChatMessageListenerStub mListener;
@@ -70,13 +70,15 @@ public class ImdnFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mRoomUri = getArguments().getString("SipUri");
+            mLocalSipuri = getArguments().getString("LocalSipUri");
+            mLocalSipAddr = LinphoneManager.getLc().createAddress(mLocalSipuri);
+            mRoomUri = getArguments().getString("RemoteSipUri");
             mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
             mMessageId = getArguments().getString("MessageId");
         }
 
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
+        mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
 
         mInflater = inflater;
         mContainer = container;
@@ -88,7 +90,7 @@ public class ImdnFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().goToChat(mRoomUri, null);
+                            LinphoneActivity.instance().goToChat(mLocalSipuri, mRoomUri, null);
                         } else {
                             LinphoneActivity.instance().onBackPressed();
                         }

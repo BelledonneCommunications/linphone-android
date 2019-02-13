@@ -50,8 +50,8 @@ public class DevicesFragment extends Fragment {
     private ExpandableListView mExpandableList;
     private DevicesAdapter mAdapter;
 
-    private String mRoomUri;
-    private Address mRoomAddr;
+    private String mLocalSipUri, mRoomUri;
+    private Address mLocalSipAddr, mRoomAddr;
     private ChatRoom mRoom;
     private boolean mOnlyDisplayChilds;
 
@@ -62,7 +62,9 @@ public class DevicesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mRoomUri = getArguments().getString("SipUri");
+            mLocalSipUri = getArguments().getString("LocalSipUri");
+            mLocalSipAddr = LinphoneManager.getLc().createAddress(mLocalSipUri);
+            mRoomUri = getArguments().getString("RemoteSipUri");
             mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
         }
 
@@ -117,7 +119,7 @@ public class DevicesFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().goToChat(mRoomUri, null);
+                            LinphoneActivity.instance().goToChat(mLocalSipUri, mRoomUri, null);
                         } else {
                             LinphoneActivity.instance().onBackPressed();
                         }

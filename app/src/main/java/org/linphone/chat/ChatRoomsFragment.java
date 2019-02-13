@@ -182,7 +182,11 @@ public class ChatRoomsFragment extends Fragment
             mChatRoomsAdapter.toggleSelection(position);
         } else {
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
-            LinphoneActivity.instance().goToChat(room.getPeerAddress().asString(), null);
+            LinphoneActivity.instance()
+                    .goToChat(
+                            room.getLocalAddress().asStringUriOnly(),
+                            room.getPeerAddress().asString(),
+                            null);
         }
     }
 
@@ -205,7 +209,11 @@ public class ChatRoomsFragment extends Fragment
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null && adapter.getItemCount() > 0) {
             ChatRoom room = (ChatRoom) adapter.getItem(0);
-            LinphoneActivity.instance().goToChat(room.getPeerAddress().asStringUriOnly(), null);
+            LinphoneActivity.instance()
+                    .goToChat(
+                            room.getLocalAddress().asStringUriOnly(),
+                            room.getPeerAddress().asStringUriOnly(),
+                            null);
         } else {
             LinphoneActivity.instance().displayEmptyFragment();
         }

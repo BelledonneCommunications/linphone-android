@@ -154,6 +154,7 @@ public class NotificationsManager {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
+        notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -200,6 +201,7 @@ public class NotificationsManager {
         Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
         notifIntent.putExtra("GoToChat", true);
         notifIntent.putExtra("ChatContactSipUri", fromSipUri);
+        notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);

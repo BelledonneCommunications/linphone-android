@@ -1938,17 +1938,22 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         return count;
     }
 
-    public void updateUnreadCountForChatRoom(String key, Integer value) {
+    public void updateUnreadCountForChatRoom(
+            String localSipUri, String remoteSipUri, Integer value) {
+        String key = localSipUri + "//" + remoteSipUri;
         mUnreadChatsPerRoom.put(key, value);
     }
 
     public void updateUnreadCountForChatRoom(ChatRoom cr, Integer value) {
-        String key = cr.getPeerAddress().asStringUriOnly();
-        updateUnreadCountForChatRoom(key, value);
+        String localSipUri = cr.getLocalAddress().asStringUriOnly();
+        String remoteSipUri = cr.getPeerAddress().asStringUriOnly();
+        updateUnreadCountForChatRoom(localSipUri, remoteSipUri, value);
     }
 
     private void increaseUnreadCountForChatRoom(ChatRoom cr) {
-        String key = cr.getPeerAddress().asStringUriOnly();
+        String localSipUri = cr.getLocalAddress().asStringUriOnly();
+        String remoteSipUri = cr.getPeerAddress().asStringUriOnly();
+        String key = localSipUri + "//" + remoteSipUri;
         if (mUnreadChatsPerRoom.containsKey(key)) {
             mUnreadChatsPerRoom.put(key, mUnreadChatsPerRoom.get(key) + 1);
         } else {

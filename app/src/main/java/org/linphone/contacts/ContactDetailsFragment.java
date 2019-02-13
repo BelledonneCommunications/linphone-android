@@ -95,7 +95,10 @@ public class ContactDetailsFragment extends Fragment
                                             isSecured);
                             if (room != null) {
                                 LinphoneActivity.instance()
-                                        .goToChat(room.getPeerAddress().asStringUriOnly(), null);
+                                        .goToChat(
+                                                room.getLocalAddress().asStringUriOnly(),
+                                                room.getPeerAddress().asStringUriOnly(),
+                                                null);
                             } else {
                                 if (defaultProxyConfig.getConferenceFactoryUri() != null
                                         && (isSecured
@@ -115,7 +118,9 @@ public class ContactDetailsFragment extends Fragment
                                     room = lc.getChatRoom(participant);
                                     LinphoneActivity.instance()
                                             .goToChat(
-                                                    room.getPeerAddress().asStringUriOnly(), null);
+                                                    room.getLocalAddress().asStringUriOnly(),
+                                                    room.getPeerAddress().asStringUriOnly(),
+                                                    null);
                                 }
                             }
                         }
@@ -166,7 +171,10 @@ public class ContactDetailsFragment extends Fragment
                         if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance()
-                                    .goToChat(cr.getPeerAddress().asStringUriOnly(), null);
+                                    .goToChat(
+                                            cr.getLocalAddress().asStringUriOnly(),
+                                            cr.getPeerAddress().asStringUriOnly(),
+                                            null);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance().displayChatRoomError();

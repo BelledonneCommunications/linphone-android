@@ -701,7 +701,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     private void displayChat(
-            String sipUri,
+            String localSipUri,
+            String remoteSipUri,
             String message,
             String fileUri,
             String pictureUri,
@@ -709,17 +710,18 @@ public class LinphoneActivity extends LinphoneGenericActivity
             String displayName,
             Address lAddress) {
         Bundle extras = new Bundle();
-        extras.putString("SipUri", sipUri);
+        extras.putString("LocalSipUri", localSipUri);
+        extras.putString("RemoteSipUri", remoteSipUri);
 
         if (message != null) extras.putString("messageDraft", message);
         if (fileUri != null) extras.putString("fileSharedUri", fileUri);
-        if (sipUri != null && lAddress.getDisplayName() != null) {
+        if (remoteSipUri != null && lAddress.getDisplayName() != null) {
             extras.putString("DisplayName", displayName);
             extras.putString("PictureUri", pictureUri);
             extras.putString("ThumbnailUri", thumbnailUri);
         }
 
-        if (sipUri == null) {
+        if (remoteSipUri == null) {
             changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
         } else {
             changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
@@ -755,9 +757,10 @@ public class LinphoneActivity extends LinphoneGenericActivity
         changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
     }
 
-    public void goToChat(String sipUri, Bundle shareInfos) {
+    public void goToChat(String localSipUri, String remoteSipUri, Bundle shareInfos) {
         Bundle extras = new Bundle();
-        extras.putString("SipUri", sipUri);
+        extras.putString("LocalSipUri", localSipUri);
+        extras.putString("RemoteSipUri", remoteSipUri);
 
         if (shareInfos != null) {
             if (shareInfos.getString("fileSharedUri") != null)
@@ -773,7 +776,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     && mCurrentFragment == FragmentsAvailable.GROUP_CHAT
                     && !mEmptyFragment) {
                 ChatMessagesFragment chatFragment = (ChatMessagesFragment) fragment2;
-                chatFragment.changeDisplayedChat(sipUri);
+                chatFragment.changeDisplayedChat(localSipUri, remoteSipUri);
             } else {
                 changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
             }
@@ -781,7 +784,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
             changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
         }
 
-        LinphoneManager.getInstance().updateUnreadCountForChatRoom(sipUri, 0);
+        LinphoneManager.getInstance().updateUnreadCountForChatRoom(localSipUri, remoteSipUri, 0);
         displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 
@@ -814,15 +817,18 @@ public class LinphoneActivity extends LinphoneGenericActivity
         changeCurrentFragment(FragmentsAvailable.INFO_GROUP_CHAT, extras);
     }
 
-    public void goToContactDevicesInfos(String sipUri) {
+    public void goToContactDevicesInfos(String localSipUri, String remoteSipUri) {
         Bundle extras = new Bundle();
-        extras.putSerializable("SipUri", sipUri);
+        extras.putSerializable("LocalSipUri", localSipUri);
+        extras.putSerializable("RemoteSipUri", remoteSipUri);
         changeCurrentFragment(FragmentsAvailable.CONTACT_DEVICES, extras);
     }
 
-    public void goToChatMessageImdnInfos(String sipUri, String messageId) {
+    public void goToChatMessageImdnInfos(
+            String localSipUri, String remoteSipUri, String messageId) {
         Bundle extras = new Bundle();
-        extras.putSerializable("SipUri", sipUri);
+        extras.putSerializable("LocalSipUri", localSipUri);
+        extras.putSerializable("RemoteSipUri", remoteSipUri);
         extras.putString("MessageId", messageId);
         changeCurrentFragment(FragmentsAvailable.MESSAGE_IMDN, extras);
     }
@@ -831,7 +837,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
     }
 
-    public void displayChat(String sipUri, String message, String fileUri) {
+    public void displayChat(
+            String localSipUri, String remoteSipUri, String message, String fileUri) {
         if (getResources().getBoolean(R.bool.disable_chat)) {
             return;
         }
@@ -841,8 +848,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         String displayName = null;
 
         Address lAddress = null;
-        if (sipUri != null) {
-            lAddress = LinphoneManager.getLc().interpretUrl(sipUri);
+        if (remoteSipUri != null) {
+            lAddress = LinphoneManager.getLc().interpretUrl(remoteSipUri);
             if (lAddress == null) return;
             LinphoneContact contact =
                     ContactsManager.getInstance().findContactFromAddress(lAddress);
@@ -862,21 +869,35 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     && mCurrentFragment == FragmentsAvailable.GROUP_CHAT
                     && !mEmptyFragment) {
                 ChatMessagesFragment chatFragment = (ChatMessagesFragment) fragment2;
-                chatFragment.changeDisplayedChat(sipUri);
+                chatFragment.changeDisplayedChat(localSipUri, remoteSipUri);
             } else {
                 displayChat(
-                        sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);
+                        localSipUri,
+                        remoteSipUri,
+                        message,
+                        fileUri,
+                        pictureUri,
+                        thumbnailUri,
+                        displayName,
+                        lAddress);
             }
         } else {
             if (isTablet()) {
                 changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
             } else {
                 displayChat(
-                        sipUri, message, fileUri, pictureUri, thumbnailUri, displayName, lAddress);
+                        localSipUri,
+                        remoteSipUri,
+                        message,
+                        fileUri,
+                        pictureUri,
+                        thumbnailUri,
+                        displayName,
+                        lAddress);
             }
         }
 
-        LinphoneManager.getInstance().updateUnreadCountForChatRoom(sipUri, 0);
+        LinphoneManager.getInstance().updateUnreadCountForChatRoom(localSipUri, remoteSipUri, 0);
         displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 
@@ -1536,12 +1557,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
         Intent intent = getIntent();
 
         if (intent.getStringExtra("msgShared") != null) {
-            displayChat(null, intent.getStringExtra("msgShared"), null);
+            displayChat(null, null, intent.getStringExtra("msgShared"), null);
             intent.putExtra("msgShared", "");
         }
         if (intent.getStringExtra("fileShared") != null
                 && !intent.getStringExtra("fileShared").equals("")) {
-            displayChat(null, null, intent.getStringExtra("fileShared"));
+            displayChat(null, null, null, intent.getStringExtra("fileShared"));
             intent.putExtra("fileShared", "");
         }
         mIsOnBackground = false;
@@ -1592,12 +1613,13 @@ public class LinphoneActivity extends LinphoneGenericActivity
         }
         Bundle extras = intent.getExtras();
         if (extras != null && extras.getBoolean("GoToChat", false)) {
-            String sipUri = extras.getString("ChatContactSipUri");
+            String localSipUri = extras.getString("LocalSipUri");
+            String remoteSipUri = extras.getString("ChatContactSipUri");
             intent.putExtra("DoNotGoToCallActivity", true);
-            if (sipUri == null) {
+            if (remoteSipUri == null) {
                 goToChatList();
             } else {
-                goToChat(sipUri, extras);
+                goToChat(localSipUri, remoteSipUri, extras);
             }
         } else if (extras != null && extras.getBoolean("GoToHistory", false)) {
             intent.putExtra("DoNotGoToCallActivity", true);

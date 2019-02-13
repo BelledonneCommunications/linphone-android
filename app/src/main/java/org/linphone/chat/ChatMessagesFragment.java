@@ -113,8 +113,8 @@ public class ChatMessagesFragment extends Fragment
     private Uri mImageToUploadUri;
     private ChatMessagesAdapter mEventsAdapter;
     private ChatMessagesOldAdapter mOldEventsAdapter;
-    private String mRemoteSipUri;
-    private Address mRemoteSipAddress, mRemoteParticipantAddress;
+    private String mLocalSipUri, mRemoteSipUri;
+    private Address mLocalSipAddress, mRemoteSipAddress, mRemoteParticipantAddress;
     private ChatRoom mChatRoom;
     private ArrayList<LinphoneContact> mParticipants;
     private LinearLayoutManager layoutManager;
@@ -131,8 +131,12 @@ public class ChatMessagesFragment extends Fragment
         setRetainInstance(true);
 
         if (getArguments() != null) {
-            if (getArguments().getString("SipUri") != null) {
-                mRemoteSipUri = getArguments().getString("SipUri");
+            if (getArguments().getString("LocalSipUri") != null) {
+                mLocalSipUri = getArguments().getString("LocalSipUri");
+                mLocalSipAddress = LinphoneManager.getLc().createAddress(mLocalSipUri);
+            }
+            if (getArguments().getString("RemoteSipUri") != null) {
+                mRemoteSipUri = getArguments().getString("RemoteSipUri");
                 mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
             }
         }
@@ -166,7 +170,7 @@ public class ChatMessagesFragment extends Fragment
                                 CallManager.getInstance().inviteAddress(device.getAddress());
                             } else {
                                 LinphoneActivity.instance()
-                                        .goToContactDevicesInfos(getRemoteSipUri());
+                                        .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);
                             }
                         }
                     }
@@ -368,8 +372,10 @@ public class ChatMessagesFragment extends Fragment
         LinphoneManager.getInstance().setCurrentChatRoomAddress(mRemoteSipAddress);
     }
 
-    public void changeDisplayedChat(String sipUri) {
-        mRemoteSipUri = sipUri;
+    public void changeDisplayedChat(String localSipUri, String remoteSipUri) {
+        mLocalSipUri = localSipUri;
+        mLocalSipAddress = LinphoneManager.getLc().createAddress(mLocalSipUri);
+        mRemoteSipUri = remoteSipUri;
         mRemoteSipAddress = LinphoneManager.getLc().createAddress(mRemoteSipUri);
 
         initChatRoom();
@@ -539,7 +545,8 @@ public class ChatMessagesFragment extends Fragment
             return true;
         }
         if (item.getItemId() == R.id.imdn_infos) {
-            LinphoneActivity.instance().goToChatMessageImdnInfos(getRemoteSipUri(), messageId);
+            LinphoneActivity.instance()
+                    .goToChatMessageImdnInfos(mLocalSipUri, mRemoteSipUri, messageId);
             return true;
         }
         if (item.getItemId() == R.id.copy_text) {
@@ -708,7 +715,11 @@ public class ChatMessagesFragment extends Fragment
             return;
         }
 
-        mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
+        if (mLocalSipAddress != null) {
+            mChatRoom = core.getChatRoom(mRemoteSipAddress, mLocalSipAddress);
+        } else {
+            mChatRoom = core.getChatRoomFromUri(mRemoteSipAddress.asStringUriOnly());
+        }
         mChatRoom.addListener(this);
         mChatRoom.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
@@ -864,7 +875,8 @@ public class ChatMessagesFragment extends Fragment
                                     mChatRoom.getParticipants()[0].getDevices()[0];
                             CallManager.getInstance().inviteAddress(device.getAddress());
                         } else {
-                            LinphoneActivity.instance().goToContactDevicesInfos(getRemoteSipUri());
+                            LinphoneActivity.instance()
+                                    .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);
                         }
 
                         dialog.dismiss();
@@ -886,10 +898,6 @@ public class ChatMessagesFragment extends Fragment
 
     private void scrollToBottom() {
         mChatEventsList.getLayoutManager().scrollToPosition(0);
-    }
-
-    private String getRemoteSipUri() {
-        return mRemoteSipUri;
     }
 
     @Override

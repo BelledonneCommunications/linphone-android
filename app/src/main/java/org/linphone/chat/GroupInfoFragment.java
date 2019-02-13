@@ -159,6 +159,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             if (LinphoneActivity.instance().isTablet()) {
                                 LinphoneActivity.instance()
                                         .goToChat(
+                                                null,
                                                 mGroupChatRoomAddress.asStringUriOnly(),
                                                 mShareInfos);
                             } else {
@@ -200,7 +201,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                             mChatRoom.leave();
                                             LinphoneActivity.instance()
                                                     .goToChat(
-                                                            mGroupChatRoomAddress.asString(), null);
+                                                            null,
+                                                            mGroupChatRoomAddress.asString(),
+                                                            null);
                                         } else {
                                             Log.e(
                                                     "Can't leave, chatRoom for address "
@@ -297,7 +300,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             getFragmentManager().popBackStack();
                             getFragmentManager().popBackStack();
                             LinphoneActivity.instance()
-                                    .goToChat(cr.getPeerAddress().asStringUriOnly(), mShareInfos);
+                                    .goToChat(
+                                            cr.getLocalAddress().asStringUriOnly(),
+                                            cr.getPeerAddress().asStringUriOnly(),
+                                            mShareInfos);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance().displayChatRoomError();
@@ -378,7 +384,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             mChatRoom.addParticipants(participantsToAdd);
 
                             LinphoneActivity.instance()
-                                    .goToChat(mGroupChatRoomAddress.asString(), null);
+                                    .goToChat(null, mGroupChatRoomAddress.asString(), null);
                         }
                     }
                 });
