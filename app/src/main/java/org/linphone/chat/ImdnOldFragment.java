@@ -134,7 +134,6 @@ public class ImdnOldFragment extends Fragment {
                     }
                 };
         if (mMessage == null) return null;
-        mMessage.setListener(mListener);
 
         RelativeLayout.LayoutParams layoutParams =
                 new RelativeLayout.LayoutParams(
@@ -169,8 +168,20 @@ public class ImdnOldFragment extends Fragment {
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.MESSAGE_IMDN);
         }
+        if (mMessage != null) {
+            mMessage.addListener(mListener);
+        }
 
         refreshInfo();
+    }
+
+    @Override
+    public void onPause() {
+        if (mMessage != null) {
+            mMessage.removeListener(mListener);
+        }
+
+        super.onPause();
     }
 
     private void refreshInfo() {

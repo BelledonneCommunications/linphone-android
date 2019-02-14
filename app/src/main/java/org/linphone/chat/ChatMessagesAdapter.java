@@ -52,6 +52,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     private final List<ChatMessage> mTransientMessages;
 
     private final ChatMessageViewHolderClickListener mClickListener;
+    private final ChatMessageListenerStub mListener;
 
     public ChatMessagesAdapter(
             ChatMessagesFragment fragment,
@@ -69,6 +70,25 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         mParticipants = participants;
         mClickListener = clickListener;
         mTransientMessages = new ArrayList<>();
+
+        mListener =
+                new ChatMessageListenerStub() {
+                    @Override
+                    public void onMsgStateChanged(ChatMessage message, ChatMessage.State state) {
+                        ChatMessageViewHolder holder =
+                                (ChatMessageViewHolder) message.getUserData();
+                        if (holder != null) {
+                            notifyItemChanged(holder.getAdapterPosition());
+                        } else {
+                            // Just in case, better to refresh the whole view than to miss
+                            // an update
+                            notifyDataSetChanged();
+                        }
+                        if (state == ChatMessage.State.Displayed) {
+                            mTransientMessages.remove(message);
+                        }
+                    }
+                };
     }
 
     @Override
@@ -110,25 +130,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 }
                 message.setUserData(
                         holder); // This only works if JAVA object is kept, hence the transient list
-                message.setListener(
-                        new ChatMessageListenerStub() {
-                            @Override
-                            public void onMsgStateChanged(
-                                    ChatMessage message, ChatMessage.State state) {
-                                ChatMessageViewHolder holder =
-                                        (ChatMessageViewHolder) message.getUserData();
-                                if (holder != null) {
-                                    notifyItemChanged(holder.getAdapterPosition());
-                                } else {
-                                    // Just in case, better to refresh the whole view than to miss
-                                    // an update
-                                    notifyDataSetChanged();
-                                }
-                                if (state == ChatMessage.State.Displayed) {
-                                    mTransientMessages.remove(message);
-                                }
-                            }
-                        });
+                message.addListener(mListener);
             }
 
             LinphoneContact contact = null;
@@ -285,7 +287,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
         for (EventLog event : mHistory) {
             if (event.getType() == EventLog.Type.ConferenceChatMessage) {
                 ChatMessage message = event.getChatMessage();
-                message.setListener(null);
+                message.removeListener(mListener);
             }
         }
         mTransientMessages.clear();

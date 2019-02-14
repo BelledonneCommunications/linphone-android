@@ -118,7 +118,6 @@ public class ImdnFragment extends Fragment {
                     }
                 };
         if (mMessage == null) return null;
-        mMessage.setListener(mListener);
 
         return view;
     }
@@ -132,19 +131,16 @@ public class ImdnFragment extends Fragment {
         }
 
         refreshInfo();
-        mMessage.setListener(
-                new ChatMessageListenerStub() {
-                    @Override
-                    public void onParticipantImdnStateChanged(
-                            ChatMessage msg, ParticipantImdnState state) {
-                        refreshInfo();
-                    }
-                });
+        if (mMessage != null) {
+            mMessage.addListener(mListener);
+        }
     }
 
     @Override
     public void onPause() {
-        mMessage.setListener(null);
+        if (mMessage != null) {
+            mMessage.removeListener(mListener);
+        }
         super.onPause();
     }
 

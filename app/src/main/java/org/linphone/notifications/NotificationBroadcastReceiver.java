@@ -103,7 +103,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
                 ChatMessage msg = room.createMessage(reply);
                 msg.send();
-                msg.setListener(
+                msg.addListener(
                         new ChatMessageListenerStub() {
                             @Override
                             public void onMsgStateChanged(
