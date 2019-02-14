@@ -1050,11 +1050,17 @@ public class ChatMessagesFragment extends Fragment
     /** Message sending */
     private void sendMessage() {
         ChatMessage msg = mChatRoom.createEmptyMessage();
+        boolean isBasicChatRoom = mChatRoom.hasCapability(ChatRoomCapabilities.Basic.toInt());
+        boolean sendMultipleImagesAsDifferentMessages =
+                getResources().getBoolean(R.bool.send_multiple_images_as_different_messages);
+        boolean sendImageAndTextAsDifferentMessages =
+                getResources().getBoolean(R.bool.send_text_and_images_as_different_messages);
 
         String text = mMessageTextToSend.getText().toString();
         boolean hasText = text != null && text.length() > 0;
 
-        for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
+        int filesCount = mFilesUploadLayout.getChildCount();
+        for (int i = 0; i < filesCount; i++) {
             String filePath = (String) mFilesUploadLayout.getChildAt(i).getTag();
             String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
             String extension = FileUtils.getExtensionFromFileName(fileName);
@@ -1068,8 +1074,21 @@ public class ChatMessagesFragment extends Fragment
             content.setName(fileName);
             content.setFilePath(filePath); // Let the file body handler take care of the upload
 
-            if (getResources().getBoolean(R.bool.send_text_and_images_as_different_messages)
-                    && (mFilesUploadLayout.getChildCount() > 1 || hasText)) {
+            boolean split =
+                    isBasicChatRoom; // Always split contents in basic chat rooms for compatibility
+            if (hasText && sendImageAndTextAsDifferentMessages) {
+                split = true;
+            } else if (mFilesUploadLayout.getChildCount() > 1
+                    && sendMultipleImagesAsDifferentMessages) {
+                split = true;
+
+                // Allow the last image to be sent with text if image and text at the same time OK
+                if (hasText && !sendImageAndTextAsDifferentMessages && i == filesCount - 1) {
+                    split = false;
+                }
+            }
+
+            if (split) {
                 ChatMessage fileMessage = mChatRoom.createFileTransferMessage(content);
                 fileMessage.send();
             } else {
