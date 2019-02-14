@@ -11,6 +11,23 @@ However, if you wish to use a locally compiled SDK see below how to proceed.
 The repository structure has also been cleaned and updated, and changing the package name can now be done in a single step.
 This allows developpers to keep a stable version as well as a developpment one on the same device easily.
 
+# Building the app
+
+If you have Android Studio, simply open the project, wait for the gradle synchronization and then build/install the app.
+It will download the linphone library from our Maven repository so you don't have to build anything yourself.
+
+If you don't have Android Studio, you can build and install the app using gradle directly:
+```
+./gradlew assemble
+```
+will compile the apk file (both debug and release, use assembleDebug or assembleRelease to only build one), and then
+```
+./gradlew installDebug
+```
+to install the generated apk in the previous step (use installRelease instead if you built a release package).
+
+APK files are stored within ```app/build/outputs/apk/debug/``` and ```app/build/outputs/apk/release```.
+
 ## Building a local SDK
 
 1. Clone the linphone-sdk repository from out gitlab:
