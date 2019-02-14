@@ -55,6 +55,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.Content;
 import org.linphone.mediastream.Log;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.AsyncBitmap;
 import org.linphone.views.BitmapWorkerTask;
@@ -146,6 +147,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         mContext, message.getTime(), R.string.messages_date_format);
 
         if (message.isOutgoing()) {
+            bubbleLayout.setPadding(0, 0, 0, 0); // Reset padding
             outgoingImdn.setVisibility(View.INVISIBLE); // For anchoring purposes
 
             if (status == ChatMessage.State.DeliveredToUser) {
@@ -170,6 +172,10 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             rightAnchor.setVisibility(View.GONE);
             avatarLayout.setVisibility(View.VISIBLE);
             background.setBackgroundResource(R.drawable.chat_bubble_incoming_full);
+
+            // Can't anchor incoming messages, setting this to align max width with LIME icon
+            bubbleLayout.setPadding(
+                    0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 16), 0);
         }
 
         if (contact == null) {
