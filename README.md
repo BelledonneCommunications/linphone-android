@@ -14,19 +14,19 @@ This allows developpers to keep a stable version as well as a developpment one o
 # Building the app
 
 If you have Android Studio, simply open the project, wait for the gradle synchronization and then build/install the app.
-It will download the linphone library from our Maven repository so you don't have to build anything yourself.
+It will download the linphone library from our Maven repository as an AAR file so you don't have to build anything yourself.
 
-If you don't have Android Studio, you can build and install the app using gradle directly:
+If you don't have Android Studio, you can build and install the app using gradle:
 ```
-./gradlew assemble
+./gradlew assembleDebug
 ```
-will compile the apk file (both debug and release, use assembleDebug or assembleRelease to only build one), and then
+will compile the APK file (assembleRelease to instead if you want to build a release package), and then
 ```
 ./gradlew installDebug
 ```
-to install the generated apk in the previous step (use installRelease instead if you built a release package).
+to install the generated APK in the previous step (use installRelease instead if you built a release package).
 
-APK files are stored within ```app/build/outputs/apk/debug/``` and ```app/build/outputs/apk/release```.
+APK files are stored within ```./app/build/outputs/apk/debug/``` and ```./app/build/outputs/apk/release/``` directories.
 
 ## Building a local SDK
 
@@ -37,7 +37,7 @@ git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug or release) to the generated aar:
+3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug or release) to the generated AAR:
 ```
 ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-<debug or release>.aar linphone-sdk-android/linphone-sdk-android-<debug or release>.aar
 ```
@@ -56,7 +56,7 @@ ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/lin
 
 5. Debug app.
 
-## Create an apk with a different package name
+## Create an APK with a different package name
 
 Before the 4.1 release, there were a lot of files to edit to change the package name.
 Now, simply edit the app/build.gradle file and change the value returned by method ```getPackageName()```
@@ -78,8 +78,15 @@ To enable them, just add your own ```google-services.json``` in the app folder, 
 
 We use transifex so the community can translate the strings of the app in their own language.
 
-Note for developpers: here's how to push and pull transifex files:
-tx pull -af / tx push -s -f --no-interactive
+Note for developpers: here's how to push/pull string resources to/from transifex:
+```
+tx pull -af
+```
+to update local translations with latest transifex changes
+```
+tx push -s -f --no-interactive
+```
+to push new strings to transifex so they can be translated.
 
 # CONTRIBUTIONS
 
