@@ -88,7 +88,8 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
-            <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            <com.google.android.flexbox.FlexboxLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/pictures"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

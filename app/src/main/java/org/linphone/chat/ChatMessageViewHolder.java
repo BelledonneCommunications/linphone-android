@@ -125,11 +125,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         }
     }
 
-    private boolean isTooLarge(TextView text, String newText) {
-        float textWidth = text.getPaint().measureText(newText);
-        return (textWidth >= text.getMeasuredWidth());
-    }
-
     public void bindMessage(final ChatMessage message, LinphoneContact contact) {
         eventLayout.setVisibility(View.GONE);
         securityEventLayout.setVisibility(View.GONE);

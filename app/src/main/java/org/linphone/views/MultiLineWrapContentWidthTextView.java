@@ -27,8 +27,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 /**
- * The purpose of this class is to have a TextView declared with wrap_content
- * as width that won't fill it's parent if it is multi line
+ * The purpose of this class is to have a TextView declared with wrap_content as width that won't
+ * fill it's parent if it is multi line
  */
 @SuppressLint("AppCompatCustomView")
 public class MultiLineWrapContentWidthTextView extends TextView {
@@ -55,8 +55,8 @@ public class MultiLineWrapContentWidthTextView extends TextView {
             if (layout != null) {
                 int maxWidth =
                         (int) Math.ceil(getMaxLineWidth(layout))
-                                + getCompoundPaddingLeft()
-                                + getCompoundPaddingRight();
+                                + getTotalPaddingLeft()
+                                + getTotalPaddingRight();
                 widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST);
             }
         }
