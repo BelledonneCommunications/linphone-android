@@ -35,6 +35,7 @@
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:padding="15dp"
+                android:singleLine="true"
                 android:text="@string/group_chat_room_devices" />
 
             <ImageView

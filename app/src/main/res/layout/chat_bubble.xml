@@ -8,7 +8,7 @@
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"/>
 
     <CheckBox
         android:id="@+id/delete_event"
@@ -80,7 +80,7 @@
             android:layout_below="@+id/time"
             android:layout_marginLeft="45dp"
             android:layout_marginTop="1dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="3dp"
             android:layout_marginBottom="1dp"
             android:layout_toLeftOf="@+id/imdn"
             android:background="@drawable/chat_bubble_outgoing_full"
@@ -96,7 +96,7 @@
                 android:layout_marginRight="5dp"
                 app:flexWrap="wrap" />
 
-            <TextView
+            <org.linphone.views.MultiLineWrapContentWidthTextView
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
