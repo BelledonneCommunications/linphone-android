@@ -131,20 +131,15 @@ public class ImdnFragment extends Fragment {
 
         refreshInfo();
         if (mMessage != null) {
-            mMessage.setListener(
-                    new ChatMessageListenerStub() {
-                        @Override
-                        public void onParticipantImdnStateChanged(
-                                ChatMessage msg, ParticipantImdnState state) {
-                            refreshInfo();
-                        }
-                    });
+            mMessage.addListener(mListener);
         }
     }
 
     @Override
     public void onPause() {
-        mMessage.setListener(null);
+        if (mMessage != null) {
+            mMessage.removeListener(mListener);
+        }
         super.onPause();
     }
 

@@ -191,6 +191,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
             }
 
             message.setUserData(holder);
+            message.addListener(mListener);
 
             RelativeLayout.LayoutParams layoutParams =
                     new RelativeLayout.LayoutParams(
@@ -203,8 +204,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
 
             LinphoneContact contact = null;
             if (message.isOutgoing()) {
-                message.setListener(mListener);
-
                 if (status == ChatMessage.State.InProgress) {
                     holder.messageSendingInProgress.setVisibility(View.VISIBLE);
                 }
@@ -379,7 +378,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                                                             + filename);
                                             prefix += 1;
                                         }
-                                        message.setListener(mListener);
                                         message.setFileTransferFilepath(file.getPath());
                                         message.downloadFile();
 
@@ -393,7 +391,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                             });
                 }
             } else if (message.isFileTransferInProgress()) { // Outgoing file transfer in progress
-                message.setListener(mListener); // add the listener for file upload progress display
                 holder.messageSendingInProgress.setVisibility(View.GONE);
                 holder.fileTransferLayout.setVisibility(View.VISIBLE);
                 holder.fileTransferAction.setText(mContext.getString(R.string.cancel));
@@ -541,7 +538,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
         for (EventLog event : mHistory) {
             if (event.getType() == EventLog.Type.ConferenceChatMessage) {
                 ChatMessage message = event.getChatMessage();
-                message.setListener(null);
+                message.removeListener(mListener);
             }
         }
         mHistory.clear();
