@@ -1083,7 +1083,7 @@ public class ChatMessagesFragment extends Fragment
                 split = true;
 
                 // Allow the last image to be sent with text if image and text at the same time OK
-                if (hasText && !sendImageAndTextAsDifferentMessages && i == filesCount - 1) {
+                if (hasText && i == filesCount - 1) {
                     split = false;
                 }
             }

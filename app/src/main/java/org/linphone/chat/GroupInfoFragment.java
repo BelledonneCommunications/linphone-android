@@ -329,13 +329,19 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                                     mIsEncryptionEnabled);
                             mTempChatRoom.addListener(mChatRoomCreationListener);
 
-                            int i = 0;
-                            Address[] participantsToAdd = new Address[mParticipants.size()];
-                            for (ContactAddress ca : mParticipants) {
-                                participantsToAdd[i] = ca.getAddress();
-                                i++;
+                            if (mParticipants.size() == 1) {
+                                // Ugly hack until new client chat group API so we can have a group
+                                // chat room with 1 participant without being one to one
+                                mTempChatRoom.addParticipant(mParticipants.get(0).getAddress());
+                            } else {
+                                int i = 0;
+                                Address[] participantsToAdd = new Address[mParticipants.size()];
+                                for (ContactAddress ca : mParticipants) {
+                                    participantsToAdd[i] = ca.getAddress();
+                                    i++;
+                                }
+                                mTempChatRoom.addParticipants(participantsToAdd);
                             }
-                            mTempChatRoom.addParticipants(participantsToAdd);
                         } else {
                             // Subject
                             String newSubject = mSubjectField.getText().toString();
