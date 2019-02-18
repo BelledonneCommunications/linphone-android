@@ -364,6 +364,8 @@ public class ContactDetailsFragment extends Fragment
                         @Override
                         public void onClick(View view) {
                             mContact.delete();
+                            // To ensure removed contact won't appear in the contacts list anymore
+                            ContactsManager.getInstance().fetchContactsAsync();
                             LinphoneActivity.instance().displayContacts(false);
                             dialog.dismiss();
                         }

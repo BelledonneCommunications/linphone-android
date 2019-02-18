@@ -484,6 +484,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         } catch (Exception e) {
             Log.e("[Contacts Manager] " + e);
         }
+
+        // To ensure removed contacts won't appear in the contacts list anymore
+        fetchContactsAsync();
     }
 
     public String getString(int resourceID) {
