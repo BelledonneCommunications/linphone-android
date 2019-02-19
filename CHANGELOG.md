@@ -10,7 +10,7 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.1] - 2018-xx-xx
+## [4.1] - 2019-xx-xx
 
 ### Improvements
 - Improved UI.
@@ -25,6 +25,7 @@ Group changes to describe their impact on the project, as follows:
 ### Features
 - Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
 - Send multiple files with text at the same time.
+- Allow multiple images to be shared from other app through linphone at once.
 - Support of H265 codec.
 - Use TextureView instead of GL2JNIView, easier to use and will fix issues.
 - Send SMS to invite your friends in using Linphone.
@@ -33,6 +34,9 @@ Group changes to describe their impact on the project, as follows:
 - Option to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications.
 - Call recording.
 - Get remote provisioning URL from QR code scan.
+
+### Fixes
+- Fixed chat room user can't get into if there are more than one with the same remote but different local accounts
 
 ## [4.0.1] - 2018-06-26
 
