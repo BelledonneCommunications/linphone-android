@@ -110,6 +110,14 @@
                 <data android:mimeType="application/*" />
             </intent-filter>
             <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="org.linphone.intent.action.CallLaunched" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

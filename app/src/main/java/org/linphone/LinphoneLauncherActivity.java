@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import java.util.ArrayList;
 import org.linphone.assistant.RemoteProvisioningActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsManager;
@@ -129,7 +130,14 @@ public class LinphoneLauncherActivity extends Activity {
                                 }
                             } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
                                 if (type.startsWith("image/")) {
-                                    // TODO : Manage multiple files sharing
+                                    ArrayList<Uri> imageUris =
+                                            intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                                    String filePaths = "";
+                                    for (Uri uri : imageUris) {
+                                        filePaths += FileUtils.getFilePath(getBaseContext(), uri);
+                                        filePaths += ":";
+                                    }
+                                    newIntent.putExtra("fileShared", filePaths);
                                 }
                             } else if (ACTION_CALL_LINPHONE.equals(action)
                                     && (intent.getStringExtra("NumberToCall") != null)) {

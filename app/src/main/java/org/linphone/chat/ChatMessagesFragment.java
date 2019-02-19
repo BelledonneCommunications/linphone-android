@@ -316,19 +316,13 @@ public class ChatMessagesFragment extends Fragment
         if (getArguments() != null) {
             String fileSharedUri = getArguments().getString("fileSharedUri");
             if (fileSharedUri != null) {
-                if (FileUtils.isExtensionImage(fileSharedUri)) {
-                    addImageToPendingList(fileSharedUri);
-                } else {
-                    if (fileSharedUri.startsWith("content://")
-                            || fileSharedUri.startsWith("file://")) {
-                        fileSharedUri =
-                                FileUtils.getFilePath(
-                                        getActivity().getApplicationContext(),
-                                        Uri.parse(fileSharedUri));
-                    } else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
-                        fileSharedUri = FileUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
+                if (fileSharedUri.contains(":")) {
+                    String[] files = fileSharedUri.split(":");
+                    for (String file : files) {
+                        addFileIntoSharingArea(file);
                     }
-                    addFileToPendingList(fileSharedUri);
+                } else {
+                    addFileIntoSharingArea(fileSharedUri);
                 }
             }
 
@@ -578,6 +572,21 @@ public class ChatMessagesFragment extends Fragment
             return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void addFileIntoSharingArea(String fileSharedUri) {
+        if (FileUtils.isExtensionImage(fileSharedUri)) {
+            addImageToPendingList(fileSharedUri);
+        } else {
+            if (fileSharedUri.startsWith("content://") || fileSharedUri.startsWith("file://")) {
+                fileSharedUri =
+                        FileUtils.getFilePath(
+                                getActivity().getApplicationContext(), Uri.parse(fileSharedUri));
+            } else if (fileSharedUri.contains("com.android.contacts/contacts/")) {
+                fileSharedUri = FileUtils.getCVSPathFromLookupUri(fileSharedUri).toString();
+            }
+            addFileToPendingList(fileSharedUri);
+        }
     }
 
     private void loadMoreData(final int totalItemsCount) {
