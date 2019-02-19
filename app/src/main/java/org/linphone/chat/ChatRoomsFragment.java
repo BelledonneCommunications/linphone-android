@@ -116,8 +116,11 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle extras = (Bundle) getArguments().clone();
-                        getArguments().clear();
+                        Bundle extras = null;
+                        if (getArguments() != null) {
+                            extras = (Bundle) getArguments().clone();
+                            getArguments().clear();
+                        }
                         LinphoneActivity.instance()
                                 .goToChatCreator(null, null, null, false, extras, false, false);
                     }
@@ -127,8 +130,11 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle extras = (Bundle) getArguments().clone();
-                        getArguments().clear();
+                        Bundle extras = null;
+                        if (getArguments() != null) {
+                            extras = (Bundle) getArguments().clone();
+                            getArguments().clear();
+                        }
                         LinphoneActivity.instance()
                                 .goToChatCreator(null, null, null, false, extras, true, false);
                     }
@@ -200,8 +206,11 @@ public class ChatRoomsFragment extends Fragment
             mChatRoomsAdapter.toggleSelection(position);
         } else {
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
-            Bundle extras = (Bundle) getArguments().clone();
-            getArguments().clear();
+            Bundle extras = null;
+            if (getArguments() != null) {
+                extras = (Bundle) getArguments().clone();
+                getArguments().clear();
+            }
             LinphoneActivity.instance()
                     .goToChat(
                             room.getLocalAddress().asStringUriOnly(),
