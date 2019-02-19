@@ -56,6 +56,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -750,21 +755,26 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private void initPushNotificationsService() {
         if (getString(R.string.push_type).equals("firebase")) {
             try {
-                Class<?> firebaseClass =
-                        Class.forName("com.google.firebase.iid.FirebaseInstanceId");
-                Object firebaseInstance = firebaseClass.getMethod("getInstance").invoke(null);
-                final String refreshedToken =
-                        (String) firebaseClass.getMethod("getToken").invoke(firebaseInstance);
-
-                // final String refreshedToken =
-                // com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken();
-                if (refreshedToken != null) {
-                    Log.i(
-                            "[Push Notification] init push notif service token is: "
-                                    + refreshedToken);
-                    LinphonePreferences.instance()
-                            .setPushNotificationRegistrationID(refreshedToken);
-                }
+                FirebaseInstanceId.getInstance()
+                        .getInstanceId()
+                        .addOnCompleteListener(
+                                new OnCompleteListener<InstanceIdResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                        if (!task.isSuccessful()) {
+                                            Log.w(
+                                                    "[Push Notification] firebase getInstanceId failed: "
+                                                            + task.getException());
+                                            return;
+                                        }
+                                        String token = task.getResult().getToken();
+                                        Log.i(
+                                                "[Push Notification] init push notif service token is: "
+                                                        + token);
+                                        LinphonePreferences.instance()
+                                                .setPushNotificationRegistrationID(token);
+                                    }
+                                });
             } catch (Exception e) {
                 Log.i("[Push Notification] firebase not available.");
             }

@@ -2,7 +2,7 @@ package org.linphone.firebase;
 
 /*
 FirebaseMessaging.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017-2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,10 +27,24 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.mediastream.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 
 public class FirebaseMessaging extends FirebaseMessagingService {
     public FirebaseMessaging() {}
+
+    @Override
+    public void onNewToken(final String token) {
+        android.util.Log.i("FirebaseIdService", "[Push Notification] Refreshed token: " + token);
+
+        LinphoneUtils.dispatchOnUIThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        LinphonePreferences.instance().setPushNotificationRegistrationID(token);
+                    }
+                });
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
