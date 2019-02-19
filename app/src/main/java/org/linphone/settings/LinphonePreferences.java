@@ -950,7 +950,7 @@ public class LinphonePreferences {
         if (enable) {
             // Add push infos to exisiting proxy configs
             String regId = getPushNotificationRegistrationID();
-            String appId = getString(R.string.push_sender_id);
+            String appId = getString(R.string.gcm_defaultSenderId);
             if (regId != null && lc.getProxyConfigList().length > 0) {
                 for (ProxyConfig lpc : lc.getProxyConfigList()) {
                     if (lpc == null) continue;
@@ -1558,7 +1558,7 @@ public class LinphonePreferences {
             prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
 
             String regId = LinphonePreferences.instance().getPushNotificationRegistrationID();
-            String appId = LinphonePreferences.instance().getString(R.string.push_sender_id);
+            String appId = LinphonePreferences.instance().getString(R.string.gcm_defaultSenderId);
             if (regId != null && LinphonePreferences.instance().isPushNotificationEnabled()) {
                 String contactInfos =
                         "app-id="

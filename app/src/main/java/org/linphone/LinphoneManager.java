@@ -754,6 +754,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private void initPushNotificationsService() {
         if (getString(R.string.push_type).equals("firebase")) {
+            Log.i(
+                    "[Push Notification] firebase push sender id "
+                            + getString(R.string.gcm_defaultSenderId));
             try {
                 FirebaseInstanceId.getInstance()
                         .getInstanceId()
@@ -762,21 +765,19 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                                     @Override
                                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                                         if (!task.isSuccessful()) {
-                                            Log.w(
+                                            Log.e(
                                                     "[Push Notification] firebase getInstanceId failed: "
                                                             + task.getException());
                                             return;
                                         }
                                         String token = task.getResult().getToken();
-                                        Log.i(
-                                                "[Push Notification] init push notif service token is: "
-                                                        + token);
+                                        Log.i("[Push Notification] firebase token is: " + token);
                                         LinphonePreferences.instance()
                                                 .setPushNotificationRegistrationID(token);
                                     }
                                 });
             } catch (Exception e) {
-                Log.i("[Push Notification] firebase not available.");
+                Log.e("[Push Notification] firebase not available.");
             }
         }
     }

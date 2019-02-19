@@ -99,6 +99,10 @@ android {
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".provider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+
+            if (!firebaseEnabled()) {
+                resValue "string", "gcm_defaultSenderId", "none"
+            }
         }
         debug {
             applicationIdSuffix ".debug"
@@ -109,6 +113,10 @@ android {
             resValue "string", "sync_account_type", getPackageName() + ".sync"
             resValue "string", "file_provider", getPackageName() + ".provider"
             resValue "string", "linphone_address_mime_type", "vnd.android.cursor.item/vnd." + getPackageName() + ".provider.sip_address"
+
+            if (!firebaseEnabled()) {
+                resValue "string", "gcm_defaultSenderId", "none"
+            }
         }
     }
 
