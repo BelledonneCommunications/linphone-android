@@ -72,7 +72,7 @@ Now that Google Cloud Messaging has been deprecated and will be completely remov
 However to make Firebase push notifications work, the project needs to have a file named app/google-services.json that contains some confidential informations, so you won't find it (it has been added to the .gitignore file).
 This means that if you compile this project, you won't have push notification feature working in the app!
 
-To enable them, just add your own ```google-services.json``` in the app folder, edit the ```res/values/non_localizable_custom.xml``` file set your key in ```push_sender_id```. Also ensure ```push_type``` is set to ```firebase```.
+To enable them, just add your own ```google-services.json``` in the app folder.
 
 ## Translations
 
