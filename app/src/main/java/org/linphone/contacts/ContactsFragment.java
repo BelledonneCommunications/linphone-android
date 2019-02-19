@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,9 +76,19 @@ public class ContactsFragment extends Fragment
         if (getArguments() != null) {
             mEditOnClick = getArguments().getBoolean("EditOnClick");
             mSipAddressToAdd = getArguments().getString("SipAddress");
-            if (getArguments().getString("DisplayName") != null)
+            if (getArguments().getString("DisplayName") != null) {
                 mDisplayName = getArguments().getString("DisplayName");
+            }
             mOnlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
+
+            if (getArguments().getBoolean("EditOnClick")) {
+                Toast.makeText(
+                                LinphoneActivity.instance(),
+                                R.string.toast_choose_contact_for_edition,
+                                Toast.LENGTH_SHORT)
+                        .show();
+            }
+            getArguments().clear();
         }
 
         mNoSipContact = view.findViewById(R.id.noSipContact);

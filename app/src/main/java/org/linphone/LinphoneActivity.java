@@ -700,34 +700,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
         startActivity(new Intent(LinphoneActivity.this, InAppPurchaseActivity.class));
     }
 
-    private void displayChat(
-            String localSipUri,
-            String remoteSipUri,
-            String message,
-            String fileUri,
-            String pictureUri,
-            String thumbnailUri,
-            String displayName,
-            Address lAddress) {
-        Bundle extras = new Bundle();
-        extras.putString("LocalSipUri", localSipUri);
-        extras.putString("RemoteSipUri", remoteSipUri);
-
-        if (message != null) extras.putString("messageDraft", message);
-        if (fileUri != null) extras.putString("fileSharedUri", fileUri);
-        if (remoteSipUri != null && lAddress.getDisplayName() != null) {
-            extras.putString("DisplayName", displayName);
-            extras.putString("PictureUri", pictureUri);
-            extras.putString("ThumbnailUri", thumbnailUri);
-        }
-
-        if (remoteSipUri == null) {
-            changeCurrentFragment(FragmentsAvailable.CREATE_CHAT, extras);
-        } else {
-            changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
-        }
-    }
-
     public void goToChatCreator(
             String address,
             ArrayList<ContactAddress> selectedContacts,
@@ -835,70 +807,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
     public void goToChatList() {
         changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
-    }
-
-    public void displayChat(
-            String localSipUri, String remoteSipUri, String message, String fileUri) {
-        if (getResources().getBoolean(R.bool.disable_chat)) {
-            return;
-        }
-
-        String pictureUri = null;
-        String thumbnailUri = null;
-        String displayName = null;
-
-        Address lAddress = null;
-        if (remoteSipUri != null) {
-            lAddress = LinphoneManager.getLc().interpretUrl(remoteSipUri);
-            if (lAddress == null) return;
-            LinphoneContact contact =
-                    ContactsManager.getInstance().findContactFromAddress(lAddress);
-            displayName = contact != null ? contact.getFullName() : null;
-
-            if (contact != null && contact.getPhotoUri() != null) {
-                pictureUri = contact.getPhotoUri().toString();
-                thumbnailUri = contact.getThumbnailUri().toString();
-            }
-        }
-
-        if (mCurrentFragment == FragmentsAvailable.CHAT_LIST
-                || mCurrentFragment == FragmentsAvailable.GROUP_CHAT) {
-            Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
-            if (fragment2 != null
-                    && fragment2.isVisible()
-                    && mCurrentFragment == FragmentsAvailable.GROUP_CHAT
-                    && !mEmptyFragment) {
-                ChatMessagesFragment chatFragment = (ChatMessagesFragment) fragment2;
-                chatFragment.changeDisplayedChat(localSipUri, remoteSipUri);
-            } else {
-                displayChat(
-                        localSipUri,
-                        remoteSipUri,
-                        message,
-                        fileUri,
-                        pictureUri,
-                        thumbnailUri,
-                        displayName,
-                        lAddress);
-            }
-        } else {
-            if (isTablet()) {
-                changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
-            } else {
-                displayChat(
-                        localSipUri,
-                        remoteSipUri,
-                        message,
-                        fileUri,
-                        pictureUri,
-                        thumbnailUri,
-                        displayName,
-                        lAddress);
-            }
-        }
-
-        LinphoneManager.getInstance().updateUnreadCountForChatRoom(localSipUri, remoteSipUri, 0);
-        displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 
     @Override
@@ -1122,12 +1030,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     public void setAddresGoToDialerAndCall(String number, String name) {
-        //		Bundle extras = new Bundle();
-        //		extras.putString("SipUri", number);
-        //		extras.putString("DisplayName", name);
-        //		extras.putString("Photo", photo == null ? null : photo.toString());
-        //		changeCurrentFragment(FragmentsAvailable.DIALER, extras);
-
         AddressType address = new AddressText(this, null);
         address.setText(number);
         address.setDisplayedName(name);
@@ -1407,13 +1309,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
     protected void onStart() {
         super.onStart();
         ArrayList<String> permissionsList = new ArrayList<>();
-        permissionsList.add(
-                Manifest.permission
-                        .SYSTEM_ALERT_WINDOW); // This one is to allow floating notifications
-        permissionsList.add(
-                "android.permission.FOREGROUND_SERVICE"); // Manifest.permission.FOREGROUND_SERVICE,
+        // This one is to allow floating notifications
+        permissionsList.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
+        // Manifest.permission.FOREGROUND_SERVICE,
         // required starting Android 9 to be able
         // to start a foreground service
+        permissionsList.add("android.permission.FOREGROUND_SERVICE");
 
         int contacts =
                 getPackageManager()
@@ -1557,13 +1458,16 @@ public class LinphoneActivity extends LinphoneGenericActivity
         Intent intent = getIntent();
 
         if (intent.getStringExtra("msgShared") != null) {
-            displayChat(null, null, intent.getStringExtra("msgShared"), null);
-            intent.putExtra("msgShared", "");
-        }
-        if (intent.getStringExtra("fileShared") != null
+            Bundle extras = new Bundle();
+            extras.putString("messageDraft", intent.getStringExtra("msgShared"));
+            changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
+            intent.removeExtra("msgShared");
+        } else if (intent.getStringExtra("fileShared") != null
                 && !intent.getStringExtra("fileShared").equals("")) {
-            displayChat(null, null, null, intent.getStringExtra("fileShared"));
-            intent.putExtra("fileShared", "");
+            Bundle extras = new Bundle();
+            extras.putString("fileSharedUri", intent.getStringExtra("fileShared"));
+            changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
+            intent.removeExtra("fileShared");
         }
         mIsOnBackground = false;
 

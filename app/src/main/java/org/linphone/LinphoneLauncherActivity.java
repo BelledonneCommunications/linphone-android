@@ -168,17 +168,6 @@ public class LinphoneLauncherActivity extends Activity {
                             mAddressToCall = null;
                         }
                         startActivity(newIntent);
-                        if (classToStart == LinphoneActivity.class
-                                && LinphoneActivity.isInstanciated()
-                                && (stringFileShared != null || fileUri != null)) {
-                            if (stringFileShared != null) {
-                                LinphoneActivity.instance()
-                                        .displayChat(null, null, stringFileShared, null);
-                            } else if (fileUri != null) {
-                                LinphoneActivity.instance()
-                                        .displayChat(null, null, null, stringUriFileShared);
-                            }
-                        }
                     }
                 },
                 1000);

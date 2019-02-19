@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -115,8 +116,10 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Bundle extras = (Bundle) getArguments().clone();
+                        getArguments().clear();
                         LinphoneActivity.instance()
-                                .goToChatCreator(null, null, null, false, null, false, false);
+                                .goToChatCreator(null, null, null, false, extras, false, false);
                     }
                 });
 
@@ -124,8 +127,10 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Bundle extras = (Bundle) getArguments().clone();
+                        getArguments().clear();
                         LinphoneActivity.instance()
-                                .goToChatCreator(null, null, null, false, null, true, false);
+                                .goToChatCreator(null, null, null, false, extras, true, false);
                     }
                 });
 
@@ -173,6 +178,19 @@ public class ChatRoomsFragment extends Fragment
                         }
                     }
                 };
+
+        if (getArguments() != null) {
+            String fileSharedUri = getArguments().getString("fileSharedUri");
+            String messageSharedUri = getArguments().getString("messageDraft");
+            if (fileSharedUri != null || messageSharedUri != null) {
+                Toast.makeText(
+                                LinphoneActivity.instance(),
+                                R.string.toast_choose_chat_room_for_sharing,
+                                Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+
         return view;
     }
 
@@ -182,11 +200,13 @@ public class ChatRoomsFragment extends Fragment
             mChatRoomsAdapter.toggleSelection(position);
         } else {
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
+            Bundle extras = (Bundle) getArguments().clone();
+            getArguments().clear();
             LinphoneActivity.instance()
                     .goToChat(
                             room.getLocalAddress().asStringUriOnly(),
                             room.getPeerAddress().asString(),
-                            null);
+                            extras);
         }
     }
 
