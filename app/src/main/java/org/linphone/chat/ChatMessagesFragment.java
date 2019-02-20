@@ -316,6 +316,7 @@ public class ChatMessagesFragment extends Fragment
         if (getArguments() != null) {
             String fileSharedUri = getArguments().getString("fileSharedUri");
             if (fileSharedUri != null) {
+                Log.i("[ChatMessages] Found shared file(s): " + fileSharedUri);
                 if (fileSharedUri.contains(":")) {
                     String[] files = fileSharedUri.split(":");
                     for (String file : files) {
@@ -326,8 +327,11 @@ public class ChatMessagesFragment extends Fragment
                 }
             }
 
-            if (getArguments().getString("messageDraft") != null)
-                mMessageTextToSend.setText(getArguments().getString("messageDraft"));
+            if (getArguments().getString("messageDraft") != null) {
+                String sharedText = getArguments().getString("messageDraft");
+                mMessageTextToSend.setText(sharedText);
+                Log.i("[ChatMessages] Found shared text: " + sharedText);
+            }
         }
 
         if (savedInstanceState != null) {

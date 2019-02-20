@@ -256,7 +256,10 @@ public class ChatRoomCreationFragment extends Fragment
             String fileSharedUri = getArguments().getString("fileSharedUri");
             String messageDraft = getArguments().getString("messageDraft");
 
-            if (fileSharedUri != null || messageDraft != null) mShareInfos = new Bundle();
+            if (fileSharedUri != null || messageDraft != null) {
+                Log.i("[ChatRoomCreation] Forwarding arguments to new chat room");
+                mShareInfos = new Bundle();
+            }
 
             if (fileSharedUri != null) {
                 LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();

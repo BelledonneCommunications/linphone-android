@@ -51,6 +51,7 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.mediastream.Log;
 import org.linphone.utils.SelectableHelper;
 
 public class ChatRoomsFragment extends Fragment
@@ -118,6 +119,7 @@ public class ChatRoomsFragment extends Fragment
                     public void onClick(View v) {
                         Bundle extras = null;
                         if (getArguments() != null) {
+                            Log.i("[ChatRooms] Forwarding arguments to new chat room");
                             extras = (Bundle) getArguments().clone();
                             getArguments().clear();
                         }
@@ -132,6 +134,7 @@ public class ChatRoomsFragment extends Fragment
                     public void onClick(View v) {
                         Bundle extras = null;
                         if (getArguments() != null) {
+                            Log.i("[ChatRooms] Forwarding arguments to new group chat room");
                             extras = (Bundle) getArguments().clone();
                             getArguments().clear();
                         }
@@ -195,6 +198,7 @@ public class ChatRoomsFragment extends Fragment
                                 Toast.LENGTH_SHORT)
                         .show();
             }
+            Log.i("[ChatRooms] Arguments found: " + messageSharedUri + " / " + fileSharedUri);
         }
 
         return view;
@@ -208,6 +212,7 @@ public class ChatRoomsFragment extends Fragment
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
             Bundle extras = null;
             if (getArguments() != null) {
+                Log.i("[ChatRooms] Forwarding arguments to existing chat room");
                 extras = (Bundle) getArguments().clone();
                 getArguments().clear();
             }

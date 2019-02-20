@@ -144,7 +144,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
         String fileSharedUri = getArguments().getString("fileSharedUri");
         String messageDraft = getArguments().getString("messageDraft");
 
-        if (fileSharedUri != null || messageDraft != null) mShareInfos = new Bundle();
+        if (fileSharedUri != null || messageDraft != null) {
+            Log.i("[GroupInfo] Forwarding arguments to group chat room");
+            mShareInfos = new Bundle();
+        }
 
         if (fileSharedUri != null) mShareInfos.putString("fileSharedUri", fileSharedUri);
 
