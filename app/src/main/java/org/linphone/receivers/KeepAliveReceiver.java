@@ -41,7 +41,8 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (LinphoneService.isReady()) {
             boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-            LinphoneUtils.initLoggingService(isDebugEnabled, context.getString(R.string.app_name));
+            LinphoneUtils.configureLoggingService(
+                    isDebugEnabled, context.getString(R.string.app_name));
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
             if (lc == null) return;
 

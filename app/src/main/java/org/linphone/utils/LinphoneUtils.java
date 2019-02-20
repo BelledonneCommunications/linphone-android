@@ -52,9 +52,6 @@ import org.linphone.core.Call.State;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
-import org.linphone.core.LogLevel;
-import org.linphone.core.LoggingService;
-import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
@@ -66,7 +63,7 @@ public final class LinphoneUtils {
 
     private LinphoneUtils() {}
 
-    public static void initLoggingService(boolean isDebugEnabled, String appName) {
+    public static void configureLoggingService(boolean isDebugEnabled, String appName) {
         if (!LinphonePreferences.instance().useJavaLogger()) {
             Factory.instance().enableLogCollection(LogCollectionState.Enabled);
             Factory.instance().setDebugMode(isDebugEnabled, appName);
@@ -74,36 +71,19 @@ public final class LinphoneUtils {
             Factory.instance().setDebugMode(isDebugEnabled, appName);
             Factory.instance()
                     .enableLogCollection(LogCollectionState.EnabledWithoutPreviousLogHandler);
-            Factory.instance()
-                    .getLoggingService()
-                    .setListener(
-                            new LoggingServiceListener() {
-                                @Override
-                                public void onLogMessageWritten(
-                                        LoggingService logService,
-                                        String domain,
-                                        LogLevel lev,
-                                        String message) {
-                                    switch (lev) {
-                                        case Debug:
-                                            android.util.Log.d(domain, message);
-                                            break;
-                                        case Message:
-                                            android.util.Log.i(domain, message);
-                                            break;
-                                        case Warning:
-                                            android.util.Log.w(domain, message);
-                                            break;
-                                        case Error:
-                                            android.util.Log.e(domain, message);
-                                            break;
-                                        case Fatal:
-                                        default:
-                                            android.util.Log.wtf(domain, message);
-                                            break;
-                                    }
-                                }
-                            });
+            if (isDebugEnabled) {
+                if (LinphoneService.isReady()) {
+                    Factory.instance()
+                            .getLoggingService()
+                            .addListener(LinphoneService.instance().getJavaLoggingService());
+                }
+            } else {
+                if (LinphoneService.isReady()) {
+                    Factory.instance()
+                            .getLoggingService()
+                            .removeListener(LinphoneService.instance().getJavaLoggingService());
+                }
+            }
         }
     }
 

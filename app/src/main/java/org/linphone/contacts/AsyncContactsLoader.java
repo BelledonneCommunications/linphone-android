@@ -75,7 +75,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                                 || !list.getRlsAddress().asStringUriOnly().equals(rls))) {
                     list.setRlsUri(rls);
                 }
-                list.setListener(ContactsManager.getInstance());
+                list.addListener(ContactsManager.getInstance());
             }
         }
     }
@@ -215,8 +215,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             contact.createOrUpdateFriendFromNativeContact();
         }
 
-        ContactsManager.getInstance().clearGroupChatContacts();
-        ContactsManager.getInstance().clearLimeX3dhContacts();
         // Now that contact fetching is asynchronous, this is required to ensure
         // presence subscription event will be sent with all friends
         for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {

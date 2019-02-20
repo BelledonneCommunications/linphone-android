@@ -50,7 +50,6 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
 import org.linphone.core.Friend;
-import org.linphone.core.FriendCapability;
 import org.linphone.core.FriendList;
 import org.linphone.core.FriendListListener;
 import org.linphone.core.MagicSearch;
@@ -61,7 +60,7 @@ import org.linphone.settings.LinphonePreferences;
 public class ContactsManager extends ContentObserver implements FriendListListener {
     private static ContactsManager sInstance;
 
-    private List<LinphoneContact> mContacts, mSipContacts, mGroupChatContacts, mLimeX3dhContacts;
+    private List<LinphoneContact> mContacts, mSipContacts;
     private ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
     private final Bitmap mDefaultAvatar;
@@ -83,8 +82,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         mContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();
-        mGroupChatContacts = new ArrayList<>();
-        mLimeX3dhContacts = new ArrayList<>();
 
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             mMagicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
@@ -114,10 +111,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         fetchContactsAsync();
     }
 
-    public synchronized boolean hasContacts() {
-        return mContacts.size() > 0;
-    }
-
     public synchronized List<LinphoneContact> getContacts() {
         return mContacts;
     }
@@ -134,27 +127,11 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         mSipContacts = c;
     }
 
-    public synchronized List<LinphoneContact> getGroupChatContacts() {
-        return mGroupChatContacts;
-    }
-
-    synchronized void clearGroupChatContacts() {
-        mGroupChatContacts.clear();
-    }
-
-    public synchronized List<LinphoneContact> getLimeX3dhContacts() {
-        return mLimeX3dhContacts;
-    }
-
-    synchronized void clearLimeX3dhContacts() {
-        mLimeX3dhContacts.clear();
-    }
-
     public void destroy() {
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             for (FriendList list : lc.getFriendsLists()) {
-                list.setListener(null);
+                list.removeListener(this);
             }
         }
         mDefaultAvatar.recycle();
@@ -440,19 +417,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private synchronized boolean refreshSipContact(Friend lf) {
         LinphoneContact contact = (LinphoneContact) lf.getUserData();
         if (contact != null) {
-            if (lf.hasCapability(FriendCapability.GroupChat)
-                    && !mGroupChatContacts.contains(contact)) {
-                mGroupChatContacts.add(contact);
-                Log.i("[Contacts Manager] Contact " + contact + " has group chat capability");
-
-                // Contact may only have LimeX3DH capability if it already has GroupChat capability
-                if (lf.hasCapability(FriendCapability.LimeX3Dh)
-                        && !mLimeX3dhContacts.contains(contact)) {
-                    mLimeX3dhContacts.add(contact);
-                    Log.i("[Contacts Manager] Contact " + contact + " has lime x3dh capability");
-                }
-            }
-
             if (!mSipContacts.contains(contact)) {
                 mSipContacts.add(contact);
                 return true;
@@ -518,8 +482,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
         if (updated) {
             Collections.sort(mSipContacts);
-            Collections.sort(mGroupChatContacts);
-            Collections.sort(mLimeX3dhContacts);
         }
 
         for (ContactsUpdatedListener listener : mContactsUpdatedListeners) {

@@ -43,6 +43,9 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Factory;
 import org.linphone.core.GlobalState;
+import org.linphone.core.LogLevel;
+import org.linphone.core.LoggingService;
+import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.mediastream.Log;
@@ -85,6 +88,36 @@ public final class LinphoneService extends Service {
     private NotificationsManager mNotificationManager;
     private String mIncomingReceivedActivityName;
     private Class<? extends Activity> mIncomingReceivedActivity = LinphoneActivity.class;
+
+    private LoggingServiceListener mJavaLoggingService =
+            new LoggingServiceListener() {
+                @Override
+                public void onLogMessageWritten(
+                        LoggingService logService, String domain, LogLevel lev, String message) {
+                    switch (lev) {
+                        case Debug:
+                            android.util.Log.d(domain, message);
+                            break;
+                        case Message:
+                            android.util.Log.i(domain, message);
+                            break;
+                        case Warning:
+                            android.util.Log.w(domain, message);
+                            break;
+                        case Error:
+                            android.util.Log.e(domain, message);
+                            break;
+                        case Fatal:
+                        default:
+                            android.util.Log.wtf(domain, message);
+                            break;
+                    }
+                }
+            };
+
+    public LoggingServiceListener getJavaLoggingService() {
+        return mJavaLoggingService;
+    }
 
     public static boolean isReady() {
         return sInstance != null && sInstance.mTestDelayElapsed;
@@ -270,7 +303,11 @@ public final class LinphoneService extends Service {
         LinphonePreferences.instance().setContext(getBaseContext());
         Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
         boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-        LinphoneUtils.initLoggingService(isDebugEnabled, getString(R.string.app_name));
+        LinphoneUtils.configureLoggingService(isDebugEnabled, getString(R.string.app_name));
+        // LinphoneService isn't ready yet so we have to manually set up the Java logging service
+        if (LinphonePreferences.instance().useJavaLogger()) {
+            Factory.instance().getLoggingService().addListener(mJavaLoggingService);
+        }
 
         // Dump some debugging information to the logs
         Log.i(START_LINPHONE_LOGS);
@@ -394,6 +431,8 @@ public final class LinphoneService extends Service {
             Log.w("[Service] Service is getting destroyed, finish LinphoneActivity");
             LinphoneActivity.instance().finish();
         }
+
+        LinphoneUtils.configureLoggingService(false, getString(R.string.app_name));
 
         super.onDestroy();
     }

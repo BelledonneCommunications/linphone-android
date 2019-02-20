@@ -1034,12 +1034,13 @@ public class LinphonePreferences {
     // Advanced settings
     public void setDebugEnabled(boolean enabled) {
         getConfig().setBool("app", "debug", enabled);
-        LinphoneUtils.initLoggingService(enabled, mContext.getString(R.string.app_name));
+        LinphoneUtils.configureLoggingService(enabled, mContext.getString(R.string.app_name));
     }
 
     public void setJavaLogger(boolean enabled) {
         getConfig().setBool("app", "java_logger", enabled);
-        LinphoneUtils.initLoggingService(isDebugEnabled(), mContext.getString(R.string.app_name));
+        LinphoneUtils.configureLoggingService(
+                isDebugEnabled(), mContext.getString(R.string.app_name));
     }
 
     public boolean useJavaLogger() {

@@ -72,7 +72,7 @@ class Recording implements PlayerListener, Comparable<Recording> {
                 };
 
         mPlayer = LinphoneManager.getLc().createLocalPlayer(null, null, null);
-        mPlayer.setListener(this);
+        mPlayer.addListener(this);
     }
 
     public String getRecordPath() {
@@ -135,6 +135,7 @@ class Recording implements PlayerListener, Comparable<Recording> {
     }
 
     public void close() {
+        mPlayer.removeListener(this);
         mPlayer.close();
     }
 

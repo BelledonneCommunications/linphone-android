@@ -41,7 +41,7 @@ public class DozeReceiver extends android.content.BroadcastReceiver {
         if (!LinphoneService.isReady()) return;
 
         boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-        LinphoneUtils.initLoggingService(isDebugEnabled, context.getString(R.string.app_name));
+        LinphoneUtils.configureLoggingService(isDebugEnabled, context.getString(R.string.app_name));
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc == null) return;
 
