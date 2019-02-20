@@ -215,8 +215,15 @@ public class CallVideoFragment extends Fragment
 
     @Override
     public void onPause() {
-        if (LinphonePreferences.instance().isOverlayEnabled()) {
-            LinphoneService.instance().createOverlay();
+        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (LinphonePreferences.instance().isOverlayEnabled()
+                && lc != null
+                && lc.getCurrentCall() != null) {
+            Call call = lc.getCurrentCall();
+            if (call.getState() == Call.State.StreamsRunning) {
+                // Prevent overlay creation if video call is paused by remote
+                LinphoneService.instance().createOverlay();
+            }
         }
 
         super.onPause();
