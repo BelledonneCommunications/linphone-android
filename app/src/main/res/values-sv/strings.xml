@@ -11,9 +11,15 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">linphone-kontakter</string>
   <!--Notifications-->
+  <string name="notification_reply_label">Svara</string>
+  <string name="notification_replied_label">Skickat svar: %s</string>
+  <string name="notification_call_hangup_label">Lägg på</string>
+  <string name="notification_call_answer_label">Svara</string>
+  <string name="notification_mark_as_read_label">Märk som läst</string>
   <!--Common-->
   <string name="username">Användarnamn</string>
   <string name="userid">Användar-ID (valfritt)</string>
@@ -51,6 +57,8 @@
   <string name="yes">Ja</string>
   <string name="link_account">Länka ditt konto</string>
   <string name="update_available">En uppdatering är tillgänglig</string>
+  <string name="do_not_ask_again">Visa inte igen</string>
+  <string name="delete_contacts_text">Är du säker på att du vill ta bort dessa kontakter?\nDe kommer att tas bort från telefonen också!</string>
   <!--Launch screen-->
   <string name="app_description"><i>libre</i> SIP-klient</string>
   <!--Assistant-->
@@ -81,6 +89,7 @@
   <string name="assistant_generic_account">Använd SIP-konto</string>
   <string name="assistant_remote_provisioning_title">Hämta fjärrkonfiguration</string>
   <string name="assistant_fetch_apply">Hämta och tillämpa</string>
+  <string name="assistant_launch_qrcode">QRCode</string>
   <string name="assistant_login">Logga in</string>
   <string name="assistant_ec_calibration">Ekoeliminerare kalibrering pågår</string>
   <string name="assistant_remote_provisioning_login">Ange din inloggning</string>
@@ -157,13 +166,12 @@
   <string name="contact_first_name">Förnamn</string>
   <string name="contact_last_name">Efternamn</string>
   <string name="contact_organization">Organisation</string>
+  <string name="invite_friend">Bjud in</string>
+  <string name="invite_friend_text">Hej, börja också använda Linphone! Du kan hämta det gratis på http://www.linphone.org/technical-corner/linphone/downloads</string>
   <!--Chat-->
   <string name="no_chat_history">Inga konversationer</string>
   <string name="delete_conversation">Vill du ta bort vald konversation?</string>
   <string name="delete_message">Vill du ta bort valt meddelande?</string>
-  <string name="remote_composing">Fjärr skriver...</string>
-  <string name="remote_composing_single">%s skriver...</string>
-  <string name="remote_composing_multiple">%s skriver...</string>
   <string name="share_picture_size_small">Liten</string>
   <string name="share_picture_size_medium">Mellan</string>
   <string name="share_picture_size_large">Stor</string>
@@ -173,7 +181,6 @@
   <string name="image_picker_title">Välj källa</string>
   <string name="image_saved">Bild sparad</string>
   <string name="image_not_saved">Fel, bild ej sparad</string>
-  <string name="wait">Vänta...</string>
   <string name="image_transfert_error">Ett fel inträffade under filöverföringen</string>
   <string name="message_not_encrypted">Detta meddelande är inte krypterat</string>
   <string name="message_cant_be_decrypted">Du har fått ett krypterat meddelande som du inte kan dekryptera från %s\nDu behöver ringa din korrespondent för att utbyta dina ZRTP-nycklar om du vill dekryptera de framtida meddelanden som du kommer att få.</string>
@@ -207,12 +214,20 @@
   <string name="chat_room_you_are_now_admin">Du är nu administratör</string>
   <string name="chat_room_you_are_no_longer_admin">Du är inte längre administratör</string>
   <string name="chat_room_creation_failed">Upprättning av chattrum misslyckades</string>
+  <string name="chat_room_leave_dialog">Vill du lämna den här konversationen?</string>
   <string name="chat_room_leave_button">Lämna</string>
+  <string name="chat_room_delete_dialog">Vill du ta bort och lämna de valda konversationerna?</string>
   <string name="separator">: </string>
   <string name="imdn_info">Leveransstatus</string>
   <string name="chat_room_devices">%ss enheter</string>
   <string name="group_chat_room_devices">Konversationsenheter</string>
   <string name="add_to_contacts">Lägg till kontakter</string>
+  <string name="lime_security_popup">Snabbmeddelanden är end-to-end krypterade i säkrade samtal. Det är möjligt att uppgradera säkerhetsnivån för en konversation genom att autentisera deltagare. För att göra det, ring kontakten och följ autentiseringsprocessen.</string>
+  <string name="lime_identity_key_changed">LIME-identitetsnyckel ändrad för %s</string>
+  <string name="man_in_the_middle_detected">Man-in-the-middle-attack upptäckt för %s</string>
+  <string name="security_level_downgraded">Säkerhetsnivån sänktes på grund av %s</string>
+  <string name="participant_max_count_exceeded">Högsta antal deltagare överskrids med %s</string>
+  <string name="unexpected_event">Oväntad händelse %i för %s</string>
   <string name="download_file">Ladda ner</string>
   <!--Status Bar-->
   <string name="status_connected">Registrerad</string>
@@ -223,6 +238,7 @@
   <!--Side Menu-->
   <string name="menu_assistant">Assistent</string>
   <string name="menu_settings">Inställningar</string>
+  <string name="menu_recordings">Inspelningar</string>
   <string name="menu_about">Om</string>
   <string name="quit">Avsluta</string>
   <!--Call-->
@@ -232,6 +248,9 @@
   <string name="no_current_call">Inget aktivt samtal</string>
   <string name="call_paused_by_remote">Din uppringare pausade samtalet</string>
   <string name="couldnt_accept_call">Ett fel uppstod när du accepterade samtalet</string>
+  <string name="zrtp_local_sas">Säg:</string>
+  <string name="zrtp_remote_sas">Bekräfta att din samtalspartner säger:</string>
+  <string name="zrtp_dialog_title">Kommunikationssäkerhet</string>
   <string name="zrtp_notification_title">SAS</string>
   <string name="zrtp_notification_message">Bekräfta tidigare SAS-kod med din korrespondent</string>
   <string name="unknown_incoming_call_name">Okänd</string>
@@ -255,6 +274,8 @@
   <string name="call_stats_display_filter">Visningsfilter:</string>
   <string name="call">Ring</string>
   <!--Recordings-->
+  <string name="no_recordings">Inga inspelningar</string>
+  <string name="recordings_delete_dialog">Vill du ta bort de valda inspelningarna?</string>
   <!--About-->
   <string name="menu_send_log">Skicka logg</string>
   <string name="menu_reset_log">Nollställ logg</string>
@@ -282,7 +303,6 @@
   <string name="error_unauthorized">Obehörig</string>
   <string name="error_io_error">Nätverksfel</string>
   <string name="download_image_failed">Hämtning misslyckad. Kontrollera din nätverksanslutning eller försök igen senare.</string>
-  <string name="remote_provisioning_failure">Misslyckades med att ladda ner eller tillämpa fjärrleveransprofil...</string>
   <string name="remote_provisioning_again_title">Fjärrleverans</string>
   <string name="remote_provisioning_again_message">Vill du ändra leverans-URI?</string>
   <!--Account Settings-->
@@ -367,6 +387,7 @@
   <!--Call settings-->
   <string name="pref_call_title">Ring</string>
   <string name="pref_device_ringtone">Använd enhetens ringsignal</string>
+  <string name="pref_vibrate_on_incoming_calls">Vibrera medan inkommande samtal ringer</string>
   <string name="pref_auto_answer">Automatiskt svara på inkommande samtal</string>
   <string name="pref_auto_answer_time">Autosvarstid (i millisekunder)</string>
   <string name="pref_rfc2833_dtmf">Skicka in-band DTMF (RFC2833)</string>
@@ -383,6 +404,11 @@
   <string name="lime_encryption_entry_mandatory">Obligatorisk</string>
   <string name="lime_encryption_entry_preferred">Föredragen</string>
   <string name="lime_encryption_enable_zrtp">LIME kräver ZRTP-kryptering.\nGenom att aktivera LIME aktiverar du automatiskt ZRTP-mediekryptering.</string>
+  <string name="pref_auto_download_policy_title">Policy för att hämta automatiskt inkommande filer</string>
+  <string name="pref_auto_download_max_size_title">Största storlek (i byte)</string>
+  <string name="pref_auto_download_disabled">Aldrig</string>
+  <string name="pref_auto_download_always">Alltid</string>
+  <string name="pref_auto_download_under_size">Om mindre än största storlek</string>
   <!--Network settings-->
   <string name="pref_network_title">Nätverk</string>
   <string name="pref_wifi_only">Använd endast Wi-Fi</string>
@@ -402,6 +428,8 @@
   <string name="pref_media_encryption">Mediakryptering</string>
   <string name="pref_push_notification">Aktivera push-meddelanden</string>
   <string name="pref_ipv6_title">Tillåt IPv6</string>
+  <string name="pref_protected_settings_title">Inställningar för batteriskyddade appar</string>
+  <string name="pref_protected_settings_desc">Denna app måste aktiveras för att få push-meddelanden</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Avancerat</string>
   <string name="pref_debug_title">Felsökning</string>
@@ -426,6 +454,8 @@
   <string name="pref_audio_hacks_use_routing_api_title">Använd rutt API hack</string>
   <string name="pref_audio_hacks_use_galaxys_hack_title">Använd Galaxy S-ljudhack</string>
   <!--Device specifics-->
+  <string name="device_power_saver_dialog_title">Energisparläge upptäckt!</string>
+  <string name="device_power_saver_dialog_message">Det verkar som om din enhet har en energisparare. För att appen ska kunna ta emot samtal och meddelanden i bakgrunden med hjälp av push-meddelanden måste appen vitlistas.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Inställningar</string>
   <string name="device_power_saver_dialog_button_later">Senare</string>
   <!--Content description-->
@@ -504,4 +534,5 @@
   <string name="content_title_notification">Linphone-chattaviseringar</string>
   <string name="content_description_conversation_subject">Ämne för gruppchattrum</string>
   <string name="content_description_conversation_infos">Info för gruppchattrum</string>
+  <string name="content_description_record_call">Spela in samtal</string>
 </resources>

@@ -155,7 +155,6 @@
   <string name="no_chat_history">لا وجود لأي محادثة</string>
   <string name="delete_conversation">أتود حذف المحادثات المحددة ؟</string>
   <string name="delete_message">أتود حذف الرسالة المحددة ؟</string>
-  <string name="remote_composing">المُراسِل يكتب...</string>
   <string name="share_picture_size_small">صغيرة</string>
   <string name="share_picture_size_medium">متوسطة</string>
   <string name="share_picture_size_large">كبيرة</string>
@@ -165,7 +164,6 @@
   <string name="image_picker_title">اختر المصدر</string>
   <string name="image_saved">حُفظَت الصورة</string>
   <string name="image_not_saved">خطأ، لم تُحفَظ الصورة</string>
-  <string name="wait">يُرجى الانتظار...</string>
   <string name="image_transfert_error">حدث خطأ أثناء نقل الملف</string>
   <string name="message_not_encrypted">إن الرسالة ليست مُعمَّاة</string>
   <string name="message_cant_be_decrypted">لقد استلمت رسالة مُعمَّاة لم تتمكن من فك تعميتها من  %s\nيجب عليك الاتصال بمخاطبك لتبادل مفاتيح ZRTP إذا أردت فك تعمية الرسائل اللاحقة التي ستستلمها.</string>
@@ -243,7 +241,6 @@
   <string name="error_unauthorized">غير مُصرَّح</string>
   <string name="error_io_error">خطأ في الشبكة</string>
   <string name="download_image_failed">فشل التنزيل. يُرجى التحقق من اتصالك بالشبكة أو الإعادة لاحقا.</string>
-  <string name="remote_provisioning_failure">فشِل تنزيل أو تطبيق تشكيلة التهيئة عن بعد</string>
   <string name="remote_provisioning_again_title">التهيئة عن بعد</string>
   <string name="remote_provisioning_again_message">أتود تغيير عنوان التهئية البعيدة ؟</string>
   <!--Account Settings-->

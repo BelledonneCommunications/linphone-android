@@ -150,7 +150,6 @@
   <string name="no_chat_history">Brak rozmów</string>
   <string name="delete_conversation">Czy chcesz usunąć wybraną rozmowę?</string>
   <string name="delete_message">Czy chcesz usunąć zaznaczoną wiadomość?</string>
-  <string name="remote_composing">Zdalne pisanie ...</string>
   <string name="share_picture_size_small">Mały</string>
   <string name="share_picture_size_medium">Średni</string>
   <string name="share_picture_size_large">Duży</string>
@@ -160,7 +159,6 @@
   <string name="image_picker_title">Wybierz źródło</string>
   <string name="image_saved">Obraz zapisany</string>
   <string name="image_not_saved">Błąd, obraz nie został zapisany</string>
-  <string name="wait">Proszę czekać...</string>
   <string name="processing_image">Przetwarzanie obrazu, może potrwać nawet do kilku sekund w zależności od rozmiaru pliku</string>
   <string name="add_to_contacts">Dodaj do kontaktów</string>
   <!--Status Bar-->
@@ -220,7 +218,6 @@
   <string name="error_unauthorized">Nieautoryzowany</string>
   <string name="error_io_error">Błąd sieci</string>
   <string name="download_image_failed">Pobieranie nie udane. Proszę sprawdzić swoje połączenie sieciowe lub spróbuj ponownie później.</string>
-  <string name="remote_provisioning_failure">Nie udało się pobrać lub zastosować profil zdalnego zastrzegania ...</string>
   <string name="remote_provisioning_again_title">Zdalne zastrzeganie </string>
   <string name="remote_provisioning_again_message">Chcesz zmienić zastrzeganie URI?</string>
   <!--Account Settings-->

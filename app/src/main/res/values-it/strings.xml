@@ -161,9 +161,6 @@
   <string name="no_chat_history">Nessuna conversazione</string>
   <string name="delete_conversation">Vuoi eliminare la conversazione selezionata?</string>
   <string name="delete_message">Vuoi eliminare il messaggio selezionato?</string>
-  <string name="remote_composing"> L\'interlocutore sta scrivendo...</string>
-  <string name="remote_composing_single">%s sta scrivendo...</string>
-  <string name="remote_composing_multiple">%s stanno scrivendo...</string>
   <string name="share_picture_size_small">Piccolo</string>
   <string name="share_picture_size_medium">Medio</string>
   <string name="share_picture_size_large">Grande</string>
@@ -173,7 +170,6 @@
   <string name="image_picker_title">Seleziona la fonte</string>
   <string name="image_saved">Immagine salvata</string>
   <string name="image_not_saved">Errore, immagine non salvata</string>
-  <string name="wait">Attendere prego...</string>
   <string name="image_transfert_error">Si è verificato un errore durante il trasferimento del file</string>
   <string name="message_not_encrypted">Questo messaggio non è cifrato</string>
   <string name="message_cant_be_decrypted">Hai ricevuto un messaggio crittografato che non sei in grado di decodificare da %s\nDevi chiamare il tuo corrispondente per scambiare le tue chiavi ZRTP se vuoi decodificare i messaggi futuri che riceverai.</string>
@@ -281,7 +277,6 @@
   <string name="error_unauthorized">Non autorizzato</string>
   <string name="error_io_error">Errore di rete</string>
   <string name="download_image_failed">Scaricamento fallito. Controlla la connessione di rete o riprova più tardi.</string>
-  <string name="remote_provisioning_failure">Impossibile scaricare o applicare il profilo di provisioning remoto...</string>
   <string name="remote_provisioning_again_title">Provisioning remoto</string>
   <string name="remote_provisioning_again_message">Vuoi cambiare l\'URI di provisioning?</string>
   <!--Account Settings-->

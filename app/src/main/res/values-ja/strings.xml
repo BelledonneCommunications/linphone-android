@@ -153,7 +153,6 @@
   <string name="no_chat_history">新しい会話はありません</string>
   <string name="delete_conversation">本当に選択した会話を削除しますか？</string>
   <string name="delete_message">本当に選択したメッセージを削除しますか？</string>
-  <string name="remote_composing">リモート先が入力中...</string>
   <string name="share_picture_size_small">小さい</string>
   <string name="share_picture_size_medium">中くらい</string>
   <string name="share_picture_size_large">大きい</string>
@@ -163,7 +162,6 @@
   <string name="image_picker_title">選択したソース</string>
   <string name="image_saved">保存した画像</string>
   <string name="image_not_saved">エラー、画像が保存できません。</string>
-  <string name="wait">お待ちください...</string>
   <string name="message_not_encrypted">このメッセージは暗号化されていません。</string>
   <string name="message_cant_be_decrypted_notif">このメッセージを復号化することが出来ませんでした。</string>
   <string name="processing_image">画像の処理は、ファイルサイズによっては数秒かかることがあります</string>
@@ -230,7 +228,6 @@
   <string name="error_unauthorized">無断</string>
   <string name="error_io_error">ネットワークエラー</string>
   <string name="download_image_failed">ダウンロードに失敗しました。ネットワークを確認して再度操作してください。</string>
-  <string name="remote_provisioning_failure">ダウンロードした、リモートプロビジョニング設定を適用できませんでした...</string>
   <string name="remote_provisioning_again_title">遠隔準備</string>
   <string name="remote_provisioning_again_message">本当にプロビジョニングのURIを変更しますか？</string>
   <!--Account Settings-->

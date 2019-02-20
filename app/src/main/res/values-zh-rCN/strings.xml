@@ -150,7 +150,6 @@
   <string name="no_chat_history">无对话</string>
   <string name="delete_conversation">您想删除所选对话吗？</string>
   <string name="delete_message">您想删除所选信息吗？</string>
-  <string name="remote_composing">远程编写中</string>
   <string name="share_picture_size_small">小</string>
   <string name="share_picture_size_medium">中</string>
   <string name="share_picture_size_large">大</string>
@@ -160,7 +159,6 @@
   <string name="image_picker_title">选择源</string>
   <string name="image_saved">图片已保存</string>
   <string name="image_not_saved">错误，图片保存失败</string>
-  <string name="wait">请等待...</string>
   <string name="image_transfert_error">文件传输出错</string>
   <string name="message_not_encrypted">此消息未加密</string>
   <string name="message_cant_be_decrypted">您收到了一个加密的消息，但您无法从%s中解密。如果您想要解密之后的消息，需要使用ZRTP密钥。</string>
@@ -232,7 +230,6 @@
   <string name="error_unauthorized">未授权</string>
   <string name="error_io_error">网络错误</string>
   <string name="download_image_failed">下载失败，请检查您的网络连接货稍后再试</string>
-  <string name="remote_provisioning_failure">配置文件下载或获取失败</string>
   <string name="remote_provisioning_again_title">移除配置文件</string>
   <string name="remote_provisioning_again_message">您想更换配置文件URI吗？</string>
   <!--Account Settings-->

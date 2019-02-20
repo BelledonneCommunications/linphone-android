@@ -178,7 +178,7 @@
     <string name="contact_organization">Organization</string>
     <string name="invite_friend">Invite</string>
     <string name="invite_friend_text">Hello, join me on Linphone! You can download it for free at http://www.linphone.org/technical-corner/linphone/downloads</string>
-    <string name="toast_choose_contact_for_edition">Select the contact to edit or create a new one</string>
+    <string name="toast_choose_contact_for_edition">Select a contact or create a new one</string>
 
     <!-- Chat -->
     <string name="no_chat_history">No conversations</string>
@@ -245,7 +245,7 @@
     <string name="participant_max_count_exceeded">Max participant count exceeded by %s</string>
     <string name="unexpected_event">Unexpected event %i for %s</string>
     <string name="download_file">Download</string>
-    <string name="toast_choose_chat_room_for_sharing">Select the conversation in which to send your selection or create a new one</string>
+    <string name="toast_choose_chat_room_for_sharing">Select a conversation or create a new one</string>
 
     <!-- Status Bar -->
     <string name="status_connected">Registered</string>

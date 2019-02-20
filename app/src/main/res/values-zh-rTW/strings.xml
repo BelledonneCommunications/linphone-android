@@ -160,9 +160,6 @@
   <string name="no_chat_history">沒有對話</string>
   <string name="delete_conversation">你想要刪除選取的對話嗎？</string>
   <string name="delete_message">你想要刪除選取的訊息嗎？</string>
-  <string name="remote_composing">對方正在輸入...</string>
-  <string name="remote_composing_single">%s 正在輸入...</string>
-  <string name="remote_composing_multiple">%s 正在輸入...</string>
   <string name="share_picture_size_small">小</string>
   <string name="share_picture_size_medium">中</string>
   <string name="share_picture_size_large">大</string>
@@ -172,7 +169,6 @@
   <string name="image_picker_title">選擇來源</string>
   <string name="image_saved">已儲存圖片</string>
   <string name="image_not_saved">錯誤，沒有儲存圖片</string>
-  <string name="wait">請稍候...</string>
   <string name="image_transfert_error">檔案傳輸時發生錯誤</string>
   <string name="message_not_encrypted">這個訊息沒有被加密</string>
   <string name="message_cant_be_decrypted">您從 %s 收到您無法解密的加密訊息\n如果您想要解密未來會收到的訊息，您需要與對方交換 ZRTP 金鑰。</string>
@@ -277,7 +273,6 @@
   <string name="error_unauthorized">未授權</string>
   <string name="error_io_error">網路錯誤</string>
   <string name="download_image_failed">下載失敗。請檢查你的網路連接或稍候再試。</string>
-  <string name="remote_provisioning_failure">無法下載或套用遠端配置設定檔...</string>
   <string name="remote_provisioning_again_title">遠端配置</string>
   <string name="remote_provisioning_again_message">你要變更配置 URI 嗎？</string>
   <!--Account Settings-->

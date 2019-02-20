@@ -51,7 +51,6 @@
   <string name="contact_first_name">Име</string>
   <string name="contact_last_name">Презиме</string>
   <!--Chat-->
-  <string name="remote_composing">Удаљени пише...</string>
   <string name="share_picture_size_small">Мала</string>
   <string name="share_picture_size_medium">Средња</string>
   <string name="share_picture_size_large">Велика</string>
@@ -61,7 +60,6 @@
   <string name="image_picker_title">Изабери извор</string>
   <string name="image_saved">Слика је сачувана</string>
   <string name="image_not_saved">Грешка, слика није сачувана</string>
-  <string name="wait">Молим сачекајте...</string>
   <string name="processing_image">Обрађујем слику, може да потраје неколико скунде у зависности од величине датотеке</string>
   <string name="add_to_contacts">Додај у контакте</string>
   <string name="download_file">Преузми</string>
@@ -103,7 +101,6 @@
   <string name="error_bad_credentials">Лоша уверења</string>
   <string name="error_unauthorized">Неовлашћен</string>
   <string name="error_io_error">Грешка мреже</string>
-  <string name="remote_provisioning_failure">Нисам успео да преузмем или да применим профил прибављања удаљеног...</string>
   <string name="remote_provisioning_again_title">Прибављање удаљеног</string>
   <!--Account Settings-->
   <string name="pref_sipaccount">СИП налог</string>

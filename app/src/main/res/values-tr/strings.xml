@@ -156,9 +156,6 @@
   <string name="no_chat_history">görüşme yok</string>
   <string name="delete_conversation">Seçilen görüşmeyi silmek ister misiniz?</string>
   <string name="delete_message">Seçilen iletiyi silmek ister misiniz?</string>
-  <string name="remote_composing">Karşıdan yazılıyor...</string>
-  <string name="remote_composing_single">%s yazıyor...</string>
-  <string name="remote_composing_multiple">%s yazıyor...</string>
   <string name="share_picture_size_small">Küçük</string>
   <string name="share_picture_size_medium">Orta</string>
   <string name="share_picture_size_large">Büyük</string>
@@ -168,7 +165,6 @@
   <string name="image_picker_title">Kaynak seç</string>
   <string name="image_saved">Resim kaydedildi</string>
   <string name="image_not_saved">Hata,resim kaydedilmedi</string>
-  <string name="wait">Lütfen bekleyin...</string>
   <string name="image_transfert_error">Dosya aktarımı sırasında bir hata oluştu</string>
   <string name="message_not_encrypted">Bu ileti şifrelenmemiş</string>
   <string name="message_cant_be_decrypted">%s\'den şifresi çözülemeyen bir şifrelenmiş ileti aldınız.\nEğer gelecekte alacağınız iletileri çözmek istiyorsanız, ZRTP anahtarlarınızın değiş tokuşu için eşinizi aramanız gerekiyor.</string>
@@ -274,7 +270,6 @@
   <string name="error_unauthorized">Kimlik doğrulanmadı</string>
   <string name="error_io_error">Ağ hatası</string>
   <string name="download_image_failed">İndirme başarısız. Lütfen ağ bağlantınızı gözden geçirin ya da daha sonra yeniden deneyin.</string>
-  <string name="remote_provisioning_failure">Uzaktan yetkilendirme profili indirilirmesi ya da uygulanması başarısız...</string>
   <string name="remote_provisioning_again_title">Uzaktan yetkilendirme</string>
   <string name="remote_provisioning_again_message">Uzaktan yetkilendirme adresinizi değiştirmek istiyor musunuz?</string>
   <!--Account Settings-->

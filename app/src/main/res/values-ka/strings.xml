@@ -156,9 +156,6 @@
   <string name="no_chat_history">მიმოწერა არ არის</string>
   <string name="delete_conversation">გსურთ არჩეული მიმოწერის წაშლა?</string>
   <string name="delete_message">გსურთ არჩეული შეტყობინების წაშლა?</string>
-  <string name="remote_composing">დაშორებული წერს...</string>
-  <string name="remote_composing_single">%s წერს...</string>
-  <string name="remote_composing_multiple">%s წერენ...</string>
   <string name="share_picture_size_small">პატარა</string>
   <string name="share_picture_size_medium">საშუალო</string>
   <string name="share_picture_size_large">დიდი</string>
@@ -168,7 +165,6 @@
   <string name="image_picker_title">წყაროს არჩევა</string>
   <string name="image_saved">სურათი შენახულია</string>
   <string name="image_not_saved">შეცდომა, სურათი ვერ შეინახა</string>
-  <string name="wait">გთხოვთ, დაელოდოთ...</string>
   <string name="image_transfert_error">ფაილისი გზავნის დროს მოხდა შეცდომა</string>
   <string name="message_not_encrypted">ეს შეტყობინება არ არის დაშიფრული</string>
   <string name="message_cant_be_decrypted">თქვენ მიიღეთ დაშიფრული შეტყობინება, რომლის განშიფრვაც %s-დან არ შეგიძლიათ\nუნდა დაუკავშერდეთ თქვენს კორესპონდენტს იმისათვის, რომ გაცვალოთ ZRTP გასაღებები, თუ გსურთ მომავალი მიღებული შეტყობინებების განშიფრვა.</string>
@@ -272,7 +268,6 @@
   <string name="error_unauthorized">არაავტორიზებული</string>
   <string name="error_io_error">ქსელის შეცდომა</string>
   <string name="download_image_failed">გადმოწერა ვერ მოხერხდა. გთხოვთ, შეამოწმოთ თქვენი ქსელური კავშირი ან სცადოთ მოგვიანებით.</string>
-  <string name="remote_provisioning_failure">დაშორებული პროვიზიული პროფილის გადმოტვირთვა ან მიღება ვერ მოხერხდა...</string>
   <string name="remote_provisioning_again_title">დაშორებული პროვიზია</string>
   <string name="remote_provisioning_again_message">გსურთ პროვიზიის URI-ს შეცვლა?</string>
   <!--Account Settings-->
