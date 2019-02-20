@@ -29,20 +29,25 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
+import org.linphone.core.Core;
+import org.linphone.core.VideoDefinition;
 import org.linphone.mediastream.Version;
 
-public class LinphoneTextureViewOverlay extends TextureView implements LinphoneOverlay {
+public class LinphoneTextureViewOverlay extends RelativeLayout implements LinphoneOverlay {
     private final WindowManager mWindowManager;
     private final WindowManager.LayoutParams mParams;
     private final DisplayMetrics mMetrics;
     private float mX, mY, mTouchX, mTouchY;
     private boolean mDragEnabled;
+    private TextureView mRemoteVideo, mLocalPreview;
 
     public LinphoneTextureViewOverlay(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
@@ -70,7 +75,33 @@ public class LinphoneTextureViewOverlay extends TextureView implements LinphoneO
         CallParams callParams = call.getCurrentParams();
         mParams.width = callParams.getReceivedVideoDefinition().getWidth();
         mParams.height = callParams.getReceivedVideoDefinition().getHeight();
-        LinphoneManager.getLc().setNativeVideoWindowId(this);
+
+        mRemoteVideo = new TextureView(context);
+        addView(mRemoteVideo);
+        mLocalPreview = new TextureView(context);
+        addView(mLocalPreview);
+
+        RelativeLayout.LayoutParams remoteVideoParams =
+                new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mRemoteVideo.setLayoutParams(remoteVideoParams);
+
+        VideoDefinition videoSize = call.getCurrentParams().getSentVideoDefinition();
+        int localPreviewWidth = videoSize.getWidth();
+        int localPreviewHeight = videoSize.getHeight();
+        int localPreviewMaxHeight = mParams.height / 4;
+        localPreviewWidth = localPreviewWidth * localPreviewMaxHeight / localPreviewHeight;
+        localPreviewHeight = localPreviewMaxHeight;
+
+        RelativeLayout.LayoutParams localPreviewParams =
+                new RelativeLayout.LayoutParams(localPreviewWidth, localPreviewHeight);
+        localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, TRUE);
+        localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+        mLocalPreview.setLayoutParams(localPreviewParams);
+
+        Core lc = LinphoneManager.getLc();
+        lc.setNativeVideoWindowId(mRemoteVideo);
+        lc.setNativePreviewWindowId(mLocalPreview);
 
         setOnClickListener(
                 new OnClickListener() {

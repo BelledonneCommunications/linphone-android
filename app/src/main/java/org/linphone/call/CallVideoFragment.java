@@ -149,18 +149,19 @@ public class CallVideoFragment extends Fragment
                     call.getCurrentParams()
                             .getSentVideoDefinition(); // It already takes care of rotation
             if (videoSize.getWidth() == 0 || videoSize.getHeight() == 0) {
-                Log.w("Couldn't get sent video definition, using default video definition");
+                Log.w(
+                        "[Video Fragment] Couldn't get sent video definition, using default video definition");
                 videoSize = lc.getPreferredVideoDefinition();
             }
             int width = videoSize.getWidth();
             int height = videoSize.getHeight();
 
-            Log.d("Video height is " + height + ", width is " + width);
+            Log.d("[Video Fragment] Video height is " + height + ", width is " + width);
             width = width * maxHeight / height;
             height = maxHeight;
 
             if (mCaptureView == null) {
-                Log.e("mCaptureView is null !");
+                Log.e("[Video Fragment] mCaptureView is null !");
                 return;
             }
 
@@ -170,7 +171,7 @@ public class CallVideoFragment extends Fragment
                     1); // Clears the rule, as there is no removeRule until API 17.
             newLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
             mCaptureView.setLayoutParams(newLp);
-            Log.d("Video preview size set to " + width + "x" + height);
+            Log.d("[Video Fragment] Video preview size set to " + width + "x" + height);
         }
     }
 
@@ -194,7 +195,7 @@ public class CallVideoFragment extends Fragment
 
             CallManager.getInstance().updateCall();
         } catch (ArithmeticException ae) {
-            Log.e("Cannot swtich camera : no camera");
+            Log.e("[Video Fragment] Cannot swtich camera : no camera");
         }
     }
 
