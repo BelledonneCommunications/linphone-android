@@ -238,7 +238,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         File f = new File(mUserCertsPath);
         if (!f.exists()) {
             if (!f.mkdir()) {
-                Log.e(mUserCertsPath + " can't be created.");
+                Log.e("[Manager] " + mUserCertsPath + " can't be created.");
             }
         }
 
@@ -248,7 +248,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public static synchronized void createAndStart(Context c) {
         if (sInstance != null) {
             Log.e(
-                    "Linphone Manager is already initialized ! Destroying it and creating a new one...");
+                    "[Manager] Linphone Manager is already initialized ! Destroying it and creating a new one...");
             destroy();
         }
 
@@ -265,11 +265,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         if (sExited) {
             throw new RuntimeException(
-                    "Linphone Manager was already destroyed. "
+                    "[Manager] Linphone Manager was already destroyed. "
                             + "Better use getLcIfManagerNotDestroyedOrNull and check returned value");
         }
 
-        throw new RuntimeException("Linphone Manager should be created before accessed");
+        throw new RuntimeException("[Manager] Linphone Manager should be created before accessed");
     }
 
     public static synchronized Core getLc() {
@@ -282,7 +282,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         final float distanceInCm = event.values[0];
         final float maxDistance = event.sensor.getMaximumRange();
         Log.d(
-                "Proximity sensor report ["
+                "[Manager] Proximity sensor report ["
                         + distanceInCm
                         + "] , for max range ["
                         + maxDistance
@@ -337,7 +337,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private void routeAudioToSpeakerHelper(boolean speakerOn) {
         Log.w(
-                "Routing audio to "
+                "[Manager] Routing audio to "
                         + (speakerOn ? "speaker" : "earpiece")
                         + ", disabling bluetooth audio route");
         BluetoothManager.getInstance().disableBluetoothSCO();
@@ -355,7 +355,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private void initOpenH264DownloadHelper() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            Log.i("Android >= 5.1 we disable the download of OpenH264");
+            Log.i("[Manager] Android >= 5.1 we disable the download of OpenH264");
             OpenH264DownloadHelper.setOpenH264DownloadEnabled(false);
             return;
         }
@@ -466,14 +466,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         PresenceModel model = lc.createPresenceModel();
         model.setBasicStatus(PresenceBasicStatus.Open);
         lc.setPresenceModel(model);
-        /*
-        if (isInstanciated() && lc != null && isPresenceModelActivitySet() && lc.getPresenceModel().getActivity().getType() != PresenceActivity.Type.TV) {
-        	lc.getPresenceModel().getActivity().setType(PresenceActivity.Type.TV);
-        } else if (isInstanciated() && lc != null && !isPresenceModelActivitySet()) {
-        	PresenceModel model = lc.createPresenceModelWithActivity(PresenceActivity.Type.TV, null);
-        	lc.setPresenceModel(model);
-        }
-        */
     }
 
     public void changeStatusToOnThePhone() {
@@ -505,7 +497,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         Core lc = getLcIfManagerNotDestroyedOrNull();
         if (lc != null && lc.getFriendsLists() != null && lc.getFriendsLists().length > 0) {
             FriendList mFriendList = (lc.getFriendsLists())[0];
-            Log.i("Presence list subscription is " + (enabled ? "enabled" : "disabled"));
+            Log.i("[Manager] Presence list subscription is " + (enabled ? "enabled" : "disabled"));
             mFriendList.enableSubscriptions(enabled);
         }
     }
@@ -536,7 +528,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         Address lAddress;
         lAddress = mCore.interpretUrl(to); // InterpretUrl does normalizePhoneNumber
         if (lAddress == null) {
-            Log.e("Couldn't convert to String to Address : " + to);
+            Log.e("[Manager] Couldn't convert to String to Address : " + to);
             return;
         }
 
@@ -569,7 +561,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     .displayCustomToast(
                             getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
         } else {
-            Log.e("Error: " + getString(R.string.error_network_unreachable));
+            Log.e("[Manager] Error: " + getString(R.string.error_network_unreachable));
         }
     }
 
@@ -586,7 +578,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         String[] devices = getLc().getVideoDevicesList();
         if (camId >= devices.length) {
             Log.e(
-                    "Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
+                    "[Manager] Trying to use a camera id that's higher than the linphone's devices list, using 0 to prevent crash...");
             camId = 0;
         }
         String newDevice = devices[camId];
@@ -610,7 +602,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 return;
             }
         } catch (SettingNotFoundException e) {
-            Log.e(e);
+            Log.e("[Manager] playDtmf exception: " + e);
         }
 
         getLc().playDtmf(dtmf, -1);
@@ -637,7 +629,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private boolean isTunnelNeeded(NetworkInfo info) {
         if (info == null) {
-            Log.i("No connectivity: tunnel should be disabled");
+            Log.i("[Manager] No connectivity: tunnel should be disabled");
             return false;
         }
 
@@ -649,7 +641,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         if (info.getType() != ConnectivityManager.TYPE_WIFI
                 && getString(R.string.tunnel_mode_entry_value_3G_only).equals(pref)) {
-            Log.i("need tunnel: 'no wifi' connection");
+            Log.i("[Manager] Need tunnel: 'no wifi' connection");
             return true;
         }
 
@@ -661,12 +653,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (!mCore.tunnelAvailable()) return;
         Tunnel tunnel = mCore.getTunnel();
 
-        Log.i("Managing tunnel");
+        Log.i("[Manager] Managing tunnel");
         if (isTunnelNeeded(info)) {
-            Log.i("Tunnel need to be activated");
+            Log.i("[Manager] Tunnel need to be activated");
             tunnel.setMode(Tunnel.Mode.Enable);
         } else {
-            Log.i("Tunnel should not be used");
+            Log.i("[Manager] Tunnel should not be used");
             String pref = mPrefs.getTunnelMode();
             tunnel.setMode(Tunnel.Mode.Disable);
             if (getString(R.string.tunnel_mode_entry_value_auto).equals(pref)) {
@@ -683,34 +675,34 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             mTimer.cancel();
             destroyLinphoneCore();
         } catch (RuntimeException e) {
-            Log.e(e);
+            Log.e("[Manager] Destroy Core Runtime Exception: " + e);
         } finally {
             try {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                     mServiceContext.unregisterReceiver(mNetworkReceiver);
                 }
             } catch (Exception e) {
-                Log.e(e);
+                Log.e("[Manager] unregister receiver exception: " + e);
             }
             try {
                 mServiceContext.unregisterReceiver(mHookReceiver);
             } catch (Exception e) {
-                Log.e(e);
+                Log.e("[Manager] unregister receiver exception: " + e);
             }
             try {
                 mServiceContext.unregisterReceiver(mCallReceiver);
             } catch (Exception e) {
-                Log.e(e);
+                Log.e("[Manager] unregister receiver exception: " + e);
             }
             try {
                 mServiceContext.unregisterReceiver(mKeepAliveReceiver);
             } catch (Exception e) {
-                Log.e(e);
+                Log.e("[Manager] unregister receiver exception: " + e);
             }
             try {
                 dozeManager(false);
             } catch (Exception e) {
-                Log.e(e);
+                Log.e("[Manager] unregister receiver exception: " + e);
             }
             mCore = null;
         }
@@ -748,14 +740,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             mTimer = new Timer("Linphone scheduler");
             mTimer.schedule(lTask, 0, 20);
         } catch (Exception e) {
-            Log.e(e, "Cannot start linphone");
+            Log.e(e, "[Manager] Cannot start linphone");
         }
     }
 
     private void initPushNotificationsService() {
         if (getString(R.string.push_type).equals("firebase")) {
             Log.i(
-                    "[Push Notification] firebase push sender id "
+                    "[Manager][Push Notification] firebase push sender id "
                             + getString(R.string.gcm_defaultSenderId));
             try {
                 FirebaseInstanceId.getInstance()
@@ -766,18 +758,20 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                                     public void onComplete(@NonNull Task<InstanceIdResult> task) {
                                         if (!task.isSuccessful()) {
                                             Log.e(
-                                                    "[Push Notification] firebase getInstanceId failed: "
+                                                    "[Manager][Push Notification] firebase getInstanceId failed: "
                                                             + task.getException());
                                             return;
                                         }
                                         String token = task.getResult().getToken();
-                                        Log.i("[Push Notification] firebase token is: " + token);
+                                        Log.i(
+                                                "[Manager][Push Notification] firebase token is: "
+                                                        + token);
                                         LinphonePreferences.instance()
                                                 .setPushNotificationRegistrationID(token);
                                     }
                                 });
             } catch (Exception e) {
-                Log.e("[Push Notification] firebase not available.");
+                Log.e("[Manager][Push Notification] firebase not available.");
             }
         }
     }
@@ -808,7 +802,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         enableDeviceRingtone(mPrefs.isDeviceRingtoneEnabled());
 
         int availableCores = Runtime.getRuntime().availableProcessors();
-        Log.w("MediaStreamer : " + availableCores + " cores detected and configured");
+        Log.w("[Manager] MediaStreamer : " + availableCores + " cores detected and configured");
 
         mCore.migrateLogsFromRcToDb();
 
@@ -953,10 +947,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
 
         if (networkInfo == null || !connected) {
-            Log.i("No connectivity: setting network unreachable");
+            Log.i("[Manager] No connectivity: setting network unreachable");
             mCore.setNetworkReachable(false);
         } else if (mDozeModeEnabled) {
-            Log.i("Doze Mode enabled: shutting down network");
+            Log.i("[Manager] Doze Mode enabled: shutting down network");
             mCore.setNetworkReachable(false);
         } else if (connected) {
             manageTunnelServer(networkInfo);
@@ -966,7 +960,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                     mCore.setNetworkReachable(true);
                 } else {
-                    Log.i("Wifi-only mode, setting network not reachable");
+                    Log.i("[Manager] Wifi-only mode, setting network not reachable");
                     mCore.setNetworkReachable(false);
                 }
             } else {
@@ -976,7 +970,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     // if kind of network has changed, we need to notify network_reachable(false) to
                     // make sure all current connections are destroyed.
                     // they will be re-created during setNetworkReachable(true).
-                    Log.i("Connectivity has changed.");
+                    Log.i("[Manager] Connectivity has changed.");
                     mCore.setNetworkReachable(false);
                 }
                 mCore.setNetworkReachable(true);
@@ -1006,11 +1000,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private void dozeManager(boolean enable) {
         if (enable) {
-            Log.i("[Doze Mode]: register");
+            Log.i("[Manager][Doze Mode]: register");
             mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
             mDozeModeEnabled = true;
         } else {
-            Log.i("[Doze Mode]: unregister");
+            Log.i("[Manager][Doze Mode]: unregister");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 try {
                     mServiceContext.unregisterReceiver(mDozeReceiver);
@@ -1087,7 +1081,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onDtmfReceived(Core lc, Call call, int dtmf) {
-        Log.d("DTMF received: " + dtmf);
+        Log.d("[Manager] DTMF received: " + dtmf);
     }
 
     @Override
@@ -1100,18 +1094,20 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 && cr.getPeerAddress()
                         .asStringUriOnly()
                         .equals(mCurrentChatRoomAddress.asStringUriOnly())) {
-            Log.i("Message received for currently displayed chat room, do not make a notification");
+            Log.i(
+                    "[Manager] Message received for currently displayed chat room, do not make a notification");
             return;
         }
 
         if (message.getErrorInfo() != null
                 && message.getErrorInfo().getReason() == Reason.UnsupportedContent) {
-            Log.w("Message received but content is unsupported, do not notify it");
+            Log.w("[Manager] Message received but content is unsupported, do not notify it");
             return;
         }
 
         if (!message.hasTextContent() && message.getFileTransferInformation() == null) {
-            Log.w("Message has no text or file transfer information to display, ignoring it...");
+            Log.w(
+                    "[Manager] Message has no text or file transfer information to display, ignoring it...");
             return;
         }
 
@@ -1235,7 +1231,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         ((AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE))
                 .setMode(AudioManager.MODE_NORMAL);
         mAudioManager.abandonAudioFocus(null);
-        Log.i("Set audio mode on 'Normal'");
+        Log.i("[Manager] Set audio mode on 'Normal'");
     }
 
     public void onGlobalStateChanged(final Core lc, final GlobalState state, final String message) {
@@ -1244,7 +1240,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             try {
                 initLiblinphone(lc);
             } catch (IllegalArgumentException iae) {
-                Log.e(iae);
+                Log.e("[Manager] Global State Changed Illegal Argument Exception: " + iae);
             }
         }
     }
@@ -1254,7 +1250,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             final ProxyConfig proxy,
             final RegistrationState state,
             final String message) {
-        Log.i("New registration state [" + state + "]");
+        Log.i("[Manager] New registration state [" + state + "]");
         if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
             subscribeFriendList(false);
         }
@@ -1280,10 +1276,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private void setAudioManagerInCallMode() {
         if (mAudioManager.getMode() == AudioManager.MODE_IN_COMMUNICATION) {
-            Log.w("[AudioManager] already in MODE_IN_COMMUNICATION, skipping...");
+            Log.w("[Manager][AudioManager] already in MODE_IN_COMMUNICATION, skipping...");
             return;
         }
-        Log.d("[AudioManager] Mode: MODE_IN_COMMUNICATION");
+        Log.d("[Manager][AudioManager] Mode: MODE_IN_COMMUNICATION");
 
         mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
     }
@@ -1291,7 +1287,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     @SuppressLint("Wakelock")
     public void onCallStateChanged(
             final Core lc, final Call call, final State state, final String message) {
-        Log.i("New call state [", state, "]");
+        Log.i("[Manager] New call state [", state, "]");
         if (state == State.IncomingReceived && !call.equals(lc.getCurrentCall())) {
             if (call.getReplacedCall() != null) {
                 // attended transfer
@@ -1354,7 +1350,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
 
             if (Hacks.needSoftvolume()) {
-                Log.w("Using soft volume audio hack");
+                Log.w("[Manager] Using soft volume audio hack");
                 adjustVolume(0); // Synchronize
             }
         }
@@ -1367,7 +1363,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 if (mAudioFocused) {
                     int res = mAudioManager.abandonAudioFocus(null);
                     Log.d(
-                            "Audio focus released a bit later: "
+                            "[Manager] Audio focus released a bit later: "
                                     + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
                                             ? "Granted"
                                             : "Denied"));
@@ -1377,9 +1373,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     TelephonyManager tm =
                             (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
                     if (tm.getCallState() == TelephonyManager.CALL_STATE_IDLE) {
-                        Log.d("---AudioManager: back to MODE_NORMAL");
+                        Log.d("[Manager] ---AudioManager: back to MODE_NORMAL");
                         mAudioManager.setMode(AudioManager.MODE_NORMAL);
-                        Log.d("All call terminated, routing back to earpiece");
+                        Log.d("[Manager] All call terminated, routing back to earpiece");
                         routeAudioToReceiver();
                     }
                 }
@@ -1432,7 +1428,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void startEcCalibration() {
         routeAudioToSpeaker();
         setAudioManagerInCallMode();
-        Log.i("Set audio mode on 'Voice Communication'");
+        Log.i("[Manager] Set audio mode on 'Voice Communication'");
         requestAudioFocus(STREAM_VOICE_CALL);
         int oldVolume = mAudioManager.getStreamVolume(STREAM_VOICE_CALL);
         int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
@@ -1444,7 +1440,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public int startEchoTester() {
         routeAudioToSpeaker();
         setAudioManagerInCallMode();
-        Log.i("Set audio mode on 'Voice Communication'");
+        Log.i("[Manager] Set audio mode on 'Voice Communication'");
         requestAudioFocus(STREAM_VOICE_CALL);
         int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_VOICE_CALL);
         int sampleRate;
@@ -1463,7 +1459,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         routeAudioToReceiver();
         ((AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE))
                 .setMode(AudioManager.MODE_NORMAL);
-        Log.i("Set audio mode on 'Normal'");
+        Log.i("[Manager] Set audio mode on 'Normal'");
         return 1; // status;
     }
 
@@ -1477,7 +1473,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     mAudioManager.requestAudioFocus(
                             null, stream, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE);
             Log.d(
-                    "Audio focus requested: "
+                    "[Manager] Audio focus requested: "
                             + (res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
                                     ? "Granted"
                                     : "Denied"));
@@ -1532,17 +1528,17 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                         fis.close();
                     }
                 } catch (IOException e) {
-                    Log.e(e, "Cannot set ringtone");
+                    Log.e(e, "[Manager] Cannot set ringtone");
                 }
 
                 mRingerPlayer.prepare();
                 mRingerPlayer.setLooping(true);
                 mRingerPlayer.start();
             } else {
-                Log.w("already ringing");
+                Log.w("[Manager] Already ringing");
             }
         } catch (Exception e) {
-            Log.e(e, "cannot handle incoming call");
+            Log.e(e, "[Manager] Cannot handle incoming call");
         }
         mIsRinging = true;
     }
@@ -1563,10 +1559,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         // You may need to call galaxys audio hack after this method
         if (!BluetoothManager.getInstance().isBluetoothHeadsetAvailable()) {
             if (mServiceContext.getResources().getBoolean(R.bool.isTablet)) {
-                Log.d("Stopped ringing, routing back to speaker");
+                Log.d("[Manager] Stopped ringing, routing back to speaker");
                 routeAudioToSpeaker();
             } else {
-                Log.d("Stopped ringing, routing back to earpiece");
+                Log.d("[Manager] Stopped ringing, routing back to earpiece");
                 routeAudioToReceiver();
             }
         }
@@ -1603,7 +1599,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             params.setRecordFile(
                     FileUtils.getCallRecordingFilename(getContext(), call.getRemoteAddress()));
         } else {
-            Log.e("Could not create call params for call");
+            Log.e("[Manager] Could not create call params for call");
             return false;
         }
 
@@ -1728,11 +1724,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onInfoReceived(Core lc, Call call, InfoMessage info) {
-        Log.d("Info message received from " + call.getRemoteAddress().asString());
+        Log.d("[Manager] Info message received from " + call.getRemoteAddress().asString());
         Content ct = info.getContent();
         if (ct != null) {
             Log.d(
-                    "Info received with body with mime type "
+                    "[Manager] Info received with body with mime type "
                             + ct.getType()
                             + "/"
                             + ct.getSubtype()
@@ -1744,7 +1740,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onSubscriptionStateChanged(Core lc, Event ev, SubscriptionState state) {
-        Log.d("Subscription state changed to " + state + " event name is " + ev.getName());
+        Log.d(
+                "[Manager] Subscription state changed to "
+                        + state
+                        + " event name is "
+                        + ev.getName());
     }
 
     @Override
@@ -1752,10 +1752,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onNotifyReceived(Core lc, Event ev, String eventName, Content content) {
-        Log.d("Notify received for event " + eventName);
+        Log.d("[Manager] Notify received for event " + eventName);
         if (content != null)
             Log.d(
-                    "with content "
+                    "[Manager] With content "
                             + content.getType()
                             + "/"
                             + content.getSubtype()
@@ -1768,12 +1768,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onPublishStateChanged(Core lc, Event ev, PublishState state) {
-        Log.d("Publish state changed to " + state + " for event name " + ev.getName());
+        Log.d("[Manager] Publish state changed to " + state + " for event name " + ev.getName());
     }
 
     @Override
     public void onIsComposingReceived(Core lc, ChatRoom cr) {
-        Log.d("Composing received for chatroom " + cr.getPeerAddress().asStringUriOnly());
+        Log.d("[Manager] Composing received for chatroom " + cr.getPeerAddress().asStringUriOnly());
     }
 
     @Override
@@ -1781,7 +1781,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onConfiguringStatus(Core lc, ConfiguringState state, String message) {
-        Log.d("Remote provisioning status = " + state.toString() + " (" + message + ")");
+        Log.d("[Manager] Remote provisioning status = " + state.toString() + " (" + message + ")");
 
         LinphonePreferences prefs = LinphonePreferences.instance();
         if (state == ConfiguringState.Successful) {
@@ -1801,7 +1801,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void onLogCollectionUploadProgressIndication(Core linphoneCore, int offset, int total) {
         if (total > 0)
             Log.d(
-                    "Log upload progress: currently uploaded = "
+                    "[Manager] Log upload progress: currently uploaded = "
                             + offset
                             + " , total = "
                             + total
@@ -1849,7 +1849,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     @Override
     public void onLogCollectionUploadStateChanged(
             Core linphoneCore, LogCollectionUploadState state, String info) {
-        Log.d("Log upload state: " + state.toString() + ", info = " + info);
+        Log.d("[Manager] Log upload state: " + state.toString() + ", info = " + info);
     }
 
     @Override
