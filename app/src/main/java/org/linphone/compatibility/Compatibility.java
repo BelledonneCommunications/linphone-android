@@ -196,4 +196,11 @@ public class Compatibility {
             ApiTwentyOnePlus.closeContentProviderClient(client);
         }
     }
+
+    public static boolean isAppUserRestricted(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
+            return ApiTwentyEightPlus.isAppUserRestricted(context);
+        }
+        return false;
+    }
 }

@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Person;
@@ -77,5 +78,11 @@ class ApiTwentyEightPlus {
                 .addAction(ApiTwentyFourPlus.getReplyMessageAction(context, notif))
                 .addAction(ApiTwentyFourPlus.getMarkMessageAsReadAction(context, notif))
                 .build();
+    }
+
+    public static boolean isAppUserRestricted(Context context) {
+        ActivityManager activityManager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        return activityManager.isBackgroundRestricted();
     }
 }

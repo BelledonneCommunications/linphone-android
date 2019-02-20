@@ -36,6 +36,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import java.util.List;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
@@ -118,6 +119,10 @@ public class DeviceUtils {
 
     public static boolean hasDevicePowerManager(Context context) {
         return getDevicePowerManagerIntent(context) != null;
+    }
+
+    public static boolean isAppUserRestricted(Context context) {
+        return Compatibility.isAppUserRestricted(context);
     }
 
     public static void displayDialogIfDeviceHasPowerManagerThatCouldPreventPushNotifications(

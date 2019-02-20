@@ -1391,6 +1391,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     this, permissions, PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE);
         }
         ContactsManager.getInstance().initializeContactManager(this);
+
+        if (DeviceUtils.isAppUserRestricted(this)) {
+            Log.w(
+                    "[Linphone Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
+        }
     }
 
     @Override
