@@ -33,7 +33,7 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.core.Core;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 @SuppressLint("AppCompatCustomView")

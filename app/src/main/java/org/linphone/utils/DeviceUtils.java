@@ -36,7 +36,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import java.util.List;
 import org.linphone.R;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class DeviceUtils {

@@ -39,8 +39,8 @@ import org.linphone.core.AccountCreatorListener;
 import org.linphone.core.CoreException;
 import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences.AccountBuilder;
 import org.linphone.utils.LinphoneUtils;
 

@@ -25,7 +25,7 @@ import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 

@@ -43,7 +43,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.Content;
 import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 public class FileUtils {
     public static String getNameFromFilePath(String filePath) {

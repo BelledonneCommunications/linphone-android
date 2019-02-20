@@ -84,7 +84,7 @@ import org.linphone.core.LimeState;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
 import org.linphone.core.Reason;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;

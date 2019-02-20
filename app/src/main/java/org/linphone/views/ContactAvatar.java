@@ -29,7 +29,7 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.ImageUtils;
 
 class ContactAvatarHolder {

@@ -46,7 +46,7 @@ import org.linphone.core.Call.State;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneGenericActivity;

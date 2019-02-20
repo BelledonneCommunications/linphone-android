@@ -53,7 +53,7 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 /** Helpers. */

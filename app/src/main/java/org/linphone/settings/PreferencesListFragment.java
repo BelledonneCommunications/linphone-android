@@ -40,7 +40,7 @@ import android.widget.RelativeLayout;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.linphone.R;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 @SuppressLint("ValidFragment")
 public class PreferencesListFragment extends ListFragment {

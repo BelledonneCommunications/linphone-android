@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import org.linphone.LinphoneManager;
 import org.linphone.core.Player;
 import org.linphone.core.PlayerListener;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 class Recording implements PlayerListener, Comparable<Recording> {
     public static final Pattern RECORD_PATTERN =

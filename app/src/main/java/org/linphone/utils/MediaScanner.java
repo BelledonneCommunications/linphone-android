@@ -23,7 +23,7 @@ import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import java.io.File;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 public class MediaScanner implements MediaScannerConnection.MediaScannerConnectionClient {
     private final MediaScannerConnection mMediaConnection;

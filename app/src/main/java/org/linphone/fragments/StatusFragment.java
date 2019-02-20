@@ -50,7 +50,7 @@ import org.linphone.core.Event;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class StatusFragment extends Fragment {

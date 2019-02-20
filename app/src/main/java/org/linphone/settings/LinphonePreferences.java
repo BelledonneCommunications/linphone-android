@@ -46,7 +46,7 @@ import org.linphone.core.Transports;
 import org.linphone.core.Tunnel;
 import org.linphone.core.TunnelConfig;
 import org.linphone.core.VideoActivationPolicy;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.purchase.Purchasable;
 import org.linphone.utils.LinphoneUtils;
 

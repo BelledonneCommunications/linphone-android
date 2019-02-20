@@ -33,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 

@@ -50,8 +50,8 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 import org.linphone.utils.SelectableHelper;
 
 public class ChatRoomsFragment extends Fragment

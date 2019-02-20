@@ -40,7 +40,7 @@ import org.linphone.compatibility.CompatibilityScaleGestureListener;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.VideoDefinition;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 

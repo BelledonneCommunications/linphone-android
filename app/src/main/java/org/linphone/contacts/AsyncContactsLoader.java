@@ -36,7 +36,7 @@ import org.linphone.core.Friend;
 import org.linphone.core.FriendList;
 import org.linphone.core.PresenceBasicStatus;
 import org.linphone.core.PresenceModel;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 

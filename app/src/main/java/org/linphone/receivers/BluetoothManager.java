@@ -32,7 +32,7 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.call.CallActivity;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 public class BluetoothManager extends BroadcastReceiver {
     private static BluetoothManager sInstance;

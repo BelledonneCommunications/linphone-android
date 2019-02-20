@@ -53,8 +53,8 @@ import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 import org.linphone.utils.LinphoneUtils;
 
 public class GroupInfoFragment extends Fragment implements ChatRoomListener {

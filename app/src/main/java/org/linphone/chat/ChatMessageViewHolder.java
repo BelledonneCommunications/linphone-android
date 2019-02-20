@@ -53,7 +53,7 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatMessage;
 import org.linphone.core.Content;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;

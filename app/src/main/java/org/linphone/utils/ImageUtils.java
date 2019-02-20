@@ -37,7 +37,7 @@ import java.io.InputStream;
 import java.net.URL;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 public class ImageUtils {
 

@@ -39,7 +39,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ImageUtils;

@@ -25,7 +25,7 @@ import org.linphone.core.XmlRpcRequest;
 import org.linphone.core.XmlRpcRequestListener;
 import org.linphone.core.XmlRpcSession;
 import org.linphone.core.XmlRpcStatus;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class XmlRpcHelper {

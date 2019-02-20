@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 class AndroidContact implements Serializable {
     protected String mAndroidId, mAndroidRawId, mAndroidLookupKey;

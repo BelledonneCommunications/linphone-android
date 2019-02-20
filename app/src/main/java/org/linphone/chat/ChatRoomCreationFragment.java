@@ -56,8 +56,8 @@ import org.linphone.core.Core;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
-import org.linphone.mediastream.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.views.ContactSelectView;
 

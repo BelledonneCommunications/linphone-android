@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;

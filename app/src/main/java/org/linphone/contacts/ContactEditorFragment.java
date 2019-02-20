@@ -55,7 +55,7 @@ import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;

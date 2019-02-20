@@ -48,7 +48,7 @@ import org.linphone.core.LoggingService;
 import org.linphone.core.LoggingServiceListener;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
 import org.linphone.receivers.BluetoothManager;
@@ -396,7 +396,7 @@ public final class LinphoneService extends Service {
                 lc.terminateAllCalls();
             }
 
-            Log.d("[Service] Task removed, stop service");
+            Log.i("[Service] Task removed, stop service");
 
             // If push is enabled, don't unregister account, otherwise do unregister
             if (LinphonePreferences.instance().isPushNotificationEnabled()) {

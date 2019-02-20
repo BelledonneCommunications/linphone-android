@@ -36,7 +36,7 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Core;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.views.AddressAware;
 import org.linphone.views.AddressText;
 import org.linphone.views.CallButton;

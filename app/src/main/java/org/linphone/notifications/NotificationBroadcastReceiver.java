@@ -36,7 +36,7 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
     @Override

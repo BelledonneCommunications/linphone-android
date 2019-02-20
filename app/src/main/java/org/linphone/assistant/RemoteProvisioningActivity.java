@@ -37,7 +37,7 @@ import org.linphone.R;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class RemoteProvisioningActivity extends Activity {

@@ -54,7 +54,7 @@ import org.linphone.core.FriendList;
 import org.linphone.core.FriendListListener;
 import org.linphone.core.MagicSearch;
 import org.linphone.core.ProxyConfig;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class ContactsManager extends ContentObserver implements FriendListListener {

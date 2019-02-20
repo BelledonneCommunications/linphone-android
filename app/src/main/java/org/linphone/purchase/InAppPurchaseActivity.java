@@ -32,7 +32,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.R;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;

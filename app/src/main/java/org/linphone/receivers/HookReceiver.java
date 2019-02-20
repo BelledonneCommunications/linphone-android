@@ -24,7 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import org.linphone.LinphoneManager;
-import org.linphone.mediastream.Log;
+import org.linphone.core.tools.Log;
 
 public class HookReceiver extends BroadcastReceiver {
     @Override
