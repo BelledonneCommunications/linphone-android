@@ -109,6 +109,15 @@
 
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/download_in_progress"
+            android:visibility="gone"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_toRightOf="@id/background"
+            android:layout_alignBottom="@id/background"
+            android:indeterminateTint="@color/colorA" />
+
         <RelativeLayout
             android:id="@+id/message_sender_avatar"
             android:layout_width="wrap_content"
@@ -160,8 +169,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:indeterminateTint="@color/colorA"
-            android:src="@drawable/imdn_received" />
+            android:indeterminateTint="@color/colorA" />
 
     </RelativeLayout>
 

@@ -181,7 +181,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private BroadcastReceiver mKeepAliveReceiver;
     private BroadcastReceiver mHookReceiver;
     private BroadcastReceiver mCallReceiver;
-    private BroadcastReceiver mNetworkReceiver;
     private IntentFilter mKeepAliveIntentFilter;
     private IntentFilter mHookIntentFilter;
     private IntentFilter mCallIntentFilter;
@@ -669,13 +668,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         } catch (RuntimeException e) {
             Log.e("[Manager] Destroy Core Runtime Exception: " + e);
         } finally {
-            try {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                    mServiceContext.unregisterReceiver(mNetworkReceiver);
-                }
-            } catch (Exception e) {
-                Log.e("[Manager] unregister receiver exception: " + e);
-            }
             try {
                 mServiceContext.unregisterReceiver(mHookReceiver);
             } catch (Exception e) {

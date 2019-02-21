@@ -455,8 +455,8 @@ public class ChatMessagesFragment extends Fragment
                 if (message.getAppdata() != null && !message.isOutgoing()) {
                     File file = new File(message.getAppdata());
                     if (file.exists()) {
-                        file.delete(); // Delete downloaded file from incoming message that will
-                        // be deleted
+                        // Delete downloaded file from incoming message that will be deleted
+                        file.delete();
                     }
                 }
             }

@@ -74,7 +74,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public final LinearLayout background;
     public final RelativeLayout avatarLayout;
 
-    public final ProgressBar sendInProgress;
+    public final ProgressBar downloadInProgress, sendInProgress;
     public final TextView timeText;
     public final ImageView outgoingImdn;
     public final TextView messageText;
@@ -108,6 +108,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         background = view.findViewById(R.id.background);
         avatarLayout = view.findViewById(R.id.avatar_layout);
 
+        downloadInProgress = view.findViewById(R.id.download_in_progress);
         sendInProgress = view.findViewById(R.id.send_in_progress);
         timeText = view.findViewById(R.id.time);
         outgoingImdn = view.findViewById(R.id.imdn);
@@ -136,6 +137,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         outgoingImdn.setVisibility(View.GONE);
         avatarLayout.setVisibility(View.GONE);
         sendInProgress.setVisibility(View.GONE);
+        downloadInProgress.setVisibility(View.GONE);
         pictures.setVisibility(View.GONE);
         pictures.removeAllViews();
 
@@ -176,6 +178,10 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             // Can't anchor incoming messages, setting this to align max width with LIME icon
             bubbleLayout.setPadding(
                     0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 16), 0);
+
+            if (status == ChatMessage.State.InProgress) {
+                downloadInProgress.setVisibility(View.VISIBLE);
+            }
         }
 
         if (contact == null) {
@@ -221,12 +227,9 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         LayoutInflater.from(mContext)
                                 .inflate(R.layout.chat_bubble_content, null, false);
 
-                if (c.isFile()
-                        || (c.isFileTransfer()
-                                && message
-                                        .isOutgoing())) { // If message is outgoing, even if content
-                    // is file transfer we have the file
-                    // available
+                if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) {
+                    // If message is outgoing, even if content
+                    // is file transfer we have the file available
                     String filePath = c.getFilePath();
 
                     View v;
