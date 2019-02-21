@@ -168,7 +168,7 @@ public class HistoryFragment extends Fragment
                         getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
         mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
-        mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
+        mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
     }
 
     @Override
