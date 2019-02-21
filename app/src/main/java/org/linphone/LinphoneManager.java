@@ -41,7 +41,6 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
@@ -124,10 +123,8 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.AndroidCamera;
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.receivers.BluetoothManager;
-import org.linphone.receivers.DozeReceiver;
 import org.linphone.receivers.HookReceiver;
 import org.linphone.receivers.KeepAliveReceiver;
-import org.linphone.receivers.NetworkManager;
 import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
@@ -179,20 +176,15 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final String mBasePath;
     private boolean mAudioFocused;
     private boolean mEchoTesterIsRunning;
-    private boolean mDozeModeEnabled;
     private boolean mCallGsmON;
-    private int mLastNetworkType = -1;
     private final ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mKeepAliveReceiver;
-    private BroadcastReceiver mDozeReceiver;
     private BroadcastReceiver mHookReceiver;
     private BroadcastReceiver mCallReceiver;
     private BroadcastReceiver mNetworkReceiver;
     private IntentFilter mKeepAliveIntentFilter;
-    private IntentFilter mDozeIntentFilter;
     private IntentFilter mHookIntentFilter;
     private IntentFilter mCallIntentFilter;
-    private IntentFilter mNetworkIntentFilter;
     private final Handler mHandler = new Handler();
     private WakeLock mProximityWakelock;
     private AccountCreator mAccountCreator;
@@ -699,11 +691,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             } catch (Exception e) {
                 Log.e("[Manager] unregister receiver exception: " + e);
             }
-            try {
-                dozeManager(false);
-            } catch (Exception e) {
-                Log.e("[Manager] unregister receiver exception: " + e);
-            }
             mCore = null;
         }
     }
@@ -846,29 +833,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
                         mServiceContext.getPackageName() + ";manager_proximity_sensor");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mDozeIntentFilter = new IntentFilter();
-            mDozeIntentFilter.addAction(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-            mDozeReceiver = new DozeReceiver();
-            mDozeModeEnabled =
-                    ((PowerManager) mServiceContext.getSystemService(Context.POWER_SERVICE))
-                            .isDeviceIdleMode();
-            mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
-        }
-
         mHookIntentFilter = new IntentFilter("com.base.module.phone.HOOKEVENT");
         mHookIntentFilter.setPriority(999);
         mHookReceiver = new HookReceiver();
         mServiceContext.registerReceiver(mHookReceiver, mHookIntentFilter);
-
-        // Since Android N we need to register the network manager
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            mNetworkReceiver = new NetworkManager();
-            mNetworkIntentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            mServiceContext.registerReceiver(mNetworkReceiver, mNetworkIntentFilter);
-        }
-
-        updateNetworkReachability();
 
         resetCameraFromPreferences();
 
@@ -927,65 +895,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         lInputStream.close();
     }
 
-    public void updateNetworkReachability() {
-        if (mConnectivityManager == null) return;
-
-        boolean connected;
-        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-        connected = networkInfo != null && networkInfo.isConnected();
-
-        if (networkInfo == null && Version.sdkAboveOrEqual(Version.API21_LOLLIPOP_50)) {
-            for (Network network : mConnectivityManager.getAllNetworks()) {
-                if (network != null) {
-                    networkInfo = mConnectivityManager.getNetworkInfo(network);
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                        connected = true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (networkInfo == null || !connected) {
-            Log.i("[Manager] No connectivity: setting network unreachable");
-            mCore.setNetworkReachable(false);
-        } else if (mDozeModeEnabled) {
-            Log.i("[Manager] Doze Mode enabled: shutting down network");
-            mCore.setNetworkReachable(false);
-        } else if (connected) {
-            manageTunnelServer(networkInfo);
-
-            boolean wifiOnly = LinphonePreferences.instance().isWifiOnlyEnabled();
-            if (wifiOnly) {
-                if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
-                    mCore.setNetworkReachable(true);
-                } else {
-                    Log.i("[Manager] Wifi-only mode, setting network not reachable");
-                    mCore.setNetworkReachable(false);
-                }
-            } else {
-                int curtype = networkInfo.getType();
-
-                if (curtype != mLastNetworkType) {
-                    // if kind of network has changed, we need to notify network_reachable(false) to
-                    // make sure all current connections are destroyed.
-                    // they will be re-created during setNetworkReachable(true).
-                    Log.i("[Manager] Connectivity has changed.");
-                    mCore.setNetworkReachable(false);
-                }
-                mCore.setNetworkReachable(true);
-                mLastNetworkType = curtype;
-            }
-        }
-
-        if (mCore.isNetworkReachable()) {
-            // When network isn't available, push informations might not be set. This should fix the
-            // issue.
-            LinphonePreferences prefs = LinphonePreferences.instance();
-            prefs.setPushNotificationEnabled(prefs.isPushNotificationEnabled());
-        }
-    }
-
     private void destroyLinphoneCore() {
         if (LinphonePreferences.instance() != null) {
             // We set network reachable at false before destroy LC to not send register with expires
@@ -996,24 +905,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             }
         }
         mCore = null;
-    }
-
-    private void dozeManager(boolean enable) {
-        if (enable) {
-            Log.i("[Manager][Doze Mode]: register");
-            mServiceContext.registerReceiver(mDozeReceiver, mDozeIntentFilter);
-            mDozeModeEnabled = true;
-        } else {
-            Log.i("[Manager][Doze Mode]: unregister");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                try {
-                    mServiceContext.unregisterReceiver(mDozeReceiver);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-            mDozeModeEnabled = false;
-        }
     }
 
     public void enableProximitySensing(boolean enable) {
@@ -1058,18 +949,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private String getString(int key) {
         return mRessources.getString(key);
-    }
-
-    /* Simple implementation as Android way seems very complicate:
-    For example: with wifi and mobile actives; when pulling mobile down:
-    I/Linphone( 8397): WIFI connected: setting network reachable
-    I/Linphone( 8397): new state [RegistrationProgress]
-    I/Linphone( 8397): mobile disconnected: setting network unreachable
-    I/Linphone( 8397): Managing tunnel
-    I/Linphone( 8397): WIFI connected: setting network reachable
-    */
-    public void connectivityChanged() {
-        updateNetworkReachability();
     }
 
     public void onNewSubscriptionRequested(Core lc, Friend lf, String url) {}
@@ -1701,10 +1580,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     }
                 });
         dialog.show();
-    }
-
-    public void setDozeModeEnabled(boolean b) {
-        mDozeModeEnabled = b;
     }
 
     public String getmDynamicConfigFile() {
