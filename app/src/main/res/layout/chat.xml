@@ -194,8 +194,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/top"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
         android:src="@drawable/security_alert_indicator" />
 
 </RelativeLayout>

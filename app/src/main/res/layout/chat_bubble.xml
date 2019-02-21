@@ -5,15 +5,15 @@
 
     <View
         android:id="@+id/rightAnchor"
-        android:layout_width="1dp"
+        android:layout_width="3dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"/>
 
     <CheckBox
         android:id="@+id/delete_event"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:adjustViewBounds="true"
@@ -90,12 +90,23 @@
 
             <com.google.android.flexbox.FlexboxLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/pictures"
+                android:id="@+id/multi_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 app:flexWrap="wrap" />
+
+            <RelativeLayout
+                android:id="@+id/single_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+
+                <include layout="@layout/chat_bubble_content" />
+
+            </RelativeLayout>
 
             <org.linphone.views.MultiLineWrapContentWidthTextView
                 android:id="@+id/message"
@@ -139,17 +150,6 @@
             android:layout_toLeftOf="@id/imdn"
             android:gravity="right"
             android:textAppearance="@style/chat_bubble_time_font" />
-
-        <CheckBox
-            android:id="@+id/delete_message"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignTop="@id/background"
-            android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
-            android:button="@drawable/checkbox"
-            android:clickable="false"
-            android:contentDescription="@string/content_description_delete" />
 
         <ImageView
             android:id="@id/imdn"

@@ -106,30 +106,29 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
     public void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position) {
         EventLog event = mHistory.get(position);
 
-        holder.deleteEvent.setVisibility(View.GONE);
-        holder.deleteMessage.setVisibility(View.GONE);
+        holder.delete.setVisibility(View.GONE);
         holder.eventLayout.setVisibility(View.GONE);
         holder.securityEventLayout.setVisibility(View.GONE);
         holder.rightAnchor.setVisibility(View.GONE);
         holder.bubbleLayout.setVisibility(View.GONE);
         holder.sendInProgress.setVisibility(View.GONE);
 
+        if (isEditionEnabled()) {
+            holder.delete.setVisibility(View.VISIBLE);
+            holder.delete.setChecked(isSelected(position));
+            holder.delete.setTag(position);
+        }
+
         if (event.getType() == EventLog.Type.ConferenceChatMessage) {
             ChatMessage message = event.getChatMessage();
-
-            if (isEditionEnabled()) {
-                holder.deleteMessage.setVisibility(View.VISIBLE);
-                holder.deleteMessage.setChecked(isSelected(position));
-                holder.deleteMessage.setTag(position);
-            }
 
             if ((message.isOutgoing() && message.getState() != ChatMessage.State.Displayed)
                     || (!message.isOutgoing() && message.isFileTransfer())) {
                 if (!mTransientMessages.contains(message)) {
                     mTransientMessages.add(message);
                 }
-                message.setUserData(
-                        holder); // This only works if JAVA object is kept, hence the transient list
+                // This only works if JAVA object is kept, hence the transient list
+                message.setUserData(holder);
                 message.addListener(mListener);
             }
 
@@ -146,12 +145,6 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
             holder.bindMessage(message, contact);
             changeBackgroundDependingOnPreviousAndNextEvents(message, holder, position);
         } else { // Event is not chat message
-            if (isEditionEnabled()) {
-                holder.deleteEvent.setVisibility(View.VISIBLE);
-                holder.deleteEvent.setChecked(isSelected(position));
-                holder.deleteEvent.setTag(position);
-            }
-
             Address address = event.getParticipantAddress();
             if (address == null && event.getType() == EventLog.Type.ConferenceSecurityEvent) {
                 address = event.getSecurityEventFaultyDeviceAddress();

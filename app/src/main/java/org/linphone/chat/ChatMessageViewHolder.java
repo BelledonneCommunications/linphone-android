@@ -76,10 +76,10 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public final ImageView outgoingImdn;
     public final TextView messageText;
 
-    public final FlexboxLayout pictures;
+    public final FlexboxLayout multiFileContents;
+    public final RelativeLayout singleFileContent;
 
-    public final CheckBox deleteEvent;
-    public final CheckBox deleteMessage;
+    public final CheckBox delete;
 
     private Context mContext;
     private ChatMessageViewHolderClickListener mListener;
@@ -111,10 +111,10 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         outgoingImdn = view.findViewById(R.id.imdn);
         messageText = view.findViewById(R.id.message);
 
-        pictures = view.findViewById(R.id.pictures);
+        singleFileContent = view.findViewById(R.id.single_content);
+        multiFileContents = view.findViewById(R.id.multi_content);
 
-        deleteEvent = view.findViewById(R.id.delete_event);
-        deleteMessage = view.findViewById(R.id.delete_message);
+        delete = view.findViewById(R.id.delete_event);
     }
 
     @Override
@@ -135,8 +135,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         avatarLayout.setVisibility(View.GONE);
         sendInProgress.setVisibility(View.GONE);
         downloadInProgress.setVisibility(View.GONE);
-        pictures.setVisibility(View.GONE);
-        pictures.removeAllViews();
+        singleFileContent.setVisibility(View.GONE);
+        multiFileContents.setVisibility(View.GONE);
 
         ChatMessage.State status = message.getState();
         Address remoteSender = message.getFromAddress();
@@ -174,7 +174,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
             // Can't anchor incoming messages, setting this to align max width with LIME icon
             bubbleLayout.setPadding(
-                    0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 16), 0);
+                    0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 18), 0);
 
             if (status == ChatMessage.State.InProgress) {
                 downloadInProgress.setVisibility(View.VISIBLE);
@@ -217,87 +217,98 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             }
         }
 
-        if (fileContents.size() > 0) {
-            pictures.setVisibility(View.VISIBLE);
+        if (fileContents.size() == 1) {
+            singleFileContent.setVisibility(View.VISIBLE);
+            displayContent(message, fileContents.get(0), singleFileContent, false);
+        } else if (fileContents.size() > 1) {
+            multiFileContents.removeAllViews();
+            multiFileContents.setVisibility(View.VISIBLE);
+
             for (Content c : fileContents) {
                 View content =
                         LayoutInflater.from(mContext)
                                 .inflate(R.layout.chat_bubble_content, null, false);
 
-                if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) {
-                    // If message is outgoing, even if content
-                    // is file transfer we have the file available
-                    String filePath = c.getFilePath();
+                displayContent(message, c, content, true);
 
-                    View v;
-                    if (FileUtils.isExtensionImage(filePath)) {
-                        if (fileContents.size() == 1
-                                && mContext.getResources()
-                                        .getBoolean(
-                                                R.bool.use_big_pictures_to_preview_images_file_transfers)) {
-                            v = content.findViewById(R.id.bigImage);
-                            loadBitmap(c.getFilePath(), ((ImageView) v));
-                        } else {
-                            v = content.findViewById(R.id.image);
-                            loadBitmap(c.getFilePath(), ((ImageView) v));
-                        }
-                    } else {
-                        v = content.findViewById(R.id.file);
-                        ((TextView) v).setText(FileUtils.getNameFromFilePath(filePath));
-                    }
-                    v.setVisibility(View.VISIBLE);
-                    v.setTag(c.getFilePath());
-                    v.setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    openFile((String) v.getTag());
-                                }
-                            });
+                multiFileContents.addView(content);
+            }
+        }
+    }
+
+    private void displayContent(
+            final ChatMessage message, Content c, View content, boolean isMultiContent) {
+        Button download = content.findViewById(R.id.download);
+        download.setVisibility(View.GONE);
+
+        if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) {
+            // If message is outgoing, even if content
+            // is file transfer we have the file available
+            final String filePath = c.getFilePath();
+
+            View v;
+            if (FileUtils.isExtensionImage(filePath)) {
+                if (!isMultiContent
+                        && mContext.getResources()
+                                .getBoolean(
+                                        R.bool.use_big_pictures_to_preview_images_file_transfers)) {
+                    v = content.findViewById(R.id.bigImage);
+                    loadBitmap(c.getFilePath(), ((ImageView) v));
                 } else {
-                    Button download = content.findViewById(R.id.download);
-                    download.setVisibility(View.VISIBLE);
-
-                    if (mContext.getPackageManager()
-                                    .checkPermission(
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                            mContext.getPackageName())
-                            == PackageManager.PERMISSION_GRANTED) {
-                        String filename = c.getName();
-                        File file = new File(FileUtils.getStorageDirectory(mContext), filename);
-
-                        int prefix = 1;
-                        while (file.exists()) {
-                            file =
-                                    new File(
-                                            FileUtils.getStorageDirectory(mContext),
-                                            prefix + "_" + filename);
-                            Log.w(
-                                    "File with that name already exists, renamed to "
-                                            + prefix
-                                            + "_"
-                                            + filename);
-                            prefix += 1;
+                    v = content.findViewById(R.id.image);
+                    loadBitmap(c.getFilePath(), ((ImageView) v));
+                }
+            } else {
+                v = content.findViewById(R.id.file);
+                ((TextView) v).setText(FileUtils.getNameFromFilePath(filePath));
+            }
+            v.setVisibility(View.VISIBLE);
+            v.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openFile(filePath);
                         }
+                    });
+        } else {
+            download.setVisibility(View.VISIBLE);
 
-                        download.setTag(c);
-                        c.setFilePath(file.getPath());
-                        download.setOnClickListener(
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Content c = (Content) v.getTag();
-                                        message.downloadContent(c);
-                                    }
-                                });
-                    } else {
-                        Log.w(
-                                "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-                        LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
-                    }
+            if (mContext.getPackageManager()
+                            .checkPermission(
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    mContext.getPackageName())
+                    == PackageManager.PERMISSION_GRANTED) {
+                String filename = c.getName();
+                File file = new File(FileUtils.getStorageDirectory(mContext), filename);
+
+                int prefix = 1;
+                while (file.exists()) {
+                    file =
+                            new File(
+                                    FileUtils.getStorageDirectory(mContext),
+                                    prefix + "_" + filename);
+                    Log.w(
+                            "File with that name already exists, renamed to "
+                                    + prefix
+                                    + "_"
+                                    + filename);
+                    prefix += 1;
                 }
 
-                pictures.addView(content);
+                download.setTag(c);
+                c.setFilePath(file.getPath());
+                download.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Content c = (Content) v.getTag();
+                                message.downloadContent(c);
+                            }
+                        });
+            } else {
+                Log.w(
+                        "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
+                LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
             }
         }
     }
