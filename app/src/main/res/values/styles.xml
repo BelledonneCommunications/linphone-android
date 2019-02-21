@@ -147,6 +147,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="contact_avatar_letters_big" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textSize">70sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="imdn_read_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorK</item>
         <item name="android:textSize">15sp</item>

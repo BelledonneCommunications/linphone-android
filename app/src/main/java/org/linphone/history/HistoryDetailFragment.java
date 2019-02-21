@@ -42,16 +42,16 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.ContactAvatar;
 
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
     private ImageView mDialBack, mChat, mAddToContacts, mGoToContact, mBack;
     private View mView;
-    private ImageView mContactPicture, mCallDirection;
+    private ImageView mCallDirection;
     private TextView mContactName, mContactAddress, mTime, mDate;
     private String mSipUri, mDisplayName;
-    private RelativeLayout mWaitLayout;
+    private RelativeLayout mWaitLayout, mAvatarLayout;
     private LinphoneContact mContact;
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
@@ -91,7 +91,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         mGoToContact = mView.findViewById(R.id.goto_contact);
         mGoToContact.setOnClickListener(this);
 
-        mContactPicture = mView.findViewById(R.id.contact_picture);
+        mAvatarLayout = mView.findViewById(R.id.avatar_layout);
 
         mContactName = mView.findViewById(R.id.contact_name);
         mContactAddress = mView.findViewById(R.id.contact_address);
@@ -156,13 +156,10 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         if (lAddress != null) {
             mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
             mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
+
             if (mContact != null) {
                 mContactName.setText(mContact.getFullName());
-                ImageUtils.setImagePictureFromUri(
-                        mView.getContext(),
-                        mContactPicture,
-                        mContact.getPhotoUri(),
-                        mContact.getThumbnailUri());
+                ContactAvatar.displayAvatar(mContact, mAvatarLayout);
                 mAddToContacts.setVisibility(View.GONE);
                 mGoToContact.setVisibility(View.VISIBLE);
             } else {
@@ -170,8 +167,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                         mDisplayName == null
                                 ? LinphoneUtils.getAddressDisplayName(mSipUri)
                                 : mDisplayName);
-                mContactPicture.setImageBitmap(
-                        ContactsManager.getInstance().getDefaultAvatarBitmap());
+                ContactAvatar.displayAvatar(
+                        LinphoneUtils.getAddressDisplayName(lAddress), mAvatarLayout);
                 mAddToContacts.setVisibility(View.VISIBLE);
                 mGoToContact.setVisibility(View.GONE);
             }
