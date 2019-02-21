@@ -1467,7 +1467,7 @@ public class CallActivity extends LinphoneGenericActivity
         LinphoneContact lContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
         if (lContact == null) {
             contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
-            contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+            ImageUtils.setDefaultContactImage(contactPicture);
         } else {
             contactName.setText(lContact.getFullName());
             ImageUtils.setImagePictureFromUri(

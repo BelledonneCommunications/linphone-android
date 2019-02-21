@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +29,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
@@ -60,9 +58,9 @@ class ContactAvatarHolder implements RequestListener<Drawable> {
             Object model,
             Target<Drawable> target,
             boolean isFirstResource) {
-        generatedAvatar.setVisibility(View.VISIBLE);
         contactPicture.setVisibility(View.GONE);
-        return true;
+        generatedAvatar.setVisibility(View.VISIBLE);
+        return false;
     }
 
     @Override
@@ -161,12 +159,10 @@ public class ContactAvatar {
                                 : contact.getFullName()));
         holder.generatedAvatar.setVisibility(View.GONE);
 
-        Context c = LinphoneService.instance().getApplicationContext();
         holder.contactPicture.setVisibility(View.VISIBLE);
-        Glide.with(c)
+        Glide.with(v)
                 .load(contact.getPhotoUri())
-                .thumbnail(Glide.with(c).load(contact.getThumbnailUri()))
-                .listener(holder)
+                .error(Glide.with(v).load(contact.getThumbnailUri()).listener(holder))
                 .into(holder.contactPicture);
         holder.securityLevel.setVisibility(View.GONE);
     }

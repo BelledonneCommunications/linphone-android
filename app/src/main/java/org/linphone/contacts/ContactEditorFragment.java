@@ -317,7 +317,7 @@ public class ContactEditorFragment extends Fragment {
                     mContact.getPhotoUri(),
                     mContact.getThumbnailUri());
         } else {
-            mContactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
+            ImageUtils.setDefaultContactImage(mContactPicture);
         }
 
         mContactPicture.setOnClickListener(

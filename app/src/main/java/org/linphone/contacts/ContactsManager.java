@@ -33,8 +33,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
@@ -63,7 +61,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private List<LinphoneContact> mContacts, mSipContacts;
     private ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
-    private final Bitmap mDefaultAvatar;
     private boolean mContactsFetchedOnce = false;
     private Context mContext;
     private AsyncContactsLoader mLoadContactTask;
@@ -76,9 +73,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     private ContactsManager() {
         super(LinphoneService.instance().handler);
-        mDefaultAvatar =
-                BitmapFactory.decodeResource(
-                        LinphoneService.instance().getResources(), R.drawable.avatar);
         mContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();
@@ -134,7 +128,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 list.removeListener(this);
             }
         }
-        mDefaultAvatar.recycle();
         sInstance = null;
     }
 
@@ -187,10 +180,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public boolean contactsFetchedOnce() {
         return mContactsFetchedOnce;
-    }
-
-    public Bitmap getDefaultAvatarBitmap() {
-        return mDefaultAvatar;
     }
 
     public List<LinphoneContact> getContacts(String search) {

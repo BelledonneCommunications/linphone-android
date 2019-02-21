@@ -49,8 +49,8 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.ContactAvatar;
 
 public class ContactDetailsFragment extends Fragment
         implements OnClickListener, ContactsUpdatedListener {
@@ -196,16 +196,7 @@ public class ContactDetailsFragment extends Fragment
 
     @SuppressLint("InflateParams")
     private void displayContact(LayoutInflater inflater, View view) {
-        ImageView contactPicture = view.findViewById(R.id.contact_picture);
-        if (mContact.hasPhoto()) {
-            ImageUtils.setImagePictureFromUri(
-                    getActivity(),
-                    contactPicture,
-                    mContact.getPhotoUri(),
-                    mContact.getThumbnailUri());
-        } else {
-            contactPicture.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-        }
+        ContactAvatar.displayAvatar(mContact, view.findViewById(R.id.avatar_layout));
 
         TextView contactName = view.findViewById(R.id.contact_name);
         contactName.setText(mContact.getFullName());
