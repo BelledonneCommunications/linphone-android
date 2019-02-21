@@ -432,7 +432,7 @@ public final class LinphoneService extends Service {
             LinphoneActivity.instance().finish();
         }
 
-        LinphoneUtils.configureLoggingService(false, getString(R.string.app_name));
+        Factory.instance().getLoggingService().removeListener(mJavaLoggingService);
 
         super.onDestroy();
     }
