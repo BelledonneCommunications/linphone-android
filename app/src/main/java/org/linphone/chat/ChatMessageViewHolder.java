@@ -25,8 +25,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -42,6 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import java.io.File;
 import java.util.ArrayList;
@@ -57,8 +56,6 @@ import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
-import org.linphone.views.AsyncBitmap;
-import org.linphone.views.BitmapWorkerTask;
 import org.linphone.views.ContactAvatar;
 
 public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -347,32 +344,6 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     }
 
     private void loadBitmap(String path, ImageView imageView) {
-        if (cancelPotentialWork(path, imageView)) {
-            Bitmap defaultBitmap =
-                    BitmapFactory.decodeResource(mContext.getResources(), R.drawable.chat_file);
-            BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView, defaultBitmap);
-            final AsyncBitmap asyncBitmap =
-                    new AsyncBitmap(mContext.getResources(), defaultBitmap, task);
-            imageView.setImageDrawable(asyncBitmap);
-            task.execute(path);
-        }
-    }
-
-    private boolean cancelPotentialWork(String path, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = BitmapWorkerTask.getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final String bitmapData = bitmapWorkerTask.path;
-            // If bitmapData is not yet set or it differs from the new data
-            if (bitmapData == null || !bitmapData.equals(path)) {
-                // Cancel previous task
-                bitmapWorkerTask.cancel(true);
-            } else {
-                // The same work is already in progress
-                return false;
-            }
-        }
-        // No task associated with the ImageView, or an existing task was cancelled
-        return true;
+        Glide.with(mContext).load(path).into(imageView);
     }
 }
