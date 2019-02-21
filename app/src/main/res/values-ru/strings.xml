@@ -172,6 +172,9 @@
   <string name="no_chat_history">Нет разговоров</string>
   <string name="delete_conversation">Вы действительно хотите удалить выбранный разговор?</string>
   <string name="delete_message">Вы действительно хотите удалить выбранное сообщение?</string>
+  <string name="remote_composing">Собеседник пишет...</string>
+  <string name="remote_composing_single">%s пишет…</string>
+  <string name="remote_composing_multiple">%s пишут...</string>
   <string name="share_picture_size_small">Маленький</string>
   <string name="share_picture_size_medium">Средний</string>
   <string name="share_picture_size_large">Большой</string>
@@ -181,6 +184,7 @@
   <string name="image_picker_title">Выбрать источник</string>
   <string name="image_saved">Картинка сохранена</string>
   <string name="image_not_saved">Ошибка, картинка не сохранена</string>
+  <string name="wait">Пожалуйста, подождите...</string>
   <string name="image_transfert_error">При передаче файла произошла ошибка</string>
   <string name="message_not_encrypted">Это сообщение не зашифровано</string>
   <string name="message_cant_be_decrypted">От %s получено зашифрованное сообщение, которое вы не можете расшифровать.\nВы должны позвонить своему собеседнику для обмена ключами ZRTP. Это необходимо для расшифровки будущих сообщений, которые вы получите.</string>
@@ -303,6 +307,7 @@
   <string name="error_unauthorized">Неавторизован</string>
   <string name="error_io_error">Ошибка сети</string>
   <string name="download_image_failed">Загрузка не удалась. Проверьте сетевое подключение или повторите попытку позже.</string>
+  <string name="remote_provisioning_failure">Не удалось загрузить или применить профиль удалённой конфигурации...</string>
   <string name="remote_provisioning_again_title">Удалённое конфигурирование</string>
   <string name="remote_provisioning_again_message">Вы хотите изменить URI конфигурирования?</string>
   <!--Account Settings-->

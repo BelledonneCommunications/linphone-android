@@ -281,6 +281,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="call_stats_decoder_name">Décodeur :</string>
   <string name="call_stats_display_filter">Filtre d\'affichage :</string>
   <string name="call">Appel</string>
+  <string name="call_log_delete_dialog">Voulez-vous supprimer les appels sélectionnés ?</string>
   <!--Recordings-->
   <string name="no_recordings">Aucun enregistrement</string>
   <string name="recordings_delete_dialog">Voulez-vous supprimer les enregistrements sélectionnés ?</string>
