@@ -19,20 +19,23 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.io.IOException;
+import androidx.annotation.Nullable;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
-import org.linphone.core.tools.Log;
-import org.linphone.utils.ImageUtils;
 
-class ContactAvatarHolder {
+class ContactAvatarHolder implements RequestListener<Drawable> {
     public final ImageView contactPicture;
     public final ImageView avatarMask;
     public final ImageView securityLevel;
@@ -49,6 +52,27 @@ class ContactAvatarHolder {
         contactPicture.setVisibility(View.VISIBLE);
         generatedAvatar.setVisibility(View.VISIBLE);
         securityLevel.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onLoadFailed(
+            @Nullable GlideException e,
+            Object model,
+            Target<Drawable> target,
+            boolean isFirstResource) {
+        generatedAvatar.setVisibility(View.VISIBLE);
+        contactPicture.setVisibility(View.GONE);
+        return true;
+    }
+
+    @Override
+    public boolean onResourceReady(
+            Drawable resource,
+            Object model,
+            Target<Drawable> target,
+            DataSource dataSource,
+            boolean isFirstResource) {
+        return false;
     }
 }
 
@@ -126,38 +150,24 @@ public class ContactAvatar {
     public static void displayAvatar(LinphoneContact contact, View v) {
         if (contact == null || v == null) return;
 
-        Bitmap bm = null;
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.init();
 
-        if (contact.getThumbnailUri() != null
-                && contact.getThumbnailUri().getScheme().startsWith("http")) {
-            bm = ImageUtils.downloadBitmap(contact.getThumbnailUri());
-        } else {
-            if (contact.getThumbnailUri() != null) {
-                try {
-                    bm =
-                            MediaStore.Images.Media.getBitmap(
-                                    LinphoneService.instance().getContentResolver(),
-                                    contact.getThumbnailUri());
-                } catch (IOException e) {
-                    Log.e(e);
-                }
-            }
-        }
+        // Kepp the generated avatar ready in case of failure while loading picture
+        holder.generatedAvatar.setText(
+                generateAvatar(
+                        contact.getFullName() == null
+                                ? contact.getFirstName() + " " + contact.getLastName()
+                                : contact.getFullName()));
+        holder.generatedAvatar.setVisibility(View.GONE);
 
-        if (bm != null) {
-            holder.contactPicture.setImageBitmap(bm);
-            holder.contactPicture.setVisibility(View.VISIBLE);
-            holder.generatedAvatar.setVisibility(View.GONE);
-        } else {
-            holder.generatedAvatar.setText(
-                    generateAvatar(
-                            contact.getFullName() == null
-                                    ? contact.getFirstName() + " " + contact.getLastName()
-                                    : contact.getFullName()));
-            holder.generatedAvatar.setVisibility(View.VISIBLE);
-        }
+        Context c = LinphoneService.instance().getApplicationContext();
+        holder.contactPicture.setVisibility(View.VISIBLE);
+        Glide.with(c)
+                .load(contact.getPhotoUri())
+                .thumbnail(Glide.with(c).load(contact.getThumbnailUri()))
+                .listener(holder)
+                .into(holder.contactPicture);
         holder.securityLevel.setVisibility(View.GONE);
     }
 

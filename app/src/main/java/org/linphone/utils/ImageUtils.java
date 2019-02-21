@@ -32,65 +32,14 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.ImageView;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import com.bumptech.glide.Glide;
 import org.linphone.R;
-import org.linphone.contacts.ContactsManager;
-import org.linphone.core.tools.Log;
 
 public class ImageUtils {
 
-    public static Bitmap downloadBitmap(Uri uri) {
-        URL url;
-        InputStream is = null;
-        try {
-            url = new URL(uri.toString());
-            is = url.openStream();
-            return BitmapFactory.decodeStream(is);
-        } catch (IOException e) {
-            Log.e(e, e.getMessage());
-        } finally {
-            try {
-                is.close();
-            } catch (IOException x) {
-                Log.e(x);
-            }
-        }
-        return null;
-    }
-
     public static void setImagePictureFromUri(
             Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
-        if (pictureUri == null && thumbnailUri == null) {
-            view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-            return;
-        }
-        if (pictureUri.getScheme().startsWith("http")) {
-            Bitmap bm = downloadBitmap(pictureUri);
-            if (bm == null) view.setImageResource(R.drawable.avatar);
-            view.setImageBitmap(bm);
-        } else {
-            Bitmap bm = null;
-            try {
-                bm = MediaStore.Images.Media.getBitmap(c.getContentResolver(), pictureUri);
-            } catch (IOException e) {
-                if (thumbnailUri != null) {
-                    try {
-                        bm =
-                                MediaStore.Images.Media.getBitmap(
-                                        c.getContentResolver(), thumbnailUri);
-                    } catch (IOException ie) {
-                        Log.e(ie);
-                    }
-                }
-            }
-            if (bm != null) {
-                view.setImageBitmap(bm);
-            } else {
-                view.setImageBitmap(ContactsManager.getInstance().getDefaultAvatarBitmap());
-            }
-        }
+        Glide.with(c).load(pictureUri).thumbnail(Glide.with(c).load(thumbnailUri)).into(view);
     }
 
     public static Bitmap getRoundBitmapFromUri(Context context, Uri fromPictureUri) {
