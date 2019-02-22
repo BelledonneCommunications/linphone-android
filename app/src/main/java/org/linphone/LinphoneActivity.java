@@ -408,7 +408,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 mFragment = new HistoryDetailFragment();
                 break;
             case CONTACTS_LIST:
-                checkAndRequestWriteContactsPermission();
                 mFragment = new ContactsFragment();
                 break;
             case CONTACT_DETAIL:
@@ -439,7 +438,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 mFragment = new ChatRoomsFragment();
                 break;
             case CREATE_CHAT:
-                checkAndRequestWriteContactsPermission();
                 mFragment = new ChatRoomCreationFragment();
                 break;
             case INFO_GROUP_CHAT:
@@ -1176,12 +1174,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
         checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 0);
     }
 
-    public void checkAndRequestCameraPermission() {
-        checkAndRequestPermission(Manifest.permission.CAMERA, 0);
+    public void checkAndRequestReadContactsPermission() {
+        checkAndRequestPermission(Manifest.permission.READ_CONTACTS, PERMISSIONS_REQUEST_SYNC);
     }
 
-    private void checkAndRequestWriteContactsPermission() {
-        checkAndRequestPermission(Manifest.permission.WRITE_CONTACTS, 0);
+    public void checkAndRequestCameraPermission() {
+        checkAndRequestPermission(Manifest.permission.CAMERA, 0);
     }
 
     public void checkAndRequestRecordAudioPermissionForEchoCanceller() {

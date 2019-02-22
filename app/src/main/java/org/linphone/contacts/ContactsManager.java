@@ -135,6 +135,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
         }
+        if (!hasReadContactsAccess()) {
+            Log.w("[Contacts Manager] Can't fetch contact without READ permission");
+            return;
+        }
         mLoadContactTask = new AsyncContactsLoader(mContext);
         mContactsFetchedOnce = true;
         mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
@@ -224,7 +228,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         LinphonePreferences.instance().disableFriendsStorage();
     }
 
-    public boolean hasContactsAccess() {
+    public boolean hasReadContactsAccess() {
         if (mContext == null) {
             return false;
         }
@@ -236,6 +240,27 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                                         mContext.getPackageName()));
         return contactsR
                 && !mContext.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
+    }
+
+    public boolean hasWriteContactsAccess() {
+        if (mContext == null) {
+            return false;
+        }
+        return (PackageManager.PERMISSION_GRANTED
+                == mContext.getPackageManager()
+                        .checkPermission(
+                                Manifest.permission.WRITE_CONTACTS, mContext.getPackageName()));
+    }
+
+    public boolean hasWriteSyncPermission() {
+        if (mContext == null) {
+            return false;
+        }
+        return (PackageManager.PERMISSION_GRANTED
+                == mContext.getPackageManager()
+                        .checkPermission(
+                                Manifest.permission.WRITE_SYNC_SETTINGS,
+                                mContext.getPackageName()));
     }
 
     public boolean isLinphoneContactsPrefered() {
@@ -251,11 +276,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
         if (!mInitialized) {
             if (mContext.getResources().getBoolean(R.bool.use_linphone_tag)) {
-                if (mContext.getPackageManager()
-                                .checkPermission(
-                                        Manifest.permission.WRITE_SYNC_SETTINGS,
-                                        mContext.getPackageName())
-                        == PackageManager.PERMISSION_GRANTED) {
+                if (hasReadContactsAccess()
+                        && hasWriteContactsAccess()
+                        && hasWriteSyncPermission()) {
                     if (LinphoneService.isReady()) {
                         ContactsManager.getInstance().initializeSyncAccount();
                         mInitialized = true;
@@ -264,7 +287,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             }
         }
 
-        if (mContext != null && getContacts().size() == 0 && hasContactsAccess()) {
+        if (mContext != null && getContacts().size() == 0 && hasReadContactsAccess()) {
             fetchContactsAsync();
         }
     }

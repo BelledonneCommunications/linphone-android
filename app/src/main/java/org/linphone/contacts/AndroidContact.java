@@ -79,7 +79,7 @@ class AndroidContact implements Serializable {
     }
 
     protected void saveChangesCommited() {
-        if (ContactsManager.getInstance().hasContactsAccess() && mChangesToCommit.size() > 0) {
+        if (ContactsManager.getInstance().hasReadContactsAccess() && mChangesToCommit.size() > 0) {
             try {
                 ContentResolver contentResolver = LinphoneService.instance().getContentResolver();
                 ContentProviderResult[] results =

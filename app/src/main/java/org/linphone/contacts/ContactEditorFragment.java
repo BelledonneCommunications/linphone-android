@@ -112,7 +112,7 @@ public class ContactEditorFragment extends Fragment {
 
         mPhoneNumbersSection = mView.findViewById(R.id.phone_numbers);
         if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)
-                || !ContactsManager.getInstance().hasContactsAccess()) {
+                || !ContactsManager.getInstance().hasReadContactsAccess()) {
             // Currently linphone friends don't support phone mNumbers, so hide them
             mPhoneNumbersSection.setVisibility(View.GONE);
         }

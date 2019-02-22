@@ -251,7 +251,7 @@ public final class LinphoneService extends Service {
 
         if (!Version.sdkAboveOrEqual(Version.API26_O_80)
                 || (ContactsManager.getInstance() != null
-                        && ContactsManager.getInstance().hasContactsAccess())) {
+                        && ContactsManager.getInstance().hasReadContactsAccess())) {
             getContentResolver()
                     .registerContentObserver(
                             ContactsContract.Contacts.CONTENT_URI,

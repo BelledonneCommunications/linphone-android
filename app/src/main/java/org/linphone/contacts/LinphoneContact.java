@@ -61,7 +61,7 @@ public class LinphoneContact extends AndroidContact
 
     public static LinphoneContact createContact() {
         LinphoneContact contact = new LinphoneContact();
-        if (ContactsManager.getInstance().hasContactsAccess()) {
+        if (ContactsManager.getInstance().hasReadContactsAccess()) {
             contact.createAndroidContact();
         } else {
             contact.createFriend();
@@ -364,7 +364,7 @@ public class LinphoneContact extends AndroidContact
             lc.addFriend(mFriend);
         }
 
-        if (!ContactsManager.getInstance().hasContactsAccess()) {
+        if (!ContactsManager.getInstance().hasReadContactsAccess()) {
             // This refresh is only needed if app has no contacts permission to refresh the list of
             // Friends.
             // Otherwise contacts will be refreshed due to changes in native contact and the handler

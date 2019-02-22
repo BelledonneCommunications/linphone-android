@@ -162,7 +162,11 @@ public class ContactsFragment extends Fragment
         mNewContact.setEnabled(LinphoneManager.getLc().getCallsNb() == 0);
 
         if (!ContactsManager.getInstance().contactsFetchedOnce()) {
-            mContactsFetchInProgress.setVisibility(View.VISIBLE);
+            if (ContactsManager.getInstance().hasReadContactsAccess()) {
+                mContactsFetchInProgress.setVisibility(View.VISIBLE);
+            } else {
+                LinphoneActivity.instance().checkAndRequestReadContactsPermission();
+            }
         } else {
             if (!mOnlyDisplayLinphoneContacts
                     && ContactsManager.getInstance().getContacts().size() == 0) {
