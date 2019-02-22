@@ -122,6 +122,8 @@ android {
 
     sourceSets {
         main {
+            java.excludes = excludeFiles
+
             packagingOptions {
                 excludes = excludePackage
             }
@@ -136,7 +138,9 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    if (firebaseEnabled()) {
+        implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    }
     implementation 'com.android.billingclient:billing:1.2'
     implementation 'org.apache.commons:commons-compress:1.18'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -145,7 +149,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha02'
     implementation 'com.google.android:flexbox:1.1.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     if (isLocalAarAvailable()) {
         implementation project(":linphone-sdk-android")

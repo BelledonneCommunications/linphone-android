@@ -55,11 +55,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -131,6 +126,7 @@ import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.MediaScanner;
 import org.linphone.utils.MediaScannerListener;
+import org.linphone.utils.PushNotificationUtils;
 
 /**
  * Manager of the low level LibLinphone stuff.<br>
@@ -724,35 +720,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     private void initPushNotificationsService() {
-        if (getString(R.string.push_type).equals("firebase")) {
-            Log.i(
-                    "[Manager][Push Notification] firebase push sender id "
-                            + getString(R.string.gcm_defaultSenderId));
-            try {
-                FirebaseInstanceId.getInstance()
-                        .getInstanceId()
-                        .addOnCompleteListener(
-                                new OnCompleteListener<InstanceIdResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                        if (!task.isSuccessful()) {
-                                            Log.e(
-                                                    "[Manager][Push Notification] firebase getInstanceId failed: "
-                                                            + task.getException());
-                                            return;
-                                        }
-                                        String token = task.getResult().getToken();
-                                        Log.i(
-                                                "[Manager][Push Notification] firebase token is: "
-                                                        + token);
-                                        LinphonePreferences.instance()
-                                                .setPushNotificationRegistrationID(token);
-                                    }
-                                });
-            } catch (Exception e) {
-                Log.e("[Manager][Push Notification] firebase not available.");
-            }
-        }
+        PushNotificationUtils.init(mServiceContext);
     }
 
     private synchronized void initLiblinphone(Core lc) {
