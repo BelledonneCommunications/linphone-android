@@ -393,8 +393,13 @@ public class LinphoneContact extends AndroidContact
     }
 
     public void setFriend(Friend f) {
+        if (mFriend != null && (f == null || f != mFriend)) {
+            mFriend.setUserData(null);
+        }
         mFriend = f;
-        mFriend.setUserData(this);
+        if (mFriend != null) {
+            mFriend.setUserData(this);
+        }
     }
 
     public boolean isInFriendList() {

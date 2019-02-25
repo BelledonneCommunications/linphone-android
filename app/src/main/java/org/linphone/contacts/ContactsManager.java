@@ -122,6 +122,20 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public void destroy() {
+        if (mLoadContactTask != null) {
+            mLoadContactTask.cancel(true);
+        }
+        // LinphoneContact has a Friend field and Friend can have a LinphoneContact has userData
+        // Friend also keeps a ref on the Core, so we have to clean them
+        for (LinphoneContact c : mContacts) {
+            c.setFriend(null);
+        }
+        mContacts.clear();
+        for (LinphoneContact c : mSipContacts) {
+            c.setFriend(null);
+        }
+        mSipContacts.clear();
+
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             for (FriendList list : lc.getFriendsLists()) {

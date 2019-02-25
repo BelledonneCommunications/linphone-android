@@ -112,7 +112,12 @@ public class StatusFragment extends Fragment {
                                     new OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            lc.refreshRegisters();
+                                            Core core =
+                                                    LinphoneManager
+                                                            .getLcIfManagerNotDestroyedOrNull();
+                                            if (core != null) {
+                                                core.refreshRegisters();
+                                            }
                                         }
                                     });
                         } catch (IllegalStateException ise) {
