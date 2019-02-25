@@ -183,7 +183,7 @@ public class ContactAvatar {
 
     public static void displayGroupChatAvatar(View v) {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
-        holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
+        Glide.with(v).load(R.drawable.chat_group_avatar).into(holder.contactPicture);
         holder.generatedAvatar.setVisibility(View.GONE);
         holder.securityLevel.setVisibility(View.GONE);
     }
