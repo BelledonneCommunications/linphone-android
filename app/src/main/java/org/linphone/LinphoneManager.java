@@ -655,6 +655,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     private synchronized void destroyCore() {
+        Log.w("[Manager] Destroying Core");
         sExited = true;
         ContactsManagerDestroy();
         BluetoothManagerDestroy();
@@ -861,6 +862,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             // at 0
             if (LinphonePreferences.instance().isPushNotificationEnabled()
                     || LinphonePreferences.instance().isBackgroundModeEnabled()) {
+                Log.w(
+                        "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
                 mCore.setNetworkReachable(false);
             }
         }
