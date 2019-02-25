@@ -238,8 +238,14 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     private void displayContent(
             final ChatMessage message, Content c, View content, boolean isMultiContent) {
-        Button download = content.findViewById(R.id.download);
+        final Button download = content.findViewById(R.id.download);
         download.setVisibility(View.GONE);
+        final ImageView bigImage = content.findViewById(R.id.bigImage);
+        bigImage.setVisibility(View.GONE);
+        final ImageView smallImage = content.findViewById(R.id.image);
+        smallImage.setVisibility(View.GONE);
+        final TextView fileName = content.findViewById(R.id.file);
+        fileName.setVisibility(View.GONE);
 
         if (c.isFile() || (c.isFileTransfer() && message.isOutgoing())) {
             // If message is outgoing, even if content
@@ -252,15 +258,15 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         && mContext.getResources()
                                 .getBoolean(
                                         R.bool.use_big_pictures_to_preview_images_file_transfers)) {
-                    v = content.findViewById(R.id.bigImage);
-                    loadBitmap(c.getFilePath(), ((ImageView) v));
+                    loadBitmap(c.getFilePath(), bigImage);
+                    v = bigImage;
                 } else {
-                    v = content.findViewById(R.id.image);
-                    loadBitmap(c.getFilePath(), ((ImageView) v));
+                    loadBitmap(c.getFilePath(), smallImage);
+                    v = smallImage;
                 }
             } else {
-                v = content.findViewById(R.id.file);
-                ((TextView) v).setText(FileUtils.getNameFromFilePath(filePath));
+                fileName.setText(FileUtils.getNameFromFilePath(filePath));
+                v = fileName;
             }
             v.setVisibility(View.VISIBLE);
             v.setOnClickListener(
@@ -302,7 +308,9 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                             @Override
                             public void onClick(View v) {
                                 Content c = (Content) v.getTag();
-                                message.downloadContent(c);
+                                if (!message.isFileTransferInProgress()) {
+                                    message.downloadContent(c);
+                                }
                             }
                         });
             } else {
