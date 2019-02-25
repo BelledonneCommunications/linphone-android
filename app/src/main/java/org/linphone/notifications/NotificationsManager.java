@@ -87,7 +87,7 @@ public class NotificationsManager {
 
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
-                        mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mContext, SERVICE_NOTIF_ID, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mServiceNotification =
                 Compatibility.createNotification(
                         mContext,
@@ -151,13 +151,6 @@ public class NotificationsManager {
             long timestamp,
             Uri filePath,
             String fileMime) {
-        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
-        notifIntent.putExtra("GoToChat", true);
-        notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
-        notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(
-                        mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, fromPictureUri);
         Notifiable notif = mChatNotifMap.get(conferenceAddress);
@@ -175,6 +168,17 @@ public class NotificationsManager {
         notif.setGroupTitle(subject);
         notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
         notif.setLocalIdentity(localIdentity.asString());
+
+        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
+        notifIntent.putExtra("GoToChat", true);
+        notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
+        notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(
+                        mContext,
+                        notif.getNotificationId(),
+                        notifIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification =
                 Compatibility.createMessageNotification(
@@ -198,14 +202,6 @@ public class NotificationsManager {
             long timestamp,
             Uri filePath,
             String fileMime) {
-        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
-        notifIntent.putExtra("GoToChat", true);
-        notifIntent.putExtra("ChatContactSipUri", fromSipUri);
-        notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(
-                        mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         if (fromName == null) {
             fromName = fromSipUri;
         }
@@ -226,6 +222,17 @@ public class NotificationsManager {
         notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
         notif.setLocalIdentity(localIdentity.asString());
 
+        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
+        notifIntent.putExtra("GoToChat", true);
+        notifIntent.putExtra("ChatContactSipUri", fromSipUri);
+        notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(
+                        mContext,
+                        notif.getNotificationId(),
+                        notifIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
         Notification notification =
                 Compatibility.createMessageNotification(
                         mContext, notif, fromName, message, bm, pendingIntent);
@@ -237,7 +244,10 @@ public class NotificationsManager {
         missedCallNotifIntent.putExtra("GoToHistory", true);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
-                        mContext, 0, missedCallNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mContext,
+                        MISSED_CALLS_NOTIF_ID,
+                        missedCallNotifIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
         int missedCallCount =
                 LinphoneManager.getLcIfManagerNotDestroyedOrNull().getMissedCallsCount();
@@ -353,7 +363,7 @@ public class NotificationsManager {
         notifIntent.putExtra("GoToInapp", true);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
-                        mContext, 0, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mContext, IN_APP_NOTIF_ID, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notif =
                 Compatibility.createSimpleNotification(
