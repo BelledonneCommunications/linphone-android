@@ -14,7 +14,7 @@
     <bool name="set_notification_bar_background_color_to_primary">true</bool>
 
     <!-- Time -->
-    <string name="history_date_format">EEE, d MMM</string>
+    <string name="history_date_format">EEE d MMM</string>
     <string name="history_detail_date_format">yyyy/MM/dd - HH:mm - </string>
     <string name="inapp_popup_date_format">yyyy/MM/dd</string>
     <string name="inapp_popup_date_day">dd</string>
