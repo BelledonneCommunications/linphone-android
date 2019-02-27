@@ -27,11 +27,8 @@ import android.content.Intent;
 import android.os.SystemClock;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
-import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.LinphoneUtils;
 
 /*
  * Purpose of this receiver is to disable keep alives when screen is off
@@ -40,9 +37,6 @@ public class KeepAliveReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (LinphoneService.isReady()) {
-            boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-            LinphoneUtils.configureLoggingService(
-                    isDebugEnabled, context.getString(R.string.app_name));
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
             if (lc == null) return;
 

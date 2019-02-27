@@ -177,8 +177,10 @@ public final class LinphoneService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
+        boolean isPush = false;
         if (intent.getBooleanExtra("PushNotification", false)) {
             Log.i("[Service] [Push Notification] LinphoneService started because of a push");
+            isPush = true;
         }
 
         if (sInstance != null) {
@@ -186,7 +188,7 @@ public final class LinphoneService extends Service {
             return START_REDELIVER_INTENT;
         }
 
-        LinphoneManager.createAndStart(this);
+        LinphoneManager.createAndStart(this, isPush);
 
         sInstance = this; // sInstance is ready once linphone manager has been created
         mNotificationManager = new NotificationsManager(this);
@@ -428,8 +430,8 @@ public final class LinphoneService extends Service {
         // We have to so there are no more ref on the native LinphoneCore object and thus call
         // it's uninit() method which will free the AndroidPlatformHelper resources...
         // Problem is both the below methods do not guaranty the finalize will be called in time...
-        //System.gc();
-        //System.runFinalization();
+        // System.gc();
+        // System.runFinalization();
 
         // Make sure our notification is gone.
         mNotificationManager.destroy();

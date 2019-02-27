@@ -232,7 +232,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mMediaScanner = new MediaScanner(c);
     }
 
-    public static synchronized void createAndStart(Context c) {
+    public static synchronized void createAndStart(Context c, boolean isPush) {
         if (sInstance != null) {
             Log.e(
                     "[Manager] Linphone Manager is already initialized ! Destroying it and creating a new one...");
@@ -240,7 +240,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
 
         sInstance = new LinphoneManager(c);
-        sInstance.startLibLinphone(c);
+        sInstance.startLibLinphone(c, isPush);
         sInstance.initOpenH264DownloadHelper();
 
         // H264 codec Management - set to auto mode -> MediaCodec >= android 5.0 >= OpenH264
@@ -686,16 +686,22 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     public void restartCore() {
         destroyCore();
-        startLibLinphone(mServiceContext);
+        startLibLinphone(mServiceContext, false);
         sExited = false;
     }
 
-    private synchronized void startLibLinphone(Context c) {
+    private synchronized void startLibLinphone(Context c, boolean isPush) {
         try {
             copyAssetsFromPackage();
             // traces alway start with traces enable to not missed first initialization
             mCore = Factory.instance().createCore(configFile, mLinphoneFactoryConfigFile, c);
             mCore.addListener(this);
+            if (isPush) {
+                Log.w(
+                        "[Manager] We are here because of a received push notification, force network reachability and enter background mode before starting the Core");
+                mCore.setNetworkReachable(true);
+                mCore.enterBackground();
+            }
             mCore.start();
             TimerTask lTask =
                     new TimerTask() {
