@@ -162,7 +162,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             if (LinphoneActivity.instance().isTablet()) {
                                 LinphoneActivity.instance()
                                         .goToChat(
-                                                null,
+                                                mChatRoom.getLocalAddress().asStringUriOnly(),
                                                 mGroupChatRoomAddress.asStringUriOnly(),
                                                 mShareInfos);
                             } else {
@@ -204,7 +204,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                             mChatRoom.leave();
                                             LinphoneActivity.instance()
                                                     .goToChat(
-                                                            null,
+                                                            mChatRoom
+                                                                    .getLocalAddress()
+                                                                    .asStringUriOnly(),
                                                             mGroupChatRoomAddress.asString(),
                                                             null);
                                         } else {
@@ -398,7 +400,10 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             mChatRoom.addParticipants(participantsToAdd);
 
                             LinphoneActivity.instance()
-                                    .goToChat(null, mGroupChatRoomAddress.asString(), null);
+                                    .goToChat(
+                                            mChatRoom.getLocalAddress().asStringUriOnly(),
+                                            mGroupChatRoomAddress.asString(),
+                                            null);
                         }
                     }
                 });

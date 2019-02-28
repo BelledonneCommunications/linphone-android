@@ -142,7 +142,7 @@ public class DevicesFragment extends Fragment {
 
     private void initChatRoom() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        mRoom = core.getChatRoomFromUri(mRoomAddr.asStringUriOnly());
+        mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
     }
 
     private void initHeader() {
