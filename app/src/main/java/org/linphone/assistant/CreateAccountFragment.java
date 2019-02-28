@@ -340,8 +340,8 @@ public class CreateAccountFragment extends Fragment
                 if (mUseEmail.isChecked()) mAccountCreator.setPhoneNumber(null, null);
                 if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
                     LinphoneManager.getLc()
-                            .getConfig()
-                            .loadFromXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
+                            .loadConfigFromXml(
+                                    LinphoneManager.getInstance().getmDynamicConfigFile());
                     mAccountCreator.isAccountExist();
                 } else {
                     LinphoneUtils.displayErrorAlert(
@@ -674,8 +674,7 @@ public class CreateAccountFragment extends Fragment
                         LinphoneUtils.errorForStatus(status), AssistantActivity.instance());
             } else {
                 LinphoneManager.getLc()
-                        .getConfig()
-                        .loadFromXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
+                        .loadConfigFromXml(LinphoneManager.getInstance().getmDynamicConfigFile());
                 accountCreator.isAliasUsed();
             }
         } else {

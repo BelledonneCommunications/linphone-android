@@ -32,4 +32,7 @@
     <entry name="username_min_length" overwrite="true">1</entry>
     <entry name="username_regex" overwrite="true">^[a-z0-9+_.\-]*$</entry>
   </section>
+  <section name="lime">
+    <entry name="x3dh_server_url" overwrite="true">http://sip-staging.linphone.org:8083/flexisip-account-manager/x3dh-25519.php</entry>
+  </section>
 </config>

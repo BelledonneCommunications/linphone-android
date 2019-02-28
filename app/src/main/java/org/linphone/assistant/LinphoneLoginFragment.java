@@ -277,8 +277,7 @@ public class LinphoneLoginFragment extends Fragment
             boolean isOk = status == AccountCreator.PhoneNumberStatus.Ok.toInt();
             if (isOk) {
                 LinphoneManager.getLc()
-                        .getConfig()
-                        .loadFromXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
+                        .loadConfigFromXml(LinphoneManager.getInstance().getmDynamicConfigFile());
                 mAccountCreator.isAliasUsed();
             } else {
                 mApply.setEnabled(true);

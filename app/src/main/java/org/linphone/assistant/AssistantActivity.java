@@ -503,8 +503,7 @@ public class AssistantActivity extends Activity
 
     public void linphoneLogIn(AccountCreator accountCreator) {
         LinphoneManager.getLc()
-                .getConfig()
-                .loadFromXmlFile(LinphoneManager.getInstance().getmDynamicConfigFile());
+                .loadConfigFromXml(LinphoneManager.getInstance().getmDynamicConfigFile());
         configureProxyConfig(accountCreator);
     }
 
