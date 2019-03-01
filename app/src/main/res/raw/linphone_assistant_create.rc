@@ -24,7 +24,6 @@
     <entry name="rls_uri" overwrite="true">sips:rls@sip.linphone.org</entry>
   </section>
   <section name="assistant">
-    <entry name="domain" overwrite="true">sip.linphone.org</entry>
     <entry name="password_max_length" overwrite="true">-1</entry>
     <entry name="password_min_length" overwrite="true">1</entry>
     <entry name="username_length" overwrite="true">-1</entry>

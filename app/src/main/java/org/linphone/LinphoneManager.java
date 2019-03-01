@@ -155,7 +155,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private final String mLPConfigXsd;
 
     private final String mLinphoneFactoryConfigFile;
-    private final String mDynamicConfigFile;
+    private final String mLinphoneDynamicConfigFile, mDefaultDynamicConfigFile;
     private final String mChatDatabaseFile;
     private final String mRingSoundFile;
     private final String mCallLogDatabaseFile;
@@ -205,7 +205,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mLPConfigXsd = mBasePath + "/lpconfig.xsd";
         mLinphoneFactoryConfigFile = mBasePath + "/linphonerc";
         configFile = mBasePath + "/.linphonerc";
-        mDynamicConfigFile = mBasePath + "/assistant_create.rc";
+        mLinphoneDynamicConfigFile = mBasePath + "/linphone_assistant_create.rc";
+        mDefaultDynamicConfigFile = mBasePath + "/default_assistant_create.rc";
         mChatDatabaseFile = mBasePath + "/linphone-history.db";
         mCallLogDatabaseFile = mBasePath + "/linphone-log-history.db";
         mFriendsDatabaseFile = mBasePath + "/linphone-friends.db";
@@ -839,7 +840,10 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         copyIfNotExist(R.raw.linphonerc_default, configFile);
         copyFromPackage(R.raw.linphonerc_factory, new File(mLinphoneFactoryConfigFile).getName());
         copyIfNotExist(R.raw.lpconfig, mLPConfigXsd);
-        copyFromPackage(R.raw.assistant_create, new File(mDynamicConfigFile).getName());
+        copyFromPackage(
+                R.raw.default_assistant_create, new File(mDefaultDynamicConfigFile).getName());
+        copyFromPackage(
+                R.raw.linphone_assistant_create, new File(mLinphoneDynamicConfigFile).getName());
     }
 
     private void copyIfNotExist(int ressourceId, String target) throws IOException {
@@ -1551,8 +1555,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         dialog.show();
     }
 
-    public String getmDynamicConfigFile() {
-        return mDynamicConfigFile;
+    public String getDefaultDynamicConfigFile() {
+        return mDefaultDynamicConfigFile;
+    }
+
+    public String getLinphoneDynamicConfigFile() {
+        return mLinphoneDynamicConfigFile;
     }
 
     public boolean getCallGsmON() {

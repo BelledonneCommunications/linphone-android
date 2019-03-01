@@ -209,6 +209,7 @@ public class LinphoneLoginFragment extends Fragment
         }
         mAccountCreator.setUsername(mLogin.getText().toString());
         mAccountCreator.setPassword(mPassword.getText().toString());
+        mAccountCreator.setDomain(getString(R.string.default_domain));
         mAccountCreator.isAccountExist();
     }
 
@@ -276,8 +277,6 @@ public class LinphoneLoginFragment extends Fragment
             int status = getPhoneNumberStatus();
             boolean isOk = status == AccountCreator.PhoneNumberStatus.Ok.toInt();
             if (isOk) {
-                LinphoneManager.getLc()
-                        .loadConfigFromXml(LinphoneManager.getInstance().getmDynamicConfigFile());
                 mAccountCreator.isAliasUsed();
             } else {
                 mApply.setEnabled(true);
