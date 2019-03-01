@@ -35,6 +35,7 @@ Group changes to describe their impact on the project, as follows:
 - Option to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications.
 - Call recording.
 - Get remote provisioning URL from QR code scan.
+- Added app setting for microphone & playback gain.
 
 ### Fixes
 - Fixed chat room user can't get into if there are more than one with the same remote but different local accounts

@@ -79,6 +79,18 @@
                     android:persistent="false"
                     android:title="@string/pref_codec_bitrate_limit" />
 
+                <EditTextPreference
+                    android:key="@string/pref_mic_gain_db_key"
+                    android:persistent="false"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:title="@string/pref_mic_gain_db" />
+
+                <EditTextPreference
+                    android:key="@string/pref_playback_gain_db_key"
+                    android:persistent="false"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:title="@string/pref_playback_gain_db" />
+
             </PreferenceCategory>
 
             <PreferenceCategory

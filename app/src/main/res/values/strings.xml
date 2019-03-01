@@ -398,6 +398,8 @@
     <string name="failed">failed</string>
     <string name="pref_adaptive_rate_control">Adaptive rate control</string>
     <string name="pref_codec_bitrate_limit">Codec bitrate limit</string>
+    <string name="pref_mic_gain_db">Microphone gain (in db)</string>
+    <string name="pref_playback_gain_db">Playback gain (in db)</string>
     <string name="pref_codecs">Codecs</string>
 
     <!-- Video settings -->

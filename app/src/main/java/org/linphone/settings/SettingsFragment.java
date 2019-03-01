@@ -630,6 +630,15 @@ public class SettingsFragment extends PreferencesListFragment {
                 (ListPreference) findPreference(getString(R.string.pref_codec_bitrate_limit_key));
         bitrateLimit.setSummary(String.valueOf(mPrefs.getCodecBitrateLimit()));
         bitrateLimit.setValue(String.valueOf(mPrefs.getCodecBitrateLimit()));
+
+        EditTextPreference micGain =
+                (EditTextPreference) findPreference(getString(R.string.pref_mic_gain_db_key));
+        micGain.setText(String.valueOf(mPrefs.getMicGainDb()));
+        micGain.setSummary(String.valueOf(mPrefs.getMicGainDb()));
+        EditTextPreference playbackGain =
+                (EditTextPreference) findPreference(getString(R.string.pref_playback_gain_db_key));
+        playbackGain.setText(String.valueOf(mPrefs.getPlaybackGainDb()));
+        playbackGain.setSummary(String.valueOf(mPrefs.getPlaybackGainDb()));
     }
 
     private void setAudioPreferencesListener() {
@@ -725,6 +734,28 @@ public class SettingsFragment extends PreferencesListFragment {
                                                 .checkAndRequestRecordAudioPermissionsForEchoTester();
                                     }
                                 }
+                                return true;
+                            }
+                        });
+
+        findPreference(getString(R.string.pref_mic_gain_db_key))
+                .setOnPreferenceChangeListener(
+                        new OnPreferenceChangeListener() {
+                            @Override
+                            public boolean onPreferenceChange(Preference preference, Object o) {
+                                float newVal = Float.valueOf((String) o);
+                                mPrefs.setMicGainDb(newVal);
+                                return true;
+                            }
+                        });
+
+        findPreference(getString(R.string.pref_playback_gain_db_key))
+                .setOnPreferenceChangeListener(
+                        new OnPreferenceChangeListener() {
+                            @Override
+                            public boolean onPreferenceChange(Preference preference, Object o) {
+                                float newVal = Float.valueOf((String) o);
+                                mPrefs.setPlaybackGainDb(newVal);
                                 return true;
                             }
                         });

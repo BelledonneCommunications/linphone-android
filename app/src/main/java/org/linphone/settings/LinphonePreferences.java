@@ -514,11 +514,17 @@ public class LinphonePreferences {
     }
 
     public boolean isFriendlistsubscriptionEnabled() {
-        return getConfig().getBool("app", "friendlist_subscription_enabled", false);
+        boolean previousConfig =
+                getConfig().getBool("app", "friendlist_subscription_enabled", false);
+        if (previousConfig) {
+            enabledFriendlistSubscription(previousConfig);
+            getConfig().setBool("app", "friendlist_subscription_enabled", false);
+        }
+        return getLc().isFriendListSubscriptionEnabled();
     }
 
     public void enabledFriendlistSubscription(boolean enabled) {
-        getConfig().setBool("app", "friendlist_subscription_enabled", enabled);
+        getLc().enableFriendListSubscription(enabled);
     }
 
     public void setDefaultAccount(int accountIndex) {
@@ -627,6 +633,22 @@ public class LinphonePreferences {
 
     public int getEchoCalibration() {
         return getConfig().getInt("sound", "ec_delay", -1);
+    }
+
+    public float getMicGainDb() {
+        return getLc().getMicGainDb();
+    }
+
+    public void setMicGainDb(float gain) {
+        getLc().setMicGainDb(gain);
+    }
+
+    public float getPlaybackGainDb() {
+        return getLc().getPlaybackGainDb();
+    }
+
+    public void setPlaybackGainDb(float gain) {
+        getLc().setPlaybackGainDb(gain);
     }
 
     // End of audio settings
