@@ -686,9 +686,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     public void restartCore() {
-        destroyCore();
-        startLibLinphone(mServiceContext, false);
-        sExited = false;
+        mCore.stop();
+        mCore.start();
     }
 
     private synchronized void startLibLinphone(Context c, boolean isPush) {
@@ -877,7 +876,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 mCore.setNetworkReachable(false);
             }
         }
-        mCore = null;
+        mCore.stop();
     }
 
     public void enableProximitySensing(boolean enable) {

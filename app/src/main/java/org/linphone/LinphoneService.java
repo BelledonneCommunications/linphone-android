@@ -425,13 +425,6 @@ public final class LinphoneService extends Service {
 
         sInstance = null;
         LinphoneManager.destroy();
-        // The following are required if we want for the Core's finalize() method to be called
-        // before the super.onDestroy() call.
-        // We have to so there are no more ref on the native LinphoneCore object and thus call
-        // it's uninit() method which will free the AndroidPlatformHelper resources...
-        // Problem is both the below methods do not guaranty the finalize will be called in time...
-        // System.gc();
-        // System.runFinalization();
 
         // Make sure our notification is gone.
         mNotificationManager.destroy();
