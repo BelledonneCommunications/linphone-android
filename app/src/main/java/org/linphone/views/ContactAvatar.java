@@ -19,21 +19,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.Nullable;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import java.io.IOException;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.ChatRoomSecurityLevel;
+import org.linphone.core.tools.Log;
 
-class ContactAvatarHolder implements RequestListener<Drawable> {
+class ContactAvatarHolder {
     public final ImageView contactPicture;
     public final ImageView avatarMask;
     public final ImageView securityLevel;
@@ -50,27 +48,6 @@ class ContactAvatarHolder implements RequestListener<Drawable> {
         contactPicture.setVisibility(View.VISIBLE);
         generatedAvatar.setVisibility(View.VISIBLE);
         securityLevel.setVisibility(View.GONE);
-    }
-
-    @Override
-    public boolean onLoadFailed(
-            @Nullable GlideException e,
-            Object model,
-            Target<Drawable> target,
-            boolean isFirstResource) {
-        contactPicture.setVisibility(View.GONE);
-        generatedAvatar.setVisibility(View.VISIBLE);
-        return false;
-    }
-
-    @Override
-    public boolean onResourceReady(
-            Drawable resource,
-            Object model,
-            Target<Drawable> target,
-            DataSource dataSource,
-            boolean isFirstResource) {
-        return false;
     }
 }
 
@@ -157,14 +134,32 @@ public class ContactAvatar {
                         contact.getFullName() == null
                                 ? contact.getFirstName() + " " + contact.getLastName()
                                 : contact.getFullName()));
-        holder.generatedAvatar.setVisibility(View.GONE);
 
+        holder.generatedAvatar.setVisibility(View.GONE);
         holder.contactPicture.setVisibility(View.VISIBLE);
-        Glide.with(v)
-                .load(contact.getPhotoUri())
-                .error(Glide.with(v).load(contact.getThumbnailUri()).listener(holder))
-                .into(holder.contactPicture);
         holder.securityLevel.setVisibility(View.GONE);
+
+        Bitmap bm = null;
+        try {
+            bm =
+                    MediaStore.Images.Media.getBitmap(
+                            LinphoneService.instance().getContentResolver(),
+                            contact.getThumbnailUri());
+        } catch (IOException e) {
+            Log.e(e);
+        }
+        if (bm != null) {
+            holder.contactPicture.setImageBitmap(bm);
+            holder.contactPicture.setVisibility(View.VISIBLE);
+            holder.generatedAvatar.setVisibility(View.GONE);
+        } else {
+            holder.generatedAvatar.setText(
+                    generateAvatar(
+                            contact.getFullName() == null
+                                    ? contact.getFirstName() + " " + contact.getLastName()
+                                    : contact.getFullName()));
+            holder.generatedAvatar.setVisibility(View.VISIBLE);
+        }
     }
 
     public static void displayAvatar(
@@ -183,7 +178,7 @@ public class ContactAvatar {
 
     public static void displayGroupChatAvatar(View v) {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
-        Glide.with(v).load(R.drawable.chat_group_avatar).into(holder.contactPicture);
+        holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
         holder.generatedAvatar.setVisibility(View.GONE);
         holder.securityLevel.setVisibility(View.GONE);
     }
