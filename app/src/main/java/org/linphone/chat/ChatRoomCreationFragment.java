@@ -221,9 +221,12 @@ public class ChatRoomCreationFragment extends Fragment
             updateListSelected();
         }
 
-        mOnlyDisplayLinphoneContacts = ContactsManager.getInstance().getSIPContacts().size() > 0;
+        mOnlyDisplayLinphoneContacts =
+                ContactsManager.getInstance().isLinphoneContactsPrefered()
+                        || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
         if (savedInstanceState != null) {
-            mOnlyDisplayLinphoneContacts = savedInstanceState.getBoolean("onlySipContact", true);
+            mOnlyDisplayLinphoneContacts =
+                    savedInstanceState.getBoolean("onlySipContact", mOnlyDisplayLinphoneContacts);
         }
         mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts);
         updateList();
@@ -328,7 +331,20 @@ public class ChatRoomCreationFragment extends Fragment
         mContactsList.setVisibility(View.VISIBLE);
         mSearchLayout.setVisibility(View.VISIBLE);
 
+        if (mCreateGroupChatRoom) {
+            mLinphoneContactsToggle.setVisibility(View.GONE);
+            mAllContactsToggle.setVisibility(View.GONE);
+            mContactsSelectLayout.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
+        } else {
+            mLinphoneContactsToggle.setVisibility(View.VISIBLE);
+            mAllContactsToggle.setVisibility(View.VISIBLE);
+            mContactsSelectLayout.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.GONE);
+        }
+
         if (getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
+            mLinphoneContactsToggle.setVisibility(View.GONE);
             mLinphoneContactsButton.setVisibility(View.INVISIBLE);
 
             mAllContactsButton.setEnabled(false);
@@ -355,18 +371,6 @@ public class ChatRoomCreationFragment extends Fragment
 
             mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
             mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
-        }
-
-        if (mCreateGroupChatRoom) {
-            mLinphoneContactsToggle.setVisibility(View.GONE);
-            mAllContactsToggle.setVisibility(View.GONE);
-            mContactsSelectLayout.setVisibility(View.VISIBLE);
-            mNextButton.setVisibility(View.VISIBLE);
-        } else {
-            mLinphoneContactsToggle.setVisibility(View.VISIBLE);
-            mAllContactsToggle.setVisibility(View.VISIBLE);
-            mContactsSelectLayout.setVisibility(View.GONE);
-            mNextButton.setVisibility(View.GONE);
         }
 
         mContactsSelectedLayout.removeAllViews();
@@ -458,7 +462,8 @@ public class ChatRoomCreationFragment extends Fragment
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.all_contacts) {
-            mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts = false);
+            mOnlyDisplayLinphoneContacts = false;
+            mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts);
             mAllContactsSelected.setVisibility(View.VISIBLE);
             mAllContactsButton.setEnabled(false);
             mLinphoneContactsButton.setEnabled(true);
@@ -469,7 +474,8 @@ public class ChatRoomCreationFragment extends Fragment
             mSearchAdapter.setOnlySipContact(true);
             mLinphoneContactsSelected.setVisibility(View.VISIBLE);
             mLinphoneContactsButton.setEnabled(false);
-            mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts = true);
+            mOnlyDisplayLinphoneContacts = true;
+            mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
             mAllContactsSelected.setVisibility(View.INVISIBLE);
             updateList();
             resetAndResearch();

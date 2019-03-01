@@ -57,7 +57,9 @@ public class ContactAvatar {
         String[] names = displayName.split(" ");
         StringBuilder generatedAvatarText = new StringBuilder();
         for (String name : names) {
-            generatedAvatarText.append(name.charAt(0));
+            if (name != null && name.length() > 0) {
+                generatedAvatarText.append(name.charAt(0));
+            }
         }
         return generatedAvatarText.toString().toUpperCase();
     }
