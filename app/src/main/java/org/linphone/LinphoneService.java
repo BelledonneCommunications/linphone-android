@@ -145,11 +145,6 @@ public final class LinphoneService extends Service {
 
     private void onBackgroundMode() {
         Log.i("[Service] App has entered background mode");
-        if (LinphonePreferences.instance() != null
-                && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            if (LinphoneManager.isInstanciated())
-                LinphoneManager.getInstance().subscribeFriendList(false);
-        }
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
         }
@@ -157,11 +152,6 @@ public final class LinphoneService extends Service {
 
     private void onForegroundMode() {
         Log.i("[Service] App has left background mode");
-        if (LinphonePreferences.instance() != null
-                && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            if (LinphoneManager.isInstanciated())
-                LinphoneManager.getInstance().subscribeFriendList(true);
-        }
         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
             LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterForeground();
         }
