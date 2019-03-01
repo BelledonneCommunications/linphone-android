@@ -745,6 +745,7 @@ public class SettingsFragment extends PreferencesListFragment {
                             public boolean onPreferenceChange(Preference preference, Object o) {
                                 float newVal = Float.valueOf((String) o);
                                 mPrefs.setMicGainDb(newVal);
+                                preference.setSummary(String.valueOf(newVal));
                                 return true;
                             }
                         });
@@ -756,6 +757,7 @@ public class SettingsFragment extends PreferencesListFragment {
                             public boolean onPreferenceChange(Preference preference, Object o) {
                                 float newVal = Float.valueOf((String) o);
                                 mPrefs.setPlaybackGainDb(newVal);
+                                preference.setSummary(String.valueOf(newVal));
                                 return true;
                             }
                         });
