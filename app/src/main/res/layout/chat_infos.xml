@@ -22,10 +22,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
-                android:src="@drawable/back" />
+                android:src="@drawable/back"
+                android:tint="?attr/drawableDarkModeTintColor" />
 
             <TextView
                 style="@style/toolbar_small_title_font"
@@ -43,10 +44,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_valid"
                 android:padding="18dp"
-                android:src="@drawable/chat_room_creation_confirm" />
+                android:src="@drawable/chat_room_creation_confirm"
+                android:tint="?attr/drawableDarkModeTintColor" />
 
         </LinearLayout>
 
@@ -75,7 +77,7 @@
             android:id="@+id/addParticipantsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorG"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
@@ -84,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/chat_room_participants"
-                android:textColor="@color/colorB"
+                android:textColor="?attr/primaryTextColor"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

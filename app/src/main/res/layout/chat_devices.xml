@@ -21,29 +21,23 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
-                android:src="@drawable/back" />
+                android:src="@drawable/back"
+                android:tint="?attr/drawableDarkModeTintColor" />
 
             <TextView
                 android:id="@+id/title"
                 style="@style/toolbar_small_title_font"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
+                android:layout_weight="0.8"
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:padding="15dp"
                 android:singleLine="true"
                 android:text="@string/group_chat_room_devices" />
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:padding="15dp"
-                android:visibility="invisible" />
 
         </LinearLayout>
 

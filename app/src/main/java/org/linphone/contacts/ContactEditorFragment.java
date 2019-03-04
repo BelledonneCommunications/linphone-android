@@ -58,8 +58,8 @@ import org.linphone.R;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.utils.FileUtils;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.ContactAvatar;
 
 public class ContactEditorFragment extends Fragment {
     private static final int ADD_PHOTO = 1337;
@@ -311,13 +311,9 @@ public class ContactEditorFragment extends Fragment {
 
         mContactPicture = mView.findViewById(R.id.contact_picture);
         if (mContact != null) {
-            ImageUtils.setImagePictureFromUri(
-                    getActivity(),
-                    mContactPicture,
-                    mContact.getPhotoUri(),
-                    mContact.getThumbnailUri());
+            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
         } else {
-            ImageUtils.setDefaultContactImage(mContactPicture);
+            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
         }
 
         mContactPicture.setOnClickListener(

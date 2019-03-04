@@ -17,10 +17,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_back"
             android:padding="18dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/back"
+            android:tint="?attr/drawableDarkModeTintColor" />
 
         <TextView
             android:id="@+id/top_bar_title"
@@ -38,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_edit_list"
             android:padding="15dp"
             android:src="@drawable/delete" />

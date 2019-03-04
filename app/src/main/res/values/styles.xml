@@ -2,6 +2,14 @@
 <resources>
 
     <style name="LinphoneStyleLight" parent="Theme.AppCompat.NoActionBar">
+        <!-- Android theme override -->
+        <item name="colorAccent">@color/colorA</item>
+        <item name="android:textColorPrimary">@color/colorC</item>
+        <item name="android:textColorSecondary">@color/colorH</item>
+        <item name="android:textColorHint">@color/colorE</item>
+        <item name="android:colorBackground">@color/colorH</item>
+        <item name="android:textColorPrimaryInverse">@color/colorH</item>
+
         <item name="accentColor">@color/colorA</item>
         <item name="accentTextColor">@color/colorH</item>
         <item name="primaryTextColor">@color/colorC</item>
@@ -19,9 +27,17 @@
         <item name="lighToolbarTextColor">@color/colorC</item>
         <item name="darkToolbarBackgroundColor">@color/colorC</item>
         <item name="darkToolbarTextColor">@color/colorH</item>
+        <item name="button_background_drawable">@drawable/button_background_light</item>
     </style>
 
-    <style name="LinphoneStyleDark" parent="Theme.AppCompat.NoActionBar">
+    <style name="LinphoneStyleDark" parent="LinphoneStyleLight">
+        <!-- Android theme override -->
+        <item name="android:textColorPrimary">@color/colorH</item>
+        <item name="android:textColorSecondary">@color/colorC</item>
+        <item name="android:textColorHint">@color/colorF</item>
+        <item name="android:colorBackground">@color/colorC</item>
+        <item name="android:textColorPrimaryInverse">@color/colorC</item>
+
         <item name="accentColor">@color/colorA</item>
         <item name="accentTextColor">@color/colorH</item>
         <item name="primaryTextColor">@color/colorH</item>
@@ -32,15 +48,15 @@
         <item name="drawableDarkModeTintColor">@color/colorH</item>
 
         <!-- Same value for now -->
-        <item name="dividerColor">@color/colorE</item>
-        <item name="drawableTintColor">@color/colorC</item>
-        <item name="drawableTintDisabledColor">@color/colorDisabled</item>
+        <item name="drawableTintColor">@color/colorH</item>
+        <item name="drawableTintDisabledColor">@color/colorE</item>
         <item name="drawableTintOverColor">@color/colorA</item>
-        <item name="lighToolbarBackgroundColor">@color/colorF</item>
+        <item name="lighToolbarBackgroundColor">@color/colorC</item>
         <item name="lighToolbarBackgroundDisabledColor">@color/colorE</item>
-        <item name="lighToolbarTextColor">@color/colorC</item>
+        <item name="lighToolbarTextColor">@color/colorH</item>
         <item name="darkToolbarBackgroundColor">@color/colorC</item>
         <item name="darkToolbarTextColor">@color/colorH</item>
+        <item name="button_background_drawable">@drawable/button_background_dark</item>
     </style>
 
     <style name="main_account_font" parent="@android:style/TextAppearance.Medium">
@@ -84,7 +100,7 @@
     </style>
 
     <style name="toolbar_small_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -146,7 +162,7 @@
     </style>
 
     <style name="font13" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorE</item>
+        <item name="android:textColor">?attr/primarySubtextLightColor</item>
         <item name="android:textSize">13sp</item>
     </style>
 

@@ -21,7 +21,7 @@
                 android:id="@+id/all_contacts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_all_contacts"
                 android:padding="15dp"
                 android:src="@drawable/contacts_all" />
@@ -44,7 +44,7 @@
                 android:id="@+id/linphone_contacts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_linphone_contacts"
                 android:gravity="center"
                 android:padding="15dp"
@@ -69,7 +69,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_new_contact"
             android:padding="15dp"
             android:src="@drawable/contact_add" />
@@ -79,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_edit_list"
             android:padding="15dp"
             android:src="@drawable/delete" />
@@ -103,8 +103,7 @@
             android:inputType="textPersonName"
             android:paddingRight="5dp"
             android:queryBackground="@android:color/transparent"
-            android:queryHint="@string/chat_room_creation_filter_hint"
-            android:textColor="@color/colorC" />
+            android:queryHint="@string/chat_room_creation_filter_hint"/>
 
     </RelativeLayout>
 

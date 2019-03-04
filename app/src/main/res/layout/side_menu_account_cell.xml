@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="35dp"
-    android:background="@color/colorG"
+    android:background="?attr/backgroundColor"
     android:gravity="center">
 
     <TextView
@@ -25,5 +25,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/backgroundColor" />
+        android:layout_alignParentBottom="true"
+        android:background="?attr/dividerColor" />
+
 </RelativeLayout>

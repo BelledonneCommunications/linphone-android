@@ -18,5 +18,6 @@
         <attr name="lighToolbarTextColor" format="color"/>
         <attr name="darkToolbarBackgroundColor" format="color"/>
         <attr name="darkToolbarTextColor" format="color"/>
+        <attr name="button_background_drawable" format="reference" />
     </declare-styleable>
 </resources>

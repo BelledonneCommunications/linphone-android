@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_background"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_toggle_micro"
             android:padding="10dp"
             android:src="@drawable/micro" />
@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_background"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_toggle_speaker"
             android:padding="15dp"
             android:src="@drawable/speaker" />

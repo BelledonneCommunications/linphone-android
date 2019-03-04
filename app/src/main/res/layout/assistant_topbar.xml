@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_gravity="center_horizontal"
-    android:background="@color/colorF"
+    android:background="?attr/lighToolbarBackgroundColor"
     android:orientation="horizontal">
 
     <ImageView
@@ -12,10 +12,11 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.2"
-        android:background="@drawable/toolbar_button"
+        android:background="?attr/button_background_drawable"
         android:contentDescription="@string/content_description_back"
         android:padding="18dp"
-        android:src="@drawable/back" />
+        android:src="@drawable/back"
+        android:tint="?attr/drawableDarkModeTintColor" />
 
     <TextView
         style="@style/font1"

@@ -21,30 +21,33 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_new_discussion"
                 android:padding="15dp"
-                android:src="@drawable/chat_new" />
+                android:src="@drawable/chat_new"
+                android:tint="?attr/drawableDarkModeTintColor" />
 
             <ImageView
                 android:id="@+id/new_group_discussion"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_new_discussion"
                 android:padding="15dp"
-                android:src="@drawable/chat_group_new" />
+                android:src="@drawable/chat_group_new"
+                android:tint="?attr/drawableDarkModeTintColor"/>
 
             <ImageView
                 android:id="@+id/back_in_call"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back_call"
                 android:padding="15dp"
                 android:src="@drawable/call_back"
+                android:tint="?attr/drawableDarkModeTintColor"
                 android:visibility="invisible" />
 
             <View
@@ -57,10 +60,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_edit_list"
                 android:padding="15dp"
-                android:src="@drawable/delete" />
+                android:src="@drawable/delete"
+                android:tint="?attr/drawableDarkModeTintColor" />
         </LinearLayout>
 
         <include layout="@layout/edit_list" />

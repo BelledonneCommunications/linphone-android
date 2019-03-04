@@ -16,10 +16,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_cancel_button"
             android:padding="15dp"
-            android:src="@drawable/cancel_edit" />
+            android:src="@drawable/cancel_edit"
+            android:tint="?attr/drawableDarkModeTintColor" />
 
         <View
             android:layout_width="0dp"
@@ -31,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_delete"
             android:padding="15dp"
             android:src="@drawable/delete" />
@@ -41,10 +42,11 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:background="@drawable/toolbar_button"
+            android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_valid"
             android:padding="18dp"
-            android:src="@drawable/valid" />
+            android:src="@drawable/valid"
+            android:tint="?attr/drawableDarkModeTintColor" />
 
     </LinearLayout>
 
@@ -73,24 +75,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/contact_picture"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="5dp"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@string/content_description_contact_picture"
-                        android:src="@drawable/avatar" />
-
-                    <ImageView
-                        android:id="@+id/mask"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="5dp"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/avatar_mask" />
+                    <include layout="@layout/contact_avatar_big" />
 
                 </RelativeLayout>
 

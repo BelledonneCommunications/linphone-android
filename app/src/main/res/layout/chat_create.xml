@@ -22,10 +22,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:layout_weight="1"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
-                android:src="@drawable/back" />
+                android:src="@drawable/back"
+                android:tint="?attr/drawableDarkModeTintColor" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -40,7 +41,7 @@
                     android:id="@+id/security_toogle_off"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/security_toogle_icon_grey" />
+                    android:src="@drawable/security_toogle_icon_grey"/>
 
                 <Switch
                     android:id="@+id/security_toogle"
@@ -52,7 +53,7 @@
                     android:textOff=""
                     android:textOn=""
                     android:thumb="@drawable/security_switch_thumb"
-                    android:track="@drawable/security_switch_track" />
+                    android:track="@drawable/security_switch_track"/>
 
                 <ImageView
                     android:id="@+id/security_toogle_on"
@@ -72,7 +73,7 @@
                     android:id="@+id/all_contacts"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/toolbar_button"
+                    android:background="?attr/button_background_drawable"
                     android:contentDescription="@string/content_description_all_contacts"
                     android:padding="15dp"
                     android:src="@drawable/contacts_all" />
@@ -95,7 +96,7 @@
                     android:id="@+id/linphone_contacts"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/toolbar_button"
+                    android:background="?attr/button_background_drawable"
                     android:contentDescription="@string/content_description_linphone_contacts"
                     android:gravity="center"
                     android:padding="15dp"
@@ -116,7 +117,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
                 android:layout_weight="1"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_valid"
                 android:padding="18dp"
                 android:src="@drawable/chat_room_creation_next"
@@ -151,7 +152,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/resizable_textfield"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:fadeScrollbars="false"
             android:lines="1">
 
@@ -164,6 +165,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:scrollIndicators="bottom" />
+
         </HorizontalScrollView>
 
         <RelativeLayout

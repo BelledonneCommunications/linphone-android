@@ -103,21 +103,23 @@
 
             <Button
                 android:id="@+id/send_log"
-                style="android:attr/buttonBarButtonStyleStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/font8"
                 android:padding="10dp"
                 android:text="@string/menu_send_log" />
 
             <Button
                 android:id="@+id/reset_log"
-                style="android:attr/buttonBarButtonStyleStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
+                style="@style/font8"
                 android:padding="10dp"
                 android:text="@string/menu_reset_log" />
 

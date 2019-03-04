@@ -25,7 +25,7 @@
                     android:id="@+id/all_calls"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/toolbar_button"
+                    android:background="?attr/button_background_drawable"
                     android:contentDescription="@string/content_description_all_contacts"
                     android:padding="15dp"
                     android:src="@drawable/history_all" />
@@ -48,7 +48,7 @@
                     android:id="@+id/missed_calls"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/toolbar_button"
+                    android:background="?attr/button_background_drawable"
                     android:contentDescription="@string/content_description_linphone_contacts"
                     android:gravity="center"
                     android:padding="15dp"
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.2"
-                android:background="@drawable/toolbar_button"
+                android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_edit_list"
                 android:padding="15dp"
                 android:src="@drawable/delete" />
