@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorH"
+        android:background="?attr/backgroundColor"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorF"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:orientation="horizontal">
 
             <ImageView
@@ -83,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/colorA" />
+                    android:background="?attr/accentColor" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -107,7 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/colorA"
+                    android:background="?attr/accentColor"
                     android:visibility="gone" />
             </RelativeLayout>
 
@@ -143,7 +142,7 @@
                 android:paddingRight="5dp"
                 android:queryBackground="@android:color/transparent"
                 android:queryHint="@string/chat_room_creation_filter_hint"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/colorB" />
 
         </RelativeLayout>
 
@@ -176,7 +175,7 @@
                 android:id="@+id/contactsList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/colorE"
+                android:divider="?attr/dividerColor"
                 android:dividerHeight="1dp"
                 android:fastScrollAlwaysVisible="true"
                 android:fastScrollEnabled="true" />

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorH"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical">
 
     <fragment
@@ -21,6 +21,7 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/backgroundColor"
         android:orientation="horizontal" />
 
 </LinearLayout>

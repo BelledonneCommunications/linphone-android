@@ -469,6 +469,7 @@
 
     <!-- Advanced settings -->
     <string name="pref_advanced_title">Advanced</string>
+    <string name="pref_dark_mode">Dark Mode</string>
     <string name="pref_debug_title">Debug</string>
     <string name="pref_debug">Debug</string>
     <string name="pref_java_debug">Use Java logger</string>

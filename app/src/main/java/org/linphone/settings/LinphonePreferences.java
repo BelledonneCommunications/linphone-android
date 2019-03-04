@@ -1431,6 +1431,17 @@ public class LinphonePreferences {
         getConfig().setBool("app", "android_power_saver_dialog", b);
     }
 
+    public boolean isDarkModeEnabled() {
+        return /*AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+               && */ getConfig().getBool("app", "dark_mode", false);
+    }
+
+    public void enableDarkMode(boolean enable) {
+        /*AppCompatDelegate.setDefaultNightMode(
+        enable ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);*/
+        getConfig().setBool("app", "dark_mode", enable);
+    }
+
     public static class AccountBuilder {
         private final Core lc;
         private String tempUsername;

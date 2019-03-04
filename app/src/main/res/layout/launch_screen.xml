@@ -17,7 +17,7 @@
             android:src="@drawable/splashscreen" />
 
         <TextView
-            style="@style/font21"
+            style="@style/splash_screen_app_name_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -26,12 +26,11 @@
             android:visibility="gone" />
 
         <TextView
+            style="@style/splash_screen_subtitle_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/app_description"
-            android:textColor="@color/colorA"
-            android:textSize="28sp" />
+            android:text="@string/app_description" />
 
     </LinearLayout>
 
@@ -39,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
+        android:indeterminateTint="@color/colorA"
         android:layout_marginBottom="20dp" />
 
     <View

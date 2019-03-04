@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorH"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical">
 
     <LinearLayout
@@ -63,7 +63,6 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@color/colorH"
         android:orientation="vertical"
         android:padding="10dp">
 

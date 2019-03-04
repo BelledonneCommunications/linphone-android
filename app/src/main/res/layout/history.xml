@@ -2,19 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorH">
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorH"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorF"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -36,7 +35,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/colorA" />
+                    android:background="?attr/accentColor" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -59,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/colorA"
+                    android:background="?attr/accentColor"
                     android:visibility="gone" />
             </RelativeLayout>
 
@@ -87,14 +87,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cacheColorHint="@color/transparent"
-            android:divider="@color/colorE"
+            android:divider="?attr/dividerColor"
             android:dividerHeight="1dp" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/no_call_history"
-        style="@style/font6"
+        style="@style/empty_list_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -103,7 +103,7 @@
 
     <TextView
         android:id="@+id/no_missed_call_history"
-        style="@style/font6"
+        style="@style/empty_list_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

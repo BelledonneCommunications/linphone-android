@@ -29,10 +29,10 @@
             android:id="@+id/event_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorH"
+            android:background="?attr/backgroundColor"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textAppearance="@style/font_group_chat_event" />
+            android:textAppearance="@style/group_chat_event_font" />
 
     </LinearLayout>
 

@@ -55,7 +55,7 @@
 
                         <TextView
                             android:id="@+id/current_contact_name"
-                            style="@style/font5"
+                            style="@style/big_contact_name_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -189,7 +189,7 @@
                     android:background="@drawable/round_orange_button_background"
                     android:contentDescription="@string/content_description_record_call"
                     android:padding="8dp"
-                    android:src="@drawable/recording"
+                    android:src="@drawable/options_rec"
                     android:visibility="gone" />
 
             </RelativeLayout>
@@ -248,7 +248,7 @@
 
                         <TextView
                             android:id="@+id/missed_chats"
-                            style="@style/font18"
+                            style="@style/unread_count_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="15dp"
@@ -388,7 +388,7 @@
                             android:background="@drawable/button_background"
                             android:contentDescription="@string/content_description_record_call"
                             android:padding="15dp"
-                            android:src="@drawable/options_rec_default"
+                            android:src="@drawable/options_rec"
                             android:visibility="gone" />
 
                         <ImageView

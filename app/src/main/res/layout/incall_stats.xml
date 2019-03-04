@@ -11,13 +11,11 @@
 
         <TextView
             android:id="@+id/call_stats_audio"
+            style="@style/call_stats_title_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center"
             android:text="@string/call_stats_audio"
-            android:textColor="@color/colorB"
-            android:textSize="18sp"
-            android:textStyle="bold"
             tools:gravity="center" />
 
         <TableLayout
@@ -31,119 +29,107 @@
 
             <TextView
                 android:id="@+id/codec_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_codec"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_codec" />
 
             <TextView
                 android:id="@+id/encoder_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_encoder_name"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_encoder_name" />
 
 
             <TextView
                 android:id="@+id/decoder_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_decoder_name"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_decoder_name" />
 
 
             <TextView
                 android:id="@+id/uploadBandwith_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_upload"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_upload" />
 
             <TextView
                 android:id="@+id/downloadBandwith_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_download"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_download" />
 
 
             <TextView
                 android:id="@+id/ice_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_ice"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_ice" />
 
             <TextView
                 android:id="@+id/ip_audio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_ip"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_ip" />
 
             <TextView
                 android:id="@+id/senderLossRateAudio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_sender_loss_rate"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_sender_loss_rate" />
 
 
             <TextView
                 android:id="@+id/receiverLossRateAudio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_receiver_loss_rate"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_receiver_loss_rate" />
 
             <TextView
                 android:id="@+id/jitterBufferAudio"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_jitter_buffer"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_jitter_buffer" />
 
         </TableLayout>
 
         <TextView
             android:id="@+id/call_stats_video"
+            style="@style/call_stats_title_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center"
             android:text="@string/call_stats_video"
-            android:textColor="@color/colorB"
-            android:textSize="18sp"
-            android:textStyle="bold"
             tools:gravity="center" />
 
         <TableLayout
@@ -158,156 +144,141 @@
 
             <TextView
                 android:id="@+id/codec_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_codec"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_codec" />
 
 
             <TextView
                 android:id="@+id/encoder_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_encoder_name"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_encoder_name" />
 
             <TextView
                 android:id="@+id/decoder_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_decoder_name"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_decoder_name" />
 
             <TextView
                 android:id="@+id/display_filter"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_decoder_name"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_decoder_name" />
 
             <TextView
                 android:id="@+id/uploadBandwith_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_upload"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_upload" />
 
 
             <TextView
                 android:id="@+id/downloadBandwith_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_download"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_download" />
 
             <TextView
                 android:id="@+id/estimatedDownloadBandwidth_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_estimated_download"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_estimated_download" />
 
             <TextView
                 android:id="@+id/ice_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_ice"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_ice" />
 
             <TextView
                 android:id="@+id/ip_video"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_ip"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_ip" />
 
             <TextView
                 android:id="@+id/senderLossRateVideo"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_sender_loss_rate"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_sender_loss_rate" />
 
 
             <TextView
                 android:id="@+id/receiverLossRateVideo"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_receiver_loss_rate"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_receiver_loss_rate" />
 
             <TextView
                 android:id="@+id/video_resolution_sent"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_video_resolution_sent"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_video_resolution_sent" />
 
             <TextView
                 android:id="@+id/video_resolution_received"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_video_resolution_received"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_video_resolution_received" />
 
             <TextView
                 android:id="@+id/video_fps_sent"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_video_fps_sent"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_video_fps_sent" />
 
             <TextView
                 android:id="@+id/video_fps_received"
+                style="@style/call_stats_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="5dp"
-                android:text="@string/call_stats_video_fps_received"
-                android:textColor="@color/colorB"
-                android:textSize="12sp" />
+                android:text="@string/call_stats_video_fps_received" />
 
         </TableLayout>
     </LinearLayout>

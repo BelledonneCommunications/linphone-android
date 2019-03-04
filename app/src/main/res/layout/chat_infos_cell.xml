@@ -3,7 +3,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorH"
+    android:background="?attr/backgroundColor"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/chat_room_infos_admin"
-                    android:textColor="@color/colorB"
+                    android:textColor="?attr/primaryTextColor"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -86,9 +86,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/chat_room_infos_admin"
-                    android:textColor="@color/colorF" />
+                    android:textColor="?attr/primarySubtextLightColor" />
 
             </LinearLayout>
+
         </LinearLayout>
 
         <RelativeLayout
@@ -101,7 +102,7 @@
 
             <TextView
                 android:id="@+id/name"
-                style="@style/font6"
+                style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

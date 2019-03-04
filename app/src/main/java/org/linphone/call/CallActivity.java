@@ -684,8 +684,7 @@ public class CallActivity extends LinphoneGenericActivity
                 !LinphoneManager.getLc().soundResourcesLocked()
                         && currentCall != null
                         && currentCall.getCurrentParams().getRecordFile() != null);
-        mRecordCall.setImageResource(
-                mIsRecording ? R.drawable.options_rec_selected : R.drawable.options_rec_default);
+        mRecordCall.setSelected(mIsRecording);
 
         mRecording.setEnabled(mIsRecording);
         mRecording.setVisibility(mIsRecording ? View.VISIBLE : View.GONE);
@@ -823,8 +822,7 @@ public class CallActivity extends LinphoneGenericActivity
         if (enable && !mIsRecording) {
             call.startRecording();
             Log.d("start call mRecording");
-
-            mRecordCall.setImageResource(R.drawable.options_rec_selected);
+            mRecordCall.setSelected(true);
 
             mRecording.setVisibility(View.VISIBLE);
             mRecording.setEnabled(true);
@@ -833,8 +831,7 @@ public class CallActivity extends LinphoneGenericActivity
         } else if (!enable && mIsRecording) {
             call.stopRecording();
             Log.d("stop call mRecording");
-
-            mRecordCall.setImageResource(R.drawable.options_rec_default);
+            mRecordCall.setSelected(false);
 
             mRecording.setVisibility(View.GONE);
             mRecording.setEnabled(false);

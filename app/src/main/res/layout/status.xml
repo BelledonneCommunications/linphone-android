@@ -3,7 +3,7 @@
     android:id="@+id/status"
     android:layout_width="match_parent"
     android:layout_height="40dp"
-    android:background="@color/colorA"
+    android:background="?attr/accentColor"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/status_text"
-            style="@style/font16"
+            style="@style/status_bar_font"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -64,7 +64,7 @@
 
         <TextView
             android:id="@+id/voicemail_count"
-            style="@style/font16"
+            style="@style/status_bar_font"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -84,5 +84,7 @@
             android:padding="5dp"
             android:src="@drawable/security_ko"
             android:visibility="gone" />
+
     </RelativeLayout>
+
 </RelativeLayout>

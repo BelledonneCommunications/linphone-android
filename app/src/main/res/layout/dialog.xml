@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/dialog_message"
-        style="@style/font14"
+        style="@style/dialog_message_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
@@ -116,11 +116,11 @@
             android:id="@+id/doNotAskAgain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:button="@drawable/checkbox" />
+            android:buttonTint="?attr/accentColor" />
 
         <TextView
             android:id="@+id/doNotAskAgainLabel"
-            style="@style/font14"
+            style="@style/dialog_message_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -143,6 +143,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
             android:ellipsize="end"
             android:padding="10dp"
             android:text="@string/cancel" />
@@ -154,6 +155,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
             android:backgroundTint="@color/colorI"
             android:ellipsize="end"
             android:padding="10dp"
@@ -166,6 +168,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
             android:backgroundTint="@color/colorL"
             android:ellipsize="end"
             android:padding="10dp"

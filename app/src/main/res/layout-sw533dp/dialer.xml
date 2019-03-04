@@ -17,7 +17,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
-        android:background="@color/colorH">
+        android:background="?attr/backgroundColor">
 
         <RelativeLayout
             android:id="@+id/address_bar"
@@ -25,7 +25,7 @@
             android:layout_height="60dp"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="10dp"
-            android:background="@color/colorF">
+            android:background="?attr/lighToolbarBackgroundColor">
 
             <org.linphone.views.EraseButton
                 android:id="@+id/erase"
@@ -40,12 +40,11 @@
 
             <org.linphone.views.AddressText
                 android:id="@+id/address"
-                style="@style/font5"
+                style="@style/numpad_composed_number_font"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/erase"
-                android:background="@color/colorF"
                 android:ellipsize="start"
                 android:hint="@string/address_bar_hint"
                 android:inputType="textEmailAddress"

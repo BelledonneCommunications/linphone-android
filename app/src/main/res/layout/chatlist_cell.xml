@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@drawable/list_selector"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:background="?attr/backgroundColor"
     android:gravity="center_vertical"
     android:paddingLeft="10dp"
     android:paddingTop="5dp"
@@ -53,7 +52,7 @@
 
             <TextView
                 android:id="@+id/sipUri"
-                style="@style/font6"
+                style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"
@@ -64,7 +63,7 @@
 
             <TextView
                 android:id="@+id/unreadMessages"
-                style="@style/font18"
+                style="@style/unread_count_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/lastMessageLayout"

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorH"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorF"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:orientation="horizontal">
 
             <ImageView
@@ -51,6 +51,7 @@
                 android:padding="15dp"
                 android:src="@drawable/contact"
                 android:visibility="gone" />
+
         </LinearLayout>
 
         <ScrollView
@@ -76,7 +77,7 @@
 
                 <TextView
                     android:id="@+id/contact_name"
-                    style="@style/font5"
+                    style="@style/big_contact_name_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal" />
@@ -122,7 +123,7 @@
                     <View
                         android:layout_width="wrap_content"
                         android:layout_height="1dp"
-                        android:background="@color/colorE" />
+                        android:background="?attr/dividerColor" />
 
                     <TextView
                         style="@style/font13"

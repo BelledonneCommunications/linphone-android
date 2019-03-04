@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorH">
+    android:background="?attr/backgroundColor">
 
     <RelativeLayout
         android:id="@+id/top"
@@ -13,7 +13,7 @@
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorF"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:orientation="horizontal">
 
             <ImageView
@@ -37,7 +37,7 @@
 
                 <TextView
                     android:id="@+id/subject"
-                    style="@style/font6"
+                    style="@style/toolbar_small_title_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -45,11 +45,11 @@
 
                 <TextView
                     android:id="@+id/participants"
+                    style="@style/toolbar_small_title_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/colorC" />
+                    android:maxLines="1" />
 
             </LinearLayout>
 
@@ -104,13 +104,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorF"
+        android:background="?attr/lighToolbarBackgroundColor"
         android:orientation="vertical">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorC"
+            android:background="?attr/darkToolbarBackgroundColor"
             android:orientation="horizontal">
 
             <LinearLayout

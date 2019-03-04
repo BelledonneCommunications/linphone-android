@@ -15,7 +15,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/colorE" />
+            android:background="?attr/dividerColor" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10dp"
                 android:textAllCaps="true"
-                android:textColor="@color/colorE" />
+                android:textColor="?attr/primarySubtextLightColor" />
 
             <ImageView
                 android:id="@+id/friendLinphone"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/numeroOrAddress"
-            style="@style/font6"
+            style="@style/contact_name_list_cell_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fadingEdge="horizontal"
@@ -116,6 +116,7 @@
             </RelativeLayout>
 
         </LinearLayout>
+
     </LinearLayout>
 
 </TableRow>

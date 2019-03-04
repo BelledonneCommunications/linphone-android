@@ -31,10 +31,11 @@ import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ThemableActivity;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
-public class RemoteProvisioningLoginActivity extends Activity implements OnClickListener {
+public class RemoteProvisioningLoginActivity extends ThemableActivity implements OnClickListener {
     private EditText mLogin, mPassword, mDomain;
     private Button mConnect;
     private CoreListenerStub mListener;

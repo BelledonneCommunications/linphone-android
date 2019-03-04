@@ -18,11 +18,12 @@
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
+        android:tint="?attr/backgroundColor"
         android:src="@drawable/avatar_mask" />
 
     <TextView
         android:id="@+id/generated_avatar"
-        style="@style/contact_avatar_letters_big"
+        style="@style/generated_contact_avatar_big_font"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"

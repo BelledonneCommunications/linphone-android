@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -133,7 +134,7 @@
 
                             <TextView
                                 android:id="@+id/sip_uri"
-                                style="@style/font9"
+                                style="@style/contact_organization_font"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:visibility="visible" />
@@ -328,6 +329,8 @@
                     android:layout_height="wrap_content"
                     android:layout_column="1"
                     android:checked="false"
+                    android:button="@drawable/checkbox"
+                    android:textColor="?attr/primaryTextColor"
                     android:text="@string/use_username_instead_or_phone_number"
                     android:visibility="visible" />
             </TableRow>
@@ -344,10 +347,13 @@
                     android:layout_height="wrap_content"
                     android:layout_column="1"
                     android:checked="false"
+                    android:button="@drawable/checkbox"
+                    android:textColor="?attr/primaryTextColor"
                     android:text="@string/use_email_for_validation"
                     android:visibility="visible" />
 
             </TableRow>
+
         </TableLayout>
 
         <Button
@@ -377,4 +383,5 @@
             android:visibility="gone" />
 
     </LinearLayout>
+
 </ScrollView>

@@ -3,6 +3,6 @@
     <item android:state_enabled="true" 
         android:drawable="@drawable/valid_default" />
     <item android:state_enabled="false"
-         android:drawable="@drawable/valid_disabled" />
+        android:drawable="@drawable/valid_disabled" />
 </selector>
 

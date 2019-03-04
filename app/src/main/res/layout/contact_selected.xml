@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/sipUri"
-        style="@style/font6"
+        style="@style/contact_name_list_cell_font"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"

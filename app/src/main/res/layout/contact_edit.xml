@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorH"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/colorF"
+        android:background="?attr/lighToolbarBackgroundColor"
         android:orientation="horizontal">
 
         <ImageView
@@ -94,9 +94,8 @@
 
                 </RelativeLayout>
 
-
                 <TextView
-                    style="@style/font13"
+                    style="@style/contact_edit_form_label_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -105,7 +104,7 @@
 
                 <EditText
                     android:id="@+id/contactLastName"
-                    style="@style/font6"
+                    style="@style/contact_edit_form_font"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/resizable_textfield"
@@ -116,7 +115,7 @@
                     android:textCursorDrawable="@null" />
 
                 <TextView
-                    style="@style/font13"
+                    style="@style/contact_edit_form_label_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -125,7 +124,7 @@
 
                 <EditText
                     android:id="@+id/contactFirstName"
-                    style="@style/font6"
+                    style="@style/contact_edit_form_font"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/resizable_textfield"
@@ -137,7 +136,7 @@
 
                 <TextView
                     android:id="@+id/contactOrganizationTitle"
-                    style="@style/font13"
+                    style="@style/contact_edit_form_label_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
@@ -146,7 +145,7 @@
 
                 <EditText
                     android:id="@+id/contactOrganization"
-                    style="@style/font6"
+                    style="@style/contact_edit_form_font"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/resizable_textfield"
@@ -171,7 +170,7 @@
                     android:layout_gravity="center">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/contact_edit_form_label_font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -212,7 +211,7 @@
                     android:layout_gravity="center">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/contact_edit_form_label_font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"

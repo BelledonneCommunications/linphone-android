@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorH"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorF"
+            android:background="?attr/lighToolbarBackgroundColor"
             android:orientation="horizontal">
 
             <ImageView
@@ -75,7 +75,7 @@
 
                 <TextView
                     android:id="@+id/contact_name"
-                    style="@style/font5"
+                    style="@style/big_contact_name_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -83,7 +83,7 @@
 
                 <TextView
                     android:id="@+id/contactOrganization"
-                    style="@style/font9"
+                    style="@style/contact_organization_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

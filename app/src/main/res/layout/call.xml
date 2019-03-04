@@ -51,12 +51,12 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:alpha="0.8"
-                        android:background="@color/colorH"
+                        android:background="?attr/backgroundColor"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/current_contact_name"
-                            style="@style/font5"
+                            style="@style/big_contact_name_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
-                    android:background="@color/colorH"
+                    android:background="?attr/backgroundColor"
                     android:orientation="vertical"/>
 
                 <LinearLayout
@@ -161,7 +161,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@id/calls_list"
-                    android:background="@color/colorC"
+                    android:background="?attr/backgroundColor"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -190,7 +190,7 @@
                     android:background="@drawable/round_orange_button_background"
                     android:contentDescription="@string/content_description_record_call"
                     android:padding="10dp"
-                    android:src="@drawable/recording"
+                    android:src="@drawable/options_rec"
                     android:visibility="gone" />
 
             </RelativeLayout>
@@ -329,7 +329,7 @@
                             android:background="@drawable/button_background"
                             android:contentDescription="@string/content_description_record_call"
                             android:padding="15dp"
-                            android:src="@drawable/options_rec_default"
+                            android:src="@drawable/options_rec"
                             android:visibility="gone" />
 
                         <ImageView
@@ -415,7 +415,7 @@
 
                         <TextView
                             android:id="@+id/missed_chats"
-                            style="@style/font18"
+                            style="@style/unread_count_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="15dp"
@@ -455,7 +455,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:layout_marginTop="40dp"
-            android:background="@color/colorH">
+            android:background="?attr/backgroundColor">
 
             <include
                 android:id="@+id/incall_stats"

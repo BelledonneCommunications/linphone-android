@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@color/colorH"
+    android:background="?attr/backgroundColor"
     android:gravity="center_vertical">
 
     <LinearLayout
@@ -44,6 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorE" />
+        android:background="?attr/dividerColor" />
 
 </RelativeLayout>

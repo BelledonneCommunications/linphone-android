@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,6 +42,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
                 android:contentDescription="@string/assistant_create_account"
                 android:text="@string/assistant_create_account" />
 
@@ -52,6 +54,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
                 android:contentDescription="@string/assistant_login_linphone"
                 android:text="@string/assistant_login_linphone" />
 
@@ -62,6 +65,7 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
                 android:contentDescription="@string/assistant_login_generic"
                 android:text="@string/assistant_login_generic" />
 
@@ -72,9 +76,12 @@
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/assistant_button"
+                android:textColor="@drawable/assistant_button_text_color"
                 android:contentDescription="@string/assistant_remote_provisioning"
                 android:text="@string/assistant_remote_provisioning" />
 
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>

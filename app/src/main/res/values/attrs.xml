@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LinphoneAppTheme">
+        <attr name="accentColor" format="color"/>
+        <attr name="accentTextColor" format="color"/>
+        <attr name="primaryTextColor" format="color"/>
+        <attr name="secondaryTextColor" format="color"/>
+        <attr name="primarySubtextDarkColor" format="color"/>
+        <attr name="primarySubtextLightColor" format="color"/>
+        <attr name="backgroundColor" format="color"/>
+        <attr name="dividerColor" format="color"/>
+        <attr name="drawableTintColor" format="color"/>
+        <attr name="drawableTintDisabledColor" format="color"/>
+        <attr name="drawableTintOverColor" format="color"/>
+        <attr name="drawableDarkModeTintColor" format="color"/>
+        <attr name="lighToolbarBackgroundColor" format="color"/>
+        <attr name="lighToolbarBackgroundDisabledColor" format="color"/>
+        <attr name="lighToolbarTextColor" format="color"/>
+        <attr name="darkToolbarBackgroundColor" format="color"/>
+        <attr name="darkToolbarTextColor" format="color"/>
+    </declare-styleable>
+</resources>

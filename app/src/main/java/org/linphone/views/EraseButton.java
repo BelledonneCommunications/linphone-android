@@ -36,6 +36,7 @@ public class EraseButton extends ImageView
 
     public EraseButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setEnabled(false);
         setOnClickListener(this);
         setOnLongClickListener(this);
     }
@@ -50,6 +51,7 @@ public class EraseButton extends ImageView
                 mAddress.getEditableText().delete(lBegin - 1, lBegin);
             }
         }
+        setEnabled(mAddress.getText().length() > 0);
     }
 
     public boolean onLongClick(View v) {

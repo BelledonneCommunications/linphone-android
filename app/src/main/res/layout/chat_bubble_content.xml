@@ -37,6 +37,7 @@
         android:layout_width="137dp"
         android:layout_height="40dp"
         android:layout_margin="5dp"
+        android:textColor="@drawable/assistant_button_text_color"
         android:background="@drawable/resizable_assistant_button"
         android:ellipsize="end"
         android:padding="10dp"

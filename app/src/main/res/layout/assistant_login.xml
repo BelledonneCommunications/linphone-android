@@ -142,6 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:textColor="?attr/primaryTextColor"
                     android:text="@string/pref_transport_udp" />
 
                 <RadioButton
@@ -149,6 +150,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:textColor="?attr/primaryTextColor"
                     android:text="@string/pref_transport_tcp" />
 
                 <RadioButton
@@ -156,6 +158,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:textColor="?attr/primaryTextColor"
                     android:checked="true"
                     android:text="@string/pref_transport_tls" />
             </RadioGroup>
@@ -173,5 +176,7 @@
                 android:textColor="@drawable/assistant_button_text_color" />
 
         </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>

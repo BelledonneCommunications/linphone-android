@@ -3,7 +3,7 @@
     android:id="@+id/default_account"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:background="@color/colorF"
+    android:background="?attr/lighToolbarBackgroundColor"
     android:contentDescription="@string/content_description_default_account">
 
     <ImageView
@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/main_account_display_name"
-            style="@style/font7"
+            style="@style/main_account_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

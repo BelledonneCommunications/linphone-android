@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="?attr/backgroundColor"
     android:padding="30dp">
 
     <TextView
@@ -212,6 +213,8 @@
                 android:id="@+id/use_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:button="@drawable/checkbox"
+                android:textColor="?attr/primaryTextColor"
                 android:text="@string/login_with_username"
                 android:visibility="visible" />
         </TableRow>

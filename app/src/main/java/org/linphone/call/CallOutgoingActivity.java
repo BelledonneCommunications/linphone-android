@@ -216,20 +216,12 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
         if (id == R.id.micro) {
             mIsMicMuted = !mIsMicMuted;
-            if (mIsMicMuted) {
-                mMicro.setImageResource(R.drawable.micro_selected);
-            } else {
-                mMicro.setImageResource(R.drawable.micro_default);
-            }
+            mMicro.setSelected(mIsMicMuted);
             LinphoneManager.getLc().enableMic(!mIsMicMuted);
         }
         if (id == R.id.speaker) {
             mIsSpeakerEnabled = !mIsSpeakerEnabled;
-            if (mIsSpeakerEnabled) {
-                mSpeaker.setImageResource(R.drawable.route_speaker_selected);
-            } else {
-                mSpeaker.setImageResource(R.drawable.route_speaker_default);
-            }
+            mSpeaker.setSelected(mIsSpeakerEnabled);
             LinphoneManager.getInstance().enableSpeaker(mIsSpeakerEnabled);
         }
         if (id == R.id.outgoing_hang_up) {

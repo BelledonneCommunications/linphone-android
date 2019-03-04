@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:background="?attr/backgroundColor">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -190,6 +191,8 @@
 				android:layout_marginTop="20dp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:button="@drawable/checkbox"
+				android:textColor="?attr/primaryTextColor"
 				android:text="@string/login_with_username"/>
 
 			<Button

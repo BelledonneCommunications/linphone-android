@@ -4,7 +4,7 @@
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorH">
+    android:background="?attr/backgroundColor">
 
     <fragment
         android:id="@+id/status"
@@ -18,10 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_below="@id/status"
-        android:background="@color/colorF">
+        android:background="?attr/lighToolbarBackgroundColor">
 
         <TextView
-            style="@style/font1"
+            style="@style/toolbar_title_font"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/contact_name"
-            style="@style/font5"
+            style="@style/big_contact_name_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"

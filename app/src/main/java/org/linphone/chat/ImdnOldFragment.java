@@ -151,11 +151,12 @@ public class ImdnOldFragment extends Fragment {
             ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_chat_mask_outgoing);
         } else {
             mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
-            Compatibility.setTextAppearance(mBubble.contactName, getActivity(), R.style.font9);
+            Compatibility.setTextAppearance(
+                    mBubble.contactName, getActivity(), R.style.contact_organization_font);
             Compatibility.setTextAppearance(
                     mBubble.fileTransferAction, getActivity(), R.style.font8);
             mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
-            ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_chat_mask);
+            ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_mask);
         }
 
         return view;

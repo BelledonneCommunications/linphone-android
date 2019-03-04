@@ -3,7 +3,7 @@
     android:id="@+id/edit_list"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@color/colorF"
+    android:background="?attr/lighToolbarBackgroundColor"
     android:orientation="horizontal"
     android:visibility="gone">
 
@@ -52,6 +52,5 @@
         android:contentDescription="@string/content_description_delete_selection"
         android:padding="15dp"
         android:src="@drawable/delete" />
-
 
 </LinearLayout>

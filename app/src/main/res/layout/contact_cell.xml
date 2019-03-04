@@ -3,7 +3,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorH"
+    android:background="?attr/backgroundColor"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorE" />
+            android:background="?attr/dividerColor" />
 
     </LinearLayout>
 
@@ -90,7 +90,7 @@
 
             <TextView
                 android:id="@+id/name"
-                style="@style/font6"
+                style="@style/contact_name_list_cell_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -100,7 +100,7 @@
 
             <TextView
                 android:id="@+id/contactOrganization"
-                style="@style/font9"
+                style="@style/contact_organization_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

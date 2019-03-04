@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:alpha="0.5"
-    android:background="@color/colorA"
+    android:background="?attr/accentColor"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="5dp">
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/contact_name"
-        style="@style/font14"
+        style="@style/call_contact_name_paused_font"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"

@@ -25,7 +25,7 @@
                 android:id="@+id/top_bar"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@color/colorF"
+                android:background="?attr/lighToolbarBackgroundColor"
                 android:orientation="horizontal"
                 android:visibility="gone">
 
@@ -41,7 +41,7 @@
 
                 <TextView
                     android:id="@+id/top_bar_title"
-                    style="@style/font1"
+                    style="@style/toolbar_title_font"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
@@ -104,12 +104,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/colorA"
+                        android:background="?attr/accentColor"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/missed_calls"
-                        style="@style/font18"
+                        style="@style/unread_count_font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="15dp"
@@ -139,7 +139,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/colorA"
+                        android:background="?attr/accentColor"
                         android:visibility="gone" />
                 </RelativeLayout>
 
@@ -163,7 +163,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/colorA" />
+                        android:background="?attr/accentColor" />
 
                 </RelativeLayout>
 
@@ -187,12 +187,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/colorA"
+                        android:background="?attr/accentColor"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/missed_chats"
-                        style="@style/font18"
+                        style="@style/unread_count_font"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="15dp"
@@ -227,7 +227,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/colorA"
+                android:background="?attr/accentColor"
                 android:gravity="bottom">
 
                 <ImageView
@@ -241,7 +241,7 @@
 
                 <TextView
                     android:id="@+id/quit"
-                    style="@style/font14"
+                    style="@style/quit_button_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -254,7 +254,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/side_menu_quit"
-                android:background="@color/colorH"
+                android:background="?attr/backgroundColor"
                 android:orientation="vertical">
 
                 <include layout="@layout/side_menu_main_account" />
@@ -263,7 +263,6 @@
                     android:id="@+id/accounts_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorH"
                     android:cacheColorHint="@color/transparent"
                     android:choiceMode="singleChoice"
                     android:divider="@android:color/transparent"
@@ -273,17 +272,10 @@
                     android:id="@+id/item_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorH"
                     android:choiceMode="singleChoice"
-                    android:divider="@color/colorE"
+                    android:divider="?dividerColor"
                     android:dividerHeight="1dp"
-                    android:footerDividersEnabled="true"
-                    android:listSelector="@color/colorH" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorE" />
+                    android:footerDividersEnabled="true" />
 
             </LinearLayout>
 

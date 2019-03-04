@@ -5,6 +5,8 @@
 
     <string name="dummy_group_chat_subject">dummy subject</string>
 
+    <string name="pref_dark_mode_key">pref_dark_mode_key</string>
+
     <item name="contact_search_name" type="id" />
     <string name="pref_disable_account_key">pref_disable_account_key</string>
     <string name="pref_extra_accounts">pref_nb_accounts_extra</string>

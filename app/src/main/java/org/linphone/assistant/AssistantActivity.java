@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -80,8 +79,9 @@ import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.LinphonePreferences.AccountBuilder;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.ThemableActivity;
 
-public class AssistantActivity extends Activity
+public class AssistantActivity extends ThemableActivity
         implements OnClickListener,
                 ActivityCompat.OnRequestPermissionsResultCallback,
                 AccountCreatorListener {
@@ -673,7 +673,7 @@ public class AssistantActivity extends Activity
                             WindowManager.LayoutParams.MATCH_PARENT,
                             WindowManager.LayoutParams.MATCH_PARENT);
             mProgress.getWindow().setBackgroundDrawable(d);
-            mProgress.setContentView(R.layout.progress_dialog);
+            mProgress.setContentView(R.layout.wait_layout);
             mProgress.show();
         }
     }
@@ -690,7 +690,7 @@ public class AssistantActivity extends Activity
                         WindowManager.LayoutParams.MATCH_PARENT,
                         WindowManager.LayoutParams.MATCH_PARENT);
         mProgress.getWindow().setBackgroundDrawable(d);
-        mProgress.setContentView(R.layout.progress_dialog);
+        mProgress.setContentView(R.layout.wait_layout);
         mProgress.show();
     }
 

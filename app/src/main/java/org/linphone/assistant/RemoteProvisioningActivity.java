@@ -18,7 +18,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,8 +38,9 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ThemableActivity;
 
-public class RemoteProvisioningActivity extends Activity {
+public class RemoteProvisioningActivity extends ThemableActivity {
     private final Handler mHandler = new Handler();
     private String mConfigUriParam = null;
     private ProgressBar mSpinner;

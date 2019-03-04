@@ -120,7 +120,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
                         WindowManager.LayoutParams.MATCH_PARENT,
                         WindowManager.LayoutParams.MATCH_PARENT);
         mProgress.getWindow().setBackgroundDrawable(d);
-        mProgress.setContentView(R.layout.progress_dialog);
+        mProgress.setContentView(R.layout.wait_layout);
         mProgress.show();
     }
 
