@@ -1763,7 +1763,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
             status.setVisibility(View.GONE);
             address.setText("");
             mStatusFragment.resetAccountStatus();
-            LinphoneManager.getInstance().subscribeFriendList(false);
 
             mDefaultAccount.setOnClickListener(null);
         } else {

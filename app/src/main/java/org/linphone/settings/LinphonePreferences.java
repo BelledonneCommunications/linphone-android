@@ -514,11 +514,10 @@ public class LinphonePreferences {
     }
 
     public boolean isFriendlistsubscriptionEnabled() {
-        boolean previousConfig =
-                getConfig().getBool("app", "friendlist_subscription_enabled", false);
-        if (previousConfig) {
-            enabledFriendlistSubscription(previousConfig);
+        if (getConfig().getBool("app", "friendlist_subscription_enabled", false)) {
+            // Old setting, do migration
             getConfig().setBool("app", "friendlist_subscription_enabled", false);
+            enabledFriendlistSubscription(true);
         }
         return getLc().isFriendListSubscriptionEnabled();
     }

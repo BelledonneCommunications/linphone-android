@@ -488,13 +488,6 @@ public class AssistantActivity extends Activity
         if (LinphonePreferences.instance() != null)
             LinphonePreferences.instance().setPushNotificationEnabled(true);
 
-        if (LinphonePreferences.instance() != null)
-            mPrefs.enabledFriendlistSubscription(
-                    getResources().getBoolean(R.bool.use_friendlist_subscription));
-
-        LinphoneManager.getInstance()
-                .subscribeFriendList(getResources().getBoolean(R.bool.use_friendlist_subscription));
-
         if (!mNewAccount) {
             displayRegistrationInProgressDialog();
         }

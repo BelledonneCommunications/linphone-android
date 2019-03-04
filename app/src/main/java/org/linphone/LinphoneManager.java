@@ -484,9 +484,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void subscribeFriendList(boolean enabled) {
         Core lc = getLcIfManagerNotDestroyedOrNull();
         if (lc != null && lc.getFriendsLists() != null && lc.getFriendsLists().length > 0) {
-            FriendList mFriendList = (lc.getFriendsLists())[0];
+            FriendList friendList = (lc.getFriendsLists())[0];
             Log.i("[Manager] Presence list subscription is " + (enabled ? "enabled" : "disabled"));
-            mFriendList.enableSubscriptions(enabled);
+            friendList.enableSubscriptions(enabled);
         }
     }
 
@@ -1102,9 +1102,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             final RegistrationState state,
             final String message) {
         Log.i("[Manager] New registration state [" + state + "]");
-        if (LinphoneManager.getLc().getDefaultProxyConfig() == null) {
-            subscribeFriendList(false);
-        }
     }
 
     public Context getContext() {

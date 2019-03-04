@@ -84,7 +84,6 @@
     <bool name="disable_all_security_features_for_markets">false
     </bool> <!-- Disable TLS/SRTP/ZRTP -->
     <bool name="disable_all_patented_codecs_for_markets">false</bool> <!-- Disable MPEG4/H264 -->
-    <bool name="use_friendlist_subscription">true</bool>
     <string name="default_stun">stun.linphone.org</string>
     <bool name="hide_accounts">false</bool>
 
