@@ -158,7 +158,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                     }
                 };
 
-        super.onCreate(savedInstanceState);
         sInstance = this;
     }
 
