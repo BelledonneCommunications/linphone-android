@@ -138,24 +138,22 @@
 
         <Button
             android:id="@+id/dialog_cancel_button"
-            style="@style/font8"
+            style="@style/dialog_cancel_button_font"
             android:layout_width="137dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
-            android:textColor="@drawable/assistant_button_text_color"
             android:ellipsize="end"
             android:padding="10dp"
             android:text="@string/cancel" />
 
         <Button
             android:id="@+id/dialog_delete_button"
-            style="@style/font15"
+            style="@style/dialog_action_button_font"
             android:layout_width="137dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
-            android:textColor="@drawable/assistant_button_text_color"
             android:backgroundTint="@color/colorI"
             android:ellipsize="end"
             android:padding="10dp"
@@ -163,12 +161,11 @@
 
         <Button
             android:id="@+id/dialog_ok_button"
-            style="@style/font15"
+            style="@style/dialog_action_button_font"
             android:layout_width="137dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
-            android:textColor="@drawable/assistant_button_text_color"
             android:backgroundTint="@color/colorL"
             android:ellipsize="end"
             android:padding="10dp"

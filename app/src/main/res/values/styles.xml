@@ -330,8 +330,20 @@
     </style>
 
     <style name="dialog_message_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/subtitleTextColor</item>
+        <item name="android:textColor">@color/colorH</item>
         <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="dialog_cancel_button_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorC</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="dialog_action_button_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="dialog_zrtp_colored_font" parent="@android:style/TextAppearance.Medium">
