@@ -382,6 +382,7 @@
             <CheckBoxPreference
                 android:key="@string/pref_dark_mode_key"
                 android:persistent="false"
+                android:layout="@layout/hidden"
                 android:title="@string/pref_dark_mode" />
 
             <PreferenceCategory android:title="@string/pref_debug_title">

@@ -1689,8 +1689,8 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     private void initAdvancedSettings() {
-        ((CheckBoxPreference) findPreference(getString(R.string.pref_dark_mode_key)))
-                .setChecked(mPrefs.isDarkModeEnabled());
+        /*((CheckBoxPreference) findPreference(getString(R.string.pref_dark_mode_key)))
+        .setChecked(mPrefs.isDarkModeEnabled());*/
         ((CheckBoxPreference) findPreference(getString(R.string.pref_friendlist_subscribe_key)))
                 .setChecked(mPrefs.isFriendlistsubscriptionEnabled());
         ((CheckBoxPreference) findPreference(getString(R.string.pref_debug_key)))
@@ -1712,23 +1712,23 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     private void setAdvancedPreferencesListener() {
-        findPreference(getString(R.string.pref_dark_mode_key))
-                .setOnPreferenceChangeListener(
-                        new OnPreferenceChangeListener() {
-                            @Override
-                            public boolean onPreferenceChange(
-                                    Preference preference, Object newValue) {
-                                boolean value = (Boolean) newValue;
-                                mPrefs.enableDarkMode(value);
-                                if (value) {
-                                    LinphoneActivity.instance().setTheme(R.style.LinphoneStyleDark);
-                                } else {
-                                    LinphoneActivity.instance()
-                                            .setTheme(R.style.LinphoneStyleLight);
-                                }
-                                return true;
-                            }
-                        });
+        /*findPreference(getString(R.string.pref_dark_mode_key))
+        .setOnPreferenceChangeListener(
+                new OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(
+                            Preference preference, Object newValue) {
+                        boolean value = (Boolean) newValue;
+                        mPrefs.enableDarkMode(value);
+                        if (value) {
+                            LinphoneActivity.instance().setTheme(R.style.LinphoneStyleDark);
+                        } else {
+                            LinphoneActivity.instance()
+                                    .setTheme(R.style.LinphoneStyleLight);
+                        }
+                        return true;
+                    }
+                });*/
 
         findPreference(getString(R.string.pref_friendlist_subscribe_key))
                 .setOnPreferenceChangeListener(
