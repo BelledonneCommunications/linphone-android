@@ -25,8 +25,7 @@
                 android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
-                android:src="@drawable/back"
-                android:tint="?attr/drawableDarkModeTintColor" />
+                android:src="@drawable/back" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -120,7 +119,7 @@
                 android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_valid"
                 android:padding="18dp"
-                android:src="@drawable/chat_room_creation_next"
+                android:src="@drawable/valid"
                 android:visibility="gone" />
 
         </LinearLayout>

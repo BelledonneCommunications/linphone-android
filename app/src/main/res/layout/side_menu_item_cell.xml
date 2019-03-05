@@ -8,7 +8,6 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:padding="10dp"
-        android:tint="?attr/drawableDarkModeTintColor"
         android:src="@drawable/menu_about" />
 
     <TextView

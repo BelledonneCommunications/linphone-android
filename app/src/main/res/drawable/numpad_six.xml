@@ -6,6 +6,6 @@
     </item>
     <item>
         <bitmap android:src="@drawable/numpad_6"
-            android:tint="?attr/drawableDarkModeTintColor"/>
+            android:tint="?attr/drawableTintColor"/>
     </item>
 </selector>

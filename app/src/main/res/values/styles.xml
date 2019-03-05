@@ -23,7 +23,6 @@
         <item name="drawableTintColor">@color/colorC</item>
         <item name="drawableTintDisabledColor">@color/colorDisabled</item>
         <item name="drawableTintOverColor">@color/colorA</item>
-        <item name="drawableDarkModeTintColor">@color/colorC</item>
 
         <item name="lighToolbarBackgroundColor">@color/colorF</item>
         <item name="lighToolbarBackgroundDisabledColor">@color/colorE</item>
@@ -55,7 +54,6 @@
         <item name="drawableTintColor">@color/colorH</item>
         <item name="drawableTintDisabledColor">@color/colorE</item>
         <item name="drawableTintOverColor">@color/colorA</item>
-        <item name="drawableDarkModeTintColor">@color/colorH</item>
 
         <item name="lighToolbarBackgroundColor">@color/colorC</item>
         <item name="lighToolbarBackgroundDisabledColor">@color/colorE</item>

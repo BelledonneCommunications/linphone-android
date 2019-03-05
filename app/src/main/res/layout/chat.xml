@@ -24,8 +24,7 @@
                 android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
-                android:src="@drawable/back"
-                android:tint="?attr/drawableDarkModeTintColor" />
+                android:src="@drawable/back" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -63,7 +62,6 @@
                 android:contentDescription="@string/content_description_back_call"
                 android:padding="15dp"
                 android:src="@drawable/call_back"
-                android:tint="?attr/drawableDarkModeTintColor"
                 android:visibility="gone" />
 
             <ImageView
@@ -74,8 +72,7 @@
                 android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_call"
                 android:padding="15dp"
-                android:src="@drawable/call_alt_start"
-                android:tint="?attr/drawableDarkModeTintColor" />
+                android:src="@drawable/call_alt_start" />
 
             <ImageView
                 android:id="@+id/group_infos"
@@ -85,8 +82,7 @@
                 android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_conversation_infos"
                 android:padding="15dp"
-                android:src="@drawable/chat_room_group_infos"
-                android:tint="?attr/drawableDarkModeTintColor" />
+                android:src="@drawable/chat_room_group_infos" />
 
             <ImageView
                 android:id="@+id/edit"

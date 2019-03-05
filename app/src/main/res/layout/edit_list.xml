@@ -15,8 +15,7 @@
         android:background="?attr/button_background_drawable"
         android:contentDescription="@string/content_description_cancel_button"
         android:padding="15dp"
-        android:src="@drawable/cancel_edit"
-        android:tint="?attr/drawableDarkModeTintColor" />
+        android:src="@drawable/cancel_edit" />
 
     <View
         android:layout_width="0dp"
@@ -31,8 +30,7 @@
         android:background="?attr/button_background_drawable"
         android:contentDescription="@string/content_description_select_all"
         android:padding="15dp"
-        android:src="@drawable/select_all"
-        android:tint="?attr/drawableDarkModeTintColor" />
+        android:src="@drawable/select_all" />
 
     <ImageView
         android:id="@+id/deselect_all"
@@ -43,7 +41,6 @@
         android:contentDescription="@string/content_description_deselect_all"
         android:padding="15dp"
         android:src="@drawable/deselect_all"
-        android:tint="?attr/drawableDarkModeTintColor"
         android:visibility="gone" />
 
     <ImageView

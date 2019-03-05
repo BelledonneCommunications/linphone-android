@@ -19,8 +19,7 @@
             android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_cancel_button"
             android:padding="15dp"
-            android:src="@drawable/cancel_edit"
-            android:tint="?attr/drawableDarkModeTintColor" />
+            android:src="@drawable/cancel_edit" />
 
         <View
             android:layout_width="0dp"
@@ -45,8 +44,7 @@
             android:background="?attr/button_background_drawable"
             android:contentDescription="@string/content_description_valid"
             android:padding="18dp"
-            android:src="@drawable/valid"
-            android:tint="?attr/drawableDarkModeTintColor" />
+            android:src="@drawable/valid" />
 
     </LinearLayout>
 

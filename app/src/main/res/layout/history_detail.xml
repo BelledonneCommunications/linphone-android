@@ -24,8 +24,7 @@
                 android:background="?attr/button_background_drawable"
                 android:contentDescription="@string/content_description_back"
                 android:padding="18dp"
-                android:src="@drawable/back"
-                android:tint="?attr/drawableDarkModeTintColor" />
+                android:src="@drawable/back" />
 
             <View
                 android:layout_width="0dp"
@@ -51,7 +50,6 @@
                 android:contentDescription="@string/content_description_contacts"
                 android:padding="15dp"
                 android:src="@drawable/contact"
-                android:tint="?attr/drawableDarkModeTintColor"
                 android:visibility="gone" />
 
         </LinearLayout>

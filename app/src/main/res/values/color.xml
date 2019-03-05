@@ -22,7 +22,7 @@
     <color name="security_thumb">#ffffff</color>
     <color name="chat_bubble_incoming">#f3f3f3</color>
     <color name="chat_bubble_outgoing">#ffeee5</color>
-    <color name="colorDisabled">#464646</color>
+    <color name="colorDisabled">#808080</color>
 
     <color name="transparent">#00000000</color>
     <color name="linphone_launcher_icon_background">@color/colorA</color>
