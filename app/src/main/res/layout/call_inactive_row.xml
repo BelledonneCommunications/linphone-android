@@ -2,17 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:alpha="0.5"
-    android:background="?attr/accentColor"
+    android:background="?attr/accentColor50"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="5dp">
 
-    <ImageView
-        android:id="@+id/contact_picture"
+    <RelativeLayout
+        android:id="@+id/avatar_layout"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/avatar" />
+        android:gravity="center">
+
+        <include layout="@layout/contact_avatar_call_paused" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/contact_name"

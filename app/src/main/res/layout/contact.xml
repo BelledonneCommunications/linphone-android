@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center">
 
-                    <include layout="@layout/contact_avatar_big" />
+                    <include layout="@layout/contact_avatar_100" />
 
                 </RelativeLayout>
 

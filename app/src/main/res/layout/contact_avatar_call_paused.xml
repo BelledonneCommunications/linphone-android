@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/avatar_layout"
-    android:layout_width="100dp"
-    android:layout_height="100dp">
+    android:layout_width="45dp"
+    android:layout_height="35dp">
 
     <ImageView
         android:id="@+id/contact_picture"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
         android:src="@drawable/avatar" />
 
-    <ImageView
-        android:id="@+id/mask"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:adjustViewBounds="true"
-        android:tint="?attr/backgroundColor"
-        android:src="@drawable/avatar_mask" />
-
     <TextView
         android:id="@+id/generated_avatar"
-        style="@style/generated_contact_avatar_big_font"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        style="@style/generated_contact_avatar_font"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentLeft="true"
         android:background="@drawable/generated_avatar_bg"
         android:gravity="center"
         android:maxLines="1" />
+
+    <ImageView
+        android:id="@+id/mask"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/avatar_mask"
+        android:tint="?attr/accentColor50"/>
 
     <ImageView
         android:id="@+id/security_level"

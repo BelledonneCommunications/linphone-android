@@ -45,18 +45,18 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.CallIncomingAnswerButton;
 import org.linphone.views.CallIncomingButtonListener;
 import org.linphone.views.CallIncomingDeclineButton;
+import org.linphone.views.ContactAvatar;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
     private static CallIncomingActivity sInstance;
 
     private TextView mName, mNumber;
-    private ImageView mContactPicture, mAcceptIcon;
+    private ImageView mAcceptIcon;
     private CallIncomingAnswerButton mAccept;
     private CallIncomingDeclineButton mDecline;
     private Call mCall;
@@ -85,7 +85,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
 
         mName = findViewById(R.id.contact_name);
         mNumber = findViewById(R.id.contact_number);
-        mContactPicture = findViewById(R.id.contact_picture);
 
         // set this flag so this activity will stay in front of the keyguard
         int flags =
@@ -187,11 +186,14 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
-            ImageUtils.setImagePictureFromUri(
-                    this, mContactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ContactAvatar.displayAvatar(
+                    contact, findViewById(R.id.avatar_layout), R.drawable.avatar_mask_border);
             mName.setText(contact.getFullName());
         } else {
-            mName.setText(LinphoneUtils.getAddressDisplayName(address));
+            String displayName = LinphoneUtils.getAddressDisplayName(address);
+            ContactAvatar.displayAvatar(
+                    displayName, findViewById(R.id.avatar_layout), R.drawable.avatar_mask_border);
+            mName.setText(displayName);
         }
         mNumber.setText(address.asStringUriOnly());
     }

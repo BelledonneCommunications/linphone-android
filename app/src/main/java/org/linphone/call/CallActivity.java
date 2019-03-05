@@ -87,9 +87,9 @@ import org.linphone.fragments.StatusFragment;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.ContactAvatar;
 import org.linphone.views.Numpad;
 
 public class CallActivity extends LinphoneGenericActivity
@@ -119,7 +119,6 @@ public class CallActivity extends LinphoneGenericActivity
             mTransfer,
             mConference,
             mConferenceStatus,
-            mContactPicture,
             mRecordCall,
             mRecording;
     private ImageView mAudioRoute, mRouteSpeaker, mRouteEarpiece, mRouteBluetooth, mMenu, mChat;
@@ -425,7 +424,6 @@ public class CallActivity extends LinphoneGenericActivity
         mNoCurrentCall = findViewById(R.id.no_current_call);
         mCallPaused = findViewById(R.id.remote_pause);
 
-        mContactPicture = findViewById(R.id.contact_picture);
         mAvatarLayout = findViewById(R.id.avatar_layout);
 
         // Options
@@ -1423,7 +1421,7 @@ public class CallActivity extends LinphoneGenericActivity
     private void displayCurrentCall(Call call) {
         Address lAddress = call.getRemoteAddress();
         TextView contactName = findViewById(R.id.current_contact_name);
-        setContactInformation(contactName, mContactPicture, lAddress);
+        setContactInformation(contactName, lAddress);
         registerCallDurationTimer(null, call);
     }
 
@@ -1449,29 +1447,35 @@ public class CallActivity extends LinphoneGenericActivity
             callView.setId(index + 1);
 
             TextView contactName = callView.findViewById(R.id.contact_name);
-            ImageView contactImage = callView.findViewById(R.id.contact_picture);
 
             Address lAddress = call.getRemoteAddress();
-            setContactInformation(contactName, contactImage, lAddress);
+            LinphoneContact lContact =
+                    ContactsManager.getInstance().findContactFromAddress(lAddress);
+
+            if (lContact == null) {
+                String displayName = LinphoneUtils.getAddressDisplayName(lAddress);
+                contactName.setText(displayName);
+                ContactAvatar.displayAvatar(displayName, callView.findViewById(R.id.avatar_layout));
+            } else {
+                contactName.setText(lContact.getFullName());
+                ContactAvatar.displayAvatar(lContact, callView.findViewById(R.id.avatar_layout));
+            }
+
             displayCallStatusIconAndReturnCallPaused(callView, call);
             registerCallDurationTimer(callView, call);
         }
         mCallsList.addView(callView);
     }
 
-    private void setContactInformation(
-            TextView contactName, ImageView contactPicture, Address lAddress) {
+    private void setContactInformation(TextView contactName, Address lAddress) {
         LinphoneContact lContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
         if (lContact == null) {
-            contactName.setText(LinphoneUtils.getAddressDisplayName(lAddress));
-            ImageUtils.setDefaultContactImage(contactPicture);
+            String displayName = LinphoneUtils.getAddressDisplayName(lAddress);
+            contactName.setText(displayName);
+            ContactAvatar.displayAvatar(displayName, mAvatarLayout, R.drawable.avatar_mask_border);
         } else {
             contactName.setText(lContact.getFullName());
-            ImageUtils.setImagePictureFromUri(
-                    contactPicture.getContext(),
-                    contactPicture,
-                    lContact.getPhotoUri(),
-                    lContact.getThumbnailUri());
+            ContactAvatar.displayAvatar(lContact, mAvatarLayout, R.drawable.avatar_mask_border);
         }
     }
 

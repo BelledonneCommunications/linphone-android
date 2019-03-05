@@ -11,6 +11,7 @@
         <item name="android:textColorPrimaryInverse">@color/colorH</item>
 
         <item name="accentColor">@color/colorA</item>
+        <item name="accentColor50">@color/colorA50</item>
         <item name="accentTextColor">@color/colorH</item>
         <item name="primaryTextColor">@color/colorC</item>
         <item name="secondaryTextColor">@color/colorH</item>
@@ -18,6 +19,7 @@
         <item name="primarySubtextLightColor">@color/colorE</item>
 
         <item name="backgroundColor">@color/colorH</item>
+        <item name="backgroundContastColor">@color/colorC</item>
         <item name="dividerColor">@color/colorE</item>
 
         <item name="drawableTintColor">@color/colorC</item>
@@ -42,6 +44,8 @@
         <item name="android:colorBackground">@color/colorC</item>
         <item name="android:textColorPrimaryInverse">@color/colorC</item>
 
+        <item name="accentColor">@color/colorA</item>
+        <item name="accentColor50">@color/colorA50</item>
         <item name="accentTextColor">@color/colorH</item>
         <item name="primaryTextColor">@color/colorH</item>
         <item name="secondaryTextColor">@color/colorC</item>
@@ -49,6 +53,7 @@
         <item name="primarySubtextLightColor">@color/colorF</item>
 
         <item name="backgroundColor">@color/colorC</item>
+        <item name="backgroundContastColor">@color/colorH</item>
         <item name="dividerColor">@color/colorE</item>
 
         <item name="drawableTintColor">@color/colorH</item>
@@ -256,9 +261,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="generated_contact_avatar_big_font" parent="@android:style/TextAppearance.Large">
+    <style name="generated_contact_avatar_100_font" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">70sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="generated_contact_avatar_200_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">1500sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

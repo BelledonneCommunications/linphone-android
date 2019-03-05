@@ -48,13 +48,13 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.ContactAvatar;
 
 public class CallOutgoingActivity extends LinphoneGenericActivity implements OnClickListener {
     private TextView mName, mNumber;
-    private ImageView mContactPicture, mMicro, mSpeaker, mHangUp;
+    private ImageView mMicro, mSpeaker, mHangUp;
     private Call mCall;
     private CoreListenerStub mListener;
     private boolean mIsMicMuted, mIsSpeakerEnabled;
@@ -72,7 +72,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
 
         mName = findViewById(R.id.contact_name);
         mNumber = findViewById(R.id.contact_number);
-        mContactPicture = findViewById(R.id.contact_picture);
 
         mIsMicMuted = false;
         mIsSpeakerEnabled = false;
@@ -186,11 +185,14 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         Address address = mCall.getRemoteAddress();
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         if (contact != null) {
-            ImageUtils.setImagePictureFromUri(
-                    this, mContactPicture, contact.getPhotoUri(), contact.getThumbnailUri());
+            ContactAvatar.displayAvatar(
+                    contact, findViewById(R.id.avatar_layout), R.drawable.avatar_mask_border);
             mName.setText(contact.getFullName());
         } else {
-            mName.setText(LinphoneUtils.getAddressDisplayName(address));
+            String displayName = LinphoneUtils.getAddressDisplayName(address);
+            ContactAvatar.displayAvatar(
+                    displayName, findViewById(R.id.avatar_layout), R.drawable.avatar_mask_border);
+            mName.setText(displayName);
         }
         mNumber.setText(LinphoneUtils.getDisplayableAddress(address));
     }

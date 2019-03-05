@@ -260,7 +260,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                         holder.fileTransferAction, mContext, R.style.font15);
                 holder.fileTransferAction.setBackgroundResource(
                         R.drawable.resizable_confirm_delete_button);
-                ContactAvatar.setAvatarMask(holder.avatarLayout, R.drawable.avatar_mask);
             } else {
                 for (LinphoneContact c : mParticipants) {
                     if (c != null && c.hasAddress(remoteSender.asStringUriOnly())) {
@@ -291,7 +290,6 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                 Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
                 holder.fileTransferAction.setBackgroundResource(
                         R.drawable.resizable_assistant_button);
-                ContactAvatar.setAvatarMask(holder.avatarLayout, R.drawable.avatar_mask);
             }
 
             if (contact == null) {

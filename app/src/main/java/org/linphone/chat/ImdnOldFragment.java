@@ -148,7 +148,6 @@ public class ImdnOldFragment extends Fragment {
                     mBubble.fileTransferAction, getActivity(), R.style.font15);
             mBubble.fileTransferAction.setBackgroundResource(
                     R.drawable.resizable_confirm_delete_button);
-            ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_chat_mask_outgoing);
         } else {
             mBubble.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
             Compatibility.setTextAppearance(
@@ -156,7 +155,6 @@ public class ImdnOldFragment extends Fragment {
             Compatibility.setTextAppearance(
                     mBubble.fileTransferAction, getActivity(), R.style.font8);
             mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
-            ContactAvatar.setAvatarMask(mBubble.avatarLayout, R.drawable.avatar_mask);
         }
 
         return view;

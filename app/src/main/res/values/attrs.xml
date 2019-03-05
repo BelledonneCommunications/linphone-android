@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="LinphoneAppTheme">
         <attr name="accentColor" format="color"/>
+        <attr name="accentColor50" format="color"/>
 
         <attr name="accentTextColor" format="color"/>
         <attr name="primaryTextColor" format="color"/>
@@ -10,6 +11,7 @@
         <attr name="primarySubtextLightColor" format="color"/>
 
         <attr name="backgroundColor" format="color"/>
+        <attr name="backgroundContastColor" format="color"/>
         <attr name="dividerColor" format="color"/>
 
         <attr name="drawableTintColor" format="color"/>
