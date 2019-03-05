@@ -203,4 +203,11 @@ public class Compatibility {
         }
         return false;
     }
+
+    public static boolean isAppIdleMode(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            return ApiTwentyThreePlus.isAppIdleMode(context);
+        }
+        return false;
+    }
 }

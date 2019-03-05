@@ -1102,6 +1102,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             final RegistrationState state,
             final String message) {
         Log.i("[Manager] New registration state [" + state + "]");
+
+        if (state == RegistrationState.Failed) {
+            boolean isIdle = Compatibility.isAppIdleMode(mServiceContext);
+            Log.w("[Manager] PowerManager isIdleMode returned " + isIdle);
+        }
     }
 
     public Context getContext() {
