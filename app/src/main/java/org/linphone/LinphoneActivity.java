@@ -115,6 +115,7 @@ import org.linphone.settings.AccountPreferencesFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsFragment;
 import org.linphone.utils.DeviceUtils;
+import org.linphone.utils.IntentUtils;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.AddressText;
@@ -385,6 +386,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
     private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
         if (newFragmentType == mCurrentFragment
+                && newFragmentType != FragmentsAvailable.CHAT_LIST
                 && newFragmentType != FragmentsAvailable.CHAT
                 && newFragmentType != FragmentsAvailable.GROUP_CHAT) {
             return;
@@ -1394,6 +1396,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
             Log.w(
                     "[Linphone Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
         }
+
+        IntentUtils.handleIntent(this, getIntent());
     }
 
     @Override
@@ -1457,31 +1461,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 }
             }
         }
-
-        Intent intent = getIntent();
-
-        if (intent.getStringExtra("msgShared") != null) {
-            Bundle extras = new Bundle();
-            extras.putString("messageDraft", intent.getStringExtra("msgShared"));
-            changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
-            intent.removeExtra("msgShared");
-        } else if (intent.getStringExtra("fileShared") != null
-                && !intent.getStringExtra("fileShared").equals("")) {
-            Bundle extras = new Bundle();
-            extras.putString("fileSharedUri", intent.getStringExtra("fileShared"));
-            changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
-            intent.removeExtra("fileShared");
-        }
-        mIsOnBackground = false;
-
-        if (intent != null) {
-            Bundle extras = intent.getExtras();
-            if (extras != null && extras.containsKey("SipUriOrNumber")) {
-                addressWaitingToBeCalled = extras.getString("SipUriOrNumber");
-                intent.removeExtra("SipUriOrNumber");
-                goToDialerFragment();
-            }
-        }
     }
 
     @Override
@@ -1513,75 +1492,104 @@ public class LinphoneActivity extends LinphoneGenericActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
         if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
             if (mFragment instanceof SettingsFragment) {
                 ((SettingsFragment) mFragment).closePreferenceScreen();
             }
         }
+
         Bundle extras = intent.getExtras();
-        if (extras != null && extras.getBoolean("GoToChat", false)) {
-            String localSipUri = extras.getString("LocalSipUri");
-            String remoteSipUri = extras.getString("ChatContactSipUri");
-            intent.putExtra("DoNotGoToCallActivity", true);
-            if (remoteSipUri == null) {
-                goToChatList();
-            } else {
-                goToChat(localSipUri, remoteSipUri, extras);
-            }
-        } else if (extras != null && extras.getBoolean("GoToHistory", false)) {
-            intent.putExtra("DoNotGoToCallActivity", true);
-            changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
-        } else if (extras != null && extras.getBoolean("GoToInapp", false)) {
-            intent.putExtra("DoNotGoToCallActivity", true);
-            displayInapp();
-        } else if (extras != null && extras.getBoolean("Notification", false)) {
-            if (LinphoneManager.getLc().getCallsNb() > 0) {
-                startIncallActivity();
-            }
-        } else if (extras != null && extras.getBoolean("StartCall", false)) {
-            if (CallActivity.isInstanciated()) {
-                CallActivity.instance().startIncomingCallActivity();
-            } else {
-                addressWaitingToBeCalled = extras.getString("NumberToCall");
-                goToDialerFragment();
-            }
-        } else if (extras != null && extras.getBoolean("Transfer", false)) {
-            intent.putExtra("DoNotGoToCallActivity", true);
-        } else if (extras != null && extras.getBoolean("AddCall", false)) {
-            intent.putExtra("DoNotGoToCallActivity", true);
-        } else {
-            DialerFragment dialerFragment = DialerFragment.instance();
-            if (dialerFragment != null) {
-                if (extras != null && extras.containsKey("SipUriOrNumber")) {
-                    if (getResources()
-                            .getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
-                        dialerFragment.newOutgoingCall(extras.getString("SipUriOrNumber"));
-                    } else {
-                        dialerFragment.displayTextInAddressBar(extras.getString("SipUriOrNumber"));
-                    }
+        if (extras != null) {
+            if (extras.getBoolean("GoToChat", false)) {
+                String localSipUri = extras.getString("LocalSipUri");
+                String remoteSipUri = extras.getString("ChatContactSipUri");
+                Log.i(
+                        "[Linphone Activity] Intent asked to go to chat, local URI "
+                                + localSipUri
+                                + ", remote URI "
+                                + remoteSipUri);
+                intent.putExtra("DoNotGoToCallActivity", true);
+                if (remoteSipUri == null) {
+                    goToChatList();
                 } else {
-                    dialerFragment.newOutgoingCall(intent);
+                    goToChat(localSipUri, remoteSipUri, extras);
                 }
-            } else {
-                if (extras != null && extras.containsKey("SipUriOrNumber")) {
-                    addressWaitingToBeCalled = extras.getString("SipUriOrNumber");
+            } else if (extras.getBoolean("GoToHistory", false)) {
+                Log.i("[Linphone Activity] Intent asked to go to call history");
+                intent.putExtra("DoNotGoToCallActivity", true);
+                changeCurrentFragment(FragmentsAvailable.HISTORY_LIST, null);
+            } else if (extras.getBoolean("GoToInapp", false)) {
+                Log.i("[Linphone Activity] Intent asked to go to inapp");
+                intent.putExtra("DoNotGoToCallActivity", true);
+                displayInapp();
+            } else if (extras.getBoolean("Notification", false)) {
+                if (LinphoneManager.getLc().getCallsNb() > 0) {
+                    startIncallActivity();
+                }
+            } else if (extras.getBoolean("StartCall", false)) {
+                if (CallActivity.isInstanciated()) {
+                    CallActivity.instance().startIncomingCallActivity();
+                } else {
+                    addressWaitingToBeCalled = extras.getString("NumberToCall");
                     goToDialerFragment();
                 }
-            }
-            if (LinphoneManager.getLc().getCalls().length > 0) {
-                // If a call is ringing, start incomingcallactivity
-                Collection<Call.State> incoming = new ArrayList<>();
-                incoming.add(Call.State.IncomingReceived);
-                if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
-                    if (CallActivity.isInstanciated()) {
-                        CallActivity.instance().startIncomingCallActivity();
-                    } else {
-                        startActivity(new Intent(this, CallIncomingActivity.class));
+            } else if (extras.getBoolean("Transfer", false)) {
+                intent.putExtra("DoNotGoToCallActivity", true);
+            } else if (extras.getBoolean("AddCall", false)) {
+                intent.putExtra("DoNotGoToCallActivity", true);
+            } else if (intent.getStringExtra("msgShared") != null) {
+                String message = intent.getStringExtra("msgShared");
+                Log.i(
+                        "[Linphone Activity] Intent asked to go to chat list to share message "
+                                + message);
+                extras.putString("messageDraft", message);
+                changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
+                intent.removeExtra("msgShared");
+            } else if (intent.getStringExtra("fileShared") != null
+                    && !intent.getStringExtra("fileShared").equals("")) {
+                String file = intent.getStringExtra("fileShared");
+                Log.i(
+                        "[Linphone Activity] Intent asked to go to chat list to share file(s) "
+                                + file);
+                extras.putString("fileSharedUri", file);
+                changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
+                intent.removeExtra("fileShared");
+            } else {
+                DialerFragment dialerFragment = DialerFragment.instance();
+                if (dialerFragment != null) {
+                    if (extras.containsKey("SipUriOrNumber")) {
+                        if (getResources()
+                                .getBoolean(
+                                        R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
+                            dialerFragment.newOutgoingCall(extras.getString("SipUriOrNumber"));
+                        } else {
+                            dialerFragment.displayTextInAddressBar(
+                                    extras.getString("SipUriOrNumber"));
+                        }
+                    }
+                } else {
+                    if (extras.containsKey("SipUriOrNumber")) {
+                        addressWaitingToBeCalled = extras.getString("SipUriOrNumber");
+                        goToDialerFragment();
                     }
                 }
             }
         }
         setIntent(intent);
+
+        if (LinphoneManager.getLc().getCalls().length > 0) {
+            // If a call is ringing, start incomingcallactivity
+            Collection<Call.State> incoming = new ArrayList<>();
+            incoming.add(Call.State.IncomingReceived);
+            if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
+                if (CallActivity.isInstanciated()) {
+                    CallActivity.instance().startIncomingCallActivity();
+                } else {
+                    startActivity(new Intent(this, CallIncomingActivity.class));
+                }
+            }
+        }
     }
 
     public boolean isOnBackground() {

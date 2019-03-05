@@ -20,11 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -32,7 +29,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
 import java.util.ArrayList;
@@ -52,7 +48,6 @@ import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
 import org.linphone.receivers.BluetoothManager;
-import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.LinphoneGL2JNIViewOverlay;
@@ -175,7 +170,7 @@ public final class LinphoneService extends Service {
 
         if (sInstance != null) {
             Log.w("[Service] Attempt to start the LinphoneService but it is already running !");
-            return START_REDELIVER_INTENT;
+            return START_STICKY;
         }
 
         LinphoneManager.createAndStart(this, isPush);
@@ -263,25 +258,9 @@ public final class LinphoneService extends Service {
                     5000);
         }
 
-        // make sure the application will at least wakes up every 10 mn
-        if (LinphonePreferences.instance().isBackgroundModeEnabled()
-                && (!LinphonePreferences.instance().isPushNotificationEnabled()
-                        || !LinphoneManager.getInstance().hasLinphoneAccount())) {
-            Intent keepAliveIntent = new Intent(this, KeepAliveReceiver.class);
-            PendingIntent keepAlivePendingIntent =
-                    PendingIntent.getBroadcast(
-                            this, 0, keepAliveIntent, PendingIntent.FLAG_ONE_SHOT);
-            AlarmManager alarmManager =
-                    ((AlarmManager) this.getSystemService(Context.ALARM_SERVICE));
-            alarmManager.setExact(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 600000,
-                    keepAlivePendingIntent);
-        }
-
         BluetoothManager.getInstance().initBluetooth();
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @SuppressWarnings("unchecked")
