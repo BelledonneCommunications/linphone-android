@@ -30,17 +30,10 @@
                 style="@style/toolbar_small_title_font"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
+                android:layout_weight="0.8"
                 android:gravity="center"
                 android:padding="15dp"
                 android:text="@string/imdn_info" />
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:padding="15dp"
-                android:visibility="invisible" />
 
         </LinearLayout>
 
