@@ -83,6 +83,7 @@
                     android:layout_height="5dp"
                     android:layout_alignParentBottom="true"
                     android:background="?attr/accentColor" />
+
             </RelativeLayout>
 
             <RelativeLayout

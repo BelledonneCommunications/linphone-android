@@ -116,7 +116,7 @@
             android:id="@+id/doNotAskAgain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="?attr/accentColor" />
+            android:button="@drawable/checkbox" />
 
         <TextView
             android:id="@+id/doNotAskAgainLabel"

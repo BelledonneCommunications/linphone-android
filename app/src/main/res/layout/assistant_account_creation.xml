@@ -201,93 +201,93 @@
 
 				</LinearLayout>
 
-			<LinearLayout
-				android:id="@+id/password_layout"
-				android:visibility="gone"
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-
 				<LinearLayout
+					android:id="@+id/password_layout"
+					android:visibility="gone"
 					android:orientation="vertical"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 
-					<TextView
-						android:id="@+id/password_label"
-						style="@style/font13"
-						android:text="@string/password"
-						android:textAllCaps="true"
+					<LinearLayout
+						android:orientation="vertical"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"/>
+						android:layout_height="wrap_content">
 
-					<EditText
-						android:id="@+id/password"
-						android:background="@drawable/resizable_textfield"
-						android:textColor="@color/colorB"
-						android:inputType="textPassword"
-						android:textCursorDrawable="@null"
-						android:layout_width="match_parent"
-						android:layout_height="40dp"
-						android:paddingLeft="10dp"
-						android:paddingRight="10dp"
-						android:maxLines="1"/>
+						<TextView
+							android:id="@+id/password_label"
+							style="@style/font13"
+							android:text="@string/password"
+							android:textAllCaps="true"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"/>
 
-					<TextView
-						android:id="@+id/password_error"
-						android:text="@string/error"
-						style="@style/font20"
+						<EditText
+							android:id="@+id/password"
+							android:background="@drawable/resizable_textfield"
+							android:textColor="@color/colorB"
+							android:inputType="textPassword"
+							android:textCursorDrawable="@null"
+							android:layout_width="match_parent"
+							android:layout_height="40dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:maxLines="1"/>
+
+						<TextView
+							android:id="@+id/password_error"
+							android:text="@string/error"
+							style="@style/font20"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:visibility="invisible"/>
+
+					</LinearLayout>
+
+					<LinearLayout
+						android:id="@+id/password_confirm_layout"
+						android:orientation="vertical"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:visibility="invisible"/>
+						android:layout_height="wrap_content">
+
+						<TextView
+							android:id="@+id/confirm_password_label"
+							android:text="@string/confirm_password"
+							style="@style/font13"
+							android:textAllCaps="true"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"/>
+
+						<EditText
+							android:id="@+id/confirm_password"
+							android:background="@drawable/resizable_textfield"
+							android:textColor="@color/colorB"
+							android:inputType="textPassword"
+							android:contentDescription="@string/content_description_confirm_password_field"
+							android:textCursorDrawable="@null"
+							android:layout_width="match_parent"
+							android:layout_height="40dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:maxLines="1"/>
+
+						<TextView
+							android:id="@+id/confirm_password_error"
+							android:text="@string/error"
+							style="@style/font20"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:visibility="invisible"/>
+
+					</LinearLayout>
 
 				</LinearLayout>
-
-				<LinearLayout
-					android:id="@+id/password_confirm_layout"
-					android:orientation="vertical"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
-
-					<TextView
-						android:id="@+id/confirm_password_label"
-						android:text="@string/confirm_password"
-						style="@style/font13"
-						android:textAllCaps="true"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"/>
-
-					<EditText
-						android:id="@+id/confirm_password"
-						android:background="@drawable/resizable_textfield"
-						android:textColor="@color/colorB"
-						android:inputType="textPassword"
-						android:contentDescription="@string/content_description_confirm_password_field"
-						android:textCursorDrawable="@null"
-						android:layout_width="match_parent"
-						android:layout_height="40dp"
-						android:paddingLeft="10dp"
-						android:paddingRight="10dp"
-						android:maxLines="1"/>
-
-					<TextView
-						android:id="@+id/confirm_password_error"
-						android:text="@string/error"
-						style="@style/font20"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:visibility="invisible"/>
-
-				</LinearLayout>
-
-
-			</LinearLayout>
 
 			</LinearLayout>
 
 			<CheckBox
 				android:id="@+id/use_username"
 				android:visibility="gone"
+				android:paddingLeft="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
                 android:button="@drawable/checkbox"
@@ -297,6 +297,7 @@
 			<CheckBox
 				android:id="@+id/use_email"
 				android:visibility="gone"
+				android:paddingLeft="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
                 android:button="@drawable/checkbox"

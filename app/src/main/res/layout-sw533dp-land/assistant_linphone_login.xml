@@ -120,6 +120,7 @@
                         android:visibility="invisible" />
 
                 </LinearLayout>
+
             </LinearLayout>
 
         </TableRow>
@@ -154,6 +155,7 @@
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
                     android:textColor="@color/colorB" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -189,6 +191,7 @@
                     android:layout_gravity="right"
                     android:maxLines="1" />
             </LinearLayout>
+
         </TableRow>
 
         <TableRow
@@ -214,10 +217,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:button="@drawable/checkbox"
+                android:paddingLeft="5dp"
                 android:textColor="?attr/primaryTextColor"
                 android:text="@string/login_with_username"
                 android:visibility="visible" />
         </TableRow>
+
     </TableLayout>
 
     <Button

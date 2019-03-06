@@ -140,7 +140,9 @@
                                 android:visibility="visible" />
 
                         </LinearLayout>
+
                     </LinearLayout>
+
                 </LinearLayout>
 
             </TableRow>
@@ -185,6 +187,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/error"
                         android:visibility="invisible" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -315,6 +318,7 @@
                         android:visibility="invisible" />
 
                 </LinearLayout>
+
             </TableRow>
 
             <TableRow
@@ -329,6 +333,7 @@
                     android:layout_height="wrap_content"
                     android:layout_column="1"
                     android:checked="false"
+                    android:paddingLeft="5dp"
                     android:button="@drawable/checkbox"
                     android:textColor="?attr/primaryTextColor"
                     android:text="@string/use_username_instead_or_phone_number"
@@ -347,6 +352,7 @@
                     android:layout_height="wrap_content"
                     android:layout_column="1"
                     android:checked="false"
+                    android:paddingLeft="5dp"
                     android:button="@drawable/checkbox"
                     android:textColor="?attr/primaryTextColor"
                     android:text="@string/use_email_for_validation"
