@@ -2,8 +2,8 @@
 <resources>
     <color name="colorA">#ff5e00</color>
     <!-- You can use https://material.io/design/color/#tools-for-picking-colors to get dark color value from primary -->
-    <color name="colorADark">#e65000</color>
-    <color name="colorA50">#80ff5e00</color>
+    <color name="colorADark10">#e65000</color>
+    <color name="colorALight30">#ffab4d</color>
     <color name="colorB">#000000</color>
     <color name="colorC">#444444</color>
     <color name="colorD">#808080</color>

@@ -11,7 +11,7 @@
         <item name="android:textColorPrimaryInverse">@color/colorH</item>
 
         <item name="accentColor">@color/colorA</item>
-        <item name="accentColor50">@color/colorA50</item>
+        <item name="accentColorLight30">@color/colorALight30</item>
         <item name="accentTextColor">@color/colorH</item>
         <item name="primaryTextColor">@color/colorC</item>
         <item name="secondaryTextColor">@color/colorH</item>
@@ -45,7 +45,7 @@
         <item name="android:textColorPrimaryInverse">@color/colorC</item>
 
         <item name="accentColor">@color/colorA</item>
-        <item name="accentColor50">@color/colorA50</item>
+        <item name="accentColorLight30">@color/colorALight30</item>
         <item name="accentTextColor">@color/colorH</item>
         <item name="primaryTextColor">@color/colorH</item>
         <item name="secondaryTextColor">@color/colorC</item>
@@ -322,7 +322,7 @@
     </style>
 
     <style name="dialog_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textColor">@color/colorH</item>
         <item name="android:textSize">21.7sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">sans-serif</item>
@@ -355,7 +355,7 @@
     </style>
 
     <style name="dialog_zrtp_white_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textColor">@color/colorH</item>
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:lineSpacingExtra">8.3sp</item>

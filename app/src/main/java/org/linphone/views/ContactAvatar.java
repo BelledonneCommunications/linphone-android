@@ -220,6 +220,7 @@ public class ContactAvatar {
         holder.contactPicture.setImageResource(R.drawable.chat_group_avatar);
         holder.generatedAvatar.setVisibility(View.GONE);
         holder.securityLevel.setVisibility(View.GONE);
+        holder.avatarBorder.setVisibility(View.GONE);
     }
 
     public static void displayGroupChatAvatar(ChatRoomSecurityLevel level, View v) {

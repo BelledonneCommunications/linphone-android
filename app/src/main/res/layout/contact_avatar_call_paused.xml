@@ -29,7 +29,7 @@
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="true"
         android:src="@drawable/avatar_mask"
-        android:tint="?attr/accentColor50"/>
+        android:tint="?attr/accentColorLight30"/>
 
     <ImageView
         android:id="@+id/border"

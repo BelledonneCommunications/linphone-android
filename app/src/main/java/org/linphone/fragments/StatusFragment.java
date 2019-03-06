@@ -175,7 +175,7 @@ public class StatusFragment extends Fragment {
             Window window = activity.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(ContextCompat.getColor(activity, R.color.colorADark));
+            window.setStatusBarColor(ContextCompat.getColor(activity, R.color.colorADark10));
         }
 
         return view;

@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="LinphoneAppTheme">
         <attr name="accentColor" format="color"/>
-        <attr name="accentColor50" format="color"/>
+        <attr name="accentColorLight30" format="color"/>
 
         <attr name="accentTextColor" format="color"/>
         <attr name="primaryTextColor" format="color"/>
