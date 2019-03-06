@@ -31,20 +31,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.widget.ImageView;
-import com.bumptech.glide.Glide;
 import org.linphone.R;
 
 public class ImageUtils {
-
-    public static void setDefaultContactImage(ImageView view) {
-        Glide.with(view).load(R.drawable.avatar).into(view);
-    }
-
-    public static void setImagePictureFromUri(
-            Context c, ImageView view, Uri pictureUri, Uri thumbnailUri) {
-        Glide.with(c).load(pictureUri).thumbnail(Glide.with(c).load(thumbnailUri)).into(view);
-    }
 
     public static Bitmap getRoundBitmapFromUri(Context context, Uri fromPictureUri) {
         Bitmap bm;

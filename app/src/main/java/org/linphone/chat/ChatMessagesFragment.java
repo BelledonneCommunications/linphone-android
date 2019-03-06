@@ -29,8 +29,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,6 +55,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +86,6 @@ import org.linphone.core.Reason;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
-import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 
@@ -1015,11 +1013,6 @@ public class ChatMessagesFragment extends Fragment
         mSendMessageButton.setEnabled(true);
     }
 
-    private Bitmap scaleToFitHeight(Bitmap b, int height) {
-        float factor = height / (float) b.getHeight();
-        return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
-    }
-
     private void addImageToPendingList(String path) {
         if (path == null) {
             Log.e("Can't add image to pending list because it's path is null...");
@@ -1031,9 +1024,7 @@ public class ChatMessagesFragment extends Fragment
         pendingImage.setTag(path);
 
         ImageView image = pendingImage.findViewById(R.id.pendingImageForUpload);
-        Bitmap bm = BitmapFactory.decodeFile(path);
-        if (bm == null) return;
-        image.setImageBitmap(scaleToFitHeight(bm, (int) ImageUtils.dpToPixels(mContext, 100)));
+        Glide.with(mContext).load(path).into(image);
 
         ImageView remove = pendingImage.findViewById(R.id.remove);
         remove.setTag(pendingImage);
