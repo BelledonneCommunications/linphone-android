@@ -49,10 +49,11 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.core.view.inputmethod.InputConnectionCompat;
+import androidx.core.view.inputmethod.InputContentInfoCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -88,20 +89,24 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
+import org.linphone.views.RichEditText;
 
 public class ChatMessagesFragment extends Fragment
         implements ChatRoomListener,
                 ContactsUpdatedListener,
                 ChatMessageViewHolderClickListener,
-                SelectableHelper.DeleteListener {
+                SelectableHelper.DeleteListener,
+                RichEditText.RichInputListener {
     private static final int ADD_PHOTO = 1337;
     private static final int MESSAGES_PER_PAGE = 20;
+    private static final String INPUT_CONTENT_INFO_KEY = "COMMIT_CONTENT_INPUT_CONTENT_INFO";
+    private static final String COMMIT_CONTENT_FLAGS_KEY = "COMMIT_CONTENT_FLAGS";
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
     private ImageView mAttachImageButton, mSendMessageButton;
     private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
-    private EditText mMessageTextToSend;
+    private RichEditText mMessageTextToSend;
     private LayoutInflater mInflater;
     private RecyclerView mChatEventsList;
     private LinearLayout mFilesUploadLayout;
@@ -120,6 +125,9 @@ public class ChatMessagesFragment extends Fragment
     private ChatScrollListener mChatScrollListener;
     private LinearLayout mTopBar;
     private ImageView mChatRoomSecurityLevel;
+
+    private InputContentInfoCompat mCurrentInputContentInfo;
+    private int mCurrentFlags;
 
     @Override
     public View onCreateView(
@@ -293,6 +301,7 @@ public class ChatMessagesFragment extends Fragment
                     public void afterTextChanged(Editable editable) {}
                 });
         mMessageTextToSend.clearFocus();
+        mMessageTextToSend.setListener(this);
 
         mRemoteComposing = view.findViewById(R.id.remote_composing);
 
@@ -927,6 +936,13 @@ public class ChatMessagesFragment extends Fragment
             String path = (String) child.getTag();
             files[i] = path;
         }
+        if (mCurrentInputContentInfo != null) {
+            outState.putParcelable(
+                    INPUT_CONTENT_INFO_KEY, (Parcelable) mCurrentInputContentInfo.unwrap());
+            outState.putInt(COMMIT_CONTENT_FLAGS_KEY, mCurrentFlags);
+        }
+        mCurrentInputContentInfo = null;
+        mCurrentFlags = 0;
         outState.putStringArray("Files", files);
         super.onSaveInstanceState(outState);
     }
@@ -941,6 +957,14 @@ public class ChatMessagesFragment extends Fragment
                     addFileToPendingList(file);
                 }
             }
+        }
+
+        final InputContentInfoCompat previousInputContentInfo =
+                InputContentInfoCompat.wrap(
+                        savedInstanceState.getParcelable(INPUT_CONTENT_INFO_KEY));
+        final int previousFlags = savedInstanceState.getInt(COMMIT_CONTENT_FLAGS_KEY);
+        if (previousInputContentInfo != null) {
+            onCommitContentInternal(previousInputContentInfo, previousFlags);
         }
     }
 
@@ -1373,6 +1397,57 @@ public class ChatMessagesFragment extends Fragment
     @Override
     public void onContactsUpdated() {
         getContactsForParticipants();
+    }
+
+    @Override
+    public boolean onCommitContent(
+            InputContentInfoCompat inputContentInfo,
+            int flags,
+            Bundle opts,
+            String[] contentMimeTypes) {
+        try {
+            if (mCurrentInputContentInfo != null) {
+                mCurrentInputContentInfo.releasePermission();
+            }
+        } catch (Exception e) {
+            Log.e("[TimelineFragment] releasePermission failed : ", e);
+        } finally {
+            mCurrentInputContentInfo = null;
+        }
+
+        boolean supported = false;
+        for (final String mimeType : contentMimeTypes) {
+            if (inputContentInfo.getDescription().hasMimeType(mimeType)) {
+                supported = true;
+                break;
+            }
+        }
+        if (!supported) {
+            return false;
+        }
+
+        return onCommitContentInternal(inputContentInfo, flags);
+    }
+
+    private boolean onCommitContentInternal(InputContentInfoCompat inputContentInfo, int flags) {
+        if ((flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
+            try {
+                inputContentInfo.requestPermission();
+            } catch (Exception e) {
+                Log.e("[TimelineFragment] requestPermission failed : ", e);
+                return false;
+            }
+        }
+
+        if (inputContentInfo.getContentUri() != null) {
+            String contentUri = FileUtils.getFilePath(mContext, inputContentInfo.getContentUri());
+            addImageToPendingList(contentUri);
+        }
+
+        mCurrentInputContentInfo = inputContentInfo;
+        mCurrentFlags = flags;
+
+        return true;
     }
 
     // This is a workaround to prevent a crash from happening while rotating the device
