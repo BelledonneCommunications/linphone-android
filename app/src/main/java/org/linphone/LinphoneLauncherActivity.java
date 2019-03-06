@@ -72,11 +72,11 @@ public class LinphoneLauncherActivity extends Activity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = new Intent(LinphoneLauncherActivity.this, classToStart);
-                        startActivity(intent);
+                        startActivity(
+                                getIntent().setClass(LinphoneLauncherActivity.this, classToStart));
                     }
                 },
-                1000);
+                500);
     }
 
     private class ServiceWaitThread extends Thread {
