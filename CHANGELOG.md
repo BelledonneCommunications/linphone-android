@@ -36,6 +36,7 @@ Group changes to describe their impact on the project, as follows:
 - Call recording.
 - Get remote provisioning URL from QR code scan.
 - Added app setting for microphone & playback gain.
+- Allow rich input while composing chat message to easily send images from keyboard.
 
 ### Fixes
 - Fixed chat room user can't get into if there are more than one with the same remote but different local accounts
