@@ -163,7 +163,7 @@ public final class LinphoneService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         boolean isPush = false;
-        if (intent.getBooleanExtra("PushNotification", false)) {
+        if (intent != null && intent.getBooleanExtra("PushNotification", false)) {
             Log.i("[Service] [Push Notification] LinphoneService started because of a push");
             isPush = true;
         }

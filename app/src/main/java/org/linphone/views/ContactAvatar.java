@@ -34,6 +34,7 @@ import org.linphone.core.tools.Log;
 class ContactAvatarHolder {
     public final ImageView contactPicture;
     public final ImageView avatarMask;
+    public final ImageView avatarBorder;
     public final ImageView securityLevel;
     public final TextView generatedAvatar;
 
@@ -42,12 +43,14 @@ class ContactAvatarHolder {
         avatarMask = v.findViewById(R.id.mask);
         securityLevel = v.findViewById(R.id.security_level);
         generatedAvatar = v.findViewById(R.id.generated_avatar);
+        avatarBorder = v.findViewById(R.id.border);
     }
 
     public void init() {
         contactPicture.setVisibility(View.VISIBLE);
         generatedAvatar.setVisibility(View.VISIBLE);
         securityLevel.setVisibility(View.GONE);
+        avatarBorder.setVisibility(View.GONE);
     }
 }
 
@@ -96,7 +99,8 @@ public class ContactAvatar {
         }
     }
 
-    public static void displayAvatar(String displayName, View v, int maskResource) {
+    public static void displayAvatar(
+            String displayName, View v, boolean showBorder, int maskResource) {
         if (displayName == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
@@ -120,10 +124,17 @@ public class ContactAvatar {
         if (maskResource != 0) {
             holder.avatarMask.setImageResource(maskResource);
         }
+        if (showBorder) {
+            holder.avatarBorder.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void displayAvatar(String displayName, View v, boolean showBorder) {
+        displayAvatar(displayName, v, showBorder, 0);
     }
 
     public static void displayAvatar(String displayName, View v) {
-        displayAvatar(displayName, v, 0);
+        displayAvatar(displayName, v, false, 0);
     }
 
     public static void displayAvatar(
@@ -132,7 +143,8 @@ public class ContactAvatar {
         setSecurityLevel(securityLevel, v);
     }
 
-    public static void displayAvatar(LinphoneContact contact, View v, int maskResource) {
+    public static void displayAvatar(
+            LinphoneContact contact, View v, boolean showBorder, int maskResource) {
         if (contact == null || v == null) return;
 
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
@@ -176,10 +188,17 @@ public class ContactAvatar {
         if (maskResource != 0) {
             holder.avatarMask.setImageResource(maskResource);
         }
+        if (showBorder) {
+            holder.avatarBorder.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static void displayAvatar(LinphoneContact contact, View v, boolean showBorder) {
+        displayAvatar(contact, v, showBorder, 0);
     }
 
     public static void displayAvatar(LinphoneContact contact, View v) {
-        displayAvatar(contact, v, 0);
+        displayAvatar(contact, v, false, 0);
     }
 
     public static void displayAvatar(

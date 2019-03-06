@@ -1472,10 +1472,10 @@ public class CallActivity extends LinphoneGenericActivity
         if (lContact == null) {
             String displayName = LinphoneUtils.getAddressDisplayName(lAddress);
             contactName.setText(displayName);
-            ContactAvatar.displayAvatar(displayName, mAvatarLayout, R.drawable.avatar_mask_border);
+            ContactAvatar.displayAvatar(displayName, mAvatarLayout, true);
         } else {
             contactName.setText(lContact.getFullName());
-            ContactAvatar.displayAvatar(lContact, mAvatarLayout, R.drawable.avatar_mask_border);
+            ContactAvatar.displayAvatar(lContact, mAvatarLayout, true);
         }
     }
 
