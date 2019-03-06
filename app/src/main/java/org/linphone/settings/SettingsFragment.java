@@ -1728,6 +1728,9 @@ public class SettingsFragment extends PreferencesListFragment {
                                 } else {
                                     LinphoneActivity.instance()
                                             .setTheme(R.style.LinphoneStyleLight);
+                                    LinphoneActivity.instance()
+                                            .getTheme()
+                                            .applyStyle(R.style.LinphoneStyleLight, true);
                                 }
                                 return true;
                             }

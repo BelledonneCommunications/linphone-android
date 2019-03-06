@@ -168,10 +168,14 @@
   <string name="contact_organization">Organisation</string>
   <string name="invite_friend">Bjud in</string>
   <string name="invite_friend_text">Hej, börja också använda Linphone! Du kan hämta det gratis på http://www.linphone.org/technical-corner/linphone/downloads</string>
+  <string name="toast_choose_contact_for_edition">Välj en kontakt eller skapa en ny</string>
   <!--Chat-->
   <string name="no_chat_history">Inga konversationer</string>
   <string name="delete_conversation">Vill du ta bort vald konversation?</string>
   <string name="delete_message">Vill du ta bort valt meddelande?</string>
+  <string name="remote_composing">Motpart skriver...</string>
+  <string name="remote_composing_single">%s skriver…</string>
+  <string name="remote_composing_multiple">%s skriver…</string>
   <string name="share_picture_size_small">Liten</string>
   <string name="share_picture_size_medium">Mellan</string>
   <string name="share_picture_size_large">Stor</string>
@@ -181,6 +185,7 @@
   <string name="image_picker_title">Välj källa</string>
   <string name="image_saved">Bild sparad</string>
   <string name="image_not_saved">Fel, bild ej sparad</string>
+  <string name="wait">Vänligen vänta…</string>
   <string name="image_transfert_error">Ett fel inträffade under filöverföringen</string>
   <string name="message_not_encrypted">Detta meddelande är inte krypterat</string>
   <string name="message_cant_be_decrypted">Du har fått ett krypterat meddelande som du inte kan dekryptera från %s\nDu behöver ringa din korrespondent för att utbyta dina ZRTP-nycklar om du vill dekryptera de framtida meddelanden som du kommer att få.</string>
@@ -229,6 +234,7 @@
   <string name="participant_max_count_exceeded">Högsta antal deltagare överskrids med %s</string>
   <string name="unexpected_event">Oväntad händelse %i för %s</string>
   <string name="download_file">Ladda ner</string>
+  <string name="toast_choose_chat_room_for_sharing">Välj en konversation eller skapa en ny</string>
   <!--Status Bar-->
   <string name="status_connected">Registrerad</string>
   <string name="status_not_connected">Inte registrerad</string>
@@ -273,6 +279,7 @@
   <string name="call_stats_decoder_name">Avkodare:</string>
   <string name="call_stats_display_filter">Visningsfilter:</string>
   <string name="call">Ring</string>
+  <string name="call_log_delete_dialog">Vill du ta bort de valda samtalsloggarna?</string>
   <!--Recordings-->
   <string name="no_recordings">Inga inspelningar</string>
   <string name="recordings_delete_dialog">Vill du ta bort de valda inspelningarna?</string>
@@ -303,6 +310,7 @@
   <string name="error_unauthorized">Obehörig</string>
   <string name="error_io_error">Nätverksfel</string>
   <string name="download_image_failed">Hämtning misslyckad. Kontrollera din nätverksanslutning eller försök igen senare.</string>
+  <string name="remote_provisioning_failure">Misslyckades med att hämta eller tillämpa fjärrprovisionsprofil...</string>
   <string name="remote_provisioning_again_title">Fjärrleverans</string>
   <string name="remote_provisioning_again_message">Vill du ändra leverans-URI?</string>
   <!--Account Settings-->

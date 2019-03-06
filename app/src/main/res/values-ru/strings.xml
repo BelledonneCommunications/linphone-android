@@ -168,6 +168,7 @@
   <string name="contact_organization">Организация</string>
   <string name="invite_friend">Пригласить</string>
   <string name="invite_friend_text">Здравствуйте! Присоединяйтесь ко мне в Linphone! Вы можете загрузить его бесплатно отсюда: http://www.linphone.org/technical-corner/linphone/downloads</string>
+  <string name="toast_choose_contact_for_edition">Выберите контакт или создайте новый</string>
   <!--Chat-->
   <string name="no_chat_history">Нет разговоров</string>
   <string name="delete_conversation">Вы действительно хотите удалить выбранный разговор?</string>
@@ -233,6 +234,7 @@
   <string name="participant_max_count_exceeded">Максимальное количество участников превышено %s</string>
   <string name="unexpected_event">Неожиданное событие %i для %s</string>
   <string name="download_file">Скачать</string>
+  <string name="toast_choose_chat_room_for_sharing">Выберите беседу или создайте новую</string>
   <!--Status Bar-->
   <string name="status_connected">Зарегистрирован</string>
   <string name="status_not_connected">Не зарегистрирован</string>
@@ -277,6 +279,7 @@
   <string name="call_stats_decoder_name">Декодер</string>
   <string name="call_stats_display_filter">Отображаемый фильтр:</string>
   <string name="call">Вызов</string>
+  <string name="call_log_delete_dialog">Вы действительно хотите удалить выбранные журналы вызовов?</string>
   <!--Recordings-->
   <string name="no_recordings">Нет записей</string>
   <string name="recordings_delete_dialog">Вы хотите удалить выбранные записи?</string>

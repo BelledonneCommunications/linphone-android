@@ -195,7 +195,7 @@ public class ChatRoomsFragment extends Fragment
                 Toast.makeText(
                                 LinphoneActivity.instance(),
                                 R.string.toast_choose_chat_room_for_sharing,
-                                Toast.LENGTH_SHORT)
+                                Toast.LENGTH_LONG)
                         .show();
             }
             Log.i("[ChatRooms] Arguments found: " + messageSharedUri + " / " + fileSharedUri);

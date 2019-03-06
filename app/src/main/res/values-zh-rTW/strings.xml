@@ -11,9 +11,12 @@
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
+  <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
   <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone 聯絡人</string>
   <!--Notifications-->
+  <string name="notification_reply_label">回覆</string>
+  <string name="notification_replied_label">傳送回覆：%s</string>
   <!--Common-->
   <string name="username">使用者名稱</string>
   <string name="userid">使用者 id（選填）</string>
@@ -80,6 +83,7 @@
   <string name="assistant_generic_account">使用 SIP 帳號</string>
   <string name="assistant_remote_provisioning_title">擷取遠端設定</string>
   <string name="assistant_fetch_apply">擷取並套用</string>
+  <string name="assistant_launch_qrcode">QRCode</string>
   <string name="assistant_login">登入</string>
   <string name="assistant_ec_calibration">正在進行回音消除器校正</string>
   <string name="assistant_remote_provisioning_login">輸入你的使用者名稱和密碼</string>
@@ -156,6 +160,7 @@
   <string name="contact_first_name">名字</string>
   <string name="contact_last_name">姓氏</string>
   <string name="contact_organization">組織</string>
+  <string name="invite_friend">邀請</string>
   <!--Chat-->
   <string name="no_chat_history">沒有對話</string>
   <string name="delete_conversation">你想要刪除選取的對話嗎？</string>

@@ -85,7 +85,7 @@ public class ContactsFragment extends Fragment
                 Toast.makeText(
                                 LinphoneActivity.instance(),
                                 R.string.toast_choose_contact_for_edition,
-                                Toast.LENGTH_SHORT)
+                                Toast.LENGTH_LONG)
                         .show();
             }
             getArguments().clear();

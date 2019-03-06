@@ -379,6 +379,8 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="failed">échoué</string>
   <string name="pref_adaptive_rate_control">Contrôle qualité adaptatif</string>
   <string name="pref_codec_bitrate_limit">Limite de débit du codec</string>
+  <string name="pref_mic_gain_db">Volume microphone (en db)</string>
+  <string name="pref_playback_gain_db">Volume écoute (en db)</string>
   <string name="pref_codecs">Codecs</string>
   <!--Video settings-->
   <string name="pref_video_title">Vidéo</string>
@@ -442,6 +444,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="pref_protected_settings_desc">Cette app doit être activée pour recevoir des notifications poussées</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Avancé</string>
+  <string name="pref_dark_mode">Mode sombre</string>
   <string name="pref_debug_title">Activer les traces de débogage</string>
   <string name="pref_debug">Activer les traces de débogage</string>
   <string name="pref_java_debug">Utiliser le logger Java</string>
