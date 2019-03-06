@@ -151,10 +151,12 @@ public class ContactAvatar {
 
         Bitmap bm = null;
         try {
-            bm =
-                    MediaStore.Images.Media.getBitmap(
-                            LinphoneService.instance().getContentResolver(),
-                            contact.getThumbnailUri());
+            if (contact.getThumbnailUri() != null) {
+                bm =
+                        MediaStore.Images.Media.getBitmap(
+                                LinphoneService.instance().getContentResolver(),
+                                contact.getThumbnailUri());
+            }
         } catch (IOException e) {
             Log.e(e);
         }
