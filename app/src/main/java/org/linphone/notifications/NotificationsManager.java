@@ -56,11 +56,13 @@ public class NotificationsManager {
     private final HashMap<String, Notifiable> mCallNotifMap;
     private int mLastNotificationId;
     private final Notification mServiceNotification;
+    private int mCurrentForegroundServiceNotification;
 
     public NotificationsManager(Context context) {
         mContext = context;
         mChatNotifMap = new HashMap<>();
         mCallNotifMap = new HashMap<>();
+        mCurrentForegroundServiceNotification = 0;
 
         mNM = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
         mNM.cancelAll();
@@ -110,10 +112,24 @@ public class NotificationsManager {
 
     public void startForeground() {
         LinphoneService.instance().startForeground(SERVICE_NOTIF_ID, mServiceNotification);
+        mCurrentForegroundServiceNotification = SERVICE_NOTIF_ID;
+    }
+
+    public void startForeground(Notification notification, int id) {
+        LinphoneService.instance().startForeground(id, notification);
+        mCurrentForegroundServiceNotification = id;
     }
 
     public void stopForeground() {
         LinphoneService.instance().stopForeground(true);
+        mCurrentForegroundServiceNotification = 0;
+    }
+
+    public void removeForegroundServiceNotificationIfPossible() {
+        if (!LinphonePreferences.instance().getServiceNotificationVisibility()
+                && mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID) {
+            stopForeground();
+        }
     }
 
     public void sendNotification(int id, Notification notif) {
@@ -295,19 +311,16 @@ public class NotificationsManager {
             mCallNotifMap.put(addressAsString, notif);
         }
 
-        if (!isServiceNotificationDisplayed()) {
-            if (call.getCore().getCallsNb() == 0) {
-                stopForeground();
-            } else {
-                startForeground();
-            }
-        }
-
         int notificationTextId;
         int iconId;
         switch (call.getState()) {
             case Released:
             case End:
+                if (mCurrentForegroundServiceNotification == notif.getNotificationId()) {
+                    // Call is released, remove service notification to allow for an other call to
+                    // be service notification
+                    stopForeground();
+                }
                 mNM.cancel(notif.getNotificationId());
                 mCallNotifMap.remove(addressAsString);
                 return;
@@ -346,7 +359,18 @@ public class NotificationsManager {
                         bm,
                         name,
                         pendingIntent);
-        sendNotification(notif.getNotificationId(), notification);
+
+        if (!isServiceNotificationDisplayed()) {
+            if (call.getCore().getCallsNb() == 0) {
+                stopForeground();
+            } else {
+                if (mCurrentForegroundServiceNotification == 0) {
+                    startForeground(notification, notif.getNotificationId());
+                } else {
+                    sendNotification(notif.getNotificationId(), notification);
+                }
+            }
+        }
     }
 
     public String getSipUriForCallNotificationId(int notificationId) {

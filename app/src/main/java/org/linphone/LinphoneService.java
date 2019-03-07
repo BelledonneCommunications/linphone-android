@@ -128,6 +128,10 @@ public final class LinphoneService extends Service {
         return mNotificationManager;
     }
 
+    public void removeForegroundServiceNotificationIfPossible() {
+        mNotificationManager.removeForegroundServiceNotificationIfPossible();
+    }
+
     public Class<? extends Activity> getIncomingReceivedActivity() {
         return mIncomingReceivedActivity;
     }
