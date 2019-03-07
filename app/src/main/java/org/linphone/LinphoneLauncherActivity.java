@@ -68,8 +68,6 @@ public class LinphoneLauncherActivity extends Activity {
             classToStart = LinphoneActivity.class;
         }
 
-        LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
-
         mHandler.postDelayed(
                 new Runnable() {
                     @Override

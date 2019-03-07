@@ -175,6 +175,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         // This must be done before calling super.onCreate().
         super.onCreate(savedInstanceState);
 
+        LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
+
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
