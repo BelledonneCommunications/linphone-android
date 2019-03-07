@@ -29,11 +29,15 @@ public class Notifiable {
     private String mGroupTitle;
     private String mLocalIdentity;
     private String mMyself;
+    private int iconId;
+    private int textId;
 
     public Notifiable(int id) {
         mNotificationId = id;
         mMessages = new ArrayList<>();
         mIsGroup = false;
+        iconId = 0;
+        textId = 0;
     }
 
     public int getNotificationId() {
@@ -82,5 +86,21 @@ public class Notifiable {
 
     public void setLocalIdentity(String localIdentity) {
         mLocalIdentity = localIdentity;
+    }
+
+    public int getIconResourceId() {
+        return iconId;
+    }
+
+    public void setIconResourceId(int id) {
+        iconId = id;
+    }
+
+    public int getTextResourceId() {
+        return textId;
+    }
+
+    public void setTextResourceId(int id) {
+        textId = id;
     }
 }

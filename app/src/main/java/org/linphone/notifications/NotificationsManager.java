@@ -341,6 +341,14 @@ public class NotificationsManager {
                 break;
         }
 
+        if (notif.getIconResourceId() == iconId
+                && notif.getTextResourceId() == notificationTextId) {
+            // Notification hasn't changed, do not "update" it to avoid blinking
+            return;
+        }
+        notif.setIconResourceId(iconId);
+        notif.setTextResourceId(notificationTextId);
+
         LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(address);
         Uri pictureUri = contact != null ? contact.getPhotoUri() : null;
         Bitmap bm = ImageUtils.getRoundBitmapFromUri(mContext, pictureUri);
