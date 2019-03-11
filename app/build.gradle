@@ -151,7 +151,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
 
     if (isLocalAarAvailable()) {
-        implementation project(":linphone-sdk-android")
+        debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
+        releaseImplementation project(path: ":linphone-sdk-android", configuration: 'release')
     } else {
         implementation "org.linphone:linphone-sdk-android:4.1+"
     }
