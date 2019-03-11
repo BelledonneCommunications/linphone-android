@@ -1104,8 +1104,25 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         Log.i("[Manager] New registration state [" + state + "]");
 
         if (state == RegistrationState.Failed) {
-            boolean isIdle = Compatibility.isAppIdleMode(mServiceContext);
-            Log.w("[Manager] PowerManager isIdleMode returned " + isIdle);
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager)
+                            mServiceContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            Log.i("[Manager] Active network type: " + activeNetworkInfo.getTypeName());
+            if (activeNetworkInfo.isAvailable() && activeNetworkInfo.isConnected()) {
+                Log.i("[Manager] Active network is available");
+            }
+            Log.i(
+                    "[Manager] Active network reason and extra info: "
+                            + activeNetworkInfo.getReason()
+                            + " / "
+                            + activeNetworkInfo.getExtraInfo());
+            Log.i(
+                    "[Manager] Active network state "
+                            + activeNetworkInfo.getState()
+                            + " / "
+                            + activeNetworkInfo.getDetailedState());
         }
     }
 
