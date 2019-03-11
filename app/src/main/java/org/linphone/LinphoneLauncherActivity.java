@@ -77,6 +77,8 @@ public class LinphoneLauncherActivity extends Activity {
                     }
                 },
                 500);
+
+        LinphoneManager.getInstance().changeStatusToOnline();
     }
 
     private class ServiceWaitThread extends Thread {

@@ -1445,8 +1445,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
         displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
         displayMissedCalls(LinphoneManager.getLc().getMissedCallsCount());
 
-        LinphoneManager.getInstance().changeStatusToOnline();
-
         if (!getIntent().getBooleanExtra("DoNotGoToCallActivity", false)) {
             if (LinphoneManager.getLc().getCalls().length > 0) {
                 Call call = LinphoneManager.getLc().getCalls()[0];
