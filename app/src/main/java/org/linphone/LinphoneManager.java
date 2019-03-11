@@ -119,7 +119,6 @@ import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration.
 import org.linphone.mediastream.video.capture.hwconf.Hacks;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.receivers.HookReceiver;
-import org.linphone.receivers.KeepAliveReceiver;
 import org.linphone.receivers.OutgoingCallReceiver;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
@@ -174,10 +173,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private boolean mEchoTesterIsRunning;
     private boolean mCallGsmON;
     private final ConnectivityManager mConnectivityManager;
-    private BroadcastReceiver mKeepAliveReceiver;
     private BroadcastReceiver mHookReceiver;
     private BroadcastReceiver mCallReceiver;
-    private IntentFilter mKeepAliveIntentFilter;
     private IntentFilter mHookIntentFilter;
     private IntentFilter mCallIntentFilter;
     private final Handler mHandler = new Handler();
@@ -676,11 +673,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             } catch (Exception e) {
                 Log.e("[Manager] unregister receiver exception: " + e);
             }
-            try {
-                mServiceContext.unregisterReceiver(mKeepAliveReceiver);
-            } catch (Exception e) {
-                Log.e("[Manager] unregister receiver exception: " + e);
-            }
             mCore = null;
         }
     }
@@ -775,17 +767,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (mServiceContext.getResources().getBoolean(R.bool.enable_push_id)) {
             initPushNotificationsService();
         }
-
-        /*
-         You cannot receive this through components declared in manifests, only
-         by explicitly registering for it with Context.registerReceiver(). This is a protected intent that can only
-         be sent by the system.
-        */
-        mKeepAliveIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        mKeepAliveIntentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-
-        mKeepAliveReceiver = new KeepAliveReceiver();
-        mServiceContext.registerReceiver(mKeepAliveReceiver, mKeepAliveIntentFilter);
 
         mCallIntentFilter = new IntentFilter("android.intent.action.ACTION_NEW_OUTGOING_CALL");
         mCallIntentFilter.setPriority(99999999);

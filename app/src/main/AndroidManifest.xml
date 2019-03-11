@@ -249,9 +249,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- This one needs to be registered from application -->
-        <receiver android:name=".receivers.KeepAliveReceiver" />
-
         <receiver android:name=".receivers.HookReceiver">
             <intent-filter>
                 <action android:name="com.base.module.phone.HOOKEVENT" />
