@@ -25,21 +25,13 @@ ec_calibrator_cool_tones=1
 displaytype=MSAndroidTextureDisplay
 
 [misc]
-max_calls=10
-history_max_size=100
 enable_basic_to_client_group_chat_room_migration=0
 enable_simple_group_chat_message_state=0
 aggregate_imdn=1
-version_check_url_root=https://www.linphone.org/releases
-xmlrpc_server_url=https://subscribe.linphone.org:444/wizard.php
 
 [app]
 activation_code_length=4
 prefer_basic_chat_room=1
-
-[in-app-purchase]
-server_url=https://subscribe.linphone.org:444/inapp.php
-purchasable_items_ids=test_account_subscription
 
 [assistant]
 xmlrpc_url=https://subscribe.linphone.org:444/wizard.php
