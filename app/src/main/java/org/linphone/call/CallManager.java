@@ -58,7 +58,8 @@ public class CallManager {
         inviteAddress(lAddress, false);
     }
 
-    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
+    public void inviteAddress(
+            Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
         Core lc = LinphoneManager.getLc();
 
         CallParams params = lc.createCallParams(null);

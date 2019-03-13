@@ -406,7 +406,7 @@ public class ChatMessagesFragment extends Fragment
         if (data != null) {
             if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
                 String fileToUploadPath = null;
-                if (data != null && data.getData() != null) {
+                if (data.getData() != null) {
                     if (data.getData().toString().contains("com.android.contacts/contacts/")) {
                         if (FileUtils.getCVSPathFromLookupUri(data.getData().toString()) != null) {
                             fileToUploadPath =
@@ -448,7 +448,10 @@ public class ChatMessagesFragment extends Fragment
             }
         } else {
             if (FileUtils.isExtensionImage(mImageToUploadUri.getPath())) {
-                addImageToPendingList(mImageToUploadUri.getPath());
+                File file = new File(mImageToUploadUri.getPath());
+                if (file.exists()) {
+                    addImageToPendingList(mImageToUploadUri.getPath());
+                }
             }
         }
     }
