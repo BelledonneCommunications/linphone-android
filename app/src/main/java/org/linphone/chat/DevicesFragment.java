@@ -85,7 +85,7 @@ public class DevicesFragment extends Fragment {
                             long l) {
                         ParticipantDevice device =
                                 (ParticipantDevice) mAdapter.getChild(groupPosition, childPosition);
-                        CallManager.getInstance().inviteAddress(device.getAddress());
+                        CallManager.getInstance().inviteAddress(device.getAddress(), true);
                         return false;
                     }
                 });
@@ -101,7 +101,7 @@ public class DevicesFragment extends Fragment {
                             // in this case groups are childs, so call on click
                             ParticipantDevice device =
                                     (ParticipantDevice) mAdapter.getGroup(groupPosition);
-                            CallManager.getInstance().inviteAddress(device.getAddress());
+                            CallManager.getInstance().inviteAddress(device.getAddress(), true);
                             return true;
                         }
                         return false;

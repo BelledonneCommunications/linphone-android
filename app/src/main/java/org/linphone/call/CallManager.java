@@ -25,6 +25,7 @@ import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
+import org.linphone.core.MediaEncryption;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
@@ -45,15 +46,19 @@ public class CallManager {
         return BandwidthManager.getInstance();
     }
 
-    public void inviteAddress(Address lAddress) {
+    public void inviteAddress(Address lAddress, boolean forceZRTP) {
         boolean isLowBandwidthConnection =
                 !LinphoneUtils.isHighBandwidthConnection(
                         LinphoneService.instance().getApplicationContext());
 
-        inviteAddress(lAddress, false, isLowBandwidthConnection);
+        inviteAddress(lAddress, false, isLowBandwidthConnection, forceZRTP);
     }
 
-    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) {
+    public void inviteAddress(Address lAddress) {
+        inviteAddress(lAddress, false);
+    }
+
+    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
         Core lc = LinphoneManager.getLc();
 
         CallParams params = lc.createCallParams(null);
@@ -70,12 +75,20 @@ public class CallManager {
             Log.d("Low bandwidth enabled in call params");
         }
 
+        if (forceZRTP) {
+            params.setMediaEncryption(MediaEncryption.ZRTP);
+        }
+
         String recordFile =
                 FileUtils.getCallRecordingFilename(
                         LinphoneManager.getInstance().getContext(), lAddress);
         params.setRecordFile(recordFile);
 
         lc.inviteAddressWithParams(lAddress, params);
+    }
+
+    public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) {
+        inviteAddress(lAddress, videoEnabled, lowBandwidth, false);
     }
 
     /**

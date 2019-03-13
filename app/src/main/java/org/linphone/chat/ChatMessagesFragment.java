@@ -173,7 +173,7 @@ public class ChatMessagesFragment extends Fragment
                             if (oneParticipantOneDevice) {
                                 ParticipantDevice device =
                                         mChatRoom.getParticipants()[0].getDevices()[0];
-                                CallManager.getInstance().inviteAddress(device.getAddress());
+                                CallManager.getInstance().inviteAddress(device.getAddress(), true);
                             } else {
                                 LinphoneActivity.instance()
                                         .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);
@@ -893,7 +893,7 @@ public class ChatMessagesFragment extends Fragment
                         if (oneParticipantOneDevice) {
                             ParticipantDevice device =
                                     mChatRoom.getParticipants()[0].getDevices()[0];
-                            CallManager.getInstance().inviteAddress(device.getAddress());
+                            CallManager.getInstance().inviteAddress(device.getAddress(), true);
                         } else {
                             LinphoneActivity.instance()
                                     .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);
