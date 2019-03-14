@@ -377,6 +377,8 @@
   <string name="failed">не удалось</string>
   <string name="pref_adaptive_rate_control">Адаптивный контроль скорости</string>
   <string name="pref_codec_bitrate_limit">Предельная скорость кодека</string>
+  <string name="pref_mic_gain_db">Усиление микрофона (в дБ)</string>
+  <string name="pref_playback_gain_db">Усиление проигрывания (в дБ)</string>
   <string name="pref_codecs">Кодеки</string>
   <!--Video settings-->
   <string name="pref_video_title">Видео</string>
@@ -440,6 +442,7 @@
   <string name="pref_protected_settings_desc">Это приложение должно быть включено для получения push-уведомлений</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Дополнительно</string>
+  <string name="pref_dark_mode">Тёмный режим</string>
   <string name="pref_debug_title">Отладка</string>
   <string name="pref_debug">Отладка</string>
   <string name="pref_java_debug">Использовать Java-регистратор</string>

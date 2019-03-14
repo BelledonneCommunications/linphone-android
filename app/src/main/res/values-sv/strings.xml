@@ -377,6 +377,8 @@
   <string name="failed">misslyckades</string>
   <string name="pref_adaptive_rate_control">Adaptiv hastighetskontroll</string>
   <string name="pref_codec_bitrate_limit">Kodek bithastighetsgräns</string>
+  <string name="pref_mic_gain_db">Mikrofonförstärkning (i db)</string>
+  <string name="pref_playback_gain_db">Uppspelningsförstärkning (i db)</string>
   <string name="pref_codecs">Kodek</string>
   <!--Video settings-->
   <string name="pref_video_title">Video</string>
@@ -440,6 +442,7 @@
   <string name="pref_protected_settings_desc">Denna app måste aktiveras för att få push-meddelanden</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Avancerat</string>
+  <string name="pref_dark_mode">Mörkt läge</string>
   <string name="pref_debug_title">Felsökning</string>
   <string name="pref_debug">Felsökning</string>
   <string name="pref_java_debug">Använd Java-loggare</string>

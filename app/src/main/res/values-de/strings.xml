@@ -176,6 +176,7 @@
   <string name="image_picker_title">Wähle Quelle</string>
   <string name="image_saved">Bild gespeichert</string>
   <string name="image_not_saved">Fehler, Bild nicht gespeichert</string>
+  <string name="wait">Bitte warten…</string>
   <string name="image_transfert_error">Während der Dateiübertragung ist ein Fehler aufgetreten</string>
   <string name="message_not_encrypted">Diese Nachricht ist nicht verschlüsselt</string>
   <string name="message_cant_be_decrypted">Sie haben eine verschlüsselte Nachricht von %s erhalten, die Sie nicht entschlüsseln können.\nSie müssen Ihren Partner zum Austausch Ihrer ZRTP-Schlüssel anrufen, wenn Sie Nachrichten, die Sie künftig empfangen, entschlüsseln möchten.</string>
