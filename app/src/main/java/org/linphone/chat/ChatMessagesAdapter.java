@@ -78,7 +78,12 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                         ChatMessageViewHolder holder =
                                 (ChatMessageViewHolder) message.getUserData();
                         if (holder != null) {
-                            notifyItemChanged(holder.getAdapterPosition());
+                            int position = holder.getAdapterPosition();
+                            if (position >= 0) {
+                                notifyItemChanged(position);
+                            } else {
+                                notifyDataSetChanged();
+                            }
                         } else {
                             // Just in case, better to refresh the whole view than to miss
                             // an update
@@ -104,6 +109,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position) {
+        if (position < 0) return;
         EventLog event = mHistory.get(position);
 
         holder.delete.setVisibility(View.GONE);
@@ -316,7 +322,7 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 }
             }
         }
-        if (position < mHistory.size() - 1
+        if (position >= 0 && position < mHistory.size() - 1
                 && mContext.getResources()
                         .getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
             EventLog nextEvent = (EventLog) getItem(position + 1);
