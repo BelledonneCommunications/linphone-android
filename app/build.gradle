@@ -50,8 +50,8 @@ project.tasks['preBuild'].dependsOn 'getGitVersion'
 
 repositories {
     maven {
-        // Switch to release for releases !
-        url "https://gitlab.linphone.org/BC/public/maven_repository/raw/master"
+        // Replace snapshots by releases for releases !
+        url "https://linphone.org/snapshots/maven_repository"
     }
 }
 
@@ -154,7 +154,8 @@ dependencies {
         debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
         releaseImplementation project(path: ":linphone-sdk-android", configuration: 'release')
     } else {
-        implementation "org.linphone:linphone-sdk-android:4.1+"
+        debugImplementation "org.linphone:linphone-sdk-android-debug:4.1+"
+        releaseImplementation "org.linphone:linphone-sdk-android:4.1+"
     }
 }
 if (firebaseEnabled()) {
