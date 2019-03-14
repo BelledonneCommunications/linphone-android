@@ -32,7 +32,7 @@
             android:background="@drawable/resizable_textfield"
             android:gravity="center"
             android:inputType="textPersonName"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorB"
             android:textCursorDrawable="@null" />
 
         <ImageView

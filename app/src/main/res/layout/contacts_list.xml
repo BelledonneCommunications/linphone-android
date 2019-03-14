@@ -97,7 +97,6 @@
             android:id="@+id/searchField"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/resizable_textfield"
             android:gravity="center"
             android:iconifiedByDefault="false"
             android:inputType="textPersonName"
