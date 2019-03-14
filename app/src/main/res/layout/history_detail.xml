@@ -150,14 +150,14 @@
 
                         <TextView
                             android:id="@+id/date"
-                            style="@style/font10"
+                            style="@style/call_log_detail_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="10dp" />
 
                         <TextView
                             android:id="@+id/time"
-                            style="@style/font10"
+                            style="@style/call_log_detail_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
