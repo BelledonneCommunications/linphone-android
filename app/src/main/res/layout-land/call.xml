@@ -24,7 +24,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="60dp">
+                android:layout_marginBottom="60dp"
+                android:layout_marginTop="40dp">
 
                 <LinearLayout
                     android:id="@+id/conference_list"

@@ -24,7 +24,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="120dp">
+                android:layout_marginBottom="120dp"
+                android:layout_marginTop="40dp">
 
                 <LinearLayout
                     android:id="@+id/conference_list"
@@ -439,6 +440,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="left"
+            android:layout_marginTop="40dp"
             android:background="?attr/backgroundColor">
 
             <include
