@@ -177,7 +177,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return position;
     }
 
-    public boolean isContactSelected(SearchResult sr) {
+    public synchronized boolean isContactSelected(SearchResult sr) {
         for (ContactAddress c : mContactsSelected) {
             Address addr = c.getAddress();
             if (addr != null && sr.getAddress() != null) {
@@ -193,11 +193,11 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return false;
     }
 
-    public ArrayList<ContactAddress> getContactsSelectedList() {
+    public synchronized ArrayList<ContactAddress> getContactsSelectedList() {
         return mContactsSelected;
     }
 
-    public void setContactsSelectedList(ArrayList<ContactAddress> contactsList) {
+    public synchronized void setContactsSelectedList(ArrayList<ContactAddress> contactsList) {
         if (contactsList == null) {
             mContactsSelected = new ArrayList<>();
         } else {
@@ -205,7 +205,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         }
     }
 
-    public boolean toggleContactSelection(ContactAddress ca) {
+    public synchronized boolean toggleContactSelection(ContactAddress ca) {
         if (mContactsSelected.contains(ca)) {
             mContactsSelected.remove(ca);
             return false;
