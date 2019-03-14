@@ -1310,7 +1310,8 @@ public class LinphonePreferences {
 
     public String getActivityToLaunchOnIncomingReceived() {
         return getConfig()
-                .getString("app", "incoming_call_activity", "org.linphone.LinphoneActivity");
+                .getString(
+                        "app", "incoming_call_activity", "org.linphone.call.CallIncomingActivity");
     }
 
     public void setActivityToLaunchOnIncomingReceived(String name) {

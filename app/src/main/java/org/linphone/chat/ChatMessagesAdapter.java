@@ -322,7 +322,8 @@ public class ChatMessagesAdapter extends SelectableAdapter<ChatMessageViewHolder
                 }
             }
         }
-        if (position >= 0 && position < mHistory.size() - 1
+        if (position >= 0
+                && position < mHistory.size() - 1
                 && mContext.getResources()
                         .getBoolean(R.bool.lower_space_between_chat_bubbles_if_same_person)) {
             EventLog nextEvent = (EventLog) getItem(position + 1);

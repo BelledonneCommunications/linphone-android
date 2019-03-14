@@ -65,7 +65,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.linphone.LinphoneManager.AddressType;
@@ -279,10 +278,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     public void onCallStateChanged(
                             Core lc, Call call, Call.State state, String message) {
                         if (state == State.IncomingReceived) {
-                            startActivity(
-                                    new Intent(
-                                            LinphoneActivity.instance(),
-                                            CallIncomingActivity.class));
+                            // This case will be handled by the service listener
                         } else if (state == State.OutgoingInit || state == State.OutgoingProgress) {
                             startActivity(
                                     new Intent(
@@ -1472,21 +1468,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
         sInstance = null;
         super.onDestroy();
-
-        unbindDrawables(findViewById(R.id.topLayout));
-        System.gc();
-    }
-
-    private void unbindDrawables(View view) {
-        if (view != null && view.getBackground() != null) {
-            view.getBackground().setCallback(null);
-        }
-        if (view instanceof ViewGroup && !(view instanceof AdapterView)) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                unbindDrawables(((ViewGroup) view).getChildAt(i));
-            }
-            ((ViewGroup) view).removeAllViews();
-        }
     }
 
     @Override
@@ -1528,12 +1509,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     startIncallActivity();
                 }
             } else if (extras.getBoolean("StartCall", false)) {
-                if (CallActivity.isInstanciated()) {
-                    CallActivity.instance().startIncomingCallActivity();
-                } else {
-                    addressWaitingToBeCalled = extras.getString("NumberToCall");
-                    goToDialerFragment();
-                }
+                addressWaitingToBeCalled = extras.getString("NumberToCall");
+                goToDialerFragment();
             } else if (extras.getBoolean("Transfer", false)) {
                 intent.putExtra("DoNotGoToCallActivity", true);
             } else if (extras.getBoolean("AddCall", false)) {
@@ -1577,19 +1554,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
             }
         }
         setIntent(intent);
-
-        if (LinphoneManager.getLc().getCalls().length > 0) {
-            // If a call is ringing, start incomingcallactivity
-            Collection<Call.State> incoming = new ArrayList<>();
-            incoming.add(Call.State.IncomingReceived);
-            if (LinphoneUtils.getCallsInState(LinphoneManager.getLc(), incoming).size() > 0) {
-                if (CallActivity.isInstanciated()) {
-                    CallActivity.instance().startIncomingCallActivity();
-                } else {
-                    startActivity(new Intent(this, CallIncomingActivity.class));
-                }
-            }
-        }
     }
 
     public boolean isOnBackground() {

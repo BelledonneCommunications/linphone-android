@@ -1419,16 +1419,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         }
     }
 
-    public boolean hasLinphoneAccount() {
-        for (ProxyConfig proxyConfig : mCore.getProxyConfigList()) {
-            if (getString(R.string.default_domain)
-                    .equals(proxyConfig.getIdentityAddress().getDomain())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /** @return false if already in video call. */
     public boolean addVideo() {
         Call call = mCore.getCurrentCall();

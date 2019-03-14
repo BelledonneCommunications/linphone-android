@@ -80,18 +80,14 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow()
+                .addFlags(
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.call_incoming);
 
         mName = findViewById(R.id.contact_name);
         mNumber = findViewById(R.id.contact_number);
-
-        // set this flag so this activity will stay in front of the keyguard
-        int flags =
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-        getWindow().addFlags(flags);
 
         mAccept = findViewById(R.id.answer_button);
         mDecline = findViewById(R.id.decline_button);

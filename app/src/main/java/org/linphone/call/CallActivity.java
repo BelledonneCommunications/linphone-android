@@ -210,7 +210,7 @@ public class CallActivity extends LinphoneGenericActivity
                         }
 
                         if (state == State.IncomingReceived) {
-                            startIncomingCallActivity();
+                            // This scenario will be handled by the Service listener
                             return;
                         } else if (state == State.Paused
                                 || state == State.PausedByRemote
@@ -1188,10 +1188,6 @@ public class CallActivity extends LinphoneGenericActivity
         }
 
         LinphoneManager.getLc().acceptCallUpdate(call, params);
-    }
-
-    public void startIncomingCallActivity() {
-        startActivity(new Intent(this, CallIncomingActivity.class));
     }
 
     private void hideStatusBar() {

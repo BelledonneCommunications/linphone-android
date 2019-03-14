@@ -25,7 +25,6 @@ import android.net.Uri;
 import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
-import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.tools.Log;
 
@@ -71,11 +70,7 @@ public class IntentUtils {
                 && (intent.getStringExtra("NumberToCall") != null)) {
             String numberToCall = intent.getStringExtra("NumberToCall");
             Log.i("[Intent Utils] ACTION_CALL_LINPHONE with number: " + numberToCall);
-            if (CallActivity.isInstanciated()) {
-                CallActivity.instance().startIncomingCallActivity();
-            } else {
-                LinphoneManager.getInstance().newOutgoingCall(numberToCall, null);
-            }
+            LinphoneManager.getInstance().newOutgoingCall(numberToCall, null);
         } else if (Intent.ACTION_CALL.equals(action)) {
             if (intent.getData() != null) {
                 addressToCall = intent.getData().toString();

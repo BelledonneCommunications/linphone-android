@@ -81,13 +81,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
         mSpeaker = findViewById(R.id.speaker);
         mSpeaker.setOnClickListener(this);
 
-        // set this flag so this activity will stay in front of the keyguard
-        int flags =
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
-        getWindow().addFlags(flags);
-
         mHangUp = findViewById(R.id.outgoing_hang_up);
         mHangUp.setOnClickListener(this);
 
