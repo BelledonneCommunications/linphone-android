@@ -60,14 +60,11 @@
                 android:id="@+id/subjectField"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/resizable_textfield"
                 android:contentDescription="@string/content_description_conversation_subject"
                 android:gravity="center"
                 android:hint="@string/conversation_subject_hint"
                 android:inputType="textEmailSubject"
-                android:paddingRight="5dp"
-                android:textColor="@color/colorB"
-                android:textCursorDrawable="@null" />
+                android:paddingRight="5dp" />
 
         </RelativeLayout>
 
