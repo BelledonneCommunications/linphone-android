@@ -52,7 +52,6 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.Factory;
-import org.linphone.core.LimeState;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.PayloadType;
 import org.linphone.core.ProxyConfig;
@@ -65,7 +64,6 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.FileUtils;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.LedPreference;
 
 public class SettingsFragment extends PreferencesListFragment {
@@ -259,10 +257,6 @@ public class SettingsFragment extends PreferencesListFragment {
         if (getResources().getBoolean(R.bool.disable_every_log)) {
             uncheckAndHidePreference(R.string.pref_debug_key);
             uncheckAndHidePreference(R.string.pref_java_debug_key);
-        }
-
-        if (!LinphoneManager.getLc().upnpAvailable()) {
-            uncheckAndHidePreference(R.string.pref_upnp_enable_key);
         }
     }
 
@@ -529,36 +523,6 @@ public class SettingsFragment extends PreferencesListFragment {
         }
         pref.setSummary(value);
         pref.setValue(value);
-    }
-
-    private void initLimeEncryptionPreference(ListPreference pref) {
-        List<CharSequence> entries = new ArrayList<>();
-        List<CharSequence> values = new ArrayList<>();
-        entries.add(getString(R.string.lime_encryption_entry_disabled));
-        values.add(LimeState.Disabled.toString());
-
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc == null || !lc.limeAvailable()) {
-            setListPreferenceValues(pref, entries, values);
-            pref.setEnabled(false);
-            return;
-        }
-
-        entries.add(getString(R.string.lime_encryption_entry_mandatory));
-        values.add(LimeState.Mandatory.toString());
-        entries.add(getString(R.string.lime_encryption_entry_preferred));
-        values.add(LimeState.Preferred.toString());
-        setListPreferenceValues(pref, entries, values);
-
-        LimeState lime = mPrefs.limeEnabled();
-        if (lime == LimeState.Disabled) {
-            pref.setSummary(getString(R.string.lime_encryption_entry_disabled));
-        } else if (lime == LimeState.Mandatory) {
-            pref.setSummary(getString(R.string.lime_encryption_entry_mandatory));
-        } else if (lime == LimeState.Preferred) {
-            pref.setSummary(getString(R.string.lime_encryption_entry_preferred));
-        }
-        pref.setValue(lime.toString());
     }
 
     private void initAutoDownloadPolicyPreference(ListPreference pref) {
@@ -1124,6 +1088,8 @@ public class SettingsFragment extends PreferencesListFragment {
                         findPreference(getString(R.string.pref_incoming_call_vibration_key));
         CheckBoxPreference autoAnswer =
                 (CheckBoxPreference) findPreference(getString(R.string.pref_auto_answer_key));
+        EditTextPreference autoAnswerTime =
+                (EditTextPreference) findPreference(getString(R.string.pref_auto_answer_time_key));
         CheckBoxPreference rfc2833 =
                 (CheckBoxPreference) findPreference(getString(R.string.pref_rfc2833_dtmf_key));
         CheckBoxPreference sipInfo =
@@ -1133,18 +1099,17 @@ public class SettingsFragment extends PreferencesListFragment {
         EditTextPreference incTimeout =
                 (EditTextPreference)
                         findPreference(getString(R.string.pref_incoming_call_timeout_key));
-        EditTextPreference autoAnswerTime =
-                (EditTextPreference) findPreference(getString(R.string.pref_auto_answer_time_key));
 
         rfc2833.setChecked(mPrefs.useRfc2833Dtmfs());
         sipInfo.setChecked(mPrefs.useSipInfoDtmfs());
         deviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
         incomingCallVibration.setChecked(mPrefs.isIncomingCallVibrationEnabled());
-        autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
         incTimeout.setText(String.valueOf(mPrefs.getIncTimeout()));
         incTimeout.setSummary(String.valueOf(mPrefs.getIncTimeout()));
+        autoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
         autoAnswerTime.setText(String.valueOf(mPrefs.getAutoAnswerTime()));
         autoAnswerTime.setSummary(String.valueOf(mPrefs.getAutoAnswerTime()));
+
         if (mPrefs.isAutoAnswerEnabled()) {
             autoAnswerTime.setEnabled(true);
         } else {
@@ -1330,19 +1295,9 @@ public class SettingsFragment extends PreferencesListFragment {
                         });
     }
 
-    private void setEncryptionZrtp() {
-        LinphoneUtils.displayErrorAlert(
-                getString(R.string.lime_encryption_enable_zrtp), LinphoneActivity.instance());
-        mPrefs.setMediaEncryption(MediaEncryption.ZRTP);
-        findPreference(getString(R.string.pref_media_encryption_key))
-                .setSummary(mPrefs.getMediaEncryption().toString());
-    }
-
     private void initChatSettings() {
         setPreferenceDefaultValueAndSummary(
                 R.string.pref_image_sharing_server_key, mPrefs.getSharingPictureServerUrl());
-        initLimeEncryptionPreference(
-                (ListPreference) findPreference(getString(R.string.pref_use_lime_encryption_key)));
         initAutoDownloadPolicyPreference(
                 (ListPreference) findPreference(getString(R.string.pref_auto_download_policy_key)));
         int max_size = mPrefs.getAutoDownloadFileMaxSize();
@@ -1366,38 +1321,6 @@ public class SettingsFragment extends PreferencesListFragment {
                                 String value = (String) newValue;
                                 mPrefs.setSharingPictureServerUrl(value);
                                 preference.setSummary(value);
-                                return true;
-                            }
-                        });
-
-        findPreference(getString(R.string.pref_use_lime_encryption_key))
-                .setOnPreferenceChangeListener(
-                        new OnPreferenceChangeListener() {
-                            @Override
-                            public boolean onPreferenceChange(
-                                    Preference preference, Object newValue) {
-                                String value = newValue.toString();
-                                LimeState lime = LimeState.Disabled;
-                                if (value.equals(LimeState.Mandatory.toString()))
-                                    lime = LimeState.Mandatory;
-                                else if (value.equals(LimeState.Preferred.toString()))
-                                    lime = LimeState.Preferred;
-                                mPrefs.enableLime(lime);
-
-                                lime = mPrefs.limeEnabled();
-                                if (lime == LimeState.Disabled) {
-                                    preference.setSummary(
-                                            getString(R.string.lime_encryption_entry_disabled));
-                                } else if (lime == LimeState.Mandatory) {
-                                    setEncryptionZrtp();
-                                    preference.setSummary(
-                                            getString(R.string.lime_encryption_entry_mandatory));
-                                } else if (lime == LimeState.Preferred) {
-                                    setEncryptionZrtp();
-                                    preference.setSummary(
-                                            getString(R.string.lime_encryption_entry_preferred));
-                                }
-
                                 return true;
                             }
                         });
@@ -1602,18 +1525,6 @@ public class SettingsFragment extends PreferencesListFragment {
                             public boolean onPreferenceChange(
                                     Preference preference, Object newValue) {
                                 mPrefs.setTurnPassword((String) newValue);
-                                return true;
-                            }
-                        });
-
-        findPreference(getString(R.string.pref_upnp_enable_key))
-                .setOnPreferenceChangeListener(
-                        new OnPreferenceChangeListener() {
-                            @Override
-                            public boolean onPreferenceChange(
-                                    Preference preference, Object newValue) {
-                                boolean value = (Boolean) newValue;
-                                mPrefs.setUpnpEnabled(value);
                                 return true;
                             }
                         });

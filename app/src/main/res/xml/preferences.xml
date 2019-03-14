@@ -133,6 +133,14 @@
                     android:summary="@string/pref_video_automatically_accept_video"
                     android:title="@string/pref_video_automatically_accept_video_title" />
 
+                <CheckBoxPreference
+                    android:dependency="@string/pref_video_enable_key"
+                    android:key="@string/pref_overlay_key"
+                    android:persistent="false"
+                    android:shouldDisableView="true"
+                    android:summary="@string/pref_overlay_summary"
+                    android:title="@string/pref_overlay" />
+
                 <ListPreference
                     android:dependency="@string/pref_video_enable_key"
                     android:entries="@array/video_preset_entries"
@@ -163,14 +171,6 @@
                     android:persistent="false"
                     android:shouldDisableView="true"
                     android:title="@string/pref_bandwidth_limit" />
-
-                <CheckBoxPreference
-                    android:dependency="@string/pref_video_enable_key"
-                    android:key="@string/pref_overlay_key"
-                    android:persistent="false"
-                    android:shouldDisableView="true"
-                    android:summary="@string/pref_overlay_summary"
-                    android:title="@string/pref_overlay" />
 
             </PreferenceCategory>
 
@@ -251,12 +251,6 @@
             android:title="@string/pref_chat_title">
 
             <PreferenceCategory android:title="@string/pref_chat_title">
-
-                <ListPreference
-                    android:key="@string/pref_use_lime_encryption_key"
-                    android:persistent="false"
-                    android:title="@string/pref_use_lime_encryption" />
-
                 <EditTextPreference
                     android:inputType="textUri"
                     android:key="@string/pref_image_sharing_server_key"
@@ -297,6 +291,33 @@
                     android:persistent="false"
                     android:title="@string/pref_wifi_only" />
 
+                <CheckBoxPreference
+                    android:key="@string/pref_ipv6_key"
+                    android:persistent="false"
+                    android:title="@string/pref_ipv6_title" />
+
+                <CheckBoxPreference
+                    android:key="@string/pref_push_notification_key"
+                    android:persistent="false"
+                    android:title="@string/pref_push_notification" />
+
+                <Preference
+                    android:key="@string/pref_device_power_saver_settings_key"
+                    android:persistent="false"
+                    android:summary="@string/pref_protected_settings_desc"
+                    android:title="@string/pref_protected_settings_title" />
+
+                <CheckBoxPreference
+                    android:key="@string/pref_transport_use_random_ports_key"
+                    android:persistent="false"
+                    android:title="@string/pref_transport_use_random_ports" />
+
+                <EditTextPreference
+                    android:key="@string/pref_sip_port_key"
+                    android:numeric="integer"
+                    android:persistent="false"
+                    android:title="@string/pref_sip_port_title" />
+
                 <EditTextPreference
                     android:inputType="textUri"
                     android:key="@string/pref_stun_server_key"
@@ -325,22 +346,6 @@
                     android:persistent="false"
                     android:title="@string/pref_turn_passwd_title" />
 
-                <CheckBoxPreference
-                    android:key="@string/pref_upnp_enable_key"
-                    android:persistent="false"
-                    android:title="@string/pref_upnp_enable" />
-
-                <CheckBoxPreference
-                    android:key="@string/pref_transport_use_random_ports_key"
-                    android:persistent="false"
-                    android:title="@string/pref_transport_use_random_ports" />
-
-                <EditTextPreference
-                    android:key="@string/pref_sip_port_key"
-                    android:numeric="integer"
-                    android:persistent="false"
-                    android:title="@string/pref_sip_port_title" />
-
                 <EditTextPreference
                     android:key="@string/pref_audio_port_key"
                     android:layout="@layout/hidden"
@@ -354,22 +359,6 @@
                     android:persistent="false"
                     android:summary="@string/pref_video_port_description"
                     android:title="@string/pref_video_port_title" />
-
-                <CheckBoxPreference
-                    android:key="@string/pref_push_notification_key"
-                    android:persistent="false"
-                    android:title="@string/pref_push_notification" />
-
-                <Preference
-                    android:key="@string/pref_device_power_saver_settings_key"
-                    android:persistent="false"
-                    android:summary="@string/pref_protected_settings_desc"
-                    android:title="@string/pref_protected_settings_title" />
-
-                <CheckBoxPreference
-                    android:key="@string/pref_ipv6_key"
-                    android:persistent="false"
-                    android:title="@string/pref_ipv6_title" />
 
             </PreferenceCategory>
 
@@ -415,6 +404,11 @@
                     android:persistent="false"
                     android:title="@string/pref_autostart" />
 
+                <CheckBoxPreference
+                    android:key="@string/pref_dark_mode_key"
+                    android:persistent="false"
+                    android:title="@string/pref_dark_mode" />
+
                 <EditTextPreference
                     android:inputType="textUri"
                     android:key="@string/pref_remote_provisioning_key"
@@ -425,11 +419,6 @@
                     android:key="@string/pref_android_app_settings_key"
                     android:persistent="false"
                     android:title="@string/pref_android_app_settings_title" />
-
-                <CheckBoxPreference
-                    android:key="@string/pref_dark_mode_key"
-                    android:persistent="false"
-                    android:title="@string/pref_dark_mode" />
 
             </PreferenceCategory>
 
