@@ -26,6 +26,7 @@ import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Person;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
@@ -84,5 +85,25 @@ class ApiTwentyEightPlus {
         ActivityManager activityManager =
                 (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         return activityManager.isBackgroundRestricted();
+    }
+
+    public static int getAppStandbyBucket(Context context) {
+        UsageStatsManager usageStatsManager =
+                (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        return usageStatsManager.getAppStandbyBucket();
+    }
+
+    public static String getAppStandbyBucketNameFromValue(int bucket) {
+        switch (bucket) {
+            case UsageStatsManager.STANDBY_BUCKET_ACTIVE:
+                return "STANDBY_BUCKET_ACTIVE";
+            case UsageStatsManager.STANDBY_BUCKET_FREQUENT:
+                return "STANDBY_BUCKET_FREQUENT";
+            case UsageStatsManager.STANDBY_BUCKET_RARE:
+                return "STANDBY_BUCKET_RARE";
+            case UsageStatsManager.STANDBY_BUCKET_WORKING_SET:
+                return "STANDBY_BUCKET_WORKING_SET";
+        }
+        return null;
     }
 }

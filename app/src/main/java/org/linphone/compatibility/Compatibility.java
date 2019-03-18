@@ -210,4 +210,18 @@ public class Compatibility {
         }
         return false;
     }
+
+    public static int getAppStandbyBucket(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
+            return ApiTwentyEightPlus.getAppStandbyBucket(context);
+        }
+        return 0;
+    }
+
+    public static String getAppStandbyBucketNameFromValue(int bucket) {
+        if (Version.sdkAboveOrEqual(Version.API28_PIE_90)) {
+            return ApiTwentyEightPlus.getAppStandbyBucketNameFromValue(bucket);
+        }
+        return null;
+    }
 }

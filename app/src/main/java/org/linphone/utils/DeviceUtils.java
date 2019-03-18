@@ -125,6 +125,10 @@ public class DeviceUtils {
         return Compatibility.isAppUserRestricted(context);
     }
 
+    public static int getAppStandbyBucket(Context context) {
+        return Compatibility.getAppStandbyBucket(context);
+    }
+
     public static void displayDialogIfDeviceHasPowerManagerThatCouldPreventPushNotifications(
             final Context context) {
         for (final Intent intent : POWERMANAGER_INTENTS) {

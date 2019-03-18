@@ -1395,6 +1395,13 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     "[Linphone Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
         }
 
+        int bucket = DeviceUtils.getAppStandbyBucket(this);
+        if (bucket > 0) {
+            Log.w(
+                    "[Linphone Activity] Device is in bucket "
+                            + Compatibility.getAppStandbyBucketNameFromValue(bucket));
+        }
+
         IntentUtils.handleIntent(this, getIntent());
     }
 
