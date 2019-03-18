@@ -292,6 +292,8 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="incall_notif_active">Appel audio en cours</string>
   <string name="incall_notif_paused">Appel en pause</string>
   <string name="incall_notif_video">Appel vidéo en cours</string>
+  <string name="incall_notif_incoming">Appel entrant en cours</string>
+  <string name="incall_notif_outgoing">Appel sortant en cours</string>
   <string name="notification_started">démarré</string>
   <string name="unread_messages">%i messages non lus</string>
   <string name="missed_calls_notif_title">Appel manqué</string>
