@@ -34,6 +34,9 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -296,8 +299,21 @@ public class NotificationsManager {
 
     public void displayCallNotification(Call call) {
         if (call == null) return;
-        Intent callNotifIntent =
-                new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
+
+        Intent callNotifIntent;
+        if (call.getState() == Call.State.IncomingReceived
+                || call.getState() == Call.State.IncomingEarlyMedia) {
+            callNotifIntent = new Intent(mContext, CallIncomingActivity.class);
+        } else if (call.getState() == Call.State.OutgoingInit
+                || call.getState() == Call.State.OutgoingProgress
+                || call.getState() == Call.State.OutgoingRinging
+                || call.getState() == Call.State.OutgoingEarlyMedia) {
+            callNotifIntent = new Intent(mContext, CallOutgoingActivity.class);
+        } else {
+            callNotifIntent = new Intent(mContext, CallActivity.class);
+        }
+        callNotifIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext, 0, callNotifIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -329,6 +345,18 @@ public class NotificationsManager {
             case Pausing:
                 iconId = R.drawable.topbar_call_notification;
                 notificationTextId = R.string.incall_notif_paused;
+                break;
+            case IncomingEarlyMedia:
+            case IncomingReceived:
+                iconId = R.drawable.topbar_call_notification;
+                notificationTextId = R.string.incall_notif_incoming;
+                break;
+            case OutgoingEarlyMedia:
+            case OutgoingInit:
+            case OutgoingProgress:
+            case OutgoingRinging:
+                iconId = R.drawable.topbar_call_notification;
+                notificationTextId = R.string.incall_notif_outgoing;
                 break;
             default:
                 if (call.getCurrentParams().videoEnabled()) {

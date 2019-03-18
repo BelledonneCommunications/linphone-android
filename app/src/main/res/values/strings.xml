@@ -307,6 +307,8 @@
     <string name="incall_notif_active">Audio call ongoing</string>
     <string name="incall_notif_paused">Paused call ongoing</string>
     <string name="incall_notif_video">Video capturing call ongoing</string>
+    <string name="incall_notif_incoming">Call incoming</string>
+    <string name="incall_notif_outgoing">Call outgoing</string>
     <string name="notification_started">started</string>
     <string name="unread_messages">%i unread messages</string>
     <string name="missed_calls_notif_title">Missed call</string>

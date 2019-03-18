@@ -431,16 +431,22 @@ public final class LinphoneService extends Service {
     }
 
     private void onIncomingReceived() {
-        // wakeup linphone
-
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         Intent intent = new Intent().setClass(this, mIncomingReceivedActivity);
+
         if (!pm.isInteractive()) {
             // This is to workaround an infinite loop of pause/start in LinphoneActivity issue
             // if incoming call is being stopped by caller while screen if off and locked
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
-        startActivity(intent);
+
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().startActivity(intent);
+        } else {
+            // This flag is required to start an Activity from a Service context
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     /*Believe me or not, but knowing the application visibility state on Android is a nightmare.
