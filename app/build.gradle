@@ -151,7 +151,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
 
     if (isLocalAarAvailable()) {
-        debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
+        //debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
+        //debug AAR is a lot bigger than release one, and APK install time will be much longer so use release one for day-to-day development
+        debugImplementation project(path: ":linphone-sdk-android", configuration: 'release')
         releaseImplementation project(path: ":linphone-sdk-android", configuration: 'release')
     } else {
         debugImplementation "org.linphone:linphone-sdk-android-debug:4.1+"
