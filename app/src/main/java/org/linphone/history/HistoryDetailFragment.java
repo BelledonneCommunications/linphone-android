@@ -36,6 +36,7 @@ import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
@@ -228,13 +229,24 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                         && lpc.getConferenceFactoryUri() != null
                         && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
                     mWaitLayout.setVisibility(View.VISIBLE);
-                    mChatRoom =
-                            lc.createClientGroupChatRoom(
-                                    getString(R.string.dummy_group_chat_subject), true);
-                    mChatRoom.addListener(mChatRoomCreationListener);
+
+                    ChatRoomParams params = lc.createDefaultChatRoomParams();
+                    params.enableEncryption(false);
+                    params.enableGroup(true);
+
                     Address participants[] = new Address[1];
                     participants[0] = participant;
-                    mChatRoom.addParticipants(participants);
+
+                    mChatRoom =
+                            lc.createChatRoom(
+                                    params,
+                                    getString(R.string.dummy_group_chat_subject),
+                                    participants);
+                    if (mChatRoom != null) {
+                        mChatRoom.addListener(mChatRoomCreationListener);
+                    } else {
+                        Log.w("[History Detail Fragment] createChatRoom returned null...");
+                    }
                 } else {
                     room = lc.getChatRoom(participant);
                     LinphoneActivity.instance()

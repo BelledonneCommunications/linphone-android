@@ -51,6 +51,8 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListener;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.ChatRoomParams;
+import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
 import org.linphone.core.tools.Log;
@@ -326,26 +328,28 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     public void onClick(View view) {
                         if (!mIsAlreadyCreatedGroup) {
                             mWaitLayout.setVisibility(View.VISIBLE);
-                            mTempChatRoom =
-                                    LinphoneManager.getLc()
-                                            .createClientGroupChatRoom(
-                                                    mSubjectField.getText().toString(),
-                                                    false,
-                                                    mIsEncryptionEnabled);
-                            mTempChatRoom.addListener(mChatRoomCreationListener);
+                            Core core = LinphoneManager.getLc();
 
-                            if (mParticipants.size() == 1) {
-                                // Ugly hack until new client chat group API so we can have a group
-                                // chat room with 1 participant without being one to one
-                                mTempChatRoom.addParticipant(mParticipants.get(0).getAddress());
+                            int i = 0;
+                            Address[] participants = new Address[mParticipants.size()];
+                            for (ContactAddress ca : mParticipants) {
+                                participants[i] = ca.getAddress();
+                                i++;
+                            }
+
+                            ChatRoomParams params = core.createDefaultChatRoomParams();
+                            params.enableEncryption(mIsEncryptionEnabled);
+                            params.enableGroup(true);
+
+                            mTempChatRoom =
+                                    core.createChatRoom(
+                                            params,
+                                            mSubjectField.getText().toString(),
+                                            participants);
+                            if (mTempChatRoom != null) {
+                                mTempChatRoom.addListener(mChatRoomCreationListener);
                             } else {
-                                int i = 0;
-                                Address[] participantsToAdd = new Address[mParticipants.size()];
-                                for (ContactAddress ca : mParticipants) {
-                                    participantsToAdd[i] = ca.getAddress();
-                                    i++;
-                                }
-                                mTempChatRoom.addParticipants(participantsToAdd);
+                                Log.w("[Group Info Fragment] createChatRoom returned null...");
                             }
                         } else {
                             // Subject

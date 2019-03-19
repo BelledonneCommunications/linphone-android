@@ -52,6 +52,7 @@ import org.linphone.contacts.SearchContactsAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomListenerStub;
+import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
@@ -565,15 +566,23 @@ public class ChatRoomCreationFragment extends Fragment
                                     mChatRoom.getPeerAddress().asStringUriOnly(),
                                     mShareInfos);
                 } else {
-                    mChatRoom =
-                            lc.createClientGroupChatRoom(
-                                    getString(R.string.dummy_group_chat_subject),
-                                    !createEncryptedChatRoom,
-                                    createEncryptedChatRoom);
-                    mChatRoom.addListener(mChatRoomCreationListener);
+                    ChatRoomParams params = lc.createDefaultChatRoomParams();
+                    params.enableEncryption(true);
+                    params.enableGroup(true);
+
                     Address participants[] = new Address[1];
                     participants[0] = address;
-                    mChatRoom.addParticipants(participants);
+
+                    mChatRoom =
+                            lc.createChatRoom(
+                                    params,
+                                    getString(R.string.dummy_group_chat_subject),
+                                    participants);
+                    if (mChatRoom != null) {
+                        mChatRoom.addListener(mChatRoomCreationListener);
+                    } else {
+                        Log.w("[Chat Room Creation Fragment] createChatRoom returned null...");
+                    }
                 }
             } else {
                 if (lpc != null
@@ -582,13 +591,24 @@ public class ChatRoomCreationFragment extends Fragment
                     mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, false);
                     if (mChatRoom == null) {
                         mWaitLayout.setVisibility(View.VISIBLE);
-                        mChatRoom =
-                                lc.createClientGroupChatRoom(
-                                        getString(R.string.dummy_group_chat_subject), true);
-                        mChatRoom.addListener(mChatRoomCreationListener);
+
+                        ChatRoomParams params = lc.createDefaultChatRoomParams();
+                        params.enableEncryption(false);
+                        params.enableGroup(true);
+
                         Address participants[] = new Address[1];
                         participants[0] = address;
-                        mChatRoom.addParticipants(participants);
+
+                        mChatRoom =
+                                lc.createChatRoom(
+                                        params,
+                                        getString(R.string.dummy_group_chat_subject),
+                                        participants);
+                        if (mChatRoom != null) {
+                            mChatRoom.addListener(mChatRoomCreationListener);
+                        } else {
+                            Log.w("[Chat Room Creation Fragment] createChatRoom returned null...");
+                        }
                     } else {
                         LinphoneActivity.instance()
                                 .goToChat(
