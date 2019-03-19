@@ -751,15 +751,30 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         mCore.migrateLogsFromRcToDb();
 
-        // Migrate existing linphone accounts to have conference factory uri set
+        // Migrate existing linphone accounts to have conference factory uri and LIME X3Dh url set
+        String uri = getString(R.string.default_conference_factory_uri);
         for (ProxyConfig lpc : mCore.getProxyConfigList()) {
             if (lpc.getConferenceFactoryUri() == null
                     && lpc.getIdentityAddress()
                             .getDomain()
                             .equals(getString(R.string.default_domain))) {
                 lpc.edit();
-                lpc.setConferenceFactoryUri(getString(R.string.default_conference_factory_uri));
+                Log.i(
+                        "[Manager] Setting conference factory on proxy config "
+                                + lpc.getIdentityAddress().asString()
+                                + " to default value: "
+                                + uri);
+                lpc.setConferenceFactoryUri(uri);
                 lpc.done();
+            }
+
+            if (mCore.limeX3DhAvailable()) {
+                String url = mCore.getLimeX3DhServerUrl();
+                if (url == null || url.length() == 0) {
+                    url = getString(R.string.default_lime_x3dh_server_url);
+                    Log.i("[Manager] Setting LIME X3Dh server url to default value: " + url);
+                    mCore.setLimeX3DhServerUrl(url);
+                }
             }
         }
 
