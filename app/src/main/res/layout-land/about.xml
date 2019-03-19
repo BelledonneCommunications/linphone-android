@@ -93,7 +93,7 @@
 
         <TextView
             android:id="@+id/about_text"
-            style="@style/font23"
+            style="@style/about_license_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

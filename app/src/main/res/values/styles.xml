@@ -204,7 +204,7 @@
     </style>
 
     <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textColor">@color/colorH</item>
         <item name="android:textSize">10sp</item>
     </style>
 
@@ -241,6 +241,12 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="about_license_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextDarkColor</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
     <style name="font23" parent="@android:style/TextAppearance.Medium">

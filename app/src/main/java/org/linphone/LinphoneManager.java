@@ -690,8 +690,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             mCore.addListener(this);
             if (isPush) {
                 Log.w(
-                        "[Manager] We are here because of a received push notification, force network reachability and enter background mode before starting the Core");
-                mCore.setNetworkReachable(true);
+                        "[Manager] We are here because of a received push notification, enter background mode before starting the Core");
                 mCore.enterBackground();
             }
             mCore.start();
