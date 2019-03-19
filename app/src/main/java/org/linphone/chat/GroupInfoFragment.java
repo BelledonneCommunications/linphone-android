@@ -350,6 +350,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                 mTempChatRoom.addListener(mChatRoomCreationListener);
                             } else {
                                 Log.w("[Group Info Fragment] createChatRoom returned null...");
+                                mWaitLayout.setVisibility(View.GONE);
                             }
                         } else {
                             // Subject

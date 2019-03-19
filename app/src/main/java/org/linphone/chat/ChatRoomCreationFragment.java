@@ -582,6 +582,7 @@ public class ChatRoomCreationFragment extends Fragment
                         mChatRoom.addListener(mChatRoomCreationListener);
                     } else {
                         Log.w("[Chat Room Creation Fragment] createChatRoom returned null...");
+                        mWaitLayout.setVisibility(View.GONE);
                     }
                 }
             } else {
@@ -608,6 +609,7 @@ public class ChatRoomCreationFragment extends Fragment
                             mChatRoom.addListener(mChatRoomCreationListener);
                         } else {
                             Log.w("[Chat Room Creation Fragment] createChatRoom returned null...");
+                            mWaitLayout.setVisibility(View.GONE);
                         }
                     } else {
                         LinphoneActivity.instance()

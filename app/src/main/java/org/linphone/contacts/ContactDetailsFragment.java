@@ -124,6 +124,7 @@ public class ContactDetailsFragment extends Fragment
                                     } else {
                                         Log.w(
                                                 "[Contact Details Fragment] createChatRoom returned null...");
+                                        mWaitLayout.setVisibility(View.GONE);
                                     }
                                 } else {
                                     room = lc.getChatRoom(participant);

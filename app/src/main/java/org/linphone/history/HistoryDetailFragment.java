@@ -246,6 +246,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                         mChatRoom.addListener(mChatRoomCreationListener);
                     } else {
                         Log.w("[History Detail Fragment] createChatRoom returned null...");
+                        mWaitLayout.setVisibility(View.GONE);
                     }
                 } else {
                     room = lc.getChatRoom(participant);
