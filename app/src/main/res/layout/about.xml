@@ -64,6 +64,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:orientation="vertical"
+        android:background="?attr/backgroundContastColor"
         android:padding="10dp">
 
         <TextView
@@ -92,13 +93,14 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorE" />
+            android:background="?attr/dividerColor" />
 
         <LinearLayout
             style="android:attr/buttonBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingTop="20dp"
             android:orientation="horizontal">
 
             <Button
@@ -124,6 +126,7 @@
                 android:text="@string/menu_reset_log" />
 
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
