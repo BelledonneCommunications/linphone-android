@@ -8,6 +8,8 @@ Now the default way of building linphone-android is to download the AAR SDK in o
 Compared to previous versions, this project no longer uses submodules developper has to build in order to get a working app.
 However, if you wish to use a locally compiled SDK see below how to proceed.
 
+We offer different flavors for the SDK in our maven repository: org.linphone.no-video (a build without video) and org.linphone.legacy (old java wrapper if you didn't migrate your app code to the new one yet).
+
 The repository structure has also been cleaned and updated, and changing the package name can now be done in a single step.
 This allows developpers to keep a stable version as well as a developpment one on the same device easily.
 
@@ -37,9 +39,11 @@ git clone https://gitlab.linphone.org/BC/public/linphone-sdk.git --recursive
 
 2. Follow the instructions in the linphone-sdk/README file to build the SDK.
 
-3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug or release) to the generated AAR:
+3. Edit in the linphone-sdk-android folder of this project the symbolic link (debug and/or release) to the generated AAR.
+We recommend to at least create the link for the release AAR that can be used for debug APK flavor because it is smaller and will reduce the time required to install the APK.
 ```
-ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-<debug or release>.aar linphone-sdk-android/linphone-sdk-android-<debug or release>.aar
+ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-release.aar linphone-sdk-android/linphone-sdk-android-release.aar
+ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/linphone-sdk-android-debug.aar linphone-sdk-android/linphone-sdk-android-debug.aar
 ```
 
 4. Rebuild the app in Android Studio.
@@ -54,7 +58,9 @@ ln -s <path to linphone-sdk>/linphone-sdk/build/linphone-sdk/bin/outputs/aar/lin
 
 4. Open native file and put your breakpoint on it.
 
-5. Debug app.
+5. Make sure you are using the debug AAR in the app/build.gradle script and not the release one (to have faster builds by default the release AAR is used even for debug APK flavor).
+
+6. Debug app.
 
 ## Create an APK with a different package name
 
