@@ -3,7 +3,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/backgroundColor2"
+    android:background="?attr/backgroundColor"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -19,9 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="55dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/security_level"
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1" />

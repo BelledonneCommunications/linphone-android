@@ -48,6 +48,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/top"
         android:divider="?attr/dividerColor"
+        android:childDivider="?attr/dividerColor"
+        android:dividerHeight="1dp"
         android:groupIndicator="@null" />
 
 </RelativeLayout>

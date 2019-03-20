@@ -67,7 +67,7 @@ class DevicesAdapter extends BaseExpandableListAdapter {
                 }
             } else {
                 LayoutInflater inflater = LayoutInflater.from(mContext);
-                view = inflater.inflate(R.layout.chat_device_cell, viewGroup, false);
+                view = inflater.inflate(R.layout.chat_device_cell_as_group, viewGroup, false);
             }
             if (holder == null) {
                 holder = new DeviceChildViewHolder(view);

@@ -19,6 +19,7 @@
         <item name="primarySubtextLightColor">@color/colorE</item>
 
         <item name="backgroundColor">@color/colorH</item>
+        <item name="backgroundColor2">@color/colorG2</item>
         <item name="backgroundContastColor">@color/colorC</item>
         <item name="dividerColor">@color/colorE</item>
 
@@ -53,6 +54,7 @@
         <item name="primarySubtextLightColor">@color/colorF</item>
 
         <item name="backgroundColor">@color/colorC</item>
+        <item name="backgroundColor2">@color/colorD</item>
         <item name="backgroundContastColor">@color/colorH</item>
         <item name="dividerColor">@color/colorE</item>
 
