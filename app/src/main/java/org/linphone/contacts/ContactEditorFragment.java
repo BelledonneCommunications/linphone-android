@@ -165,12 +165,15 @@ public class ContactEditorFragment extends Fragment {
                         for (LinphoneNumberOrAddress noa : mNumbersAndAddresses) {
                             if (noa.getValue() == null || noa.getValue().isEmpty()) {
                                 if (noa.getOldValue() != null && !noa.getOldValue().isEmpty()) {
+                                    Log.i("[Contact Editor] Removing number " + noa.getOldValue());
                                     mContact.removeNumberOrAddress(noa);
                                 }
                             } else {
                                 if (noa.getOldValue() != null
-                                        && !noa.getOldValue().isEmpty()
                                         && noa.getOldValue().equals(noa.getValue())) {
+                                    Log.i(
+                                            "[Contact Editor] Keeping existing number "
+                                                    + noa.getValue());
                                     continue;
                                 }
 
@@ -179,6 +182,7 @@ public class ContactEditorFragment extends Fragment {
                                             LinphoneUtils.getFullAddressFromUsername(
                                                     noa.getValue()));
                                 }
+                                Log.i("[Contact Editor] Adding new number " + noa.getValue());
                                 mContact.addOrUpdateNumberOrAddress(noa);
                             }
                         }
