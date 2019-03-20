@@ -290,6 +290,8 @@
   <string name="incall_notif_active">Установлено аудиосоединение</string>
   <string name="incall_notif_paused">Вызов на удержании</string>
   <string name="incall_notif_video">Установлено видеосоединение</string>
+  <string name="incall_notif_incoming">Входящий вызов</string>
+  <string name="incall_notif_outgoing">Исходящий вызов</string>
   <string name="notification_started">начат</string>
   <string name="unread_messages">%i непрочитанных сообщений</string>
   <string name="missed_calls_notif_title">Пропущенный вызов</string>

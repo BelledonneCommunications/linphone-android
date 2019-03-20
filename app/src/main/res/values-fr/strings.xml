@@ -228,7 +228,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="imdn_info">Etat du message</string>
   <string name="chat_room_devices">Terminaux de %s</string>
   <string name="group_chat_room_devices">Terminaux de la conversation</string>
-  <string name="add_to_contacts">Button Ajouter aux contacts</string>
+  <string name="add_to_contacts">Ajouter aux contacts</string>
   <string name="lime_security_popup">Dans les conversations sécurisées, les messages sont chiffrés de bout en bout. Il est possible d\'augmenter le niveau de sécurité en vérifiant l\'identité des participants. Pour ce faire, appelez le contact et suivez la procédure d\'authentification.</string>
   <string name="lime_identity_key_changed">Les clés de sécurité ont changé pour %s</string>
   <string name="man_in_the_middle_detected">Attaque de l\'homme du milieu détectée pour %s</string>
@@ -485,7 +485,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="content_description_edit">Modifier</string>
   <string name="content_description_edit_list">Edition de list</string>
   <string name="content_description_valid">Valider</string>
-  <string name="content_description_add_contact">Button Ajouter aux contacts</string>
+  <string name="content_description_add_contact">Ajouter aux contacts</string>
   <string name="content_description_new_contact">Nouveau contact</string>
   <string name="content_description_call">Appel</string>
   <string name="content_description_backspace">Retour</string>
