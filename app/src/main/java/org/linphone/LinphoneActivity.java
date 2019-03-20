@@ -1199,37 +1199,20 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     public void checkAndRequestPermissionsToSendImage() {
-        ArrayList<String> permissionsList = new ArrayList<>();
+        ArrayList<String> permissionsToAskFor = new ArrayList<>();
+        String[] permissionsToHave = {
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA
+        };
 
-        int readExternalStorage =
-                getPackageManager()
-                        .checkPermission(
-                                Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName());
-        Log.i(
-                "[Permission] Read external storage permission is "
-                        + (readExternalStorage == PackageManager.PERMISSION_GRANTED
-                                ? "granted"
-                                : "denied"));
-        int camera =
-                getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
-        Log.i(
-                "[Permission] Camera permission is "
-                        + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        for (String permissionToHave : permissionsToHave) {
+            if (!checkPermission(permissionToHave)) {
+                permissionsToAskFor.add(permissionToHave);
+            }
+        }
 
-        if (readExternalStorage != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            Log.i("[Permission] Asking for read external storage");
-            permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (camera != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA);
-            Log.i("[Permission] Asking for camera");
-            permissionsList.add(Manifest.permission.CAMERA);
-        }
-        if (permissionsList.size() > 0) {
-            String[] permissions = new String[permissionsList.size()];
-            permissions = permissionsList.toArray(permissions);
+        if (permissionsToAskFor.size() > 0) {
+            String[] permissions = new String[permissionsToAskFor.size()];
+            permissions = permissionsToAskFor.toArray(permissions);
             ActivityCompat.requestPermissions(this, permissions, 0);
         }
     }
@@ -1237,6 +1220,16 @@ public class LinphoneActivity extends LinphoneGenericActivity
     private void checkSyncPermission() {
         checkAndRequestPermission(
                 Manifest.permission.WRITE_SYNC_SETTINGS, PERMISSIONS_REQUEST_SYNC);
+    }
+
+    private boolean checkPermission(String permission) {
+        int granted = getPackageManager().checkPermission(permission, getPackageName());
+        Log.i(
+                "[Permission] "
+                        + permission
+                        + " permission is "
+                        + (granted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        return granted == PackageManager.PERMISSION_GRANTED;
     }
 
     private void checkAndRequestPermission(String permission, int result) {
@@ -1249,8 +1242,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                                 ? "granted"
                                 : "denied"));
 
-        if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.shouldShowRequestPermissionRationale(this, permission);
+        if (!checkPermission(permission)) {
             Log.i("[Permission] Asking for " + permission);
             ActivityCompat.requestPermissions(this, new String[] {permission}, result);
         }
@@ -1306,87 +1298,37 @@ public class LinphoneActivity extends LinphoneGenericActivity
     @Override
     protected void onStart() {
         super.onStart();
-        ArrayList<String> permissionsList = new ArrayList<>();
-        // This one is to allow floating notifications
-        permissionsList.add(Manifest.permission.SYSTEM_ALERT_WINDOW);
-        // Manifest.permission.FOREGROUND_SERVICE,
-        // required starting Android 9 to be able
-        // to start a foreground service
-        permissionsList.add("android.permission.FOREGROUND_SERVICE");
 
-        int contacts =
-                getPackageManager()
-                        .checkPermission(Manifest.permission.READ_CONTACTS, getPackageName());
-        Log.i(
-                "[Permission] Contacts read permission is "
-                        + (contacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        ArrayList<String> permissionsToAskFor = new ArrayList<>();
+        String[] permissionsToHave = {
+            // This one is to allow floating notifications
+            Manifest.permission.SYSTEM_ALERT_WINDOW,
+            // Required starting Android 9 to be able to start a foreground service
+            "android.permission.FOREGROUND_SERVICE",
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_CONTACTS
+        };
 
-        int wcontacts =
-                getPackageManager()
-                        .checkPermission(Manifest.permission.WRITE_CONTACTS, getPackageName());
-        Log.i(
-                "[Permission] Contacts write permission is "
-                        + (wcontacts == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-
-        int readPhone =
-                getPackageManager()
-                        .checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
-        Log.i(
-                "[Permission] Read phone state permission is "
-                        + (readPhone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-
-        int ringtone =
-                getPackageManager()
-                        .checkPermission(
-                                Manifest.permission.READ_EXTERNAL_STORAGE, getPackageName());
-        Log.i(
-                "[Permission] Read external storage for ring tone permission is "
-                        + (ringtone == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
-
-        if (ringtone != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance()
-                            .firstTimeAskingForPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(
-                            this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Log.i("[Permission] Asking for read external storage for ring tone");
-                permissionsList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        for (String permissionToHave : permissionsToHave) {
+            if (!checkPermission(permissionToHave)) {
+                permissionsToAskFor.add(permissionToHave);
             }
         }
-        if (readPhone != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance()
-                            .firstTimeAskingForPermission(Manifest.permission.READ_PHONE_STATE)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(
-                            this, Manifest.permission.READ_PHONE_STATE)) {
-                Log.i("[Permission] Asking for read phone state");
-                permissionsList.add(Manifest.permission.READ_PHONE_STATE);
-            }
-        }
-        if (wcontacts != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance()
-                            .firstTimeAskingForPermission(Manifest.permission.WRITE_CONTACTS)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(
-                            this, Manifest.permission.WRITE_CONTACTS)) {
-                Log.i("[Permission] Asking for write contact");
-                permissionsList.add(Manifest.permission.WRITE_CONTACTS);
-            }
-        }
-        if (contacts != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance()
-                            .firstTimeAskingForPermission(Manifest.permission.READ_CONTACTS)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(
-                            this, Manifest.permission.READ_CONTACTS)) {
-                Log.i("[Permission] Asking for read contact");
-                permissionsList.add(Manifest.permission.READ_CONTACTS);
-            }
-        } else {
-            ContactsManager.getInstance().enableContactsAccess();
-        }
 
-        if (permissionsList.size() > 0) {
-            String[] permissions = new String[permissionsList.size()];
-            permissions = permissionsList.toArray(permissions);
+        if (permissionsToAskFor.size() > 0) {
+            for (String permission : permissionsToAskFor) {
+                Log.i("[Permission] Asking for " + permission + " permission");
+            }
+            String[] permissions = new String[permissionsToAskFor.size()];
+            permissions = permissionsToAskFor.toArray(permissions);
             ActivityCompat.requestPermissions(
                     this, permissions, PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE);
+        }
+
+        if (checkPermission(Manifest.permission.READ_CONTACTS)) {
+            ContactsManager.getInstance().enableContactsAccess();
         }
         ContactsManager.getInstance().initializeContactManager(this);
 

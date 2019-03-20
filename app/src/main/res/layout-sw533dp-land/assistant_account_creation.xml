@@ -385,7 +385,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/maybe_later"
-            android:textColor="@drawable/assistant_button_text_color"
+            android:textColor="?attr/primaryTextColor"
             android:visibility="gone" />
 
     </LinearLayout>

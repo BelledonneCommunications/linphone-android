@@ -320,7 +320,7 @@
 				android:id="@+id/assistant_skip"
 				android:visibility="gone"
 				android:text="@string/maybe_later"
-				android:textColor="@drawable/assistant_button_text_color"
+				android:textColor="?attr/primaryTextColor"
 				style="@style/font10"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

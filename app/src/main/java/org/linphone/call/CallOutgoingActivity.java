@@ -269,24 +269,14 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
         if (recordAudio != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance()
-                            .firstTimeAskingForPermission(Manifest.permission.RECORD_AUDIO)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(
-                            this, Manifest.permission.RECORD_AUDIO)) {
-                Log.i("[Permission] Asking for record audio");
-                permissionsList.add(Manifest.permission.RECORD_AUDIO);
-            }
+            Log.i("[Permission] Asking for record audio");
+            permissionsList.add(Manifest.permission.RECORD_AUDIO);
         }
         if (LinphonePreferences.instance().shouldInitiateVideoCall()
                 || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {
             if (camera != PackageManager.PERMISSION_GRANTED) {
-                if (LinphonePreferences.instance()
-                                .firstTimeAskingForPermission(Manifest.permission.CAMERA)
-                        || ActivityCompat.shouldShowRequestPermissionRationale(
-                                this, Manifest.permission.CAMERA)) {
-                    Log.i("[Permission] Asking for camera");
-                    permissionsList.add(Manifest.permission.CAMERA);
-                }
+                Log.i("[Permission] Asking for camera");
+                permissionsList.add(Manifest.permission.CAMERA);
             }
         }
 

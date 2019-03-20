@@ -386,11 +386,8 @@ public class AssistantActivity extends ThemableActivity
                                 : "denied"));
 
         if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
-            if (LinphonePreferences.instance().firstTimeAskingForPermission(permission)
-                    || ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                Log.i("[Permission] Asking for " + permission);
-                ActivityCompat.requestPermissions(this, new String[] {permission}, result);
-            }
+            Log.i("[Permission] Asking for " + permission);
+            ActivityCompat.requestPermissions(this, new String[] {permission}, result);
         }
     }
 

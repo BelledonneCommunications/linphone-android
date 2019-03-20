@@ -38,7 +38,6 @@ import org.linphone.core.Config;
 import org.linphone.core.Core;
 import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
-import org.linphone.core.LimeState;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
@@ -1332,32 +1331,6 @@ public class LinphonePreferences {
 
     public void enableOverlay(boolean enable) {
         getConfig().setBool("app", "display_overlay", enable);
-    }
-
-    public LimeState limeEnabled() {
-        if (getLc() == null) return LimeState.Disabled;
-        return getLc().limeEnabled();
-    }
-
-    public void enableLime(LimeState lime) {
-        if (getLc() == null) return;
-        getLc().enableLime(lime);
-    }
-
-    public boolean firstTimeAskingForPermission(String permission) {
-        return firstTimeAskingForPermission(permission, true);
-    }
-
-    private boolean firstTimeAskingForPermission(String permission, boolean toggle) {
-        boolean firstTime = getConfig().getBool("app", permission, true);
-        if (toggle) {
-            permissionHasBeenAsked(permission);
-        }
-        return firstTime;
-    }
-
-    private void permissionHasBeenAsked(String permission) {
-        getConfig().setBool("app", permission, false);
     }
 
     public boolean isDeviceRingtoneEnabled() {
