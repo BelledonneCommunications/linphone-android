@@ -49,6 +49,8 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
+import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
@@ -485,5 +487,18 @@ public final class LinphoneUtils {
         if (sContext == null && LinphoneManager.isInstanciated())
             sContext = LinphoneManager.getInstance().getContext();
         return sContext;
+    }
+
+    public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ArrayList<ChatRoom> rooms) {
+        ArrayList<ChatRoom> newRooms = new ArrayList<>();
+        for (ChatRoom room : rooms) {
+            if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+                    && room.getLastMessageInHistory() == null) {
+                // Hide 1-1 chat rooms without messages
+            } else {
+                newRooms.add(room);
+            }
+        }
+        return newRooms;
     }
 }

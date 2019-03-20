@@ -35,6 +35,7 @@ import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomBackend;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
@@ -232,7 +233,9 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
                     ChatRoomParams params = lc.createDefaultChatRoomParams();
                     params.enableEncryption(false);
-                    params.enableGroup(true);
+                    params.enableGroup(false);
+                    // We don't want a basic chat room
+                    params.setBackend(ChatRoomBackend.FlexisipChat);
 
                     Address participants[] = new Address[1];
                     participants[0] = participant;

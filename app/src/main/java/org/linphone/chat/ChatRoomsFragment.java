@@ -52,6 +52,7 @@ import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 
 public class ChatRoomsFragment extends Fragment
@@ -76,7 +77,9 @@ public class ChatRoomsFragment extends Fragment
             final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
+        mRooms =
+                LinphoneUtils.removeEmptyOneToOneChatRooms(
+                        new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms())));
 
         mContext = getActivity().getApplicationContext();
         View view = inflater.inflate(R.layout.chatlist, container, false);

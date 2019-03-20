@@ -51,6 +51,7 @@ import org.linphone.contacts.SearchContactViewHolder;
 import org.linphone.contacts.SearchContactsAdapter;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
+import org.linphone.core.ChatRoomBackend;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
@@ -567,8 +568,9 @@ public class ChatRoomCreationFragment extends Fragment
                                     mShareInfos);
                 } else {
                     ChatRoomParams params = lc.createDefaultChatRoomParams();
+                    // This will set the backend to FlexisipChat automatically
                     params.enableEncryption(true);
-                    params.enableGroup(true);
+                    params.enableGroup(false);
 
                     Address participants[] = new Address[1];
                     participants[0] = address;
@@ -595,7 +597,9 @@ public class ChatRoomCreationFragment extends Fragment
 
                         ChatRoomParams params = lc.createDefaultChatRoomParams();
                         params.enableEncryption(false);
-                        params.enableGroup(true);
+                        params.enableGroup(false);
+                        // We don't want a basic chat room
+                        params.setBackend(ChatRoomBackend.FlexisipChat);
 
                         Address participants[] = new Address[1];
                         participants[0] = address;

@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.core.ChatRoom;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
 import org.linphone.utils.SelectableHelper;
 
@@ -71,7 +72,9 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     }
 
     public void refresh() {
-        mRooms = new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms()));
+        mRooms =
+                LinphoneUtils.removeEmptyOneToOneChatRooms(
+                        new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms())));
         Collections.sort(
                 mRooms,
                 new Comparator<ChatRoom>() {
