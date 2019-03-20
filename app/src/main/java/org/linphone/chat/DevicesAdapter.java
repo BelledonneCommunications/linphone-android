@@ -122,6 +122,11 @@ class DevicesAdapter extends BaseExpandableListAdapter {
                 holder.participantName.setText(displayName);
             }
 
+            holder.sipUri.setText(participantAddress.asStringUriOnly());
+            if (!mContext.getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
+                holder.sipUri.setVisibility(View.GONE);
+            }
+
             holder.groupExpander.setImageResource(
                     isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
         }

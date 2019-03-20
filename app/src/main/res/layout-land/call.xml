@@ -65,7 +65,7 @@
 
                         <Chronometer
                             android:id="@+id/current_call_timer"
-                            style="@style/font2"
+                            style="@style/sip_uri_font"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center" />

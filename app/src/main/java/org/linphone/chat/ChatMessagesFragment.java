@@ -105,7 +105,7 @@ public class ChatMessagesFragment extends Fragment
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private ImageView mBackButton, mCallButton, mBackToCallButton, mGroupInfosButton;
     private ImageView mAttachImageButton, mSendMessageButton;
-    private TextView mRoomLabel, mParticipantsLabel, mRemoteComposing;
+    private TextView mRoomLabel, mParticipantsLabel, mSipUriLabel, mRemoteComposing;
     private RichEditText mMessageTextToSend;
     private LayoutInflater mInflater;
     private RecyclerView mChatEventsList;
@@ -252,6 +252,7 @@ public class ChatMessagesFragment extends Fragment
 
         mRoomLabel = view.findViewById(R.id.subject);
         mParticipantsLabel = view.findViewById(R.id.participants);
+        mSipUriLabel = view.findViewById(R.id.sipUri);
 
         mFilesUploadLayout = view.findViewById(R.id.file_upload_layout);
 
@@ -768,6 +769,22 @@ public class ChatMessagesFragment extends Fragment
             mGroupInfosButton.setVisibility(View.GONE);
             mParticipantsLabel.setVisibility(View.GONE);
 
+            if (mContext.getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
+                mSipUriLabel.setVisibility(View.VISIBLE);
+            } else {
+                mSipUriLabel.setVisibility(View.GONE);
+                mRoomLabel.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mSipUriLabel.setVisibility(
+                                        mSipUriLabel.getVisibility() == View.VISIBLE
+                                                ? View.GONE
+                                                : View.VISIBLE);
+                            }
+                        });
+            }
+
             if (mParticipants.size() == 0) {
                 // Contact not found
                 String displayName = LinphoneUtils.getAddressDisplayName(mRemoteParticipantAddress);
@@ -775,11 +792,13 @@ public class ChatMessagesFragment extends Fragment
             } else {
                 mRoomLabel.setText(mParticipants.get(0).getFullName());
             }
+            mSipUriLabel.setText(mRemoteParticipantAddress.asStringUriOnly());
         } else {
             mCallButton.setVisibility(View.GONE);
             mGroupInfosButton.setVisibility(View.VISIBLE);
             mRoomLabel.setText(mChatRoom.getSubject());
             mParticipantsLabel.setVisibility(View.VISIBLE);
+            mSipUriLabel.setVisibility(View.GONE);
         }
 
         mBackToCallButton.setVisibility(View.GONE);

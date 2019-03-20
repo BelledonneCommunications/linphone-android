@@ -100,6 +100,7 @@
     <bool name="send_multiple_images_as_different_messages">true</bool>
     <bool name="use_new_chat_bubbles_layout">true</bool>
     <bool name="use_big_pictures_to_preview_images_file_transfers">true</bool>
+    <bool name="show_sip_uri_in_chat">false</bool>
 
     <!-- Contacts -->
     <bool name="hide_contact_phone_numbers">false</bool>

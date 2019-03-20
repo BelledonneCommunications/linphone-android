@@ -89,9 +89,19 @@
         <item name="android:textSize">24sp</item>
     </style>
 
+    <style name="sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="font2" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="sip_uri_small_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="font3" parent="@android:style/TextAppearance.Small">

@@ -84,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/contact_address"
-                    style="@style/font2"
+                    style="@style/sip_uri_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

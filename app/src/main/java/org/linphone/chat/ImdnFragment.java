@@ -186,12 +186,31 @@ public class ImdnFragment extends Fragment {
                                     getActivity(),
                                     participant.getStateChangeTime(),
                                     R.string.messages_date_format));
-            ((TextView) v.findViewById(R.id.name)).setText(participantDisplayName);
+            TextView name = v.findViewById(R.id.name);
+            name.setText(participantDisplayName);
             if (participantContact != null) {
                 ContactAvatar.displayAvatar(participantContact, v.findViewById(R.id.avatar_layout));
             } else {
                 ContactAvatar.displayAvatar(
                         participantDisplayName, v.findViewById(R.id.avatar_layout));
+            }
+
+            final TextView sipUri = v.findViewById(R.id.sipUri);
+            sipUri.setText(address.asStringUriOnly());
+            if (!LinphoneActivity.instance()
+                    .getResources()
+                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+                sipUri.setVisibility(View.GONE);
+                name.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sipUri.setVisibility(
+                                        sipUri.getVisibility() == View.VISIBLE
+                                                ? View.GONE
+                                                : View.VISIBLE);
+                            }
+                        });
             }
 
             mRead.addView(v);
@@ -219,12 +238,31 @@ public class ImdnFragment extends Fragment {
                                     getActivity(),
                                     participant.getStateChangeTime(),
                                     R.string.messages_date_format));
-            ((TextView) v.findViewById(R.id.name)).setText(participantDisplayName);
+            TextView name = v.findViewById(R.id.name);
+            name.setText(participantDisplayName);
             if (participantContact != null) {
                 ContactAvatar.displayAvatar(participantContact, v.findViewById(R.id.avatar_layout));
             } else {
                 ContactAvatar.displayAvatar(
                         participantDisplayName, v.findViewById(R.id.avatar_layout));
+            }
+
+            final TextView sipUri = v.findViewById(R.id.sipUri);
+            sipUri.setText(address.asStringUriOnly());
+            if (!LinphoneActivity.instance()
+                    .getResources()
+                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+                sipUri.setVisibility(View.GONE);
+                name.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sipUri.setVisibility(
+                                        sipUri.getVisibility() == View.VISIBLE
+                                                ? View.GONE
+                                                : View.VISIBLE);
+                            }
+                        });
             }
 
             mDelivered.addView(v);
@@ -252,12 +290,31 @@ public class ImdnFragment extends Fragment {
                                     getActivity(),
                                     participant.getStateChangeTime(),
                                     R.string.messages_date_format));
-            ((TextView) v.findViewById(R.id.name)).setText(participantDisplayName);
+            TextView name = v.findViewById(R.id.name);
+            name.setText(participantDisplayName);
             if (participantContact != null) {
                 ContactAvatar.displayAvatar(participantContact, v.findViewById(R.id.avatar_layout));
             } else {
                 ContactAvatar.displayAvatar(
                         participantDisplayName, v.findViewById(R.id.avatar_layout));
+            }
+
+            final TextView sipUri = v.findViewById(R.id.sipUri);
+            sipUri.setText(address.asStringUriOnly());
+            if (!LinphoneActivity.instance()
+                    .getResources()
+                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+                sipUri.setVisibility(View.GONE);
+                name.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sipUri.setVisibility(
+                                        sipUri.getVisibility() == View.VISIBLE
+                                                ? View.GONE
+                                                : View.VISIBLE);
+                            }
+                        });
             }
 
             mSent.addView(v);
@@ -279,12 +336,31 @@ public class ImdnFragment extends Fragment {
 
             View v = mInflater.inflate(R.layout.chat_imdn_cell, mContainer, false);
             v.findViewById(R.id.separator).setVisibility(first ? View.GONE : View.VISIBLE);
-            ((TextView) v.findViewById(R.id.name)).setText(participantDisplayName);
+            TextView name = v.findViewById(R.id.name);
+            name.setText(participantDisplayName);
             if (participantContact != null) {
                 ContactAvatar.displayAvatar(participantContact, v.findViewById(R.id.avatar_layout));
             } else {
                 ContactAvatar.displayAvatar(
                         participantDisplayName, v.findViewById(R.id.avatar_layout));
+            }
+
+            final TextView sipUri = v.findViewById(R.id.sipUri);
+            sipUri.setText(address.asStringUriOnly());
+            if (!LinphoneActivity.instance()
+                    .getResources()
+                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+                sipUri.setVisibility(View.GONE);
+                name.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sipUri.setVisibility(
+                                        sipUri.getVisibility() == View.VISIBLE
+                                                ? View.GONE
+                                                : View.VISIBLE);
+                            }
+                        });
             }
 
             mUndelivered.addView(v);

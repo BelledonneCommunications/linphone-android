@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
 import org.linphone.contacts.LinphoneContact;
@@ -68,6 +69,22 @@ class GroupInfoAdapter extends RecyclerView.Adapter<GroupInfoViewHolder> {
             ContactAvatar.displayAvatar(c, holder.avatarLayout);
         } else {
             ContactAvatar.displayAvatar(holder.name.getText().toString(), holder.avatarLayout);
+        }
+
+        holder.sipUri.setText(ca.getAddressAsDisplayableString());
+
+        if (!LinphoneActivity.instance().getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
+            holder.sipUri.setVisibility(View.GONE);
+            holder.name.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            holder.sipUri.setVisibility(
+                                    holder.sipUri.getVisibility() == View.VISIBLE
+                                            ? View.GONE
+                                            : View.VISIBLE);
+                        }
+                    });
         }
 
         holder.delete.setOnClickListener(

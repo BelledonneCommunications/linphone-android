@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.linphone.R;
 
 public class GroupInfoViewHolder extends RecyclerView.ViewHolder {
-    public final TextView name;
+    public final TextView name, sipUri;
     public final RelativeLayout avatarLayout;
     public final ImageView delete;
     public final LinearLayout isAdmin;
@@ -37,6 +37,7 @@ public class GroupInfoViewHolder extends RecyclerView.ViewHolder {
     public GroupInfoViewHolder(View view) {
         super(view);
         name = view.findViewById(R.id.name);
+        sipUri = view.findViewById(R.id.sipUri);
         avatarLayout = view.findViewById(R.id.avatar_layout);
         delete = view.findViewById(R.id.delete);
         isAdmin = view.findViewById(R.id.isAdminLayout);
