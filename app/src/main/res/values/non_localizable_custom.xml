@@ -4,7 +4,7 @@
     <!-- Global -->
     <string name="default_domain">sip.linphone.org</string><!-- Set the default domain used for account creation/addresses -->
     <string name="default_conference_factory_uri">sip:conference-factory@sip.linphone.org</string>
-    <string name="default_lime_x3dh_server_url">http://sip-staging.linphone.org:8083/flexisip-account-manager/x3dh-25519.php</string>
+    <string name="default_lime_x3dh_server_url">https://lime.linphone.org/lime-server/lime-server.php</string>
     <string name="rls_uri">sip:rls@sip.linphone.org</string>
     <string name="user_agent">LinphoneAndroid</string>
     <bool name="orientation_portrait_only">false</bool>
