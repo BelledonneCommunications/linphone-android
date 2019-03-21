@@ -1761,7 +1761,7 @@ public class SettingsFragment extends PreferenceFragment {
                             @Override
                             public boolean onPreferenceClick(Preference preference) {
                                 synchronized (SettingsFragment.this) {
-                                    Context context = SettingsFragment.this.getActivity();
+                                    Context context = LinphoneActivity.instance();
                                     Intent i = new Intent();
                                     i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                                     i.addCategory(Intent.CATEGORY_DEFAULT);
@@ -1769,7 +1769,10 @@ public class SettingsFragment extends PreferenceFragment {
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                     i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                                    context.startActivity(i);
+                                    LinphoneActivity.instance()
+                                            .startActivityForResult(
+                                                    i,
+                                                    LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
                                 }
                                 return true;
                             }

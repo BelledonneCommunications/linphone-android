@@ -123,6 +123,8 @@ import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 public class LinphoneActivity extends LinphoneGenericActivity
         implements OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+    public static final int ANDROID_APP_SETTINGS_ACTIVITY = 300;
+
     private static final int SETTINGS_ACTIVITY = 123;
     private static final int CALL_ACTIVITY = 19;
     private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
@@ -1118,7 +1120,9 @@ public class LinphoneActivity extends LinphoneGenericActivity
             mNewProxyConfig = getIntent().getExtras().getBoolean("isNewProxyConfig");
         }
 
-        if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
+        if (requestCode == ANDROID_APP_SETTINGS_ACTIVITY) {
+            LinphoneActivity.instance().goToDialerFragment();
+        } else if (resultCode == Activity.RESULT_FIRST_USER && requestCode == SETTINGS_ACTIVITY) {
             if (data.getExtras().getBoolean("Exit", false)) {
                 quit();
             } else {
