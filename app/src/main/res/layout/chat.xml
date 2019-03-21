@@ -177,7 +177,7 @@
 
     <TextView
         android:id="@+id/remote_composing"
-        style="@style/font11"
+        style="@style/standard_small_text_font"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/footer"

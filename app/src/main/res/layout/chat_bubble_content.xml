@@ -33,7 +33,7 @@
 
     <Button
         android:id="@+id/download"
-        style="@style/font8"
+        style="@style/button_font"
         android:layout_width="137dp"
         android:layout_height="40dp"
         android:layout_margin="5dp"

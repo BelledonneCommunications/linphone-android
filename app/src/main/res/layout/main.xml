@@ -249,6 +249,7 @@
                     android:layout_toRightOf="@id/quit_button"
                     android:gravity="center_vertical"
                     android:text="@string/quit" />
+
             </RelativeLayout>
 
             <LinearLayout

@@ -20,7 +20,7 @@
 
             <TextView
                 android:id="@+id/username_label"
-                style="@style/font13"
+                style="@style/assistant_input_field_header_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/username"
@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/username_error"
-                style="@style/font20"
+                style="@style/assistant_input_field_error_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/error"
@@ -53,7 +53,7 @@
 
             <TextView
                 android:id="@+id/email_label"
-                style="@style/font13"
+                style="@style/assistant_input_field_header_font"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/email"
@@ -73,11 +73,12 @@
                 android:textCursorDrawable="@null" />
 
         </LinearLayout>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/inapp_button"
-        style="@style/font8"
+        style="@style/button_font"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_gravity="center"

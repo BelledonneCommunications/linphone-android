@@ -7,7 +7,7 @@
     android:padding="30dp">
 
     <TextView
-        style="@style/font6"
+        style="@style/standard_text_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/message_phone_number"
-        style="@style/font11"
+        style="@style/standard_small_text_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -46,7 +46,7 @@
 
                 <Button
                     android:id="@+id/select_country"
-                    style="@style/font8"
+                    style="@style/button_font"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="15dp"
@@ -67,7 +67,7 @@
 
                         <TextView
                             android:id="@+id/phone_number_label"
-                            style="@style/font13"
+                            style="@style/assistant_input_field_header_font"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/phone_number"
@@ -113,7 +113,7 @@
 
                     <TextView
                         android:id="@+id/phone_number_error_2"
-                        style="@style/font20"
+                        style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/error"
@@ -140,7 +140,7 @@
                 android:visibility="gone">
 
                 <TextView
-                    style="@style/font13"
+                    style="@style/assistant_input_field_header_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/username"
@@ -169,7 +169,7 @@
                 android:visibility="gone">
 
                 <TextView
-                    style="@style/font13"
+                    style="@style/assistant_input_field_header_font"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/password"
@@ -227,7 +227,7 @@
 
     <Button
         android:id="@+id/assistant_apply"
-        style="@style/font8"
+        style="@style/button_font"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_gravity="center"

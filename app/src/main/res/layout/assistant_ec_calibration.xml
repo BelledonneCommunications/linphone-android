@@ -8,7 +8,7 @@
 
 	<TextView
 		android:text="@string/assistant_ec_calibration"
-		style="@style/font6"
+		style="@style/standard_text_font"
 		android:textAllCaps="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

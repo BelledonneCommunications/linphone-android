@@ -11,7 +11,7 @@
         android:padding="10dp">
 
         <TextView
-            style="@style/font6"
+            style="@style/standard_text_font"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center"

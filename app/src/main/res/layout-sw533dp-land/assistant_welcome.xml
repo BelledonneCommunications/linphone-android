@@ -11,7 +11,7 @@
         android:padding="30dp">
 
         <TextView
-            style="@style/font6"
+            style="@style/standard_text_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -19,7 +19,7 @@
             android:textAllCaps="true" />
 
         <TextView
-            style="@style/font11"
+            style="@style/standard_small_text_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -39,7 +39,7 @@
 
                 <Button
                     android:id="@+id/create_account"
-                    style="@style/font8"
+                    style="@style/button_font"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
@@ -50,7 +50,7 @@
 
                 <Button
                     android:id="@+id/login_linphone"
-                    style="@style/font8"
+                    style="@style/button_font"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="30dp"
@@ -68,7 +68,7 @@
 
                 <Button
                     android:id="@+id/login_generic"
-                    style="@style/font8"
+                    style="@style/button_font"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
@@ -79,7 +79,7 @@
 
                 <Button
                     android:id="@+id/remote_provisioning"
-                    style="@style/font8"
+                    style="@style/button_font"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="30dp"

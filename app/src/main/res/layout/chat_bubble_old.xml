@@ -104,14 +104,14 @@
                         android:layout_centerVertical="true"
                         android:background="@drawable/resizable_assistant_button"
                         android:text="@string/open"
-                        android:textAppearance="@style/font8"
+                        android:textAppearance="@style/button_font"
                         android:visibility="gone" />
 
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/message"
-                    style="@style/font11"
+                    style="@style/standard_small_text_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
@@ -138,7 +138,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/progress_bar"
                         android:background="@drawable/resizable_assistant_button"
-                        android:textAppearance="@style/font8" />
+                        android:textAppearance="@style/button_font" />
 
                 </RelativeLayout>
 

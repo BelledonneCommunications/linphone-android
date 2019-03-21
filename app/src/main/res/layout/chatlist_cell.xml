@@ -36,7 +36,8 @@
 
             <TextView
                 android:id="@+id/date"
-                style="@style/font2"
+                android:textColor="?attr/accentColor"
+                android:textSize="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/avatar_layout"
@@ -83,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/lastMessage"
-                    style="@style/font11"
+                    style="@style/standard_small_text_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"

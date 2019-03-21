@@ -153,7 +153,7 @@ public class ImdnOldFragment extends Fragment {
             Compatibility.setTextAppearance(
                     mBubble.contactName, getActivity(), R.style.contact_organization_font);
             Compatibility.setTextAppearance(
-                    mBubble.fileTransferAction, getActivity(), R.style.font8);
+                    mBubble.fileTransferAction, getActivity(), R.style.button_font);
             mBubble.fileTransferAction.setBackgroundResource(R.drawable.resizable_assistant_button);
         }
 

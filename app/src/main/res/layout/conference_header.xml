@@ -13,14 +13,14 @@
         android:paddingLeft="10dp">
 
         <TextView
-            style="@style/font5"
+            style="@style/header_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/conference" />
 
         <Chronometer
             android:id="@+id/callTimer"
-            style="@style/font2"
+            style="@style/call_timer_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone" />

@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/item_name"
-        style="@style/font6"
+        style="@style/standard_text_font"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center_vertical"

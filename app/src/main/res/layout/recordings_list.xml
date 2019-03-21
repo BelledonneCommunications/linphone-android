@@ -24,7 +24,7 @@
 
         <TextView
             android:id="@+id/top_bar_title"
-            style="@style/font1"
+            style="@style/accent_colored_title_font"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.6"

@@ -287,7 +287,8 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                 holder.background.setBackgroundResource(R.drawable.resizable_chat_bubble_incoming);
                 Compatibility.setTextAppearance(
                         holder.contactName, mContext, R.style.contact_organization_font);
-                Compatibility.setTextAppearance(holder.fileTransferAction, mContext, R.style.font8);
+                Compatibility.setTextAppearance(
+                        holder.fileTransferAction, mContext, R.style.button_font);
                 holder.fileTransferAction.setBackgroundResource(
                         R.drawable.resizable_assistant_button);
             }

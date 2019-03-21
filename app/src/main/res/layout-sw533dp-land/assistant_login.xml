@@ -10,7 +10,7 @@
         android:padding="30dp">
 
         <TextView
-            style="@style/font6"
+            style="@style/standard_text_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -18,7 +18,7 @@
             android:textAllCaps="true" />
 
         <TextView
-            style="@style/font11"
+            style="@style/standard_small_text_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -43,7 +43,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/username"
@@ -68,7 +68,7 @@
                     android:paddingLeft="30dp">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/password"
@@ -97,7 +97,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/assistant_display_name_optional"
@@ -122,7 +122,7 @@
                     android:paddingLeft="30dp">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/domain"
@@ -153,7 +153,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/userid"
@@ -178,7 +178,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -226,7 +226,7 @@
 
         <Button
             android:id="@+id/assistant_apply"
-            style="@style/font8"
+            style="@style/button_font"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"

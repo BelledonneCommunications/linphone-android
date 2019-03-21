@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/question"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/downloading"
@@ -39,7 +39,7 @@
 
     <TextView
         android:id="@+id/downloading"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/question"
@@ -51,7 +51,7 @@
 
     <Button
         android:id="@+id/answerNo"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -64,7 +64,7 @@
 
     <Button
         android:id="@+id/answerYes"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/answerOk"
@@ -76,7 +76,7 @@
 
     <Button
         android:id="@+id/answerOk"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/answerNo"
@@ -87,7 +87,7 @@
 
     <TextView
         android:id="@+id/downloaded"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -99,7 +99,7 @@
 
     <TextView
         android:id="@+id/downloadingInfo"
-        style="@style/font7"
+        style="@style/assistant_codec_downloader_font"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/answerOk"

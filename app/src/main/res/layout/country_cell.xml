@@ -8,13 +8,13 @@
 
     <TextView
         android:id="@+id/country_name"
-        style="@style/font6"
+        style="@style/standard_text_font"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/country_prefix"
-        style="@style/font6"
+        style="@style/standard_text_font"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingLeft="5dp" />

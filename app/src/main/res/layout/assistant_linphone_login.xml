@@ -12,7 +12,7 @@
 
 		<TextView
 			android:text="@string/assistant_linphone_account"
-			style="@style/font6"
+			style="@style/standard_text_font"
 			android:textAllCaps="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
 
 		<TextView
 			android:text="@string/assistant_create_account_part_1"
-			style="@style/font11"
+			style="@style/standard_small_text_font"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:paddingTop="10dp"
@@ -51,7 +51,7 @@
 					<TextView
 						android:id="@+id/phone_number_label"
 						android:text="@string/phone_number"
-						style="@style/font13"
+						style="@style/assistant_input_field_header_font"
 						android:textAllCaps="true"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"/>
@@ -73,7 +73,7 @@
 
 					<Button
 						android:id="@+id/select_country"
-						style="@style/font8"
+						style="@style/button_font"
 						android:text="@string/select_your_country"
 						android:background="@drawable/resizable_assistant_button"
 						android:layout_width="match_parent"
@@ -119,7 +119,7 @@
 					<TextView
 						android:id="@+id/phone_number_error_2"
 						android:text="@string/error"
-						style="@style/font20"
+						style="@style/assistant_input_field_error_font"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:visibility="invisible"/>
@@ -136,7 +136,7 @@
 
 				<TextView
 					android:text="@string/username"
-					style="@style/font13"
+					style="@style/assistant_input_field_header_font"
 					android:textAllCaps="true"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"/>
@@ -161,7 +161,7 @@
 
 				<TextView
 					android:text="@string/password"
-					style="@style/font13"
+					style="@style/assistant_input_field_header_font"
 					android:textAllCaps="true"
 					android:paddingTop="20dp"
 					android:layout_width="match_parent"
@@ -201,7 +201,7 @@
 				android:text="@string/assistant_login"
 				android:background="@drawable/assistant_button"
 				android:textColor="@drawable/assistant_button_text_color"
-				style="@style/font8"
+				style="@style/button_font"
 				android:layout_width="wrap_content"
 				android:layout_height="40dp"
 				android:paddingLeft="10dp"
@@ -209,5 +209,7 @@
 				android:layout_marginTop="20dp"/>
 
 		</LinearLayout>
+
 	</LinearLayout>
+
 </ScrollView>

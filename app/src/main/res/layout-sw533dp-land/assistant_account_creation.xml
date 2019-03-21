@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/assistant_title"
-            style="@style/font6"
+            style="@style/standard_text_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/message_create_account"
-            style="@style/font11"
+            style="@style/standard_small_text_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -55,7 +55,7 @@
 
                         <TextView
                             android:id="@+id/phone_number_label"
-                            style="@style/font13"
+                            style="@style/assistant_input_field_header_font"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/phone_number"
@@ -80,7 +80,7 @@
 
                         <Button
                             android:id="@+id/select_country"
-                            style="@style/font8"
+                            style="@style/button_font"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"
@@ -126,7 +126,7 @@
 
                             <TextView
                                 android:id="@+id/phone_number_error"
-                                style="@style/font20"
+                                style="@style/assistant_input_field_error_font"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/error"
@@ -164,7 +164,7 @@
 
                     <TextView
                         android:id="@+id/username_label"
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/username"
@@ -182,7 +182,7 @@
 
                     <TextView
                         android:id="@+id/username_error"
-                        style="@style/font20"
+                        style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/error"
@@ -202,7 +202,7 @@
 
                     <TextView
                         android:id="@+id/password_label"
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/password"
@@ -222,7 +222,7 @@
 
                     <TextView
                         android:id="@+id/password_error"
-                        style="@style/font20"
+                        style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/error"
@@ -249,7 +249,7 @@
 
                     <TextView
                         android:id="@+id/email_label"
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/email"
@@ -270,7 +270,7 @@
 
                     <TextView
                         android:id="@+id/email_error"
-                        style="@style/font20"
+                        style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/error"
@@ -290,7 +290,7 @@
 
                     <TextView
                         android:id="@+id/confirm_password_label"
-                        style="@style/font13"
+                        style="@style/assistant_input_field_header_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/confirm_password"
@@ -311,7 +311,7 @@
 
                     <TextView
                         android:id="@+id/confirm_password_error"
-                        style="@style/font20"
+                        style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/error"
@@ -364,7 +364,7 @@
 
         <Button
             android:id="@+id/assistant_create"
-            style="@style/font8"
+            style="@style/button_font"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -377,7 +377,7 @@
 
         <TextView
             android:id="@+id/assistant_skip"
-            style="@style/font10"
+            android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -8,7 +8,7 @@
 
 	<TextView
 		android:text="@string/assistant_remote_provisioning_title"
-		style="@style/font6"
+		style="@style/standard_text_font"
 		android:textAllCaps="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
 
 	<TextView
 		android:text="@string/assistant_remote_provisioning_desc"
-		style="@style/font11"
+		style="@style/standard_small_text_font"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:paddingTop="10dp"
@@ -33,7 +33,7 @@
 
 		<TextView
 			android:text="@string/remote_provisioning_url"
-			style="@style/font13"
+			style="@style/assistant_input_field_header_font"
 			android:textAllCaps="true"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
@@ -53,7 +53,7 @@
 			android:text="@string/assistant_fetch_apply"
 			android:background="@drawable/assistant_button"
 			android:textColor="@drawable/assistant_button_text_color"
-			style="@style/font8"
+			style="@style/button_font"
 			android:layout_width="wrap_content"
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
@@ -65,7 +65,7 @@
 			android:text="@string/assistant_launch_qrcode"
 			android:background="@drawable/assistant_button"
 			android:textColor="@drawable/assistant_button_text_color"
-			style="@style/font8"
+			style="@style/button_font"
 			android:layout_width="wrap_content"
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"

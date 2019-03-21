@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/separator_text"
-            style="@style/font1"
+            style="@style/accent_colored_title_font"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center" />
@@ -94,7 +94,7 @@
 
             <LinearLayout
                 android:id="@+id/record_time"
-                style="@style/font6"
+                style="@style/standard_text_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

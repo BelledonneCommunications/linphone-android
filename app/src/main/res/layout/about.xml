@@ -22,16 +22,8 @@
             android:src="@drawable/splashscreen" />
 
         <TextView
-            style="@style/font22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/app_name"
-            android:visibility="gone" />
-
-        <TextView
-            style="@style/font2"
+            android:textSize="13sp"
+            android:textColor="?accentColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -39,7 +31,7 @@
 
         <TextView
             android:id="@+id/about_android_version"
-            style="@style/font12"
+            style="@style/about_version_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -49,7 +41,7 @@
 
         <TextView
             android:id="@+id/about_liblinphone_sdk_version"
-            style="@style/font12"
+            style="@style/about_version_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -69,7 +61,7 @@
 
         <TextView
             android:id="@+id/about_link"
-            style="@style/font2"
+            style="@style/link_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -110,7 +102,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/assistant_button"
                 android:textColor="@drawable/assistant_button_text_color"
-                style="@style/font8"
+                style="@style/button_font"
                 android:padding="10dp"
                 android:text="@string/menu_send_log" />
 
@@ -121,7 +113,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/assistant_button"
                 android:textColor="@drawable/assistant_button_text_color"
-                style="@style/font8"
+                style="@style/button_font"
                 android:padding="10dp"
                 android:text="@string/menu_reset_log" />
 

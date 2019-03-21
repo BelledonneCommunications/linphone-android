@@ -24,14 +24,14 @@
 
         <TextView
             android:id="@+id/purchase_title"
-            style="@style/font7"
+            style="@style/assistant_codec_downloader_font"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/purchase_description"
-            style="@style/font11"
+            style="@style/standard_small_text_font"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

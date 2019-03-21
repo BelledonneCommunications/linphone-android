@@ -90,7 +90,7 @@
         <item name="android:textSize">24sp</item>
     </style>
 
-    <style name="font1" parent="@android:style/TextAppearance.Medium">
+    <style name="accent_colored_title_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
@@ -102,7 +102,12 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="font2" parent="@android:style/TextAppearance.Medium">
+    <style name="call_timer_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="link_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -112,17 +117,12 @@
         <item name="android:textSize">13sp</item>
     </style>
 
-    <style name="font3" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
     <style name="big_contact_name_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="font5" parent="@android:style/TextAppearance.Medium">
+    <style name="header_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">30sp</item>
     </style>
@@ -147,18 +147,18 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="font6" parent="@android:style/TextAppearance.Medium">
+    <style name="standard_text_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="font7" parent="@android:style/TextAppearance.Medium">
+    <style name="assistant_codec_downloader_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="font8" parent="@android:style/TextAppearance.Medium">
+    <style name="button_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">16sp</item>
@@ -174,17 +174,12 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="font10" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorD</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="font11" parent="@android:style/TextAppearance.Medium">
+    <style name="standard_small_text_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primarySubtextDarkColor</item>
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="font12" parent="@android:style/TextAppearance.Small">
+    <style name="about_version_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/colorE</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -194,7 +189,7 @@
         <item name="android:textSize">13sp</item>
     </style>
 
-    <style name="font13" parent="@android:style/TextAppearance.Medium">
+    <style name="assistant_input_field_header_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primarySubtextLightColor</item>
         <item name="android:textSize">13sp</item>
     </style>
@@ -204,21 +199,9 @@
         <item name="android:textSize">21sp</item>
     </style>
 
-    <style name="font15" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="font16" parent="@android:style/TextAppearance.Small">
+    <style name="call_status_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="font17" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
@@ -226,19 +209,7 @@
         <item name="android:textSize">10sp</item>
     </style>
 
-    <style name="font18" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">10sp</item>
-    </style>
-
-    <style name="font19" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorD</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="font20" parent="@android:style/TextAppearance.Small">
+    <style name="assistant_input_field_error_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/colorI</item>
         <item name="android:textSize">14sp</item>
     </style>
@@ -254,37 +225,13 @@
         <item name="android:textSize">28sp</item>
     </style>
 
-    <style name="font22" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">25sp</item>
-    </style>
-
     <style name="about_license_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">italic</item>
     </style>
 
-    <style name="font23" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorD</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">italic</item>
-    </style>
-
-    <style name="font24" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
     <style name="generated_contact_avatar_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">21sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="font25" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">?attr/secondaryTextColor</item>
         <item name="android:textSize">21sp</item>
         <item name="android:textStyle">bold</item>
@@ -429,6 +376,17 @@
     <style name="call_stats_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="font3" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="font15" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

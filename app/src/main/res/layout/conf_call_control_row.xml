@@ -36,7 +36,7 @@
 
         <Chronometer
             android:id="@+id/call_timer"
-            style="@style/font2"
+            style="@style/call_timer_font"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|right"
