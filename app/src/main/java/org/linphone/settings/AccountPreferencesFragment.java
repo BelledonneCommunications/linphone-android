@@ -27,6 +27,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.LinphonePreferences.AccountBuilder;
 import org.linphone.utils.LinphoneUtils;
 
-public class AccountPreferencesFragment extends PreferencesListFragment
+public class AccountPreferencesFragment extends PreferenceFragment
         implements AccountCreatorListener {
     private int mN;
     private final OnPreferenceClickListener linkAccountListener =
@@ -61,7 +62,7 @@ public class AccountPreferencesFragment extends PreferencesListFragment
                 }
             };
     private boolean mIsNewAccount = false;
-    private final LinphonePreferences mPrefs;
+    private LinphonePreferences mPrefs;
     private final OnPreferenceChangeListener mAvpfRRIntervalChangedListener =
             new OnPreferenceChangeListener() {
                 @Override
@@ -312,11 +313,6 @@ public class AccountPreferencesFragment extends PreferencesListFragment
             };
     private AccountCreator mAccountCreator;
 
-    public AccountPreferencesFragment() {
-        super(R.xml.account_preferences);
-        mPrefs = LinphonePreferences.instance();
-    }
-
     private static boolean isEditTextEmpty(String s) {
         return s.equals(""); // really empty.
     }
@@ -333,7 +329,9 @@ public class AccountPreferencesFragment extends PreferencesListFragment
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.account_preferences);
 
+        mPrefs = LinphonePreferences.instance();
         mN = getArguments().getInt("Account", 0);
         if (mN == mPrefs.getAccountCount()) {
             mIsNewAccount = true;

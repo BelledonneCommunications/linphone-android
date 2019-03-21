@@ -1532,6 +1532,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     LinphoneActivity.instance().goToChatList();
                     return true;
                 case SETTINGS:
+                case ACCOUNT_SETTINGS:
                 case ABOUT:
                     hideTopBar(); // just in case
                     LinphoneActivity.instance().goToDialerFragment();

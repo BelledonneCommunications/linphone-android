@@ -29,6 +29,7 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -37,6 +38,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import java.io.File;
@@ -65,7 +67,7 @@ import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.FileUtils;
 import org.linphone.views.LedPreference;
 
-public class SettingsFragment extends PreferencesListFragment {
+public class SettingsFragment extends PreferenceFragment {
     private LinphonePreferences mPrefs;
     private final Handler mHandler = new Handler();
     private CoreListenerStub mListener;
@@ -79,8 +81,10 @@ public class SettingsFragment extends PreferencesListFragment {
                 }
             };
 
-    public SettingsFragment() {
-        super(R.xml.preferences);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.preferences);
     }
 
     private static void setListPreferenceValues(
@@ -154,6 +158,27 @@ public class SettingsFragment extends PreferencesListFragment {
         initSettings();
         setListeners();
         hideSettings();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Init the settings page interface
+        initAccounts();
+
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (LinphoneActivity.isInstanciated() && LinphoneManager.isInstanciated()) {
+            if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
+            LinphoneActivity.instance().hideTopBar();
+        }
+        super.onPause();
     }
 
     private void removePreviousPreferencesFile() {
@@ -1777,26 +1802,5 @@ public class SettingsFragment extends PreferencesListFragment {
                                 return true;
                             }
                         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Init the settings page interface
-        initAccounts();
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        if (LinphoneActivity.isInstanciated() && LinphoneManager.isInstanciated()) {
-            if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
-            LinphoneActivity.instance().hideTopBar();
-        }
-        super.onPause();
     }
 }
