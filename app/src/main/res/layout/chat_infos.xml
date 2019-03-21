@@ -125,7 +125,7 @@
                 android:gravity="center"
                 android:text="@string/chat_room_leave_group"
                 android:textAllCaps="true"
-                android:textColor="@color/colorG"
+                android:textColor="@color/white_color"
                 android:textSize="15sp" />
 
         </LinearLayout>

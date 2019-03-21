@@ -47,7 +47,7 @@
 		<EditText
 			android:id="@+id/assistant_code"
 			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
+			android:textColor="@color/black_color"
 			android:contentDescription="@string/content_description_activation_code_field"
 			android:inputType="number"
 			android:gravity="center_vertical|center_horizontal"

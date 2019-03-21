@@ -93,7 +93,7 @@
 							<EditText
 								android:id="@+id/dial_code"
 								android:background="@drawable/resizable_textfield"
-								android:textColor="@color/colorB"
+								android:textColor="@color/black_color"
 								android:inputType="phone"
 								android:text="+"
 								android:layout_marginRight="10dp"
@@ -105,7 +105,7 @@
 							<EditText
 								android:id="@+id/phone_number"
 								android:background="@drawable/resizable_textfield"
-								android:textColor="@color/colorB"
+								android:textColor="@color/black_color"
 								android:contentDescription="@string/content_description_phone_number_field"
 								android:inputType="phone"
 								android:layout_width="match_parent"
@@ -144,7 +144,7 @@
 				<EditText
 					android:id="@+id/assistant_username"
 					android:background="@drawable/resizable_textfield"
-					android:textColor="@color/colorB"
+					android:textColor="@color/black_color"
 					android:inputType="text|textNoSuggestions"
 					android:contentDescription="@string/content_description_username_field"
 					android:layout_width="match_parent"
@@ -170,7 +170,7 @@
 				<EditText
 					android:id="@+id/assistant_password"
 					android:background="@drawable/resizable_textfield"
-					android:textColor="@color/colorB"
+					android:textColor="@color/black_color"
 					android:inputType="textPassword"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"

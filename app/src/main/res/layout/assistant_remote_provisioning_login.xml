@@ -41,7 +41,7 @@
 		<EditText
 			android:id="@+id/assistant_username"
 			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
+			android:textColor="@color/black_color"
 			android:textCursorDrawable="@null"
 			android:inputType="textNoSuggestions"
 			android:layout_width="match_parent"
@@ -61,7 +61,7 @@
 		<EditText
 			android:id="@+id/assistant_password"
 			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
+			android:textColor="@color/black_color"
 			android:textCursorDrawable="@null"
 			android:inputType="textPassword"
 			android:layout_width="match_parent"
@@ -83,7 +83,7 @@
 		<EditText
 			android:id="@+id/assistant_domain"
 			android:background="@drawable/resizable_textfield"
-			android:textColor="@color/colorB"
+			android:textColor="@color/black_color"
 			android:textCursorDrawable="@null"
 			android:inputType="textUri"
 			android:layout_width="match_parent"

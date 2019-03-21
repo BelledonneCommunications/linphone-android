@@ -110,7 +110,7 @@
                                     android:inputType="phone"
                                     android:maxLines="1"
                                     android:text="+"
-                                    android:textColor="@color/colorB" />
+                                    android:textColor="@color/black_color" />
 
                                 <EditText
                                     android:id="@+id/phone_number"
@@ -120,7 +120,7 @@
                                     android:contentDescription="@string/content_description_phone_number_field"
                                     android:inputType="phone"
                                     android:maxLines="1"
-                                    android:textColor="@color/colorB" />
+                                    android:textColor="@color/black_color" />
 
                             </LinearLayout>
 
@@ -178,7 +178,7 @@
                         android:contentDescription="@string/content_description_username_field"
                         android:inputType="text|textNoSuggestions"
                         android:maxLines="1"
-                        android:textColor="@color/colorB" />
+                        android:textColor="@color/black_color" />
 
                     <TextView
                         android:id="@+id/username_error"
@@ -217,7 +217,7 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:textColor="@color/colorB"
+                        android:textColor="@color/black_color"
                         android:textCursorDrawable="@null" />
 
                     <TextView
@@ -265,7 +265,7 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:textColor="@color/colorB"
+                        android:textColor="@color/black_color"
                         android:textCursorDrawable="@null" />
 
                     <TextView
@@ -306,7 +306,7 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:textColor="@color/colorB"
+                        android:textColor="@color/black_color"
                         android:textCursorDrawable="@null" />
 
                     <TextView

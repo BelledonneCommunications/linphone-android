@@ -19,7 +19,7 @@
         android:layout_height="60dp"
         android:layout_below="@+id/status"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorF"
+        android:background="@color/toolbar_color"
         android:orientation="horizontal">
 
         <ImageView

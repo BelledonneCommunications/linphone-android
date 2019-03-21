@@ -57,7 +57,7 @@
                         android:contentDescription="@string/content_description_username_field"
                         android:inputType="text|textNoSuggestions"
                         android:maxLines="1"
-                        android:textColor="@color/colorB" />
+                        android:textColor="@color/black_color" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -81,7 +81,7 @@
                         android:background="@drawable/resizable_textfield"
                         android:inputType="textPassword"
                         android:maxLines="1"
-                        android:textColor="@color/colorB" />
+                        android:textColor="@color/black_color" />
                 </LinearLayout>
             </TableRow>
 
@@ -111,7 +111,7 @@
                         android:contentDescription="@string/content_description_display_field"
                         android:inputType="textPersonName"
                         android:maxLines="1"
-                        android:textColor="@color/colorB" />
+                        android:textColor="@color/black_color" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -136,7 +136,7 @@
                         android:contentDescription="@string/content_description_domain_field"
                         android:inputType="textUri"
                         android:maxLines="1"
-                        android:textColor="@color/colorB" />
+                        android:textColor="@color/black_color" />
                 </LinearLayout>
 
             </TableRow>
@@ -167,7 +167,7 @@
                         android:contentDescription="@string/content_description_username_field"
                         android:inputType="text|textNoSuggestions"
                         android:maxLines="1"
-                        android:textColor="@color/colorB" />
+                        android:textColor="@color/black_color" />
 
                 </LinearLayout>
 

@@ -175,7 +175,7 @@ public class StatusFragment extends Fragment {
             Window window = activity.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(ContextCompat.getColor(activity, R.color.colorADark10));
+            window.setStatusBarColor(ContextCompat.getColor(activity, R.color.primary_dark_color));
         }
 
         return view;
@@ -438,7 +438,9 @@ public class StatusFragment extends Fragment {
             mZrtpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
             mZrtpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
             mZrtpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorC));
+            Drawable d =
+                    new ColorDrawable(
+                            ContextCompat.getColor(getActivity(), R.color.dark_grey_color));
             d.setAlpha(200);
             mZrtpDialog.setContentView(R.layout.dialog);
             mZrtpDialog

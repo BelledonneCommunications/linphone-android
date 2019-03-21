@@ -219,22 +219,26 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     holder.imdmLayout.setVisibility(View.VISIBLE);
                     holder.imdmIcon.setImageResource(R.drawable.imdn_received);
                     holder.imdmLabel.setText(R.string.delivered);
-                    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorD));
+                    holder.imdmLabel.setTextColor(
+                            mContext.getResources().getColor(R.color.grey_color));
                 } else if (status == ChatMessage.State.Displayed) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
                     holder.imdmIcon.setImageResource(R.drawable.imdn_read);
                     holder.imdmLabel.setText(R.string.displayed);
-                    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorK));
+                    holder.imdmLabel.setTextColor(
+                            mContext.getResources().getColor(R.color.imdn_read_color));
                 } else if (status == ChatMessage.State.NotDelivered) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
                     holder.imdmIcon.setImageResource(R.drawable.imdn_error);
                     holder.imdmLabel.setText(R.string.error);
-                    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
+                    holder.imdmLabel.setTextColor(
+                            mContext.getResources().getColor(R.color.red_color));
                 } else if (status == ChatMessage.State.FileTransferError) {
                     holder.imdmLayout.setVisibility(View.VISIBLE);
                     holder.imdmIcon.setImageResource(R.drawable.imdn_error);
                     holder.imdmLabel.setText(R.string.file_transfer_error);
-                    holder.imdmLabel.setTextColor(mContext.getResources().getColor(R.color.colorI));
+                    holder.imdmLabel.setTextColor(
+                            mContext.getResources().getColor(R.color.red_color));
                 }
 
                 // layoutParams allow bubbles alignment during selection mode
@@ -406,7 +410,8 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
             holder.bubbleLayout.setLayoutParams(layoutParams);
         } else { // Event is not chat message
             holder.eventLayout.setVisibility(View.VISIBLE);
-            holder.eventMessage.setTextColor(mContext.getResources().getColor(R.color.colorE));
+            holder.eventMessage.setTextColor(
+                    mContext.getResources().getColor(R.color.light_grey_color));
             holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_gray);
             holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_gray);
 
@@ -465,7 +470,7 @@ public class ChatMessagesOldAdapter extends SelectableAdapter<ChatMessageOldView
                     break;
                 case ConferenceSecurityEvent:
                     holder.eventMessage.setTextColor(
-                            mContext.getResources().getColor(R.color.colorI));
+                            mContext.getResources().getColor(R.color.red_color));
                     holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
                     holder.eventLayout.setBackgroundResource(R.drawable.event_decoration_red);
 

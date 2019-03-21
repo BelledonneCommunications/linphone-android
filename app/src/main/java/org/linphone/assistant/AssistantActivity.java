@@ -662,7 +662,7 @@ public class AssistantActivity extends ThemableActivity
     private void displayRegistrationInProgressDialog() {
         if (LinphoneManager.getLc().isNetworkReachable()) {
             mProgress = ProgressDialog.show(this, null, null);
-            Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
+            Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.light_grey_color));
             d.setAlpha(200);
             mProgress
                     .getWindow()
@@ -679,7 +679,7 @@ public class AssistantActivity extends ThemableActivity
         mRemoteProvisioningInProgress = true;
 
         mProgress = ProgressDialog.show(this, null, null);
-        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorE));
+        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.light_grey_color));
         d.setAlpha(200);
         mProgress
                 .getWindow()

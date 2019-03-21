@@ -142,7 +142,7 @@
                 android:paddingRight="5dp"
                 android:queryBackground="@android:color/transparent"
                 android:queryHint="@string/chat_room_creation_filter_hint"
-                android:textColor="@color/colorB" />
+                android:textColor="@color/black_color" />
 
         </RelativeLayout>
 

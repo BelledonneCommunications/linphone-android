@@ -112,7 +112,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
         mUploadInProgress = true;
 
         mProgress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
-        Drawable d = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.colorE));
+        Drawable d =
+                new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.light_grey_color));
         d.setAlpha(200);
         mProgress
                 .getWindow()

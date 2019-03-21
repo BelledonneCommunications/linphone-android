@@ -45,7 +45,7 @@
             android:inputType="textEmailAddress"
             android:paddingLeft="20dp"
             android:paddingRight="5dp"
-            android:textColorHint="@color/colorE" />
+            android:textColorHint="@color/light_grey_color" />
 
     </RelativeLayout>
 

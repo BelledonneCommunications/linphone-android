@@ -4,7 +4,7 @@
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorB">
+    android:background="@color/black_color">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/side_menu"
@@ -51,7 +51,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:alpha="0.8"
-                        android:background="@color/colorH"
+                        android:background="@color/white_color"
                         android:orientation="vertical">
 
                         <TextView
@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:alpha="0.9"
-                        android:background="@color/colorC"
+                        android:background="@color/dark_grey_color"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:visibility="gone">
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
-                    android:background="@color/colorH"
+                    android:background="@color/white_color"
                     android:orientation="vertical"/>
 
                 <LinearLayout
@@ -147,7 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@id/calls_list"
-                    android:background="@color/colorC"
+                    android:background="@color/dark_grey_color"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -201,7 +201,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:background="@color/colorC"
+                        android:background="@color/dark_grey_color"
                         android:contentDescription="@string/content_description_numpad"
                         android:padding="15dp"
                         android:src="@drawable/footer_dialer" />
@@ -228,7 +228,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:background="@color/colorC"
+                            android:background="@color/dark_grey_color"
                             android:contentDescription="@string/content_description_chat_button"
                             android:padding="15dp"
                             android:src="@drawable/footer_chat" />
@@ -429,7 +429,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/colorF"
+                    android:background="@color/toolbar_color"
                     android:contentDescription="@string/content_description_numpad"
                     android:visibility="gone" />
 
@@ -443,7 +443,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:layout_marginTop="40dp"
-            android:background="@color/colorH">
+            android:background="@color/white_color">
 
             <include
                 android:id="@+id/incall_stats"

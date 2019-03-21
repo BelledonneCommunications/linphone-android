@@ -86,7 +86,7 @@
 						<EditText
 							android:id="@+id/dial_code"
 							android:background="@drawable/resizable_textfield"
-							android:textColor="@color/colorB"
+							android:textColor="@color/black_color"
 							android:inputType="phone"
 							android:text="+"
 							android:layout_marginRight="10dp"
@@ -98,7 +98,7 @@
 						<EditText
 							android:id="@+id/phone_number"
 							android:background="@drawable/resizable_textfield"
-							android:textColor="@color/colorB"
+							android:textColor="@color/black_color"
 							android:contentDescription="@string/content_description_phone_number_field"
 							android:inputType="phone"
 							android:layout_width="match_parent"
@@ -142,7 +142,7 @@
 				<EditText
 					android:id="@+id/username"
 					android:background="@drawable/resizable_textfield"
-					android:textColor="@color/colorB"
+					android:textColor="@color/black_color"
 					android:contentDescription="@string/content_description_username_field"
 					android:inputType="text|textNoSuggestions"
 					android:layout_width="match_parent"
@@ -182,7 +182,7 @@
 					<EditText
 						android:id="@+id/email"
 						android:background="@drawable/resizable_textfield"
-						android:textColor="@color/colorB"
+						android:textColor="@color/black_color"
 						android:inputType="textEmailAddress"
 						android:contentDescription="@string/content_description_email_field"
 						android:textCursorDrawable="@null"
@@ -225,7 +225,7 @@
 						<EditText
 							android:id="@+id/password"
 							android:background="@drawable/resizable_textfield"
-							android:textColor="@color/colorB"
+							android:textColor="@color/black_color"
 							android:inputType="textPassword"
 							android:textCursorDrawable="@null"
 							android:layout_width="match_parent"
@@ -261,7 +261,7 @@
 						<EditText
 							android:id="@+id/confirm_password"
 							android:background="@drawable/resizable_textfield"
-							android:textColor="@color/colorB"
+							android:textColor="@color/black_color"
 							android:inputType="textPassword"
 							android:contentDescription="@string/content_description_confirm_password_field"
 							android:textCursorDrawable="@null"

@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorA">#ff5e00</color>
-    <!-- You can use https://material.io/design/color/#tools-for-picking-colors to get dark color value from primary -->
-    <color name="colorADark10">#e65000</color>
-    <color name="colorALight30">#ffab4d</color>
-    <color name="colorB">#000000</color>
-    <color name="colorC">#444444</color>
-    <color name="colorD">#808080</color>
-    <color name="colorE">#c4c4c4</color>
-    <color name="colorF">#e1e1e1</color>
-    <color name="colorG">#f3f3f3</color>
-    <color name="colorG2">#f5f5f5</color>
-    <color name="colorH">#ffffff</color>
-    <color name="colorI">#ff0000</color>
-    <color name="colorJ">#ffa645</color>
-    <color name="colorK">#3eb5c0</color>
-    <color name="colorL">#96c11f</color>
-    <color name="colorM">#a2a2a2</color>
-    <color name="colorN">#a1a1a1</color>
-    <color name="notification_color_led">#FF8000</color>
-    <color name="security_green">#96c11f</color>
-    <color name="security_gray">#c2c2c2</color>
-    <color name="security_thumb">#ffffff</color>
-    <color name="chat_bubble_incoming">#f3f3f3</color>
-    <color name="chat_bubble_outgoing">#ffeee5</color>
-    <color name="colorDisabled">#808080</color>
+    <color name="transparent_color">#00000000</color>
 
-    <color name="transparent">#00000000</color>
-    <color name="linphone_launcher_icon_background">@color/colorA</color>
-    <color name="contact_disabled">#99ffffff</color>
+    <color name="primary_color">#ff5e00</color> <!-- Try to have a color that renders well on both light & dark theme -->
+    <!-- You can use https://material.io/design/color/#tools-for-picking-colors to get dark color value from primary -->
+    <color name="primary_dark_color">#e65000</color>
+    <color name="primary_light_color">#ffab4d</color>
+    <color name="notification_led_color">#ff8000</color>
+
+    <color name="black_color">#000000</color>
+    <color name="dark_grey_color">#444444</color>
+    <color name="grey_color">#808080</color>
+    <color name="light_grey_color">#c4c4c4</color>
+    <color name="white_color">#ffffff</color>
+    <color name="red_color">#ff0000</color>
+    <color name="green_color">#96c11f</color>
+
+    <color name="imdn_read_color">#3eb5c0</color>
+    <color name="toolbar_color">#e1e1e1</color>
+    <color name="header_background_color">#f3f3f3</color>
+    <color name="security_gray_color">#c2c2c2</color>
+    <color name="chat_bubble_text_color">#a1a1a1</color>
+    <color name="chat_bubble_incoming_color">#f3f3f3</color>
+    <color name="chat_bubble_outgoing_color">#ffeee5</color>
+
+    <color name="disabled_color">#808080</color>
+    <color name="contact_disabled_color">#99ffffff</color>
 </resources>

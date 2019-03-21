@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorD">
+    android:background="@color/grey_color">
 
     <ImageView
         android:layout_width="400dp"
@@ -50,7 +50,7 @@
                 android:inputType="textEmailAddress"
                 android:paddingLeft="20dp"
                 android:paddingRight="5dp"
-                android:textColorHint="@color/colorE" />
+                android:textColorHint="@color/light_grey_color" />
 
         </RelativeLayout>
 

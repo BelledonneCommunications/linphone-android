@@ -1217,7 +1217,7 @@ public class CallActivity extends LinphoneGenericActivity
         mDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         mDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         mDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
+        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.dark_grey_color));
         d.setAlpha(200);
         mDialog.setContentView(R.layout.dialog);
         mDialog.getWindow()

@@ -42,7 +42,7 @@
         android:hint="@string/password"
         android:inputType="textPassword"
         android:maxLines="1"
-        android:textColor="@color/colorB"
+        android:textColor="@color/black_color"
         android:textCursorDrawable="@null"
         android:visibility="gone" />
 
@@ -154,7 +154,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
-            android:backgroundTint="@color/colorI"
+            android:backgroundTint="@color/red_color"
             android:ellipsize="end"
             android:padding="10dp"
             android:text="@string/delete" />
@@ -166,7 +166,7 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@drawable/resizable_assistant_button"
-            android:backgroundTint="@color/colorL"
+            android:backgroundTint="@color/green_color"
             android:ellipsize="end"
             android:padding="10dp"
             android:text="@string/ok"

@@ -25,7 +25,7 @@
         android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_margin="5dp"
-        android:background="@color/colorN"
+        android:background="@color/chat_bubble_text_color"
         android:ellipsize="end"
         android:gravity="center"
         android:textAlignment="center"

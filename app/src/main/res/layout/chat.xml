@@ -160,7 +160,7 @@
                 android:inputType="textShortMessage|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
                 android:maxLines="6"
                 android:padding="5dp"
-                android:textColor="@color/colorB"
+                android:textColor="@color/black_color"
                 android:textCursorDrawable="@null" />
 
             <ImageView
@@ -189,10 +189,10 @@
         android:layout_height="match_parent"
         android:layout_above="@id/remote_composing"
         android:layout_below="@+id/top"
-        android:cacheColorHint="@color/transparent"
+        android:cacheColorHint="@color/transparent_color"
         android:choiceMode="multipleChoice"
         android:divider="@android:color/transparent"
-        android:listSelector="@color/transparent"
+        android:listSelector="@color/transparent_color"
         android:transcriptMode="normal" />
 
     <ImageView

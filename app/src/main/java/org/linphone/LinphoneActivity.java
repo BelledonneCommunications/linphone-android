@@ -1013,7 +1013,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
     public Dialog displayDialog(String text) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.colorC));
+        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.dark_grey_color));
         d.setAlpha(200);
         dialog.setContentView(R.layout.dialog);
         dialog.getWindow()

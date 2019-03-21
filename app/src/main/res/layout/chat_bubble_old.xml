@@ -201,7 +201,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:paddingRight="5dp"
-                android:progressTint="@color/colorB" />
+                android:progressTint="@color/black_color" />
 
         </RelativeLayout>
 

@@ -38,14 +38,14 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/erase"
-            android:background="@color/transparent"
-            android:backgroundTint="@color/transparent"
+            android:background="@color/transparent_color"
+            android:backgroundTint="@color/transparent_color"
             android:ellipsize="start"
             android:hint="@string/address_bar_hint"
             android:inputType="textEmailAddress"
             android:paddingLeft="20dp"
             android:paddingRight="5dp"
-            android:textColorHint="@color/colorE" />
+            android:textColorHint="@color/light_grey_color" />
 
     </RelativeLayout>
 

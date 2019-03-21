@@ -32,7 +32,7 @@
             android:background="@drawable/resizable_textfield"
             android:gravity="center"
             android:inputType="textPersonName"
-            android:textColor="@color/colorB"
+            android:textColor="@color/black_color"
             android:textCursorDrawable="@null" />
 
         <ImageView
@@ -51,8 +51,8 @@
         android:id="@+id/countryList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:cacheColorHint="@color/transparent"
-        android:divider="@color/colorE"
+        android:cacheColorHint="@color/transparent_color"
+        android:divider="@color/light_grey_color"
         android:dividerHeight="1dp" />
 
 </LinearLayout>

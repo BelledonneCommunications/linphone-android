@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@color/colorC"
+        android:background="@color/dark_grey_color"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="10dp">
@@ -69,7 +69,7 @@
             android:gravity="center"
             android:paddingTop="20dp"
             android:text="@string/about_link"
-            android:textColorLink="@color/colorA" />
+            android:textColorLink="@color/primary_color" />
 
         <TextView
             android:id="@+id/about_text"

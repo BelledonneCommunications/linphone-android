@@ -3,7 +3,7 @@
     android:id="@+id/video_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorB">
+    android:background="@color/black_color">
 
     <TextureView
         android:id="@+id/videoSurface"

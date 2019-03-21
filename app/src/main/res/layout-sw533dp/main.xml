@@ -253,7 +253,7 @@
                     android:id="@+id/accounts_list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:cacheColorHint="@color/transparent"
+                    android:cacheColorHint="@color/transparent_color"
                     android:choiceMode="singleChoice"
                     android:divider="@android:color/transparent"
                     android:dividerHeight="0dp" />
