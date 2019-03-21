@@ -77,79 +77,16 @@
         <item name="button_background_drawable">@drawable/button_background_dark</item>
     </style>
 
-    <style name="main_account_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/lighToolbarTextColor</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">18sp</item>
+    <!-- Assistant related -->
+
+    <style name="assistant_input_field_error_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorI</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="toolbar_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="accent_colored_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="sip_uri_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="call_timer_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="link_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="sip_uri_small_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentColor</item>
+    <style name="assistant_input_field_header_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextLightColor</item>
         <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="big_contact_name_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">30sp</item>
-    </style>
-
-    <style name="header_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">30sp</item>
-    </style>
-
-    <style name="toolbar_small_title_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="contact_name_list_cell_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="empty_list_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="contact_edit_form_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="standard_text_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="assistant_codec_downloader_font" parent="@android:style/TextAppearance.Medium">
@@ -158,72 +95,7 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="button_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="contact_organization_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="call_log_detail_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primarySubtextDarkColor</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="standard_small_text_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primarySubtextDarkColor</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="about_version_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">@color/colorE</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="contact_edit_form_label_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorE</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="assistant_input_field_header_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primarySubtextLightColor</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="call_contact_name_paused_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">21sp</item>
-    </style>
-
-    <style name="call_status_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">@color/colorH</item>
-        <item name="android:textSize">10sp</item>
-    </style>
-
-    <style name="assistant_input_field_error_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">@color/colorI</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="splash_screen_app_name_font" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">50sp</item>
-    </style>
-
-    <style name="splash_screen_subtitle_font" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">?attr/accentColor</item>
-        <item name="android:textSize">28sp</item>
-    </style>
+    <!-- About related -->
 
     <style name="about_license_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/secondaryTextColor</item>
@@ -231,23 +103,12 @@
         <item name="android:textStyle">italic</item>
     </style>
 
-    <style name="generated_contact_avatar_font" parent="@android:style/TextAppearance.Small">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">21sp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="about_version_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorE</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="generated_contact_avatar_100_font" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">70sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="generated_contact_avatar_200_font" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
-        <item name="android:textSize">1500sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+    <!-- Chat related -->
 
     <style name="imdn_read_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorK</item>
@@ -290,12 +151,107 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="group_chat_event_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextLightColor</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="group_chat_security_event_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorI</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <!-- Contact related -->
+
     <style name="contact_invite_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textSize">16.7sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:lineSpacingExtra">16.7sp</item>
     </style>
+
+    <style name="contact_organization_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="contact_name_list_cell_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="generated_contact_avatar_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="generated_contact_avatar_100_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">70sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="generated_contact_avatar_200_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">1500sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="contact_edit_form_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="big_contact_name_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="contact_edit_form_label_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorE</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Call related -->
+
+    <style name="call_stats_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_stats_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="call_contact_name_paused_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="call_status_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="call_log_detail_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextDarkColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="call_timer_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Dialog related -->
 
     <style name="dialog_title_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorH</item>
@@ -337,21 +293,20 @@
         <item name="android:lineSpacingExtra">8.3sp</item>
     </style>
 
-    <style name="group_chat_event_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/primarySubtextLightColor</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:lineSpacingExtra">0sp</item>
-        <item name="android:textStyle">italic</item>
+    <!-- Splashscreen -->
+
+    <style name="splash_screen_app_name_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">50sp</item>
     </style>
 
-    <style name="group_chat_security_event_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">@color/colorI</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:lineSpacingExtra">0sp</item>
-        <item name="android:textStyle">italic</item>
+    <style name="splash_screen_subtitle_font" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">28sp</item>
     </style>
+
+    <!-- UI various fonts -->
 
     <style name="status_bar_font" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">?attr/accentTextColor</item>
@@ -368,15 +323,78 @@
         <item name="android:textSize">30sp</item>
     </style>
 
-    <style name="call_stats_title_font" parent="@android:style/TextAppearance.Medium">
+    <style name="main_account_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/lighToolbarTextColor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="toolbar_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="accent_colored_title_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="sip_uri_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="link_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="sip_uri_small_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="header_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="toolbar_small_title_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="call_stats_font" parent="@android:style/TextAppearance.Medium">
+    <style name="empty_list_font" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">?attr/primaryTextColor</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
+
+    <style name="standard_text_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="button_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="standard_small_text_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextDarkColor</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="unread_count_font" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorH</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <!-- To remove when deleting OldImdn and OldChatAdapter -->
 
     <style name="font3" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">?attr/accentColor</item>
