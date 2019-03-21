@@ -4,11 +4,14 @@
     <style name="LinphoneStyleLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Android theme override -->
         <item name="colorAccent">@color/colorA</item>
+        <item name="android:colorPrimary">@color/colorA</item>
+        <item name="android:colorPrimaryDark">@color/colorADark10</item>
         <item name="android:textColorPrimary">@color/colorC</item>
         <item name="android:textColorSecondary">@color/colorD</item>
         <item name="android:textColorHint">@color/colorE</item>
         <item name="android:colorBackground">@color/colorH</item>
         <item name="android:textColorPrimaryInverse">@color/colorH</item>
+        <item name="android:windowBackground">@color/colorH</item>
 
         <item name="accentColor">@color/colorA</item>
         <item name="accentColorLight30">@color/colorALight30</item>
@@ -39,11 +42,14 @@
     <style name="LinphoneStyleDark" parent="Theme.AppCompat.NoActionBar">
         <!-- Android theme override -->
         <item name="colorAccent">@color/colorA</item>
+        <item name="android:colorPrimary">@color/colorA</item>
+        <item name="android:colorPrimaryDark">@color/colorADark10</item>
         <item name="android:textColorPrimary">@color/colorH</item>
         <item name="android:textColorSecondary">@color/colorG</item>
         <item name="android:textColorHint">@color/colorF</item>
         <item name="android:colorBackground">@color/colorC</item>
         <item name="android:textColorPrimaryInverse">@color/colorC</item>
+        <item name="android:windowBackground">@color/colorC</item>
 
         <item name="accentColor">@color/colorA</item>
         <item name="accentColorLight30">@color/colorALight30</item>

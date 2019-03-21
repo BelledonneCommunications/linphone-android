@@ -29,7 +29,6 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -102,8 +101,8 @@ public class SettingsFragment extends PreferencesListFragment {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onStart() {
+        super.onStart();
 
         mPrefs = LinphonePreferences.instance();
         removePreviousPreferencesFile(); // Required when updating the preferences order
@@ -1631,18 +1630,7 @@ public class SettingsFragment extends PreferencesListFragment {
                                     Preference preference, Object newValue) {
                                 boolean value = (Boolean) newValue;
                                 mPrefs.enableDarkMode(value);
-                                if (value) {
-                                    LinphoneActivity.instance().setTheme(R.style.LinphoneStyleDark);
-                                    LinphoneActivity.instance()
-                                            .getTheme()
-                                            .applyStyle(R.style.LinphoneStyleDark, true);
-                                } else {
-                                    LinphoneActivity.instance()
-                                            .setTheme(R.style.LinphoneStyleLight);
-                                    LinphoneActivity.instance()
-                                            .getTheme()
-                                            .applyStyle(R.style.LinphoneStyleLight, true);
-                                }
+                                LinphoneActivity.instance().recreate();
                                 return true;
                             }
                         });
