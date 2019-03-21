@@ -489,7 +489,7 @@ public final class LinphoneUtils {
         return sContext;
     }
 
-    public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ArrayList<ChatRoom> rooms) {
+    public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ChatRoom[] rooms) {
         ArrayList<ChatRoom> newRooms = new ArrayList<>();
         for (ChatRoom room : rooms) {
             if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())

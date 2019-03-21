@@ -23,12 +23,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.core.ChatRoom;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableAdapter;
@@ -72,9 +72,13 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
     }
 
     public void refresh() {
-        mRooms =
-                LinphoneUtils.removeEmptyOneToOneChatRooms(
-                        new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms())));
+        ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
+        if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
+            mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
+        } else {
+            mRooms = Arrays.asList(rooms);
+        }
+
         Collections.sort(
                 mRooms,
                 new Comparator<ChatRoom>() {
@@ -85,6 +89,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
                         return 1;
                     }
                 });
+
         notifyDataSetChanged();
     }
 

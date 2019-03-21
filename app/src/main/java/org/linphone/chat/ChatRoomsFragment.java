@@ -35,7 +35,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.linphone.LinphoneActivity;
@@ -75,11 +74,7 @@ public class ChatRoomsFragment extends Fragment
     @Override
     public View onCreateView(
             final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        mRooms =
-                LinphoneUtils.removeEmptyOneToOneChatRooms(
-                        new ArrayList<>(Arrays.asList(LinphoneManager.getLc().getChatRooms())));
 
         mContext = getActivity().getApplicationContext();
         View view = inflater.inflate(R.layout.chatlist, container, false);
@@ -90,6 +85,13 @@ public class ChatRoomsFragment extends Fragment
         mNewGroupDiscussionButton = view.findViewById(R.id.new_group_discussion);
         mBackToCallButton = view.findViewById(R.id.back_in_call);
         mNoChatHistory = view.findViewById(R.id.noChatHistory);
+
+        ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
+        if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
+            mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
+        } else {
+            mRooms = Arrays.asList(rooms);
+        }
 
         mSelectionHelper = new SelectableHelper(view, this);
         mChatRoomsAdapter =
