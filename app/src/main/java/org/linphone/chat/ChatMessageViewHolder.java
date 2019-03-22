@@ -161,7 +161,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             } else if (status == ChatMessage.State.FileTransferError) {
                 outgoingImdn.setVisibility(View.VISIBLE);
                 outgoingImdn.setImageResource(R.drawable.imdn_error);
-            } else if (status == ChatMessage.State.InProgress) {
+            } else if (status == ChatMessage.State.InProgress
+                    || status == ChatMessage.State.FileTransferInProgress) {
                 sendInProgress.setVisibility(View.VISIBLE);
             }
 
@@ -176,7 +177,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             bubbleLayout.setPadding(
                     0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 18), 0);
 
-            if (status == ChatMessage.State.InProgress) {
+            if (status == ChatMessage.State.FileTransferInProgress) {
                 downloadInProgress.setVisibility(View.VISIBLE);
             }
         }
