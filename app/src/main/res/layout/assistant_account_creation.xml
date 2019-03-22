@@ -69,6 +69,7 @@
 					style="@style/button_font"
 					android:text="@string/select_your_country"
 					android:background="@drawable/resizable_assistant_button"
+					android:textColor="@drawable/assistant_button_text_color"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"/>
 
