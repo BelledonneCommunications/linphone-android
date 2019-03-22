@@ -238,8 +238,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
 
     private void displayContent(
             final ChatMessage message, Content c, View content, boolean isMultiContent) {
-        final Button download = content.findViewById(R.id.download);
-        download.setVisibility(View.GONE);
+        final Button downloadOrCancel = content.findViewById(R.id.download);
+        downloadOrCancel.setVisibility(View.GONE);
         final ImageView bigImage = content.findViewById(R.id.bigImage);
         bigImage.setVisibility(View.GONE);
         final ImageView smallImage = content.findViewById(R.id.image);
@@ -277,7 +277,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                         }
                     });
         } else {
-            download.setVisibility(View.VISIBLE);
+            downloadOrCancel.setVisibility(View.VISIBLE);
 
             if (mContext.getPackageManager()
                             .checkPermission(
@@ -300,16 +300,24 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
                                     + filename);
                     prefix += 1;
                 }
-
-                download.setTag(c);
                 c.setFilePath(file.getPath());
-                download.setOnClickListener(
+
+                downloadOrCancel.setTag(c);
+                if (!message.isFileTransferInProgress()) {
+                    downloadOrCancel.setText(R.string.download_file);
+                } else {
+                    downloadOrCancel.setText(R.string.cancel);
+                }
+
+                downloadOrCancel.setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Content c = (Content) v.getTag();
                                 if (!message.isFileTransferInProgress()) {
                                     message.downloadContent(c);
+                                } else {
+                                    message.cancelFileTransfer();
                                 }
                             }
                         });
