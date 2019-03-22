@@ -27,6 +27,8 @@
     <string name="username">Username</string>
     <string name="userid">User-id (optional)</string>
     <string name="phone_number">Phone number</string>
+    <string name="confirmation_code">Confirmation code</string>
+    <string name="international_prefix">International phone number prefix</string>
     <string name="display_name">Display name</string>
     <string name="password">Password</string>
     <string name="confirm_password">Password confirmation</string>

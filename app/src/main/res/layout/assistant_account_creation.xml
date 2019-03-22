@@ -93,6 +93,7 @@
 							android:gravity="center"
 							android:layout_width="65dp"
 							android:layout_height="42dp"
+							android:hint="@string/international_prefix"
 							android:maxLines="1"/>
 
 						<EditText
@@ -103,6 +104,7 @@
 							android:inputType="phone"
 							android:layout_width="match_parent"
 							android:layout_height="40dp"
+							android:hint="@string/phone_number"
 							android:maxLines="1"/>
 
 					</LinearLayout>
@@ -122,6 +124,7 @@
 						android:layout_height="wrap_content"/>
 
 				</LinearLayout>
+
 			</LinearLayout>
 
 			<LinearLayout
@@ -147,6 +150,7 @@
 					android:inputType="text|textNoSuggestions"
 					android:layout_width="match_parent"
 					android:layout_height="40dp"
+					android:hint="@string/username"
 					android:maxLines="1"/>
 
 				<TextView
@@ -190,6 +194,7 @@
 						android:layout_height="40dp"
 						android:paddingLeft="10dp"
 						android:paddingRight="10dp"
+						android:hint="@string/email"
 						android:maxLines="1"/>
 
 					<TextView
@@ -232,6 +237,7 @@
 							android:layout_height="40dp"
 							android:paddingLeft="10dp"
 							android:paddingRight="10dp"
+							android:hint="@string/password"
 							android:maxLines="1"/>
 
 						<TextView
@@ -269,6 +275,7 @@
 							android:layout_height="40dp"
 							android:paddingLeft="10dp"
 							android:paddingRight="10dp"
+							android:hint="@string/confirm_password"
 							android:maxLines="1"/>
 
 						<TextView

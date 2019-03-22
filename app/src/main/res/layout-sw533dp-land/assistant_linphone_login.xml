@@ -96,6 +96,7 @@
                             android:gravity="center"
                             android:inputType="phone"
                             android:maxLines="1"
+                            android:hint="@string/international_prefix"
                             android:text="+"
                             android:textColor="@color/black_color" />
 
@@ -107,6 +108,7 @@
                             android:contentDescription="@string/content_description_phone_number_field"
                             android:inputType="phone"
                             android:maxLines="1"
+                            android:hint="@string/phone_number"
                             android:textColor="@color/black_color" />
 
                     </LinearLayout>
@@ -154,6 +156,7 @@
                     android:contentDescription="@string/content_description_username_field"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
+                    android:hint="@string/username"
                     android:textColor="@color/black_color" />
 
             </LinearLayout>
@@ -182,6 +185,7 @@
                     android:background="@drawable/resizable_textfield"
                     android:inputType="textPassword"
                     android:maxLines="1"
+                    android:hint="@string/password"
                     android:textColor="@color/black_color" />
 
                 <TextView

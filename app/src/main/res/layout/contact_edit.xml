@@ -96,6 +96,7 @@
                     android:gravity="left"
                     android:inputType="textPersonName|textCapWords"
                     android:paddingRight="5dp"
+                    android:hint="@string/contact_last_name"
                     android:textCursorDrawable="@null" />
 
                 <TextView
@@ -117,6 +118,7 @@
                     android:gravity="left"
                     android:inputType="textPersonName|textCapWords"
                     android:paddingRight="5dp"
+                    android:hint="@string/contact_first_name"
                     android:textCursorDrawable="@null" />
 
                 <TextView
@@ -139,6 +141,7 @@
                     android:gravity="left"
                     android:inputType="textPersonName|textCapWords"
                     android:paddingRight="5dp"
+                    android:hint="@string/contact_organization"
                     android:textCursorDrawable="@null" />
 
             </LinearLayout>

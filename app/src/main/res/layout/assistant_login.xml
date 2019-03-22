@@ -49,6 +49,7 @@
                 android:contentDescription="@string/content_description_username_field"
                 android:inputType="text|textNoSuggestions"
                 android:maxLines="1"
+                android:hint="@string/username"
                 android:textColor="@color/black_color" />
 
             <TextView
@@ -67,6 +68,7 @@
                 android:contentDescription="@string/content_description_username_field"
                 android:inputType="text|textNoSuggestions"
                 android:maxLines="1"
+                android:hint="@string/userid"
                 android:textColor="@color/black_color" />
 
             <TextView
@@ -84,6 +86,7 @@
                 android:background="@drawable/resizable_textfield"
                 android:inputType="textPassword"
                 android:maxLines="1"
+                android:hint="@string/password"
                 android:textColor="@color/black_color" />
 
             <TextView
@@ -102,6 +105,7 @@
                 android:contentDescription="@string/content_description_domain_field"
                 android:inputType="textUri"
                 android:maxLines="1"
+                android:hint="@string/domain"
                 android:textColor="@color/black_color" />
 
             <TextView
@@ -120,6 +124,7 @@
                 android:contentDescription="@string/content_description_display_field"
                 android:inputType="textPersonName"
                 android:maxLines="1"
+                android:hint="@string/assistant_display_name_optional"
                 android:textColor="@color/black_color" />
 
             <TextView
@@ -161,6 +166,7 @@
                     android:textColor="?attr/primaryTextColor"
                     android:checked="true"
                     android:text="@string/pref_transport_tls" />
+
             </RadioGroup>
 
             <Button

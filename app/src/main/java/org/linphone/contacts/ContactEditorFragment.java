@@ -637,6 +637,9 @@ public class ContactEditorFragment extends Fragment {
         noa.setHint(isSip ? getString(R.string.sip_address) : getString(R.string.phone_number));
         if (!isSip) {
             noa.setInputType(InputType.TYPE_CLASS_PHONE);
+            noa.setHint(R.string.phone_number);
+        } else {
+            noa.setHint(R.string.sip_address);
         }
         noa.requestFocus();
         noa.addTextChangedListener(

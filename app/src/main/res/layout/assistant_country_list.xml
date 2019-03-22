@@ -32,6 +32,7 @@
             android:background="@drawable/resizable_textfield"
             android:gravity="center"
             android:inputType="textPersonName"
+            android:hint="@string/assistant_choose_country"
             android:textColor="@color/black_color"
             android:textCursorDrawable="@null" />
 

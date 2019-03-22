@@ -48,6 +48,7 @@
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
+			android:hint="@string/username"
 			android:maxLines="1"/>
 
 		<TextView
@@ -68,6 +69,7 @@
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
+			android:hint="@string/password"
 			android:maxLines="1"/>
 
 
@@ -90,6 +92,7 @@
 			android:layout_height="40dp"
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
+			android:hint="@string/domain"
 			android:maxLines="1"/>
 
 		<Button

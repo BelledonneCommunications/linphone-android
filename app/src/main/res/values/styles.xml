@@ -16,7 +16,7 @@
         <item name="accentColor">@color/primary_color</item>
         <item name="accentColorLight30">@color/primary_light_color</item>
         <item name="accentTextColor">@color/white_color</item>
-        <item name="primaryTextColor">@color/dark_grey_color</item>
+        <item name="primaryTextColor">@color/light_primary_text_color</item>
         <item name="secondaryTextColor">@color/white_color</item>
         <item name="primarySubtextDarkColor">@color/grey_color</item>
         <item name="primarySubtextLightColor">@color/light_grey_color</item>
@@ -54,7 +54,7 @@
         <item name="accentColor">@color/primary_color</item>
         <item name="accentColorLight30">@color/primary_light_color</item>
         <item name="accentTextColor">@color/white_color</item>
-        <item name="primaryTextColor">@color/white_color</item>
+        <item name="primaryTextColor">@color/dark_primary_text_color</item>
         <item name="secondaryTextColor">@color/dark_grey_color</item>
         <item name="primarySubtextDarkColor">@color/header_background_color</item>
         <item name="primarySubtextLightColor">@color/toolbar_color</item>

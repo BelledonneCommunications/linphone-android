@@ -28,7 +28,6 @@
             android:paddingTop="10dp"
             android:text="@string/assistant_create_account_part_1" />
 
-
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,6 +109,7 @@
                                     android:inputType="phone"
                                     android:maxLines="1"
                                     android:text="+"
+                                    android:hint="@string/international_prefix"
                                     android:textColor="@color/black_color" />
 
                                 <EditText
@@ -120,6 +120,7 @@
                                     android:contentDescription="@string/content_description_phone_number_field"
                                     android:inputType="phone"
                                     android:maxLines="1"
+                                    android:hint="@string/phone_number"
                                     android:textColor="@color/black_color" />
 
                             </LinearLayout>
@@ -178,6 +179,7 @@
                         android:contentDescription="@string/content_description_username_field"
                         android:inputType="text|textNoSuggestions"
                         android:maxLines="1"
+                        android:hint="@string/username"
                         android:textColor="@color/black_color" />
 
                     <TextView
@@ -218,6 +220,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:textColor="@color/black_color"
+                        android:hint="@string/password"
                         android:textCursorDrawable="@null" />
 
                     <TextView
@@ -266,6 +269,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:textColor="@color/black_color"
+                        android:hint="@string/email"
                         android:textCursorDrawable="@null" />
 
                     <TextView
@@ -307,6 +311,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:textColor="@color/black_color"
+                        android:hint="@string/confirm_password"
                         android:textCursorDrawable="@null" />
 
                     <TextView
