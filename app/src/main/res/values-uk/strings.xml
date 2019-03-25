@@ -343,7 +343,7 @@
   <string name="default_account_flag">Типова обліківка</string>
   <string name="pref_add_account">Додати обліківку</string>
   <string name="pref_in_app_store">In-app Store</string>
-  <string name="pref_tunnel">Тунель</string>
+  <string name="pref_tunnel_title">Тунель</string>
   <string name="pref_tunnel_host">Сервер</string>
   <string name="pref_tunnel_port">Порт</string>
   <string name="pref_tunnel_mode">Режим</string>

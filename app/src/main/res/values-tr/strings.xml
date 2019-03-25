@@ -310,7 +310,7 @@
   <string name="default_account_flag">Öntanımlı hesap</string>
   <string name="pref_add_account">Hesap ekle</string>
   <string name="pref_in_app_store">Uygulama İçi Mağaza</string>
-  <string name="pref_tunnel">Tünel</string>
+  <string name="pref_tunnel_title">Tünel</string>
   <string name="pref_tunnel_host">Makine Adı</string>
   <string name="pref_tunnel_port">Bağlanma Noktası</string>
   <string name="pref_tunnel_mode">Kip</string>

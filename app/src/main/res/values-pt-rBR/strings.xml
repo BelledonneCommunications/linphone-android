@@ -315,7 +315,7 @@
   <string name="default_account_flag">Conta padrão</string>
   <string name="pref_add_account">Adicionar Conta</string>
   <string name="pref_in_app_store">In-app Store</string>
-  <string name="pref_tunnel">Túnel</string>
+  <string name="pref_tunnel_title">Túnel</string>
   <string name="pref_tunnel_host">Hostname</string>
   <string name="pref_tunnel_port">Porta</string>
   <string name="pref_tunnel_mode">Modo</string>

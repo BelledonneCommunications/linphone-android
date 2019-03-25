@@ -133,7 +133,7 @@
   <string name="pref_sipaccounts">СИП налози</string>
   <string name="default_account_flag">Основни налог</string>
   <string name="pref_add_account">Додај налог</string>
-  <string name="pref_tunnel">Тунел</string>
+  <string name="pref_tunnel_title">Тунел</string>
   <string name="pref_tunnel_host">Домаћин</string>
   <string name="pref_tunnel_port">Прикључник</string>
   <string name="pref_tunnel_mode">Режим</string>
