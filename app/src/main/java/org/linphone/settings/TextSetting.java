@@ -25,10 +25,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
-
-import org.linphone.R;
-
 import androidx.annotation.Nullable;
+import org.linphone.R;
 
 public class TextSetting extends BasicSetting implements TextWatcher {
     protected EditText mInput;
@@ -56,7 +54,9 @@ public class TextSetting extends BasicSetting implements TextWatcher {
 
         if (attrs != null) {
             TypedArray a =
-                    mContext.getTheme().obtainStyledAttributes(attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
+                    mContext.getTheme()
+                            .obtainStyledAttributes(
+                                    attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
             try {
                 String hint = a.getString(R.styleable.Settings_hint);
                 mInput.setHint(hint);
@@ -69,14 +69,10 @@ public class TextSetting extends BasicSetting implements TextWatcher {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
+    public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
     @Override
     public void afterTextChanged(Editable s) {

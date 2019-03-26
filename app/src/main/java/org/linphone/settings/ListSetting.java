@@ -24,15 +24,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.Switch;
-
-import org.linphone.R;
-
-import java.util.List;
-
 import androidx.annotation.Nullable;
+import java.util.List;
+import org.linphone.R;
 
 public class ListSetting extends BasicSetting implements AdapterView.OnItemSelectedListener {
     protected Spinner mSpinner;
@@ -63,7 +58,8 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
 
     public void setItems(List<String> list) {
         mItems = list;
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> dataAdapter =
+                new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(dataAdapter);
     }

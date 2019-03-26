@@ -21,13 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
-
-import org.linphone.R;
-
 import androidx.annotation.Nullable;
+import org.linphone.R;
 
 public class LedSetting extends BasicSetting {
     protected ImageView mLed;

@@ -83,7 +83,9 @@ public class BasicSetting extends LinearLayout {
 
         if (attrs != null) {
             TypedArray a =
-                    mContext.getTheme().obtainStyledAttributes(attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
+                    mContext.getTheme()
+                            .obtainStyledAttributes(
+                                    attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
             try {
                 String title = a.getString(R.styleable.Settings_title);
                 mTitle.setText(title);

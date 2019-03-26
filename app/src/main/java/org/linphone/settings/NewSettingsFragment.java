@@ -29,6 +29,7 @@ import org.linphone.R;
 
 public class NewSettingsFragment extends Fragment {
     private View mRootView;
+    private BasicSetting mTunnel, mAudio, mVideo, mCall, mChat, mNetwork, mAdvanced;
 
     @Nullable
     @Override
@@ -49,6 +50,14 @@ public class NewSettingsFragment extends Fragment {
     }
 
     private void loadSettings() {
+        mTunnel = mRootView.findViewById(R.id.pref_tunnel);
+        mAudio = mRootView.findViewById(R.id.pref_audio);
+        mVideo = mRootView.findViewById(R.id.pref_video);
+        mCall = mRootView.findViewById(R.id.pref_call);
+        mChat = mRootView.findViewById(R.id.pref_chat);
+        mNetwork = mRootView.findViewById(R.id.pref_network);
+        mAdvanced = mRootView.findViewById(R.id.pref_advanced);
+
         // TODO
     }
 

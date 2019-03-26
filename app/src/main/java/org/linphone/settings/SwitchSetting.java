@@ -20,17 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
-
-import org.linphone.R;
-
 import androidx.annotation.Nullable;
+import org.linphone.R;
 
 public class SwitchSetting extends BasicSetting implements CompoundButton.OnCheckedChangeListener {
     protected Switch mSwitch;
