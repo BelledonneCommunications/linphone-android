@@ -56,20 +56,6 @@ public class FirebaseMessaging extends FirebaseMessagingService {
             intent.setClass(this, LinphoneService.class);
             intent.putExtra("PushNotification", true);
             startService(intent);
-        } else if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() == 0) {
-            LinphoneUtils.dispatchOnUIThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i(
-                                    "[Push Notification] Push notification received with LinphoneManager still alive");
-                            if (LinphoneManager.isInstanciated()
-                                    && LinphoneManager.getLc().getCallsNb() == 0) {
-                                LinphoneManager.getLc().setNetworkReachable(false);
-                                LinphoneManager.getLc().setNetworkReachable(true);
-                            }
-                        }
-                    });
         }
     }
 }
