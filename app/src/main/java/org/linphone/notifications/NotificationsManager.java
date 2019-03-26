@@ -78,11 +78,6 @@ public class NotificationsManager {
                 new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
         notifIntent.putExtra("Notification", true);
 
-        // Disable service notification for Android O
-        if (Version.sdkAboveOrEqual(Version.API26_O_80)) {
-            LinphonePreferences.instance().setServiceNotificationVisibility(false);
-        }
-
         Bitmap bm = null;
         try {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
