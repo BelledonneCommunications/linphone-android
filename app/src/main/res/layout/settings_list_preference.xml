@@ -28,10 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <EditText
-            android:id="@+id/setting_input"
+        <Spinner
+            android:id="@+id/setting_spinner"
             android:layout_below="@id/setting_subtitle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>
