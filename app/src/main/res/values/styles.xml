@@ -309,7 +309,7 @@
     <!-- Settings -->
 
     <style name="settings_category_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/accentTextColor</item>
+        <item name="android:textColor">?attr/accentColor</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">12sp</item>

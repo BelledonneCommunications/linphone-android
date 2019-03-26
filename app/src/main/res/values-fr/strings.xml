@@ -357,7 +357,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="default_account_flag">Compte par défaut</string>
   <string name="pref_add_account">Ajouter un compte</string>
   <string name="pref_in_app_store">Magasin</string>
-  <string name="pref_tunnel">Tunnel</string>
+  <string name="pref_tunnel_title">Tunnel</string>
   <string name="pref_tunnel_host">Hôte</string>
   <string name="pref_tunnel_port">Port</string>
   <string name="pref_tunnel_mode">Mode</string>

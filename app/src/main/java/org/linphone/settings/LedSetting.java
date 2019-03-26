@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class LedSetting extends BasicSetting {
+    protected int mLayout = R.layout.settings_led_preference;
     protected ImageView mLed;
 
     public LedSetting(Context context) {

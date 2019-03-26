@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class SwitchSetting extends BasicSetting implements CompoundButton.OnCheckedChangeListener {
+    protected int mLayout = R.layout.settings_switch_preference;
     protected Switch mSwitch;
 
     public SwitchSetting(Context context) {

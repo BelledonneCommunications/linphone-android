@@ -18,9 +18,9 @@
         <PreferenceScreen
             android:key="@string/pref_tunnel_key"
             android:persistent="false"
-            android:title="@string/pref_tunnel">
+            android:title="@string/pref_tunnel_title">
 
-            <PreferenceCategory android:title="@string/pref_tunnel">
+            <PreferenceCategory android:title="@string/pref_tunnel_title">
 
                 <EditTextPreference
                     android:inputType="textUri"

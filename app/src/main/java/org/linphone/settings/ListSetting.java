@@ -30,6 +30,7 @@ import java.util.List;
 import org.linphone.R;
 
 public class ListSetting extends BasicSetting implements AdapterView.OnItemSelectedListener {
+    protected int mLayout = R.layout.settings_list_preference;
     protected Spinner mSpinner;
     protected List<String> mItems;
 

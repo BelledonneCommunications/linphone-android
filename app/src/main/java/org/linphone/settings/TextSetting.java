@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class TextSetting extends BasicSetting implements TextWatcher {
+    protected int mLayout = R.layout.settings_text_preference;
     protected EditText mInput;
 
     public TextSetting(Context context) {

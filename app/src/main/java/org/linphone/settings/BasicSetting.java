@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class BasicSetting extends LinearLayout {
+    protected int mLayout = R.layout.settings_basic_preference;
     protected Context mContext;
     protected View mView;
     protected TextView mTitle, mSubtitle;
@@ -65,7 +66,7 @@ public class BasicSetting extends LinearLayout {
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_led_preference, this, true);
+        mView = LayoutInflater.from(mContext).inflate(mLayout, this, false);
 
         mTitle = mView.findViewById(R.id.setting_title);
         mSubtitle = mView.findViewById(R.id.setting_subtitle);
@@ -88,9 +89,18 @@ public class BasicSetting extends LinearLayout {
                                     attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
             try {
                 String title = a.getString(R.styleable.Settings_title);
-                mTitle.setText(title);
+                if (title != null) {
+                    mTitle.setText(title);
+                } else {
+                    mTitle.setVisibility(GONE);
+                }
+
                 String subtitle = a.getString(R.styleable.Settings_subtitle);
-                mSubtitle.setText(subtitle);
+                if (subtitle != null) {
+                    mSubtitle.setText(subtitle);
+                } else {
+                    mSubtitle.setVisibility(GONE);
+                }
             } finally {
                 a.recycle();
             }
