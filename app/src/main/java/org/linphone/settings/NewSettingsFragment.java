@@ -68,14 +68,11 @@ public class NewSettingsFragment extends Fragment {
 
     protected void setListeners() {
         mAudio.setListener(
-                new SettingListener() {
+                new SettingListenerBase() {
                     @Override
-                    public void onSettingClicked() {
+                    public void onClicked() {
                         LinphoneActivity.instance().displaySubSettings(new AudioSettingsFragment());
                     }
-
-                    @Override
-                    public void onValueChanged(Object newValue) {}
                 });
         // TODO
     }

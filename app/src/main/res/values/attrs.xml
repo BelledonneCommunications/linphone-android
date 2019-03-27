@@ -32,5 +32,7 @@
         <attr name="title" format="string" />
         <attr name="subtitle" format="string" />
         <attr name="hint" format="string" />
+        <attr name="list_items_names" format="reference" />
+        <attr name="list_items_values" format="reference" />
     </declare-styleable>
 </resources>

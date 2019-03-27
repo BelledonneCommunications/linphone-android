@@ -4,16 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center_vertical|left"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp">
+    android:gravity="center_vertical|left">
 
     <RelativeLayout
         android:id="@+id/setting_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <TextView
             android:id="@+id/setting_title"
@@ -39,7 +39,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
         android:background="?attr/dividerColor" />
 
 </LinearLayout>

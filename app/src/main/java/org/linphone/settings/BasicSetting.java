@@ -31,7 +31,6 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class BasicSetting extends LinearLayout {
-    protected int mLayout = R.layout.settings_basic_preference;
     protected Context mContext;
     protected View mView;
     protected TextView mTitle, mSubtitle;
@@ -61,12 +60,18 @@ public class BasicSetting extends LinearLayout {
         init(attrs, defStyleAttr, defStyleRes);
     }
 
+    protected void inflateView() {
+        mView =
+                LayoutInflater.from(mContext)
+                        .inflate(R.layout.settings_basic_preference, this, false);
+    }
+
     public void setListener(SettingListener listener) {
         mListener = listener;
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        mView = LayoutInflater.from(mContext).inflate(mLayout, this, false);
+        inflateView();
 
         mTitle = mView.findViewById(R.id.setting_title);
         mSubtitle = mView.findViewById(R.id.setting_subtitle);
@@ -77,7 +82,7 @@ public class BasicSetting extends LinearLayout {
                     @Override
                     public void onClick(View v) {
                         if (mListener != null) {
-                            mListener.onSettingClicked();
+                            mListener.onClicked();
                         }
                     }
                 });

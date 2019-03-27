@@ -21,13 +21,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class SwitchSetting extends BasicSetting implements CompoundButton.OnCheckedChangeListener {
-    protected int mLayout = R.layout.settings_switch_preference;
     protected Switch mSwitch;
 
     public SwitchSetting(Context context) {
@@ -46,17 +48,32 @@ public class SwitchSetting extends BasicSetting implements CompoundButton.OnChec
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    protected void inflateView() {
+        mView =
+                LayoutInflater.from(mContext)
+                        .inflate(R.layout.settings_switch_preference, this, false);
+    }
+
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super.init(attrs, defStyleAttr, defStyleRes);
 
         mSwitch = mView.findViewById(R.id.setting_switch);
         mSwitch.setOnCheckedChangeListener(this);
+
+        RelativeLayout rlayout = mView.findViewById(R.id.setting_layout);
+        rlayout.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSwitch.toggle();
+                    }
+                });
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (mListener != null) {
-            mListener.onValueChanged(isChecked);
+            mListener.onBoolValueChanged(isChecked);
         }
     }
 }

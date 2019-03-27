@@ -21,12 +21,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class LedSetting extends BasicSetting {
-    protected int mLayout = R.layout.settings_led_preference;
     protected ImageView mLed;
 
     public LedSetting(Context context) {
@@ -43,6 +43,12 @@ public class LedSetting extends BasicSetting {
 
     public LedSetting(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    protected void inflateView() {
+        mView =
+                LayoutInflater.from(mContext)
+                        .inflate(R.layout.settings_led_preference, this, false);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {

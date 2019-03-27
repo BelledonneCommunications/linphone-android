@@ -20,7 +20,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,9 +32,9 @@ import java.util.List;
 import org.linphone.R;
 
 public class ListSetting extends BasicSetting implements AdapterView.OnItemSelectedListener {
-    protected int mLayout = R.layout.settings_list_preference;
     protected Spinner mSpinner;
     protected List<String> mItems;
+    protected List<String> mItemsValues;
 
     public ListSetting(Context context) {
         super(context);
@@ -50,15 +52,35 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    protected void inflateView() {
+        mView =
+                LayoutInflater.from(mContext)
+                        .inflate(R.layout.settings_list_preference, this, false);
+    }
+
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super.init(attrs, defStyleAttr, defStyleRes);
 
         mSpinner = mView.findViewById(R.id.setting_spinner);
         mSpinner.setOnItemSelectedListener(this);
+
+        if (attrs != null) {
+            TypedArray a =
+                    mContext.getTheme()
+                            .obtainStyledAttributes(
+                                    attrs, R.styleable.Settings, defStyleAttr, defStyleRes);
+            try {
+                CharSequence[] names = a.getTextArray(R.styleable.Settings_list_items_names);
+                CharSequence[] values = a.getTextArray(R.styleable.Settings_list_items_values);
+            } finally {
+                a.recycle();
+            }
+        }
     }
 
-    public void setItems(List<String> list) {
+    public void setItems(List<String> list, List<String> valuesList) {
         mItems = list;
+        mItemsValues = valuesList;
         ArrayAdapter<String> dataAdapter =
                 new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -68,14 +90,14 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (mListener != null && position < mItems.size()) {
-            mListener.onValueChanged(mItems.get(position));
+            String itemValue = null;
+            if (mItemsValues != null && position < mItemsValues.size()) {
+                itemValue = mItemsValues.get(position);
+            }
+            mListener.onListValueChanged(position, mItems.get(position), itemValue);
         }
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        if (mListener != null) {
-            mListener.onValueChanged(null);
-        }
-    }
+    public void onNothingSelected(AdapterView<?> parent) {}
 }

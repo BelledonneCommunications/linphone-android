@@ -24,12 +24,12 @@ import android.content.res.TypedArray;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.EditText;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class TextSetting extends BasicSetting implements TextWatcher {
-    protected int mLayout = R.layout.settings_text_preference;
     protected EditText mInput;
 
     public TextSetting(Context context) {
@@ -46,6 +46,12 @@ public class TextSetting extends BasicSetting implements TextWatcher {
 
     public TextSetting(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    protected void inflateView() {
+        mView =
+                LayoutInflater.from(mContext)
+                        .inflate(R.layout.settings_text_preference, this, false);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -78,7 +84,7 @@ public class TextSetting extends BasicSetting implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         if (mListener != null) {
-            mListener.onValueChanged(mInput.getText().toString());
+            mListener.onTextValueChanged(mInput.getText().toString());
         }
     }
 }
