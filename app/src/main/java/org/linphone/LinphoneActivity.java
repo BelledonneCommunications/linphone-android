@@ -1873,12 +1873,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
             if (lc != null) {
                 lc.setDeviceRotation(rotation);
-                Call currentCall = lc.getCurrentCall();
-                if (currentCall != null
-                        && currentCall.cameraEnabled()
-                        && currentCall.getCurrentParams().videoEnabled()) {
-                    lc.updateCall(currentCall, null);
-                }
             }
         }
     }
