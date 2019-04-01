@@ -85,13 +85,18 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         SearchResult searchResult = getItem(position);
 
         LinphoneContact contact;
-        if (searchResult.getAddress() == null) {
-            contact =
-                    ContactsManager.getInstance()
-                            .findContactFromPhoneNumber(searchResult.getPhoneNumber());
+        if (searchResult.getFriend() != null && searchResult.getFriend().getUserData() != null) {
+            contact = (LinphoneContact) searchResult.getFriend().getUserData();
         } else {
-            contact =
-                    ContactsManager.getInstance().findContactFromAddress(searchResult.getAddress());
+            if (searchResult.getAddress() == null) {
+                contact =
+                        ContactsManager.getInstance()
+                                .findContactFromPhoneNumber(searchResult.getPhoneNumber());
+            } else {
+                contact =
+                        ContactsManager.getInstance()
+                                .findContactFromAddress(searchResult.getAddress());
+            }
         }
 
         final String numberOrAddress =
