@@ -42,7 +42,11 @@ public class LinphoneLauncherActivity extends Activity {
         if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        setContentView(R.layout.launch_screen);
+        if (getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
+            setContentView(R.layout.launch_screen_full_image);
+        } else {
+            setContentView(R.layout.launch_screen);
+        }
 
         mHandler = new Handler();
 
