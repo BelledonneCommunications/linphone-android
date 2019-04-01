@@ -1415,6 +1415,7 @@ public class LinphonePreferences {
     }
 
     public boolean isDarkModeEnabled() {
+        if (getConfig() == null) return false;
         return getConfig()
                 .getBool(
                         "app",

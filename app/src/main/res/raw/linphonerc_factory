@@ -28,6 +28,7 @@ displaytype=MSAndroidTextureDisplay
 enable_basic_to_client_group_chat_room_migration=0
 enable_simple_group_chat_message_state=0
 aggregate_imdn=1
+notify_each_friend_individually_when_presence_received=0
 
 [app]
 activation_code_length=4
