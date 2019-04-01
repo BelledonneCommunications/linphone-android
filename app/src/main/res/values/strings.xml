@@ -257,6 +257,7 @@
     <string name="voicemail_unread"> unread messages</string>
 
     <!-- Side Menu -->
+    <string name="menu_logout">Logout</string>
     <string name="menu_assistant">Assistant</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_recordings">Recordings</string>

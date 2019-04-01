@@ -342,6 +342,9 @@ public class LinphoneActivity extends LinphoneGenericActivity
         mDialer.setOnClickListener(this);
         mChat = findViewById(R.id.chat);
         mChat.setOnClickListener(this);
+        if (getResources().getBoolean(R.bool.disable_chat)) {
+            mChat.setVisibility(View.GONE);
+        }
 
         mHistorySelected = findViewById(R.id.history_select);
         mContactsSelected = findViewById(R.id.contacts_select);
@@ -1562,6 +1565,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
     private void initSideMenu() {
         mSideMenu = findViewById(R.id.side_menu);
         mSideMenuItems = new ArrayList<>();
+        if (getResources().getBoolean(R.bool.show_log_out_in_side_menu)) {
+            mSideMenuItems.add(
+                    new MenuItem(
+                            getResources().getString(R.string.menu_logout),
+                            R.drawable.quit_default));
+        }
         if (!getResources().getBoolean(R.bool.hide_assistant_from_side_menu)) {
             mSideMenuItems.add(
                     new MenuItem(
@@ -1579,10 +1588,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     new MenuItem(
                             getResources().getString(R.string.inapp), R.drawable.menu_options));
         }
-        mSideMenuItems.add(
-                new MenuItem(
-                        getResources().getString(R.string.menu_recordings),
-                        R.drawable.menu_recordings));
+        if (!getResources().getBoolean(R.bool.hide_recordings_from_side_menu)) {
+            mSideMenuItems.add(
+                    new MenuItem(
+                            getResources().getString(R.string.menu_recordings),
+                            R.drawable.menu_recordings));
+        }
         mSideMenuItems.add(
                 new MenuItem(getResources().getString(R.string.menu_about), R.drawable.menu_about));
         mSideMenuContent = findViewById(R.id.side_menu_content);
@@ -1595,25 +1606,24 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        if (mSideMenuItemList
-                                .getAdapter()
-                                .getItem(i)
-                                .toString()
-                                .equals(getString(R.string.menu_settings))) {
+                        String selectedItem = mSideMenuItemList.getAdapter().getItem(i).toString();
+                        if (selectedItem.equals(getString(R.string.menu_logout))) {
+                            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            if (lc != null) {
+                                lc.clearAllAuthInfo();
+                                lc.clearProxyConfig();
+                                startActivity(
+                                        new Intent()
+                                                .setClass(
+                                                        LinphoneManager.getInstance().getContext(),
+                                                        AssistantActivity.class));
+                                finish();
+                            }
+                        } else if (selectedItem.equals(getString(R.string.menu_settings))) {
                             LinphoneActivity.instance().displaySettings();
-                        }
-                        if (mSideMenuItemList
-                                .getAdapter()
-                                .getItem(i)
-                                .toString()
-                                .equals(getString(R.string.menu_about))) {
+                        } else if (selectedItem.equals(getString(R.string.menu_about))) {
                             LinphoneActivity.instance().displayAbout();
-                        }
-                        if (mSideMenuItemList
-                                .getAdapter()
-                                .getItem(i)
-                                .toString()
-                                .equals(getString(R.string.menu_assistant))) {
+                        } else if (selectedItem.equals(getString(R.string.menu_assistant))) {
                             LinphoneActivity.instance().displayAssistant();
                         }
                         if (getResources().getBoolean(R.bool.enable_in_app_purchase)) {
@@ -1699,17 +1709,19 @@ public class LinphoneActivity extends LinphoneGenericActivity
             status.setImageResource(getStatusIconResource(proxy.getState()));
             status.setVisibility(View.VISIBLE);
 
-            mDefaultAccount.setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            LinphoneActivity.instance()
-                                    .displayAccountSettings(
-                                            LinphonePreferences.instance()
-                                                    .getDefaultAccountIndex());
-                            openOrCloseSideMenu(false);
-                        }
-                    });
+            if (!getResources().getBoolean(R.bool.disable_accounts_settings_from_side_menu)) {
+                mDefaultAccount.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                LinphoneActivity.instance()
+                                        .displayAccountSettings(
+                                                LinphonePreferences.instance()
+                                                        .getDefaultAccountIndex());
+                                openOrCloseSideMenu(false);
+                            }
+                        });
+            }
         }
     }
 

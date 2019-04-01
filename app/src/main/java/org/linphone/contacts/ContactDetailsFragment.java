@@ -265,7 +265,8 @@ public class ContactDetailsFragment extends Fragment
 
             v.findViewById(R.id.inviteFriend).setVisibility(View.GONE);
             if (!noa.isSIPAddress()
-                    && v.findViewById(R.id.friendLinphone).getVisibility() == View.GONE) {
+                    && v.findViewById(R.id.friendLinphone).getVisibility() == View.GONE
+                    && !getResources().getBoolean(R.bool.hide_invite_contact)) {
                 v.findViewById(R.id.inviteFriend).setVisibility(View.VISIBLE);
                 v.findViewById(R.id.inviteFriend).setTag(noa.getNormalizedPhone());
                 v.findViewById(R.id.inviteFriend)
