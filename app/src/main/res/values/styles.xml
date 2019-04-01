@@ -5,6 +5,7 @@
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>
+        <!-- Comment out the following line to disable system's status bar coloring -->
         <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
         <item name="android:textColorPrimary">@color/light_primary_text_color</item>
         <item name="android:textColorSecondary">@color/grey_color</item>
@@ -43,6 +44,7 @@
         <!-- Android theme override -->
         <item name="colorAccent">@color/primary_color</item>
         <item name="android:colorPrimary">@color/primary_color</item>
+        <!-- Comment out the following line to disable system's status bar coloring -->
         <item name="android:colorPrimaryDark">@color/primary_dark_color</item>
         <item name="android:textColorPrimary">@color/dark_primary_text_color</item>
         <item name="android:textColorSecondary">@color/header_background_color</item>

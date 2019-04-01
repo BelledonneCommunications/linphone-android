@@ -170,14 +170,6 @@ public class StatusFragment extends Fragment {
             mIsInCall = false;
         }
 
-        if (activity.getResources()
-                .getBoolean(R.bool.set_notification_bar_background_color_to_primary)) {
-            Window window = activity.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(ContextCompat.getColor(activity, R.color.primary_dark_color));
-        }
-
         return view;
     }
 
