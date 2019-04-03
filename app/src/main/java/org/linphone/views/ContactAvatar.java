@@ -106,7 +106,9 @@ public class ContactAvatar {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.init();
 
-        if (displayName.startsWith("+")) {
+        boolean generated_avatars =
+                v.getContext().getResources().getBoolean(R.bool.generate_text_avatar);
+        if (displayName.startsWith("+") || !generated_avatars) {
             // If display name is a phone number, use default avatar because generated one will be
             // +...
             holder.generatedAvatar.setVisibility(View.GONE);
@@ -150,6 +152,9 @@ public class ContactAvatar {
         ContactAvatarHolder holder = new ContactAvatarHolder(v);
         holder.init();
 
+        boolean generated_avatars =
+                v.getContext().getResources().getBoolean(R.bool.generate_text_avatar);
+
         // Kepp the generated avatar ready in case of failure while loading picture
         holder.generatedAvatar.setText(
                 generateAvatar(
@@ -176,7 +181,7 @@ public class ContactAvatar {
             holder.contactPicture.setImageBitmap(bm);
             holder.contactPicture.setVisibility(View.VISIBLE);
             holder.generatedAvatar.setVisibility(View.GONE);
-        } else {
+        } else if (generated_avatars) {
             holder.generatedAvatar.setText(
                     generateAvatar(
                             contact.getFullName() == null
