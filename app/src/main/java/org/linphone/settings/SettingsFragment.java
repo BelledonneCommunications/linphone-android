@@ -85,7 +85,6 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
     }
 
     private static void setListPreferenceValues(
@@ -108,6 +107,7 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public void onStart() {
         super.onStart();
+        addPreferencesFromResource(R.xml.preferences);
 
         mPrefs = LinphonePreferences.instance();
         removePreviousPreferencesFile(); // Required when updating the preferences order
