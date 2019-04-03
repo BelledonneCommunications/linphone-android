@@ -43,6 +43,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.LinphonePreferences.AccountBuilder;
+import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.LinphoneUtils;
 
 public class AccountPreferencesFragment extends PreferenceFragment
@@ -482,6 +483,9 @@ public class AccountPreferencesFragment extends PreferenceFragment
         pushNotif.setOnPreferenceChangeListener(mPushNotificationListener);
         if (!mIsNewAccount) {
             pushNotif.setChecked(mPrefs.isPushNotifEnabledForProxy(mN));
+        }
+        if (!DeviceUtils.isGooglePlayServicesAvailable(getActivity())) {
+            pushNotif.setLayoutResource(R.layout.hidden);
         }
 
         PreferenceCategory manage =

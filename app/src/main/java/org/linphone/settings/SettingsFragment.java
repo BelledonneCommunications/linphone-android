@@ -1480,6 +1480,10 @@ public class SettingsFragment extends PreferenceFragment {
 
         ((CheckBoxPreference) findPreference(getString(R.string.pref_push_notification_key)))
                 .setChecked(mPrefs.isPushNotificationEnabled());
+        if (!DeviceUtils.isGooglePlayServicesAvailable(getActivity())) {
+            findPreference(getString(R.string.pref_push_notification_key))
+                    .setLayoutResource(R.layout.hidden);
+        }
         ((CheckBoxPreference) findPreference(getString(R.string.pref_ipv6_key)))
                 .setChecked(mPrefs.isUsingIpv6());
     }
