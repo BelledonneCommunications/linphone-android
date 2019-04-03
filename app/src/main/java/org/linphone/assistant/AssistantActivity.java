@@ -47,6 +47,7 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
@@ -111,6 +112,7 @@ public class AssistantActivity extends ThemableActivity
     private boolean mEchoCancellerAlreadyDone;
     private AccountCreator mAccountCreator;
     private CountryListAdapter mCountryListAdapter;
+    private LinearLayout mTopBar;
 
     public static AssistantActivity instance() {
         return sInstance;
@@ -282,6 +284,11 @@ public class AssistantActivity extends ThemableActivity
         mBack.setOnClickListener(this);
         // mCancel = findViewById(R.id.assistant_cancel);
         // mCancel.setOnClickListener(this);
+
+        mTopBar = findViewById(R.id.topbar);
+        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
+            mTopBar.setVisibility(View.GONE);
+        }
     }
 
     private void changeFragment(Fragment newFragment) {
