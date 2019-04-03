@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,12 +33,10 @@ import androidx.core.content.ContextCompat;
 import org.linphone.BuildConfig;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.CoreListenerStub;
-import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class AboutFragment extends Fragment implements OnClickListener {
@@ -95,9 +91,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
                                 || state == LogCollectionUploadState.NotDelivered) {
                             mUploadInProgress = false;
                             if (mProgress != null) mProgress.dismiss();
-                            if (state == LogCollectionUploadState.Delivered) {
-                                sendLogs(LinphoneService.instance().getApplicationContext(), info);
-                            }
                         }
                     }
                 };
@@ -123,24 +116,6 @@ public class AboutFragment extends Fragment implements OnClickListener {
         mProgress.getWindow().setBackgroundDrawable(d);
         mProgress.setContentView(R.layout.wait_layout);
         mProgress.show();
-    }
-
-    private void sendLogs(Context context, String info) {
-        final String appName = context.getString(R.string.app_name);
-
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.putExtra(
-                Intent.EXTRA_EMAIL,
-                new String[] {context.getString(R.string.about_bugreport_email)});
-        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
-        i.putExtra(Intent.EXTRA_TEXT, info);
-        i.setType("application/zip");
-
-        try {
-            startActivity(Intent.createChooser(i, "Send mail..."));
-        } catch (android.content.ActivityNotFoundException ex) {
-            Log.e(ex);
-        }
     }
 
     @Override

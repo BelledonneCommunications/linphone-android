@@ -1702,10 +1702,31 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     @Override
     public void onEcCalibrationAudioUninit(Core lc) {}
 
+    private void sendLogs(Context context, String info) {
+        final String appName = context.getString(R.string.app_name);
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.putExtra(
+                Intent.EXTRA_EMAIL,
+                new String[] {context.getString(R.string.about_bugreport_email)});
+        i.putExtra(Intent.EXTRA_SUBJECT, appName + " Logs");
+        i.putExtra(Intent.EXTRA_TEXT, info);
+        i.setType("application/zip");
+
+        try {
+            LinphoneActivity.instance().startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(ex);
+        }
+    }
+
     @Override
     public void onLogCollectionUploadStateChanged(
             Core linphoneCore, LogCollectionUploadState state, String info) {
         Log.d("[Manager] Log upload state: " + state.toString() + ", info = " + info);
+        if (state == LogCollectionUploadState.Delivered) {
+            sendLogs(LinphoneService.instance().getApplicationContext(), info);
+        }
     }
 
     @Override
