@@ -25,8 +25,12 @@ import org.linphone.R;
 import org.linphone.core.tools.Log;
 
 public class PushNotificationUtils {
+    private static PushHelperInterface mHelper;
+
     public static void init(Context context) {
+        mHelper = null;
         String push_type = context.getString(R.string.push_type);
+
         if (push_type.equals("firebase")) {
             String className = "org.linphone.firebase.FirebasePushHelper";
             try {
@@ -34,9 +38,8 @@ public class PushNotificationUtils {
                 Class[] types = {};
                 Constructor constructor = pushHelper.getConstructor(types);
                 Object[] parameters = {};
-                PushHelperInterface pushHelperImpl =
-                        (PushHelperInterface) constructor.newInstance(parameters);
-                pushHelperImpl.init(context);
+                mHelper = (PushHelperInterface) constructor.newInstance(parameters);
+                mHelper.init(context);
             } catch (NoSuchMethodException e) {
                 Log.w("[Push Utils] Couldn't get push helper constructor");
             } catch (ClassNotFoundException e) {
@@ -49,7 +52,14 @@ public class PushNotificationUtils {
         }
     }
 
+    public static boolean isAvailable(Context context) {
+        if (mHelper == null) return false;
+        return mHelper.isAvailable(context);
+    }
+
     public interface PushHelperInterface {
         void init(Context context);
+
+        boolean isAvailable(Context context);
     }
 }

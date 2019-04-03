@@ -34,8 +34,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import java.util.List;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -222,11 +220,5 @@ public class DeviceUtils {
                 context.getPackageManager()
                         .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
-    }
-
-    public static boolean isGooglePlayServicesAvailable(Context context) {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
-        return resultCode == ConnectionResult.SUCCESS;
     }
 }

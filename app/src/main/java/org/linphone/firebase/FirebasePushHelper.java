@@ -21,6 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -60,5 +62,12 @@ public class FirebasePushHelper implements PushNotificationUtils.PushHelperInter
         } catch (Exception e) {
             Log.e("[Push Notification] firebase not available.");
         }
+    }
+
+    @Override
+    public boolean isAvailable(Context context) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        return resultCode == ConnectionResult.SUCCESS;
     }
 }

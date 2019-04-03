@@ -65,6 +65,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.FileUtils;
+import org.linphone.utils.PushNotificationUtils;
 import org.linphone.views.LedPreference;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -1480,7 +1481,7 @@ public class SettingsFragment extends PreferenceFragment {
 
         ((CheckBoxPreference) findPreference(getString(R.string.pref_push_notification_key)))
                 .setChecked(mPrefs.isPushNotificationEnabled());
-        if (!DeviceUtils.isGooglePlayServicesAvailable(getActivity())) {
+        if (!PushNotificationUtils.isAvailable(getActivity())) {
             findPreference(getString(R.string.pref_push_notification_key))
                     .setLayoutResource(R.layout.hidden);
         }
