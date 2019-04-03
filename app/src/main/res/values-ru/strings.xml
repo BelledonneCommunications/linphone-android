@@ -24,6 +24,8 @@
   <string name="username">Имя пользователя</string>
   <string name="userid">Идентификатор пользователя (необязательно)</string>
   <string name="phone_number">Номер телефона</string>
+  <string name="confirmation_code">Код подтверждения</string>
+  <string name="international_prefix">Префикс международного номера телефона</string>
   <string name="display_name">Отображаемое имя</string>
   <string name="password">Пароль</string>
   <string name="confirm_password">Подтверждение пароля</string>
