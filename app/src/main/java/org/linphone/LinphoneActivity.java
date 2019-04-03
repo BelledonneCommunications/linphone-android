@@ -117,6 +117,7 @@ import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.IntentUtils;
 import org.linphone.utils.LinphoneGenericActivity;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.PushNotificationUtils;
 import org.linphone.views.AddressText;
 import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
@@ -1352,10 +1353,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
                             + Compatibility.getAppStandbyBucketNameFromValue(bucket));
         }
 
-        boolean googlePlayServiceAvailable = DeviceUtils.isGooglePlayServicesAvailable(this);
-        if (!googlePlayServiceAvailable) {
-            Log.w(
-                    "[Linphone Activity] Device doesn't have Google Play Services, push notifications won't work !");
+        if (!PushNotificationUtils.isAvailable(this)) {
+            Log.w("[Linphone Activity] Push notifications won't work !");
         }
 
         IntentUtils.handleIntent(this, getIntent());
