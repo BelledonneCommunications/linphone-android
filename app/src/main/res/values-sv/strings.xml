@@ -24,6 +24,8 @@
   <string name="username">Användarnamn</string>
   <string name="userid">Användar-ID (valfritt)</string>
   <string name="phone_number">Telefonnummer</string>
+  <string name="confirmation_code">Bekräftelsekod</string>
+  <string name="international_prefix">Internationellt telefonnummer prefix</string>
   <string name="display_name">Visningsnamn</string>
   <string name="password">Lösenord</string>
   <string name="confirm_password">Lösenordsbekräftelse</string>
@@ -290,6 +292,8 @@
   <string name="incall_notif_active">Ljudsamtal pågår</string>
   <string name="incall_notif_paused">Pausat samtal pågår</string>
   <string name="incall_notif_video">Videofångstsamtal pågående</string>
+  <string name="incall_notif_incoming">Inkommande samtal</string>
+  <string name="incall_notif_outgoing">Utgående samtal</string>
   <string name="notification_started">startad</string>
   <string name="unread_messages">%i olästa meddelanden</string>
   <string name="missed_calls_notif_title">Missat samtal</string>

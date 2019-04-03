@@ -246,6 +246,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="status_error">Enregistrement échoué</string>
   <string name="voicemail_unread">messages non lus</string>
   <!--Side Menu-->
+  <string name="menu_logout">Déconnexion</string>
   <string name="menu_assistant">Assistant</string>
   <string name="menu_settings">Options</string>
   <string name="menu_recordings">Enregistrements</string>
@@ -411,6 +412,7 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="pref_call_timeout_title">Délai après lequel terminer l\'appel (en secondes)</string>
   <string name="pref_voice_mail">URI de boîte vocale</string>
   <string name="pref_dialer_call">Utiliser Linphone comme application de téléphonie par défaut</string>
+  <string name="pref_accept_early_media">Proposer early-media</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chat</string>
   <string name="pref_image_sharing_server_title">Serveur de partage</string>

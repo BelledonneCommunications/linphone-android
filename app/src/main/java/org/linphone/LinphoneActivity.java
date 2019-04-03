@@ -1616,6 +1616,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                         if (selectedItem.equals(getString(R.string.menu_logout))) {
                             Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
                             if (lc != null) {
+                                lc.setDefaultProxyConfig(null);
                                 lc.clearAllAuthInfo();
                                 lc.clearProxyConfig();
                                 startActivity(
