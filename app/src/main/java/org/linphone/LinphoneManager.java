@@ -28,6 +28,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -1701,7 +1703,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     @Override
     public void onEcCalibrationAudioUninit(Core lc) {}
 
-    private void sendLogs(Context context, String info) {
+    private void sendLogs(String info) {
+        Context context = LinphoneActivity.instance();
         final String appName = context.getString(R.string.app_name);
 
         Intent i = new Intent(Intent.ACTION_SEND);
@@ -1713,7 +1716,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         i.setType("application/zip");
 
         try {
-            LinphoneActivity.instance().startActivity(Intent.createChooser(i, "Send mail..."));
+            context.startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
             Log.e(ex);
         }
@@ -1724,7 +1727,16 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             Core linphoneCore, LogCollectionUploadState state, String info) {
         Log.d("[Manager] Log upload state: " + state.toString() + ", info = " + info);
         if (state == LogCollectionUploadState.Delivered) {
-            sendLogs(LinphoneService.instance().getApplicationContext(), info);
+            ClipboardManager clipboard =
+                    (ClipboardManager) mServiceContext.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Logs url", info);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(
+                            LinphoneActivity.instance(),
+                            getString(R.string.logs_url_copied_to_clipboard),
+                            Toast.LENGTH_SHORT)
+                    .show();
+            sendLogs(info);
         }
     }
 
