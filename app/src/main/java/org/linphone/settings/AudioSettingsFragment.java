@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +39,11 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.PayloadType;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.BasicSetting;
+import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.SettingListenerBase;
+import org.linphone.settings.widget.SwitchSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class AudioSettingsFragment extends Fragment {
     protected View mRootView;
@@ -50,8 +54,6 @@ public class AudioSettingsFragment extends Fragment {
     private ListSetting mCodecBitrateLimit;
     private BasicSetting mEchoCalibration, mEchoTester;
     private LinearLayout mAudioCodecs;
-
-    private Handler mHander = new Handler();
 
     @Nullable
     @Override
@@ -70,7 +72,10 @@ public class AudioSettingsFragment extends Fragment {
 
         mPrefs = LinphonePreferences.instance();
         if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS_SUBLEVEL);
+            LinphoneActivity.instance()
+                    .selectMenu(
+                            FragmentsAvailable.SETTINGS_SUBLEVEL,
+                            getString(R.string.pref_audio_title));
         }
 
         updateValues();

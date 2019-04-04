@@ -113,7 +113,6 @@ import org.linphone.recording.RecordingsFragment;
 import org.linphone.settings.AccountPreferencesFragment;
 import org.linphone.settings.AudioSettingsFragment;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.settings.NewSettingsFragment;
 import org.linphone.settings.SettingsFragment;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.IntentUtils;
@@ -427,7 +426,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 }
                 break;
             case SETTINGS:
-                mFragment = new NewSettingsFragment();
+                mFragment = new SettingsFragment();
                 break;
             case SETTINGS_SUBLEVEL:
                 mFragment = new AudioSettingsFragment();
@@ -886,8 +885,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
         mTopBarTitle.setText(title);
     }
 
-    @SuppressWarnings("incomplete-switch")
     public void selectMenu(FragmentsAvailable menuToSelect) {
+        selectMenu(menuToSelect, null);
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    public void selectMenu(FragmentsAvailable menuToSelect, String customTitle) {
         mCurrentFragment = menuToSelect;
         resetSelection();
         boolean hideBottomBar =
@@ -917,9 +920,13 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case SETTINGS:
             case ACCOUNT_SETTINGS:
-            case SETTINGS_SUBLEVEL:
                 hideTabBar(hideBottomBar);
-                showTopBarWithTitle(getString(R.string.settings));
+            case SETTINGS_SUBLEVEL:
+                if (customTitle == null) {
+                    showTopBarWithTitle(getString(R.string.settings));
+                } else {
+                    showTopBarWithTitle(customTitle);
+                }
                 break;
             case ABOUT:
                 showTopBarWithTitle(getString(R.string.about));
@@ -1450,11 +1457,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
+        /*if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
             if (mFragment instanceof SettingsFragment) {
                 ((SettingsFragment) mFragment).closePreferenceScreen();
             }
-        }
+        }*/
 
         Bundle extras = intent.getExtras();
         if (extras != null) {

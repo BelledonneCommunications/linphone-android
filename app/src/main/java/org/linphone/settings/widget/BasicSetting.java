@@ -1,4 +1,4 @@
-package org.linphone.settings;
+package org.linphone.settings.widget;
 
 /*
 BasicSetting.java

@@ -1,7 +1,7 @@
 package org.linphone.settings;
 
 /*
-NewSettingsFragment.java
+ChatSettingsFragment.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -29,18 +29,17 @@ import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
 
-public class NewSettingsFragment extends Fragment {
+public class ChatSettingsFragment extends Fragment {
     protected View mRootView;
-    private BasicSetting mTunnel, mAudio, mVideo, mCall, mChat, mNetwork, mAdvanced;
+    protected LinphonePreferences mPrefs;
 
     @Nullable
     @Override
     public View onCreateView(
             LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.new_settings, container, false);
+        mRootView = inflater.inflate(R.layout.settings_chat, container, false);
 
         loadSettings();
-        setListeners();
 
         return mRootView;
     }
@@ -49,39 +48,23 @@ public class NewSettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        mPrefs = LinphonePreferences.instance();
         if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS);
+            LinphoneActivity.instance()
+                    .selectMenu(
+                            FragmentsAvailable.SETTINGS_SUBLEVEL,
+                            getString(R.string.pref_chat_title));
         }
 
         updateValues();
     }
 
-    protected void loadSettings() {
-        mTunnel = mRootView.findViewById(R.id.pref_tunnel);
-        mAudio = mRootView.findViewById(R.id.pref_audio);
-        mVideo = mRootView.findViewById(R.id.pref_video);
-        mCall = mRootView.findViewById(R.id.pref_call);
-        mChat = mRootView.findViewById(R.id.pref_chat);
-        mNetwork = mRootView.findViewById(R.id.pref_network);
-        mAdvanced = mRootView.findViewById(R.id.pref_advanced);
-    }
+    protected void loadSettings() {}
 
-    protected void setListeners() {
-        mAudio.setListener(
-                new SettingListenerBase() {
-                    @Override
-                    public void onClicked() {
-                        LinphoneActivity.instance().displaySubSettings(new AudioSettingsFragment());
-                    }
-                });
-        // TODO
-    }
+    protected void setListeners() {}
 
     protected void updateValues() {
-        // TODO
 
-        initAccounts();
+        setListeners();
     }
-
-    private void initAccounts() {}
 }

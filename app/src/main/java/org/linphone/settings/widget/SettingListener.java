@@ -1,7 +1,7 @@
-package org.linphone.settings;
+package org.linphone.settings.widget;
 
 /*
-SettingListenerBase.java
+SettingListener.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -19,12 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-public class SettingListenerBase implements SettingListener {
-    public void onClicked() {}
+public interface SettingListener {
+    void onClicked();
 
-    public void onTextValueChanged(String newValue) {}
+    void onTextValueChanged(String newValue);
 
-    public void onBoolValueChanged(boolean newValue) {}
+    void onBoolValueChanged(boolean newValue);
 
-    public void onListValueChanged(int position, String newLabel, String newValue) {}
+    void onListValueChanged(int position, String newLabel, String newValue);
 }

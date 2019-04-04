@@ -1,7 +1,7 @@
-package org.linphone.settings;
+package org.linphone.settings.widget;
 
 /*
-CheckBoxSetting.java
+SwitchSetting.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -23,42 +23,42 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
-public class CheckBoxSetting extends BasicSetting {
-    protected CheckBox mCheckBox;
+public class SwitchSetting extends BasicSetting {
+    protected Switch mSwitch;
 
-    public CheckBoxSetting(Context context) {
+    public SwitchSetting(Context context) {
         super(context);
     }
 
-    public CheckBoxSetting(Context context, @Nullable AttributeSet attrs) {
+    public SwitchSetting(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CheckBoxSetting(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SwitchSetting(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-    public CheckBoxSetting(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public SwitchSetting(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     protected void inflateView() {
         mView =
                 LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_checkbox_preference, this, true);
+                        .inflate(R.layout.settings_switch_preference, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super.init(attrs, defStyleAttr, defStyleRes);
 
-        mCheckBox = mView.findViewById(R.id.setting_checkbox);
-        mCheckBox.setOnCheckedChangeListener(
+        mSwitch = mView.findViewById(R.id.setting_switch);
+        mSwitch.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -79,14 +79,14 @@ public class CheckBoxSetting extends BasicSetting {
     }
 
     public void setChecked(boolean checked) {
-        mCheckBox.setChecked(checked);
+        mSwitch.setChecked(checked);
     }
 
     public boolean isChecked() {
-        return mCheckBox.isChecked();
+        return mSwitch.isChecked();
     }
 
     public void toggle() {
-        mCheckBox.toggle();
+        mSwitch.toggle();
     }
 }
