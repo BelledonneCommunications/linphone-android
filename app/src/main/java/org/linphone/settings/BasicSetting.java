@@ -113,4 +113,14 @@ public class BasicSetting extends LinearLayout {
 
         addView(mView);
     }
+
+    public void setTitle(String title) {
+        mTitle.setText(title);
+        mTitle.setVisibility(title == null || title.isEmpty() ? GONE : VISIBLE);
+    }
+
+    public void setSubtitle(String subtitle) {
+        mSubtitle.setText(subtitle);
+        mSubtitle.setVisibility(subtitle == null || subtitle.isEmpty() ? GONE : VISIBLE);
+    }
 }

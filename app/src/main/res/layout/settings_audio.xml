@@ -57,6 +57,21 @@
             android:layout_height="wrap_content"
             linphone:title="@string/pref_playback_gain_db" />
 
+        <TextView
+            style="@style/settings_category_font"
+            android:text="@string/pref_codecs"
+            android:paddingTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/pref_audio_codecs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+
     </LinearLayout>
 
 </ScrollView>

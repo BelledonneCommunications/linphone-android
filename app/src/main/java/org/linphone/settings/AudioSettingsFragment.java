@@ -25,9 +25,13 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.PayloadType;
 import org.linphone.fragments.FragmentsAvailable;
 
 public class AudioSettingsFragment extends Fragment {
@@ -38,6 +42,7 @@ public class AudioSettingsFragment extends Fragment {
     private TextSetting mMicGain, mSpeakerGain;
     private ListSetting mCodecBitrateLimit;
     private BasicSetting mEchoCalibration, mEchoTester;
+    private LinearLayout mAudioCodecs;
 
     @Nullable
     @Override
@@ -79,6 +84,8 @@ public class AudioSettingsFragment extends Fragment {
         mEchoCalibration = mRootView.findViewById(R.id.pref_echo_canceller_calibration);
 
         mEchoTester = mRootView.findViewById(R.id.pref_echo_tester);
+
+        mAudioCodecs = mRootView.findViewById(R.id.pref_audio_codecs);
     }
 
     protected void setListeners() {
@@ -95,5 +102,23 @@ public class AudioSettingsFragment extends Fragment {
         mSpeakerGain.setValue(mPrefs.getPlaybackGainDb());
 
         mCodecBitrateLimit.setValue(mPrefs.getCodecBitrateLimit());
+
+        mAudioCodecs.removeAllViews();
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            for (final PayloadType pt : core.getAudioPayloadTypes()) {
+                SwitchSetting codec = new SwitchSetting(getActivity());
+                codec.setTitle(pt.getMimeType());
+                /* Special case */
+                if (pt.getMimeType().equals("mpeg4-generic")) {
+                    codec.setTitle("AAC-ELD");
+                }
+
+                codec.setSubtitle(pt.getClockRate() + " Hz");
+                codec.setChecked(pt.enabled());
+
+                mAudioCodecs.addView(codec);
+            }
+        }
     }
 }
