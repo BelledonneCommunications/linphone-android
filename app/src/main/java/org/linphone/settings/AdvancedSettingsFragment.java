@@ -23,6 +23,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -81,6 +82,9 @@ public class AdvancedSettingsFragment extends Fragment {
         mDebug = mRootView.findViewById(R.id.pref_debug);
 
         mJavaLogger = mRootView.findViewById(R.id.pref_java_debug);
+        // This is only required for blackberry users for all we know
+        mJavaLogger.setVisibility(
+                Build.MANUFACTURER.equals("BlackBerry") ? View.VISIBLE : View.GONE);
 
         mFriendListSubscribe = mRootView.findViewById(R.id.pref_friendlist_subscribe);
 
