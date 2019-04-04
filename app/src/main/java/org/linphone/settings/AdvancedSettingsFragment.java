@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +98,8 @@ public class AdvancedSettingsFragment extends Fragment {
         mDarkMode = mRootView.findViewById(R.id.pref_dark_mode);
 
         mRemoteProvisioningUrl = mRootView.findViewById(R.id.pref_remote_provisioning);
+        mRemoteProvisioningUrl.setInputType(
+                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
         mDisplayName = mRootView.findViewById(R.id.pref_display_name);
 

@@ -27,6 +27,13 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class LedSetting extends BasicSetting {
+    public enum Color {
+        GRAY,
+        GREEN,
+        ORANGE,
+        RED
+    }
+
     protected ImageView mLed;
 
     public LedSetting(Context context) {
@@ -53,5 +60,22 @@ public class LedSetting extends BasicSetting {
         super.init(attrs, defStyleAttr, defStyleRes);
 
         mLed = mView.findViewById(R.id.setting_led);
+    }
+
+    public void setColor(Color color) {
+        switch (color) {
+            case GRAY:
+                mLed.setImageResource(R.drawable.led_disconnected);
+                break;
+            case GREEN:
+                mLed.setImageResource(R.drawable.led_connected);
+                break;
+            case ORANGE:
+                mLed.setImageResource(R.drawable.led_inprogress);
+                break;
+            case RED:
+                mLed.setImageResource(R.drawable.led_error);
+                break;
+        }
     }
 }

@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class VideoSettingsFragment extends Fragment {
     private ListSetting mPreset, mSize, mFps;
     private TextSetting mBandwidth;
     private LinearLayout mVideoCodecs;
+    private TextView mVideoCodecsHeader;
 
     @Nullable
     @Override
@@ -58,7 +60,6 @@ public class VideoSettingsFragment extends Fragment {
             LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.settings_video, container, false);
 
-        mPrefs = LinphonePreferences.instance();
         loadSettings();
 
         return mRootView;
@@ -68,6 +69,7 @@ public class VideoSettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        mPrefs = LinphonePreferences.instance();
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance()
                     .selectMenu(
@@ -93,14 +95,13 @@ public class VideoSettingsFragment extends Fragment {
         initVideoSizeList();
 
         mFps = mRootView.findViewById(R.id.pref_preferred_fps);
-        mFps.setEnabled(mPrefs.getVideoPreset().equals("custom"));
         initFpsList();
 
         mBandwidth = mRootView.findViewById(R.id.pref_bandwidth_limit);
-        mBandwidth.setEnabled(mPrefs.getVideoPreset().equals("custom"));
         mBandwidth.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         mVideoCodecs = mRootView.findViewById(R.id.pref_video_codecs);
+        mVideoCodecsHeader = mRootView.findViewById(R.id.pref_video_codecs_header);
     }
 
     private void initVideoSizeList() {
@@ -140,6 +141,7 @@ public class VideoSettingsFragment extends Fragment {
                             mAutoAccept.setChecked(false);
                             mAutoInitiate.setChecked(false);
                         }
+                        updateVideoSettingsVisibility(newValue);
                     }
                 });
 
@@ -212,6 +214,7 @@ public class VideoSettingsFragment extends Fragment {
 
     protected void updateValues() {
         mEnable.setChecked(mPrefs.isVideoEnabled());
+        updateVideoSettingsVisibility(mPrefs.isVideoEnabled());
 
         mAutoInitiate.setChecked(mPrefs.shouldInitiateVideoCall());
 
@@ -220,12 +223,14 @@ public class VideoSettingsFragment extends Fragment {
         mOverlay.setChecked(mPrefs.isOverlayEnabled());
 
         mBandwidth.setValue(mPrefs.getBandwidthLimit());
+        mBandwidth.setEnabled(mPrefs.getVideoPreset().equals("custom"));
 
         mPreset.setValue(mPrefs.getVideoPreset());
 
         mSize.setValue(mPrefs.getPreferredVideoSize());
 
         mFps.setValue(mPrefs.getPreferredVideoFps());
+        mFps.setEnabled(mPrefs.getVideoPreset().equals("custom"));
 
         populateVideoCodecs();
 
@@ -254,5 +259,17 @@ public class VideoSettingsFragment extends Fragment {
                 mVideoCodecs.addView(codec);
             }
         }
+    }
+
+    private void updateVideoSettingsVisibility(boolean show) {
+        mAutoInitiate.setVisibility(show ? View.VISIBLE : View.GONE);
+        mAutoAccept.setVisibility(show ? View.VISIBLE : View.GONE);
+        mOverlay.setVisibility(show ? View.VISIBLE : View.GONE);
+        mBandwidth.setVisibility(show ? View.VISIBLE : View.GONE);
+        mPreset.setVisibility(show ? View.VISIBLE : View.GONE);
+        mSize.setVisibility(show ? View.VISIBLE : View.GONE);
+        mFps.setVisibility(show ? View.VISIBLE : View.GONE);
+        mVideoCodecs.setVisibility(show ? View.VISIBLE : View.GONE);
+        mVideoCodecsHeader.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 }

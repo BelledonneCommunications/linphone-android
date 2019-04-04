@@ -14,7 +14,6 @@
 
         <TextView
             android:id="@+id/accounts_settings_list_header"
-            android:visibility="gone"
             style="@style/settings_category_font"
             android:text="@string/pref_sipaccounts"
             android:layout_marginLeft="10dp"
@@ -31,6 +30,7 @@
         <TextView
             style="@style/settings_category_font"
             android:text="@string/pref_preferences_title"
+            android:paddingTop="15dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
@@ -40,7 +40,6 @@
             android:id="@+id/pref_tunnel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             linphone:title="@string/pref_tunnel_title"/>
 
         <org.linphone.settings.widget.BasicSetting

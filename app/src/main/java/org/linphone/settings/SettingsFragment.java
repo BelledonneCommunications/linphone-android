@@ -25,17 +25,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.ProxyConfig;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
+import org.linphone.settings.widget.LedSetting;
 import org.linphone.settings.widget.SettingListenerBase;
+import org.linphone.utils.LinphoneUtils;
 
 public class SettingsFragment extends Fragment {
     protected View mRootView;
     private BasicSetting mTunnel, mAudio, mVideo, mCall, mChat, mNetwork, mAdvanced;
     private LinearLayout mAccounts;
+    private TextView mAccountsHeader;
 
     @Nullable
     @Override
@@ -62,12 +69,20 @@ public class SettingsFragment extends Fragment {
 
     protected void loadSettings() {
         mAccounts = mRootView.findViewById(R.id.accounts_settings_list);
+        mAccountsHeader = mRootView.findViewById(R.id.accounts_settings_list_header);
+
         mTunnel = mRootView.findViewById(R.id.pref_tunnel);
+
         mAudio = mRootView.findViewById(R.id.pref_audio);
+
         mVideo = mRootView.findViewById(R.id.pref_video);
+
         mCall = mRootView.findViewById(R.id.pref_call);
+
         mChat = mRootView.findViewById(R.id.pref_chat);
+
         mNetwork = mRootView.findViewById(R.id.pref_network);
+
         mAdvanced = mRootView.findViewById(R.id.pref_advanced);
     }
 
@@ -80,6 +95,7 @@ public class SettingsFragment extends Fragment {
                                 .displaySubSettings(new TunnelSettingsFragment());
                     }
                 });
+
         mAudio.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -87,6 +103,7 @@ public class SettingsFragment extends Fragment {
                         LinphoneActivity.instance().displaySubSettings(new AudioSettingsFragment());
                     }
                 });
+
         mVideo.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -94,6 +111,7 @@ public class SettingsFragment extends Fragment {
                         LinphoneActivity.instance().displaySubSettings(new VideoSettingsFragment());
                     }
                 });
+
         mCall.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -101,6 +119,7 @@ public class SettingsFragment extends Fragment {
                         LinphoneActivity.instance().displaySubSettings(new CallSettingsFragment());
                     }
                 });
+
         mChat.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -108,6 +127,7 @@ public class SettingsFragment extends Fragment {
                         LinphoneActivity.instance().displaySubSettings(new ChatSettingsFragment());
                     }
                 });
+
         mNetwork.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -116,6 +136,7 @@ public class SettingsFragment extends Fragment {
                                 .displaySubSettings(new NetworkSettingsFragment());
                     }
                 });
+
         mAdvanced.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -127,10 +148,56 @@ public class SettingsFragment extends Fragment {
     }
 
     protected void updateValues() {
-        initAccounts();
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            mTunnel.setVisibility(core.tunnelAvailable() ? View.VISIBLE : View.GONE);
+            initAccounts(core);
+        }
     }
 
-    private void initAccounts() {
-        // TODO
+    private void initAccounts(Core core) {
+        mAccounts.removeAllViews();
+        ProxyConfig[] proxyConfigs = core.getProxyConfigList();
+
+        if (proxyConfigs == null || proxyConfigs.length == 0) {
+            mAccountsHeader.setVisibility(View.GONE);
+        } else {
+            mAccountsHeader.setVisibility(View.VISIBLE);
+            for (ProxyConfig proxyConfig : proxyConfigs) {
+                final LedSetting account = new LedSetting(getActivity());
+                account.setTitle(
+                        LinphoneUtils.getDisplayableAddress(proxyConfig.getIdentityAddress()));
+
+                if (proxyConfig.equals(core.getDefaultProxyConfig())) {
+                    account.setSubtitle(getString(R.string.default_account_flag));
+                }
+
+                switch (proxyConfig.getState()) {
+                    case Ok:
+                        account.setColor(LedSetting.Color.GREEN);
+                        break;
+                    case Failed:
+                        account.setColor(LedSetting.Color.RED);
+                        break;
+                    case Progress:
+                        account.setColor(LedSetting.Color.ORANGE);
+                        break;
+                    case None:
+                    case Cleared:
+                        account.setColor(LedSetting.Color.GRAY);
+                        break;
+                }
+
+                account.setListener(
+                        new SettingListenerBase() {
+                            @Override
+                            public void onClicked() {
+                                // TODO
+                            }
+                        });
+
+                mAccounts.addView(account);
+            }
+        }
     }
 }

@@ -20,16 +20,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.mediastream.Version;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.TextSetting;
 
 public class ChatSettingsFragment extends Fragment {
@@ -66,12 +74,99 @@ public class ChatSettingsFragment extends Fragment {
         updateValues();
     }
 
-    protected void loadSettings() {}
+    protected void loadSettings() {
+        mSharingServer = mRootView.findViewById(R.id.pref_image_sharing_server);
+        mSharingServer.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
-    protected void setListeners() {}
+        mMaxSizeForAutoDownloadIncomingFiles =
+                mRootView.findViewById(R.id.pref_auto_download_max_size);
+
+        mAutoDownloadIncomingFilesPolicy = mRootView.findViewById(R.id.pref_auto_download_policy);
+
+        mAndroidNotificationSettings = mRootView.findViewById(R.id.pref_android_app_notif_settings);
+    }
+
+    protected void setListeners() {
+        mSharingServer.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setSharingPictureServerUrl(newValue);
+                    }
+                });
+
+        mAutoDownloadIncomingFilesPolicy.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        try {
+                            int max_size = Integer.valueOf(newValue);
+                            mPrefs.setAutoDownloadFileMaxSize(max_size);
+                            updateAutoDownloadSettingsFromValue(max_size);
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mMaxSizeForAutoDownloadIncomingFiles.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        try {
+                            mPrefs.setAutoDownloadFileMaxSize(Integer.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mAndroidNotificationSettings.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onClicked() {
+                        if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
+                            Context context = LinphoneActivity.instance();
+                            Intent i = new Intent();
+                            i.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                            i.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+                            i.putExtra(
+                                    Settings.EXTRA_CHANNEL_ID,
+                                    context.getString(R.string.notification_channel_id));
+                            i.addCategory(Intent.CATEGORY_DEFAULT);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                            context.startActivity(i);
+                        }
+                    }
+                });
+    }
 
     protected void updateValues() {
+        mSharingServer.setValue(mPrefs.getSharingPictureServerUrl());
+
+        updateAutoDownloadSettingsFromValue(mPrefs.getAutoDownloadFileMaxSize());
+
+        if (Version.sdkStrictlyBelow(Version.API26_O_80)) {
+            mAndroidNotificationSettings.setVisibility(View.GONE);
+        }
 
         setListeners();
+    }
+
+    private void updateAutoDownloadSettingsFromValue(int max_size) {
+        if (max_size == -1) {
+            mAutoDownloadIncomingFilesPolicy.setValue(
+                    getString(R.string.pref_auto_download_policy_disabled_key));
+        } else if (max_size == 0) {
+            mAutoDownloadIncomingFilesPolicy.setValue(
+                    getString(R.string.pref_auto_download_policy_always_key));
+        } else {
+            mAutoDownloadIncomingFilesPolicy.setValue(
+                    getString(R.string.pref_auto_download_policy_size_key));
+        }
+        mMaxSizeForAutoDownloadIncomingFiles.setValue(max_size);
+        mMaxSizeForAutoDownloadIncomingFiles.setVisibility(max_size > 0 ? View.VISIBLE : View.GONE);
     }
 }

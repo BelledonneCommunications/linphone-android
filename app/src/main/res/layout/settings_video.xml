@@ -67,6 +67,7 @@
 
         <TextView
             style="@style/settings_category_font"
+            android:id="@+id/pref_video_codecs_header"
             android:text="@string/pref_codecs"
             android:paddingTop="15dp"
             android:layout_marginLeft="10dp"
