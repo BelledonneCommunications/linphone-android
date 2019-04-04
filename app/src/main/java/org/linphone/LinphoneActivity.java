@@ -1305,9 +1305,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ((SettingsFragment) mFragment).startEchoCancellerCalibration();
-                } else {
-                    ((SettingsFragment) mFragment).echoCalibrationFail();
+                    ((AudioSettingsFragment) mFragment).startEchoCancellerCalibration();
                 }
                 break;
             case PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE:
@@ -1318,7 +1316,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    ((SettingsFragment) mFragment).startEchoTester();
+                    ((AudioSettingsFragment) mFragment).startEchoTester();
                 break;
         }
     }

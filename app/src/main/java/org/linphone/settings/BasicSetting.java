@@ -63,7 +63,7 @@ public class BasicSetting extends LinearLayout {
     protected void inflateView() {
         mView =
                 LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_basic_preference, this, false);
+                        .inflate(R.layout.settings_basic_preference, this, true);
     }
 
     public void setListener(SettingListener listener) {
@@ -110,8 +110,6 @@ public class BasicSetting extends LinearLayout {
                 a.recycle();
             }
         }
-
-        addView(mView);
     }
 
     public void setTitle(String title) {
