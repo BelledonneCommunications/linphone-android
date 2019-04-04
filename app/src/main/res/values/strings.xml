@@ -64,6 +64,7 @@
     <string name="update_available">An update is available</string>
     <string name="do_not_ask_again">Do not show again</string>
     <string name="delete_contacts_text">Are you sure you want to delete these contacts?\nThey will be deleted from your phone as well!</string>
+    <string name="logs_url_copied_to_clipboard">Logs url copied into clipboard</string>
 
     <!-- Launch screen -->
     <string name="app_description">the <i>libre</i> SIP client</string>
