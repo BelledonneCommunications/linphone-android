@@ -78,6 +78,11 @@ public class CheckBoxSetting extends BasicSetting {
                 });
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mCheckBox.setEnabled(enabled);
+    }
+
     public void setChecked(boolean checked) {
         mCheckBox.setChecked(checked);
     }

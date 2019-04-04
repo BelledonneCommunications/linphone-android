@@ -1331,7 +1331,13 @@ public class LinphonePreferences {
     }
 
     public void enableOverlay(boolean enable) {
-        getConfig().setBool("app", "display_overlay", enable);
+        getConfig()
+                .setBool(
+                        "app",
+                        "display_overlay",
+                        enable
+                                && LinphoneActivity.isInstanciated()
+                                && LinphoneActivity.instance().checkAndRequestOverlayPermission());
     }
 
     public boolean isDeviceRingtoneEnabled() {

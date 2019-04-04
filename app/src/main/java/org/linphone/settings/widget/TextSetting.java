@@ -86,6 +86,11 @@ public class TextSetting extends BasicSetting implements TextWatcher {
         }
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mInput.setEnabled(enabled);
+    }
+
     public void setInputType(int inputType) {
         mInput.setInputType(inputType);
     }

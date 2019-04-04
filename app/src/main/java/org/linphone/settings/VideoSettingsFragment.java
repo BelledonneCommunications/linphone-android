@@ -21,16 +21,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.PayloadType;
+import org.linphone.core.VideoDefinition;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
@@ -52,6 +58,7 @@ public class VideoSettingsFragment extends Fragment {
             LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.settings_video, container, false);
 
+        mPrefs = LinphonePreferences.instance();
         loadSettings();
 
         return mRootView;
@@ -61,7 +68,6 @@ public class VideoSettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        mPrefs = LinphonePreferences.instance();
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance()
                     .selectMenu(
@@ -73,12 +79,153 @@ public class VideoSettingsFragment extends Fragment {
     }
 
     protected void loadSettings() {
+        mEnable = mRootView.findViewById(R.id.pref_video_enable);
+
+        mAutoInitiate = mRootView.findViewById(R.id.pref_video_initiate_call_with_video);
+
+        mAutoAccept = mRootView.findViewById(R.id.pref_video_automatically_accept_video);
+
+        mOverlay = mRootView.findViewById(R.id.pref_overlay);
+
+        mPreset = mRootView.findViewById(R.id.pref_video_preset);
+
+        mSize = mRootView.findViewById(R.id.pref_preferred_video_size);
+        initVideoSizeList();
+
+        mFps = mRootView.findViewById(R.id.pref_preferred_fps);
+        mFps.setEnabled(mPrefs.getVideoPreset().equals("custom"));
+        initFpsList();
+
+        mBandwidth = mRootView.findViewById(R.id.pref_bandwidth_limit);
+        mBandwidth.setEnabled(mPrefs.getVideoPreset().equals("custom"));
+        mBandwidth.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         mVideoCodecs = mRootView.findViewById(R.id.pref_video_codecs);
     }
 
-    protected void setListeners() {}
+    private void initVideoSizeList() {
+        List<String> entries = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        for (VideoDefinition vd : Factory.instance().getSupportedVideoDefinitions()) {
+            entries.add(vd.getName());
+            values.add(vd.getName());
+        }
+
+        mSize.setItems(entries, values);
+    }
+
+    private void initFpsList() {
+        List<String> entries = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        entries.add(getString(R.string.pref_none));
+        values.add("0");
+        for (int i = 5; i <= 30; i += 5) {
+            String str = Integer.toString(i);
+            entries.add(str);
+            values.add(str);
+        }
+
+        mFps.setItems(entries, values);
+    }
+
+    protected void setListeners() {
+        mEnable.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableVideo(newValue);
+                        if (!newValue) {
+                            mAutoAccept.setChecked(false);
+                            mAutoInitiate.setChecked(false);
+                        }
+                    }
+                });
+
+        mAutoInitiate.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setInitiateVideoCall(newValue);
+                    }
+                });
+
+        mAutoAccept.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setAutomaticallyAcceptVideoRequests(newValue);
+                    }
+                });
+
+        mOverlay.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableOverlay(newValue);
+                    }
+                });
+
+        mPreset.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        mPrefs.setVideoPreset(newValue);
+                        mFps.setEnabled(newValue.equals("custom"));
+                        mBandwidth.setEnabled(newValue.equals("custom"));
+                    }
+                });
+
+        mSize.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        mPrefs.setPreferredVideoSize(newValue);
+                    }
+                });
+
+        mFps.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        try {
+                            mPrefs.setPreferredVideoFps(Integer.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mBandwidth.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        try {
+                            mPrefs.setBandwidthLimit(Integer.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+    }
 
     protected void updateValues() {
+        mEnable.setChecked(mPrefs.isVideoEnabled());
+
+        mAutoInitiate.setChecked(mPrefs.shouldInitiateVideoCall());
+
+        mAutoAccept.setChecked(mPrefs.shouldAutomaticallyAcceptVideoRequests());
+
+        mOverlay.setChecked(mPrefs.isOverlayEnabled());
+
+        mBandwidth.setValue(mPrefs.getBandwidthLimit());
+
+        mPreset.setValue(mPrefs.getVideoPreset());
+
+        mSize.setValue(mPrefs.getPreferredVideoSize());
+
+        mFps.setValue(mPrefs.getPreferredVideoFps());
 
         populateVideoCodecs();
 

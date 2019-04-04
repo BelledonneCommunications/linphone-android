@@ -119,4 +119,9 @@ public class BasicSetting extends LinearLayout {
         mSubtitle.setText(subtitle);
         mSubtitle.setVisibility(subtitle == null || subtitle.isEmpty() ? GONE : VISIBLE);
     }
+
+    public void setEnabled(boolean enabled) {
+        mTitle.setEnabled(enabled);
+        mSubtitle.setEnabled(enabled);
+    }
 }

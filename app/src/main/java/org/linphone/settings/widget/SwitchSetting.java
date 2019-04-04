@@ -76,6 +76,11 @@ public class SwitchSetting extends BasicSetting {
                 });
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mSwitch.setEnabled(enabled);
+    }
+
     public void setChecked(boolean checked) {
         mSwitch.setChecked(checked);
     }

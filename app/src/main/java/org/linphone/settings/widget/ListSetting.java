@@ -121,6 +121,11 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
         }
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mSpinner.setEnabled(enabled);
+    }
+
     public void setValue(int value) {
         setValue(String.valueOf(value));
     }
