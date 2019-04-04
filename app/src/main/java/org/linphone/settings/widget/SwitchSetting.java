@@ -49,9 +49,7 @@ public class SwitchSetting extends BasicSetting {
     }
 
     protected void inflateView() {
-        mView =
-                LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_switch_preference, this, true);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_switch, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {

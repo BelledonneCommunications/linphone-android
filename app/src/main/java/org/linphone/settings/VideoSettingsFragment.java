@@ -24,14 +24,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.PayloadType;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.SettingListenerBase;
+import org.linphone.settings.widget.SwitchSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class VideoSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+
+    private SwitchSetting mEnable, mAutoInitiate, mAutoAccept, mOverlay;
+    private ListSetting mPreset, mSize, mFps;
+    private TextSetting mBandwidth;
+    private LinearLayout mVideoCodecs;
 
     @Nullable
     @Override
@@ -59,12 +72,40 @@ public class VideoSettingsFragment extends Fragment {
         updateValues();
     }
 
-    protected void loadSettings() {}
+    protected void loadSettings() {
+        mVideoCodecs = mRootView.findViewById(R.id.pref_video_codecs);
+    }
 
     protected void setListeners() {}
 
     protected void updateValues() {
 
+        populateVideoCodecs();
+
         setListeners();
+    }
+
+    private void populateVideoCodecs() {
+        mVideoCodecs.removeAllViews();
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            for (final PayloadType pt : core.getVideoPayloadTypes()) {
+                final SwitchSetting codec = new SwitchSetting(getActivity());
+                codec.setTitle(pt.getMimeType());
+
+                if (pt.enabled()) {
+                    codec.setChecked(true);
+                }
+                codec.setListener(
+                        new SettingListenerBase() {
+                            @Override
+                            public void onBoolValueChanged(boolean newValue) {
+                                pt.enable(newValue);
+                            }
+                        });
+
+                mVideoCodecs.addView(codec);
+            }
+        }
     }
 }

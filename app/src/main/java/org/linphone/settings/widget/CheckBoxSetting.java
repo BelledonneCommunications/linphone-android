@@ -51,7 +51,7 @@ public class CheckBoxSetting extends BasicSetting {
     protected void inflateView() {
         mView =
                 LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_checkbox_preference, this, true);
+                        .inflate(R.layout.settings_widget_checkbox, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {

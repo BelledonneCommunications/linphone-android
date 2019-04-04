@@ -28,10 +28,21 @@ import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.SwitchSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class CallSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+
+    private SwitchSetting mDeviceRingtone,
+            mVibrateIncomingCall,
+            mDtmfSipInfo,
+            mDtmfRfc2833,
+            mAutoAnswer;
+    private ListSetting mMediaEncryption;
+    private TextSetting mAutoAnswerTime, mIncomingCallTimout, mVoiceMailUri;
 
     @Nullable
     @Override

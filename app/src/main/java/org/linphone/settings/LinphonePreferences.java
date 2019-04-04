@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AVPFMode;
@@ -1417,6 +1418,9 @@ public class LinphonePreferences {
 
     public void enableDarkMode(boolean enable) {
         getConfig().setBool("app", "dark_mode", enable);
+        if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance().recreate();
+        }
     }
 
     public static class AccountBuilder {

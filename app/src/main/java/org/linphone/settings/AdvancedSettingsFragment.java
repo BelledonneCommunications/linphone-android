@@ -20,7 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +32,24 @@ import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.BasicSetting;
+import org.linphone.settings.widget.SettingListenerBase;
+import org.linphone.settings.widget.SwitchSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class AdvancedSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+
+    private SwitchSetting mDebug,
+            mJavaLogger,
+            mFriendListSubscribe,
+            mBackgroundMode,
+            mForegroundService,
+            mStartAtBoot,
+            mDarkMode;
+    private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername;
+    private BasicSetting mAndroidAppSettings;
 
     @Nullable
     @Override
@@ -59,11 +77,150 @@ public class AdvancedSettingsFragment extends Fragment {
         updateValues();
     }
 
-    protected void loadSettings() {}
+    protected void loadSettings() {
+        mDebug = mRootView.findViewById(R.id.pref_debug);
 
-    protected void setListeners() {}
+        mJavaLogger = mRootView.findViewById(R.id.pref_java_debug);
+
+        mFriendListSubscribe = mRootView.findViewById(R.id.pref_friendlist_subscribe);
+
+        mBackgroundMode = mRootView.findViewById(R.id.pref_background_mode);
+
+        mForegroundService = mRootView.findViewById(R.id.pref_service_notification);
+
+        mStartAtBoot = mRootView.findViewById(R.id.pref_autostart);
+
+        mDarkMode = mRootView.findViewById(R.id.pref_dark_mode);
+
+        mRemoteProvisioningUrl = mRootView.findViewById(R.id.pref_remote_provisioning);
+
+        mDisplayName = mRootView.findViewById(R.id.pref_display_name);
+
+        mUsername = mRootView.findViewById(R.id.pref_user_name);
+
+        mAndroidAppSettings = mRootView.findViewById(R.id.pref_android_app_settings);
+    }
+
+    protected void setListeners() {
+        mDebug.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setDebugEnabled(newValue);
+                    }
+                });
+
+        mJavaLogger.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setJavaLogger(newValue);
+                    }
+                });
+
+        mFriendListSubscribe.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enabledFriendlistSubscription(newValue);
+                    }
+                });
+
+        mBackgroundMode.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setBackgroundModeEnabled(newValue);
+                    }
+                });
+
+        mForegroundService.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setServiceNotificationVisibility(newValue);
+                    }
+                });
+
+        mStartAtBoot.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.setAutoStart(newValue);
+                    }
+                });
+
+        mDarkMode.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableDarkMode(newValue);
+                    }
+                });
+
+        mRemoteProvisioningUrl.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setRemoteProvisioningUrl(newValue);
+                    }
+                });
+
+        mDisplayName.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setDefaultDisplayName(newValue);
+                    }
+                });
+
+        mUsername.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setDefaultUsername(newValue);
+                    }
+                });
+
+        mAndroidAppSettings.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onClicked() {
+                        Context context = LinphoneActivity.instance();
+                        Intent i = new Intent();
+                        i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        i.addCategory(Intent.CATEGORY_DEFAULT);
+                        i.setData(Uri.parse("package:" + context.getPackageName()));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                        LinphoneActivity.instance()
+                                .startActivityForResult(
+                                        i, LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
+                    }
+                });
+    }
 
     protected void updateValues() {
+        mDebug.setChecked(mPrefs.isDebugEnabled());
+
+        mJavaLogger.setChecked(mPrefs.useJavaLogger());
+
+        mFriendListSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
+
+        mBackgroundMode.setChecked(mPrefs.isBackgroundModeEnabled());
+
+        mForegroundService.setChecked(mPrefs.getServiceNotificationVisibility());
+
+        mStartAtBoot.setChecked(mPrefs.isAutoStartEnabled());
+
+        mDarkMode.setChecked(mPrefs.isDarkModeEnabled());
+
+        mRemoteProvisioningUrl.setValue(mPrefs.getRemoteProvisioningUrl());
+
+        mDisplayName.setValue(mPrefs.getDefaultDisplayName());
+
+        mUsername.setValue(mPrefs.getDefaultUsername());
 
         setListeners();
     }

@@ -28,10 +28,17 @@ import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.BasicSetting;
+import org.linphone.settings.widget.SwitchSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class NetworkSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+
+    private SwitchSetting mWifiOnly, mIpv6, mPush, mRandomPorts, mIce, mTurn;
+    private TextSetting mSipPort, mStunServer, mTurnUsername, mTurnPassword, mAudioPort, mVideoPort;
+    private BasicSetting mAndroidBatterySaverSettings;
 
     @Nullable
     @Override

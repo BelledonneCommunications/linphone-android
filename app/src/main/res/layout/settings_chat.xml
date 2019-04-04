@@ -16,6 +16,7 @@
             android:id="@+id/pref_image_sharing_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:subtitle="@string/pref_image_sharing_server_desc"
             linphone:title="@string/pref_image_sharing_server_title" />
 
         <org.linphone.settings.widget.ListSetting

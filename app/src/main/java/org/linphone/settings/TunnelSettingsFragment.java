@@ -28,10 +28,15 @@ import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class TunnelSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+
+    private TextSetting mHost, mPort;
+    private ListSetting mMode;
 
     @Nullable
     @Override

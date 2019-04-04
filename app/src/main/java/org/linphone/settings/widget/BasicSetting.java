@@ -61,9 +61,7 @@ public class BasicSetting extends LinearLayout {
     }
 
     protected void inflateView() {
-        mView =
-                LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_basic_preference, this, true);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_basic, this, true);
     }
 
     public void setListener(SettingListener listener) {

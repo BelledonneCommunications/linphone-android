@@ -49,9 +49,7 @@ public class TextSetting extends BasicSetting implements TextWatcher {
     }
 
     protected void inflateView() {
-        mView =
-                LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_text_preference, this, true);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_text, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {

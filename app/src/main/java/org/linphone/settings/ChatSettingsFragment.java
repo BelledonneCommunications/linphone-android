@@ -28,10 +28,17 @@ import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
+import org.linphone.settings.widget.BasicSetting;
+import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.TextSetting;
 
 public class ChatSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+
+    private TextSetting mSharingServer, mMaxSizeForAutoDownloadIncomingFiles;
+    private BasicSetting mAndroidNotificationSettings;
+    private ListSetting mAutoDownloadIncomingFilesPolicy;
 
     @Nullable
     @Override

@@ -54,9 +54,7 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
     }
 
     protected void inflateView() {
-        mView =
-                LayoutInflater.from(mContext)
-                        .inflate(R.layout.settings_list_preference, this, true);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.settings_widget_list, this, true);
     }
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
