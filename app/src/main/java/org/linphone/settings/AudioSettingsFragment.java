@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,12 @@ import org.linphone.fragments.FragmentsAvailable;
 
 public class AudioSettingsFragment extends Fragment {
     protected View mRootView;
+    protected LinphonePreferences mPrefs;
+
+    private SwitchSetting mEchoCanceller, mAdaptiveRateControl;
+    private TextSetting mMicGain, mSpeakerGain;
+    private ListSetting mCodecBitrateLimit;
+    private BasicSetting mEchoCalibration, mEchoTester;
 
     @Nullable
     @Override
@@ -48,6 +55,7 @@ public class AudioSettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        mPrefs = LinphonePreferences.instance();
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().selectMenu(FragmentsAvailable.SETTINGS_SUBLEVEL);
         }
@@ -56,7 +64,21 @@ public class AudioSettingsFragment extends Fragment {
     }
 
     protected void loadSettings() {
-        // TODO
+        mEchoCanceller = mRootView.findViewById(R.id.pref_echo_cancellation);
+
+        mAdaptiveRateControl = mRootView.findViewById(R.id.pref_adaptive_rate_control);
+
+        mMicGain = mRootView.findViewById(R.id.pref_mic_gain_db);
+        mMicGain.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        mSpeakerGain = mRootView.findViewById(R.id.pref_playback_gain_db);
+        mSpeakerGain.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        mCodecBitrateLimit = mRootView.findViewById(R.id.pref_codec_bitrate_limit);
+
+        mEchoCalibration = mRootView.findViewById(R.id.pref_echo_canceller_calibration);
+
+        mEchoTester = mRootView.findViewById(R.id.pref_echo_tester);
     }
 
     protected void setListeners() {
@@ -64,6 +86,14 @@ public class AudioSettingsFragment extends Fragment {
     }
 
     protected void updateValues() {
-        // TODO
+        mEchoCanceller.setChecked(mPrefs.echoCancellationEnabled());
+
+        mAdaptiveRateControl.setChecked(mPrefs.adaptiveRateControlEnabled());
+
+        mMicGain.setValue(mPrefs.getMicGainDb());
+
+        mSpeakerGain.setValue(mPrefs.getPlaybackGainDb());
+
+        mCodecBitrateLimit.setValue(mPrefs.getCodecBitrateLimit());
     }
 }

@@ -76,4 +76,8 @@ public class SwitchSetting extends BasicSetting implements CompoundButton.OnChec
             mListener.onBoolValueChanged(isChecked);
         }
     }
+
+    public void setChecked(boolean checked) {
+        mSwitch.setChecked(checked);
+    }
 }

@@ -87,4 +87,24 @@ public class TextSetting extends BasicSetting implements TextWatcher {
             mListener.onTextValueChanged(mInput.getText().toString());
         }
     }
+
+    public void setInputType(int inputType) {
+        mInput.setInputType(inputType);
+    }
+
+    public void setValue(String value) {
+        mInput.setText(value);
+    }
+
+    public void setValue(int value) {
+        setValue(String.valueOf(value));
+    }
+
+    public void setValue(float value) {
+        setValue(String.valueOf(value));
+    }
+
+    public void setValue(double value) {
+        setValue(String.valueOf(value));
+    }
 }

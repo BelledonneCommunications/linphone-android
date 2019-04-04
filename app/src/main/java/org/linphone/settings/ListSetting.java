@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import androidx.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import org.linphone.R;
 
@@ -60,6 +61,8 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
 
     protected void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super.init(attrs, defStyleAttr, defStyleRes);
+        mItems = new ArrayList<>();
+        mItemsValues = new ArrayList<>();
 
         mSpinner = mView.findViewById(R.id.setting_spinner);
         mSpinner.setOnItemSelectedListener(this);
@@ -72,6 +75,15 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
             try {
                 CharSequence[] names = a.getTextArray(R.styleable.Settings_list_items_names);
                 CharSequence[] values = a.getTextArray(R.styleable.Settings_list_items_values);
+                if (values != null && names != null) {
+                    for (CharSequence cs : names) {
+                        mItems.add(cs.toString());
+                    }
+                    for (CharSequence cs : values) {
+                        mItemsValues.add(cs.toString());
+                    }
+                    setItems(mItems, mItemsValues);
+                }
             } finally {
                 a.recycle();
             }
@@ -100,4 +112,26 @@ public class ListSetting extends BasicSetting implements AdapterView.OnItemSelec
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {}
+
+    public void setValue(String value) {
+        int index = mItemsValues.indexOf(value);
+        if (index == -1) {
+            index = mItems.indexOf(value);
+        }
+        if (index != -1) {
+            mSpinner.setSelection(index);
+        }
+    }
+
+    public void setValue(int value) {
+        setValue(String.valueOf(value));
+    }
+
+    public void setValue(float value) {
+        setValue(String.valueOf(value));
+    }
+
+    public void setValue(double value) {
+        setValue(String.valueOf(value));
+    }
 }
