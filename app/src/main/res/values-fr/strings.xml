@@ -61,6 +61,7 @@
   <string name="update_available">Une mise à jour est disponible</string>
   <string name="do_not_ask_again">Ne plus afficher</string>
   <string name="delete_contacts_text">Êtes-vous sûr de vouloir supprimer ces contacts ?\nIls seront également supprimés du répertoire de votre téléphone.</string>
+  <string name="logs_url_copied_to_clipboard">Url des traces copiée dans le presse-papier</string>
   <!--Launch screen-->
   <string name="app_description">le client SIP <i>libre</i></string>
   <!--Assistant-->
@@ -477,6 +478,11 @@ Disponible gratuitement ici : http://www.linphone.org/technical-corner/linphone/
   <string name="device_power_saver_dialog_message">Il semble que votre téléphone dispose d\'un gestionnaire de batterie. Vous devez autoriser l\'app pour recevoir des appels et des messages quand elle n\'est pas au premier plan.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Options</string>
   <string name="device_power_saver_dialog_button_later">Plus tard</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Activer les traces de débogage</string>
+  <string name="debug_popup_enable_logs">Activer les traces</string>
+  <string name="debug_popup_disable_logs">Désactiver les traces</string>
+  <string name="debug_popup_send_logs">Envoyer les traces</string>
   <!--Content description-->
   <string name="content_description_back">Retour</string>
   <string name="content_description_dialer">Dialer</string>

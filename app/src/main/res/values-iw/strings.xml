@@ -88,6 +88,7 @@
   <!--Audio hack settings-->
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">הגדרות</string>
+  <!--Debug popup-->
   <!--Content description-->
   <string name="content_description_back">חזור</string>
   <string name="content_description_decline">דחה</string>

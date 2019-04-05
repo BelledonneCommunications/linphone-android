@@ -244,6 +244,7 @@
   <string name="status_error">Registrering misslyckades</string>
   <string name="voicemail_unread">olästa meddelanden</string>
   <!--Side Menu-->
+  <string name="menu_logout">Logga ut</string>
   <string name="menu_assistant">Assistent</string>
   <string name="menu_settings">Inställningar</string>
   <string name="menu_recordings">Inspelningar</string>
@@ -473,6 +474,8 @@
   <string name="device_power_saver_dialog_message">Det verkar som om din enhet har en energisparare. För att appen ska kunna ta emot samtal och meddelanden i bakgrunden med hjälp av push-meddelanden måste appen vitlistas.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Inställningar</string>
   <string name="device_power_saver_dialog_button_later">Senare</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Felsökning</string>
   <!--Content description-->
   <string name="content_description_back">Tillbaka</string>
   <string name="content_description_dialer">Uppringare</string>

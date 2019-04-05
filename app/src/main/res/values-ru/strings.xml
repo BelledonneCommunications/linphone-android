@@ -61,6 +61,7 @@
   <string name="update_available">Доступно обновление</string>
   <string name="do_not_ask_again">Не показывать снова</string>
   <string name="delete_contacts_text">Вы уверены, что хотите удалить эти контакты?\nОни также будут удалены с вашего телефона!</string>
+  <string name="logs_url_copied_to_clipboard">URL-адрес логов скопирован в буфер обмена</string>
   <!--Launch screen-->
   <string name="app_description">это <i>бесплатный</i> SIP-клиент</string>
   <!--Assistant-->
@@ -244,6 +245,7 @@
   <string name="status_error">Регистрация не удалась</string>
   <string name="voicemail_unread"> непрочитанные сообщения</string>
   <!--Side Menu-->
+  <string name="menu_logout">Выход</string>
   <string name="menu_assistant">Ассистент</string>
   <string name="menu_settings">Настройки</string>
   <string name="menu_recordings">Записи</string>
@@ -409,6 +411,7 @@
   <string name="pref_call_timeout_title">Таймаут вызова (в секундах)</string>
   <string name="pref_voice_mail">URI голосовой почты</string>
   <string name="pref_dialer_call">Использовать Linphone в качестве приложения для звонков по умолчанию.</string>
+  <string name="pref_accept_early_media">Принимать ранний поток</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Чат</string>
   <string name="pref_image_sharing_server_title">Сервер обмена</string>
@@ -473,6 +476,8 @@
   <string name="device_power_saver_dialog_message">Кажется, на вашем устройстве включено энергосбережение. Для того чтобы приложение могло принимать звонки и сообщения в фоновом режиме с помощью push-уведомлений, оно должно быть включено в белый список.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Настройки</string>
   <string name="device_power_saver_dialog_button_later">Позже</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Отладка</string>
   <!--Content description-->
   <string name="content_description_back">Назад</string>
   <string name="content_description_dialer">Номеронабиратель</string>

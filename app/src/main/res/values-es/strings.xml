@@ -248,6 +248,8 @@
   <string name="pref_audio_hacks_use_galaxys_hack_title">Usar hack de audio para Galaxy S</string>
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Configuración</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Desarrollo</string>
   <!--Content description-->
   <string name="content_description_back">Atras</string>
   <string name="content_description_dialer">Marcador</string>

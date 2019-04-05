@@ -458,6 +458,8 @@
   <string name="device_power_saver_dialog_message">Здається, на вашому пристрої увімкнено енергозбереження. Для того щоб застосунок міг приймати дзвінки й повідомлення у тловому режимі за допомогою push-сповіщень, його має бути включено до білого переліку.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Налаштування</string>
   <string name="device_power_saver_dialog_button_later">Пізніше</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Зневадження</string>
   <!--Content description-->
   <string name="content_description_back">Назад</string>
   <string name="content_description_dialer">Номеронабирач</string>

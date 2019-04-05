@@ -360,6 +360,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">设置</string>
   <string name="device_power_saver_dialog_button_later">稍后</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">诊断</string>
   <!--Content description-->
   <string name="content_description_back">返回</string>
   <string name="content_description_dialer">拨号器</string>

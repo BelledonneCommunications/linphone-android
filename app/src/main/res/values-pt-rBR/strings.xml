@@ -415,6 +415,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Configurações</string>
   <string name="device_power_saver_dialog_button_later">Mais tarde</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Depurar</string>
   <!--Content description-->
   <string name="content_description_back">Voltar</string>
   <string name="content_description_dialer">Discador</string>

@@ -410,6 +410,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Ayarlar</string>
   <string name="device_power_saver_dialog_button_later">Daha sonra</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Hata ayıklama</string>
   <!--Content description-->
   <string name="content_description_back">Geri</string>
   <string name="content_description_dialer">Telefon numarası çevirici</string>

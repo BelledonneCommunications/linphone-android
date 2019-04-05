@@ -364,6 +364,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">設定</string>
   <string name="device_power_saver_dialog_button_later">そのうち</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">デバッグ</string>
   <!--Content description-->
   <string name="content_description_back">戻る</string>
   <string name="content_description_dialer">ダイヤラー</string>
