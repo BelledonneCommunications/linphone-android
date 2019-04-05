@@ -269,7 +269,7 @@
   <string name="default_account_flag">默认账户</string>
   <string name="pref_add_account">添加帐户</string>
   <string name="pref_in_app_store">内购商店</string>
-  <string name="pref_tunnel">Tunnel隧道</string>
+  <string name="pref_tunnel_title">Tunnel隧道</string>
   <string name="pref_tunnel_host">主机名</string>
   <string name="pref_tunnel_port">端口</string>
   <string name="pref_tunnel_mode">模式</string>

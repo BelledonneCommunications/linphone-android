@@ -280,7 +280,7 @@
   <string name="default_account_flag">الحساب الافتراضي</string>
   <string name="pref_add_account">إضافة حساب</string>
   <string name="pref_in_app_store">متجر التبضع المحمول</string>
-  <string name="pref_tunnel">النفق</string>
+  <string name="pref_tunnel_title">النفق</string>
   <string name="pref_tunnel_host">إسم المضيف</string>
   <string name="pref_tunnel_port">المنفذ</string>
   <string name="pref_tunnel_mode">الوضع</string>

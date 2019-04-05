@@ -308,7 +308,7 @@
   <string name="default_account_flag">ნაგულისხმევი ანგარიში</string>
   <string name="pref_add_account">ანგარიშის დამატება</string>
   <string name="pref_in_app_store">პროგრამის-შიდა მაღაზია</string>
-  <string name="pref_tunnel">გვირაბი</string>
+  <string name="pref_tunnel_title">გვირაბი</string>
   <string name="pref_tunnel_host">ჰოსტის სახელ</string>
   <string name="pref_tunnel_port">პორტი</string>
   <string name="pref_tunnel_mode">რეჟიმი</string>

@@ -110,7 +110,8 @@ import org.linphone.history.HistoryDetailFragment;
 import org.linphone.history.HistoryFragment;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.recording.RecordingsFragment;
-import org.linphone.settings.AccountPreferencesFragment;
+import org.linphone.settings.AccountSettingsFragment;
+import org.linphone.settings.AudioSettingsFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsFragment;
 import org.linphone.utils.DeviceUtils;
@@ -431,8 +432,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
             case SETTINGS:
                 mFragment = new SettingsFragment();
                 break;
+            case SETTINGS_SUBLEVEL:
+                mFragment = new AudioSettingsFragment();
+                break;
             case ACCOUNT_SETTINGS:
-                mFragment = new AccountPreferencesFragment();
+                mFragment = new AccountSettingsFragment();
                 break;
             case ABOUT:
                 mFragment = new AboutFragment();
@@ -469,6 +473,15 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
         }
 
+        applyFragmentChanges(newFragmentType, extras);
+    }
+
+    private void changeSettingsFragment(Fragment fragment) {
+        mFragment = fragment;
+        applyFragmentChanges(FragmentsAvailable.SETTINGS_SUBLEVEL, null);
+    }
+
+    private void applyFragmentChanges(FragmentsAvailable newFragmentType, Bundle extras) {
         if (mFragment != null) {
             mFragment.setArguments(extras);
             if (isTablet()) {
@@ -560,6 +573,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 if (newFragmentType == FragmentsAvailable.DIALER
                         || newFragmentType == FragmentsAvailable.ABOUT
                         || newFragmentType == FragmentsAvailable.SETTINGS
+                        || newFragmentType == FragmentsAvailable.SETTINGS_SUBLEVEL
                         || newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS
                         || newFragmentType == FragmentsAvailable.CREATE_CHAT
                         || newFragmentType == FragmentsAvailable.INFO_GROUP_CHAT) {
@@ -686,6 +700,10 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
     private void displayRecordings() {
         changeCurrentFragment(FragmentsAvailable.RECORDING_LIST, null);
+    }
+
+    public void displaySubSettings(Fragment fragment) {
+        changeSettingsFragment(fragment);
     }
 
     public void displayContactsForEdition(String sipAddress, String displayName) {
@@ -834,7 +852,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
             mChatSelected.setVisibility(View.VISIBLE);
         } else if (id == R.id.cancel) {
             hideTopBar();
-            displayDialer();
+            if (mCurrentFragment == FragmentsAvailable.SETTINGS_SUBLEVEL) {
+                popBackStack();
+            } else {
+                displayDialer();
+            }
         }
     }
 
@@ -867,8 +889,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
         mTopBarTitle.setText(title);
     }
 
-    @SuppressWarnings("incomplete-switch")
     public void selectMenu(FragmentsAvailable menuToSelect) {
+        selectMenu(menuToSelect, null);
+    }
+
+    @SuppressWarnings("incomplete-switch")
+    public void selectMenu(FragmentsAvailable menuToSelect, String customTitle) {
         mCurrentFragment = menuToSelect;
         resetSelection();
         boolean hideBottomBar =
@@ -899,7 +925,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
             case SETTINGS:
             case ACCOUNT_SETTINGS:
                 hideTabBar(hideBottomBar);
-                showTopBarWithTitle(getString(R.string.settings));
+            case SETTINGS_SUBLEVEL:
+                if (customTitle == null) {
+                    showTopBarWithTitle(getString(R.string.settings));
+                } else {
+                    showTopBarWithTitle(customTitle);
+                }
                 break;
             case ABOUT:
                 showTopBarWithTitle(getString(R.string.about));
@@ -1286,9 +1317,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ((SettingsFragment) mFragment).startEchoCancellerCalibration();
-                } else {
-                    ((SettingsFragment) mFragment).echoCalibrationFail();
+                    ((AudioSettingsFragment) mFragment).startEchoCancellerCalibration();
                 }
                 break;
             case PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE:
@@ -1299,7 +1328,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    ((SettingsFragment) mFragment).startEchoTester();
+                    ((AudioSettingsFragment) mFragment).startEchoTester();
                 break;
         }
     }
@@ -1389,6 +1418,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
             if (mCurrentFragment == FragmentsAvailable.DIALER
                     || mCurrentFragment == FragmentsAvailable.ABOUT
                     || mCurrentFragment == FragmentsAvailable.SETTINGS
+                    || mCurrentFragment == FragmentsAvailable.SETTINGS_SUBLEVEL
                     || mCurrentFragment == FragmentsAvailable.ACCOUNT_SETTINGS) {
                 ll.setVisibility(View.GONE);
             }
@@ -1437,11 +1467,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
+        /*if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
             if (mFragment instanceof SettingsFragment) {
                 ((SettingsFragment) mFragment).closePreferenceScreen();
             }
-        }
+        }*/
 
         Bundle extras = intent.getExtras();
         if (extras != null) {

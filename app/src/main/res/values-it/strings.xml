@@ -317,7 +317,7 @@
   <string name="default_account_flag">Account predefinito</string>
   <string name="pref_add_account">Aggiungi account</string>
   <string name="pref_in_app_store">In-app Store</string>
-  <string name="pref_tunnel">Tunnel</string>
+  <string name="pref_tunnel_title">Tunnel</string>
   <string name="pref_tunnel_host">Nome host</string>
   <string name="pref_tunnel_port">Porta</string>
   <string name="pref_tunnel_mode">Modalità</string>

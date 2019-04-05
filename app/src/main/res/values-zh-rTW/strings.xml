@@ -315,7 +315,7 @@
   <string name="default_account_flag">預設帳號</string>
   <string name="pref_add_account">加入帳號</string>
   <string name="pref_in_app_store">應用程式內的商店</string>
-  <string name="pref_tunnel">隧道(Tunnel)</string>
+  <string name="pref_tunnel_title">隧道(Tunnel)</string>
   <string name="pref_tunnel_host">主機名稱</string>
   <string name="pref_tunnel_port">連接埠</string>
   <string name="pref_tunnel_mode">模式</string>

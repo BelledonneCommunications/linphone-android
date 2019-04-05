@@ -183,7 +183,7 @@
   <string name="pref_sipaccounts">SIP Tilit</string>
   <string name="default_account_flag">Vakio tili</string>
   <string name="pref_add_account">Lisää tili</string>
-  <string name="pref_tunnel">Tunneli</string>
+  <string name="pref_tunnel_title">Tunneli</string>
   <string name="pref_tunnel_host">Hostname \'eli verkkotunnuksen etunimi\'</string>
   <string name="pref_tunnel_port">Portti</string>
   <string name="pref_tunnel_mode">Tila</string>

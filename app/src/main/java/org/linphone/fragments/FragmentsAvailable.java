@@ -31,6 +31,7 @@ public enum FragmentsAvailable {
     ABOUT,
     ACCOUNT_SETTINGS,
     SETTINGS,
+    SETTINGS_SUBLEVEL,
     CHAT_LIST,
     CHAT,
     CREATE_CHAT,

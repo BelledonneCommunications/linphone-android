@@ -36,7 +36,6 @@ import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,7 +65,6 @@ import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
@@ -78,7 +76,6 @@ import org.linphone.core.tools.OpenH264DownloadHelper;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.settings.LinphonePreferences.AccountBuilder;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.ThemableActivity;
 
@@ -515,8 +512,31 @@ public class AssistantActivity extends ThemableActivity
             String prefix,
             String domain,
             TransportType transport) {
-        saveCreatedAccount(
-                username, userid, password, displayname, null, prefix, domain, transport);
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core == null) return;
+
+        AuthInfo authInfo =
+                Factory.instance().createAuthInfo(username, userid, password, null, null, domain);
+        core.addAuthInfo(authInfo);
+
+        ProxyConfig proxyConfig = core.createProxyConfig();
+
+        String identity = "sip:" + username + "@" + domain;
+        Address identityAddr = Factory.instance().createAddress(identity);
+        if (identityAddr != null) {
+            identityAddr.setDisplayName(displayname);
+            proxyConfig.setIdentityAddress(identityAddr);
+        }
+        String proxy = "<sip:" + domain + ";transport=" + transport.name().toLowerCase() + ">";
+        proxyConfig.setServerAddr(proxy);
+
+        proxyConfig.setDialPrefix(prefix);
+
+        core.addProxyConfig(proxyConfig);
+        core.setDefaultProxyConfig(proxyConfig);
+
+        mAccountCreated = true;
+        success();
     }
 
     private void display(AssistantFragmentsEnum fragment) {
@@ -616,54 +636,6 @@ public class AssistantActivity extends ThemableActivity
 
     public void endDownloadCodec() {
         goToLinphoneActivity();
-    }
-
-    private void saveCreatedAccount(
-            String username,
-            String userid,
-            String password,
-            String displayname,
-            String ha1,
-            String prefix,
-            String domain,
-            TransportType transport) {
-
-        username = LinphoneUtils.getDisplayableUsernameFromAddress(username);
-        domain = LinphoneUtils.getDisplayableUsernameFromAddress(domain);
-
-        String identity = "sip:" + username + "@" + domain;
-        mAddress = Factory.instance().createAddress(identity);
-
-        AccountBuilder builder =
-                new AccountBuilder(LinphoneManager.getLc())
-                        .setUsername(username)
-                        .setDomain(domain)
-                        .setHa1(ha1)
-                        .setUserid(userid)
-                        .setDisplayName(displayname)
-                        .setPassword(password);
-
-        if (prefix != null) {
-            builder.setPrefix(prefix);
-        }
-
-        String forcedProxy = "";
-        if (!TextUtils.isEmpty(forcedProxy)) {
-            builder.setServerAddr(forcedProxy).setOutboundProxyEnabled(true).setAvpfRrInterval(5);
-        }
-        if (transport != null) {
-            builder.setTransport(transport);
-        }
-
-        try {
-            builder.saveNewAccount();
-            if (!mNewAccount) {
-                displayRegistrationInProgressDialog();
-            }
-            mAccountCreated = true;
-        } catch (CoreException e) {
-            Log.e(e);
-        }
     }
 
     private void displayRegistrationInProgressDialog() {

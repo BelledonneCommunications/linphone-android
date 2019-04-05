@@ -308,6 +308,25 @@
         <item name="android:textSize">28sp</item>
     </style>
 
+    <!-- Settings -->
+
+    <style name="settings_category_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/accentColor</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="settings_item_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primaryTextColor</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="settings_item_subtitle_font" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?attr/primarySubtextLightColor</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <!-- UI various fonts -->
 
     <style name="status_bar_font" parent="@android:style/TextAppearance.Small">

@@ -258,7 +258,7 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <string name="default_account_flag">Domyślne konto</string>
   <string name="pref_add_account">Dodaj konto</string>
   <string name="pref_in_app_store">W aplikacji Store</string>
-  <string name="pref_tunnel">Tunel</string>
+  <string name="pref_tunnel_title">Tunel</string>
   <string name="pref_tunnel_host">Nazwa hosta</string>
   <string name="pref_tunnel_port">Port</string>
   <string name="pref_tunnel_mode">Tryb</string>
