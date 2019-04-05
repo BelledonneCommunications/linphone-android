@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:linphone="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="vertical">
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_image_sharing_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_image_sharing_server_title"
+            linphone:subtitle="@string/pref_image_sharing_server_desc"
+            linphone:title="@string/pref_image_sharing_server_title" />
+
+        <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_auto_download_policy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_auto_download_policy_title"
+            linphone:list_items_names="@array/pref_auto_download_policy_entries_labels"
+            linphone:list_items_values="@array/pref_auto_download_policy_entries_values"/>
+
+        <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_auto_download_max_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:hint="@string/pref_auto_download_max_size_title"
+            linphone:title="@string/pref_auto_download_max_size_title" />
+
+        <org.linphone.settings.widget.BasicSetting
+            android:id="@+id/pref_android_app_notif_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_android_app_notif_settings_title"/>
+
+    </LinearLayout>
+
+</ScrollView>

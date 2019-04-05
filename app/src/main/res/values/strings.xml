@@ -377,7 +377,7 @@
     <string name="default_account_flag">Default account</string>
     <string name="pref_add_account">Add account</string>
     <string name="pref_in_app_store">In-app Store</string>
-    <string name="pref_tunnel">Tunnel</string>
+    <string name="pref_tunnel_title">Tunnel</string>
     <string name="pref_tunnel_host">Hostname</string>
     <string name="pref_tunnel_port">Port</string>
     <string name="pref_tunnel_mode">Mode</string>
@@ -505,6 +505,12 @@
     <string name="device_power_saver_dialog_message">It seems your device has a power saver. In order for the app to be able to receive calls and messages while in background using push notifications, the app must be whitelisted.</string>
     <string name="device_power_saver_dialog_button_go_to_settings">Settings</string>
     <string name="device_power_saver_dialog_button_later">Later</string>
+
+    <!-- Debug popup -->
+    <string name="debug_popup_title">Debug</string>
+    <string name="debug_popup_enable_logs">Enable logs</string>
+    <string name="debug_popup_disable_logs">Disable logs</string>
+    <string name="debug_popup_send_logs">Send logs</string>
 
     <!-- Content description -->
     <string name="content_description_back">Back</string>

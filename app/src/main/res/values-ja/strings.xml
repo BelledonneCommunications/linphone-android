@@ -267,7 +267,7 @@
   <string name="default_account_flag">デフォルトのアカウント</string>
   <string name="pref_add_account">アカウントを追加する</string>
   <string name="pref_in_app_store">アプリストアで</string>
-  <string name="pref_tunnel">トンネル</string>
+  <string name="pref_tunnel_title">トンネル</string>
   <string name="pref_tunnel_host">ホスト名</string>
   <string name="pref_tunnel_port">ポート</string>
   <string name="pref_tunnel_mode">モード</string>
