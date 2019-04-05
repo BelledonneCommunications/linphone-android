@@ -36,6 +36,7 @@ import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 import org.linphone.utils.DeviceUtils;
+import org.linphone.utils.PushNotificationUtils;
 
 public class NetworkSettingsFragment extends Fragment {
     protected View mRootView;
@@ -77,6 +78,7 @@ public class NetworkSettingsFragment extends Fragment {
         mIpv6 = mRootView.findViewById(R.id.pref_ipv6);
 
         mPush = mRootView.findViewById(R.id.pref_push_notification);
+        mPush.setVisibility(PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mRandomPorts = mRootView.findViewById(R.id.pref_transport_use_random_ports);
 

@@ -48,6 +48,7 @@ import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
+import org.linphone.utils.PushNotificationUtils;
 
 public class AccountSettingsFragment extends Fragment {
     protected View mRootView;
@@ -183,6 +184,7 @@ public class AccountSettingsFragment extends Fragment {
         mReplacePlusBy00 = mRootView.findViewById(R.id.pref_escape_plus);
 
         mPush = mRootView.findViewById(R.id.pref_push_notification);
+        mPush.setVisibility(PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mChangePassword = mRootView.findViewById(R.id.pref_change_password);
         mChangePassword.setVisibility(View.GONE); // TODO
