@@ -32,17 +32,14 @@ import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.core.AVPFMode;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
 import org.linphone.core.Config;
 import org.linphone.core.Core;
-import org.linphone.core.CoreException;
 import org.linphone.core.Factory;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
-import org.linphone.core.TransportType;
 import org.linphone.core.Transports;
 import org.linphone.core.Tunnel;
 import org.linphone.core.TunnelConfig;
@@ -151,185 +148,9 @@ public class LinphonePreferences {
         return getLc().findAuthInfo(null, addr.getUsername(), addr.getDomain());
     }
 
-    /**
-     * Removes a authInfo from the core and returns a copy of it. Useful to edit a authInfo (you
-     * should call saveAuthInfo after the modifications to save them).
-     */
-    private AuthInfo getClonedAuthInfo(int n) {
-        if (getLc() == null) return null;
-        AuthInfo authInfo = getAuthInfo(n);
-        if (authInfo == null) return null;
-
-        AuthInfo cloneAuthInfo = authInfo.clone();
-        getLc().removeAuthInfo(authInfo);
-        return cloneAuthInfo;
-    }
-
-    /** Saves a authInfo into the core. Useful to save the changes made to a cloned authInfo. */
-    private void saveAuthInfo(AuthInfo authInfo) {
-        if (getLc() == null) return;
-        getLc().addAuthInfo(authInfo);
-    }
-
-    public void setAccountTransport(int n, int transport) {
-        ProxyConfig proxyConfig = getProxyConfig(n);
-
-        if (proxyConfig != null) {
-            Address proxyAddr;
-            proxyAddr = Factory.instance().createAddress(proxyConfig.getServerAddr());
-            int port = 0;
-            if (transport == TransportType.Udp.toInt()) {
-                proxyAddr.setTransport(TransportType.Udp);
-
-            } else if (transport == TransportType.Tcp.toInt()) {
-                proxyAddr.setTransport(TransportType.Tcp);
-            } else if (transport == TransportType.Tls.toInt()) {
-                proxyAddr.setTransport(TransportType.Tls);
-                port = 5223;
-            }
-
-            /* 3G mobile firewall might block random TLS port, so we force use of 5223.
-             * However we must NOT use this port when changing to TCP/UDP because otherwise
-             * REGISTER (and everything actually) will fail...
-             * */
-            if ("sip.linphone.org".equals(proxyConfig.getDomain())) {
-                proxyAddr.setPort(port);
-            }
-
-            ProxyConfig prxCfg = getProxyConfig(n);
-            prxCfg.edit();
-            prxCfg.setServerAddr(proxyAddr.asStringUriOnly());
-            prxCfg.done();
-
-            if (isAccountOutboundProxySet(n)) {
-                setAccountOutboundProxyEnabled(n, true);
-            }
-        }
-    }
-
-    private TransportType getAccountTransport(int n) {
-        TransportType transport = null;
-        ProxyConfig proxyConfig = getProxyConfig(n);
-
-        if (proxyConfig != null) {
-            Address proxyAddr;
-            proxyAddr = Factory.instance().createAddress(proxyConfig.getServerAddr());
-            transport = proxyAddr.getTransport();
-        }
-
-        return transport;
-    }
-
-    public int getAccountTransportValue(int n) {
-        TransportType transport = getAccountTransport(n);
-        int key = TransportType.Udp.toInt();
-
-        if (transport != null && transport == TransportType.Tcp) key = TransportType.Tcp.toInt();
-        else if (transport != null && transport == TransportType.Tls)
-            key = TransportType.Tls.toInt();
-
-        return key;
-    }
-
-    public String getAccountTransportString(int n) {
-        TransportType transport = getAccountTransport(n);
-
-        if (transport != null && transport == TransportType.Tcp)
-            return getString(R.string.pref_transport_tcp);
-        else if (transport != null && transport == TransportType.Tls)
-            return getString(R.string.pref_transport_tls);
-
-        return getString(R.string.pref_transport_udp);
-    }
-
-    public void setAccountUsername(int n, String username) {
-        String identity = "sip:" + username + "@" + getAccountDomain(n);
-        AuthInfo old_info = getAuthInfo(n);
-        ProxyConfig prxCfg = getProxyConfig(n);
-        if (prxCfg == null) {
-            Log.e("Error, no proxy config at index " + n);
-            return;
-        }
-        prxCfg.edit();
-        prxCfg.setIdentityAddress(Factory.instance().createAddress(identity));
-        prxCfg.enableRegister(true);
-        prxCfg.done();
-
-        if (old_info != null) {
-            // We have to remove the previous auth info after otherwise we can't unregister the
-            // previous proxy config
-            AuthInfo new_info = old_info.clone();
-            getLc().removeAuthInfo(old_info);
-            new_info.setUsername(username);
-            saveAuthInfo(new_info);
-        }
-    }
-
     public String getAccountUsername(int n) {
         AuthInfo authInfo = getAuthInfo(n);
         return authInfo == null ? null : authInfo.getUsername();
-    }
-
-    public void setAccountDisplayName(int n, String displayName) {
-        try {
-            ProxyConfig prxCfg = getProxyConfig(n);
-            Address addr = prxCfg.getIdentityAddress();
-            addr.setDisplayName(displayName);
-            prxCfg.edit();
-            prxCfg.setIdentityAddress(addr);
-            prxCfg.done();
-        } catch (Exception e) {
-            Log.e(e);
-        }
-    }
-
-    public String getAccountDisplayName(int n) {
-        if (getProxyConfig(n) == null || getProxyConfig(n).getIdentityAddress() == null)
-            return null;
-        return getProxyConfig(n).getIdentityAddress().getDisplayName();
-    }
-
-    public void setAccountUserId(int n, String userId) {
-        AuthInfo info = getClonedAuthInfo(n);
-        if (info != null) {
-            info.setUserid(userId);
-            saveAuthInfo(info);
-        }
-    }
-
-    public String getAccountUserId(int n) {
-        AuthInfo authInfo = getAuthInfo(n);
-        return authInfo == null ? null : authInfo.getUserid();
-    }
-
-    private String getAccountRealm(int n) {
-        AuthInfo authInfo = getAuthInfo(n);
-        return authInfo == null ? null : authInfo.getRealm();
-    }
-
-    public void setAccountPassword(int n, String password) {
-        if (getLc() == null) return;
-        String user = getAccountUsername(n);
-        String domain = getAccountDomain(n);
-        String userid = null;
-        String realm = null;
-        if (user != null && domain != null) {
-            if (LinphoneManager.getLc().getAuthInfoList().length > n
-                    && LinphoneManager.getLc().getAuthInfoList()[n] != null) {
-                userid = getAccountUserId(n);
-                realm = getAccountRealm(n);
-                LinphoneManager.getLc()
-                        .removeAuthInfo(LinphoneManager.getLc().getAuthInfoList()[n]);
-            }
-            AuthInfo authInfo =
-                    Factory.instance().createAuthInfo(user, userid, password, null, realm, domain);
-            LinphoneManager.getLc().addAuthInfo(authInfo);
-        }
-    }
-
-    public String getAccountPassword(int n) {
-        AuthInfo authInfo = getAuthInfo(n);
-        return authInfo == null ? null : authInfo.getPassword();
     }
 
     public String getAccountHa1(int n) {
@@ -337,122 +158,9 @@ public class LinphonePreferences {
         return authInfo == null ? null : authInfo.getHa1();
     }
 
-    public void setAccountIce(int n, boolean ice) {
-        try {
-            ProxyConfig prxCfg = getProxyConfig(n);
-            prxCfg.edit();
-            prxCfg.getNatPolicy().enableIce(ice);
-            prxCfg.getNatPolicy().enableStun(ice);
-            prxCfg.done();
-        } catch (Exception e) {
-            Log.e(e);
-        }
-    }
-
-    public boolean getAccountIce(int n) {
-        if (getProxyConfig(n) == null || getProxyConfig(n).getNatPolicy() == null) return false;
-        return getProxyConfig(n).getNatPolicy().iceEnabled();
-    }
-
-    public void setAccountStunServer(int n, String stun) {
-        try {
-            ProxyConfig prxCfg = getProxyConfig(n);
-            prxCfg.edit();
-            NatPolicy np = prxCfg.getNatPolicy();
-            np.setStunServer(stun);
-            prxCfg.done();
-        } catch (Exception e) {
-            Log.e(e);
-        }
-    }
-
-    public void setAccountDomain(int n, String domain) {
-        String identity = "sip:" + getAccountUsername(n) + "@" + domain;
-        AuthInfo old_info = getAuthInfo(n);
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        prxCfg.setIdentityAddress(Factory.instance().createAddress(identity));
-        prxCfg.enableRegister(true);
-        prxCfg.done();
-
-        if (old_info != null) {
-            // We have to remove the previous auth info after otherwise we can't unregister the
-            // previous proxy config
-            AuthInfo new_info = old_info.clone();
-            getLc().removeAuthInfo(old_info);
-            new_info.setDomain(domain);
-            saveAuthInfo(new_info);
-        }
-    }
-
     public String getAccountDomain(int n) {
         ProxyConfig proxyConf = getProxyConfig(n);
         return (proxyConf != null) ? proxyConf.getDomain() : "";
-    }
-
-    public void setAccountProxy(int n, String proxy) {
-        if (proxy == null || proxy.length() <= 0) {
-            proxy = getAccountDomain(n);
-        }
-
-        if (!proxy.contains("sip:")) {
-            proxy = "sip:" + proxy;
-        }
-
-        Address proxyAddr = Factory.instance().createAddress(proxy);
-        if (proxyAddr == null) return;
-
-        if (!proxy.contains("transport=")) {
-            proxyAddr.setTransport(getAccountTransport(n));
-        }
-
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        prxCfg.setServerAddr(proxyAddr.asStringUriOnly());
-        prxCfg.done();
-
-        if (isAccountOutboundProxySet(n)) {
-            setAccountOutboundProxyEnabled(n, true);
-        }
-    }
-
-    public String getAccountProxy(int n) {
-        return getProxyConfig(n).getServerAddr();
-    }
-
-    public void setAccountOutboundProxyEnabled(int n, boolean enabled) {
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        if (enabled) {
-            String route = prxCfg.getServerAddr();
-            prxCfg.setRoute(route);
-        } else {
-            prxCfg.setRoute(null);
-        }
-        prxCfg.done();
-    }
-
-    public boolean isAccountOutboundProxySet(int n) {
-        return getProxyConfig(n).getRoute() != null;
-    }
-
-    public String getExpires(int n) {
-        return String.valueOf(getProxyConfig(n).getExpires());
-    }
-
-    public void setExpires(int n, String expire) {
-        try {
-            ProxyConfig prxCfg = getProxyConfig(n);
-            prxCfg.edit();
-            prxCfg.setExpires(Integer.parseInt(expire));
-            prxCfg.done();
-        } catch (NumberFormatException nfe) {
-            Log.e(nfe);
-        }
-    }
-
-    public String getPrefix(int n) {
-        return getProxyConfig(n).getDialPrefix();
     }
 
     public void setPrefix(int n, String prefix) {
@@ -460,57 +168,6 @@ public class LinphonePreferences {
         prxCfg.edit();
         prxCfg.setDialPrefix(prefix);
         prxCfg.done();
-    }
-
-    public boolean avpfEnabled(int n) {
-        return getProxyConfig(n).avpfEnabled();
-    }
-
-    public void setAvpfMode(int n, boolean enable) {
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        prxCfg.setAvpfMode(enable ? AVPFMode.Enabled : AVPFMode.Disabled);
-        prxCfg.done();
-    }
-
-    public String getAvpfRrInterval(int n) {
-        return String.valueOf(getProxyConfig(n).getAvpfRrInterval());
-    }
-
-    public void setAvpfRrInterval(int n, String interval) {
-        try {
-            ProxyConfig prxCfg = getProxyConfig(n);
-            prxCfg.edit();
-            prxCfg.setAvpfRrInterval(Integer.parseInt(interval));
-            prxCfg.done();
-        } catch (NumberFormatException nfe) {
-            Log.e(nfe);
-        }
-    }
-
-    public boolean getReplacePlusByZeroZero(int n) {
-        return getProxyConfig(n).getDialEscapePlus();
-    }
-
-    public void setReplacePlusByZeroZero(int n, boolean replace) {
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        prxCfg.setDialEscapePlus(replace);
-        prxCfg.done();
-    }
-
-    public void enablePushNotifForProxy(int n, boolean enable) {
-        ProxyConfig prxCfg = getProxyConfig(n);
-        prxCfg.edit();
-        prxCfg.setPushNotificationAllowed(enable);
-        prxCfg.done();
-
-        setPushNotificationEnabled(isPushNotificationEnabled());
-    }
-
-    public boolean isPushNotifEnabledForProxy(int n) {
-        ProxyConfig prxCfg = getProxyConfig(n);
-        return prxCfg.isPushNotificationAllowed();
     }
 
     public boolean isFriendlistsubscriptionEnabled() {
@@ -524,13 +181,6 @@ public class LinphonePreferences {
 
     public void enabledFriendlistSubscription(boolean enabled) {
         getLc().enableFriendListSubscription(enabled);
-    }
-
-    public void setDefaultAccount(int accountIndex) {
-        if (getLc() == null) return;
-        ProxyConfig[] prxCfgs = getLc().getProxyConfigList();
-        if (accountIndex >= 0 && accountIndex < prxCfgs.length)
-            getLc().setDefaultProxyConfig(prxCfgs[accountIndex]);
     }
 
     public int getDefaultAccountIndex() {
@@ -598,24 +248,6 @@ public class LinphonePreferences {
         if (getLc().getDefaultProxyConfig() == null) {
             getLc().setDefaultProxyConfig(getProxyConfig(0));
         }
-    }
-
-    public void deleteAccount(int n) {
-        if (getLc() == null) return;
-        ProxyConfig proxyCfg = getProxyConfig(n);
-        if (proxyCfg != null) getLc().removeProxyConfig(proxyCfg);
-        if (getLc().getProxyConfigList().length != 0) {
-            resetDefaultProxyConfig();
-        } else {
-            getLc().setDefaultProxyConfig(null);
-        }
-
-        AuthInfo authInfo = getAuthInfo(n);
-        if (authInfo != null) {
-            getLc().removeAuthInfo(authInfo);
-        }
-
-        getLc().refreshRegisters();
     }
     // End of accounts settings
 
@@ -860,13 +492,6 @@ public class LinphonePreferences {
         NatPolicy nat = getOrCreateNatPolicy();
         nat.setStunServer(stun);
 
-        getLc().setNatPolicy(nat);
-    }
-
-    public void setUpnpEnabled(boolean enabled) {
-        if (getLc() == null) return;
-        NatPolicy nat = getOrCreateNatPolicy();
-        nat.enableUpnp(enabled);
         getLc().setNatPolicy(nat);
     }
 
@@ -1425,189 +1050,6 @@ public class LinphonePreferences {
         getConfig().setBool("app", "dark_mode", enable);
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().recreate();
-        }
-    }
-
-    public static class AccountBuilder {
-        private final Core lc;
-        private String tempUsername;
-        private String tempDisplayName;
-        private String tempUserId;
-        private String tempPassword;
-        private String tempHa1;
-        private String tempDomain;
-        private String tempProxy;
-        private String tempPrefix;
-        private boolean tempOutboundProxy;
-        private String tempExpire;
-        private TransportType tempTransport;
-        private int tempAvpfRRInterval = 0;
-        private final boolean tempQualityReportingEnabled = false;
-        private final int tempQualityReportingInterval = 0;
-        private boolean tempEnabled = true;
-        private final boolean tempNoDefault = false;
-
-        public AccountBuilder(Core lc) {
-            this.lc = lc;
-        }
-
-        public AccountBuilder setTransport(TransportType transport) {
-            tempTransport = transport;
-            return this;
-        }
-
-        public AccountBuilder setUsername(String username) {
-            tempUsername = username;
-            return this;
-        }
-
-        public AccountBuilder setDisplayName(String displayName) {
-            tempDisplayName = displayName;
-            return this;
-        }
-
-        public AccountBuilder setPassword(String password) {
-            tempPassword = password;
-            return this;
-        }
-
-        public AccountBuilder setHa1(String ha1) {
-            tempHa1 = ha1;
-            return this;
-        }
-
-        public AccountBuilder setDomain(String domain) {
-            tempDomain = domain;
-            return this;
-        }
-
-        public AccountBuilder setServerAddr(String proxy) {
-            tempProxy = proxy;
-            return this;
-        }
-
-        public AccountBuilder setOutboundProxyEnabled(boolean enabled) {
-            tempOutboundProxy = enabled;
-            return this;
-        }
-
-        public AccountBuilder setExpires(String expire) {
-            tempExpire = expire;
-            return this;
-        }
-
-        public AccountBuilder setUserid(String userId) {
-            tempUserId = userId;
-            return this;
-        }
-
-        public AccountBuilder setAvpfRrInterval(int interval) {
-            tempAvpfRRInterval = interval;
-            return this;
-        }
-
-        public AccountBuilder setPrefix(String prefix) {
-            tempPrefix = prefix;
-            return this;
-        }
-
-        public AccountBuilder setEnabled(boolean enable) {
-            tempEnabled = enable;
-            return this;
-        }
-
-        /**
-         * Creates a new account
-         *
-         * @throws CoreException
-         */
-        public void saveNewAccount() throws CoreException {
-            if (tempUsername == null
-                    || tempUsername.length() < 1
-                    || tempDomain == null
-                    || tempDomain.length() < 1) {
-                Log.w("Skipping account save: username or domain not provided");
-                return;
-            }
-
-            String identity = "sip:" + tempUsername + "@" + tempDomain;
-            String proxy = "sip:";
-            if (tempProxy == null) {
-                proxy += tempDomain;
-            } else {
-                if (!tempProxy.startsWith("sip:")
-                        && !tempProxy.startsWith("<sip:")
-                        && !tempProxy.startsWith("sips:")
-                        && !tempProxy.startsWith("<sips:")) {
-                    proxy += tempProxy;
-                } else {
-                    proxy = tempProxy;
-                }
-            }
-
-            Address proxyAddr = Factory.instance().createAddress(proxy);
-            Address identityAddr = Factory.instance().createAddress(identity);
-            if (proxyAddr == null || identityAddr == null) {
-                throw new CoreException("Proxy or Identity address is null !");
-            }
-
-            if (tempDisplayName != null) {
-                identityAddr.setDisplayName(tempDisplayName);
-            }
-
-            if (tempTransport != null) {
-                proxyAddr.setTransport(tempTransport);
-            }
-
-            String route = tempOutboundProxy ? proxyAddr.asStringUriOnly() : null;
-
-            ProxyConfig prxCfg = lc.createProxyConfig();
-            prxCfg.setIdentityAddress(identityAddr);
-            prxCfg.setServerAddr(proxyAddr.asStringUriOnly());
-            prxCfg.setRoute(route);
-            prxCfg.enableRegister(tempEnabled);
-
-            if (tempExpire != null) {
-                prxCfg.setExpires(Integer.parseInt(tempExpire));
-            }
-
-            prxCfg.setAvpfMode(AVPFMode.Enabled);
-            prxCfg.setAvpfRrInterval(tempAvpfRRInterval);
-            prxCfg.enableQualityReporting(tempQualityReportingEnabled);
-            prxCfg.setQualityReportingInterval(tempQualityReportingInterval);
-
-            String regId = LinphonePreferences.instance().getPushNotificationRegistrationID();
-            String appId = LinphonePreferences.instance().getString(R.string.gcm_defaultSenderId);
-            if (regId != null && LinphonePreferences.instance().isPushNotificationEnabled()) {
-                String contactInfos =
-                        "app-id="
-                                + appId
-                                + ";pn-type="
-                                + LinphonePreferences.instance().getString(R.string.push_type)
-                                + ";pn-tok="
-                                + regId
-                                + ";pn-silent=1";
-                prxCfg.setContactUriParameters(contactInfos);
-            }
-
-            if (tempPrefix != null) {
-                prxCfg.setDialPrefix(tempPrefix);
-            }
-
-            AuthInfo authInfo =
-                    Factory.instance()
-                            .createAuthInfo(
-                                    tempUsername,
-                                    tempUserId,
-                                    tempPassword,
-                                    tempHa1,
-                                    null,
-                                    tempDomain);
-
-            lc.addProxyConfig(prxCfg);
-            lc.addAuthInfo(authInfo);
-
-            if (!tempNoDefault) lc.setDefaultProxyConfig(prxCfg);
         }
     }
 }

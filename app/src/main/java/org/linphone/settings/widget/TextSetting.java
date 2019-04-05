@@ -110,4 +110,8 @@ public class TextSetting extends BasicSetting implements TextWatcher {
     public void setValue(double value) {
         setValue(String.valueOf(value));
     }
+
+    public String getValue() {
+        return mInput.getText().toString();
+    }
 }

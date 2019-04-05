@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -29,8 +30,18 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.assistant.AssistantActivity;
+import org.linphone.core.AVPFMode;
+import org.linphone.core.Address;
+import org.linphone.core.AuthInfo;
+import org.linphone.core.Core;
+import org.linphone.core.Factory;
+import org.linphone.core.NatPolicy;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.TransportType;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
@@ -41,6 +52,10 @@ import org.linphone.settings.widget.TextSetting;
 public class AccountSettingsFragment extends Fragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
+    private int mAccountIndex;
+    private ProxyConfig mProxyConfig;
+    private AuthInfo mAuthInfo;
+    private boolean mIsNewlyCreatedAccount;
 
     private TextSetting mUsername,
             mUserId,
@@ -53,7 +68,7 @@ public class AccountSettingsFragment extends Fragment {
             mPrefix,
             mAvpfInterval;
     private SwitchSetting mDisable,
-            mUSeAsDefault,
+            mUseAsDefault,
             mOutboundProxy,
             mIce,
             mAvpf,
@@ -70,7 +85,31 @@ public class AccountSettingsFragment extends Fragment {
 
         loadSettings();
 
+        mIsNewlyCreatedAccount = true;
+        mAccountIndex = getArguments().getInt("Account", -1);
+        if (mAccountIndex == -1 && savedInstanceState != null) {
+            mAccountIndex = savedInstanceState.getInt("Account", -1);
+        }
+
+        mProxyConfig = null;
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (mAccountIndex >= 0 && core != null) {
+            ProxyConfig[] proxyConfigs = core.getProxyConfigList();
+            if (proxyConfigs.length > mAccountIndex) {
+                mProxyConfig = proxyConfigs[mAccountIndex];
+                mIsNewlyCreatedAccount = false;
+            } else {
+                Log.e("[Account Settings] Proxy config not found !");
+            }
+        }
+
         return mRootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("Account", mAccountIndex);
     }
 
     @Override
@@ -86,6 +125,21 @@ public class AccountSettingsFragment extends Fragment {
         }
 
         updateValues();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mIsNewlyCreatedAccount) {
+            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            if (core != null && mProxyConfig != null && mAuthInfo != null) {
+                core.addAuthInfo(mAuthInfo);
+                core.addProxyConfig(mProxyConfig);
+                if (mUseAsDefault.isChecked()) {
+                    core.setDefaultProxyConfig(mProxyConfig);
+                }
+            }
+        }
     }
 
     protected void loadSettings() {
@@ -112,14 +166,13 @@ public class AccountSettingsFragment extends Fragment {
         mExpire.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         mPrefix = mRootView.findViewById(R.id.pref_prefix);
-        mPrefix.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         mAvpfInterval = mRootView.findViewById(R.id.pref_avpf_rr_interval);
         mAvpfInterval.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         mDisable = mRootView.findViewById(R.id.pref_disable_account);
 
-        mUSeAsDefault = mRootView.findViewById(R.id.pref_default_account);
+        mUseAsDefault = mRootView.findViewById(R.id.pref_default_account);
 
         mOutboundProxy = mRootView.findViewById(R.id.pref_enable_outbound_proxy);
 
@@ -132,6 +185,7 @@ public class AccountSettingsFragment extends Fragment {
         mPush = mRootView.findViewById(R.id.pref_push_notification);
 
         mChangePassword = mRootView.findViewById(R.id.pref_change_password);
+        mChangePassword.setVisibility(View.GONE); // TODO
 
         mDeleteAccount = mRootView.findViewById(R.id.pref_delete_account);
 
@@ -145,167 +199,440 @@ public class AccountSettingsFragment extends Fragment {
         mUsername.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mAuthInfo != null) {
+                            mAuthInfo.setUsername(newValue);
+                        } else {
+                            Log.e("[Account Settings] No auth info !");
+                        }
+
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            Address identity = mProxyConfig.getIdentityAddress();
+                            if (identity != null) {
+                                identity.setUsername(newValue);
+                            }
+                            mProxyConfig.setIdentityAddress(identity);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mUserId.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mAuthInfo != null) {
+                            mAuthInfo.setUserid(newValue);
+                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            if (core != null) {
+                                core.refreshRegisters();
+                            }
+                        } else {
+                            Log.e("[Account Settings] No auth info !");
+                        }
+                    }
                 });
 
         mPassword.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mAuthInfo != null) {
+                            mAuthInfo.setPassword(newValue);
+                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            if (core != null) {
+                                core.refreshRegisters();
+                            }
+                        } else {
+                            Log.e("[Account Settings] No auth info !");
+                        }
+                    }
                 });
 
         mDomain.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mAuthInfo != null) {
+                            mAuthInfo.setDomain(newValue);
+                        } else {
+                            Log.e("[Account Settings] No auth info !");
+                        }
+
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            Address identity = mProxyConfig.getIdentityAddress();
+                            if (identity != null) {
+                                identity.setDomain(newValue);
+                            }
+                            mProxyConfig.setIdentityAddress(identity);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mDisplayName.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            Address identity = mProxyConfig.getIdentityAddress();
+                            if (identity != null) {
+                                identity.setDisplayName(newValue);
+                            }
+                            mProxyConfig.setIdentityAddress(identity);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mProxy.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            Address proxy = Factory.instance().createAddress(newValue);
+                            if (proxy != null) {
+                                mProxyConfig.setServerAddr(proxy.asString());
+                                if (mOutboundProxy.isChecked()) {
+                                    mProxyConfig.setRoute(proxy.asString());
+                                }
+                                mTransport.setValue(proxy.getTransport().toInt());
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mStun.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            NatPolicy natPolicy = mProxyConfig.getNatPolicy();
+                            if (natPolicy != null) {
+                                natPolicy.setStunServer(newValue);
+                            }
+                            if (newValue == null || newValue.isEmpty()) {
+                                mIce.setChecked(false);
+                            }
+                            mIce.setEnabled(newValue != null && !newValue.isEmpty());
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mExpire.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            try {
+                                mProxyConfig.setExpires(Integer.parseInt(newValue));
+                            } catch (NumberFormatException nfe) {
+                                Log.e(nfe);
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mPrefix.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            mProxyConfig.setDialPrefix(newValue);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mAvpfInterval.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onTextValueChanged(String newValue) {}
+                    public void onTextValueChanged(String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            try {
+                                mProxyConfig.setAvpfRrInterval(Integer.parseInt(newValue));
+                            } catch (NumberFormatException nfe) {
+                                Log.e(nfe);
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mDisable.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            mProxyConfig.enableRegister(!newValue);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
-        mUSeAsDefault.setListener(
+        mUseAsDefault.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            if (core != null) {
+                                core.setDefaultProxyConfig(mProxyConfig);
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mOutboundProxy.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            if (newValue) {
+                                mProxyConfig.setRoute(mProxy.getValue());
+                            } else {
+                                mProxyConfig.setRoute(null);
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mIce.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            NatPolicy natPolicy = mProxyConfig.getNatPolicy();
+                            if (natPolicy != null) {
+                                natPolicy.enableIce(newValue);
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mAvpf.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            mProxyConfig.setAvpfMode(
+                                    newValue ? AVPFMode.Enabled : AVPFMode.Disabled);
+                            mAvpfInterval.setEnabled(mProxyConfig.avpfEnabled());
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mReplacePlusBy00.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            mProxyConfig.setDialEscapePlus(newValue);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mPush.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onBoolValueChanged(boolean newValue) {}
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            mProxyConfig.setPushNotificationAllowed(newValue);
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
 
         mChangePassword.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onClicked() {}
+                    public void onClicked() {
+                        // TODO
+                    }
                 });
 
         mDeleteAccount.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onClicked() {}
+                    public void onClicked() {
+                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        if (core != null) {
+                            if (mProxyConfig != null) {
+                                core.removeProxyConfig(mProxyConfig);
+                            }
+                            if (mAuthInfo != null) {
+                                core.removeAuthInfo(mAuthInfo);
+                            }
+                        }
+                        LinphoneActivity.instance().displaySettings();
+                        LinphoneActivity.instance().refreshAccounts();
+                    }
                 });
 
         mLinkAccount.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onClicked() {}
+                    public void onClicked() {
+                        Intent assistant = new Intent();
+                        assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
+                        assistant.putExtra("LinkPhoneNumber", true);
+                        assistant.putExtra("FromPref", true);
+                        assistant.putExtra("AccountNumber", mAccountIndex);
+                        startActivity(assistant);
+                    }
                 });
 
         mTransport.setListener(
                 new SettingListenerBase() {
                     @Override
-                    public void onListValueChanged(
-                            int position, String newLabel, String newValue) {}
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        if (mProxyConfig != null) {
+                            mProxyConfig.edit();
+                            String server = mProxyConfig.getServerAddr();
+                            Address serverAddr = Factory.instance().createAddress(server);
+                            if (serverAddr != null) {
+                                try {
+                                    serverAddr.setTransport(
+                                            TransportType.fromInt(Integer.parseInt(newValue)));
+                                    server = serverAddr.asString();
+                                    mProxyConfig.setServerAddr(server);
+                                    if (mOutboundProxy.isChecked()) {
+                                        mProxyConfig.setRoute(server);
+                                    }
+                                    mProxy.setValue(server);
+                                } catch (NumberFormatException nfe) {
+                                    Log.e(nfe);
+                                }
+                            }
+                            mProxyConfig.done();
+                        } else {
+                            Log.e("[Account Settings] No proxy config !");
+                        }
+                    }
                 });
     }
 
     protected void updateValues() {
-        mUsername.setValue("");
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core == null) return;
 
-        mUserId.setValue("");
+        // Create a proxy config if there is none
+        if (mProxyConfig == null) {
+            // Ensure the default configuration is loaded first
+            String defaultConfig = LinphoneManager.getInstance().getDefaultDynamicConfigFile();
+            core.loadConfigFromXml(defaultConfig);
+            mProxyConfig = core.createProxyConfig();
+            mAuthInfo = Factory.instance().createAuthInfo(null, null, null, null, null, null);
+            mIsNewlyCreatedAccount = true;
+        }
 
-        mPassword.setValue("");
+        if (mProxyConfig != null) {
+            Address identityAddress = mProxyConfig.getIdentityAddress();
+            mAuthInfo = mProxyConfig.findAuthInfo();
+            NatPolicy natPolicy = mProxyConfig.getNatPolicy();
+            if (natPolicy == null) {
+                natPolicy = core.createNatPolicy();
+                core.setNatPolicy(natPolicy);
+            }
 
-        mDomain.setValue("");
+            if (mAuthInfo != null) {
+                mUserId.setValue(mAuthInfo.getUserid());
+                // If password is hashed we can't display it
+                mPassword.setValue(mAuthInfo.getPassword());
+            }
 
-        mDisplayName.setValue("");
+            mUsername.setValue(identityAddress.getUsername());
 
-        mProxy.setValue("");
+            mDomain.setValue(identityAddress.getDomain());
 
-        mStun.setValue("");
+            mDisplayName.setValue(identityAddress.getDisplayName());
 
-        mExpire.setValue(0);
+            mProxy.setValue(mProxyConfig.getServerAddr());
 
-        mPrefix.setValue(0);
+            mStun.setValue(natPolicy.getStunServer());
 
-        mAvpfInterval.setValue(0);
+            mExpire.setValue(mProxyConfig.getExpires());
 
-        mDisable.setChecked(false);
+            mPrefix.setValue(mProxyConfig.getDialPrefix());
 
-        mUSeAsDefault.setChecked(false);
+            mAvpfInterval.setValue(mProxyConfig.getAvpfRrInterval());
+            mAvpfInterval.setEnabled(mProxyConfig.avpfEnabled());
 
-        mOutboundProxy.setChecked(false);
+            mDisable.setChecked(!mProxyConfig.registerEnabled());
 
-        mIce.setChecked(false);
+            mUseAsDefault.setChecked(
+                    core != null && mProxyConfig.equals(core.getDefaultProxyConfig()));
 
-        mAvpf.setChecked(false);
+            mOutboundProxy.setChecked(mProxyConfig.getRoute() != null);
 
-        mReplacePlusBy00.setChecked(false);
+            mIce.setChecked(natPolicy.iceEnabled());
+            mIce.setEnabled(
+                    natPolicy.getStunServer() != null && !natPolicy.getStunServer().isEmpty());
 
-        mPush.setChecked(false);
+            mAvpf.setChecked(mProxyConfig.avpfEnabled());
 
-        mTransport.setValue(0);
+            mReplacePlusBy00.setChecked(mProxyConfig.getDialEscapePlus());
+
+            mPush.setChecked(mProxyConfig.isPushNotificationAllowed());
+
+            Address proxy = Factory.instance().createAddress(mProxyConfig.getServerAddr());
+            if (proxy != null) {
+                mTransport.setValue(proxy.getTransport().toInt());
+            }
+        }
 
         setListeners();
     }
@@ -320,7 +647,7 @@ public class AccountSettingsFragment extends Fragment {
         values.add(String.valueOf(TransportType.Tcp.toInt()));
 
         if (!getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
-            entries.add(getString(R.string.pref_transport_tcp));
+            entries.add(getString(R.string.pref_transport_tls));
             values.add(String.valueOf(TransportType.Tls.toInt()));
         }
 
