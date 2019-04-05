@@ -184,7 +184,8 @@ public class AccountSettingsFragment extends Fragment {
         mReplacePlusBy00 = mRootView.findViewById(R.id.pref_escape_plus);
 
         mPush = mRootView.findViewById(R.id.pref_push_notification);
-        mPush.setVisibility(PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
+        mPush.setVisibility(
+                PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mChangePassword = mRootView.findViewById(R.id.pref_change_password);
         mChangePassword.setVisibility(View.GONE); // TODO
@@ -407,12 +408,12 @@ public class AccountSettingsFragment extends Fragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         if (mProxyConfig != null) {
-                            mProxyConfig.edit();
                             Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-                            if (core != null) {
+                            if (core != null && newValue) {
                                 core.setDefaultProxyConfig(mProxyConfig);
+                                mUseAsDefault.setEnabled(false);
                             }
-                            mProxyConfig.done();
+                            LinphoneActivity.instance().refreshAccounts();
                         } else {
                             Log.e("[Account Settings] No proxy config !");
                         }
@@ -617,6 +618,7 @@ public class AccountSettingsFragment extends Fragment {
 
             mUseAsDefault.setChecked(
                     core != null && mProxyConfig.equals(core.getDefaultProxyConfig()));
+            mUseAsDefault.setEnabled(!mUseAsDefault.isChecked());
 
             mOutboundProxy.setChecked(mProxyConfig.getRoute() != null);
 

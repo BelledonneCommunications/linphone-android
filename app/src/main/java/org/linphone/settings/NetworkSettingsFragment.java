@@ -78,7 +78,8 @@ public class NetworkSettingsFragment extends Fragment {
         mIpv6 = mRootView.findViewById(R.id.pref_ipv6);
 
         mPush = mRootView.findViewById(R.id.pref_push_notification);
-        mPush.setVisibility(PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
+        mPush.setVisibility(
+                PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mRandomPorts = mRootView.findViewById(R.id.pref_transport_use_random_ports);
 
