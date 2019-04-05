@@ -110,7 +110,7 @@ import org.linphone.history.HistoryDetailFragment;
 import org.linphone.history.HistoryFragment;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.recording.RecordingsFragment;
-import org.linphone.settings.AccountPreferencesFragment;
+import org.linphone.settings.AccountSettingsFragment;
 import org.linphone.settings.AudioSettingsFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsFragment;
@@ -432,7 +432,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 mFragment = new AudioSettingsFragment();
                 break;
             case ACCOUNT_SETTINGS:
-                mFragment = new AccountPreferencesFragment();
+                mFragment = new AccountSettingsFragment();
                 break;
             case ABOUT:
                 mFragment = new AboutFragment();

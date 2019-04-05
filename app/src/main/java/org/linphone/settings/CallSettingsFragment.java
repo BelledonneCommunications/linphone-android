@@ -50,7 +50,7 @@ public class CallSettingsFragment extends Fragment {
             mDtmfRfc2833,
             mAutoAnswer;
     private ListSetting mMediaEncryption;
-    private TextSetting mAutoAnswerTime, mIncomingCallTimout, mVoiceMailUri;
+    private TextSetting mAutoAnswerTime, mIncomingCallTimeout, mVoiceMailUri;
 
     @Nullable
     @Override
@@ -95,7 +95,7 @@ public class CallSettingsFragment extends Fragment {
         mAutoAnswerTime = mRootView.findViewById(R.id.pref_auto_answer_time);
         mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        mIncomingCallTimout = mRootView.findViewById(R.id.pref_incoming_call_timeout);
+        mIncomingCallTimeout = mRootView.findViewById(R.id.pref_incoming_call_timeout);
         mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         mVoiceMailUri = mRootView.findViewById(R.id.pref_voice_mail);
@@ -171,7 +171,7 @@ public class CallSettingsFragment extends Fragment {
                     }
                 });
 
-        mIncomingCallTimout.setListener(
+        mIncomingCallTimeout.setListener(
                 new SettingListenerBase() {
                     @Override
                     public void onTextValueChanged(String newValue) {
@@ -208,7 +208,7 @@ public class CallSettingsFragment extends Fragment {
         mAutoAnswerTime.setValue(mPrefs.getAutoAnswerTime());
         mAutoAnswerTime.setEnabled(mPrefs.isAutoAnswerEnabled());
 
-        mIncomingCallTimout.setValue(mPrefs.getIncTimeout());
+        mIncomingCallTimeout.setValue(mPrefs.getIncTimeout());
 
         mVoiceMailUri.setValue(mPrefs.getVoiceMailUri());
 
@@ -233,15 +233,15 @@ public class CallSettingsFragment extends Fragment {
                 mMediaEncryption.setEnabled(false);
             } else {
                 if (hasSrtp) {
-                    entries.add(getString(R.string.media_encryption_srtp));
+                    entries.add("SRTP");
                     values.add(String.valueOf(MediaEncryption.SRTP.toInt()));
                 }
                 if (hasZrtp) {
-                    entries.add(getString(R.string.media_encryption_zrtp));
+                    entries.add("ZRTP");
                     values.add(String.valueOf(MediaEncryption.ZRTP.toInt()));
                 }
                 if (hasDtls) {
-                    entries.add(getString(R.string.media_encryption_dtls));
+                    entries.add("DTLS");
                     values.add(String.valueOf(MediaEncryption.DTLS.toInt()));
                 }
             }

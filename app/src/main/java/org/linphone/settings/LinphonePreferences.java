@@ -171,19 +171,19 @@ public class LinphonePreferences {
         getLc().addAuthInfo(authInfo);
     }
 
-    public void setAccountTransport(int n, String transport) {
+    public void setAccountTransport(int n, int transport) {
         ProxyConfig proxyConfig = getProxyConfig(n);
 
-        if (proxyConfig != null && transport != null) {
+        if (proxyConfig != null) {
             Address proxyAddr;
             proxyAddr = Factory.instance().createAddress(proxyConfig.getServerAddr());
             int port = 0;
-            if (transport.equals(getString(R.string.pref_transport_udp_key))) {
+            if (transport == TransportType.Udp.toInt()) {
                 proxyAddr.setTransport(TransportType.Udp);
 
-            } else if (transport.equals(getString(R.string.pref_transport_tcp_key))) {
+            } else if (transport == TransportType.Tcp.toInt()) {
                 proxyAddr.setTransport(TransportType.Tcp);
-            } else if (transport.equals(getString(R.string.pref_transport_tls_key))) {
+            } else if (transport == TransportType.Tls.toInt()) {
                 proxyAddr.setTransport(TransportType.Tls);
                 port = 5223;
             }
@@ -220,14 +220,13 @@ public class LinphonePreferences {
         return transport;
     }
 
-    public String getAccountTransportKey(int n) {
+    public int getAccountTransportValue(int n) {
         TransportType transport = getAccountTransport(n);
-        String key = getString(R.string.pref_transport_udp_key);
+        int key = TransportType.Udp.toInt();
 
-        if (transport != null && transport == TransportType.Tcp)
-            key = getString(R.string.pref_transport_tcp_key);
+        if (transport != null && transport == TransportType.Tcp) key = TransportType.Tcp.toInt();
         else if (transport != null && transport == TransportType.Tls)
-            key = getString(R.string.pref_transport_tls_key);
+            key = TransportType.Tls.toInt();
 
         return key;
     }
