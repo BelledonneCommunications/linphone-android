@@ -348,6 +348,8 @@ Wpisz wyświetlaną nazwę (opcjonalnie)</string>
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Ustawienia</string>
   <string name="device_power_saver_dialog_button_later">Później</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Debug</string>
   <!--Content description-->
   <string name="content_description_back">Powrót</string>
   <string name="content_description_dialer">Komunikator</string>

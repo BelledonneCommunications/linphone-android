@@ -261,6 +261,8 @@
   <string name="pref_audio_hacks_use_galaxys_hack_title">Käytä Galaxy S ääni miksausta</string>
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Asetukset</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Virheen korjaus</string>
   <!--Content description-->
   <string name="content_description_back">Takaisin</string>
   <string name="content_description_dialer">Soittaja</string>

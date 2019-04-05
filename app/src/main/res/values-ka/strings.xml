@@ -408,6 +408,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">პარამეტრები</string>
   <string name="device_power_saver_dialog_button_later">მოგვიანებით</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">დებაგი</string>
   <!--Content description-->
   <string name="content_description_back">უკან</string>
   <string name="content_description_dialer">ამკრეფი</string>

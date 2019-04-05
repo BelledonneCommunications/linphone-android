@@ -176,6 +176,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Instellingen</string>
   <string name="device_power_saver_dialog_button_later">later</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Foutopsporing</string>
   <!--Content description-->
   <string name="content_description_decline">Weigeren</string>
   <string name="content_description_hang_up">Ophangen</string>

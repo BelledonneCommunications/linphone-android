@@ -203,6 +203,8 @@
   <string name="pref_audio_hacks_use_galaxys_hack_title">Користи штеловање звука Галаксија С</string>
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Подешавања</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Прочисти</string>
   <!--Content description-->
   <string name="content_description_back">Назад</string>
   <string name="content_description_dialer">Бројчаник</string>

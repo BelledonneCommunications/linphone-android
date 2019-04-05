@@ -422,6 +422,8 @@
   <!--Device specifics-->
   <string name="device_power_saver_dialog_button_go_to_settings">Impostazioni</string>
   <string name="device_power_saver_dialog_button_later">Dopo</string>
+  <!--Debug popup-->
+  <string name="debug_popup_title">Debug</string>
   <!--Content description-->
   <string name="content_description_back">Indietro</string>
   <string name="content_description_dialer">Tastierino</string>
