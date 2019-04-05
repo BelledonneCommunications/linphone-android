@@ -246,6 +246,7 @@ public class VideoSettingsFragment extends Fragment {
                 codec.setTitle(pt.getMimeType());
 
                 if (pt.enabled()) {
+                    // Never use codec.setChecked(pt.enabled) !
                     codec.setChecked(true);
                 }
                 codec.setListener(

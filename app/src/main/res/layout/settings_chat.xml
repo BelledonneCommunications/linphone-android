@@ -16,6 +16,7 @@
             android:id="@+id/pref_image_sharing_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_image_sharing_server_title"
             linphone:subtitle="@string/pref_image_sharing_server_desc"
             linphone:title="@string/pref_image_sharing_server_title" />
 
@@ -31,6 +32,7 @@
             android:id="@+id/pref_auto_download_max_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_auto_download_max_size_title"
             linphone:title="@string/pref_auto_download_max_size_title" />
 
         <org.linphone.settings.widget.BasicSetting

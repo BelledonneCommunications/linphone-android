@@ -47,12 +47,14 @@
             android:id="@+id/pref_sip_port"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_sip_port_title"
             linphone:title="@string/pref_sip_port_title" />
 
         <org.linphone.settings.widget.TextSetting
             android:id="@+id/pref_stun_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_stun_server"
             linphone:title="@string/pref_stun_server" />
 
         <org.linphone.settings.widget.SwitchSetting
@@ -71,18 +73,21 @@
             android:id="@+id/pref_turn_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_turn_username_title"
             linphone:title="@string/pref_turn_username_title" />
 
         <org.linphone.settings.widget.TextSetting
             android:id="@+id/pref_turn_passwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_turn_passwd_title"
             linphone:title="@string/pref_turn_passwd_title" />
 
         <org.linphone.settings.widget.TextSetting
             android:id="@+id/pref_audio_port"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_audio_port_description"
             linphone:subtitle="@string/pref_audio_port_description"
             linphone:title="@string/pref_audio_port_title" />
 
@@ -90,6 +95,7 @@
             android:id="@+id/pref_video_port"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_video_port_description"
             linphone:subtitle="@string/pref_video_port_description"
             linphone:title="@string/pref_video_port_title" />
 

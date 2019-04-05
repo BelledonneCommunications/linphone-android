@@ -63,6 +63,7 @@
             android:id="@+id/pref_bandwidth_limit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_bandwidth_limit"
             linphone:title="@string/pref_bandwidth_limit" />
 
         <TextView

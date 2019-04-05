@@ -17,12 +17,16 @@
 
         <TextView
             android:id="@+id/setting_title"
+            android:singleLine="true"
+            android:ellipsize="marquee"
             style="@style/settings_item_font"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/setting_subtitle"
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:layout_below="@id/setting_title"
             style="@style/settings_item_subtitle_font"
             android:layout_width="match_parent"
@@ -31,7 +35,7 @@
         <Spinner
             android:id="@+id/setting_spinner"
             android:layout_below="@id/setting_subtitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>

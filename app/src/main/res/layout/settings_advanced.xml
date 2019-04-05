@@ -58,6 +58,7 @@
             android:id="@+id/pref_remote_provisioning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_remote_provisioning_title"
             linphone:title="@string/pref_remote_provisioning_title" />
 
         <org.linphone.settings.widget.BasicSetting
@@ -79,12 +80,14 @@
             android:id="@+id/pref_display_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_display_name_title"
             linphone:title="@string/pref_display_name_title" />
 
         <org.linphone.settings.widget.TextSetting
             android:id="@+id/pref_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:hint="@string/pref_user_name_title"
             linphone:title="@string/pref_user_name_title" />
 
     </LinearLayout>

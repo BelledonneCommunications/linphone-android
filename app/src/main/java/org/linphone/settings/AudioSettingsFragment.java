@@ -232,6 +232,7 @@ public class AudioSettingsFragment extends Fragment {
 
                 codec.setSubtitle(pt.getClockRate() + " Hz");
                 if (pt.enabled()) {
+                    // Never use codec.setChecked(pt.enabled) !
                     codec.setChecked(true);
                 }
                 codec.setListener(
