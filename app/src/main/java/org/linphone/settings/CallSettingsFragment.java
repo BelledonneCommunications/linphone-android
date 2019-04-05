@@ -21,14 +21,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.MediaEncryption;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
@@ -70,12 +78,175 @@ public class CallSettingsFragment extends Fragment {
         updateValues();
     }
 
-    protected void loadSettings() {}
+    protected void loadSettings() {
+        mDeviceRingtone = mRootView.findViewById(R.id.pref_device_ringtone);
 
-    protected void setListeners() {}
+        mVibrateIncomingCall = mRootView.findViewById(R.id.pref_vibrate_on_incoming_calls);
+
+        mDtmfSipInfo = mRootView.findViewById(R.id.pref_sipinfo_dtmf);
+
+        mDtmfRfc2833 = mRootView.findViewById(R.id.pref_rfc2833_dtmf);
+
+        mAutoAnswer = mRootView.findViewById(R.id.pref_auto_answer);
+
+        mMediaEncryption = mRootView.findViewById(R.id.pref_media_encryption);
+        initMediaEncryptionList();
+
+        mAutoAnswerTime = mRootView.findViewById(R.id.pref_auto_answer_time);
+        mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        mIncomingCallTimout = mRootView.findViewById(R.id.pref_incoming_call_timeout);
+        mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        mVoiceMailUri = mRootView.findViewById(R.id.pref_voice_mail);
+        mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+    }
+
+    protected void setListeners() {
+        mDeviceRingtone.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableDeviceRingtone(newValue);
+                    }
+                });
+
+        mVibrateIncomingCall.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableIncomingCallVibration(newValue);
+                    }
+                });
+
+        mDtmfSipInfo.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (newValue) mDtmfRfc2833.setChecked(false);
+                        mPrefs.sendDTMFsAsSipInfo(newValue);
+                    }
+                });
+
+        mDtmfRfc2833.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        if (newValue) mDtmfSipInfo.setChecked(false);
+                        mPrefs.sendDtmfsAsRfc2833(newValue);
+                    }
+                });
+
+        mAutoAnswer.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onBoolValueChanged(boolean newValue) {
+                        mPrefs.enableAutoAnswer(newValue);
+                        mAutoAnswerTime.setEnabled(mPrefs.isAutoAnswerEnabled());
+                    }
+                });
+
+        mMediaEncryption.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        try {
+                            mPrefs.setMediaEncryption(
+                                    MediaEncryption.fromInt(Integer.parseInt(newValue)));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mAutoAnswerTime.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        try {
+                            mPrefs.setAutoAnswerTime(Integer.parseInt(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mIncomingCallTimout.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        try {
+                            mPrefs.setIncTimeout(Integer.parseInt(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mVoiceMailUri.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setVoiceMailUri(newValue);
+                    }
+                });
+    }
 
     protected void updateValues() {
+        mDeviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
+
+        mVibrateIncomingCall.setChecked(mPrefs.isIncomingCallVibrationEnabled());
+
+        mDtmfSipInfo.setChecked(mPrefs.useSipInfoDtmfs());
+
+        mDtmfRfc2833.setChecked(mPrefs.useRfc2833Dtmfs());
+
+        mAutoAnswer.setChecked(mPrefs.isAutoAnswerEnabled());
+
+        mMediaEncryption.setValue(mPrefs.getMediaEncryption().toInt());
+
+        mAutoAnswerTime.setValue(mPrefs.getAutoAnswerTime());
+        mAutoAnswerTime.setEnabled(mPrefs.isAutoAnswerEnabled());
+
+        mIncomingCallTimout.setValue(mPrefs.getIncTimeout());
+
+        mVoiceMailUri.setValue(mPrefs.getVoiceMailUri());
 
         setListeners();
+    }
+
+    private void initMediaEncryptionList() {
+        List<String> entries = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        entries.add(getString(R.string.pref_none));
+        values.add(String.valueOf(MediaEncryption.None.toInt()));
+
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null
+                && !getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
+            boolean hasZrtp = core.mediaEncryptionSupported(MediaEncryption.ZRTP);
+            boolean hasSrtp = core.mediaEncryptionSupported(MediaEncryption.SRTP);
+            boolean hasDtls = core.mediaEncryptionSupported(MediaEncryption.DTLS);
+
+            if (!hasSrtp && !hasZrtp && !hasDtls) {
+                mMediaEncryption.setEnabled(false);
+            } else {
+                if (hasSrtp) {
+                    entries.add(getString(R.string.media_encryption_srtp));
+                    values.add(String.valueOf(MediaEncryption.SRTP.toInt()));
+                }
+                if (hasZrtp) {
+                    entries.add(getString(R.string.media_encryption_zrtp));
+                    values.add(String.valueOf(MediaEncryption.ZRTP.toInt()));
+                }
+                if (hasDtls) {
+                    entries.add(getString(R.string.media_encryption_dtls));
+                    values.add(String.valueOf(MediaEncryption.DTLS.toInt()));
+                }
+            }
+        }
+
+        mMediaEncryption.setItems(entries, values);
     }
 }

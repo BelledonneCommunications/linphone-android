@@ -21,14 +21,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.R;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.ListSetting;
+import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.TextSetting;
 
 public class TunnelSettingsFragment extends Fragment {
@@ -64,11 +67,51 @@ public class TunnelSettingsFragment extends Fragment {
         updateValues();
     }
 
-    protected void loadSettings() {}
+    protected void loadSettings() {
+        mHost = mRootView.findViewById(R.id.pref_tunnel_host);
 
-    protected void setListeners() {}
+        mPort = mRootView.findViewById(R.id.pref_tunnel_port);
+        mPort.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        mMode = mRootView.findViewById(R.id.pref_tunnel_mode);
+    }
+
+    protected void setListeners() {
+        mHost.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setTunnelHost(newValue);
+                    }
+                });
+
+        mPort.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        try {
+                            mPrefs.setTunnelPort(Integer.valueOf(newValue));
+                        } catch (NumberFormatException nfe) {
+                            Log.e(nfe);
+                        }
+                    }
+                });
+
+        mMode.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onListValueChanged(int position, String newLabel, String newValue) {
+                        mPrefs.setTunnelMode(newValue);
+                    }
+                });
+    }
 
     protected void updateValues() {
+        mHost.setValue(mPrefs.getTunnelHost());
+
+        mPort.setValue(mPrefs.getTunnelPort());
+
+        mMode.setValue(mPrefs.getTunnelMode());
 
         setListeners();
     }

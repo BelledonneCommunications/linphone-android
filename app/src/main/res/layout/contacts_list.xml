@@ -101,7 +101,7 @@
             android:iconifiedByDefault="false"
             android:inputType="textPersonName"
             android:paddingRight="5dp"
-            android:queryBackground="@android:color/transparent"
+            android:queryBackground="@color/transparent_color"
             android:queryHint="@string/chat_room_creation_filter_hint"/>
 
     </RelativeLayout>

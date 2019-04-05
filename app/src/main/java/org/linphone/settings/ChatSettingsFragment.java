@@ -137,7 +137,7 @@ public class ChatSettingsFragment extends Fragment {
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                             i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                            context.startActivity(i);
+                            startActivity(i);
                         }
                     }
                 });

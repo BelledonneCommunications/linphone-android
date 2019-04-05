@@ -104,33 +104,6 @@ public class VideoSettingsFragment extends Fragment {
         mVideoCodecsHeader = mRootView.findViewById(R.id.pref_video_codecs_header);
     }
 
-    private void initVideoSizeList() {
-        List<String> entries = new ArrayList<>();
-        List<String> values = new ArrayList<>();
-
-        for (VideoDefinition vd : Factory.instance().getSupportedVideoDefinitions()) {
-            entries.add(vd.getName());
-            values.add(vd.getName());
-        }
-
-        mSize.setItems(entries, values);
-    }
-
-    private void initFpsList() {
-        List<String> entries = new ArrayList<>();
-        List<String> values = new ArrayList<>();
-
-        entries.add(getString(R.string.pref_none));
-        values.add("0");
-        for (int i = 5; i <= 30; i += 5) {
-            String str = Integer.toString(i);
-            entries.add(str);
-            values.add(str);
-        }
-
-        mFps.setItems(entries, values);
-    }
-
     protected void setListeners() {
         mEnable.setListener(
                 new SettingListenerBase() {
@@ -235,6 +208,33 @@ public class VideoSettingsFragment extends Fragment {
         populateVideoCodecs();
 
         setListeners();
+    }
+
+    private void initVideoSizeList() {
+        List<String> entries = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        for (VideoDefinition vd : Factory.instance().getSupportedVideoDefinitions()) {
+            entries.add(vd.getName());
+            values.add(vd.getName());
+        }
+
+        mSize.setItems(entries, values);
+    }
+
+    private void initFpsList() {
+        List<String> entries = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        entries.add(getString(R.string.pref_none));
+        values.add("0");
+        for (int i = 5; i <= 30; i += 5) {
+            String str = Integer.toString(i);
+            entries.add(str);
+            values.add(str);
+        }
+
+        mFps.setItems(entries, values);
     }
 
     private void populateVideoCodecs() {

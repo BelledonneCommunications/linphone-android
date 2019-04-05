@@ -69,12 +69,6 @@
             linphone:hint="@string/pref_voice_mail"
             linphone:title="@string/pref_voice_mail" />
 
-        <org.linphone.settings.widget.SwitchSetting
-            android:id="@+id/pref_dialer_call"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            linphone:title="@string/pref_dialer_call" />
-
     </LinearLayout>
 
 </ScrollView>

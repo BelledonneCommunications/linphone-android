@@ -31,7 +31,7 @@
             linphone:title="@string/pref_push_notification" />
 
         <org.linphone.settings.widget.BasicSetting
-            android:id="@+id/pref_protected_settings"
+            android:id="@+id/pref_android_battery_protected_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             linphone:subtitle="@string/pref_protected_settings_desc"
@@ -82,22 +82,6 @@
             android:layout_height="wrap_content"
             linphone:hint="@string/pref_turn_passwd_title"
             linphone:title="@string/pref_turn_passwd_title" />
-
-        <org.linphone.settings.widget.TextSetting
-            android:id="@+id/pref_audio_port"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            linphone:hint="@string/pref_audio_port_description"
-            linphone:subtitle="@string/pref_audio_port_description"
-            linphone:title="@string/pref_audio_port_title" />
-
-        <org.linphone.settings.widget.TextSetting
-            android:id="@+id/pref_video_port"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            linphone:hint="@string/pref_video_port_description"
-            linphone:subtitle="@string/pref_video_port_description"
-            linphone:title="@string/pref_video_port_title" />
 
     </LinearLayout>
 

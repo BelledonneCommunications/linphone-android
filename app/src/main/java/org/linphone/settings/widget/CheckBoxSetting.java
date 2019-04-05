@@ -73,7 +73,9 @@ public class CheckBoxSetting extends BasicSetting {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggle();
+                        if (mCheckBox.isEnabled()) {
+                            toggle();
+                        }
                     }
                 });
     }

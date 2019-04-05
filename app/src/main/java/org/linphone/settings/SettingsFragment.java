@@ -163,6 +163,7 @@ public class SettingsFragment extends Fragment {
             mAccountsHeader.setVisibility(View.GONE);
         } else {
             mAccountsHeader.setVisibility(View.VISIBLE);
+            int i = 0;
             for (ProxyConfig proxyConfig : proxyConfigs) {
                 final LedSetting account = new LedSetting(getActivity());
                 account.setTitle(
@@ -188,15 +189,17 @@ public class SettingsFragment extends Fragment {
                         break;
                 }
 
+                final int accountIndex = i;
                 account.setListener(
                         new SettingListenerBase() {
                             @Override
                             public void onClicked() {
-                                // TODO
+                                LinphoneActivity.instance().displayAccountSettings(accountIndex);
                             }
                         });
 
                 mAccounts.addView(account);
+                i += 1;
             }
         }
     }

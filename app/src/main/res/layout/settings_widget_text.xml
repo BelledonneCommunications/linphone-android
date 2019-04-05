@@ -34,7 +34,9 @@
 
         <EditText
             android:id="@+id/setting_input"
+            android:textColor="?attr/primaryTextColor"
             android:layout_below="@id/setting_subtitle"
+            android:background="@color/transparent_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

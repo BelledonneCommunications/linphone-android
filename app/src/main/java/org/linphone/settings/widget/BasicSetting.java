@@ -79,7 +79,7 @@ public class BasicSetting extends LinearLayout {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mListener != null) {
+                        if (mTitle.isEnabled() && mListener != null) {
                             mListener.onClicked();
                         }
                     }

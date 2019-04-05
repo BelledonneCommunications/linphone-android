@@ -201,9 +201,7 @@ public class AdvancedSettingsFragment extends Fragment {
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                        LinphoneActivity.instance()
-                                .startActivityForResult(
-                                        i, LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
+                        startActivityForResult(i, LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
                     }
                 });
     }
