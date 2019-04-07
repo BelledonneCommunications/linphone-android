@@ -101,6 +101,10 @@ public class NetworkSettingsFragment extends Fragment {
 
         mAndroidBatterySaverSettings =
                 mRootView.findViewById(R.id.pref_android_battery_protected_settings);
+        mAndroidBatterySaverSettings.setVisibility(
+                DeviceUtils.hasDevicePowerManager(LinphoneActivity.instance())
+                        ? View.VISIBLE
+                        : View.GONE);
     }
 
     protected void setListeners() {
@@ -209,7 +213,9 @@ public class NetworkSettingsFragment extends Fragment {
                         Intent intent =
                                 DeviceUtils.getDevicePowerManagerIntent(
                                         LinphoneActivity.instance());
-                        startActivity(intent);
+                        if (intent != null) {
+                            startActivity(intent);
+                        }
                     }
                 });
     }
