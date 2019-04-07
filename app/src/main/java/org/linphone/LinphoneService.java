@@ -22,7 +22,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Activity;
 import android.app.Application;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -30,7 +29,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
 import java.util.ArrayList;
@@ -434,15 +432,7 @@ public final class LinphoneService extends Service {
     }
 
     private void onIncomingReceived() {
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         Intent intent = new Intent().setClass(this, mIncomingReceivedActivity);
-
-        if (!pm.isInteractive()) {
-            // This is to workaround an infinite loop of pause/start in LinphoneActivity issue
-            // if incoming call is being stopped by caller while screen if off and locked
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        }
-
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().startActivity(intent);
         } else {
