@@ -404,7 +404,9 @@ public final class LinphoneService extends Service {
         LinphoneManager.destroy();
 
         // Make sure our notification is gone.
-        mNotificationManager.destroy();
+        if (mNotificationManager != null) {
+            mNotificationManager.destroy();
+        }
 
         // This will prevent the app from crashing if the service gets killed in background mode
         if (LinphoneActivity.isInstanciated()) {
