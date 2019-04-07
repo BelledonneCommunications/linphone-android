@@ -27,6 +27,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -1336,6 +1337,14 @@ public class LinphoneActivity extends LinphoneGenericActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        boolean locked = km.inKeyguardRestrictedInputMode();
+        if (locked) {
+            // This is to workaround an infinite loop of pause/start in LinphoneActivity issue
+            // if incoming call ends while screen if off and locked
+            finish();
+        }
 
         ArrayList<String> permissionsToAskFor = new ArrayList<>();
         String[] permissionsToHave = {
