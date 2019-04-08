@@ -1216,6 +1216,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
     public void selectMenu(FragmentsAvailable menuToSelect, String customTitle) {
         mCurrentFragment = menuToSelect;
         resetSelection();
+        hideTopBar();
         boolean hideBottomBar =
                 getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views);
 

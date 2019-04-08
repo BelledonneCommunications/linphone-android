@@ -13,7 +13,6 @@
     <string name="about_version">Linphone Android %s</string>
     <string name="about_liblinphone_version">Linphone Core %s</string>
     <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
-    <string name="about_link">www.linphone.org</string>
     <string name="sync_account_name">linphone contacts</string>
 
     <!-- Notifications -->
@@ -180,7 +179,7 @@
     <string name="contact_last_name">Last name</string>
     <string name="contact_organization">Organization</string>
     <string name="invite_friend">Invite</string>
-    <string name="invite_friend_text">Hello, join me on Linphone! You can download it for free at http://www.linphone.org/technical-corner/linphone/downloads</string>
+    <string name="invite_friend_text">Hello, join me on Linphone! You can download it for free at %s</string>
     <string name="toast_choose_contact_for_edition">Select a contact or create a new one</string>
 
     <!-- Chat -->
