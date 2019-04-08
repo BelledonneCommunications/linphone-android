@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
@@ -312,15 +313,19 @@ public class ChatRoomCreationFragment extends Fragment
             // Remove all contacts added before LIME switch was set
             // and that can stay because they don't have the capability
             mContactsSelectedLayout.removeAllViews();
+            List<ContactAddress> toToggle = new ArrayList<>();
             for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
                 // If the ContactAddress doesn't have a contact keep it anyway
                 if (ca.getContact() != null && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
-                    mSearchAdapter.toggleContactSelection(ca);
+                    toToggle.add(ca);
                 } else {
                     if (ca.getView() != null) {
                         mContactsSelectedLayout.addView(ca.getView());
                     }
                 }
+            }
+            for (ContactAddress ca : toToggle) {
+                mSearchAdapter.toggleContactSelection(ca);
             }
             mContactsSelectedLayout.invalidate();
         }
