@@ -125,6 +125,7 @@ public class RecordingsFragment extends Fragment
 
             Collections.sort(mRecordings);
         }
+        hideRecordingListAndDisplayMessageIfEmpty();
     }
 
     private void searchForRecordings() {
@@ -244,5 +245,6 @@ public class RecordingsFragment extends Fragment
                 mRecordings.remove(record);
             }
         }
+        hideRecordingListAndDisplayMessageIfEmpty();
     }
 }
