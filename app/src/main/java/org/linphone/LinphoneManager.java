@@ -739,8 +739,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                         + getString(R.string.linphone_sdk_branch)
                         + ")");
 
-        mCore.checkForUpdate(androidVersion);
-
         // mCore.setChatDatabasePath(mChatDatabaseFile);
         mCore.setCallLogsDatabasePath(mCallLogDatabaseFile);
         mCore.setFriendsDatabasePath(mFriendsDatabaseFile);
