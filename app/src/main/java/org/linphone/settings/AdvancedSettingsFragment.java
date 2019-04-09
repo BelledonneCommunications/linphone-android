@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
@@ -146,6 +147,11 @@ public class AdvancedSettingsFragment extends Fragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.setServiceNotificationVisibility(newValue);
+                        if (newValue) {
+                            LinphoneService.instance().getNotificationManager().startForeground();
+                        } else {
+                            LinphoneService.instance().getNotificationManager().stopForeground();
+                        }
                     }
                 });
 
