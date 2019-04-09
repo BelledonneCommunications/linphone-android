@@ -366,6 +366,14 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 ActivityCompat.requestPermissions(
                         this, permissions, PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE);
             }
+        } else {
+            if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+                String url = LinphonePreferences.instance().getCheckReleaseUrl();
+                if (url != null && !url.isEmpty()) {
+                    LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                            .checkForUpdate(BuildConfig.VERSION_NAME);
+                }
+            }
         }
 
         if (checkPermission(Manifest.permission.READ_CONTACTS)) {
@@ -609,6 +617,16 @@ public class LinphoneActivity extends LinphoneGenericActivity
     @Override
     public void onRequestPermissionsResult(
             int requestCode, String[] permissions, int[] grantResults) {
+
+        // If permission was asked we wait here for the results so dialogs won't conflict
+        if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+            String url = LinphonePreferences.instance().getCheckReleaseUrl();
+            if (url != null && !url.isEmpty()) {
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                        .checkForUpdate(BuildConfig.VERSION_NAME);
+            }
+        }
+
         if (permissions.length <= 0) return;
 
         int readContactsI = -1;

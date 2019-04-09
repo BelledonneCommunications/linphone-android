@@ -958,6 +958,10 @@ public class LinphonePreferences {
         getConfig().setBool("app", "show_service_notification", enable);
     }
 
+    public String getCheckReleaseUrl() {
+        return getConfig().getString("misc", "version_check_url_root", null);
+    }
+
     public boolean isOverlayEnabled() {
         return getConfig().getBool("app", "display_overlay", false);
     }
