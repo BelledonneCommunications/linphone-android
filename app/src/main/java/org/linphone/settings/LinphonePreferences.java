@@ -962,6 +962,14 @@ public class LinphonePreferences {
         return getConfig().getString("misc", "version_check_url_root", null);
     }
 
+    public int getLastCheckReleaseTimestamp() {
+        return getConfig().getInt("app", "version_check_url_last_timestamp", 0);
+    }
+
+    public void setLastCheckReleaseTimestamp(int timestamp) {
+        getConfig().setInt("app", "version_check_url_last_timestamp", timestamp);
+    }
+
     public boolean isOverlayEnabled() {
         return getConfig().getBool("app", "display_overlay", false);
     }
