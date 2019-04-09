@@ -368,11 +368,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
             }
         } else {
             if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
-                String url = LinphonePreferences.instance().getCheckReleaseUrl();
-                if (url != null && !url.isEmpty()) {
-                    LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                            .checkForUpdate(BuildConfig.VERSION_NAME);
-                }
+                checkForUpdate();
             }
         }
 
@@ -620,11 +616,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
         // If permission was asked we wait here for the results so dialogs won't conflict
         if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
-            String url = LinphonePreferences.instance().getCheckReleaseUrl();
-            if (url != null && !url.isEmpty()) {
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                        .checkForUpdate(BuildConfig.VERSION_NAME);
-            }
+            checkForUpdate();
         }
 
         if (permissions.length <= 0) return;
@@ -666,6 +658,20 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     ((AudioSettingsFragment) mFragment).startEchoTester();
                 break;
+        }
+    }
+
+    private void checkForUpdate() {
+        String url = LinphonePreferences.instance().getCheckReleaseUrl();
+        if (url != null && !url.isEmpty()) {
+            int lastTimestamp = LinphonePreferences.instance().getLastCheckReleaseTimestamp();
+            int currentTimeStamp = (int) System.currentTimeMillis();
+            int interval = getResources().getInteger(R.integer.time_between_update_check); // 24h
+            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                        .checkForUpdate(BuildConfig.VERSION_NAME);
+                LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
+            }
         }
     }
 
