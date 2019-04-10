@@ -12,7 +12,6 @@
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone-Kern %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
-  <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">Linphone-Kontakte</string>
   <!--Notifications-->
   <string name="notification_call_hangup_label">Auflegen</string>
@@ -225,6 +224,7 @@
   <string name="status_error">Registierung fehlgeschlagen</string>
   <string name="voicemail_unread">ungelesene Nachrichten</string>
   <!--Side Menu-->
+  <string name="menu_logout">Abmelden</string>
   <string name="menu_assistant">Assistent</string>
   <string name="menu_settings">Einstellungen</string>
   <string name="menu_recordings">Aufnahmen</string>
@@ -413,6 +413,7 @@
   <string name="pref_ipv6_title">IPv6 erlauben</string>
   <!--Advanced settings-->
   <string name="pref_advanced_title">Erweitert</string>
+  <string name="pref_dark_mode">Dunkler Modus</string>
   <string name="pref_debug_title">Debug</string>
   <string name="pref_debug">Debug</string>
   <string name="pref_java_debug">Benutze Java-Logger</string>
@@ -435,6 +436,7 @@
   <string name="pref_audio_hacks_use_routing_api_title">Routing-API-Hack verwenden</string>
   <string name="pref_audio_hacks_use_galaxys_hack_title">Galaxy-S-Audio-Hack verwenden</string>
   <!--Device specifics-->
+  <string name="device_power_saver_dialog_message">Es scheint, dass Ihr Gerät über einen Energiesparmodus verfügt. Damit die App im Hintergrund Anrufe und Nachrichten über Push-Benachrichtigungen empfangen kann, muss die App auf der Whitelist stehen.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Einstellungen</string>
   <string name="device_power_saver_dialog_button_later">Später</string>
   <!--Debug popup-->

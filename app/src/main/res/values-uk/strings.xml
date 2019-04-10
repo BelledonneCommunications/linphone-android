@@ -12,7 +12,6 @@
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ядро %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
-  <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">контакти linphone</string>
   <!--Notifications-->
   <string name="notification_reply_label">Відповідь</string>
@@ -167,7 +166,6 @@
   <string name="contact_last_name">Прізвище</string>
   <string name="contact_organization">Організація</string>
   <string name="invite_friend">Запросити</string>
-  <string name="invite_friend_text">Вітаю! Приєднуйтеся до мене в Linphone! Ви можете завантажити його безкоштовно звідси: http://www.linphone.org/technical-corner/linphone/downloads</string>
   <!--Chat-->
   <string name="no_chat_history">Немає розмов</string>
   <string name="delete_conversation">Ви справді бажаєте вилучити обрану розмову?</string>

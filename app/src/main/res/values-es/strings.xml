@@ -247,6 +247,7 @@
   <string name="pref_audio_hacks_use_routing_api_title">Usar hack de la API de encaminamiento</string>
   <string name="pref_audio_hacks_use_galaxys_hack_title">Usar hack de audio para Galaxy S</string>
   <!--Device specifics-->
+  <string name="device_power_saver_dialog_message">Parece que su dispositivo tiene activado un modo de ahorro de energía. Para que la app pueda recibir llamadas y mensajes mientras esté en segundo plano usando las notificaciones push, la app debe estar en la lista de aplicaciones permitidas.</string>
   <string name="device_power_saver_dialog_button_go_to_settings">Configuración</string>
   <!--Debug popup-->
   <string name="debug_popup_title">Desarrollo</string>

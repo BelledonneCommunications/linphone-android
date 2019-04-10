@@ -12,7 +12,6 @@
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Ядро Linphone %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
-  <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">контакты linphone</string>
   <!--Notifications-->
   <string name="notification_reply_label">Ответ</string>
@@ -61,7 +60,7 @@
   <string name="update_available">Доступно обновление</string>
   <string name="do_not_ask_again">Не показывать снова</string>
   <string name="delete_contacts_text">Вы уверены, что хотите удалить эти контакты?\nОни также будут удалены с вашего телефона!</string>
-  <string name="logs_url_copied_to_clipboard">URL-адрес логов скопирован в буфер обмена</string>
+  <string name="logs_url_copied_to_clipboard">URL-адрес журналов скопирован в буфер обмена</string>
   <!--Launch screen-->
   <string name="app_description">это <i>бесплатный</i> SIP-клиент</string>
   <!--Assistant-->
@@ -170,7 +169,7 @@
   <string name="contact_last_name">Фамилия</string>
   <string name="contact_organization">Организация</string>
   <string name="invite_friend">Пригласить</string>
-  <string name="invite_friend_text">Здравствуйте! Присоединяйтесь ко мне в Linphone! Вы можете загрузить его бесплатно отсюда: http://www.linphone.org/technical-corner/linphone/downloads</string>
+  <string name="invite_friend_text">Здравствуйте! Присоединяйтесь ко мне в Linphone! Вы можете загрузить его бесплатно отсюда: %s</string>
   <string name="toast_choose_contact_for_edition">Выберите контакт или создайте новый</string>
   <!--Chat-->
   <string name="no_chat_history">Нет разговоров</string>
@@ -478,6 +477,9 @@
   <string name="device_power_saver_dialog_button_later">Позже</string>
   <!--Debug popup-->
   <string name="debug_popup_title">Отладка</string>
+  <string name="debug_popup_enable_logs">Включить журналы</string>
+  <string name="debug_popup_disable_logs">Выключить журналы</string>
+  <string name="debug_popup_send_logs">Отправить журналы</string>
   <!--Content description-->
   <string name="content_description_back">Назад</string>
   <string name="content_description_dialer">Номеронабиратель</string>

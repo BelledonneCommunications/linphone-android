@@ -12,7 +12,6 @@
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
-  <string name="about_link">www.linphone.org</string>
   <string name="sync_account_name">linphone-kontakter</string>
   <!--Notifications-->
   <string name="notification_reply_label">Svara</string>
@@ -61,6 +60,7 @@
   <string name="update_available">En uppdatering är tillgänglig</string>
   <string name="do_not_ask_again">Visa inte igen</string>
   <string name="delete_contacts_text">Är du säker på att du vill ta bort dessa kontakter?\nDe kommer att tas bort från telefonen också!</string>
+  <string name="logs_url_copied_to_clipboard">Webbadresser till loggar kopierade till urklipp</string>
   <!--Launch screen-->
   <string name="app_description"><i>libre</i> SIP-klient</string>
   <!--Assistant-->
@@ -169,7 +169,7 @@
   <string name="contact_last_name">Efternamn</string>
   <string name="contact_organization">Organisation</string>
   <string name="invite_friend">Bjud in</string>
-  <string name="invite_friend_text">Hej, börja också använda Linphone! Du kan hämta det gratis på http://www.linphone.org/technical-corner/linphone/downloads</string>
+  <string name="invite_friend_text">Hej, låt oss använda Linphone! Du kan hämta det gratis på %s</string>
   <string name="toast_choose_contact_for_edition">Välj en kontakt eller skapa en ny</string>
   <!--Chat-->
   <string name="no_chat_history">Inga konversationer</string>
@@ -410,6 +410,7 @@
   <string name="pref_call_timeout_title">Tidsgräns för samtal (i sekunder)</string>
   <string name="pref_voice_mail">Röstbrevlåda URI</string>
   <string name="pref_dialer_call">Använd Linphone som standard telefonapp</string>
+  <string name="pref_accept_early_media">Acceptera tidig-media</string>
   <!--Chat settings-->
   <string name="pref_chat_title">Chatt</string>
   <string name="pref_image_sharing_server_title">Delar server</string>
@@ -476,6 +477,9 @@
   <string name="device_power_saver_dialog_button_later">Senare</string>
   <!--Debug popup-->
   <string name="debug_popup_title">Felsökning</string>
+  <string name="debug_popup_enable_logs">Aktivera loggar</string>
+  <string name="debug_popup_disable_logs">Inaktivera loggar</string>
+  <string name="debug_popup_send_logs">Skicka loggar</string>
   <!--Content description-->
   <string name="content_description_back">Tillbaka</string>
   <string name="content_description_dialer">Uppringare</string>
