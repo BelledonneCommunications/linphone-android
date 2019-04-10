@@ -705,10 +705,6 @@ public class LinphonePreferences {
         return getConfig().getBool("app", "background_mode", true);
     }
 
-    public void setBackgroundModeEnabled(boolean enabled) {
-        getConfig().setBool("app", "background_mode", enabled);
-    }
-
     public boolean isAutoStartEnabled() {
         return getConfig().getBool("app", "auto_start", false);
     }

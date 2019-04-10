@@ -34,13 +34,8 @@
             android:id="@+id/pref_background_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            linphone:subtitle="@string/pref_background_mode_desc"
             linphone:title="@string/pref_background_mode" />
-
-        <org.linphone.settings.widget.SwitchSetting
-            android:id="@+id/pref_service_notification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            linphone:title="@string/pref_service_notification" />
 
         <org.linphone.settings.widget.SwitchSetting
             android:id="@+id/pref_autostart"

@@ -1589,14 +1589,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 case CONTACTS_LIST:
                 case HISTORY_LIST:
                 case CHAT_LIST:
-                    boolean isBackgroundModeActive =
-                            LinphonePreferences.instance().isBackgroundModeEnabled();
-                    if (!isBackgroundModeActive) {
-                        stopService(
-                                new Intent(Intent.ACTION_MAIN)
-                                        .setClass(this, LinphoneService.class));
-                        finish();
-                    } else if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
+                    if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
                         return true;
                     }
                     break;

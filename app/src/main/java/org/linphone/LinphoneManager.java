@@ -863,8 +863,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (LinphonePreferences.instance() != null) {
             // We set network reachable at false before destroy LC to not send register with expires
             // at 0
-            if (LinphonePreferences.instance().isPushNotificationEnabled()
-                    || LinphonePreferences.instance().isBackgroundModeEnabled()) {
+            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
                 Log.w(
                         "[Manager] Setting network reachability to False to prevent unregister and allow incoming push notifications");
                 mCore.setNetworkReachable(false);
