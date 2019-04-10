@@ -17,29 +17,29 @@ Group changes to describe their impact on the project, as follows:
 - Added adaptive icon for Android 8+.
 - Use of binary SDK hosted in Maven repository instead of having to build it manually.
 - Asynchronous fetch of native contacts.
-- Removed unused graphical resources.
+- Removed unused graphical resources and improved some existing ones.
 - Updated translations.
 - Updated sliders used to answer or hangup incoming call so they can be used with accessibility tools.
-- Added setting to disable vibration while incoming call is ringing.
-- Video overlay now displays local preview.
+- Reworked settings, new ones are available, some unused have been removed.
+- Video overlay also displays local preview now.
 
 ### Features
 - Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
-- Send multiple files with text at the same time.
-- Allow multiple images to be shared from other app through linphone at once.
+- Send multiple files with text in the same chat message.
+- Allow multiple images to be shared from an external app through linphone at once.
 - Support of H265 codec.
 - Use TextureView instead of GL2JNIView, easier to use and will fix issues.
 - Send SMS to invite your friends in using Linphone.
-- Reply to received chat message in notification.
+- Reply to / mark as read chat message in notification.
 - Answer or hangup calls in notification.
-- Option to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications.
+- Setting to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications on Android 8+.
 - Call recording.
 - Get remote provisioning URL from QR code scan.
-- Added app setting for microphone & playback gain.
 - Allow rich input while composing chat message to easily send images from keyboard.
+- Animated GIFs are no longer displayed as static images.
 
 ### Fixes
-- Fixed chat room user can't get into if there are more than one with the same remote but different local accounts
+- Fixed basic chat room with same correspondant with multiple local accounts always displaying the same one when clicking on it in chat rooms list view.
 
 ## [4.0.1] - 2018-06-26
 
