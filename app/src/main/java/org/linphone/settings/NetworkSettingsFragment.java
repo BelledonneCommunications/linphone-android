@@ -137,7 +137,8 @@ public class NetworkSettingsFragment extends Fragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.useRandomPort(newValue);
-                        mSipPort.setEnabled(!mPrefs.isUsingRandomPort());
+                        mSipPort.setVisibility(
+                                mPrefs.isUsingRandomPort() ? View.GONE : View.VISIBLE);
                     }
                 });
 
@@ -236,7 +237,7 @@ public class NetworkSettingsFragment extends Fragment {
         mTurn.setEnabled(mPrefs.getStunServer() != null && !mPrefs.getStunServer().isEmpty());
 
         mSipPort.setValue(mPrefs.getSipPort());
-        mSipPort.setEnabled(!mPrefs.isUsingRandomPort());
+        mSipPort.setVisibility(mPrefs.isUsingRandomPort() ? View.GONE : View.VISIBLE);
 
         mStunServer.setValue(mPrefs.getStunServer());
 

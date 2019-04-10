@@ -142,7 +142,8 @@ public class CallSettingsFragment extends Fragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enableAutoAnswer(newValue);
-                        mAutoAnswerTime.setEnabled(mPrefs.isAutoAnswerEnabled());
+                        mAutoAnswerTime.setVisibility(
+                                mPrefs.isAutoAnswerEnabled() ? View.VISIBLE : View.GONE);
                     }
                 });
 
@@ -206,7 +207,7 @@ public class CallSettingsFragment extends Fragment {
         mMediaEncryption.setValue(mPrefs.getMediaEncryption().toInt());
 
         mAutoAnswerTime.setValue(mPrefs.getAutoAnswerTime());
-        mAutoAnswerTime.setEnabled(mPrefs.isAutoAnswerEnabled());
+        mAutoAnswerTime.setVisibility(mPrefs.isAutoAnswerEnabled() ? View.VISIBLE : View.GONE);
 
         mIncomingCallTimeout.setValue(mPrefs.getIncTimeout());
 

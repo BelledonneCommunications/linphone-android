@@ -40,18 +40,18 @@
             linphone:title="@string/pref_overlay" />
 
         <org.linphone.settings.widget.ListSetting
+            android:id="@+id/pref_preferred_video_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:title="@string/pref_preferred_video_size" />
+
+        <org.linphone.settings.widget.ListSetting
             android:id="@+id/pref_video_preset"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             linphone:list_items_names="@array/video_preset_entries"
             linphone:list_items_values="@array/video_preset_entries"
             linphone:title="@string/pref_video_preset" />
-
-        <org.linphone.settings.widget.ListSetting
-            android:id="@+id/pref_preferred_video_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            linphone:title="@string/pref_preferred_video_size" />
 
         <org.linphone.settings.widget.ListSetting
             android:id="@+id/pref_preferred_fps"

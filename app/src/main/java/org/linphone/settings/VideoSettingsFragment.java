@@ -147,8 +147,9 @@ public class VideoSettingsFragment extends Fragment {
                     @Override
                     public void onListValueChanged(int position, String newLabel, String newValue) {
                         mPrefs.setVideoPreset(newValue);
-                        mFps.setEnabled(newValue.equals("custom"));
-                        mBandwidth.setEnabled(newValue.equals("custom"));
+                        mFps.setVisibility(newValue.equals("custom") ? View.VISIBLE : View.GONE);
+                        mBandwidth.setVisibility(
+                                newValue.equals("custom") ? View.VISIBLE : View.GONE);
                     }
                 });
 
@@ -196,14 +197,15 @@ public class VideoSettingsFragment extends Fragment {
         mOverlay.setChecked(mPrefs.isOverlayEnabled());
 
         mBandwidth.setValue(mPrefs.getBandwidthLimit());
-        mBandwidth.setEnabled(mPrefs.getVideoPreset().equals("custom"));
+        mBandwidth.setVisibility(
+                mPrefs.getVideoPreset().equals("custom") ? View.VISIBLE : View.GONE);
 
         mPreset.setValue(mPrefs.getVideoPreset());
 
         mSize.setValue(mPrefs.getPreferredVideoSize());
 
         mFps.setValue(mPrefs.getPreferredVideoFps());
-        mFps.setEnabled(mPrefs.getVideoPreset().equals("custom"));
+        mFps.setVisibility(mPrefs.getVideoPreset().equals("custom") ? View.VISIBLE : View.GONE);
 
         populateVideoCodecs();
 
