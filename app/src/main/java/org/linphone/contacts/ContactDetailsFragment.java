@@ -278,8 +278,12 @@ public class ContactDetailsFragment extends Fragment
                                         Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
                                         smsIntent.putExtra("address", number);
                                         smsIntent.setData(Uri.parse("smsto:" + number));
-                                        smsIntent.putExtra(
-                                                "sms_body", getString(R.string.invite_friend_text));
+                                        String text =
+                                                getString(R.string.invite_friend_text)
+                                                        .replace(
+                                                                "%s",
+                                                                getString(R.string.download_link));
+                                        smsIntent.putExtra("sms_body", text);
                                         startActivity(smsIntent);
                                     }
                                 });
