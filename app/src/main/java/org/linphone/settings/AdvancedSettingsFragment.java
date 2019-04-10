@@ -48,7 +48,6 @@ public class AdvancedSettingsFragment extends Fragment {
             mJavaLogger,
             mFriendListSubscribe,
             mBackgroundMode,
-            mForegroundService,
             mStartAtBoot,
             mDarkMode;
     private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername;
@@ -92,8 +91,6 @@ public class AdvancedSettingsFragment extends Fragment {
 
         mBackgroundMode = mRootView.findViewById(R.id.pref_background_mode);
 
-        mForegroundService = mRootView.findViewById(R.id.pref_service_notification);
-
         mStartAtBoot = mRootView.findViewById(R.id.pref_autostart);
 
         mDarkMode = mRootView.findViewById(R.id.pref_dark_mode);
@@ -135,14 +132,6 @@ public class AdvancedSettingsFragment extends Fragment {
                 });
 
         mBackgroundMode.setListener(
-                new SettingListenerBase() {
-                    @Override
-                    public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.setBackgroundModeEnabled(newValue);
-                    }
-                });
-
-        mForegroundService.setListener(
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
@@ -219,9 +208,7 @@ public class AdvancedSettingsFragment extends Fragment {
 
         mFriendListSubscribe.setChecked(mPrefs.isFriendlistsubscriptionEnabled());
 
-        mBackgroundMode.setChecked(mPrefs.isBackgroundModeEnabled());
-
-        mForegroundService.setChecked(mPrefs.getServiceNotificationVisibility());
+        mBackgroundMode.setChecked(mPrefs.getServiceNotificationVisibility());
 
         mStartAtBoot.setChecked(mPrefs.isAutoStartEnabled());
 

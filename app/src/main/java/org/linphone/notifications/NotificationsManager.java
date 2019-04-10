@@ -73,16 +73,15 @@ public class NotificationsManager {
 
         Compatibility.createNotificationChannels(mContext);
 
-        Intent notifIntent =
-                new Intent(mContext, LinphoneService.instance().getIncomingReceivedActivity());
-        notifIntent.putExtra("Notification", true);
-
         Bitmap bm = null;
         try {
             bm = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher);
         } catch (Exception e) {
             Log.e(e);
         }
+
+        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
+        notifIntent.putExtra("Notification", true);
 
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
@@ -123,7 +122,7 @@ public class NotificationsManager {
     }
 
     public void removeForegroundServiceNotificationIfPossible() {
-        if (!LinphonePreferences.instance().getServiceNotificationVisibility()
+        if (!isServiceNotificationDisplayed()
                 && mCurrentForegroundServiceNotification == SERVICE_NOTIF_ID) {
             stopForeground();
         }
