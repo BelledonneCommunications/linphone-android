@@ -74,8 +74,6 @@ public class LinphoneLoginFragment extends Fragment
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
         mAccountCreator.setListener(this);
 
-        String url = "http://linphone.org/free-sip-service.html&action=recover";
-
         mLogin = view.findViewById(R.id.assistant_username);
         mLogin.addTextChangedListener(this);
 
@@ -160,7 +158,7 @@ public class LinphoneLoginFragment extends Fragment
             mForgotPassword.setText(
                     Html.fromHtml(
                             "<a href=\""
-                                    + url
+                                    + getString(R.string.recover_password_link)
                                     + "\"'>"
                                     + getString(R.string.forgot_password)
                                     + "</a>"));
