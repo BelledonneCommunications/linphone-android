@@ -66,8 +66,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             mContext = LinphoneService.instance().getApplicationContext();
         }
 
-        if (LinphonePreferences.instance() != null
-                && LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
+        if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
             String rls = mContext.getString(R.string.rls_uri);
             for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
                 if (rls != null
@@ -217,8 +216,10 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
 
         // Now that contact fetching is asynchronous, this is required to ensure
         // presence subscription event will be sent with all friends
-        for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
-            list.updateSubscriptions();
+        if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
+            for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
+                list.updateSubscriptions();
+            }
         }
 
         ContactsManager.getInstance().setContacts(data.contacts);
