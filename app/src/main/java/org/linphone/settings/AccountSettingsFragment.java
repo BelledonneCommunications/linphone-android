@@ -325,6 +325,13 @@ public class AccountSettingsFragment extends Fragment {
                         if (mProxyConfig != null) {
                             mProxyConfig.edit();
                             NatPolicy natPolicy = mProxyConfig.getNatPolicy();
+                            if (natPolicy == null) {
+                                Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                                if (core != null) {
+                                    natPolicy = core.createNatPolicy();
+                                    mProxyConfig.setNatPolicy(natPolicy);
+                                }
+                            }
                             if (natPolicy != null) {
                                 natPolicy.setStunServer(newValue);
                             }
@@ -444,7 +451,16 @@ public class AccountSettingsFragment extends Fragment {
                     public void onBoolValueChanged(boolean newValue) {
                         if (mProxyConfig != null) {
                             mProxyConfig.edit();
+
                             NatPolicy natPolicy = mProxyConfig.getNatPolicy();
+                            if (natPolicy == null) {
+                                Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                                if (core != null) {
+                                    natPolicy = core.createNatPolicy();
+                                    mProxyConfig.setNatPolicy(natPolicy);
+                                }
+                            }
+
                             if (natPolicy != null) {
                                 natPolicy.enableIce(newValue);
                             }
