@@ -37,6 +37,7 @@ Group changes to describe their impact on the project, as follows:
 - Get remote provisioning URL from QR code scan.
 - Allow rich input while composing chat message to easily send images from keyboard.
 - Animated GIFs are no longer displayed as static images.
+- A dark mode is available.
 
 ### Fixes
 - Fixed basic chat room with same correspondant with multiple local accounts always displaying the same one when clicking on it in chat rooms list view.

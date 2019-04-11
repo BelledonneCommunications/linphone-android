@@ -100,7 +100,7 @@
     <!-- About related -->
 
     <style name="about_license_font" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textColor">?attr/secondaryTextColor</item>
+        <item name="android:textColor">?attr/primaryTextColor</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">italic</item>
     </style>

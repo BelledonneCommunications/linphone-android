@@ -80,7 +80,7 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="?attr/backgroundContastColor"
+        android:background="?attr/backgroundColor"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -112,7 +112,7 @@
             android:background="?attr/dividerColor" />
 
         <LinearLayout
-            style="android:attr/buttonBarStyle"
+            android:background="?attr/backgroundColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
