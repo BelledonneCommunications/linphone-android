@@ -40,6 +40,7 @@ import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
 import org.linphone.core.Factory;
+import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.FragmentsAvailable;
@@ -53,7 +54,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
     private ImageView mCallDirection;
     private TextView mContactName, mContactAddress, mTime, mDate;
     private String mSipUri, mDisplayName;
-    private RelativeLayout mWaitLayout, mAvatarLayout;
+    private RelativeLayout mWaitLayout, mAvatarLayout, mChatSecured;
     private LinphoneContact mContact;
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
@@ -84,8 +85,14 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
 
         mChat = mView.findViewById(R.id.chat);
         mChat.setOnClickListener(this);
-        if (getResources().getBoolean(R.bool.disable_chat))
-            mView.findViewById(R.id.chat).setVisibility(View.GONE);
+
+        mChatSecured = mView.findViewById(R.id.chat_secured);
+        mChatSecured.setOnClickListener(this);
+
+        if (getResources().getBoolean(R.bool.disable_chat)) {
+            mChat.setVisibility(View.GONE);
+            mChatSecured.setVisibility(View.GONE);
+        }
 
         mAddToContacts = mView.findViewById(R.id.add_contact);
         mAddToContacts.setOnClickListener(this);
@@ -146,6 +153,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         } else if (status.equals(getResources().getString(R.string.outgoing))) {
             mCallDirection.setImageResource(R.drawable.call_outgoing);
         }
+        mChatSecured.setVisibility(View.GONE);
 
         mTime.setText(callTime == null ? "" : callTime);
         Long longDate = Long.parseLong(callDate);
@@ -164,6 +172,12 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                 ContactAvatar.displayAvatar(mContact, mAvatarLayout);
                 mAddToContacts.setVisibility(View.GONE);
                 mGoToContact.setVisibility(View.VISIBLE);
+
+                if (!getResources().getBoolean(R.bool.disable_chat)
+                        && mContact.hasPresenceModelForUriOrTelCapability(
+                                mSipUri, FriendCapability.LimeX3Dh)) {
+                    mChatSecured.setVisibility(View.VISIBLE);
+                }
             } else {
                 mContactName.setText(
                         mDisplayName == null
@@ -212,12 +226,13 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         }
         if (id == R.id.call) {
             LinphoneActivity.instance().setAddresGoToDialerAndCall(mSipUri, mDisplayName);
-        } else if (id == R.id.chat) {
+        } else if (id == R.id.chat || id == R.id.chat_secured) {
+            boolean isSecured = id == R.id.chat_secured;
             Core lc = LinphoneManager.getLc();
             Address participant = Factory.instance().createAddress(mSipUri);
             ChatRoom room =
                     lc.findOneToOneChatRoom(
-                            lc.getDefaultProxyConfig().getContact(), participant, false);
+                            lc.getDefaultProxyConfig().getContact(), participant, isSecured);
             if (room != null) {
                 LinphoneActivity.instance()
                         .goToChat(
@@ -228,11 +243,12 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                 ProxyConfig lpc = lc.getDefaultProxyConfig();
                 if (lpc != null
                         && lpc.getConferenceFactoryUri() != null
-                        && !LinphonePreferences.instance().useBasicChatRoomFor1To1()) {
+                        && (isSecured
+                                || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
                     mWaitLayout.setVisibility(View.VISIBLE);
 
                     ChatRoomParams params = lc.createDefaultChatRoomParams();
-                    params.enableEncryption(false);
+                    params.enableEncryption(isSecured);
                     params.enableGroup(false);
                     // We don't want a basic chat room
                     params.setBackend(ChatRoomBackend.FlexisipChat);
