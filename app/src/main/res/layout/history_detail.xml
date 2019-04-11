@@ -112,6 +112,31 @@
                         android:contentDescription="@string/content_description_chat"
                         android:src="@drawable/chat_start_default" />
 
+                    <RelativeLayout
+                        android:id="@+id/chat_secured"
+                        android:layout_width="65dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="10dp">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/round_orange_button_background"
+                            android:contentDescription="@string/content_description_chat"
+                            android:src="@drawable/chat_start_default" />
+
+                        <ImageView
+                            android:id="@+id/security_level"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/security_toogle_icon_green" />
+
+                    </RelativeLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
