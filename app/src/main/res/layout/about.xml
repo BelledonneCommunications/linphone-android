@@ -74,6 +74,18 @@
             android:textColorLink="@color/primary_color" />
 
         <TextView
+            android:id="@+id/privaci_policy_link"
+            style="@style/link_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:autoLink="web"
+            android:paddingTop="10dp"
+            android:gravity="center"
+            android:text="@string/about_privacy_policy"
+            android:textColorLink="@color/primary_color" />
+
+        <TextView
             android:id="@+id/about_text"
             style="@style/about_license_font"
             android:layout_width="wrap_content"

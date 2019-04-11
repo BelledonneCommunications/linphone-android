@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,19 @@ public class AboutFragment extends Fragment implements OnClickListener {
                 String.format(
                         getString(R.string.about_version),
                         BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
+
+        TextView privacyPolicy = view.findViewById(R.id.privaci_policy_link);
+        privacyPolicy.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent =
+                                new Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.about_privacy_policy_link)));
+                        startActivity(browserIntent);
+                    }
+                });
 
         mSendLogButton = view.findViewById(R.id.send_log);
         mSendLogButton.setOnClickListener(this);
