@@ -7,8 +7,8 @@
     <string name="addressbook_label">Linphone</string>
     <string name="notification_title">Linphone</string>
     <string name="wait_dialog_text">Starting up</string>
-    <string name="notification_registered">%s registered</string>
-    <string name="notification_register_failure">%s failed to register</string>
+    <string name="notification_registered">%s connected</string>
+    <string name="notification_register_failure">%s failed to connect</string>
     <string name="tunnel_host"></string>
     <string name="about_version">Linphone Android %s</string>
     <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -250,10 +250,10 @@
     <string name="toast_choose_chat_room_for_sharing">Select a conversation or create a new one</string>
 
     <!-- Status Bar -->
-    <string name="status_connected">Registered</string>
-    <string name="status_not_connected">Not registered</string>
-    <string name="status_in_progress">Registration in progress</string>
-    <string name="status_error">Registration failed</string>
+    <string name="status_connected">Connected</string>
+    <string name="status_not_connected">Not connected</string>
+    <string name="status_in_progress">Connection in progress</string>
+    <string name="status_error">Connection failed</string>
     <string name="voicemail_unread"> unread messages</string>
 
     <!-- Side Menu -->

@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@color/dark_grey_color"
+        android:background="?attr/backgroundContastColor"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="10dp">
@@ -37,6 +37,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingTop="20dp"
+            android:textColorLink="?attr/secondaryTextColor"
             android:text="@string/about_version" />
 
         <TextView
@@ -46,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:textColorLink="?attr/secondaryTextColor"
             android:text="@string/about_liblinphone_sdk_version" />
 
     </LinearLayout>
@@ -56,7 +58,7 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="?attr/backgroundContastColor"
+        android:background="?attr/backgroundColor"
         android:padding="10dp">
 
         <TextView
@@ -88,7 +90,7 @@
             android:background="?attr/dividerColor" />
 
         <LinearLayout
-            style="android:attr/buttonBarStyle"
+            android:background="?attr/backgroundColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
