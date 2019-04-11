@@ -11,6 +11,7 @@
     <string name="about_link" translatable="false">https://linphone.org</string>
     <string name="download_link" translatable="false">https://linphone.org/download</string>
     <string name="recover_password_link" translatable="false">https://linphone.org/freesip/recover</string>
+    <string name="about_privacy_policy_link" translatable="false">https://www.linphone.org/terms-and-privacy</string>
 
     <!-- Textual mention of the app name -->
     <string name="user_agent" translatable="false">LinphoneAndroid</string>
