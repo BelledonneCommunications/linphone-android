@@ -134,6 +134,8 @@
             android:name=".call.CallIncomingActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -152,6 +154,7 @@
             android:name=".call.CallActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
+            android:showWhenLocked="true"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

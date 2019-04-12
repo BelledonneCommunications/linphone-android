@@ -20,11 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.WindowManager;
 import androidx.core.content.ContextCompat;
 import org.linphone.R;
 
@@ -197,5 +199,17 @@ class ApiTwentyOnePlus {
 
     public static void closeContentProviderClient(ContentProviderClient client) {
         client.release();
+    }
+
+    public static void setShowWhenLocked(Activity activity, boolean enable) {
+        if (enable) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        }
+    }
+
+    public static void setTurnScreenOn(Activity activity, boolean enable) {
+        if (enable) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
     }
 }

@@ -2,7 +2,7 @@ package org.linphone.call;
 
 /*
 CallActivity.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -174,10 +174,8 @@ public class CallActivity extends LinphoneGenericActivity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        getWindow()
-                .addFlags(
-                        WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                                | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(R.layout.call);
 
         // Earset Connectivity Broadcast Processing
