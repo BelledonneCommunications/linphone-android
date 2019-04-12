@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Bezig met opstarten</string>
-  <string name="notification_registered">%s geregistreerd</string>
-  <string name="notification_register_failure">%s registratie mislukt</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -76,10 +74,6 @@
   <string name="share_picture_size_medium">Middel</string>
   <string name="share_picture_size_large">Groot</string>
   <!--Status Bar-->
-  <string name="status_connected">Geregistreerd</string>
-  <string name="status_not_connected">niet geregistreerd</string>
-  <string name="status_in_progress">Bezig met registreren</string>
-  <string name="status_error">registratie fout</string>
   <string name="voicemail_unread">ongelezen voicemail</string>
   <!--Side Menu-->
   <string name="menu_assistant">Assistent</string>

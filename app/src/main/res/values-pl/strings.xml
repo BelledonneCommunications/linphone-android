@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Uruchamianie</string>
-  <string name="notification_registered">%s zarejestrowany</string>
-  <string name="notification_register_failure">%s nie udało się zarejestrować</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -161,10 +159,6 @@
   <string name="processing_image">Przetwarzanie obrazu, może potrwać nawet do kilku sekund w zależności od rozmiaru pliku</string>
   <string name="add_to_contacts">Dodaj do kontaktów</string>
   <!--Status Bar-->
-  <string name="status_connected">Zarejestrowany</string>
-  <string name="status_not_connected">Nie zarejestrowany</string>
-  <string name="status_in_progress">Rejestracja w trakcie</string>
-  <string name="status_error">Rejestracja nie powiodła się</string>
   <string name="voicemail_unread">Nieprzeczytane wiadomości</string>
   <!--Side Menu-->
   <string name="menu_assistant">Asystent </string>

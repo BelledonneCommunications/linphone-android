@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">მიმდინარეობს გაშვება</string>
-  <string name="notification_registered">%s დარეგისტრირებულია</string>
-  <string name="notification_register_failure">%s-ის დარეგისტრირება ვერ მოხერხდა</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ბირთვი %s</string>
@@ -201,10 +199,6 @@
   <string name="imdn_info">მიწოდების სტატუსი</string>
   <string name="add_to_contacts">კონტაქტებში დამატება</string>
   <!--Status Bar-->
-  <string name="status_connected">რეგისტრირებული</string>
-  <string name="status_not_connected">არ არის რეგისტრირებული</string>
-  <string name="status_in_progress">მიმდინარეობს რეგისტრაცია</string>
-  <string name="status_error">რეგისტრაცია ვერ მოხერხდა</string>
   <string name="voicemail_unread">წაუკითხავი შეტყობინება</string>
   <!--Side Menu-->
   <string name="menu_assistant">ასისტენტი</string>

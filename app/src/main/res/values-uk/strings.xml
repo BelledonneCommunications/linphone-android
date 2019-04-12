@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Завантажується</string>
-  <string name="notification_registered">%s зареєстрований</string>
-  <string name="notification_register_failure">%s зареєструвати не вдалося</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone ядро %s</string>
@@ -228,10 +226,6 @@
   <string name="unexpected_event">Несподівана подія %i для %s</string>
   <string name="download_file">Стягнути</string>
   <!--Status Bar-->
-  <string name="status_connected">Зареєстрований</string>
-  <string name="status_not_connected">Не зареєстрований</string>
-  <string name="status_in_progress">Виконується реєстрація</string>
-  <string name="status_error">Реєстрація не вдалася</string>
   <string name="voicemail_unread">непрочитаних повідомлень</string>
   <!--Side Menu-->
   <string name="menu_assistant">Асистент</string>

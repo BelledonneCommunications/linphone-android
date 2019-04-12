@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Avvio</string>
-  <string name="notification_registered">%s registrato</string>
-  <string name="notification_register_failure">%s non è riuscito a registrarsi</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -209,10 +207,6 @@
   <string name="group_chat_room_devices">Dispositivi di conversazione</string>
   <string name="add_to_contacts">Aggiungi ai contatti</string>
   <!--Status Bar-->
-  <string name="status_connected">Registrato</string>
-  <string name="status_not_connected">Non registrato</string>
-  <string name="status_in_progress">Registrazione in corso</string>
-  <string name="status_error">Registrazione fallita</string>
   <string name="voicemail_unread">messaggi non letti</string>
   <!--Side Menu-->
   <string name="menu_assistant">Assistente</string>

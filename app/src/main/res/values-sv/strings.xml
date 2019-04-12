@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startar upp</string>
-  <string name="notification_registered">%s registrerad</string>
-  <string name="notification_register_failure">%s misslyckades med att registrera sig</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -238,10 +236,6 @@
   <string name="download_file">Ladda ner</string>
   <string name="toast_choose_chat_room_for_sharing">Välj en konversation eller skapa en ny</string>
   <!--Status Bar-->
-  <string name="status_connected">Registrerad</string>
-  <string name="status_not_connected">Inte registrerad</string>
-  <string name="status_in_progress">Registrering pågår</string>
-  <string name="status_error">Registrering misslyckades</string>
   <string name="voicemail_unread">olästa meddelanden</string>
   <!--Side Menu-->
   <string name="menu_logout">Logga ut</string>
@@ -454,6 +448,7 @@
   <string name="pref_java_debug">Använd Java-loggare</string>
   <string name="pref_friendlist_subscribe">Prenumerera på vänlista</string>
   <string name="pref_background_mode">Bakgrundsläge</string>
+  <string name="pref_background_mode_desc">Visa en avisering för att hålla appen vid liv</string>
   <string name="pref_animation_enable_title">Aktivera animeringar</string>
   <string name="pref_service_notification">Aktivera serviceanmälan</string>
   <string name="pref_autostart">Starta vid uppstart</string>
