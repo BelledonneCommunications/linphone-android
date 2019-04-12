@@ -622,6 +622,7 @@ public class LinphonePreferences {
                                         + appId
                                         + ";pn-type="
                                         + getString(R.string.push_type)
+                                        + ";pn-timeout=0"
                                         + ";pn-tok="
                                         + regId
                                         + ";pn-silent=1";
