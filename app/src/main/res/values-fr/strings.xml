@@ -7,11 +7,12 @@
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Démarrage</string>
   <string name="notification_registered">%s connecté</string>
-  <string name="notification_register_failure">%s n\'a pas pu s\'enregistrer</string>
+  <string name="notification_register_failure">%s connexion échouée</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Politique de confidentialité</string>
   <string name="sync_account_name">contacts linphone</string>
   <!--Notifications-->
   <string name="notification_reply_label">Répondre</string>
@@ -160,6 +161,7 @@ Vos amis pourront vous joindre plus facilement si vous associez votre compte à 
   <string name="delete_history_log">Voulez-vous supprimer l\'historique d\'appel sélectionné ?</string>
   <string name="today">Aujourd\'hui</string>
   <string name="yesterday">Hier</string>
+  <string name="calls">Appels</string>
   <!--Contacts-->
   <string name="no_contact">Aucun contact dans votre carnet d\'adresse.</string>
   <string name="no_sip_contact">Aucun contact SIP dans votre carnet d\'adresse.</string>

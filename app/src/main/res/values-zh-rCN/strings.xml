@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">启动</string>
-  <string name="notification_registered">%s已注册</string>
-  <string name="notification_register_failure">%s无法注册</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android%s</string>
   <string name="about_liblinphone_version">Linphone Core%s</string>
@@ -169,10 +167,6 @@
   <string name="resend">重发</string>
   <string name="add_to_contacts">添加联系人</string>
   <!--Status Bar-->
-  <string name="status_connected">在线</string>
-  <string name="status_not_connected">离线</string>
-  <string name="status_in_progress">正在登录</string>
-  <string name="status_error">登录失败</string>
   <string name="voicemail_unread">未读消息</string>
   <!--Side Menu-->
   <string name="menu_assistant">助手</string>

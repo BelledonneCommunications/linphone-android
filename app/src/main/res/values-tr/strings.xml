@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Başlatılıyor</string>
-  <string name="notification_registered">%s kayıtlı</string>
-  <string name="notification_register_failure">%s kaydedilemedi</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Çekirdeği %s</string>
@@ -203,10 +201,6 @@
   <string name="add_to_contacts">Bağlantılara ekle</string>
   <string name="download_file">İndir</string>
   <!--Status Bar-->
-  <string name="status_connected">Kayıtlı</string>
-  <string name="status_not_connected">Kayıtsız</string>
-  <string name="status_in_progress">Kayıt sürüyor</string>
-  <string name="status_error">Kayıt başarısız</string>
   <string name="voicemail_unread">okunmamış iletiler</string>
   <!--Side Menu-->
   <string name="menu_assistant">Yardımcı</string>

@@ -64,9 +64,6 @@
   <string name="add_to_contacts">Додај у контакте</string>
   <string name="download_file">Преузми</string>
   <!--Status Bar-->
-  <string name="status_connected">Уписан</string>
-  <string name="status_in_progress">Упис је у току</string>
-  <string name="status_error">Упис није успео</string>
   <string name="voicemail_unread"> непрочитане поруке</string>
   <!--Side Menu-->
   <string name="menu_settings">Подешавања</string>

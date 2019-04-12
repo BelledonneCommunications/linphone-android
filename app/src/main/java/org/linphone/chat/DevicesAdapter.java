@@ -33,7 +33,6 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
-import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
