@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -957,27 +956,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
         String pictureUri =
                 c != null && c.getPhotoUri() != null ? c.getPhotoUri().toString() : null;
 
-        String status;
-        if (log.getDir() == Call.Dir.Outgoing) {
-            status = getString(R.string.outgoing);
-        } else {
-            if (log.getStatus() == Call.Status.Missed) {
-                status = getString(R.string.missed);
-            } else {
-                status = getString(R.string.incoming);
-            }
-        }
-
-        String callTime = secondsToDisplayableString(log.getDuration());
-        String callDate = String.valueOf(log.getStartDate());
-
         Fragment fragment2 = getFragmentManager().findFragmentById(R.id.fragmentContainer2);
         if (fragment2 != null
                 && fragment2.isVisible()
                 && mCurrentFragment == FragmentsAvailable.HISTORY_DETAIL) {
             HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
-            historyDetailFragment.changeDisplayedHistory(
-                    sipUri, displayName, status, callTime, callDate);
+            historyDetailFragment.changeDisplayedHistory(sipUri, displayName);
         } else {
             Bundle extras = new Bundle();
             extras.putString("SipUri", sipUri);
@@ -985,9 +969,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 extras.putString("DisplayName", displayName);
                 extras.putString("PictureUri", pictureUri);
             }
-            extras.putString("Call.Status", status);
-            extras.putString("CallTime", callTime);
-            extras.putString("CallDate", callDate);
 
             changeCurrentFragment(FragmentsAvailable.HISTORY_DETAIL, extras);
         }
@@ -995,14 +976,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
     public void displayEmptyFragment() {
         changeCurrentFragment(FragmentsAvailable.EMPTY, new Bundle());
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    private String secondsToDisplayableString(int secs) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        Calendar cal = Calendar.getInstance();
-        cal.set(0, 0, 0, 0, 0, secs);
-        return dateFormat.format(cal.getTime());
     }
 
     public void displayContact(LinphoneContact contact, boolean chatOnly) {
