@@ -68,7 +68,7 @@ public class AboutFragment extends Fragment implements OnClickListener {
                         getString(R.string.about_version),
                         BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
 
-        TextView privacyPolicy = view.findViewById(R.id.privaci_policy_link);
+        TextView privacyPolicy = view.findViewById(R.id.privacy_policy_link);
         privacyPolicy.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -77,6 +77,19 @@ public class AboutFragment extends Fragment implements OnClickListener {
                                 new Intent(
                                         Intent.ACTION_VIEW,
                                         Uri.parse(getString(R.string.about_privacy_policy_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+
+        TextView license = view.findViewById(R.id.about_text);
+        license.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent =
+                                new Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.about_license_link)));
                         startActivity(browserIntent);
                     }
                 });

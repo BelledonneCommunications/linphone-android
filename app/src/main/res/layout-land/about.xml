@@ -106,8 +106,8 @@
                     android:textColorLink="@color/primary_color" />
 
                 <TextView
-                    android:id="@+id/privaci_policy_link"
-                    style="@style/link_font"
+                    android:id="@+id/privacy_policy_link"
+                    style="@style/about_license_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
