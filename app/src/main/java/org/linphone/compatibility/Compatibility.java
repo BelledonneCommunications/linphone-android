@@ -18,6 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -223,5 +224,17 @@ public class Compatibility {
             return ApiTwentyEightPlus.getAppStandbyBucketNameFromValue(bucket);
         }
         return null;
+    }
+
+    public static void setShowWhenLocked(Activity activity, boolean enable) {
+        if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
+            ApiTwentyOnePlus.setShowWhenLocked(activity, enable);
+        }
+    }
+
+    public static void setTurnScreenOn(Activity activity, boolean enable) {
+        if (Version.sdkStrictlyBelow(Version.API27_OREO_81)) {
+            ApiTwentyOnePlus.setTurnScreenOn(activity, enable);
+        }
     }
 }

@@ -2,7 +2,7 @@ package org.linphone.call;
 
 /*
 CallIncomingActivity.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -28,7 +28,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.TextureView;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -82,10 +82,9 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        getWindow()
-                .addFlags(
-                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        Compatibility.setShowWhenLocked(this, true);
+        Compatibility.setTurnScreenOn(this, true);
+
         setContentView(R.layout.call_incoming);
 
         mName = findViewById(R.id.contact_name);
