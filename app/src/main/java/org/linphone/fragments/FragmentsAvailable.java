@@ -68,6 +68,9 @@ public enum FragmentsAvailable {
             case MESSAGE_IMDN:
                 return fragment == GROUP_CHAT || fragment == MESSAGE_IMDN;
 
+            case SETTINGS_SUBLEVEL:
+                return fragment == SETTINGS || fragment == SETTINGS_SUBLEVEL;
+
             case CONTACT_DEVICES:
                 return fragment == GROUP_CHAT || fragment == CONTACT_DEVICES;
 
