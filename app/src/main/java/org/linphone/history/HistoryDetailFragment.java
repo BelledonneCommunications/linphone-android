@@ -26,14 +26,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import java.util.Arrays;
+import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.CallLog;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomBackend;
 import org.linphone.core.ChatRoomListenerStub;
@@ -51,22 +55,19 @@ import org.linphone.views.ContactAvatar;
 public class HistoryDetailFragment extends Fragment implements OnClickListener {
     private ImageView mDialBack, mChat, mAddToContacts, mGoToContact, mBack;
     private View mView;
-    private ImageView mCallDirection;
-    private TextView mContactName, mContactAddress, mTime, mDate;
+    private TextView mContactName, mContactAddress;
     private String mSipUri, mDisplayName;
     private RelativeLayout mWaitLayout, mAvatarLayout, mChatSecured;
     private LinphoneContact mContact;
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
+    private ListView mLogsList;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mSipUri = getArguments().getString("SipUri");
         mDisplayName = getArguments().getString("DisplayName");
-        String status = getArguments().getString("Call.Status");
-        String callTime = getArguments().getString("CallTime");
-        String callDate = getArguments().getString("CallDate");
 
         mView = inflater.inflate(R.layout.history_detail, container, false);
 
@@ -101,16 +102,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         mGoToContact.setOnClickListener(this);
 
         mAvatarLayout = mView.findViewById(R.id.avatar_layout);
-
         mContactName = mView.findViewById(R.id.contact_name);
         mContactAddress = mView.findViewById(R.id.contact_address);
-
-        mCallDirection = mView.findViewById(R.id.direction);
-
-        mTime = mView.findViewById(R.id.time);
-        mDate = mView.findViewById(R.id.date);
-
-        displayHistory(status, callTime, callDate);
 
         mChatRoomCreationListener =
                 new ChatRoomListenerStub() {
@@ -134,36 +127,25 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                     }
                 };
 
+        mLogsList = mView.findViewById(R.id.logs_list);
+        displayHistory();
+
         return mView;
     }
 
-    @Override
-    public void onPause() {
-        if (mChatRoom != null) {
-            mChatRoom.removeListener(mChatRoomCreationListener);
-        }
-        super.onPause();
-    }
-
-    private void displayHistory(String status, String callTime, String callDate) {
-        if (status.equals(getResources().getString(R.string.missed))) {
-            mCallDirection.setImageResource(R.drawable.call_missed);
-        } else if (status.equals(getResources().getString(R.string.incoming))) {
-            mCallDirection.setImageResource(R.drawable.call_incoming);
-        } else if (status.equals(getResources().getString(R.string.outgoing))) {
-            mCallDirection.setImageResource(R.drawable.call_outgoing);
-        }
+    private void displayHistory() {
+        Address lAddress = Factory.instance().createAddress(mSipUri);
         mChatSecured.setVisibility(View.GONE);
 
-        mTime.setText(callTime == null ? "" : callTime);
-        Long longDate = Long.parseLong(callDate);
-        mDate.setText(
-                LinphoneUtils.timestampToHumanDate(
-                        getActivity(), longDate, getString(R.string.history_detail_date_format)));
-
-        Address lAddress = Factory.instance().createAddress(mSipUri);
-
         if (lAddress != null) {
+            CallLog[] logs =
+                    LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                            .getCallHistoryForAddress(lAddress);
+            List<CallLog> logsList = Arrays.asList(logs);
+            mLogsList.setAdapter(
+                    new HistoryLogAdapter(
+                            LinphoneActivity.instance(), R.layout.history_detail_cell, logsList));
+
             mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
             mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 
@@ -197,15 +179,22 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         }
     }
 
-    public void changeDisplayedHistory(
-            String sipUri, String displayName, String status, String callTime, String callDate) {
+    @Override
+    public void onPause() {
+        if (mChatRoom != null) {
+            mChatRoom.removeListener(mChatRoomCreationListener);
+        }
+        super.onPause();
+    }
+
+    public void changeDisplayedHistory(String sipUri, String displayName) {
         if (displayName == null) {
             displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
         }
 
         mSipUri = sipUri;
         mDisplayName = displayName;
-        displayHistory(status, callTime, callDate);
+        displayHistory();
     }
 
     @Override

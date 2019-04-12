@@ -169,6 +169,7 @@
     <string name="delete_history_log">Do you want to delete selected call log?</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="calls">Calls</string>
 
     <!-- Contacts -->
     <string name="no_contact">No contact in your address book.</string>
