@@ -28,12 +28,13 @@ import org.linphone.R;
 class DeviceGroupViewHolder {
     public final RelativeLayout avatarLayout;
     public final TextView participantName, sipUri;
-    public final ImageView groupExpander;
+    public final ImageView groupExpander, securityLevel;
 
     public DeviceGroupViewHolder(View v) {
         avatarLayout = v.findViewById(R.id.avatar_layout);
         participantName = v.findViewById(R.id.name);
         sipUri = v.findViewById(R.id.sipUri);
         groupExpander = v.findViewById(R.id.dropdown);
+        securityLevel = v.findViewById(R.id.device_security_level);
     }
 }
