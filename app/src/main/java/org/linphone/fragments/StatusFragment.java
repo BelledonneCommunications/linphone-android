@@ -42,6 +42,8 @@ import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallActivity;
+import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
 import org.linphone.core.Call;
 import org.linphone.core.Content;
 import org.linphone.core.Core;
@@ -161,14 +163,15 @@ public class StatusFragment extends Fragment {
 
         if (activity instanceof LinphoneActivity) {
             ((LinphoneActivity) activity).updateStatusFragment(this);
-            mIsInCall = false;
         } else if (activity instanceof CallActivity) {
             ((CallActivity) activity).updateStatusFragment(this);
-            mIsInCall = true;
         } else if (activity instanceof AssistantActivity) {
             ((AssistantActivity) activity).updateStatusFragment(this);
-            mIsInCall = false;
         }
+        mIsInCall =
+                activity instanceof CallActivity
+                        || activity instanceof CallIncomingActivity
+                        || activity instanceof CallOutgoingActivity;
 
         return view;
     }
