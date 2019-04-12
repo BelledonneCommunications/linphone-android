@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">はじめる</string>
-  <string name="notification_registered">%sを登録しました</string>
-  <string name="notification_register_failure">%sの登録に失敗しました</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -168,10 +166,6 @@
   <string name="add_to_contacts">連絡先に追加</string>
   <string name="download_file">ダウンロード</string>
   <!--Status Bar-->
-  <string name="status_connected">登録済</string>
-  <string name="status_not_connected">登録なし</string>
-  <string name="status_in_progress">登録に問題があります</string>
-  <string name="status_error">登録できませんでした</string>
   <string name="voicemail_unread">未読メッセージ</string>
   <!--Side Menu-->
   <string name="menu_assistant">アシスタント</string>

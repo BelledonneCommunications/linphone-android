@@ -6,12 +6,13 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Загружается</string>
-  <string name="notification_registered">%s зарегистрирован</string>
-  <string name="notification_register_failure">%s зарегистрировать не удалось</string>
+  <string name="notification_registered">%s соединено</string>
+  <string name="notification_register_failure">%s соединиться не удалось</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Ядро Linphone %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Посетите нашу политику конфиденциальности</string>
   <string name="sync_account_name">контакты linphone</string>
   <!--Notifications-->
   <string name="notification_reply_label">Ответ</string>
@@ -238,10 +239,10 @@
   <string name="download_file">Скачать</string>
   <string name="toast_choose_chat_room_for_sharing">Выберите беседу или создайте новую</string>
   <!--Status Bar-->
-  <string name="status_connected">Зарегистрирован</string>
-  <string name="status_not_connected">Не зарегистрирован</string>
-  <string name="status_in_progress">Выполняется регистрация</string>
-  <string name="status_error">Регистрация не удалась</string>
+  <string name="status_connected">Соединено</string>
+  <string name="status_not_connected">Не соединено</string>
+  <string name="status_in_progress">Выполняется соединение</string>
+  <string name="status_error">Соединение не удалось</string>
   <string name="voicemail_unread"> непрочитанные сообщения</string>
   <!--Side Menu-->
   <string name="menu_logout">Выход</string>
@@ -454,6 +455,7 @@
   <string name="pref_java_debug">Использовать Java-регистратор</string>
   <string name="pref_friendlist_subscribe">Подписка</string>
   <string name="pref_background_mode">Фоновый режим</string>
+  <string name="pref_background_mode_desc">Показывать уведомление, чтобы сохранить приложение рабочим</string>
   <string name="pref_animation_enable_title">Включить анимацию</string>
   <string name="pref_service_notification">Включить сервисное уведомление</string>
   <string name="pref_autostart">Запуск во время загрузки</string>

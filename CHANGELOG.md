@@ -22,6 +22,7 @@ Group changes to describe their impact on the project, as follows:
 - Updated sliders used to answer or hangup incoming call so they can be used with accessibility tools.
 - Reworked settings, new ones are available, some unused have been removed.
 - Video overlay also displays local preview now.
+- In About fragment, the license text is a link to the full license on gnu.org.
 
 ### Features
 - Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
@@ -38,6 +39,7 @@ Group changes to describe their impact on the project, as follows:
 - Allow rich input while composing chat message to easily send images from keyboard.
 - Animated GIFs are no longer displayed as static images.
 - A dark mode is available.
+- List all calls with the same SIP address in history detail view.
 
 ### Fixes
 - Fixed basic chat room with same correspondant with multiple local accounts always displaying the same one when clicking on it in chat rooms list view.

@@ -6,8 +6,6 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">啟動中</string>
-  <string name="notification_registered">%s 已註冊</string>
-  <string name="notification_register_failure">%s 無法註冊</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
@@ -214,10 +212,6 @@
   <string name="add_to_contacts">加入到連絡人</string>
   <string name="download_file">下載</string>
   <!--Status Bar-->
-  <string name="status_connected">已註冊</string>
-  <string name="status_not_connected">未註冊</string>
-  <string name="status_in_progress">正在註冊</string>
-  <string name="status_error">註冊失敗</string>
   <string name="voicemail_unread">未讀訊息</string>
   <!--Side Menu-->
   <string name="menu_assistant">助理</string>
