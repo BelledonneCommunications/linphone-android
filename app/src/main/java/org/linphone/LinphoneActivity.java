@@ -775,9 +775,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
             case SETTINGS:
                 mFragment = new SettingsFragment();
                 break;
-            case SETTINGS_SUBLEVEL:
-                mFragment = new AudioSettingsFragment();
-                break;
             case ACCOUNT_SETTINGS:
                 mFragment = new AccountSettingsFragment();
                 break;
@@ -916,7 +913,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 if (newFragmentType == FragmentsAvailable.DIALER
                         || newFragmentType == FragmentsAvailable.ABOUT
                         || newFragmentType == FragmentsAvailable.SETTINGS
-                        || newFragmentType == FragmentsAvailable.SETTINGS_SUBLEVEL
                         || newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS
                         || newFragmentType == FragmentsAvailable.CREATE_CHAT
                         || newFragmentType == FragmentsAvailable.INFO_GROUP_CHAT) {
@@ -1194,10 +1190,10 @@ public class LinphoneActivity extends LinphoneGenericActivity
             changeCurrentFragment(FragmentsAvailable.CHAT_LIST, null);
             mChatSelected.setVisibility(View.VISIBLE);
         } else if (id == R.id.cancel) {
-            hideTopBar();
-            if (mCurrentFragment == FragmentsAvailable.SETTINGS_SUBLEVEL) {
+            if (mCurrentFragment == FragmentsAvailable.SETTINGS_SUBLEVEL && !isTablet()) {
                 popBackStack();
             } else {
+                hideTopBar();
                 displayDialer();
             }
         }
@@ -1597,6 +1593,11 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     hideTopBar(); // just in case
                     LinphoneActivity.instance().goToChatList();
                     return true;
+                case SETTINGS_SUBLEVEL:
+                    if (!isTablet()) {
+                        popBackStack();
+                        return true;
+                    }
                 case SETTINGS:
                 case ACCOUNT_SETTINGS:
                 case ABOUT:
