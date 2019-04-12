@@ -33,6 +33,7 @@ import org.linphone.core.Address;
 import org.linphone.core.ChatRoomSecurityLevel;
 import org.linphone.core.Participant;
 import org.linphone.core.ParticipantDevice;
+import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
@@ -127,8 +128,31 @@ class DevicesAdapter extends BaseExpandableListAdapter {
                 holder.sipUri.setVisibility(View.GONE);
             }
 
-            holder.groupExpander.setImageResource(
-                    isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
+            if (getChildrenCount(groupPosition) == 1) {
+                holder.securityLevel.setVisibility(View.VISIBLE);
+                holder.groupExpander.setVisibility(View.GONE);
+
+                ParticipantDevice device = (ParticipantDevice) getChild(groupPosition, 0);
+                ChatRoomSecurityLevel level = device.getSecurityLevel();
+                switch (level) {
+                    case Safe:
+                        holder.securityLevel.setImageResource(R.drawable.security_2_indicator);
+                        break;
+                    case Encrypted:
+                        holder.securityLevel.setImageResource(R.drawable.security_1_indicator);
+                        break;
+                    case ClearText:
+                    case Unsafe:
+                    default:
+                        holder.securityLevel.setImageResource(R.drawable.security_alert_indicator);
+                        break;
+                }
+            } else {
+                holder.securityLevel.setVisibility(View.GONE);
+                holder.groupExpander.setVisibility(View.VISIBLE);
+                holder.groupExpander.setImageResource(
+                        isExpanded ? R.drawable.chevron_list_open : R.drawable.chevron_list_close);
+            }
         }
 
         return view;
