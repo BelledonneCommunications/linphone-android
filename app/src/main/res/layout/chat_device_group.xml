@@ -54,6 +54,15 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/device_security_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/security_alert_indicator" />
+
+        <ImageView
             android:id="@id/dropdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

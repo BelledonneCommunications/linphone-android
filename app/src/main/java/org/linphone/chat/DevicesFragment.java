@@ -103,6 +103,13 @@ public class DevicesFragment extends Fragment {
                                     (ParticipantDevice) mAdapter.getGroup(groupPosition);
                             CallManager.getInstance().inviteAddress(device.getAddress(), true);
                             return true;
+                        } else {
+                            if (mAdapter.getChildrenCount(groupPosition) == 1) {
+                                ParticipantDevice device =
+                                        (ParticipantDevice) mAdapter.getChild(groupPosition, 0);
+                                CallManager.getInstance().inviteAddress(device.getAddress(), true);
+                                return true;
+                            }
                         }
                         return false;
                     }
