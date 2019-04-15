@@ -6,6 +6,7 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startvorgang</string>
+  <string name="notification_registered">%s verbunden</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone-Kern %s</string>
@@ -18,6 +19,7 @@
   <string name="username">Benutzername</string>
   <string name="userid">Benutzerkennung (optional)</string>
   <string name="phone_number">Telefonnummer</string>
+  <string name="confirmation_code">Bestätigungscode</string>
   <string name="display_name">Anzeigename</string>
   <string name="password">Passwort</string>
   <string name="confirm_password">Passwortbestätigung</string>
@@ -216,6 +218,9 @@
   <string name="unexpected_event">Unerwartetes Ereignis %i für %s</string>
   <string name="download_file">Herunterladen</string>
   <!--Status Bar-->
+  <string name="status_connected">Verbunden</string>
+  <string name="status_not_connected">Nicht verbunden</string>
+  <string name="status_error">Verbindung fehlgeschlagen</string>
   <string name="voicemail_unread">ungelesene Nachrichten</string>
   <!--Side Menu-->
   <string name="menu_logout">Abmelden</string>
@@ -263,6 +268,8 @@
   <string name="incall_notif_active">Anruf fortsetzen</string>
   <string name="incall_notif_paused">Pausierten Anruf fortsetzen</string>
   <string name="incall_notif_video">Video-Anruf fortsetzen</string>
+  <string name="incall_notif_incoming">Eingehender Anruf</string>
+  <string name="incall_notif_outgoing">Ausgehender Anruf</string>
   <string name="notification_started">begonnen</string>
   <string name="unread_messages">%i ungelesene Nachrichten</string>
   <string name="missed_calls_notif_title">Verpasster Anruf</string>
