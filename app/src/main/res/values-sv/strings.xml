@@ -6,10 +6,13 @@
   <string name="addressbook_label">Linphone</string>
   <string name="notification_title">Linphone</string>
   <string name="wait_dialog_text">Startar upp</string>
+  <string name="notification_registered">%s ansluten</string>
+  <string name="notification_register_failure">%s kunde inte ansluta</string>
   <string name="tunnel_host"></string>
   <string name="about_version">Linphone Android %s</string>
   <string name="about_liblinphone_version">Linphone Core %s</string>
   <string name="about_liblinphone_sdk_version">Linphone SDK %s</string>
+  <string name="about_privacy_policy">Besök vår sekretesspolicy</string>
   <string name="sync_account_name">linphone-kontakter</string>
   <!--Notifications-->
   <string name="notification_reply_label">Svara</string>
@@ -157,6 +160,7 @@
   <string name="delete_history_log">Vill du ta bort vald samtalslog?</string>
   <string name="today">Idag</string>
   <string name="yesterday">Igår</string>
+  <string name="calls">Samtal</string>
   <!--Contacts-->
   <string name="no_contact">Inga kontakter i din adressbok.</string>
   <string name="no_sip_contact">Inga SIP-kontakter i din adressbok.</string>
@@ -236,6 +240,10 @@
   <string name="download_file">Ladda ner</string>
   <string name="toast_choose_chat_room_for_sharing">Välj en konversation eller skapa en ny</string>
   <!--Status Bar-->
+  <string name="status_connected">Ansluten</string>
+  <string name="status_not_connected">Inte ansluten</string>
+  <string name="status_in_progress">Anslutning pågår</string>
+  <string name="status_error">Anslutningen misslyckades</string>
   <string name="voicemail_unread">olästa meddelanden</string>
   <!--Side Menu-->
   <string name="menu_logout">Logga ut</string>

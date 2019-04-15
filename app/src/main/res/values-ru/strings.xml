@@ -160,6 +160,7 @@
   <string name="delete_history_log">Вы действительно хотите удалить выбранный журнал вызовов?</string>
   <string name="today">Сегодня</string>
   <string name="yesterday">Вчера</string>
+  <string name="calls">Вызовы</string>
   <!--Contacts-->
   <string name="no_contact">В адресной книге нет контактов.</string>
   <string name="no_sip_contact">В адресной книге нет SIP контактов.</string>
