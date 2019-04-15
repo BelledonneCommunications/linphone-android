@@ -33,13 +33,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/menu"
-        android:layout_below="@id/top_bar"
-        android:paddingTop="10dp">
+        android:layout_below="@id/top_bar">
 
         <RelativeLayout
             android:id="@+id/contact_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="?attr/backgroundColor">
 
             <TextView
                 android:id="@+id/contact_name"
@@ -75,12 +75,13 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
+            <TextureView
+                android:id="@+id/videoSurface"
+                android:layout_below="@id/contact_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <TextureView
-            android:id="@+id/videoSurface"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        </RelativeLayout>
 
     </FrameLayout>
 

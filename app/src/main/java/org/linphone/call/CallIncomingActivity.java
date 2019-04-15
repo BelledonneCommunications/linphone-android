@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -193,7 +194,10 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         mNumber.setText(address.asStringUriOnly());
 
         if (LinphonePreferences.instance().acceptIncomingEarlyMedia()) {
-            mCall.getCore().setNativeVideoWindowId(mVideoDisplay);
+            if (mCall.getCurrentParams().videoEnabled()) {
+                findViewById(R.id.avatar_layout).setVisibility(View.GONE);
+                mCall.getCore().setNativeVideoWindowId(mVideoDisplay);
+            }
         }
     }
 
