@@ -65,6 +65,7 @@ import java.util.TimerTask;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -175,6 +176,7 @@ public class CallActivity extends LinphoneGenericActivity
         }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Compatibility.setShowWhenLocked(this, true);
 
         setContentView(R.layout.call);
 
