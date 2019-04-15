@@ -730,6 +730,11 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void initChatRoom() {
+        if (mChatRoom != null) {
+            // Required on tablets
+            mChatRoom.removeListener(this);
+        }
+
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (mRemoteSipAddress == null
                 || mRemoteSipUri == null
@@ -817,6 +822,7 @@ public class ChatMessagesFragment extends Fragment
         if (!mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt())) {
             mChatRoomSecurityLevel.setVisibility(View.GONE);
         } else {
+            mChatRoomSecurityLevel.setVisibility(View.VISIBLE);
             ChatRoomSecurityLevel level = mChatRoom.getSecurityLevel();
             switch (level) {
                 case Safe:
