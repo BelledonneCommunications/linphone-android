@@ -50,7 +50,7 @@ public class AdvancedSettingsFragment extends Fragment {
             mBackgroundMode,
             mStartAtBoot,
             mDarkMode;
-    private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername;
+    private TextSetting mRemoteProvisioningUrl, mDisplayName, mUsername, mDeviceName;
     private BasicSetting mAndroidAppSettings;
 
     @Nullable
@@ -104,6 +104,8 @@ public class AdvancedSettingsFragment extends Fragment {
         mUsername = mRootView.findViewById(R.id.pref_user_name);
 
         mAndroidAppSettings = mRootView.findViewById(R.id.pref_android_app_settings);
+
+        mDeviceName = mRootView.findViewById(R.id.pref_device_name);
     }
 
     protected void setListeners() {
@@ -199,6 +201,14 @@ public class AdvancedSettingsFragment extends Fragment {
                         startActivityForResult(i, LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
                     }
                 });
+
+        mDeviceName.setListener(
+                new SettingListenerBase() {
+                    @Override
+                    public void onTextValueChanged(String newValue) {
+                        mPrefs.setDeviceName(newValue);
+                    }
+                });
     }
 
     protected void updateValues() {
@@ -219,6 +229,8 @@ public class AdvancedSettingsFragment extends Fragment {
         mDisplayName.setValue(mPrefs.getDefaultDisplayName());
 
         mUsername.setValue(mPrefs.getDefaultUsername());
+
+        mDeviceName.setValue(mPrefs.getDeviceName(LinphoneActivity.instance()));
 
         setListeners();
     }

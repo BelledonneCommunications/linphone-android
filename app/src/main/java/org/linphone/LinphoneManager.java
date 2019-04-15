@@ -72,7 +72,6 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallManager;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreator;
@@ -728,10 +727,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         mCore.setZrtpSecretsFile(mBasePath + "/zrtp_secrets");
 
-        String deviceName = Compatibility.getDeviceName(mServiceContext);
+        String deviceName = mPrefs.getDeviceName(mServiceContext);
         String appName = mServiceContext.getResources().getString(R.string.user_agent);
         String androidVersion = BuildConfig.VERSION_NAME;
         String userAgent = appName + "/" + androidVersion + " (" + deviceName + ") LinphoneSDK";
+
         mCore.setUserAgent(
                 userAgent,
                 getString(R.string.linphone_sdk_version)

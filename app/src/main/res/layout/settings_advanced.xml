@@ -50,6 +50,14 @@
             linphone:title="@string/pref_dark_mode" />
 
         <org.linphone.settings.widget.TextSetting
+            android:id="@+id/pref_device_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            linphone:subtitle="@string/pref_display_name_subtitle"
+            linphone:hint="@string/pref_device_name"
+            linphone:title="@string/pref_device_name" />
+
+        <org.linphone.settings.widget.TextSetting
             android:id="@+id/pref_remote_provisioning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

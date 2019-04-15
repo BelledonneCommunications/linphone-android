@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
 import org.linphone.core.Config;
@@ -1065,5 +1066,14 @@ public class LinphonePreferences {
         if (LinphoneActivity.isInstanciated()) {
             LinphoneActivity.instance().recreate();
         }
+    }
+
+    public String getDeviceName(Context context) {
+        String defaultValue = Compatibility.getDeviceName(context);
+        return getConfig().getString("app", "device_name", defaultValue);
+    }
+
+    public void setDeviceName(String name) {
+        getConfig().setString("app", "device_name", name);
     }
 }
