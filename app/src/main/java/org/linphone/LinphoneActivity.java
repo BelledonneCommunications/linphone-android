@@ -1237,8 +1237,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case SETTINGS:
             case ACCOUNT_SETTINGS:
-                hideTabBar(hideBottomBar);
             case SETTINGS_SUBLEVEL:
+                hideTabBar(hideBottomBar);
                 if (customTitle == null) {
                     showTopBarWithTitle(getString(R.string.settings));
                 } else {

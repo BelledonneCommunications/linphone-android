@@ -5,62 +5,64 @@
     android:background="?attr/backgroundColor">
 
     <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="?attr/lighToolbarBackgroundColor"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_back"
+            android:padding="18dp"
+            android:src="@drawable/back" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6" />
+
+        <ImageView
+            android:id="@+id/add_contact"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_add_contact"
+            android:padding="15dp"
+            android:src="@drawable/contact_add" />
+
+        <ImageView
+            android:id="@+id/goto_contact"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="?attr/button_background_drawable"
+            android:contentDescription="@string/content_description_contacts"
+            android:padding="15dp"
+            android:src="@drawable/contact"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@id/top_bar"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/top_bar"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="?attr/lighToolbarBackgroundColor"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_back"
-                android:padding="18dp"
-                android:src="@drawable/back" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.6" />
-
-            <ImageView
-                android:id="@+id/add_contact"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_add_contact"
-                android:padding="15dp"
-                android:src="@drawable/contact_add" />
-
-            <ImageView
-                android:id="@+id/goto_contact"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:background="?attr/button_background_drawable"
-                android:contentDescription="@string/content_description_contacts"
-                android:padding="15dp"
-                android:src="@drawable/contact"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="20dp"
-            android:paddingBottom="5dp">
+            android:padding="20dp">
 
             <RelativeLayout
                 android:id="@+id/avatar_layout"
@@ -136,34 +138,30 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/assistant_input_field_header_font"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="@string/calls"
+                android:textAllCaps="true" />
 
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:background="?attr/dividerColor" />
-
-                <TextView
-                    style="@style/assistant_input_field_header_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/calls"
-                    android:textAllCaps="true" />
-
-                <ListView
-                    android:id="@+id/logs_list"
-                    android:cacheColorHint="@color/transparent_color"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
+            <ListView
+                android:id="@+id/logs_list"
+                android:cacheColorHint="@color/transparent_color"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
