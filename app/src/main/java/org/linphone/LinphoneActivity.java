@@ -914,7 +914,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
                         || newFragmentType == FragmentsAvailable.SETTINGS
                         || newFragmentType == FragmentsAvailable.ACCOUNT_SETTINGS
                         || newFragmentType == FragmentsAvailable.CREATE_CHAT
-                        || newFragmentType == FragmentsAvailable.INFO_GROUP_CHAT) {
+                        || newFragmentType == FragmentsAvailable.INFO_GROUP_CHAT
+                        || newFragmentType == FragmentsAvailable.RECORDING_LIST) {
                     ll.setVisibility(View.GONE);
                 } else {
                     ll.setVisibility(View.VISIBLE);
