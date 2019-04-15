@@ -974,7 +974,7 @@ public class ChatMessagesFragment extends Fragment
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         String files[] = savedInstanceState.getStringArray("Files");
-        if (files.length > 0) {
+        if (files != null && files.length > 0) {
             for (String file : files) {
                 if (FileUtils.isExtensionImage(file)) {
                     addImageToPendingList(file);
