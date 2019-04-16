@@ -59,7 +59,7 @@ project.tasks['preBuild'].dependsOn 'getGitVersion'
 repositories {
     maven {
         // Replace snapshots by releases for releases !
-        url "https://linphone.org/snapshots/maven_repository"
+        url "https://linphone.org/releases/maven_repository"
     }
 }
 
@@ -72,7 +72,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4118
+        versionCode 4119
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
