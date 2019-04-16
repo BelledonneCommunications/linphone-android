@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <bitmap android:src="@drawable/numpad_star"
+            android:tint="?attr/accentColor"/>
+    </item>
+    <item>
+        <bitmap android:src="@drawable/numpad_star"
+            android:tint="?attr/drawableTintColor"/>
+    </item>
+</selector>

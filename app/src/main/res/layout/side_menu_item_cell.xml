@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp">
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:src="@drawable/menu_about" />
+
+    <TextView
+        android:id="@+id/item_name"
+        style="@style/standard_text_font"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="16dp" />
+
+</LinearLayout>

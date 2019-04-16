@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="?attr/backgroundColor"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="10dp">
+
+        <TextView
+            style="@style/header_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conference" />
+
+        <Chronometer
+            android:id="@+id/callTimer"
+            style="@style/call_timer_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/conference_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/content_description_pause"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/pause" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/dividerColor" />
+
+</RelativeLayout>

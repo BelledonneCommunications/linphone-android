@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:paddingBottom="5dp">
+
+    <EditText
+        android:id="@+id/numoraddr"
+        style="@style/contact_edit_form_font"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_toStartOf="@+id/delete_field"
+        android:layout_toLeftOf="@+id/delete_field"
+        android:background="@drawable/resizable_textfield"
+        android:textColor="@color/black_color"
+        android:inputType="textEmailAddress"
+        android:textCursorDrawable="@null" />
+
+    <ImageView
+        android:id="@+id/delete_field"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:contentDescription="@string/content_description_add"
+        android:paddingLeft="5dp"
+        android:src="@drawable/delete_field" />
+
+</RelativeLayout>

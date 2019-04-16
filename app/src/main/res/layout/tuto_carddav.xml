@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top|center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/carddav_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:text="sylvain" />
+
+        <EditText
+            android:id="@+id/carddav_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Pwd" />
+
+        <EditText
+            android:id="@+id/carddav_ha1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="HA1"
+            android:text="4747ce2517a985f2fc20234a38f068b6" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/carddav_server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Server URL"
+        android:text="http://192.168.0.230/sabredav/addressbookserver.php/addressbooks/sylvain/default" />
+
+    <Button
+        android:id="@+id/carddav_synchronize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Synchronize" />
+
+    <TextView
+        android:id="@+id/carddav_events"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
