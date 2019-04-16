@@ -10,39 +10,42 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [4.1] - 2019-xx-xx
+## [4.1.0] - 2019-xx-xx
 
-### Improvements
-- Improved UI.
-- Added adaptive icon for Android 8+.
-- Use of binary SDK hosted in Maven repository instead of having to build it manually.
-- Asynchronous fetch of native contacts.
-- Removed unused graphical resources and improved some existing ones.
-- Updated translations.
-- Updated sliders used to answer or hangup incoming call so they can be used with accessibility tools.
-- Reworked settings, new ones are available, some unused have been removed.
-- Video overlay also displays local preview now.
-- In About fragment, the license text is a link to the full license on gnu.org.
+### Added
+- End-to-end encryption for instant messaging, for both one-to-one and group conversations.
+- Video H.265 codec support, based on android MediaCodec.
+- Enhanced call and IM notifications, so that it is possible to answer, decline, reply or mark as read directly from them.
+- Setting to request attachments to be automatically downloaded, unconditionnally or based on their size.
+- Possibility to send multiple attachments (images, documents) in a same message.
+- Possibility to share multiple images through Linphone from an external application (ex: photo app)
+- Rich input from keyboard (images, animated gifs...) when composing messages.
+- Rendering of animated gifs in conversations.
+- Button to invite contacts to use Linphone by sending them a SMS.
+- Possibility to record calls (audio only), and replay them from the "Recordings" menu.
+- Remote provisioning from a QR code providing the http(s) url of a provisioning server.
+- Option for a dark theme
 
-### Features
-- Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
-- Send multiple files with text in the same chat message.
-- Allow multiple images to be shared from an external app through linphone at once.
-- Support of H265 codec.
-- Use TextureView instead of GL2JNIView, easier to use and will fix issues.
-- Send SMS to invite your friends in using Linphone.
-- Reply to / mark as read chat message in notification.
-- Answer or hangup calls in notification.
-- Setting to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications on Android 8+.
-- Call recording.
-- Get remote provisioning URL from QR code scan.
-- Allow rich input while composing chat message to easily send images from keyboard.
-- Animated GIFs are no longer displayed as static images.
-- A dark mode is available.
-- List all calls with the same SIP address in history detail view.
+### Changed
+- Compilation procedure is simplified: a binary SDK containing dependencies (liblinphone) is retrieved automatically from a Maven repository.
+  Full compilation remains absolutely supported. Please check local README.md for more details.
+- Updated translations, mainly French and English.
+- Call history view shows last calls for a given contact.
+- Improved ergonomy of answer/decline buttons, including accessibility support.
+- Enhanced user interface, including new icons, cleanups of unused graphical resources.
+- Contact view is faster thanks to an asynchronous fetching.
+- Adaptive icon for Android 8+.
+- Video overlay now also shows local view.
+- Reworked settings view, cleanup of useless settings.
+- About section links to full GPLv2 license text.
 
-### Fixes
-- Fixed basic chat room with same correspondant with multiple local accounts always displaying the same one when clicking on it in chat rooms list view.
+### Deprecated
+- The video rendering method based on GL2JNIView is deprecated in favour of TextureView, which is easier to use.
+  Please read [this article](https://wiki.linphone.org/xwiki/wiki/public/view/Lib/Features/Android%20TextureView%20Display/) for more information.
+
+### Fixed
+- One to one text conversations mixed up when initiated from differents SIP accounts. 
+
 
 ## [4.0.1] - 2018-06-26
 
