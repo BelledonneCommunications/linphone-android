@@ -24,11 +24,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import org.linphone.R;
 
 public class WelcomeFragment extends Fragment implements OnClickListener {
-    private Button mCreateAccount, mLogLinphoneAccount, mLogGenericAccount, mRemoteProvisioning;
+    private TextView mCreateAccount, mLogLinphoneAccount, mLogGenericAccount, mRemoteProvisioning;
 
     @Override
     public View onCreateView(

@@ -78,8 +78,6 @@ public class NetworkSettingsFragment extends Fragment {
         mIpv6 = mRootView.findViewById(R.id.pref_ipv6);
 
         mPush = mRootView.findViewById(R.id.pref_push_notification);
-        mPush.setVisibility(
-                PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mRandomPorts = mRootView.findViewById(R.id.pref_transport_use_random_ports);
 
@@ -101,10 +99,6 @@ public class NetworkSettingsFragment extends Fragment {
 
         mAndroidBatterySaverSettings =
                 mRootView.findViewById(R.id.pref_android_battery_protected_settings);
-        mAndroidBatterySaverSettings.setVisibility(
-                DeviceUtils.hasDevicePowerManager(LinphoneActivity.instance())
-                        ? View.VISIBLE
-                        : View.GONE);
     }
 
     protected void setListeners() {
@@ -227,6 +221,8 @@ public class NetworkSettingsFragment extends Fragment {
         mIpv6.setChecked(mPrefs.isUsingIpv6());
 
         mPush.setChecked(mPrefs.isPushNotificationEnabled());
+        mPush.setVisibility(
+                PushNotificationUtils.isAvailable(getActivity()) ? View.VISIBLE : View.GONE);
 
         mRandomPorts.setChecked(mPrefs.isUsingRandomPort());
 
@@ -244,6 +240,11 @@ public class NetworkSettingsFragment extends Fragment {
         mTurnUsername.setValue(mPrefs.getTurnUsername());
         mTurnUsername.setEnabled(mPrefs.isTurnEnabled());
         mTurnPassword.setEnabled(mPrefs.isTurnEnabled());
+
+        mAndroidBatterySaverSettings.setVisibility(
+                DeviceUtils.hasDevicePowerManager(LinphoneActivity.instance())
+                        ? View.VISIBLE
+                        : View.GONE);
 
         setListeners();
     }
