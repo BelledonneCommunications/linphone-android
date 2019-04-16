@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialog_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/security_alert_indicator"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/dialog_title"
+        style="@style/dialog_title_font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/dialog_message"
+        style="@style/dialog_message_font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/dialog_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/resizable_textfield"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:textColor="@color/black_color"
+        android:textCursorDrawable="@null"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/dialog_zrtp_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zrtp_local_sas"
+                android:textAlignment="center"
+                android:textAppearance="@style/dialog_zrtp_white_font" />
+
+            <TextView
+                android:id="@+id/zrtp_sas_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@style/dialog_zrtp_colored_font" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zrtp_remote_sas"
+                android:textAlignment="center"
+                android:textAppearance="@style/dialog_zrtp_white_font" />
+
+            <TextView
+                android:id="@+id/zrtp_sas_remote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@style/dialog_zrtp_colored_font" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dialog_do_not_ask_again_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <CheckBox
+            android:id="@+id/doNotAskAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/checkbox" />
+
+        <TextView
+            android:id="@+id/doNotAskAgainLabel"
+            style="@style/dialog_message_font"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/do_not_ask_again" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/dialog_cancel_button"
+            style="@style/dialog_cancel_button_font"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/resizable_assistant_button"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/dialog_delete_button"
+            style="@style/dialog_action_button_font"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/resizable_assistant_button"
+            android:backgroundTint="@color/red_color"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="@string/delete" />
+
+        <Button
+            android:id="@+id/dialog_ok_button"
+            style="@style/dialog_action_button_font"
+            android:layout_width="137dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/resizable_assistant_button"
+            android:backgroundTint="@color/green_color"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="@string/ok"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

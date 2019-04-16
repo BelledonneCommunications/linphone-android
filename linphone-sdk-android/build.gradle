@@ -1,0 +1,12 @@
+configurations.maybeCreate("debug")
+configurations.maybeCreate("release")
+
+File debugAar = new File('linphone-sdk-android/linphone-sdk-android-debug.aar')
+File releaseAar = new File('linphone-sdk-android/linphone-sdk-android-release.aar')
+
+if (debugAar.exists()) {
+    artifacts.add("debug", file('linphone-sdk-android-debug.aar'))
+}
+if (releaseAar.exists()) {
+    artifacts.add("release", file('linphone-sdk-android-release.aar'))
+}
