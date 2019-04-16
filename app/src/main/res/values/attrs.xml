@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LinphoneAppTheme">
+        <attr name="accentColor" format="color"/>
+        <attr name="accentColorLight30" format="color"/>
+
+        <attr name="accentTextColor" format="color"/>
+        <attr name="primaryTextColor" format="color"/>
+        <attr name="secondaryTextColor" format="color"/>
+        <attr name="primarySubtextDarkColor" format="color"/>
+        <attr name="primarySubtextLightColor" format="color"/>
+
+        <attr name="backgroundColor" format="color"/>
+        <attr name="backgroundColor2" format="color"/>
+        <attr name="backgroundContastColor" format="color"/>
+        <attr name="dividerColor" format="color"/>
+
+        <attr name="drawableTintColor" format="color"/>
+        <attr name="drawableTintDisabledColor" format="color"/>
+        <attr name="drawableTintOverColor" format="color"/>
+
+        <attr name="lighToolbarBackgroundColor" format="color"/>
+        <attr name="lighToolbarBackgroundDisabledColor" format="color"/>
+        <attr name="lighToolbarTextColor" format="color"/>
+        <attr name="darkToolbarBackgroundColor" format="color"/>
+        <attr name="darkToolbarTextColor" format="color"/>
+
+        <attr name="button_background_drawable" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="Settings">
+        <attr name="title" format="string" />
+        <attr name="subtitle" format="string" />
+        <attr name="hint" format="string" />
+        <attr name="list_items_names" format="reference" />
+        <attr name="list_items_values" format="reference" />
+    </declare-styleable>
+</resources>

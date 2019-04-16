@@ -1,0 +1,33 @@
+job-android:
+
+  stage: build
+  tags: [ "docker-android" ]
+  image: gitlab.linphone.org:4567/bc/public/linphone-android/bc-dev-android:28
+
+  before_script:
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then eval $(ssh-agent -s); fi
+    - if ! [ -z ${SCP_PRIVATE_KEY+x} ]; then echo "$SCP_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null; fi
+
+  script:
+    - sdkmanager
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_KEYSTORE_PATH app/
+    - scp -oStrictHostKeyChecking=no $DEPLOY_SERVER:$ANDROID_GOOGLE_SERVICES_PATH app/
+    - echo storePassword=$ANDROID_KEYSTORE_PASSWORD > keystore.properties
+    - echo keyPassword=$ANDROID_KEYSTORE_KEY_PASSWORD >> keystore.properties
+    - echo keyAlias=$ANDROID_KEYSTORE_KEY_ALIAS >> keystore.properties
+    - echo storeFile=$ANDROID_KEYSTORE_FILE >> keystore.properties
+    - ./gradlew assembleDebug
+    - ./gradlew assembleRelease
+
+  artifacts:
+    paths:
+      - ./app/build/outputs/apk/debug/linphone-android-debug-*.apk
+      - ./app/build/outputs/apk/release/linphone-android-release-*.apk
+    when: always
+    expire_in: 1 week
+
+
+.scheduled-job-android:
+  extends: job-android
+  only:
+    - schedules

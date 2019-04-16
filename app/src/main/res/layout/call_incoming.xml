@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <fragment
+        android:id="@+id/status"
+        android:name="org.linphone.fragments.StatusFragment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        tools:layout="@layout/status" />
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/status"
+        android:background="?attr/lighToolbarBackgroundColor">
+
+        <TextView
+            style="@style/toolbar_title_font"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/incoming_call" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/menu"
+        android:layout_below="@id/top_bar">
+
+        <RelativeLayout
+            android:id="@+id/contact_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/backgroundColor">
+
+            <TextView
+                android:id="@+id/contact_name"
+                style="@style/big_contact_name_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingTop="5dp" />
+
+            <TextView
+                android:id="@+id/contact_number"
+                style="@style/sip_uri_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contact_name"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="10dp" />
+
+            <RelativeLayout
+                android:id="@+id/avatar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/contact_number"
+                android:layout_margin="5dp"
+                android:gravity="center">
+
+                <include layout="@layout/contact_avatar_200" />
+
+            </RelativeLayout>
+
+            <TextureView
+                android:id="@+id/videoSurface"
+                android:layout_below="@id/contact_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <org.linphone.views.CallIncomingDeclineButton
+            android:id="@+id/decline_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <org.linphone.views.CallIncomingAnswerButton
+            android:id="@+id/answer_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</RelativeLayout>

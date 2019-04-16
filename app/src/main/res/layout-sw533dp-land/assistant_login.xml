@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <TextView
+            style="@style/standard_text_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/assistant_generic_account"
+            android:textAllCaps="true" />
+
+        <TextView
+            style="@style/standard_small_text_font"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="10dp"
+            android:text="@string/assistant_login_desc" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <TableRow
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/username"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/resizable_textfield"
+                        android:contentDescription="@string/content_description_username_field"
+                        android:inputType="text|textNoSuggestions"
+                        android:maxLines="1"
+                        android:hint="@string/username"
+                        android:textColor="@color/black_color" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="30dp">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/password"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/resizable_textfield"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:hint="@string/password"
+                        android:textColor="@color/black_color" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/assistant_display_name_optional"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_display_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/resizable_textfield"
+                        android:contentDescription="@string/content_description_display_field"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:hint="@string/assistant_display_name_optional"
+                        android:textColor="@color/black_color" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="30dp">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/domain"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_domain"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/resizable_textfield"
+                        android:contentDescription="@string/content_description_domain_field"
+                        android:inputType="textUri"
+                        android:maxLines="1"
+                        android:hint="@string/domain"
+                        android:textColor="@color/black_color" />
+
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/userid"
+                        android:textAllCaps="true" />
+
+                    <EditText
+                        android:id="@+id/assistant_userid"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/resizable_textfield"
+                        android:contentDescription="@string/content_description_username_field"
+                        android:inputType="text|textNoSuggestions"
+                        android:maxLines="1"
+                        android:hint="@string/userid"
+                        android:textColor="@color/black_color" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/assistant_input_field_header_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/transport"
+                        android:textAllCaps="true" />
+
+                    <RadioGroup
+                        android:id="@+id/assistant_transports"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/transport_udp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:textColor="?attr/primaryTextColor"
+                            android:text="@string/pref_transport_udp" />
+
+                        <RadioButton
+                            android:id="@+id/transport_tcp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:textColor="?attr/primaryTextColor"
+                            android:text="@string/pref_transport_tcp" />
+
+                        <RadioButton
+                            android:id="@+id/transport_tls"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:textColor="?attr/primaryTextColor"
+                            android:checked="true"
+                            android:text="@string/pref_transport_tls" />
+                    </RadioGroup>
+
+                </LinearLayout>
+
+            </TableRow>
+
+        </TableLayout>
+
+        <Button
+            android:id="@+id/assistant_apply"
+            style="@style/button_font"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/assistant_button"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/assistant_login"
+            android:textColor="@drawable/assistant_button_text_color" />
+
+    </LinearLayout>
+
+</ScrollView>
