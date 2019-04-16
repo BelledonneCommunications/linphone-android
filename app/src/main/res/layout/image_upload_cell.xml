@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/pendingImageForUpload"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true" />
+
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignTop="@id/pendingImageForUpload"
+        android:layout_alignRight="@id/pendingImageForUpload"
+        android:src="@drawable/clean_field" />
+
+</RelativeLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Do not translate any of the strings below -->
+    <bool name="isTablet">false</bool>
+
+    <string name="dummy_group_chat_subject" translatable="false">dummy subject</string>
+
+    <string-array name="popup_enable_log">
+        <item>@string/debug_popup_enable_logs</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="popup_send_log">
+        <item>@string/debug_popup_disable_logs</item>
+        <item>@string/debug_popup_send_logs</item>
+        <item>@string/cancel</item>
+    </string-array>
+
+    <string-array name="limit_bitrate_entry_values">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>36</item>
+        <item>64</item>
+        <item>128</item>
+    </string-array>
+    <string-array name="limit_bitrate_entries">
+        <item>10 kbits/s</item>
+        <item>15 kbits/s</item>
+        <item>20 kbits/s</item>
+        <item>36 kbits/s</item>
+        <item>64 kbits/s</item>
+        <item>128 kbits/s</item>
+    </string-array>
+
+    <string-array name="video_preset_entries">
+        <item>default</item>
+        <item>high-fps</item>
+        <item>custom</item>
+    </string-array>
+
+    <string name="pref_auto_download_policy_disabled_key" translatable="false">-1</string>
+    <string name="pref_auto_download_policy_always_key" translatable="false">0</string>
+    <string name="pref_auto_download_policy_size_key" translatable="false">10000000</string>
+    <string-array name="pref_auto_download_policy_entries_values">
+        <item>@string/pref_auto_download_policy_disabled_key</item>
+        <item>@string/pref_auto_download_policy_always_key</item>
+        <item>@string/pref_auto_download_policy_size_key</item>
+    </string-array>
+    <string-array name="pref_auto_download_policy_entries_labels">
+        <item>@string/pref_auto_download_disabled</item>
+        <item>@string/pref_auto_download_always</item>
+        <item>@string/pref_auto_download_under_size</item>
+    </string-array>
+
+    <string name="tunnel_mode_entry_value_disabled" translatable="false">disabled</string>
+    <string name="tunnel_mode_entry_value_3G_only" translatable="false">3G_only</string>
+    <string name="tunnel_mode_entry_value_always" translatable="false">always</string>
+    <string name="tunnel_mode_entry_value_auto" translatable="false">auto</string>
+    <string-array name="tunnel_mode_entry_values">
+        <item>@string/tunnel_mode_entry_value_disabled</item>
+        <item>@string/tunnel_mode_entry_value_3G_only</item>
+        <item>@string/tunnel_mode_entry_value_always</item>
+        <item>@string/tunnel_mode_entry_value_auto</item>
+    </string-array>
+</resources>

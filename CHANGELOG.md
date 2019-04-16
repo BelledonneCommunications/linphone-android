@@ -10,9 +10,39 @@ Group changes to describe their impact on the project, as follows:
     Fixed for any bug fixes.
     Security to invite users to upgrade in case of vulnerabilities.
 
-## [Incomming]
-- feature: support of H265 codec.
-- feature: use TextureView instead of GL2JNIView, easier to use and will fix issues
+## [4.1] - 2019-xx-xx
+
+### Improvements
+- Improved UI.
+- Added adaptive icon for Android 8+.
+- Use of binary SDK hosted in Maven repository instead of having to build it manually.
+- Asynchronous fetch of native contacts.
+- Removed unused graphical resources and improved some existing ones.
+- Updated translations.
+- Updated sliders used to answer or hangup incoming call so they can be used with accessibility tools.
+- Reworked settings, new ones are available, some unused have been removed.
+- Video overlay also displays local preview now.
+- In About fragment, the license text is a link to the full license on gnu.org.
+
+### Features
+- Added new end to end LIME encryption for instant messaging, both for single chat rooms and group ones.
+- Send multiple files with text in the same chat message.
+- Allow multiple images to be shared from an external app through linphone at once.
+- Support of H265 codec.
+- Use TextureView instead of GL2JNIView, easier to use and will fix issues.
+- Send SMS to invite your friends in using Linphone.
+- Reply to / mark as read chat message in notification.
+- Answer or hangup calls in notification.
+- Setting to automatically download incoming files, either always, never or depending on their sizes. This adds the feature of having images received by file transfer in notifications on Android 8+.
+- Call recording.
+- Get remote provisioning URL from QR code scan.
+- Allow rich input while composing chat message to easily send images from keyboard.
+- Animated GIFs are no longer displayed as static images.
+- A dark mode is available.
+- List all calls with the same SIP address in history detail view.
+
+### Fixes
+- Fixed basic chat room with same correspondant with multiple local accounts always displaying the same one when clicking on it in chat rooms list view.
 
 ## [4.0.1] - 2018-06-26
 
@@ -33,7 +63,6 @@ Group changes to describe their impact on the project, as follows:
 
 ### Fixed
 - issue with changing push notification token not passed to library, possibly resulting in a loss of incoming calls.
-
 
 ## [3.3.0] - 2017-10-18
 

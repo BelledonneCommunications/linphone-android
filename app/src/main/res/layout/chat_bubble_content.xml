@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:adjustViewBounds="true"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/bigImage"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_margin="5dp"
+        android:adjustViewBounds="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/file"
+        style="@style/chat_bubble_file_name_font"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:background="@color/chat_bubble_text_color"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/download"
+        style="@style/button_font"
+        android:layout_width="137dp"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:textColor="@drawable/assistant_button_text_color"
+        android:background="@drawable/resizable_assistant_button"
+        android:ellipsize="end"
+        android:padding="10dp"
+        android:text="@string/download_file"
+        android:visibility="gone" />
+
+</RelativeLayout>
