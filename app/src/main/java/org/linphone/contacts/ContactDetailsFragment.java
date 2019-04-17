@@ -226,8 +226,11 @@ public class ContactDetailsFragment extends Fragment
             View v = inflater.inflate(R.layout.contact_control_row, null);
 
             String value = noa.getValue();
-            String displayednumberOrAddress =
-                    LinphoneUtils.getDisplayableUsernameFromAddress(value);
+            String displayedNumberOrAddress = value;
+            if (getResources()
+                    .getBoolean(R.bool.only_show_address_username_if_matches_default_domain)) {
+                displayedNumberOrAddress = LinphoneUtils.getDisplayableUsernameFromAddress(value);
+            }
 
             TextView label = v.findViewById(R.id.address_label);
             if (noa.isSIPAddress()) {
@@ -239,12 +242,12 @@ public class ContactDetailsFragment extends Fragment
             }
 
             TextView tv = v.findViewById(R.id.numeroOrAddress);
-            tv.setText(displayednumberOrAddress);
+            tv.setText(displayedNumberOrAddress);
             tv.setSelected(true);
 
             ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
             if (lpc != null) {
-                String username = lpc.normalizePhoneNumber(displayednumberOrAddress);
+                String username = lpc.normalizePhoneNumber(displayedNumberOrAddress);
                 if (username != null) {
                     value = LinphoneUtils.getFullAddressFromUsername(username);
                 }
