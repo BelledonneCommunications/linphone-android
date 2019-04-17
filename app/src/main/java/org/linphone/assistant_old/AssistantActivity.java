@@ -118,10 +118,6 @@ public class AssistantActivity extends ThemableActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-
         setContentView(R.layout.assistant);
         initUI();
 
