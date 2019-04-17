@@ -339,7 +339,7 @@ public class CreateAccountFragment extends Fragment
                 addAlias();
             } else {
                 if (mUseEmail.isChecked()) mAccountCreator.setPhoneNumber(null, null);
-                if (!getResources().getBoolean(R.bool.isTablet) || getUsername().length() > 0) {
+                if (getUsername().length() > 0) {
                     mAccountCreator.isAccountExist();
                 } else {
                     LinphoneUtils.displayErrorAlert(

@@ -58,10 +58,9 @@ public class LinphoneLoginFragment extends Fragment
     private CheckBox mUseUsername;
     private LinearLayout mPhoneNumberLayout, mUsernameLayout, mPasswordLayout;
     private TextView mForgotPassword, mMessagePhoneNumber, mPhoneNumberError;
-    private Boolean mRecoverAccount;
     private AccountCreator mAccountCreator;
     private int mCountryCode;
-    private String mPhone, mDialcode, mUsername, mPwd;
+    private String mPhone, mUsername, mPwd;
     private ImageView mPhoneNumberInfo;
 
     @Override
@@ -76,8 +75,6 @@ public class LinphoneLoginFragment extends Fragment
 
         mLogin = view.findViewById(R.id.assistant_username);
         mLogin.addTextChangedListener(this);
-
-        mRecoverAccount = true;
 
         mDialCode = view.findViewById(R.id.dial_code);
 
@@ -104,7 +101,7 @@ public class LinphoneLoginFragment extends Fragment
         if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
             mMessagePhoneNumber.setText(getString(R.string.assistant_create_account_part_1));
             mPhone = getArguments().getString("Phone");
-            mDialcode = getArguments().getString("Dialcode");
+            String prefix = getArguments().getString("Dialcode");
 
             getActivity().getApplicationContext();
             // Automatically get the country code from the mPhone
@@ -148,7 +145,7 @@ public class LinphoneLoginFragment extends Fragment
             }
 
             if (mPhone != null) mPhoneNumberEdit.setText(mPhone);
-            if (mDialcode != null) mDialCode.setText("+" + mDialcode);
+            if (prefix != null) mDialCode.setText("+" + prefix);
         }
 
         if (getResources().getBoolean(R.bool.assistant_allow_username)) {
@@ -212,6 +209,7 @@ public class LinphoneLoginFragment extends Fragment
     }
 
     private int getPhoneNumberStatus() {
+        mAccountCreator.setDomain(getString(R.string.default_domain));
         return mAccountCreator.setPhoneNumber(
                 mPhoneNumberEdit.getText().toString(), LinphoneUtils.getCountryCode(mDialCode));
     }
@@ -247,7 +245,6 @@ public class LinphoneLoginFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        mRecoverAccount = mUseUsername == null || !mUseUsername.isChecked();
     }
 
     @Override
@@ -255,7 +252,7 @@ public class LinphoneLoginFragment extends Fragment
         int id = v.getId();
         if (id == R.id.assistant_apply) {
             mApply.setEnabled(false);
-            if (mRecoverAccount) {
+            if (mUseUsername == null || !mUseUsername.isChecked()) {
                 recoverAccount();
             } else {
                 linphoneLogIn();
@@ -271,7 +268,7 @@ public class LinphoneLoginFragment extends Fragment
     }
 
     private void recoverAccount() {
-        if (mPhoneNumberEdit.length() > 0 || mDialCode.length() > 1) {
+        if (mPhoneNumberEdit.getText().length() > 0 || mDialCode.getText().length() > 1) {
             int status = getPhoneNumberStatus();
             boolean isOk = status == AccountCreator.PhoneNumberStatus.Ok.toInt();
             if (isOk) {
@@ -333,14 +330,12 @@ public class LinphoneLoginFragment extends Fragment
                 mPhoneNumberEdit.setVisibility(EditText.GONE);
                 mPhoneNumberLayout.setVisibility(LinearLayout.GONE);
                 mMessagePhoneNumber.setText(getString(R.string.assistant_linphone_login_desc));
-                mRecoverAccount = false;
             } else {
                 mUsernameLayout.setVisibility(View.GONE);
                 mPasswordLayout.setVisibility(View.GONE);
                 mPhoneNumberEdit.setVisibility(EditText.VISIBLE);
                 mPhoneNumberLayout.setVisibility(LinearLayout.VISIBLE);
                 mMessagePhoneNumber.setText(getString(R.string.assistant_create_account_part_1));
-                mRecoverAccount = true;
             }
         }
     }
