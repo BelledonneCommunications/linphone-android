@@ -385,6 +385,7 @@ public final class LinphoneUtils {
 
     public static String errorForStatus(AccountCreator.Status status) {
         Context ctxt = getContext();
+        Log.e("Status error " + status.name());
         if (ctxt != null) {
             if (status.equals(AccountCreator.Status.RequestFailed))
                 return ctxt.getString(R.string.request_failed);
