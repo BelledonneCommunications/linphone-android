@@ -29,7 +29,6 @@ import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -180,9 +179,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
         LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
 
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
         boolean useFirstLoginActivity =
                 getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
         if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
