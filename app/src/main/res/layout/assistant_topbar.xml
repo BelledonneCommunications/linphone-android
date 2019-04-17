@@ -27,19 +27,14 @@
         android:padding="15dp"
         android:text="@string/assistant"/>
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2" />
-
-    <!--<ImageView
-        android:id="@+id/assistant_cancel"
+    <ImageView
+        android:id="@+id/valid"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.2"
-        android:background="@drawable/toolbar_button"
-        android:contentDescription="@string/content_description_dialer_back"
+        android:background="?attr/button_background_drawable"
+        android:contentDescription="@string/content_description_valid"
         android:padding="15dp"
-        android:src="@drawable/dialer_back" />-->
+        android:src="@drawable/valid" />
 
 </LinearLayout>

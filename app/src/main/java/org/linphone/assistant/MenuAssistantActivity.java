@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
@@ -29,6 +30,7 @@ import org.linphone.utils.ThemableActivity;
 
 public class MenuAssistantActivity extends ThemableActivity {
     private View mTopBar;
+    private ImageView mBack, mValid;
     private TextView mAccountCreation, mAccountConnection, mGenericConnection, mRemoteConfiguration;
 
     @Override
@@ -38,16 +40,21 @@ public class MenuAssistantActivity extends ThemableActivity {
         setContentView(R.layout.assistant_menu);
 
         mTopBar = findViewById(R.id.top_bar);
-        mTopBar.setOnClickListener(
+        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
+            mTopBar.setVisibility(View.GONE);
+        }
+
+        mBack = findViewById(R.id.back);
+        mBack.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         finish();
                     }
                 });
-        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
-        }
+
+        mValid = findViewById(R.id.valid);
+        mValid.setVisibility(View.INVISIBLE);
 
         mAccountCreation = findViewById(R.id.account_creation);
         mAccountCreation.setOnClickListener(
