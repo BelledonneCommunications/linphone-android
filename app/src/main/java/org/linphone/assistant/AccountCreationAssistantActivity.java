@@ -26,14 +26,24 @@ import org.linphone.R;
 import org.linphone.utils.ThemableActivity;
 
 public class AccountCreationAssistantActivity extends ThemableActivity {
+    private View mTopBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_menu);
 
+        mTopBar = findViewById(R.id.top_bar);
+        mTopBar.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
         if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            findViewById(R.id.top_bar).setVisibility(View.GONE);
+            mTopBar.setVisibility(View.GONE);
         }
     }
 }
