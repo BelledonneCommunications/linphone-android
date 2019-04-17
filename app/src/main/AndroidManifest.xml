@@ -200,6 +200,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".assistant.GenericConnectionAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".assistant.QrCodeConfigurationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
