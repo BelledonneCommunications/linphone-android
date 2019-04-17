@@ -50,26 +50,26 @@
     <integer name="popup_time_interval">86400000</integer>
 
     <!-- Assistant -->
-    <!-- Allow to use an username instead of the phone number for account creation -->
-    <bool name="assistant_allow_username">true</bool>
     <!-- Only on should be set to true at a time! If not the first one will be used -->
     <!-- Start assistant in loginFragment view instead of menu -->
     <bool name="assistant_use_linphone_login_as_first_fragment">false</bool>
     <!-- Start Linphone creation account in loginFragment view instead of menu -->
     <bool name="assistant_use_create_linphone_account_as_first_fragment">false</bool>
-    <bool name="assistant_hide_top_bar">false</bool>
 
-    <bool name="replace_assistant_with_old_interface">false</bool>
-    <bool name="hide_assistant">false</bool>
-    <bool name="assistant_cancel_move_to_back">false</bool>
+    <bool name="assistant_hide_top_bar">false</bool>
+    <bool name="hide_linphone_accounts_in_assistant">false</bool>
+    <bool name="hide_generic_accounts_in_assistant">false</bool>
+    <bool name="hide_remote_provisioning_in_assistant">false</bool>
+
+    <!-- Allow to use an username instead of the phone number for account creation -->
+    <bool name="assistant_allow_username">true</bool>
     <!-- Set the email field of the wizard with one of the gmail account registered on the device -->
     <bool name="pre_fill_email_in_assistant">true</bool>
     <bool name="assistant_account_validation_mandatory">false</bool>
     <bool name="allow_only_phone_numbers_in_assistant">false</bool>
-    <bool name="hide_linphone_accounts_in_assistant">false</bool>
-    <bool name="hide_generic_accounts_in_assistant">false</bool>
-    <bool name="hide_remote_provisioning_in_assistant">false</bool>
     <bool name="display_account_assistant_at_first_start">true</bool>
+
+    <bool name="assistant_cancel_move_to_back">false</bool> <!-- Can be removed along with old assistant -->
 
     <!-- Remote provisioning -->
     <bool name="display_sms_remote_provisioning_activity">false</bool>
