@@ -72,6 +72,7 @@ import org.linphone.assistant.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallManager;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.AccountCreator;
@@ -1357,6 +1358,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (!LinphonePreferences.instance().isDeviceRingtoneEnabled()) {
             // Enable speaker audio route, linphone library will do the ringing itself automatically
             routeAudioToSpeaker();
+            return;
+        }
+
+        if (Compatibility.isDoNotDisturbModeEnabledForCalls(mServiceContext)) {
+            Log.w("[Manager] Do not disturb mode enabled, do not ring");
             return;
         }
 

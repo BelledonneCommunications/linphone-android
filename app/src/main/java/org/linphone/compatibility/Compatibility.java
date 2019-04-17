@@ -237,4 +237,11 @@ public class Compatibility {
             ApiTwentyOnePlus.setTurnScreenOn(activity, enable);
         }
     }
+
+    public static boolean isDoNotDisturbModeEnabledForCalls(Context context) {
+        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
+            return ApiTwentyThreePlus.isDoNotDisturbModeEnabledForCalls(context);
+        }
+        return false;
+    }
 }

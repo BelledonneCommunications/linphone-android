@@ -19,7 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import static android.app.NotificationManager.INTERRUPTION_FILTER_ALARMS;
+
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.PowerManager;
 import android.widget.TextView;
@@ -32,5 +35,12 @@ class ApiTwentyThreePlus {
 
     public static boolean isAppIdleMode(Context context) {
         return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();
+    }
+
+    public static boolean isDoNotDisturbModeEnabledForCalls(Context context) {
+        int filter =
+                ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE))
+                        .getCurrentInterruptionFilter();
+        return filter == INTERRUPTION_FILTER_ALARMS;
     }
 }
