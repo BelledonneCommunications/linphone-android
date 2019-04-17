@@ -32,7 +32,7 @@ import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant_old.AssistantActivity;
 import org.linphone.core.AVPFMode;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
