@@ -563,13 +563,17 @@ public class ContactEditorFragment extends Fragment {
 
     private View displayNumberOrAddress(
             final LinearLayout controls, String numberOrAddress, boolean isSIP) {
-        String displayNumberOrAddress = numberOrAddress;
+        String displayedNumberOrAddress = numberOrAddress;
         if (isSIP) {
             if (mFirstSipAddressIndex == -1) {
                 mFirstSipAddressIndex = controls.getChildCount();
             }
-            displayNumberOrAddress =
-                    LinphoneUtils.getDisplayableUsernameFromAddress(numberOrAddress);
+
+            if (getResources()
+                    .getBoolean(R.bool.only_show_address_username_if_matches_default_domain)) {
+                displayedNumberOrAddress =
+                        LinphoneUtils.getDisplayableUsernameFromAddress(numberOrAddress);
+            }
         }
         if ((getResources().getBoolean(R.bool.hide_phone_numbers_in_editor) && !isSIP)
                 || (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor) && isSIP)) {
@@ -591,7 +595,7 @@ public class ContactEditorFragment extends Fragment {
         if (!isSIP) {
             noa.setInputType(InputType.TYPE_CLASS_PHONE);
         }
-        noa.setText(displayNumberOrAddress);
+        noa.setText(displayedNumberOrAddress);
         noa.addTextChangedListener(
                 new TextWatcher() {
                     @Override
