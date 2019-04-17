@@ -17,10 +17,87 @@
         android:id="@+id/top_bar"
         layout="@layout/assistant_topbar" />
 
-    <RelativeLayout
-        android:id="@+id/main_layout"
+    <TextView
+        style="@style/standard_text_font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/welcome"
+        android:paddingTop="30dp"
+        android:textAllCaps="true" />
+
+    <TextView
+        style="@style/standard_small_text_font"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="top"
+        android:paddingTop="10dp"
+        android:text="@string/assistant_welcome_desc" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/backgroundColor" />
+        android:layout_marginTop="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:background="?attr/backgroundColor"
+        app:flexWrap="wrap"
+        app:flexDirection="column">
+
+        <TextView
+            android:id="@+id/account_creation"
+            style="@style/button_font"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
+            android:contentDescription="@string/assistant_create_account"
+            android:text="@string/assistant_create_account" />
+
+        <TextView
+            android:id="@+id/account_connection"
+            style="@style/button_font"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
+            android:contentDescription="@string/assistant_login_linphone"
+            android:text="@string/assistant_login_linphone" />
+
+        <TextView
+            android:id="@+id/generic_connection"
+            style="@style/button_font"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
+            android:contentDescription="@string/assistant_login_generic"
+            android:text="@string/assistant_login_generic" />
+
+        <TextView
+            android:id="@+id/remote_configuration"
+            style="@style/button_font"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/assistant_button"
+            android:textColor="@drawable/assistant_button_text_color"
+            android:contentDescription="@string/assistant_remote_provisioning"
+            android:text="@string/assistant_remote_provisioning" />
+
+    </com.google.android.flexbox.FlexboxLayout>
 
 </LinearLayout>
