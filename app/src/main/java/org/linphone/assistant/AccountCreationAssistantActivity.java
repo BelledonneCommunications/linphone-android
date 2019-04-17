@@ -19,14 +19,21 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Activity;
 import android.os.Bundle;
-
+import android.view.View;
 import androidx.annotation.Nullable;
+import org.linphone.R;
+import org.linphone.utils.ThemableActivity;
 
-public class AccountCreationAssistantActivity extends Activity {
+public class AccountCreationAssistantActivity extends ThemableActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.assistant_menu);
+
+        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
+            findViewById(R.id.top_bar).setVisibility(View.GONE);
+        }
     }
 }
