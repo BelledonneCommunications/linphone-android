@@ -26,7 +26,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import org.linphone.assistant.RemoteProvisioningActivity;
+import org.linphone.assistant_old.RemoteProvisioningActivity;
 import org.linphone.settings.LinphonePreferences;
 
 /** Launch Linphone main activity when Service is ready. */

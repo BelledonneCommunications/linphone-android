@@ -40,7 +40,7 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant_old.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;

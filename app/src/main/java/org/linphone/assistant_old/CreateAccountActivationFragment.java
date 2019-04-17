@@ -1,4 +1,4 @@
-package org.linphone.assistant;
+package org.linphone.assistant_old;
 /*
 CreateAccountActivationFragment.java
 Copyright (C) 2017  Belledonne Communications, Grenoble, France
