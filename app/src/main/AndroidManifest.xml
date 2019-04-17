@@ -75,6 +75,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LinphoneActivity"
             android:launchMode="singleTask"
@@ -130,6 +131,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".call.CallIncomingActivity"
             android:launchMode="singleTop"
@@ -168,17 +170,62 @@
             </intent-filter>
             -->
         </activity>
+
         <activity
-            android:name=".assistant_old.AssistantActivity"
-            android:screenOrientation="behind"
+            android:name=".assistant.MenuAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".assistant.AccountConnectionAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.AccountCreationAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.AccountValidationAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.QrCodeConfigurationAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.RemoteConfigurationAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".purchase.InAppPurchaseActivity"
             android:screenOrientation="nosensor"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".assistant_old.AssistantActivity"
+            android:screenOrientation="behind"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

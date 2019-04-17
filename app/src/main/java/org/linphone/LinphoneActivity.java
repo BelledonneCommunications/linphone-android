@@ -67,6 +67,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.linphone.LinphoneManager.AddressType;
+import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.assistant_old.AssistantActivity;
 import org.linphone.assistant_old.RemoteProvisioningLoginActivity;
 import org.linphone.call.CallActivity;
@@ -1024,7 +1025,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     private void displayAssistant() {
-        startActivity(new Intent(LinphoneActivity.this, AssistantActivity.class));
+        startActivity(new Intent(LinphoneActivity.this, MenuAssistantActivity.class));
     }
 
     private void displayInapp() {
