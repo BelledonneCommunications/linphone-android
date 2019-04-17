@@ -1,4 +1,4 @@
-package org.linphone.assistant;
+package org.linphone.assistant_old;
 
 /*
 CountryListFragment.java

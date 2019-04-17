@@ -169,7 +169,7 @@
             -->
         </activity>
         <activity
-            android:name=".assistant.AssistantActivity"
+            android:name=".assistant_old.AssistantActivity"
             android:screenOrientation="behind"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
@@ -185,7 +185,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".assistant.RemoteProvisioningLoginActivity"
+            android:name=".assistant_old.RemoteProvisioningLoginActivity"
             android:screenOrientation="nosensor"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
@@ -193,7 +193,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".assistant.RemoteProvisioningActivity"
+            android:name=".assistant_old.RemoteProvisioningActivity"
             android:screenOrientation="nosensor"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>

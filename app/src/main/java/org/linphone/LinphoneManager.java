@@ -68,7 +68,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant_old.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallManager;
