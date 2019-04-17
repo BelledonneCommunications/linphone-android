@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.content.Context;
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,6 +33,7 @@ import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.PushNotificationUtils;
 
+@Keep
 public class FirebasePushHelper implements PushNotificationUtils.PushHelperInterface {
     public FirebasePushHelper() {}
 
