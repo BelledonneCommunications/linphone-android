@@ -20,14 +20,86 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
+    private TextView mCountryPicker, mError, mSipUri, mCreate;
+    private EditText mPrefix, mPhoneNumber;
+    private ImageView mPhoneNumberInfos;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_phone_account_creation);
+
+        mCountryPicker = findViewById(R.id.select_country);
+        mCountryPicker.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showCountryPickerDialog();
+                    }
+                });
+
+        mError = findViewById(R.id.phone_number_error);
+
+        mSipUri = findViewById(R.id.sip_uri);
+
+        mCreate = findViewById(R.id.assistant_create);
+        mCreate.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO
+                    }
+                });
+
+        mPrefix = findViewById(R.id.dial_code);
+        mPrefix.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+
+        mPhoneNumber = findViewById(R.id.phone_number);
+
+        mPhoneNumberInfos = findViewById(R.id.info_phone_number);
+        mPhoneNumberInfos.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPhoneNumberDialog();
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        int iso = getCountryIsoCode();
+        if (iso != -1) {
+            mPrefix.setText("+" + iso);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }
