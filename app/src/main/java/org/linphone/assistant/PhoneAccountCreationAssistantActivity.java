@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 
 /*
-AccountValidationAssistantActivity.java
+PhoneAccountCreationAssistantActivity.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -20,37 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
-import org.linphone.utils.ThemableActivity;
 
-public class AccountValidationAssistantActivity extends ThemableActivity {
-    private View mTopBar;
-    private ImageView mBack, mValid;
-
+public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.assistant_menu);
-
-        mTopBar = findViewById(R.id.top_bar);
-        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
-        }
-
-        mBack = findViewById(R.id.back);
-        mBack.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
-
-        mValid = findViewById(R.id.valid);
-        mValid.setEnabled(false);
+        setContentView(R.layout.assistant_phone_account_creation);
     }
 }

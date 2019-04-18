@@ -23,19 +23,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.TextureView;
-import android.view.View;
-import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
-import org.linphone.utils.ThemableActivity;
 
-public class QrCodeConfigurationAssistantActivity extends ThemableActivity {
-    private View mTopBar;
-    private ImageView mBack, mValid;
+public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     private TextureView mQrcodeView;
 
     private CoreListenerStub mListener;
@@ -45,23 +40,6 @@ public class QrCodeConfigurationAssistantActivity extends ThemableActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_qr_code_remote_configuration);
-
-        mTopBar = findViewById(R.id.top_bar);
-        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
-        }
-
-        mBack = findViewById(R.id.back);
-        mBack.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
-
-        mValid = findViewById(R.id.valid);
-        mValid.setVisibility(View.INVISIBLE);
 
         mQrcodeView = findViewById(R.id.qr_code_capture_texture);
 
@@ -103,6 +81,7 @@ public class QrCodeConfigurationAssistantActivity extends ThemableActivity {
     private void launchQrcodeReader() {
         LinphoneManager.getLc().setNativePreviewWindowId(mQrcodeView);
         setBackCamera();
+
         enableQrcodeReader(true);
     }
 

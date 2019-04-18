@@ -22,15 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
-import org.linphone.utils.ThemableActivity;
 
-public class MenuAssistantActivity extends ThemableActivity {
-    private View mTopBar;
-    private ImageView mBack, mValid;
+public class MenuAssistantActivity extends AssistantActivity {
     private TextView mAccountCreation, mAccountConnection, mGenericConnection, mRemoteConfiguration;
 
     @Override
@@ -39,32 +35,25 @@ public class MenuAssistantActivity extends ThemableActivity {
 
         setContentView(R.layout.assistant_menu);
 
-        mTopBar = findViewById(R.id.top_bar);
-        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
-        }
-
-        mBack = findViewById(R.id.back);
-        mBack.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
-
-        mValid = findViewById(R.id.valid);
-        mValid.setVisibility(View.INVISIBLE);
-
         mAccountCreation = findViewById(R.id.account_creation);
         mAccountCreation.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(
-                                new Intent(
-                                        MenuAssistantActivity.this,
-                                        AccountCreationAssistantActivity.class));
+                        Intent intent;
+                        if (getResources().getBoolean(R.bool.isTablet)
+                                || getResources().getBoolean(R.bool.use_phone_number_validation)) {
+                            intent =
+                                    new Intent(
+                                            MenuAssistantActivity.this,
+                                            EmailAccountCreationAssistantActivity.class);
+                        } else {
+                            intent =
+                                    new Intent(
+                                            MenuAssistantActivity.this,
+                                            PhoneAccountCreationAssistantActivity.class);
+                        }
+                        startActivity(intent);
                     }
                 });
 
@@ -121,7 +110,9 @@ public class MenuAssistantActivity extends ThemableActivity {
         } else if (getResources()
                 .getBoolean(R.bool.assistant_use_create_linphone_account_as_first_fragment)) {
             startActivity(
-                    new Intent(MenuAssistantActivity.this, AccountCreationAssistantActivity.class));
+                    new Intent(
+                            MenuAssistantActivity.this,
+                            PhoneAccountCreationAssistantActivity.class));
             finish();
         }
     }

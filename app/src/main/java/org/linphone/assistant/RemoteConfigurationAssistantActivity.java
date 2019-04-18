@@ -29,7 +29,6 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,14 +42,11 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ThemableActivity;
 
-public class RemoteConfigurationAssistantActivity extends ThemableActivity {
+public class RemoteConfigurationAssistantActivity extends AssistantActivity {
     private static final int QR_CODE_ACTIVITY_RESULT = 1;
     private static final int CAMERA_PERMISSION_RESULT = 2;
 
-    private View mTopBar;
-    private ImageView mBack, mValid;
     private TextView mFetchAndApply, mQrCode;
     private EditText mRemoteConfigurationUrl;
     private RelativeLayout mWaitLayout;
@@ -62,23 +58,6 @@ public class RemoteConfigurationAssistantActivity extends ThemableActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_remote_configuration);
-
-        mTopBar = findViewById(R.id.top_bar);
-        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
-        }
-
-        mBack = findViewById(R.id.back);
-        mBack.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
-
-        mValid = findViewById(R.id.valid);
-        mValid.setVisibility(View.INVISIBLE);
 
         mWaitLayout = findViewById(R.id.waitScreen);
         mWaitLayout.setVisibility(View.GONE);

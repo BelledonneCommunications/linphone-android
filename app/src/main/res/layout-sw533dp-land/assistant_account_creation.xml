@@ -155,84 +155,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <LinearLayout
-                    android:id="@+id/username_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/username_label"
-                        style="@style/assistant_input_field_header_font"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/username"
-                        android:textAllCaps="true" />
-
-                    <EditText
-                        android:id="@+id/username"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/resizable_textfield"
-                        android:contentDescription="@string/content_description_username_field"
-                        android:inputType="text|textNoSuggestions"
-                        android:maxLines="1"
-                        android:hint="@string/username"
-                        android:textColor="@color/black_color" />
-
-                    <TextView
-                        android:id="@+id/username_error"
-                        style="@style/assistant_input_field_error_font"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/error"
-                        android:visibility="invisible" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/password_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="30dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/password_label"
-                        style="@style/assistant_input_field_header_font"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/password"
-                        android:textAllCaps="true" />
-
-                    <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/resizable_textfield"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/black_color"
-                        android:hint="@string/password"
-                        android:textCursorDrawable="@null" />
-
-                    <TextView
-                        android:id="@+id/password_error"
-                        style="@style/assistant_input_field_error_font"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/error"
-                        android:visibility="invisible" />
-
-                </LinearLayout>
 
             </TableRow>
 
@@ -248,8 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_column="0"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/email_label"
@@ -291,7 +213,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="30dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/confirm_password_label"
@@ -392,7 +314,7 @@
             android:paddingRight="10dp"
             android:text="@string/maybe_later"
             android:textColor="?attr/primaryTextColor"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </LinearLayout>
 

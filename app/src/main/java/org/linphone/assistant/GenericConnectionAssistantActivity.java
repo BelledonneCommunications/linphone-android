@@ -25,8 +25,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
@@ -35,11 +35,9 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.TransportType;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.utils.ThemableActivity;
 
-public class GenericConnectionAssistantActivity extends ThemableActivity implements TextWatcher {
-    private View mTopBar;
-    private ImageView mBack, mValid;
+public class GenericConnectionAssistantActivity extends AssistantActivity implements TextWatcher {
+    private TextView mLogin;
     private EditText mUsername, mPassword, mDomain, mDisplayName;
     private RadioGroup mTransport;
 
@@ -51,23 +49,9 @@ public class GenericConnectionAssistantActivity extends ThemableActivity impleme
 
         setContentView(R.layout.assistant_generic_connection);
 
-        mTopBar = findViewById(R.id.top_bar);
-        if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
-            mTopBar.setVisibility(View.GONE);
-        }
-
-        mBack = findViewById(R.id.back);
-        mBack.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finish();
-                    }
-                });
-
-        mValid = findViewById(R.id.valid);
-        mValid.setEnabled(false);
-        mValid.setOnClickListener(
+        mLogin = findViewById(R.id.assistant_login);
+        mLogin.setEnabled(false);
+        mLogin.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -126,7 +110,7 @@ public class GenericConnectionAssistantActivity extends ThemableActivity impleme
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        mValid.setEnabled(
+        mLogin.setEnabled(
                 !mUsername.getText().toString().isEmpty()
                         && !mPassword.getText().toString().isEmpty()
                         && !mDomain.getText().toString().isEmpty());
