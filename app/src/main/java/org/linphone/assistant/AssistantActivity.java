@@ -94,9 +94,20 @@ public abstract class AssistantActivity extends ThemableActivity
         return null;
     }
 
-    private DialPlan getDialPlanFromCountryCode(String countryCode) {
+    protected DialPlan getDialPlanFromPrefix(String prefix) {
+        if (prefix == null || prefix.isEmpty()) return null;
+
         for (DialPlan c : Factory.instance().getDialPlans()) {
-            if (c.getIsoCountryCode().equalsIgnoreCase(countryCode)) return c;
+            if (prefix.equalsIgnoreCase(c.getCountryCallingCode())) return c;
+        }
+        return null;
+    }
+
+    protected DialPlan getDialPlanFromCountryCode(String countryCode) {
+        if (countryCode == null || countryCode.isEmpty()) return null;
+
+        for (DialPlan c : Factory.instance().getDialPlans()) {
+            if (countryCode.equalsIgnoreCase(c.getIsoCountryCode())) return c;
         }
         return null;
     }

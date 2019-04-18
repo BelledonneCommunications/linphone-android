@@ -64,6 +64,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                 });
 
         mPrefix = findViewById(R.id.dial_code);
+        mPrefix.setText("+");
         mPrefix.addTextChangedListener(
                 new TextWatcher() {
                     @Override
@@ -74,7 +75,16 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+                        String prefix = s.toString();
+                        if (prefix.startsWith("+")) {
+                            prefix = prefix.substring(1);
+                        }
+                        DialPlan dp = getDialPlanFromPrefix(prefix);
+                        if (dp != null) {
+                            mCountryPicker.setText(dp.getCountry());
+                        }
+                    }
                 });
 
         mPhoneNumber = findViewById(R.id.phone_number);
@@ -94,10 +104,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
         super.onResume();
 
         DialPlan dp = getDialPlanForCurrentCountry();
-        if (dp != null) {
-            mPrefix.setText("+" + dp.getCountryCallingCode());
-            mCountryPicker.setText(dp.getCountry());
-        }
+        displayDialPlan(dp);
     }
 
     @Override
@@ -108,9 +115,13 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     @Override
     public void onCountryClicked(DialPlan dialPlan) {
         super.onCountryClicked(dialPlan);
-        if (dialPlan != null) {
-            mPrefix.setText("+" + dialPlan.getCountryCallingCode());
-            mCountryPicker.setText(dialPlan.getCountry());
+        displayDialPlan(dialPlan);
+    }
+
+    private void displayDialPlan(DialPlan dp) {
+        if (dp != null) {
+            mPrefix.setText("+" + dp.getCountryCallingCode());
+            mCountryPicker.setText(dp.getCountry());
         }
     }
 }
