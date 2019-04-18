@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -41,6 +42,8 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ThemableActivity;
 
 public class RemoteConfigurationAssistantActivity extends ThemableActivity {
+    private static int QR_CODE_ACTIVITY_RESULT = 1;
+
     private View mTopBar;
     private ImageView mBack, mValid;
     private TextView mFetchAndApply, mQrCode;
@@ -93,7 +96,7 @@ public class RemoteConfigurationAssistantActivity extends ThemableActivity {
                             }
                             LinphoneManager.getInstance().restartCore();
                         } else {
-                            //TODO improve error text
+                            // TODO improve error text
                             Toast.makeText(
                                             RemoteConfigurationAssistantActivity.this,
                                             getString(R.string.remote_provisioning_failure),
@@ -125,10 +128,11 @@ public class RemoteConfigurationAssistantActivity extends ThemableActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivity(
+                        startActivityForResult(
                                 new Intent(
                                         RemoteConfigurationAssistantActivity.this,
-                                        QrCodeConfigurationAssistantActivity.class));
+                                        QrCodeConfigurationAssistantActivity.class),
+                                QR_CODE_ACTIVITY_RESULT);
                     }
                 });
 
@@ -157,5 +161,16 @@ public class RemoteConfigurationAssistantActivity extends ThemableActivity {
                         }
                     }
                 };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == QR_CODE_ACTIVITY_RESULT
+                && resultCode == Activity.RESULT_OK
+                && data != null) {
+            String url = data.getStringExtra("URL");
+            mRemoteConfigurationUrl.setText(url);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
