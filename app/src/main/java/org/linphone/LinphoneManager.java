@@ -1506,6 +1506,21 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private void askLinkWithPhoneNumber() {
         if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
 
+        long now = new Timestamp(new Date().getTime()).getTime();
+        if (LinphonePreferences.instance().getLinkPopupTime() != null
+                && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
+
+        long future =
+                new Timestamp(
+                                LinphoneActivity.instance()
+                                        .getResources()
+                                        .getInteger(
+                                                R.integer.phone_number_linking_popup_time_interval))
+                        .getTime();
+        long newDate = now + future;
+
+        LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
+
         final Dialog dialog =
                 LinphoneActivity.instance()
                         .displayDialog(

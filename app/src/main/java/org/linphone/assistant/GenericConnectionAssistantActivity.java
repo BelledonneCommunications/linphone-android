@@ -112,7 +112,6 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mLogin.setEnabled(
                 !mUsername.getText().toString().isEmpty()
-                        && !mPassword.getText().toString().isEmpty()
                         && !mDomain.getText().toString().isEmpty());
     }
 

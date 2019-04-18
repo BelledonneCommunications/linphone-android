@@ -108,6 +108,12 @@ public class MenuAssistantActivity extends AssistantActivity {
                             MenuAssistantActivity.this, AccountConnectionAssistantActivity.class));
             finish();
         } else if (getResources()
+                .getBoolean(R.bool.assistant_use_generic_login_as_first_fragment)) {
+            startActivity(
+                    new Intent(
+                            MenuAssistantActivity.this, GenericConnectionAssistantActivity.class));
+            finish();
+        } else if (getResources()
                 .getBoolean(R.bool.assistant_use_create_linphone_account_as_first_fragment)) {
             startActivity(
                     new Intent(
