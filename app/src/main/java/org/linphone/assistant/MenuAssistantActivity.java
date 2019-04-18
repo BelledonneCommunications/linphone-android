@@ -42,7 +42,7 @@ public class MenuAssistantActivity extends AssistantActivity {
                     public void onClick(View v) {
                         Intent intent;
                         if (getResources().getBoolean(R.bool.isTablet)
-                                || getResources().getBoolean(R.bool.use_phone_number_validation)) {
+                                || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
                             intent =
                                     new Intent(
                                             MenuAssistantActivity.this,
