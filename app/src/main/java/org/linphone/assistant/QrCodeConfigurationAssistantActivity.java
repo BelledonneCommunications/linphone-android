@@ -19,22 +19,32 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.utils.ThemableActivity;
 
 public class QrCodeConfigurationAssistantActivity extends ThemableActivity {
     private View mTopBar;
     private ImageView mBack, mValid;
+    private TextureView mQrcodeView;
+
+    private CoreListenerStub mListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.assistant_menu);
+        setContentView(R.layout.assistant_qr_code_remote_configuration);
 
         mTopBar = findViewById(R.id.top_bar);
         if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
@@ -51,6 +61,60 @@ public class QrCodeConfigurationAssistantActivity extends ThemableActivity {
                 });
 
         mValid = findViewById(R.id.valid);
-        mValid.setEnabled(false);
+        mValid.setVisibility(View.INVISIBLE);
+
+        mQrcodeView = findViewById(R.id.qr_code_capture_texture);
+
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onQrcodeFound(Core lc, String result) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra("URL", result);
+                        setResult(Activity.RESULT_OK, resultIntent);
+                        finish();
+                    }
+                };
+    }
+
+    private void enableQrcodeReader(boolean enable) {
+        LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
+        LinphoneManager.getLc().enableVideoPreview(enable);
+
+        if (enable) {
+            LinphoneManager.getLc().addListener(mListener);
+        } else {
+            LinphoneManager.getLc().removeListener(mListener);
+        }
+    }
+
+    private void setBackCamera() {
+        int camId = 0;
+        AndroidCameraConfiguration.AndroidCamera[] cameras =
+                AndroidCameraConfiguration.retrieveCameras();
+        for (AndroidCameraConfiguration.AndroidCamera androidCamera : cameras) {
+            if (!androidCamera.frontFacing) camId = androidCamera.id;
+        }
+        String[] devices = LinphoneManager.getLc().getVideoDevicesList();
+        String newDevice = devices[camId];
+        LinphoneManager.getLc().setVideoDevice(newDevice);
+    }
+
+    private void launchQrcodeReader() {
+        LinphoneManager.getLc().setNativePreviewWindowId(mQrcodeView);
+        setBackCamera();
+        enableQrcodeReader(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        launchQrcodeReader();
+    }
+
+    @Override
+    public void onPause() {
+        enableQrcodeReader(false);
+        super.onPause();
     }
 }
