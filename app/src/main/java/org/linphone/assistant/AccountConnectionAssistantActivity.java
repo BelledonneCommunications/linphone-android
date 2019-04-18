@@ -28,6 +28,6 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.assistant_menu);
+        setContentView(R.layout.assistant_account_connection);
     }
 }
