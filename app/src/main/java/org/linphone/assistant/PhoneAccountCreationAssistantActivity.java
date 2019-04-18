@@ -62,6 +62,7 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                         // TODO
                     }
                 });
+        mCreate.setEnabled(false);
 
         mPrefix = findViewById(R.id.dial_code);
         mPrefix.setText("+");
@@ -88,6 +89,22 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                 });
 
         mPhoneNumber = findViewById(R.id.phone_number);
+        mPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //TODO
+            }
+        });
 
         mPhoneNumberInfos = findViewById(R.id.info_phone_number);
         mPhoneNumberInfos.setOnClickListener(
