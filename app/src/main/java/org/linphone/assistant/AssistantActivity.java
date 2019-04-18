@@ -20,18 +20,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import org.linphone.R;
+import org.linphone.core.DialPlan;
+import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
 import org.linphone.utils.ThemableActivity;
 
-public abstract class AssistantActivity extends ThemableActivity {
+public abstract class AssistantActivity extends ThemableActivity
+        implements CountryPicker.CountryPickedListener {
     protected View mTopBar, mStatusBar;
     protected ImageView mBack;
+    private AlertDialog mCountryPickerDialog;
+
+    private CountryPicker mCountryPicker;
 
     @Override
     protected void onResume() {
@@ -71,18 +76,36 @@ public abstract class AssistantActivity extends ThemableActivity {
     }
 
     protected void showCountryPickerDialog() {
-        DialogFragment countryPickerFragment = CountryPickerFragment.instance();
-        countryPickerFragment.show(getFragmentManager(), "Country picker");
+        if (mCountryPicker == null) {
+            mCountryPicker = new CountryPicker(this, this);
+        }
+        mCountryPickerDialog =
+                new AlertDialog.Builder(this).setView(mCountryPicker.getView()).show();
     }
 
-    protected int getCountryIsoCode() {
+    protected DialPlan getDialPlanForCurrentCountry() {
         try {
             TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             String countryIso = tm.getNetworkCountryIso();
-            return org.linphone.core.Utils.getCccFromIso(countryIso.toUpperCase());
+            return getDialPlanFromCountryCode(countryIso);
         } catch (Exception e) {
             Log.e("[Assistant] " + e);
         }
-        return -1;
+        return null;
+    }
+
+    private DialPlan getDialPlanFromCountryCode(String countryCode) {
+        for (DialPlan c : Factory.instance().getDialPlans()) {
+            if (c.getIsoCountryCode().equalsIgnoreCase(countryCode)) return c;
+        }
+        return null;
+    }
+
+    @Override
+    public void onCountryClicked(DialPlan dialPlan) {
+        if (mCountryPickerDialog != null) {
+            mCountryPickerDialog.dismiss();
+            mCountryPickerDialog = null;
+        }
     }
 }

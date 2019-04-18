@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.core.DialPlan;
 
 public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     private TextView mCountryPicker, mError, mSipUri, mCreate;
@@ -92,14 +93,24 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     protected void onResume() {
         super.onResume();
 
-        int iso = getCountryIsoCode();
-        if (iso != -1) {
-            mPrefix.setText("+" + iso);
+        DialPlan dp = getDialPlanForCurrentCountry();
+        if (dp != null) {
+            mPrefix.setText("+" + dp.getCountryCallingCode());
+            mCountryPicker.setText(dp.getCountry());
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onCountryClicked(DialPlan dialPlan) {
+        super.onCountryClicked(dialPlan);
+        if (dialPlan != null) {
+            mPrefix.setText("+" + dialPlan.getCountryCallingCode());
+            mCountryPicker.setText(dialPlan.getCountry());
+        }
     }
 }
