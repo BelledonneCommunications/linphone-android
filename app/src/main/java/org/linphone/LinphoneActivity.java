@@ -412,7 +412,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
         if (lc != null) {
             lc.removeListener(mListener);
         }
-        mCallTransfer = false;
         mIsOnBackground = true;
 
         super.onPause();
@@ -534,6 +533,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
         }*/
 
         Bundle extras = intent.getExtras();
+        mCallTransfer = false;
         if (extras != null) {
             if (extras.getBoolean("GoToChat", false)) {
                 String localSipUri = extras.getString("LocalSipUri");
@@ -566,6 +566,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 goToDialerFragment();
             } else if (extras.getBoolean("Transfer", false)) {
                 intent.putExtra("DoNotGoToCallActivity", true);
+                mCallTransfer = true;
+                if (LinphoneManager.getLc().getCallsNb() > 0) {
+                    initInCallMenuLayout();
+                } else {
+                    resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                }
             } else if (extras.getBoolean("AddCall", false)) {
                 intent.putExtra("DoNotGoToCallActivity", true);
             } else if (intent.getStringExtra("msgShared") != null) {
@@ -1382,7 +1388,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
         AddressType address = new AddressText(this, null);
         address.setText(number);
         address.setDisplayedName(name);
-        LinphoneManager.getInstance().newOutgoingCall(address);
+        if (!mCallTransfer) {
+            LinphoneManager.getInstance().newOutgoingCall(address);
+        } else {
+            addressWaitingToBeCalled = number;
+            displayDialer();
+        }
     }
 
     public void startIncallActivity() {
