@@ -20,9 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +30,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Core;
-import org.linphone.core.tools.Log;
 import org.linphone.views.AddressAware;
 import org.linphone.views.AddressText;
 import org.linphone.views.CallButton;
@@ -178,8 +173,9 @@ public class DialerFragment extends Fragment {
         String addressWaitingToBeCalled = LinphoneActivity.instance().addressWaitingToBeCalled;
         if (addressWaitingToBeCalled != null) {
             mAddress.setText(addressWaitingToBeCalled);
-            if (getResources()
-                    .getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
+            if (!LinphoneActivity.instance().isCallTransfer()
+                    && getResources()
+                            .getBoolean(R.bool.automatically_start_intercepted_outgoing_gsm_call)) {
                 newOutgoingCall(addressWaitingToBeCalled);
             }
             LinphoneActivity.instance().addressWaitingToBeCalled = null;
@@ -208,6 +204,7 @@ public class DialerFragment extends Fragment {
             mAddContact.setImageResource(R.drawable.call_back);
             mAddContact.setOnClickListener(mCancelListener);
         } else {
+            mCall.resetClickListener();
             if (LinphoneManager.getLc().getVideoActivationPolicy().getAutomaticallyInitiate()) {
                 mCall.setImageResource(R.drawable.call_video_start);
             } else {
@@ -234,34 +231,5 @@ public class DialerFragment extends Fragment {
     public void newOutgoingCall(String numberOrSipAddress) {
         displayTextInAddressBar(numberOrSipAddress);
         LinphoneManager.getInstance().newOutgoingCall(mAddress);
-    }
-
-    public void newOutgoingCall(Intent intent) {
-        if (intent != null && intent.getData() != null) {
-            String scheme = intent.getData().getScheme();
-            if (scheme.startsWith("imto")) {
-                mAddress.setText("sip:" + intent.getData().getLastPathSegment());
-            } else if (scheme.startsWith("call") || scheme.startsWith("sip")) {
-                mAddress.setText(intent.getData().getSchemeSpecificPart());
-            } else {
-                Uri contactUri = intent.getData();
-                String address =
-                        ContactsManager.getInstance()
-                                .getAddressOrNumberForAndroidContact(
-                                        LinphoneService.instance().getContentResolver(),
-                                        contactUri);
-                if (address != null) {
-                    mAddress.setText(address);
-                } else {
-                    Log.e("Unknown scheme: ", scheme);
-                    mAddress.setText(intent.getData().getSchemeSpecificPart());
-                }
-            }
-
-            mAddress.clearDisplayedName();
-            intent.setData(null);
-
-            LinphoneManager.getInstance().newOutgoingCall(mAddress);
-        }
     }
 }
