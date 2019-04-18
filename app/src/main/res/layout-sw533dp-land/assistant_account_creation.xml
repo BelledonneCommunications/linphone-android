@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -162,7 +162,7 @@
                     android:layout_column="0"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/username_label"
@@ -201,7 +201,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="30dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/password_label"
@@ -249,7 +249,7 @@
                     android:layout_column="0"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/email_label"
@@ -291,7 +291,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="30dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/confirm_password_label"
@@ -338,12 +338,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
-                    android:checked="false"
+                    android:checked="true"
                     android:paddingLeft="5dp"
                     android:button="@drawable/checkbox"
                     android:textColor="?attr/primaryTextColor"
                     android:text="@string/use_username_instead_or_phone_number"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </TableRow>
 
             <TableRow
@@ -357,12 +357,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
-                    android:checked="false"
+                    android:checked="true"
                     android:paddingLeft="5dp"
                     android:button="@drawable/checkbox"
                     android:textColor="?attr/primaryTextColor"
                     android:text="@string/use_email_for_validation"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </TableRow>
 

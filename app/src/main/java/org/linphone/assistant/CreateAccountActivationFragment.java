@@ -31,6 +31,7 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListener;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class CreateAccountActivationFragment extends Fragment
@@ -57,6 +58,7 @@ public class CreateAccountActivationFragment extends Fragment
 
         mAccountCreator.setUsername(mUsername);
         mAccountCreator.setPassword(mPassword);
+        mAccountCreator.setDomain(getString(R.string.default_domain));
 
         mEmail = view.findViewById(R.id.send_email);
         mEmail.setText(getArguments().getString("Email"));
@@ -71,7 +73,7 @@ public class CreateAccountActivationFragment extends Fragment
         int id = v.getId();
         if (id == R.id.assistant_check) {
             mCheckAccount.setEnabled(false);
-            mAccountCreator.isAccountActivated();
+            AccountCreator.Status status = mAccountCreator.isAccountActivated();
         }
     }
 
@@ -111,6 +113,7 @@ public class CreateAccountActivationFragment extends Fragment
             AssistantActivity.instance().linphoneLogIn(accountCreator);
             AssistantActivity.instance().isAccountVerified();
         } else {
+            Log.w("Unexpected error " + status.name());
             Toast.makeText(
                             getActivity(),
                             getString(R.string.wizard_server_unavailable),

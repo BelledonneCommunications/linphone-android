@@ -135,7 +135,8 @@ public class CreateAccountFragment extends Fragment
         mSkip = view.findViewById(R.id.assistant_skip);
 
         // Phone number
-        if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
+        if (!getResources().getBoolean(R.bool.isTablet)
+                && getResources().getBoolean(R.bool.use_phone_number_validation)) {
             getActivity().getApplicationContext();
             // Automatically get the country code from the phone
             TelephonyManager tm =
@@ -179,12 +180,10 @@ public class CreateAccountFragment extends Fragment
             }
             addPhoneNumberHandler(mPhoneNumberEdit);
             addPhoneNumberHandler(mDialCode);
-        }
-
-        // Password & email address
-        if (getResources().getBoolean(R.bool.isTablet)
-                || !getResources().getBoolean(R.bool.use_phone_number_validation)) {
-            mUseEmail.setVisibility(View.VISIBLE);
+        } else {
+            if (!getResources().getBoolean(R.bool.isTablet)) {
+                mUseEmail.setVisibility(View.VISIBLE);
+            }
             mUseEmail.setOnCheckedChangeListener(this);
 
             if (getResources().getBoolean(R.bool.pre_fill_email_in_assistant)) {
