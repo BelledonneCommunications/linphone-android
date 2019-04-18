@@ -1,7 +1,8 @@
-package org.linphone.assistant_old;
+package org.linphone.assistant;
+
 /*
-AssistantFragmentsEnum.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+PhoneAccountLinkingAssistantActivity.java
+Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,16 +19,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-public enum AssistantFragmentsEnum {
-    WELCOME,
-    CREATE_ACCOUNT,
-    CREATE_ACCOUNT_ACTIVATION,
-    CREATE_ACCOUNT_CODE_ACTIVATION,
-    LINPHONE_LOGIN,
-    COUNTRY_CHOOSER,
-    LOGIN,
-    REMOTE_PROVISIONING,
-    ECHO_CANCELLER_CALIBRATION,
-    DOWNLOAD_CODEC,
-    QRCODE_READER
+import android.os.Bundle;
+import androidx.annotation.Nullable;
+import org.linphone.R;
+
+public class PhoneAccountLinkingAssistantActivity extends AssistantActivity {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.assistant_phone_account_linking);
+    }
 }

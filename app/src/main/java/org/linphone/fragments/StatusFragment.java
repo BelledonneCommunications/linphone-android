@@ -40,7 +40,6 @@ import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.assistant_old.AssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
@@ -165,8 +164,6 @@ public class StatusFragment extends Fragment {
             ((LinphoneActivity) activity).updateStatusFragment(this);
         } else if (activity instanceof CallActivity) {
             ((CallActivity) activity).updateStatusFragment(this);
-        } else if (activity instanceof AssistantActivity) {
-            ((AssistantActivity) activity).updateStatusFragment(this);
         }
         mIsInCall =
                 activity instanceof CallActivity
@@ -174,18 +171,6 @@ public class StatusFragment extends Fragment {
                         || activity instanceof CallOutgoingActivity;
 
         return view;
-    }
-
-    public void setCoreListener() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
-
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
-            if (lpc != null) {
-                mListener.onRegistrationStateChanged(lc, lpc, lpc.getState(), null);
-            }
-        }
     }
 
     @Override

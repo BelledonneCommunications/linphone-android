@@ -72,7 +72,6 @@
     <bool name="assistant_cancel_move_to_back">false</bool> <!-- Can be removed along with old assistant -->
 
     <!-- Remote provisioning -->
-    <bool name="display_sms_remote_provisioning_activity">false</bool>
     <bool name="forbid_app_usage_until_remote_provisioning_completed">false</bool>
     <bool name="display_confirmation_popup_after_first_configuration">false</bool>
     <bool name="allow_cancel_remote_provisioning_login_activity">true</bool>
