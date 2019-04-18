@@ -259,6 +259,10 @@ public class AccountSettingsFragment extends Fragment {
                 new SettingListenerBase() {
                     @Override
                     public void onTextValueChanged(String newValue) {
+                        if (newValue.isEmpty()) {
+                            return;
+                        }
+
                         if (mAuthInfo != null) {
                             mAuthInfo.setDomain(newValue);
                         } else {

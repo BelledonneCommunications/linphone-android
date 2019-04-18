@@ -240,10 +240,11 @@ public class CallActivity extends LinphoneGenericActivity
                                 mStatus.refreshStatusItems(call);
                             }
                         } else if (state == State.UpdatedByRemote) {
-                            // If the correspondent proposes mVideo while audio call
+                            // If the correspondent proposes video while audio call
                             boolean videoEnabled = LinphonePreferences.instance().isVideoEnabled();
                             if (!videoEnabled) {
                                 acceptCallUpdate(false);
+                                return;
                             }
 
                             boolean remoteVideo = call.getRemoteParams().videoEnabled();
