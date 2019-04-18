@@ -1251,7 +1251,7 @@ public class CallActivity extends LinphoneGenericActivity
                                                 : "denied"));
 
                         if (camera == PackageManager.PERMISSION_GRANTED) {
-                            CallActivity.instance().acceptCallUpdate(true);
+                            acceptCallUpdate(true);
                         } else {
                             checkAndRequestPermission(
                                     Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
@@ -1266,9 +1266,7 @@ public class CallActivity extends LinphoneGenericActivity
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (CallActivity.isInstanciated()) {
-                            CallActivity.instance().acceptCallUpdate(false);
-                        }
+                        acceptCallUpdate(false);
                         mIsVideoAsk = false;
                         mDialog.dismiss();
                         mDialog = null;
