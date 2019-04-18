@@ -68,8 +68,6 @@ import java.util.Date;
 import java.util.List;
 import org.linphone.LinphoneManager.AddressType;
 import org.linphone.assistant.MenuAssistantActivity;
-import org.linphone.assistant_old.AssistantActivity;
-import org.linphone.assistant_old.RemoteProvisioningLoginActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
@@ -179,28 +177,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
         super.onCreate(savedInstanceState);
 
         LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
-
-        boolean useFirstLoginActivity =
-                getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
-        if (LinphonePreferences.instance().isProvisioningLoginViewEnabled()) {
-            Intent wizard = new Intent();
-            wizard.setClass(this, RemoteProvisioningLoginActivity.class);
-            wizard.putExtra("Domain", LinphoneManager.getInstance().wizardLoginViewDomain);
-            startActivity(wizard);
-            finish();
-            return;
-        } else if (savedInstanceState == null
-                && (useFirstLoginActivity
-                        && LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-                        && LinphonePreferences.instance().isFirstLaunch())) {
-            if (LinphonePreferences.instance().getAccountCount() > 0) {
-                LinphonePreferences.instance().firstLaunchSuccessful();
-            } else {
-                startActivity(new Intent().setClass(this, AssistantActivity.class));
-                finish();
-                return;
-            }
-        }
 
         if (getResources().getBoolean(R.bool.use_linphone_tag)) {
             if (getPackageManager()
@@ -1657,7 +1633,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                                         new Intent()
                                                 .setClass(
                                                         LinphoneManager.getInstance().getContext(),
-                                                        AssistantActivity.class));
+                                                        MenuAssistantActivity.class));
                                 finish();
                             }
                         } else if (selectedItem.equals(getString(R.string.menu_settings))) {

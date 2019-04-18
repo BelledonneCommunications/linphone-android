@@ -206,6 +206,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".assistant.PhoneAccountLinkingAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".assistant.GenericConnectionAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
@@ -233,38 +240,6 @@
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".assistant_old.AssistantActivity"
-            android:screenOrientation="behind"
-            android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".assistant_old.RemoteProvisioningLoginActivity"
-            android:screenOrientation="nosensor"
-            android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".assistant_old.RemoteProvisioningActivity"
-            android:screenOrientation="nosensor"
-            android:theme="@style/LinphoneStyleLight">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            <intent-filter>
-                <data android:scheme="linphone-config" /> <!-- Change if needed -->
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 

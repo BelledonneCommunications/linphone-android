@@ -820,19 +820,7 @@ public class LinphonePreferences {
         LinphoneManager.getInstance().initTunnelFromConf();
     }
 
-    public boolean isProvisioningLoginViewEnabled() {
-
-        return (getConfig() != null) && getConfig().getBool("app", "show_login_view", false);
-    }
     // End of tunnel settings
-
-    public void disableProvisioningLoginView() {
-        if (isProvisioningLoginViewEnabled()) { // Only do it if it was previously enabled
-            getConfig().setBool("app", "show_login_view", false);
-        } else {
-            Log.w("Remote provisioning login view wasn't enabled, ignoring");
-        }
-    }
 
     public boolean isFirstRemoteProvisioning() {
         return getConfig().getBool("app", "first_remote_provisioning", true);
