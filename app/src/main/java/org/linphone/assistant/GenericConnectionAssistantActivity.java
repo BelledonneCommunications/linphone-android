@@ -19,16 +19,31 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import androidx.annotation.Nullable;
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.ProxyConfig;
+import org.linphone.core.TransportType;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ThemableActivity;
 
-public class GenericConnectionAssistantActivity extends ThemableActivity {
+public class GenericConnectionAssistantActivity extends ThemableActivity implements TextWatcher {
     private View mTopBar;
     private ImageView mBack, mValid;
+    private EditText mUsername, mPassword, mDomain, mDisplayName;
+    private RadioGroup mTransport;
+
+    private AccountCreator mAccountCreator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,5 +67,71 @@ public class GenericConnectionAssistantActivity extends ThemableActivity {
 
         mValid = findViewById(R.id.valid);
         mValid.setEnabled(false);
+        mValid.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        configureAccount();
+                    }
+                });
+
+        mUsername = findViewById(R.id.assistant_username);
+        mUsername.addTextChangedListener(this);
+        mDisplayName = findViewById(R.id.assistant_display_name);
+        mDisplayName.addTextChangedListener(this);
+        mPassword = findViewById(R.id.assistant_password);
+        mPassword.addTextChangedListener(this);
+        mDomain = findViewById(R.id.assistant_domain);
+        mDomain.addTextChangedListener(this);
+        mTransport = findViewById(R.id.assistant_transports);
+
+        mAccountCreator =
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                        .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
     }
+
+    private void configureAccount() {
+        mAccountCreator.setUsername(mUsername.getText().toString());
+        mAccountCreator.setDomain(mDomain.getText().toString());
+        mAccountCreator.setPassword(mPassword.getText().toString());
+        mAccountCreator.setDisplayName(mDisplayName.getText().toString());
+        // TODO: mUserId
+
+        switch (mTransport.getCheckedRadioButtonId()) {
+            case R.id.transport_udp:
+                mAccountCreator.setTransport(TransportType.Udp);
+                break;
+            case R.id.transport_tcp:
+                mAccountCreator.setTransport(TransportType.Tcp);
+                break;
+            case R.id.transport_tls:
+                mAccountCreator.setTransport(TransportType.Tls);
+                break;
+        }
+
+        ProxyConfig proxyConfig = mAccountCreator.configure();
+        if (proxyConfig == null) {
+            // An error has happened !
+            // TODO: display error message
+        } else {
+            Intent intent =
+                    new Intent(GenericConnectionAssistantActivity.this, LinphoneActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        mValid.setEnabled(
+                !mUsername.getText().toString().isEmpty()
+                        && !mPassword.getText().toString().isEmpty()
+                        && !mDomain.getText().toString().isEmpty());
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {}
 }
