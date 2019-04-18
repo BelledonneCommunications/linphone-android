@@ -1496,7 +1496,8 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 new Timestamp(
                                 LinphoneActivity.instance()
                                         .getResources()
-                                        .getInteger(R.integer.popup_time_interval))
+                                        .getInteger(
+                                                R.integer.phone_number_linking_popup_time_interval))
                         .getTime();
         long newDate = now + future;
 
