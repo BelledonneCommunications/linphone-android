@@ -25,12 +25,17 @@ import org.linphone.R;
 import org.linphone.utils.ThemableActivity;
 
 public abstract class AssistantActivity extends ThemableActivity {
-    protected View mTopBar;
+    protected View mTopBar, mStatusBar;
     protected ImageView mBack;
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        mStatusBar = findViewById(R.id.status);
+        if (getResources().getBoolean(R.bool.assistant_hide_status_bar)) {
+            mStatusBar.setVisibility(View.GONE);
+        }
 
         mTopBar = findViewById(R.id.top_bar);
         if (getResources().getBoolean(R.bool.assistant_hide_top_bar)) {
