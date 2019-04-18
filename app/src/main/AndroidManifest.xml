@@ -161,14 +161,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <data android:mimeType="audio/*" />
-                <data android:mimeType="video/*" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            -->
         </activity>
 
         <activity
@@ -186,14 +178,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".assistant.AccountCreationAssistantActivity"
+            android:name=".assistant.EmailAccountCreationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".assistant.AccountValidationAssistantActivity"
+            android:name=".assistant.EmailAccountValidationAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.PhoneAccountCreationAssistantActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".assistant.PhoneAccountValidationAssistantActivity"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -311,14 +317,6 @@
                 <action android:name="com.base.module.phone.HOOKEVENT" />
             </intent-filter>
         </receiver>
-
-        <!--<receiver
-            android:name=".receivers.OutgoingCallReceiver"
-            android:permission="android.permission.PROCESS_OUTGOING_CALLS">
-            <intent-filter>
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-            </intent-filter>
-        </receiver>-->
 
         <receiver
             android:name=".receivers.AccountEnableReceiver"

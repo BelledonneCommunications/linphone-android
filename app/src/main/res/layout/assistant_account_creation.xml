@@ -37,7 +37,7 @@
 
 			<LinearLayout
 				android:id="@+id/phone_number_layout"
-				android:visibility="gone"
+				android:visibility="visible"
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
@@ -130,7 +130,7 @@
 
 			<LinearLayout
 				android:id="@+id/username_layout"
-				android:visibility="gone"
+				android:visibility="visible"
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
@@ -166,7 +166,7 @@
 
 			<LinearLayout
 				android:id="@+id/email_layout"
-				android:visibility="gone"
+				android:visibility="visible"
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
@@ -210,7 +210,7 @@
 
 				<LinearLayout
 					android:id="@+id/password_layout"
-					android:visibility="gone"
+					android:visibility="visible"
 					android:orientation="vertical"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
@@ -295,7 +295,7 @@
 
 			<CheckBox
 				android:id="@+id/use_username"
-				android:visibility="gone"
+				android:visibility="visible"
 				android:paddingLeft="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -305,7 +305,7 @@
 
 			<CheckBox
 				android:id="@+id/use_email"
-				android:visibility="gone"
+				android:visibility="visible"
 				android:paddingLeft="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -327,7 +327,7 @@
 
 			<TextView
 				android:id="@+id/assistant_skip"
-				android:visibility="gone"
+				android:visibility="visible"
 				android:text="@string/maybe_later"
 				android:textColor="?attr/primaryTextColor"
 				android:textSize="18sp"

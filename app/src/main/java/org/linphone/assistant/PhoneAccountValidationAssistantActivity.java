@@ -1,7 +1,7 @@
 package org.linphone.assistant;
 
 /*
-AccountConnectionAssistantActivity.java
+PhoneAccountValidationAssistantActivity.java
 Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import org.linphone.R;
 
-public class AccountConnectionAssistantActivity extends AssistantActivity {
+public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.assistant_menu);
+        setContentView(R.layout.assistant_phone_account_validation);
     }
 }
