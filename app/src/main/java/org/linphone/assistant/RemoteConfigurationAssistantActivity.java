@@ -19,8 +19,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,17 +34,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.ConfiguringState;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ThemableActivity;
 
 public class RemoteConfigurationAssistantActivity extends ThemableActivity {
-    private static int QR_CODE_ACTIVITY_RESULT = 1;
+    private static final int QR_CODE_ACTIVITY_RESULT = 1;
+    private static final int CAMERA_PERMISSION_RESULT = 2;
 
     private View mTopBar;
     private ImageView mBack, mValid;
@@ -128,11 +133,13 @@ public class RemoteConfigurationAssistantActivity extends ThemableActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startActivityForResult(
-                                new Intent(
-                                        RemoteConfigurationAssistantActivity.this,
-                                        QrCodeConfigurationAssistantActivity.class),
-                                QR_CODE_ACTIVITY_RESULT);
+                        if (checkCameraPermissionForQrCode()) {
+                            startActivityForResult(
+                                    new Intent(
+                                            RemoteConfigurationAssistantActivity.this,
+                                            QrCodeConfigurationAssistantActivity.class),
+                                    QR_CODE_ACTIVITY_RESULT);
+                        }
                     }
                 });
 
@@ -172,5 +179,51 @@ public class RemoteConfigurationAssistantActivity extends ThemableActivity {
             mRemoteConfigurationUrl.setText(url);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private boolean checkCameraPermissionForQrCode() {
+        int permissionGranted =
+                getPackageManager().checkPermission(Manifest.permission.CAMERA, getPackageName());
+        Log.i(
+                "[Permission] Manifest.permission.CAMERA is "
+                        + (permissionGranted == PackageManager.PERMISSION_GRANTED
+                                ? "granted"
+                                : "denied"));
+
+        if (permissionGranted != PackageManager.PERMISSION_GRANTED) {
+            Log.i("[Permission] Asking for " + Manifest.permission.CAMERA);
+            ActivityCompat.requestPermissions(
+                    this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_RESULT);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, final int[] grantResults) {
+        for (int i = 0; i < permissions.length; i++) {
+            Log.i(
+                    "[Permission] "
+                            + permissions[i]
+                            + " has been "
+                            + (grantResults[i] == PackageManager.PERMISSION_GRANTED
+                                    ? "granted"
+                                    : "denied"));
+        }
+
+        switch (requestCode) {
+            case CAMERA_PERMISSION_RESULT:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startActivityForResult(
+                            new Intent(
+                                    RemoteConfigurationAssistantActivity.this,
+                                    QrCodeConfigurationAssistantActivity.class),
+                            QR_CODE_ACTIVITY_RESULT);
+                } else {
+                    // TODO: permission denied, display something to the user
+                }
+                break;
+        }
     }
 }
