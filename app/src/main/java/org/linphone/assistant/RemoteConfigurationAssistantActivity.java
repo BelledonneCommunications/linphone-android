@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.ConfiguringState;
@@ -132,12 +131,7 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
                         mFetchAndApply.setEnabled(true);
 
                         if (status == ConfiguringState.Successful) {
-                            Intent intent =
-                                    new Intent(
-                                            RemoteConfigurationAssistantActivity.this,
-                                            LinphoneActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+                            goToLinphoneActivity();
                         } else if (status == ConfiguringState.Failed) {
                             Toast.makeText(
                                             RemoteConfigurationAssistantActivity.this,
