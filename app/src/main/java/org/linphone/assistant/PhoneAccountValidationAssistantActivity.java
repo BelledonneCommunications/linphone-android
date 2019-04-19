@@ -108,6 +108,9 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     protected void onResume() {
         super.onResume();
         mAccountCreator.addListener(mListener);
+
+        // Prevent user to go back, it won't be able to come back here after...
+        mBack.setEnabled(false);
     }
 
     @Override
