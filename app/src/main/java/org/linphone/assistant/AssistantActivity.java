@@ -156,6 +156,9 @@ public abstract class AssistantActivity extends ThemableActivity
             case WrongActivationCode:
                 message = getString(R.string.activation_code_invalid);
                 break;
+            case PhoneNumberOverused:
+                message = getString(R.string.phone_number_overuse);
+                break;
             default:
                 message = getString(R.string.error_unknown);
                 break;
@@ -180,6 +183,16 @@ public abstract class AssistantActivity extends ThemableActivity
             TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
             String countryIso = tm.getNetworkCountryIso();
             return getDialPlanFromCountryCode(countryIso);
+        } catch (Exception e) {
+            Log.e("[Assistant] " + e);
+        }
+        return null;
+    }
+
+    protected String getDevicePhoneNumber() {
+        try {
+            TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+            return tm.getLine1Number();
         } catch (Exception e) {
             Log.e("[Assistant] " + e);
         }

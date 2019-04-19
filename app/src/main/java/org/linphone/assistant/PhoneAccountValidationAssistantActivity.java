@@ -19,6 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,6 +36,7 @@ import org.linphone.core.tools.Log;
 public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     private TextView mPhoneNumber, mFinishCreation;
     private EditText mSmsCode;
+    private ClipboardManager mClipboard;
 
     private int mActivationCodeLength;
     private AccountCreatorListenerStub mListener;
@@ -108,6 +111,21 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                         }
                     }
                 };
+
+        mClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        mClipboard.addPrimaryClipChangedListener(
+                new ClipboardManager.OnPrimaryClipChangedListener() {
+                    @Override
+                    public void onPrimaryClipChanged() {
+                        ClipData data = mClipboard.getPrimaryClip();
+                        if (data != null && data.getItemCount() > 0) {
+                            String clip = data.getItemAt(0).getText().toString();
+                            if (clip.length() == 4) {
+                                mSmsCode.setText(clip);
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
