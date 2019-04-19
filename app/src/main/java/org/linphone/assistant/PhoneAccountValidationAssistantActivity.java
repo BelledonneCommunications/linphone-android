@@ -120,7 +120,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                         ClipData data = mClipboard.getPrimaryClip();
                         if (data != null && data.getItemCount() > 0) {
                             String clip = data.getItemAt(0).getText().toString();
-                            if (clip.length() == 4) {
+                            if (clip.length() == mActivationCodeLength) {
                                 mSmsCode.setText(clip);
                             }
                         }
