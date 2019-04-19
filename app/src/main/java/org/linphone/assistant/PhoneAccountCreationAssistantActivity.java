@@ -178,6 +178,11 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
+
+        String phoneNumber = getDevicePhoneNumber();
+        if (phoneNumber != null) {
+            mPhoneNumber.setText(phoneNumber);
+        }
     }
 
     @Override
