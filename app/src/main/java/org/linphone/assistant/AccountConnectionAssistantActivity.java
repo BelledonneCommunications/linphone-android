@@ -223,6 +223,11 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
+
+        String phoneNumber = getDevicePhoneNumber();
+        if (phoneNumber != null) {
+            mPhoneNumber.setText(phoneNumber);
+        }
     }
 
     @Override
