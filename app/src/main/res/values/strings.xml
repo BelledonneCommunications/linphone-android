@@ -155,6 +155,7 @@
     <string name="request_failed">Failed to query the server. Please try again later</string>
     <string name="transport_unsupported">Unsupported transport</string>
     <string name="country_code_invalid">Country code invalid</string>
+    <string name="invalid_characters">Invalid character(s) found</string>
 
     <!-- In-app -->
     <string name="inapp">In-app</string>

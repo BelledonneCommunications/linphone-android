@@ -81,7 +81,7 @@
                         style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="invisible"/>
 
                 </LinearLayout>
 
@@ -112,11 +112,11 @@
 
                     <TextView
                         android:id="@+id/email_error"
-                        android:text="@string/error"
+                        android:text="@string/invalid_email"
                         style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="invisible"/>
 
                 </LinearLayout>
 
@@ -151,7 +151,7 @@
                         style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="invisible"/>
 
                 </LinearLayout>
 
@@ -182,11 +182,11 @@
 
                     <TextView
                         android:id="@+id/confirm_password_error"
-                        android:text="@string/error"
+                        android:text="@string/wizard_passwords_unmatched"
                         style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="invisible"/>
 
                 </LinearLayout>
 
