@@ -32,6 +32,7 @@ import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 
 public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     private TextView mPhoneNumber, mFinishCreation;
@@ -39,6 +40,7 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
     private ClipboardManager mClipboard;
 
     private int mActivationCodeLength;
+    private boolean mIsLogin, mIsLinking;
     private AccountCreatorListenerStub mListener;
 
     @Override
@@ -47,10 +49,16 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_phone_account_validation);
 
+        mIsLogin = mIsLinking = false;
         if (getIntent() != null && getIntent().getBooleanExtra("isLoginVerification", false)) {
-            findViewById(R.id.title_account_creation).setVisibility(View.GONE);
+            findViewById(R.id.title_account_creation).setVisibility(View.VISIBLE);
+            mIsLogin = true;
+        } else if (getIntent() != null
+                && getIntent().getBooleanExtra("isLinkingVerification", false)) {
+            mIsLinking = true;
+            findViewById(R.id.title_account_linking).setVisibility(View.VISIBLE);
         } else {
-            findViewById(R.id.title_account_activation).setVisibility(View.GONE);
+            findViewById(R.id.title_account_activation).setVisibility(View.VISIBLE);
         }
 
         mActivationCodeLength =
@@ -84,9 +92,19 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                         mFinishCreation.setEnabled(false);
                         mAccountCreator.setActivationCode(mSmsCode.getText().toString());
 
-                        AccountCreator.Status status = mAccountCreator.activateAccount();
+                        AccountCreator.Status status;
+                        if (mIsLinking) {
+                            status = mAccountCreator.activateAlias();
+                        } else {
+                            status = mAccountCreator.activateAccount();
+                        }
                         if (status != AccountCreator.Status.RequestOk) {
-                            Log.e("[Phone Account Validation] activateAccount returned " + status);
+                            Log.e(
+                                    "[Phone Account Validation] "
+                                            + (mIsLinking
+                                                    ? "linkAccount"
+                                                    : "activateAccount" + " returned ")
+                                            + status);
                             mFinishCreation.setEnabled(true);
                             showGenericErrorDialog(status);
                         }
@@ -101,6 +119,23 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
                         Log.i("[Phone Account Validation] onActivateAccount status is " + status);
                         if (status.equals(AccountCreator.Status.AccountActivated)) {
                             createProxyConfigAndLeaveAssistant();
+                        } else {
+                            mFinishCreation.setEnabled(true);
+                            showGenericErrorDialog(status);
+
+                            if (status.equals(AccountCreator.Status.WrongActivationCode)) {
+                                // TODO
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onActivateAlias(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i("[Phone Account Validation] onActivateAlias status is " + status);
+                        if (status.equals(AccountCreator.Status.AccountActivated)) {
+                            LinphonePreferences.instance().setLinkPopupTime("");
+                            goToLinphoneActivity();
                         } else {
                             mFinishCreation.setEnabled(true);
                             showGenericErrorDialog(status);
