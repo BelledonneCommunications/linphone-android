@@ -16,7 +16,4 @@
     <entry name="realm" overwrite="true"></entry>
     <entry name="conference_factory_uri" overwrite="true"></entry>
   </section>
-  <section name="assistant">
-    <entry name="domain" overwrite="true"></entry>
-  </section>
 </config>

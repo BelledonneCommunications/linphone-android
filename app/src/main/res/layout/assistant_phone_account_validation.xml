@@ -26,14 +26,24 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/title_account_creation"
             android:text="@string/assistant_create_account"
             style="@style/standard_text_font"
             android:textAllCaps="true"
             android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:id="@+id/title_account_activation" />
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:id="@+id/title_account_activation"
+            android:text="@string/assistant_login_linphone"
+            style="@style/standard_text_font"
+            android:textAllCaps="true"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"/>
 
         <TextView
             android:text="@string/assistant_create_account_part_2"

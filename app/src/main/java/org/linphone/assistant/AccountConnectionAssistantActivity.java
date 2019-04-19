@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,11 +35,12 @@ import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.DialPlan;
+import org.linphone.core.tools.Log;
 
 public class AccountConnectionAssistantActivity extends AssistantActivity {
     private RelativeLayout mPhoneNumberConnection, mUsernameConnection;
     private Switch mUsernameConnectionSwitch;
-    private EditText mPrefix, mPhoneNumber;
+    private EditText mPrefix, mPhoneNumber, mUsername, mPassword;
     private TextView mCountryPicker, mError, mConnect;
     private ImageView mPhoneNumberInfos;
 
@@ -68,8 +70,28 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
         mConnect.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {}
+                    public void onClick(View v) {
+                        mAccountCreator.setDomain(getString(R.string.default_domain));
+                        mConnect.setEnabled(false);
+
+                        if (mUsernameConnectionSwitch.isChecked()) {
+                            mAccountCreator.setUsername(mUsername.getText().toString());
+                            mAccountCreator.setPassword(mPassword.getText().toString());
+
+                            createProxyConfigAndLeaveAssistant();
+                        } else {
+                            mAccountCreator.setUsername(mPhoneNumber.getText().toString());
+
+                            AccountCreator.Status status = mAccountCreator.recoverAccount();
+                            if (status != AccountCreator.Status.RequestOk) {
+                                Log.e("[Account Connection] recoverAccount returned " + status);
+                                mConnect.setEnabled(true);
+                                showGenericErrorDialog(status);
+                            }
+                        }
+                    }
                 });
+        mConnect.setEnabled(false);
 
         if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
             mUsernameConnection.setVisibility(View.GONE);
@@ -140,7 +162,57 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                     }
                 });
 
-        mListener = new AccountCreatorListenerStub() {};
+        mUsername = findViewById(R.id.assistant_username);
+        mUsername.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        mConnect.setEnabled(s.length() > 0 && mPassword.getText().length() > 0);
+                    }
+                });
+
+        mPassword = findViewById(R.id.assistant_password);
+        mPassword.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        mConnect.setEnabled(s.length() > 0 && mUsername.getText().length() > 0);
+                    }
+                });
+
+        mListener =
+                new AccountCreatorListenerStub() {
+                    @Override
+                    public void onRecoverAccount(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i("[Account Connection] onRecoverAccount status is " + status);
+                        if (status.equals(AccountCreator.Status.RequestOk)) {
+                            Intent intent =
+                                    new Intent(
+                                            AccountConnectionAssistantActivity.this,
+                                            PhoneAccountValidationAssistantActivity.class);
+                            intent.putExtra("isLoginVerification", true);
+                            startActivity(intent);
+                        } else {
+                            mConnect.setEnabled(true);
+                            showGenericErrorDialog(status);
+                        }
+                    }
+                };
     }
 
     @Override
