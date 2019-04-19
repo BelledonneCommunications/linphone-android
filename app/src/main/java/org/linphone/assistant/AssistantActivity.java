@@ -56,6 +56,7 @@ public abstract class AssistantActivity extends ThemableActivity
         if (mAccountCreator == null) {
             String url = LinphonePreferences.instance().getXmlrpcUrl();
             Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            core.loadConfigFromXml(LinphoneManager.getInstance().getDefaultDynamicConfigFile());
             mAccountCreator = core.createAccountCreator(url);
         }
     }
@@ -96,21 +97,17 @@ public abstract class AssistantActivity extends ThemableActivity
 
     protected void createProxyConfigAndLeaveAssistant() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        String config = LinphoneManager.getInstance().getDefaultDynamicConfigFile();
         boolean useLinphoneDefaultValues =
                 getString(R.string.default_domain).equals(mAccountCreator.getDomain());
-
         if (useLinphoneDefaultValues) {
-            config = LinphoneManager.getInstance().getLinphoneDynamicConfigFile();
+            core.loadConfigFromXml(LinphoneManager.getInstance().getLinphoneDynamicConfigFile());
         }
-        core.loadConfigFromXml(config);
 
         ProxyConfig proxyConfig = mAccountCreator.configure();
 
         if (useLinphoneDefaultValues) {
             // Restore default values
-            config = LinphoneManager.getInstance().getDefaultDynamicConfigFile();
-            core.loadConfigFromXml(config);
+            core.loadConfigFromXml(LinphoneManager.getInstance().getDefaultDynamicConfigFile());
         }
 
         if (proxyConfig == null) {

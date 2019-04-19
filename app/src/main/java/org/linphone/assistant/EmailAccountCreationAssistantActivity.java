@@ -19,15 +19,252 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Patterns;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.AccountCreatorListenerStub;
+import org.linphone.core.tools.Log;
 
 public class EmailAccountCreationAssistantActivity extends AssistantActivity {
+    private EditText mUsername, mPassword, mPasswordConfirm, mEmail;
+    private TextView mCreate, mUsernameError, mPasswordError, mPasswordConfirmError, mEmailError;
+
+    private AccountCreatorListenerStub mListener;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_email_account_creation);
+
+        mUsernameError = findViewById(R.id.username_error);
+        mPasswordError = findViewById(R.id.password_error);
+        mPasswordConfirmError = findViewById(R.id.confirm_password_error);
+        mEmailError = findViewById(R.id.email_error);
+
+        mUsername = findViewById(R.id.assistant_username);
+        mUsername.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        AccountCreator.UsernameStatus status =
+                                mAccountCreator.setUsername(s.toString());
+                        mUsernameError.setVisibility(
+                                status == AccountCreator.UsernameStatus.Ok
+                                        ? View.INVISIBLE
+                                        : View.VISIBLE);
+                        switch (status) {
+                            case Invalid:
+                                mUsernameError.setText(getString(R.string.username_invalid_size));
+                                break;
+                            case InvalidCharacters:
+                                mUsernameError.setText(getString(R.string.invalid_characters));
+                                break;
+                            case TooLong:
+                                mUsernameError.setText(getString(R.string.username_too_long));
+                                break;
+                            case TooShort:
+                                mUsernameError.setText(getString(R.string.username_too_short));
+                                break;
+                        }
+                        updateCreateButton();
+                    }
+                });
+
+        mPassword = findViewById(R.id.assistant_password);
+        mPassword.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        AccountCreator.PasswordStatus status =
+                                mAccountCreator.setPassword(s.toString());
+                        mPasswordError.setVisibility(
+                                status == AccountCreator.PasswordStatus.Ok
+                                        ? View.INVISIBLE
+                                        : View.VISIBLE);
+
+                        mPasswordConfirmError.setVisibility(
+                                s.toString().equals(mPasswordConfirm.getText().toString())
+                                        ? View.INVISIBLE
+                                        : View.VISIBLE);
+
+                        switch (status) {
+                            case InvalidCharacters:
+                                mPasswordError.setText(getString(R.string.invalid_characters));
+                                break;
+                            case TooLong:
+                                mPasswordError.setText(getString(R.string.password_too_long));
+                                break;
+                            case TooShort:
+                                mPasswordError.setText(getString(R.string.password_too_short));
+                                break;
+                        }
+                        updateCreateButton();
+                    }
+                });
+
+        mPasswordConfirm = findViewById(R.id.assistant_password_confirmation);
+        mPasswordConfirm.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        mPasswordConfirmError.setVisibility(
+                                s.toString().equals(mPassword.getText().toString())
+                                        ? View.INVISIBLE
+                                        : View.VISIBLE);
+                        updateCreateButton();
+                    }
+                });
+
+        mEmail = findViewById(R.id.assistant_email);
+        mEmail.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        AccountCreator.EmailStatus status = mAccountCreator.setEmail(s.toString());
+                        mEmailError.setVisibility(
+                                status == AccountCreator.EmailStatus.Ok
+                                        ? View.INVISIBLE
+                                        : View.VISIBLE);
+                        updateCreateButton();
+                    }
+                });
+
+        mCreate = findViewById(R.id.assistant_create);
+        mCreate.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        enableButtonsAndFields(false);
+                        mAccountCreator.setDomain(getString(R.string.default_domain));
+
+                        AccountCreator.Status status = mAccountCreator.isAccountExist();
+                        if (status != AccountCreator.Status.RequestOk) {
+                            enableButtonsAndFields(true);
+                            Log.e("[Email Account Creation] isAccountExists returned " + status);
+                            showGenericErrorDialog(status);
+                        }
+                    }
+                });
+        mCreate.setEnabled(false);
+
+        mListener =
+                new AccountCreatorListenerStub() {
+                    public void onIsAccountExist(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i("[Email Account Creation] onIsAccountExist status is " + status);
+                        if (status.equals(AccountCreator.Status.AccountExist)
+                                || status.equals(AccountCreator.Status.AccountExistWithAlias)) {
+                            showAccountAlreadyExistsDialog();
+                            enableButtonsAndFields(true);
+                        } else if (status.equals(AccountCreator.Status.AccountNotExist)) {
+                            status = mAccountCreator.createAccount();
+                            if (status != AccountCreator.Status.RequestOk) {
+                                Log.e("[Email Account Creation] createAccount returned " + status);
+                                enableButtonsAndFields(true);
+                                showGenericErrorDialog(status);
+                            }
+                        } else {
+                            enableButtonsAndFields(true);
+                            showGenericErrorDialog(status);
+                        }
+                    }
+
+                    @Override
+                    public void onCreateAccount(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i("[Email Account Creation] onCreateAccount status is " + status);
+                        if (status.equals(AccountCreator.Status.AccountCreated)) {
+                            startActivity(
+                                    new Intent(
+                                            EmailAccountCreationAssistantActivity.this,
+                                            EmailAccountValidationAssistantActivity.class));
+                        } else {
+                            enableButtonsAndFields(true);
+                            showGenericErrorDialog(status);
+                        }
+                    }
+                };
+    }
+
+    private void enableButtonsAndFields(boolean enable) {
+        mUsername.setEnabled(enable);
+        mPassword.setEnabled(enable);
+        mPasswordConfirm.setEnabled(enable);
+        mEmail.setEnabled(enable);
+        mCreate.setEnabled(enable);
+    }
+
+    private void updateCreateButton() {
+        mCreate.setEnabled(
+                mUsername.getText().length() > 0
+                        && mPassword.getText().toString().length() > 0
+                        && mEmail.getText().toString().length() > 0
+                        && mEmailError.getVisibility() == View.INVISIBLE
+                        && mUsernameError.getVisibility() == View.INVISIBLE
+                        && mPasswordError.getVisibility() == View.INVISIBLE
+                        && mPasswordConfirmError.getVisibility() == View.INVISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAccountCreator.addListener(mListener);
+
+        if (getResources().getBoolean(R.bool.pre_fill_email_in_assistant)) {
+            Account[] accounts = AccountManager.get(this).getAccountsByType("com.google");
+            for (Account account : accounts) {
+                if (Patterns.EMAIL_ADDRESS.matcher(account.name).matches()) {
+                    String possibleEmail = account.name;
+                    mEmail.setText(possibleEmail);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAccountCreator.removeListener(mListener);
     }
 }
