@@ -20,23 +20,39 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.AlertDialog;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ThemableActivity;
 
 public abstract class AssistantActivity extends ThemableActivity
         implements CountryPicker.CountryPickedListener {
     protected View mTopBar, mStatusBar;
     protected ImageView mBack;
-    private AlertDialog mCountryPickerDialog;
+    protected AlertDialog mCountryPickerDialog;
 
-    private CountryPicker mCountryPicker;
+    protected CountryPicker mCountryPicker;
+    protected AccountCreator mAccountCreator;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        String url = LinphonePreferences.instance().getXmlrpcUrl();
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        mAccountCreator = core.createAccountCreator(url);
+    }
 
     @Override
     protected void onResume() {
@@ -64,6 +80,14 @@ public abstract class AssistantActivity extends ThemableActivity
                 });
     }
 
+    @Override
+    public void onCountryClicked(DialPlan dialPlan) {
+        if (mCountryPickerDialog != null) {
+            mCountryPickerDialog.dismiss();
+            mCountryPickerDialog = null;
+        }
+    }
+
     protected void showPhoneNumberDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.phone_number_info_title))
@@ -72,6 +96,13 @@ public abstract class AssistantActivity extends ThemableActivity
                                 + "\n"
                                 + getString(
                                         R.string.phone_number_link_info_content_already_account))
+                .show();
+    }
+
+    protected void showAccountAlreadyExistsDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.account_already_exist))
+                .setMessage(getString(R.string.assistant_phone_number_unavailable))
                 .show();
     }
 
@@ -112,11 +143,94 @@ public abstract class AssistantActivity extends ThemableActivity
         return null;
     }
 
-    @Override
-    public void onCountryClicked(DialPlan dialPlan) {
-        if (mCountryPickerDialog != null) {
-            mCountryPickerDialog.dismiss();
-            mCountryPickerDialog = null;
+    protected int arePhoneNumberAndPrefixOk(EditText prefixEditText, EditText phoneNumberEditText) {
+        String prefix = prefixEditText.getText().toString();
+        if (prefix.startsWith("+")) {
+            prefix = prefix.substring(1);
         }
+
+        String phoneNumber = phoneNumberEditText.getText().toString();
+        return mAccountCreator.setPhoneNumber(phoneNumber, prefix);
     }
+
+    protected String getErrorFromPhoneNumberStatus(int status) {
+        AccountCreator.PhoneNumberStatus phoneNumberStatus =
+                AccountCreator.PhoneNumberStatus.fromInt(status);
+        switch (phoneNumberStatus) {
+            case InvalidCountryCode:
+                return getString(R.string.country_code_invalid);
+            case TooShort:
+                return getString(R.string.phone_number_too_short);
+            case TooLong:
+                return getString(R.string.phone_number_too_long);
+            case Invalid:
+                return getString(R.string.phone_number_invalid);
+        }
+        return null;
+    }
+
+    /*public static String errorForEmailStatus(AccountCreator.EmailStatus status) {
+        Context ctxt = getContext();
+        if (ctxt != null) {
+            if (status.equals(AccountCreator.EmailStatus.InvalidCharacters)
+                    || status.equals(AccountCreator.EmailStatus.Malformed))
+                return ctxt.getString(R.string.invalid_email);
+        }
+        return null;
+    }
+
+    public static String errorForUsernameStatus(AccountCreator.UsernameStatus status) {
+        Context ctxt = getContext();
+        if (ctxt != null) {
+            if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
+                return ctxt.getString(R.string.invalid_username);
+            if (status.equals(AccountCreator.UsernameStatus.TooShort))
+                return ctxt.getString(R.string.username_too_short);
+            if (status.equals(AccountCreator.UsernameStatus.TooLong))
+                return ctxt.getString(R.string.username_too_long);
+            if (status.equals(AccountCreator.UsernameStatus.Invalid))
+                return ctxt.getString(R.string.username_invalid_size);
+            if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
+                return ctxt.getString(R.string.invalid_display_name);
+        }
+        return null;
+    }
+
+    public static String errorForPasswordStatus(AccountCreator.PasswordStatus status) {
+        Context ctxt = getContext();
+        if (ctxt != null) {
+            if (status.equals(AccountCreator.PasswordStatus.TooShort))
+                return ctxt.getString(R.string.password_too_short);
+            if (status.equals(AccountCreator.PasswordStatus.TooLong))
+                return ctxt.getString(R.string.password_too_long);
+        }
+        return null;
+    }
+
+    public static String errorForStatus(AccountCreator.Status status) {
+        Context ctxt = getContext();
+        if (ctxt != null) {
+            if (status.equals(AccountCreator.Status.RequestFailed))
+                return ctxt.getString(R.string.request_failed);
+            if (status.equals(AccountCreator.Status.ServerError))
+                return ctxt.getString(R.string.wizard_failed);
+            if (status.equals(AccountCreator.Status.AccountExist)
+                    || status.equals(AccountCreator.Status.AccountExistWithAlias))
+                return ctxt.getString(R.string.account_already_exist);
+            if (status.equals(AccountCreator.Status.AliasIsAccount)
+                    || status.equals(AccountCreator.Status.AliasExist))
+                return ctxt.getString(R.string.assistant_phone_number_unavailable);
+            if (status.equals(AccountCreator.Status.AccountNotExist))
+                return ctxt.getString(R.string.assistant_error_bad_credentials);
+            if (status.equals(AccountCreator.Status.AliasNotExist))
+                return ctxt.getString(R.string.phone_number_not_exist);
+            if (status.equals(AccountCreator.Status.AliasNotExist)
+                    || status.equals(AccountCreator.Status.AccountNotActivated)
+                    || status.equals(AccountCreator.Status.AccountAlreadyActivated)
+                    || status.equals(AccountCreator.Status.AccountActivated)
+                    || status.equals(AccountCreator.Status.AccountNotCreated)
+                    || status.equals(AccountCreator.Status.RequestOk)) return "";
+        }
+        return null;
+    }*/
 }
