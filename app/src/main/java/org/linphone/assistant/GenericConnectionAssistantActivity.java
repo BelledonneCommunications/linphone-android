@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,11 +27,9 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
-import org.linphone.core.ProxyConfig;
 import org.linphone.core.TransportType;
 import org.linphone.settings.LinphonePreferences;
 
@@ -93,16 +90,7 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
                 break;
         }
 
-        ProxyConfig proxyConfig = mAccountCreator.configure();
-        if (proxyConfig == null) {
-            // An error has happened !
-            // TODO: display error message
-        } else {
-            Intent intent =
-                    new Intent(GenericConnectionAssistantActivity.this, LinphoneActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
+        createProxyConfigAndLeaveAssistant();
     }
 
     @Override

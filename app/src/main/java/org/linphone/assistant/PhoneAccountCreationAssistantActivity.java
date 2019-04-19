@@ -73,8 +73,8 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                         AccountCreator.Status status = mAccountCreator.isAccountExist();
                         if (status != AccountCreator.Status.RequestOk) {
                             Log.e("[Phone Account Creation] isAccountExists returned " + status);
-                            // TODO display error
                             enableButtonsAndFields(true);
+                            showGenericErrorDialog(status);
                         }
                     }
                 });
@@ -140,13 +140,16 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                                 || status.equals(AccountCreator.Status.AccountExistWithAlias)) {
                             showAccountAlreadyExistsDialog();
                             enableButtonsAndFields(true);
-                        } else {
+                        } else if (status.equals(AccountCreator.Status.AccountNotExist)) {
                             status = mAccountCreator.createAccount();
                             if (status != AccountCreator.Status.RequestOk) {
                                 Log.e("[Phone Account Creation] createAccount returned " + status);
-                                // TODO display error
                                 enableButtonsAndFields(true);
+                                showGenericErrorDialog(status);
                             }
+                        } else {
+                            enableButtonsAndFields(true);
+                            showGenericErrorDialog(status);
                         }
                     }
 
@@ -160,7 +163,8 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                                             PhoneAccountCreationAssistantActivity.this,
                                             PhoneAccountValidationAssistantActivity.class));
                         } else {
-                            // TODO display error
+                            enableButtonsAndFields(true);
+                            showGenericErrorDialog(status);
                         }
                     }
                 };

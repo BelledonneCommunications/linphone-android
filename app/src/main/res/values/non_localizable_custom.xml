@@ -48,6 +48,7 @@
     <bool name="use_phone_number_validation">true</bool><!-- Use phone number for validation -->
     <!-- Time between two link your account with phone number dialog in milliseconds -->
     <integer name="phone_number_linking_popup_time_interval">86400000</integer>
+    <integer name="phone_number_validation_code_length">4</integer>
 
     <!-- Assistant -->
     <!-- Only on should be set to true at a time! If not the first one will be used -->
