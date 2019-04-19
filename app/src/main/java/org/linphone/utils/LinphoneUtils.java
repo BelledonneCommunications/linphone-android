@@ -33,8 +33,6 @@ import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +43,6 @@ import java.util.regex.Pattern;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -316,112 +313,6 @@ public final class LinphoneUtils {
         return sipAddress;
     }
 
-    public static void displayError(boolean isOk, TextView error, String errorText) {
-        if (isOk) {
-            error.setVisibility(View.INVISIBLE);
-            error.setText("");
-        } else {
-            error.setVisibility(View.VISIBLE);
-            error.setText(errorText);
-        }
-    }
-
-    public static String errorForPhoneNumberStatus(int status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (AccountCreator.PhoneNumberStatus.InvalidCountryCode.toInt()
-                    == (status & AccountCreator.PhoneNumberStatus.InvalidCountryCode.toInt()))
-                return ctxt.getString(R.string.country_code_invalid);
-            if (AccountCreator.PhoneNumberStatus.TooShort.toInt()
-                    == (status & AccountCreator.PhoneNumberStatus.TooShort.toInt()))
-                return ctxt.getString(R.string.phone_number_too_short);
-            if (AccountCreator.PhoneNumberStatus.TooLong.toInt()
-                    == (status & AccountCreator.PhoneNumberStatus.TooLong.toInt()))
-                return ctxt.getString(R.string.phone_number_too_long);
-            if (AccountCreator.PhoneNumberStatus.Invalid.toInt()
-                    == (status & AccountCreator.PhoneNumberStatus.Invalid.toInt()))
-                return ctxt.getString(R.string.phone_number_invalid);
-        }
-        return null;
-    }
-
-    public static String errorForEmailStatus(AccountCreator.EmailStatus status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.EmailStatus.InvalidCharacters)
-                    || status.equals(AccountCreator.EmailStatus.Malformed))
-                return ctxt.getString(R.string.invalid_email);
-        }
-        return null;
-    }
-
-    public static String errorForUsernameStatus(AccountCreator.UsernameStatus status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
-                return ctxt.getString(R.string.invalid_username);
-            if (status.equals(AccountCreator.UsernameStatus.TooShort))
-                return ctxt.getString(R.string.username_too_short);
-            if (status.equals(AccountCreator.UsernameStatus.TooLong))
-                return ctxt.getString(R.string.username_too_long);
-            if (status.equals(AccountCreator.UsernameStatus.Invalid))
-                return ctxt.getString(R.string.username_invalid_size);
-            if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
-                return ctxt.getString(R.string.invalid_display_name);
-        }
-        return null;
-    }
-
-    public static String errorForPasswordStatus(AccountCreator.PasswordStatus status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.PasswordStatus.TooShort))
-                return ctxt.getString(R.string.password_too_short);
-            if (status.equals(AccountCreator.PasswordStatus.TooLong))
-                return ctxt.getString(R.string.password_too_long);
-        }
-        return null;
-    }
-
-    public static String errorForStatus(AccountCreator.Status status) {
-        Context ctxt = getContext();
-        Log.e("Status error " + status.name());
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.Status.RequestFailed))
-                return ctxt.getString(R.string.request_failed);
-            if (status.equals(AccountCreator.Status.ServerError))
-                return ctxt.getString(R.string.wizard_failed);
-            if (status.equals(AccountCreator.Status.AccountExist)
-                    || status.equals(AccountCreator.Status.AccountExistWithAlias))
-                return ctxt.getString(R.string.account_already_exist);
-            if (status.equals(AccountCreator.Status.AliasIsAccount)
-                    || status.equals(AccountCreator.Status.AliasExist))
-                return ctxt.getString(R.string.assistant_phone_number_unavailable);
-            if (status.equals(AccountCreator.Status.AccountNotExist))
-                return ctxt.getString(R.string.assistant_error_bad_credentials);
-            if (status.equals(AccountCreator.Status.AliasNotExist))
-                return ctxt.getString(R.string.phone_number_not_exist);
-            if (status.equals(AccountCreator.Status.AliasNotExist)
-                    || status.equals(AccountCreator.Status.AccountNotActivated)
-                    || status.equals(AccountCreator.Status.AccountAlreadyActivated)
-                    || status.equals(AccountCreator.Status.AccountActivated)
-                    || status.equals(AccountCreator.Status.AccountNotCreated)
-                    || status.equals(AccountCreator.Status.RequestOk)) return "";
-        }
-        return null;
-    }
-
-    public static String getCountryCode(EditText dialCode) {
-        if (dialCode != null) {
-            String code = dialCode.getText().toString();
-            if (code != null && code.startsWith("+")) {
-                code = code.substring(1);
-            }
-            return code;
-        }
-        return null;
-    }
-
     public static void displayErrorAlert(String msg, Context ctxt) {
         if (ctxt != null && msg != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
@@ -482,12 +373,6 @@ public final class LinphoneUtils {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    private static Context getContext() {
-        if (sContext == null && LinphoneManager.isInstanciated())
-            sContext = LinphoneManager.getInstance().getContext();
-        return sContext;
     }
 
     public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ChatRoom[] rooms) {

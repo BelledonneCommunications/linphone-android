@@ -124,7 +124,7 @@
                         style="@style/assistant_input_field_error_font"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"/>
+                        android:visibility="invisible"/>
 
                     <TextView
                         android:id="@+id/sip_uri"
