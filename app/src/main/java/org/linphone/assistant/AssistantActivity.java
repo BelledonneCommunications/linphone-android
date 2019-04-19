@@ -20,38 +20,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
 import org.linphone.core.Core;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ThemableActivity;
 
 public abstract class AssistantActivity extends ThemableActivity
         implements CountryPicker.CountryPickedListener {
+    protected static AccountCreator mAccountCreator;
+
     protected View mTopBar, mStatusBar;
     protected ImageView mBack;
     protected AlertDialog mCountryPickerDialog;
 
     protected CountryPicker mCountryPicker;
-    protected AccountCreator mAccountCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String url = LinphonePreferences.instance().getXmlrpcUrl();
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        mAccountCreator = core.createAccountCreator(url);
+        if (mAccountCreator == null) {
+            String url = LinphonePreferences.instance().getXmlrpcUrl();
+            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            mAccountCreator = core.createAccountCreator(url);
+        }
     }
 
     @Override
@@ -88,6 +94,23 @@ public abstract class AssistantActivity extends ThemableActivity
         }
     }
 
+    protected void createProxyConfigAndLeaveAssistant() {
+        ProxyConfig proxyConfig = mAccountCreator.configure();
+        if (proxyConfig == null) {
+            // An error has happened !
+            // TODO: display error message
+        } else {
+            goToLinphoneActivity();
+        }
+    }
+
+    protected void goToLinphoneActivity() {
+        mAccountCreator = null;
+        Intent intent = new Intent(this, LinphoneActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
     protected void showPhoneNumberDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.phone_number_info_title))
@@ -103,6 +126,28 @@ public abstract class AssistantActivity extends ThemableActivity
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.account_already_exist))
                 .setMessage(getString(R.string.assistant_phone_number_unavailable))
+                .show();
+    }
+
+    protected void showGenericErrorDialog(AccountCreator.Status status) {
+        String message;
+
+        switch (status) {
+                // TODO
+            case PhoneNumberInvalid:
+                message = getString(R.string.phone_number_invalid);
+                break;
+            case WrongActivationCode:
+                message = getString(R.string.activation_code_invalid);
+                break;
+            default:
+                message = getString(R.string.error_unknown);
+                break;
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.error))
+                .setMessage(message)
                 .show();
     }
 
