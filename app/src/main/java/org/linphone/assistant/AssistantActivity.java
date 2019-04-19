@@ -114,13 +114,28 @@ public abstract class AssistantActivity extends ThemableActivity
             Log.e("[Assistant] Account creator couldn't create proxy config");
             // TODO: display error message
         } else {
+            LinphonePreferences.instance().firstLaunchSuccessful();
             goToLinphoneActivity();
         }
     }
 
     protected void goToLinphoneActivity() {
-        Intent intent = new Intent(this, LinphoneActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        boolean needsEchoCalibration = LinphoneManager.getLc().isEchoCancellerCalibrationRequired();
+        boolean echoCalibrationDone =
+                LinphonePreferences.instance().isEchoCancellationCalibrationDone();
+        Log.i(
+                "[Assistant] Echo cancellation calibration required ? "
+                        + needsEchoCalibration
+                        + ", already done ? "
+                        + echoCalibrationDone);
+
+        Intent intent;
+        if (needsEchoCalibration && !echoCalibrationDone) {
+            intent = new Intent(this, EchoCancellerCalibrationAssistantActivity.class);
+        } else {
+            intent = new Intent(this, LinphoneActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
         startActivity(intent);
     }
 
