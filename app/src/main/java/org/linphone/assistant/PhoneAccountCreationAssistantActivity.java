@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,12 +29,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.core.AccountCreator;
+import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.DialPlan;
+import org.linphone.core.tools.Log;
 
 public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     private TextView mCountryPicker, mError, mSipUri, mCreate;
     private EditText mPrefix, mPhoneNumber;
     private ImageView mPhoneNumberInfos;
+
+    private AccountCreatorListenerStub mListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +65,17 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO
+                        enableButtonsAndFields(false);
+
+                        mAccountCreator.setUsername(mAccountCreator.getPhoneNumber());
+                        mAccountCreator.setDomain(getString(R.string.default_domain));
+
+                        AccountCreator.Status status = mAccountCreator.isAccountExist();
+                        if (status != AccountCreator.Status.RequestOk) {
+                            Log.e("[Phone Account Creation] isAccountExists returned " + status);
+                            // TODO display error
+                            enableButtonsAndFields(true);
+                        }
                     }
                 });
         mCreate.setEnabled(false);
@@ -85,26 +101,26 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                         if (dp != null) {
                             mCountryPicker.setText(dp.getCountry());
                         }
+
+                        updateCreateButtonAndDisplayError();
                     }
                 });
 
         mPhoneNumber = findViewById(R.id.phone_number);
-        mPhoneNumber.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        mPhoneNumber.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(
+                            CharSequence s, int start, int count, int after) {}
 
-            }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //TODO
-            }
-        });
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        updateCreateButtonAndDisplayError();
+                    }
+                });
 
         mPhoneNumberInfos = findViewById(R.id.info_phone_number);
         mPhoneNumberInfos.setOnClickListener(
@@ -114,11 +130,47 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                         showPhoneNumberDialog();
                     }
                 });
+
+        mListener =
+                new AccountCreatorListenerStub() {
+                    public void onIsAccountExist(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i("[Phone Account Creation] onIsAccountExist status is " + status);
+                        if (status.equals(AccountCreator.Status.AccountExist)
+                                || status.equals(AccountCreator.Status.AccountExistWithAlias)) {
+                            showAccountAlreadyExistsDialog();
+                            enableButtonsAndFields(true);
+                        } else {
+                            status = mAccountCreator.createAccount();
+                            if (status != AccountCreator.Status.RequestOk) {
+                                Log.e("[Phone Account Creation] createAccount returned " + status);
+                                // TODO display error
+                                enableButtonsAndFields(true);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCreateAccount(
+                            AccountCreator creator, AccountCreator.Status status, String resp) {
+                        Log.i("[Phone Account Creation] onCreateAccount status is " + status);
+                        if (status.equals(AccountCreator.Status.AccountCreated)) {
+                            startActivity(
+                                    new Intent(
+                                            PhoneAccountCreationAssistantActivity.this,
+                                            PhoneAccountValidationAssistantActivity.class));
+                        } else {
+                            // TODO display error
+                        }
+                    }
+                };
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        mAccountCreator.addListener(mListener);
 
         DialPlan dp = getDialPlanForCurrentCountry();
         displayDialPlan(dp);
@@ -127,12 +179,47 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mAccountCreator.removeListener(mListener);
     }
 
     @Override
     public void onCountryClicked(DialPlan dialPlan) {
         super.onCountryClicked(dialPlan);
         displayDialPlan(dialPlan);
+    }
+
+    private void enableButtonsAndFields(boolean enable) {
+        mPrefix.setEnabled(enable);
+        mPhoneNumber.setEnabled(enable);
+        mCreate.setEnabled(enable);
+    }
+
+    private void updateCreateButtonAndDisplayError() {
+        if (mPrefix.getText().toString().isEmpty() || mPhoneNumber.getText().toString().isEmpty())
+            return;
+
+        int status = arePhoneNumberAndPrefixOk(mPrefix, mPhoneNumber);
+        if (status == AccountCreator.PhoneNumberStatus.Ok.toInt()) {
+            mCreate.setEnabled(true);
+            mError.setText("");
+            mError.setVisibility(View.INVISIBLE);
+        } else {
+            mCreate.setEnabled(false);
+            mError.setText(getErrorFromPhoneNumberStatus(status));
+            mError.setVisibility(View.VISIBLE);
+        }
+
+        String username = mAccountCreator.getPhoneNumber();
+        if (username != null) {
+            String sip =
+                    getString(R.string.assistant_create_account_phone_number_address)
+                            + " <sip:"
+                            + username
+                            + "@"
+                            + getResources().getString(R.string.default_domain)
+                            + ">";
+            mSipUri.setText(sip);
+        }
     }
 
     private void displayDialPlan(DialPlan dp) {
