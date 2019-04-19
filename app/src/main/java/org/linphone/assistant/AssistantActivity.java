@@ -250,32 +250,5 @@ public abstract class AssistantActivity extends ThemableActivity
                 return ctxt.getString(R.string.password_too_long);
         }
         return null;
-    }
-
-    public static String errorForStatus(AccountCreator.Status status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.Status.RequestFailed))
-                return ctxt.getString(R.string.request_failed);
-            if (status.equals(AccountCreator.Status.ServerError))
-                return ctxt.getString(R.string.wizard_failed);
-            if (status.equals(AccountCreator.Status.AccountExist)
-                    || status.equals(AccountCreator.Status.AccountExistWithAlias))
-                return ctxt.getString(R.string.account_already_exist);
-            if (status.equals(AccountCreator.Status.AliasIsAccount)
-                    || status.equals(AccountCreator.Status.AliasExist))
-                return ctxt.getString(R.string.assistant_phone_number_unavailable);
-            if (status.equals(AccountCreator.Status.AccountNotExist))
-                return ctxt.getString(R.string.assistant_error_bad_credentials);
-            if (status.equals(AccountCreator.Status.AliasNotExist))
-                return ctxt.getString(R.string.phone_number_not_exist);
-            if (status.equals(AccountCreator.Status.AliasNotExist)
-                    || status.equals(AccountCreator.Status.AccountNotActivated)
-                    || status.equals(AccountCreator.Status.AccountAlreadyActivated)
-                    || status.equals(AccountCreator.Status.AccountActivated)
-                    || status.equals(AccountCreator.Status.AccountNotCreated)
-                    || status.equals(AccountCreator.Status.RequestOk)) return "";
-        }
-        return null;
     }*/
 }
