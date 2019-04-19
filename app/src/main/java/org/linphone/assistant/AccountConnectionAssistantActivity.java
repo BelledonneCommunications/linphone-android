@@ -94,7 +94,11 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
         mConnect.setEnabled(false);
 
         if (getResources().getBoolean(R.bool.use_phone_number_validation)) {
-            mUsernameConnection.setVisibility(View.GONE);
+            if (getResources().getBoolean(R.bool.isTablet)) {
+                mUsernameConnectionSwitch.setChecked(true);
+            } else {
+                mUsernameConnection.setVisibility(View.GONE);
+            }
         } else {
             mPhoneNumberConnection.setVisibility(View.GONE);
             findViewById(R.id.username_switch_layout).setVisibility(View.GONE);
