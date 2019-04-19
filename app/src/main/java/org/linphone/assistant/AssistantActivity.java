@@ -95,7 +95,24 @@ public abstract class AssistantActivity extends ThemableActivity
     }
 
     protected void createProxyConfigAndLeaveAssistant() {
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        String config = LinphoneManager.getInstance().getDefaultDynamicConfigFile();
+        boolean useLinphoneDefaultValues =
+                getString(R.string.default_domain).equals(mAccountCreator.getDomain());
+
+        if (useLinphoneDefaultValues) {
+            config = LinphoneManager.getInstance().getLinphoneDynamicConfigFile();
+        }
+        core.loadConfigFromXml(config);
+
         ProxyConfig proxyConfig = mAccountCreator.configure();
+
+        if (useLinphoneDefaultValues) {
+            // Restore default values
+            config = LinphoneManager.getInstance().getDefaultDynamicConfigFile();
+            core.loadConfigFromXml(config);
+        }
+
         if (proxyConfig == null) {
             // An error has happened !
             // TODO: display error message
@@ -105,7 +122,6 @@ public abstract class AssistantActivity extends ThemableActivity
     }
 
     protected void goToLinphoneActivity() {
-        mAccountCreator = null;
         Intent intent = new Intent(this, LinphoneActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

@@ -44,6 +44,12 @@ public class PhoneAccountValidationAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_phone_account_validation);
 
+        if (getIntent() != null && getIntent().getBooleanExtra("isLoginVerification", false)) {
+            findViewById(R.id.title_account_creation).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.title_account_activation).setVisibility(View.GONE);
+        }
+
         mActivationCodeLength =
                 getResources().getInteger(R.integer.phone_number_validation_code_length);
 
