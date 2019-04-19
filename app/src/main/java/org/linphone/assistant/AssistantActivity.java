@@ -111,7 +111,7 @@ public abstract class AssistantActivity extends ThemableActivity
         }
 
         if (proxyConfig == null) {
-            // An error has happened !
+            Log.e("[Assistant] Account creator couldn't create proxy config");
             // TODO: display error message
         } else {
             goToLinphoneActivity();
@@ -239,42 +239,4 @@ public abstract class AssistantActivity extends ThemableActivity
         }
         return null;
     }
-
-    /*public static String errorForEmailStatus(AccountCreator.EmailStatus status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.EmailStatus.InvalidCharacters)
-                    || status.equals(AccountCreator.EmailStatus.Malformed))
-                return ctxt.getString(R.string.invalid_email);
-        }
-        return null;
-    }
-
-    public static String errorForUsernameStatus(AccountCreator.UsernameStatus status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
-                return ctxt.getString(R.string.invalid_username);
-            if (status.equals(AccountCreator.UsernameStatus.TooShort))
-                return ctxt.getString(R.string.username_too_short);
-            if (status.equals(AccountCreator.UsernameStatus.TooLong))
-                return ctxt.getString(R.string.username_too_long);
-            if (status.equals(AccountCreator.UsernameStatus.Invalid))
-                return ctxt.getString(R.string.username_invalid_size);
-            if (status.equals(AccountCreator.UsernameStatus.InvalidCharacters))
-                return ctxt.getString(R.string.invalid_display_name);
-        }
-        return null;
-    }
-
-    public static String errorForPasswordStatus(AccountCreator.PasswordStatus status) {
-        Context ctxt = getContext();
-        if (ctxt != null) {
-            if (status.equals(AccountCreator.PasswordStatus.TooShort))
-                return ctxt.getString(R.string.password_too_short);
-            if (status.equals(AccountCreator.PasswordStatus.TooLong))
-                return ctxt.getString(R.string.password_too_long);
-        }
-        return null;
-    }*/
 }
