@@ -75,8 +75,12 @@ public class LinphoneLauncherActivity extends Activity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(
-                                getIntent().setClass(LinphoneLauncherActivity.this, classToStart));
+                        Intent intent = new Intent();
+                        intent.setClass(LinphoneLauncherActivity.this, classToStart);
+                        if (getIntent() != null && getIntent().getExtras() != null) {
+                            intent.putExtras(getIntent().getExtras());
+                        }
+                        startActivity(intent);
                     }
                 },
                 500);

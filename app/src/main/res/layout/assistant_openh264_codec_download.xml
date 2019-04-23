@@ -25,36 +25,38 @@
         android:background="?attr/backgroundColor">
 
         <TextView
+            android:id="@+id/question"
             android:text="@string/assistant_codec_down_question"
             style="@style/assistant_codec_downloader_font"
             android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:id="@+id/question"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"/>
 
         <ImageView
+            android:id="@+id/linphone_logo"
             android:src="@drawable/linphone_logo_orange"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/imageView"
-            android:layout_below="@+id/question"
+            android:layout_below="@id/question"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="36dp"/>
 
         <ProgressBar
+            android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
             android:layout_marginBottom="40dp"
-            android:layout_above="@+id/answerNo"
+            android:visibility="invisible"
+            android:layout_above="@id/answer_no"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"/>
 
         <TextView
+            android:id="@+id/answer_no"
             android:text="No"
             android:textAllCaps="true"
             android:layout_width="wrap_content"
@@ -64,38 +66,26 @@
             android:textColor="@drawable/assistant_button_text_color"
             android:layout_gravity="center"
             style="@style/button_font"
-            android:id="@+id/answerNo"
             android:layout_margin="10dp"
             android:padding="10dp"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/imageView" />
+            android:layout_toLeftOf="@id/linphone_logo" />
 
         <TextView
+            android:id="@+id/answer_yes"
             android:text="Yes"
             android:textAllCaps="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:id="@+id/answerYes"
             android:background="@drawable/assistant_button"
             android:textColor="@drawable/assistant_button_text_color"
             android:layout_gravity="center"
             style="@style/button_font"
             android:layout_margin="10dp"
             android:padding="10dp"
-            android:layout_below="@+id/progressBar"
-            android:layout_toRightOf="@+id/imageView"/>
-
-        <TextView
-            style="@style/assistant_codec_downloader_font"
-            android:textAllCaps="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:id="@+id/downloadingInfo"
-            android:layout_above="@+id/progressBar"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"/>
+            android:layout_below="@id/progress_bar"
+            android:layout_toRightOf="@id/linphone_logo"/>
 
     </RelativeLayout>
 

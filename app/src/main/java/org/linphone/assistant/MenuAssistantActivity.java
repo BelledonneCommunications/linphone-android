@@ -21,10 +21,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.core.tools.Log;
+import org.linphone.settings.LinphonePreferences;
 
 public class MenuAssistantActivity extends AssistantActivity {
     private TextView mAccountCreation, mAccountConnection, mGenericConnection, mRemoteConfiguration;
@@ -34,6 +37,8 @@ public class MenuAssistantActivity extends AssistantActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_menu);
+
+        Log.e("###");
 
         mAccountCreation = findViewById(R.id.account_creation);
         mAccountCreation.setOnClickListener(
@@ -121,5 +126,39 @@ public class MenuAssistantActivity extends AssistantActivity {
                             PhoneAccountCreationAssistantActivity.class));
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!getResources()
+                .getBoolean(R.bool.forbid_to_leave_assistant_before_account_configuration)) {
+            mBack.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LinphonePreferences.instance().firstLaunchSuccessful();
+                            goToLinphoneActivity();
+                        }
+                    });
+        } else {
+            mBack.setEnabled(false);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getResources()
+                    .getBoolean(R.bool.forbid_to_leave_assistant_before_account_configuration)) {
+                // Do nothing
+                return true;
+            } else {
+                LinphonePreferences.instance().firstLaunchSuccessful();
+                goToLinphoneActivity();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -1046,4 +1046,12 @@ public class LinphonePreferences {
     public void setEchoCancellationCalibrationDone(boolean done) {
         getConfig().setBool("app", "echo_cancellation_calibration_done", done);
     }
+
+    public boolean isOpenH264CodecDownloadEnabled() {
+        return getConfig().getBool("app", "open_h264_download_enabled", true);
+    }
+
+    public void setOpenH264CodecDownloadEnabled(boolean enable) {
+        getConfig().setBool("app", "open_h264_download_enabled", enable);
+    }
 }
