@@ -131,6 +131,7 @@ public class RemoteConfigurationAssistantActivity extends AssistantActivity {
                         mFetchAndApply.setEnabled(true);
 
                         if (status == ConfiguringState.Successful) {
+                            LinphonePreferences.instance().firstLaunchSuccessful();
                             goToLinphoneActivity();
                         } else if (status == ConfiguringState.Failed) {
                             Toast.makeText(

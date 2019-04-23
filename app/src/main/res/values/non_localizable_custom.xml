@@ -67,6 +67,7 @@
     <bool name="pre_fill_email_in_assistant">true</bool>
     <bool name="assistant_account_validation_mandatory">false</bool>
     <bool name="display_account_assistant_at_first_start">true</bool>
+    <bool name="forbid_to_leave_assistant_before_account_configuration">false</bool>
 
     <!-- Call -->
     <bool name="forbid_self_call">false</bool>
