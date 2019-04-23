@@ -1471,15 +1471,30 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     }
 
     public void isAccountWithAlias() {
+        if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
+
         if (LinphoneManager.getLc().getDefaultProxyConfig() != null) {
+
             long now = new Timestamp(new Date().getTime()).getTime();
-            if (mAccountCreator != null && LinphonePreferences.instance().getLinkPopupTime() == null
-                    || Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) < now) {
+            if (LinphonePreferences.instance().getLinkPopupTime() != null
+                    && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now)
+                return;
+
+            long future =
+                    new Timestamp(
+                                    LinphoneActivity.instance()
+                                            .getResources()
+                                            .getInteger(R.integer.popup_time_interval))
+                            .getTime();
+            long newDate = now + future;
+
+            if (mAccountCreator != null) {
                 mAccountCreator.setUsername(
                         LinphonePreferences.instance()
                                 .getAccountUsername(
                                         LinphonePreferences.instance().getDefaultAccountIndex()));
                 mAccountCreator.isAccountExist();
+                LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
             }
         } else {
             LinphonePreferences.instance().setLinkPopupTime(null);
@@ -1488,20 +1503,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     private void askLinkWithPhoneNumber() {
         if (!LinphonePreferences.instance().isLinkPopupEnabled()) return;
-
-        long now = new Timestamp(new Date().getTime()).getTime();
-        if (LinphonePreferences.instance().getLinkPopupTime() != null
-                && Long.parseLong(LinphonePreferences.instance().getLinkPopupTime()) >= now) return;
-
-        long future =
-                new Timestamp(
-                                LinphoneActivity.instance()
-                                        .getResources()
-                                        .getInteger(R.integer.popup_time_interval))
-                        .getTime();
-        long newDate = now + future;
-
-        LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
         final Dialog dialog =
                 LinphoneActivity.instance()
