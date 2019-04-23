@@ -506,4 +506,58 @@ public class StatusFragment extends Fragment {
             mZrtpDialog.show();
         }
     }
+
+    public void showTrustDeniedDialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Drawable d =
+                new ColorDrawable(
+                        ContextCompat.getColor(getActivity(), R.color.dark_grey_color));
+        d.setAlpha(200);
+        dialog.setContentView(R.layout.dialog);
+        dialog
+                .getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setBackgroundDrawable(d);
+
+        TextView title = dialog.findViewById(R.id.dialog_title);
+        title.setVisibility(View.GONE);
+
+        TextView message = dialog.findViewById(R.id.dialog_message);
+        message.setVisibility(View.VISIBLE);
+        message.setText(getString(R.string.trust_denied));
+
+        ImageView icon = dialog.findViewById(R.id.dialog_icon);
+        icon.setVisibility(View.VISIBLE);
+        icon.setImageResource(R.drawable.security_alert_indicator);
+
+        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+        delete.setVisibility(View.GONE);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+        cancel.setVisibility(View.VISIBLE);
+        Button call = dialog.findViewById(R.id.dialog_ok_button);
+        call.setVisibility(View.VISIBLE);
+        call.setText(R.string.call);
+
+        cancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        call.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
+    }
 }
