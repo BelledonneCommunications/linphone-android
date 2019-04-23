@@ -21,8 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -32,9 +35,14 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +57,7 @@ import org.linphone.core.AccountCreator;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
+import org.linphone.core.CallLog;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
@@ -501,5 +510,66 @@ public final class LinphoneUtils {
             }
         }
         return newRooms;
+    }
+
+    public static void showTrustDeniedDialog(Context context) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(context, R.color.dark_grey_color));
+        d.setAlpha(200);
+        dialog.setContentView(R.layout.dialog);
+        dialog.getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setBackgroundDrawable(d);
+
+        TextView title = dialog.findViewById(R.id.dialog_title);
+        title.setVisibility(View.GONE);
+
+        TextView message = dialog.findViewById(R.id.dialog_message);
+        message.setVisibility(View.VISIBLE);
+        message.setText(context.getString(R.string.trust_denied));
+
+        ImageView icon = dialog.findViewById(R.id.dialog_icon);
+        icon.setVisibility(View.VISIBLE);
+        icon.setImageResource(R.drawable.security_alert_indicator);
+
+        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+        delete.setVisibility(View.GONE);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+        cancel.setVisibility(View.VISIBLE);
+        Button call = dialog.findViewById(R.id.dialog_ok_button);
+        call.setVisibility(View.VISIBLE);
+        call.setText(R.string.call);
+
+        cancel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+        call.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        CallLog[] logs =
+                                LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCallLogs();
+                        CallLog lastLog = logs[0];
+                        Address addressToCall =
+                                lastLog.getDir() == Call.Dir.Incoming
+                                        ? lastLog.getFromAddress()
+                                        : lastLog.getToAddress();
+                        LinphoneManager.getInstance()
+                                .newOutgoingCall(addressToCall.asString(), null);
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
     }
 }

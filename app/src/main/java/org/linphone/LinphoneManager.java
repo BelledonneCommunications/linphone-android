@@ -193,6 +193,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private MediaPlayer mRingerPlayer;
     private final Vibrator mVibrator;
     private boolean mIsRinging;
+    private boolean mHasLastCallSasBeenRejected;
 
     private LinphoneManager(Context c) {
         mUnreadChatsPerRoom = new HashMap();
@@ -220,6 +221,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mSensorManager = (SensorManager) c.getSystemService(Context.SENSOR_SERVICE);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mRessources = c.getResources();
+        mHasLastCallSasBeenRejected = false;
 
         File f = new File(mUserCertsPath);
         if (!f.exists()) {
@@ -493,13 +495,42 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         newOutgoingCall(to, address.getDisplayedName());
     }
 
-    public void newOutgoingCall(String to, String displayName) {
-        //		if (mCore.inCall()) {
-        //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
-        //			return;
-        //		}
+    public void newOutgoingCall(Address to) {
         if (to == null) return;
 
+        ProxyConfig lpc = mCore.getDefaultProxyConfig();
+        if (mRessources.getBoolean(R.bool.forbid_self_call)
+                && lpc != null
+                && to.weakEqual(lpc.getIdentityAddress())) {
+            return;
+        }
+
+        boolean isLowBandwidthConnection =
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneService.instance().getApplicationContext());
+
+        if (mCore.isNetworkReachable()) {
+            if (Version.isVideoCapable()) {
+                boolean prefVideoEnable = mPrefs.isVideoEnabled();
+                boolean prefInitiateWithVideo = mPrefs.shouldInitiateVideoCall();
+                CallManager.getInstance()
+                        .inviteAddress(
+                                to,
+                                prefVideoEnable && prefInitiateWithVideo,
+                                isLowBandwidthConnection);
+            } else {
+                CallManager.getInstance().inviteAddress(to, false, isLowBandwidthConnection);
+            }
+        } else if (LinphoneActivity.isInstanciated()) {
+            LinphoneActivity.instance()
+                    .displayCustomToast(
+                            getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
+        } else {
+            Log.e("[Manager] Error: " + getString(R.string.error_network_unreachable));
+        }
+    }
+
+    public void newOutgoingCall(String to, String displayName) {
         // If to is only a username, try to find the contact to get an alias if existing
         if (!to.startsWith("sip:") || !to.contains("@")) {
             LinphoneContact contact = ContactsManager.getInstance().findContactFromPhoneNumber(to);
@@ -518,37 +549,9 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             return;
         }
 
-        ProxyConfig lpc = mCore.getDefaultProxyConfig();
-        if (mRessources.getBoolean(R.bool.forbid_self_call)
-                && lpc != null
-                && lAddress.weakEqual(lpc.getIdentityAddress())) {
-            return;
-        }
-        lAddress.setDisplayName(displayName);
+        if (displayName != null) lAddress.setDisplayName(displayName);
 
-        boolean isLowBandwidthConnection =
-                !LinphoneUtils.isHighBandwidthConnection(
-                        LinphoneService.instance().getApplicationContext());
-
-        if (mCore.isNetworkReachable()) {
-            if (Version.isVideoCapable()) {
-                boolean prefVideoEnable = mPrefs.isVideoEnabled();
-                boolean prefInitiateWithVideo = mPrefs.shouldInitiateVideoCall();
-                CallManager.getInstance()
-                        .inviteAddress(
-                                lAddress,
-                                prefVideoEnable && prefInitiateWithVideo,
-                                isLowBandwidthConnection);
-            } else {
-                CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
-            }
-        } else if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .displayCustomToast(
-                            getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
-        } else {
-            Log.e("[Manager] Error: " + getString(R.string.error_network_unreachable));
-        }
+        newOutgoingCall(lAddress);
     }
 
     private void resetCameraFromPreferences() {
@@ -1866,5 +1869,13 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         String getDisplayedName();
 
         void setDisplayedName(String s);
+    }
+
+    public boolean hasLastCallSasBeenRejected() {
+        return mHasLastCallSasBeenRejected;
+    }
+
+    public void lastCallSasRejected(boolean rejected) {
+        mHasLastCallSasBeenRejected = rejected;
     }
 }

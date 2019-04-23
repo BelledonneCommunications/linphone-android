@@ -483,6 +483,7 @@ public class StatusFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             if (call != null) {
+                                LinphoneManager.getInstance().lastCallSasRejected(true);
                                 call.setAuthenticationTokenVerified(false);
                                 if (mEncryption != null) {
                                     mEncryption.setImageResource(R.drawable.security_ko);
