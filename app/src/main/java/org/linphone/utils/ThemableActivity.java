@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import org.linphone.R;
@@ -30,6 +31,10 @@ public class ThemableActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         if (LinphonePreferences.instance().isDarkModeEnabled()) {
             setTheme(R.style.LinphoneStyleDark);
+        }
+
+        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
         super.onCreate(savedInstanceState);

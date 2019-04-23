@@ -32,7 +32,7 @@ import java.util.List;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.assistant.AssistantActivity;
+import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
 import org.linphone.core.AVPFMode;
 import org.linphone.core.Address;
 import org.linphone.core.AuthInfo;
@@ -546,9 +546,9 @@ public class AccountSettingsFragment extends Fragment {
                     @Override
                     public void onClicked() {
                         Intent assistant = new Intent();
-                        assistant.setClass(LinphoneActivity.instance(), AssistantActivity.class);
-                        assistant.putExtra("LinkPhoneNumber", true);
-                        assistant.putExtra("FromPref", true);
+                        assistant.setClass(
+                                LinphoneActivity.instance(),
+                                PhoneAccountLinkingAssistantActivity.class);
                         assistant.putExtra("AccountNumber", mAccountIndex);
                         startActivity(assistant);
                     }

@@ -16,20 +16,12 @@
     <entry name="realm" overwrite="true">sip.linphone.org</entry>
     <entry name="conference_factory_uri" overwrite="true">sip:conference-factory@sip.linphone.org</entry>
   </section>
-<section name="nat_policy_default_values">
+  <section name="nat_policy_default_values">
     <entry name="stun_server" overwrite="true">stun.linphone.org</entry>
     <entry name="protocols" overwrite="true">stun,ice</entry>
-</section>
+  </section>
   <section name="sip">
     <entry name="rls_uri" overwrite="true">sips:rls@sip.linphone.org</entry>
-  </section>
-  <section name="assistant">
-    <entry name="password_max_length" overwrite="true">-1</entry>
-    <entry name="password_min_length" overwrite="true">1</entry>
-    <entry name="username_length" overwrite="true">-1</entry>
-    <entry name="username_max_length" overwrite="true">64</entry>
-    <entry name="username_min_length" overwrite="true">1</entry>
-    <entry name="username_regex" overwrite="true">^[a-z0-9+_.\-]*$</entry>
   </section>
   <section name="lime">
     <entry name="x3dh_server_url" overwrite="true">https://lime.linphone.org/lime-server/lime-server.php</entry>
