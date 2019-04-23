@@ -59,7 +59,7 @@ project.tasks['preBuild'].dependsOn 'getGitVersion'
 repositories {
     maven {
         // Replace snapshots by releases for releases !
-        url "https://linphone.org/releases/maven_repository"
+        url "https://linphone.org/snapshots/maven_repository"
     }
 }
 
@@ -72,7 +72,7 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4120
+        versionCode 4119
         versionName "4.1"
         applicationId getPackageName()
         multiDexEnabled true
@@ -167,7 +167,7 @@ dependencies {
             debugImplementation project(path: ":linphone-sdk-android", configuration: 'debug')
         }
     } else {
-        implementation "org.linphone:linphone-sdk-android:4.1-366-g1b22291"
+        implementation "org.linphone:linphone-sdk-android:4.1+"
     }
 }
 if (firebaseEnabled()) {

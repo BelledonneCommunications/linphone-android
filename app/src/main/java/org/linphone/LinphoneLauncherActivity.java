@@ -26,7 +26,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import org.linphone.assistant.RemoteProvisioningActivity;
+import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.settings.LinphonePreferences;
 
 /** Launch Linphone main activity when Service is ready. */
@@ -62,12 +62,11 @@ public class LinphoneLauncherActivity extends Activity {
 
     private void onServiceReady() {
         final Class<? extends Activity> classToStart;
-        /*if (getResources().getBoolean(R.bool.show_tutorials_instead_of_app)) {
-        	classToStart = TutorialLauncherActivity.class;
-        } else */
-        if (getResources().getBoolean(R.bool.display_sms_remote_provisioning_activity)
-                && LinphonePreferences.instance().isFirstRemoteProvisioning()) {
-            classToStart = RemoteProvisioningActivity.class;
+
+        boolean useFirstLoginActivity =
+                getResources().getBoolean(R.bool.display_account_assistant_at_first_start);
+        if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
+            classToStart = MenuAssistantActivity.class;
         } else {
             classToStart = LinphoneActivity.class;
         }
@@ -76,8 +75,12 @@ public class LinphoneLauncherActivity extends Activity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(
-                                getIntent().setClass(LinphoneLauncherActivity.this, classToStart));
+                        Intent intent = new Intent();
+                        intent.setClass(LinphoneLauncherActivity.this, classToStart);
+                        if (getIntent() != null && getIntent().getExtras() != null) {
+                            intent.putExtras(getIntent().getExtras());
+                        }
+                        startActivity(intent);
                     }
                 },
                 500);
