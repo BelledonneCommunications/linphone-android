@@ -134,6 +134,7 @@
 
         <activity
             android:name=".main.DialerActivity"
+            android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -141,6 +142,7 @@
         </activity>
         <activity
             android:name=".main.AboutActivity"
+            android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -148,6 +150,7 @@
         </activity>
         <activity
             android:name=".recording.RecordingsActivity"
+            android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -155,6 +158,7 @@
         </activity>
         <activity
             android:name=".settings.SettingsActivity"
+            android:noHistory="true"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -162,6 +166,7 @@
         </activity>
         <activity
             android:name=".chat.ChatActivity"
+            android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -169,6 +174,7 @@
         </activity>
         <activity
             android:name=".contacts.ContactsActivity"
+            android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -176,6 +182,7 @@
         </activity>
         <activity
             android:name=".history.HistoryActivity"
+            android:launchMode="singleTop"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

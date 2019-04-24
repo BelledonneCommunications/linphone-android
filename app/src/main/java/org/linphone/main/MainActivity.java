@@ -94,7 +94,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivity(intent);
                     }
                 });
@@ -104,7 +104,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivity(intent);
                     }
                 });
@@ -114,7 +114,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, DialerActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivity(intent);
                     }
                 });
@@ -124,7 +124,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                         startActivity(intent);
                     }
                 });
