@@ -30,6 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:focusableInTouchMode="true"
             android:contentDescription="@string/content_description_backspace"
             android:src="@drawable/backspace" />
 
