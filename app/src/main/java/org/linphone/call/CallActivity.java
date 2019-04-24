@@ -61,9 +61,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -84,6 +84,7 @@ import org.linphone.core.Player;
 import org.linphone.core.StreamType;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.StatusFragment;
+import org.linphone.main.DialerActivity;
 import org.linphone.mediastream.video.capture.hwconf.AndroidCameraConfiguration;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
@@ -1143,22 +1144,21 @@ public class CallActivity extends LinphoneGenericActivity
 
     private void goBackToDialer() {
         Intent intent = new Intent();
-        intent.setClass(this, LinphoneActivity.class);
-        intent.putExtra("AddCall", true);
+        intent.setClass(this, DialerActivity.class);
+        intent.putExtra("Transfer", false);
         startActivity(intent);
     }
 
     private void goBackToDialerAndDisplayTransferButton() {
         Intent intent = new Intent();
-        intent.setClass(this, LinphoneActivity.class);
+        intent.setClass(this, DialerActivity.class);
         intent.putExtra("Transfer", true);
         startActivity(intent);
     }
 
     private void goToChatList() {
         Intent intent = new Intent();
-        intent.setClass(this, LinphoneActivity.class);
-        intent.putExtra("GoToChat", true);
+        intent.setClass(this, ChatActivity.class);
         startActivity(intent);
     }
 
@@ -1905,8 +1905,7 @@ public class CallActivity extends LinphoneGenericActivity
                                         if (LinphoneManager.getLcIfManagerNotDestroyedOrNull()
                                                 == null) return;
                                         synchronized (LinphoneManager.getLc()) {
-                                            if (LinphoneActivity.isInstanciated()
-                                                    && call.getState() != Call.State.Released) {
+                                            if (call.getState() != Call.State.Released) {
                                                 CallParams params = call.getCurrentParams();
                                                 if (params != null) {
                                                     CallStats audioStats =

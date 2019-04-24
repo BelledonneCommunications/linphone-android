@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,7 +28,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.CallActivity;
+import org.linphone.contacts.ContactsActivity;
+import org.linphone.core.Call;
 import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
 import org.linphone.views.AddressAware;
 import org.linphone.views.AddressText;
 import org.linphone.views.CallButton;
@@ -40,6 +45,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     private ImageView mAddContact, mBackToCall;
 
     private boolean mIsTransfer;
+    private CoreListenerStub mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +107,10 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: add contact
+                        Intent intent = new Intent(DialerActivity.this, ContactsActivity.class);
+                        intent.putExtra("EditOnClick", true);
+                        intent.putExtra("SipAddress", mAddress.getText().toString());
+                        startActivity(intent);
                     }
                 });
 
@@ -110,7 +119,7 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: go back to call
+                        startActivity(new Intent(DialerActivity.this, CallActivity.class));
                     }
                 });
 
@@ -119,6 +128,15 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
             mIsTransfer = getIntent().getBooleanExtra("Transfer", false);
             mAddress.setText(getIntent().getStringExtra("SipUri"));
         }
+
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core lc, Call call, Call.State state, String message) {
+                        updateLayout();
+                    }
+                };
     }
 
     @Override
@@ -126,6 +144,11 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         super.onResume();
 
         mDialerSelected.setVisibility(View.VISIBLE);
+
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.addListener(mListener);
+        }
 
         boolean isOrientationLandscape =
                 getResources().getConfiguration().orientation
@@ -142,6 +165,11 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
     @Override
     protected void onPause() {
         super.onPause();
+
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.removeListener(mListener);
+        }
     }
 
     public void updateLayout() {
