@@ -203,6 +203,10 @@ public class AccountSettingsFragment extends Fragment {
                 new SettingListenerBase() {
                     @Override
                     public void onTextValueChanged(String newValue) {
+                        if (newValue.isEmpty()) {
+                            return;
+                        }
+
                         if (mAuthInfo != null) {
                             mAuthInfo.setUsername(newValue);
                         } else {
@@ -229,6 +233,7 @@ public class AccountSettingsFragment extends Fragment {
                     public void onTextValueChanged(String newValue) {
                         if (mAuthInfo != null) {
                             mAuthInfo.setUserid(newValue);
+
                             Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
                             if (core != null) {
                                 core.refreshRegisters();
@@ -244,9 +249,12 @@ public class AccountSettingsFragment extends Fragment {
                     @Override
                     public void onTextValueChanged(String newValue) {
                         if (mAuthInfo != null) {
+                            mAuthInfo.setHa1(null);
                             mAuthInfo.setPassword(newValue);
+
                             Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
                             if (core != null) {
+                                core.addAuthInfo(mAuthInfo);
                                 core.refreshRegisters();
                             }
                         } else {
@@ -605,6 +613,7 @@ public class AccountSettingsFragment extends Fragment {
         if (mProxyConfig != null) {
             Address identityAddress = mProxyConfig.getIdentityAddress();
             mAuthInfo = mProxyConfig.findAuthInfo();
+
             NatPolicy natPolicy = mProxyConfig.getNatPolicy();
             if (natPolicy == null) {
                 natPolicy = core.createNatPolicy();
