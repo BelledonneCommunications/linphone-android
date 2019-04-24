@@ -19,21 +19,171 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.core.content.ContextCompat;
+import org.linphone.BuildConfig;
+import org.linphone.LinphoneActivity;
+import org.linphone.LinphoneManager;
+import org.linphone.R;
+import org.linphone.core.Core;
+import org.linphone.core.CoreListenerStub;
+import org.linphone.settings.LinphonePreferences;
 
 public class AboutActivity extends MainActivity {
+    private CoreListenerStub mListener;
+    private ProgressDialog mProgress;
+    private boolean mUploadInProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Uses the fragment container layout to inflate the about view instead of using a fragment
+        View aboutView = LayoutInflater.from(this).inflate(R.layout.about, null, false);
+        LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
+        fragmentContainer.addView(aboutView);
+
+        TextView aboutVersion = findViewById(R.id.about_android_version);
+        TextView aboutLiblinphoneVersion = findViewById(R.id.about_liblinphone_sdk_version);
+        aboutLiblinphoneVersion.setText(
+                String.format(
+                        getString(R.string.about_liblinphone_sdk_version),
+                        getString(R.string.linphone_sdk_version)
+                                + " ("
+                                + getString(R.string.linphone_sdk_branch)
+                                + ")"));
+        // We can't access a library's BuildConfig, so we have to set it as a resource
+        aboutVersion.setText(
+                String.format(
+                        getString(R.string.about_version),
+                        BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
+
+        TextView privacyPolicy = findViewById(R.id.privacy_policy_link);
+        privacyPolicy.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent =
+                                new Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.about_privacy_policy_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+
+        TextView license = findViewById(R.id.about_text);
+        license.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent =
+                                new Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(getString(R.string.about_license_link)));
+                        startActivity(browserIntent);
+                    }
+                });
+
+        Button sendLogs = findViewById(R.id.send_log);
+        sendLogs.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        if (core != null) {
+                            core.uploadLogCollection();
+                        }
+                    }
+                });
+        sendLogs.setVisibility(
+                LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+
+        Button resetLogs = findViewById(R.id.reset_log);
+        resetLogs.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        if (core != null) {
+                            core.resetLogCollection();
+                        }
+                    }
+                });
+        resetLogs.setVisibility(
+                LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
+
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onLogCollectionUploadProgressIndication(
+                            Core lc, int offset, int total) {}
+
+                    @Override
+                    public void onLogCollectionUploadStateChanged(
+                            Core lc, Core.LogCollectionUploadState state, String info) {
+                        if (state == Core.LogCollectionUploadState.InProgress) {
+                            displayUploadLogsInProgress();
+                        } else if (state == Core.LogCollectionUploadState.Delivered
+                                || state == Core.LogCollectionUploadState.NotDelivered) {
+                            mUploadInProgress = false;
+                            if (mProgress != null) mProgress.dismiss();
+                        }
+                    }
+                };
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    public void onPause() {
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.removeListener(mListener);
+        }
 
-    @Override
-    protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showTopBarWithTitle(getString(R.string.about));
+        if (getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+            hideTabBar();
+        }
+
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.addListener(mListener);
+        }
+    }
+
+    private void displayUploadLogsInProgress() {
+        if (mUploadInProgress) {
+            return;
+        }
+        mUploadInProgress = true;
+
+        mProgress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.light_grey_color));
+        d.setAlpha(200);
+        mProgress
+                .getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
+        mProgress.getWindow().setBackgroundDrawable(d);
+        mProgress.setContentView(R.layout.wait_layout);
+        mProgress.show();
     }
 }

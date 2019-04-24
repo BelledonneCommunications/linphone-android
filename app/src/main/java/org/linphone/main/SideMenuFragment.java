@@ -124,16 +124,9 @@ public class SideMenuFragment extends Fragment {
                             startActivity(new Intent(getActivity(), AboutActivity.class));
                         } else if (selectedItem.equals(getString(R.string.menu_assistant))) {
                             startActivity(new Intent(getActivity(), MenuAssistantActivity.class));
-                        }
-                        if (mSideMenuItemList
-                                .getAdapter()
-                                .getItem(i)
-                                .toString()
-                                .equals(getString(R.string.menu_recordings))) {
+                        } else if (selectedItem.equals(getString(R.string.menu_recordings))) {
                             startActivity(new Intent(getActivity(), RecordingsActivity.class));
                         }
-
-                        openOrCloseSideMenu(false);
                     }
                 });
 
@@ -167,13 +160,17 @@ public class SideMenuFragment extends Fragment {
         return mSideMenu != null && mSideMenu.isDrawerVisible(Gravity.LEFT);
     }
 
-    public void openOrCloseSideMenu(boolean open) {
+    public void closeDrawer() {
+        openOrCloseSideMenu(false, false);
+    }
+
+    public void openOrCloseSideMenu(boolean open, boolean animate) {
         if (mSideMenu == null || mSideMenuContent == null) return;
 
         if (open) {
-            mSideMenu.openDrawer(mSideMenuContent);
+            mSideMenu.openDrawer(mSideMenuContent, animate);
         } else {
-            mSideMenu.closeDrawer(mSideMenuContent);
+            mSideMenu.closeDrawer(mSideMenuContent, animate);
         }
     }
 
@@ -204,7 +201,6 @@ public class SideMenuFragment extends Fragment {
                                         .displayAccountSettings(
                                                 LinphonePreferences.instance()
                                                         .getDefaultAccountIndex());
-                                openOrCloseSideMenu(false);
                             }
                         });
             }
@@ -243,7 +239,6 @@ public class SideMenuFragment extends Fragment {
                                 int position = Integer.parseInt(view.getTag().toString());
                                 LinphoneActivity.instance().displayAccountSettings(position);
                             }
-                            openOrCloseSideMenu(false);
                         }
                     });
         } else {

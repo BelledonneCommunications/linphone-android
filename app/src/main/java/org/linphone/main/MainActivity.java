@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public abstract class MainActivity extends ThemableActivity
     protected LinearLayout mTopBar;
     protected TextView mTopBarTitle;
     protected LinearLayout mTabBar;
+    protected ImageView mBack;
 
     protected DrawerLayout mSideMenu;
     protected RelativeLayout mSideMenuContent;
@@ -116,6 +118,15 @@ public abstract class MainActivity extends ThemableActivity
         mTopBar = findViewById(R.id.top_bar);
         mTopBarTitle = findViewById(R.id.top_bar_title);
 
+        mBack = findViewById(R.id.cancel);
+        mBack.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+
         mStatusFragment =
                 (StatusFragment) getSupportFragmentManager().findFragmentById(R.id.status_fragment);
 
@@ -130,9 +141,9 @@ public abstract class MainActivity extends ThemableActivity
     @Override
     public void onMenuCliked() {
         if (mSideMenuFragment.isOpened()) {
-            mSideMenuFragment.openOrCloseSideMenu(false);
+            mSideMenuFragment.openOrCloseSideMenu(false, true);
         } else {
-            mSideMenuFragment.openOrCloseSideMenu(true);
+            mSideMenuFragment.openOrCloseSideMenu(true, true);
         }
     }
 
@@ -145,6 +156,9 @@ public abstract class MainActivity extends ThemableActivity
     protected void onResume() {
         super.onResume();
 
+        hideTopBar();
+        showTabBar();
+
         mHistorySelected.setVisibility(View.GONE);
         mContactsSelected.setVisibility(View.GONE);
         mDialerSelected.setVisibility(View.GONE);
@@ -153,6 +167,10 @@ public abstract class MainActivity extends ThemableActivity
         mStatusFragment.setMenuListener(this);
         mSideMenuFragment.setQuitListener(this);
         mSideMenuFragment.displayAccountsInSideMenu();
+
+        if (mSideMenuFragment.isOpened()) {
+            mSideMenuFragment.closeDrawer();
+        }
     }
 
     @Override
@@ -178,26 +196,21 @@ public abstract class MainActivity extends ThemableActivity
     // Tab, Top and Status bars
 
     protected void hideStatusBar() {
-        if (isTablet()) {
-            return;
-        }
-
         findViewById(R.id.status).setVisibility(View.GONE);
     }
 
     protected void showStatusBar() {
-        if (isTablet()) {
-            return;
-        }
         findViewById(R.id.status).setVisibility(View.VISIBLE);
     }
 
-    protected void hideTabBar(Boolean hide) {
-        if (hide && !isTablet()) { // do not hide if tablet, otherwise won't be able to navigate...
+    protected void hideTabBar() {
+        if (!isTablet()) { // do not hide if tablet, otherwise won't be able to navigate...
             mTabBar.setVisibility(View.GONE);
-        } else {
-            mTabBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    protected void showTabBar() {
+        mTabBar.setVisibility(View.VISIBLE);
     }
 
     protected void hideTopBar() {

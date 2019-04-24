@@ -559,7 +559,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 changeCurrentFragment(FragmentsAvailable.CHAT_LIST, extras);
                 intent.removeExtra("fileShared");
             } else {
-                DialerFragment dialerFragment = DialerFragment.instance();
+                /*DialerFragment dialerFragment = DialerFragment.instance();
                 if (dialerFragment != null) {
                     if (extras.containsKey("SipUriOrNumber")) {
                         if (getResources()
@@ -576,7 +576,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                         addressWaitingToBeCalled = extras.getString("SipUriOrNumber");
                         goToDialerFragment();
                     }
-                }
+                }*/
             }
         }
         setIntent(intent);
@@ -1379,16 +1379,16 @@ public class LinphoneActivity extends LinphoneGenericActivity
     private void initInCallMenuLayout() {
         selectMenu(FragmentsAvailable.DIALER);
         DialerFragment dialerFragment = DialerFragment.instance();
-        if (dialerFragment != null) {
-            (dialerFragment).resetLayout();
-        }
+        /* if (dialerFragment != null) {
+            (dialerFragment).updateLayout();
+        }*/
     }
 
     public void resetClassicMenuLayoutAndGoBackToCallIfStillRunning() {
         DialerFragment dialerFragment = DialerFragment.instance();
-        if (dialerFragment != null) {
-            (dialerFragment).resetLayout();
-        }
+        /*if (dialerFragment != null) {
+            (dialerFragment).updateLayout();
+        }*/
 
         if (LinphoneManager.isInstanciated() && LinphoneManager.getLc().getCallsNb() > 0) {
             Call call = LinphoneManager.getLc().getCalls()[0];
