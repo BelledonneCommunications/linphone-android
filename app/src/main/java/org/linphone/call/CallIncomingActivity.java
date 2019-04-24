@@ -284,9 +284,20 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                 "[Permission] Camera permission is "
                         + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
 
+        int readPhoneState =
+                getPackageManager()
+                        .checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName());
+        Log.i(
+                "[Permission] Read phone state permission is "
+                        + (camera == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+
         if (recordAudio != PackageManager.PERMISSION_GRANTED) {
             Log.i("[Permission] Asking for record audio");
             permissionsList.add(Manifest.permission.RECORD_AUDIO);
+        }
+        if (readPhoneState != PackageManager.PERMISSION_GRANTED) {
+            Log.i("[Permission] Asking for read phone state");
+            permissionsList.add(Manifest.permission.READ_PHONE_STATE);
         }
         if (LinphonePreferences.instance().shouldInitiateVideoCall()
                 || LinphonePreferences.instance().shouldAutomaticallyAcceptVideoRequests()) {

@@ -19,9 +19,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,18 +31,29 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import java.util.ArrayList;
+import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.chat.ChatActivity;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsActivity;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.core.tools.Log;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.history.HistoryActivity;
+import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.utils.PushNotificationUtils;
 import org.linphone.utils.ThemableActivity;
 
 public abstract class MainActivity extends ThemableActivity
         implements StatusFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
+    private static final int MAIN_PERMISSIONS = 1;
+
     protected LinearLayout mFragment, mChildFragment;
     protected RelativeLayout mHistory, mContacts, mDialer, mChat;
     protected TextView mMissedCalls, mMissedMessages;
@@ -57,6 +70,7 @@ public abstract class MainActivity extends ThemableActivity
     protected StatusFragment mStatusFragment;
 
     protected boolean mOnBackPressGoHome;
+    protected String[] mPermissionsToHave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,17 +159,31 @@ public abstract class MainActivity extends ThemableActivity
     }
 
     @Override
-    public void onMenuCliked() {
-        if (mSideMenuFragment.isOpened()) {
-            mSideMenuFragment.openOrCloseSideMenu(false, true);
-        } else {
-            mSideMenuFragment.openOrCloseSideMenu(true, true);
-        }
-    }
+    protected void onStart() {
+        super.onStart();
 
-    @Override
-    public void onQuitClicked() {
-        quit();
+        askRequiredPermissions();
+
+        if (checkPermission(Manifest.permission.READ_CONTACTS)) {
+            ContactsManager.getInstance().enableContactsAccess();
+        }
+        ContactsManager.getInstance().initializeContactManager(this);
+
+        if (DeviceUtils.isAppUserRestricted(this)) {
+            Log.w(
+                    "[Main Activity] Device has been restricted by user (Android 9+), push notifications won't work !");
+        }
+
+        int bucket = DeviceUtils.getAppStandbyBucket(this);
+        if (bucket > 0) {
+            Log.w(
+                    "[Main Activity] Device is in bucket "
+                            + Compatibility.getAppStandbyBucketNameFromValue(bucket));
+        }
+
+        if (!PushNotificationUtils.isAvailable(this)) {
+            Log.w("[Main Activity] Push notifications won't work !");
+        }
     }
 
     @Override
@@ -195,6 +223,20 @@ public abstract class MainActivity extends ThemableActivity
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onMenuCliked() {
+        if (mSideMenuFragment.isOpened()) {
+            mSideMenuFragment.openOrCloseSideMenu(false, true);
+        } else {
+            mSideMenuFragment.openOrCloseSideMenu(true, true);
+        }
+    }
+
+    @Override
+    public void onQuitClicked() {
+        quit();
     }
 
     protected void goBack() {
@@ -245,5 +287,74 @@ public abstract class MainActivity extends ThemableActivity
     protected void showTopBarWithTitle(String title) {
         showTopBar();
         mTopBarTitle.setText(title);
+    }
+
+    // Permissions
+
+    private boolean checkPermission(String permission) {
+        int granted = getPackageManager().checkPermission(permission, getPackageName());
+        Log.i(
+                "[Permission] "
+                        + permission
+                        + " permission is "
+                        + (granted == PackageManager.PERMISSION_GRANTED ? "granted" : "denied"));
+        return granted == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void askRequiredPermissions() {
+        ArrayList<String> permissionsToAskFor = new ArrayList<>();
+        if (mPermissionsToHave != null) { // This is created (or not) by the child activity
+            for (String permissionToHave : mPermissionsToHave) {
+                if (!checkPermission(permissionToHave)) {
+                    permissionsToAskFor.add(permissionToHave);
+                }
+            }
+        }
+
+        if (permissionsToAskFor.size() > 0) {
+            for (String permission : permissionsToAskFor) {
+                Log.i("[Permission] Asking for " + permission + " permission");
+            }
+            String[] permissions = new String[permissionsToAskFor.size()];
+            permissions = permissionsToAskFor.toArray(permissions);
+
+            ActivityCompat.requestPermissions(this, permissions, MAIN_PERMISSIONS);
+        } else {
+            if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+                LinphoneManager.getInstance().checkForUpdate();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, String[] permissions, int[] grantResults) {
+
+        // If permission was asked we wait here for the results so dialogs won't conflict
+        if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+            LinphoneManager.getInstance().checkForUpdate();
+        }
+
+        if (permissions.length <= 0) return;
+
+        for (int i = 0; i < permissions.length; i++) {
+            Log.i(
+                    "[Permission] "
+                            + permissions[i]
+                            + " is "
+                            + (grantResults[i] == PackageManager.PERMISSION_GRANTED
+                                    ? "granted"
+                                    : "denied"));
+            if (permissions[i].equals(Manifest.permission.READ_CONTACTS)
+                    || permissions[i].equals(Manifest.permission.WRITE_CONTACTS)) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    ContactsManager.getInstance().enableContactsAccess();
+                }
+            } else if (permissions[i].equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                boolean enableRingtone = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
+                LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
+            }
+        }
     }
 }

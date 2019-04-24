@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,6 +83,11 @@ public class RecordingsActivity extends MainActivity
         mRecordingList.addItemDecoration(dividerItemDecoration);
 
         mRecordings = new ArrayList<>();
+
+        mPermissionsToHave =
+                new String[] {
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                };
     }
 
     @Override

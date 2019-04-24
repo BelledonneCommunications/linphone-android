@@ -19,6 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -98,7 +100,17 @@ public class CallSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.enableDeviceRingtone(newValue);
+                        int readExternalStorage =
+                                getActivity()
+                                        .getPackageManager()
+                                        .checkPermission(
+                                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                getActivity().getPackageName());
+                        if (readExternalStorage == PackageManager.PERMISSION_GRANTED) {
+                            mPrefs.enableDeviceRingtone(newValue);
+                        } else {
+                            // TODO: ask for READ_EXTERNAL_STORAGE permission
+                        }
                     }
                 });
 

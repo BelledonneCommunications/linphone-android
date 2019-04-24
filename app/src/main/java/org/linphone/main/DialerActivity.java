@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -137,6 +138,17 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                         updateLayout();
                     }
                 };
+
+        // On dialer we ask for all permissions
+        mPermissionsToHave =
+                new String[] {
+                    // This one is to allow floating notifications
+                    Manifest.permission.SYSTEM_ALERT_WINDOW,
+                    // Required starting Android 9 to be able to start a foreground service
+                    "android.permission.FOREGROUND_SERVICE",
+                    Manifest.permission.WRITE_CONTACTS,
+                    Manifest.permission.READ_CONTACTS
+                };
     }
 
     @Override
@@ -170,6 +182,18 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         if (core != null) {
             core.removeListener(mListener);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("isTransfer", mIsTransfer);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mIsTransfer = savedInstanceState.getBoolean("isTransfer");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     public void updateLayout() {

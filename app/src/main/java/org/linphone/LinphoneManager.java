@@ -1069,6 +1069,23 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                 .setCurrentlyDisplayedChatRoom(address != null ? address.asStringUriOnly() : null);
     }
 
+    public void checkForUpdate() {
+        String url = LinphonePreferences.instance().getCheckReleaseUrl();
+        if (url != null && !url.isEmpty()) {
+            int lastTimestamp = LinphonePreferences.instance().getLastCheckReleaseTimestamp();
+            int currentTimeStamp = (int) System.currentTimeMillis();
+            int interval =
+                    mServiceContext
+                            .getResources()
+                            .getInteger(R.integer.time_between_update_check); // 24h
+            if (lastTimestamp == 0 || currentTimeStamp - lastTimestamp >= interval) {
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                        .checkForUpdate(BuildConfig.VERSION_NAME);
+                LinphonePreferences.instance().setLastCheckReleaseTimestamp(currentTimeStamp);
+            }
+        }
+    }
+
     @Override
     public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delay_ms) {
         ((AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE))
