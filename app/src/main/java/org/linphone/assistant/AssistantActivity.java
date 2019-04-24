@@ -145,7 +145,6 @@ public abstract class AssistantActivity extends ThemableActivity
                 intent = new Intent(this, OpenH264DownloadAssistantActivity.class);
             } else {*/
             intent = new Intent(this, DialerActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             // }
         }
         startActivity(intent);

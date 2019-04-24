@@ -23,6 +23,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,7 @@ import org.linphone.chat.ChatActivity;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.history.HistoryActivity;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.ThemableActivity;
 
 public abstract class MainActivity extends ThemableActivity
@@ -54,6 +56,8 @@ public abstract class MainActivity extends ThemableActivity
     protected SideMenuFragment mSideMenuFragment;
     protected StatusFragment mStatusFragment;
 
+    protected boolean mOnBackPressGoHome;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,8 @@ public abstract class MainActivity extends ThemableActivity
         LinphoneService.instance().removeForegroundServiceNotificationIfPossible();
 
         setContentView(R.layout.main);
+
+        mOnBackPressGoHome = true;
 
         mFragment = findViewById(R.id.fragmentContainer);
         mChildFragment = findViewById(R.id.fragmentContainer2);
@@ -179,6 +185,15 @@ public abstract class MainActivity extends ThemableActivity
         mSideMenuFragment.setQuitListener(null);
 
         super.onPause();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (mOnBackPressGoHome && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     protected boolean isTablet() {
