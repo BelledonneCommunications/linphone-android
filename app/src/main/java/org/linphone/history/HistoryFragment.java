@@ -2,7 +2,7 @@ package org.linphone.history;
 
 /*
 HistoryFragment.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,13 +29,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -44,7 +43,6 @@ import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.SelectableHelper;
 
 public class HistoryFragment extends Fragment
@@ -106,18 +104,16 @@ public class HistoryFragment extends Fragment
     }
 
     public void displayFirstLog() {
+        Address addr = null;
         if (mLogs != null && mLogs.size() > 0) {
-            CallLog log = mLogs.get(0);
-            String addr;
+            CallLog log = mLogs.get(0); // More recent one is 0
             if (log.getDir() == Call.Dir.Incoming) {
-                addr = log.getFromAddress().asString();
+                addr = log.getFromAddress();
             } else {
-                addr = log.getToAddress().asString();
+                addr = log.getToAddress();
             }
-            LinphoneActivity.instance().displayHistoryDetail(addr, log);
-        } else {
-            LinphoneActivity.instance().displayEmptyFragment();
         }
+        ((HistoryActivity) getActivity()).showHistoryDetails(addr);
     }
 
     private void removeNotMissedCallsFromLogs() {
@@ -156,16 +152,10 @@ public class HistoryFragment extends Fragment
         super.onResume();
         ContactsManager.getInstance().addContactsListener(this);
 
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_LIST);
-            LinphoneActivity.instance().displayMissedCalls(0);
-        }
-
         mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
         hideHistoryListAndDisplayMessageIfEmpty();
         mHistoryAdapter =
-                new HistoryAdapter(
-                        getActivity().getApplicationContext(), mLogs, this, mSelectionHelper);
+                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
         mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.call_log_delete_dialog);
@@ -179,9 +169,6 @@ public class HistoryFragment extends Fragment
 
     @Override
     public void onContactsUpdated() {
-        if (!LinphoneActivity.isInstanciated()
-                || LinphoneActivity.instance().getCurrentFragment()
-                        != FragmentsAvailable.HISTORY_LIST) return;
         HistoryAdapter adapter = (HistoryAdapter) mHistoryList.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
@@ -208,7 +195,8 @@ public class HistoryFragment extends Fragment
             mOnlyDisplayMissedCalls = true;
         }
         hideHistoryListAndDisplayMessageIfEmpty();
-        mHistoryAdapter = new HistoryAdapter(mContext, mLogs, this, mSelectionHelper);
+        mHistoryAdapter =
+                new HistoryAdapter((HistoryActivity) getActivity(), mLogs, this, mSelectionHelper);
         mHistoryList.setAdapter(mHistoryAdapter);
         mSelectionHelper.setAdapter(mHistoryAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
@@ -238,17 +226,15 @@ public class HistoryFragment extends Fragment
         if (mHistoryAdapter.isEditionEnabled()) {
             mHistoryAdapter.toggleSelection(position);
         } else {
-            if (LinphoneActivity.isInstanciated()) {
-                CallLog log = mLogs.get(position);
-                Address address;
-                if (log.getDir() == Call.Dir.Incoming) {
-                    address = log.getFromAddress();
-                } else {
-                    address = log.getToAddress();
-                }
-                LinphoneActivity.instance()
-                        .setAddresGoToDialerAndCall(
-                                address.asStringUriOnly(), address.getDisplayName());
+            CallLog log = mLogs.get(position);
+            Address address;
+            if (log.getDir() == Call.Dir.Incoming) {
+                address = log.getFromAddress();
+            } else {
+                address = log.getToAddress();
+            }
+            if (address != null) {
+                LinphoneManager.getInstance().newOutgoingCall(address.asStringUriOnly(), null);
             }
         }
     }

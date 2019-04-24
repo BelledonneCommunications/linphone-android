@@ -33,6 +33,7 @@ import android.provider.ContactsContract;
 import android.view.WindowManager;
 import java.util.ArrayList;
 import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -205,19 +206,19 @@ public final class LinphoneService extends Service {
                                                 || state == State.IncomingEarlyMedia) {
                                             if (!LinphoneManager.getInstance().getCallGsmON())
                                                 onIncomingReceived();
-                                        }
-
-                                        if (state == State.End
+                                        } else if (state == State.OutgoingInit) {
+                                            onOutgoingStarted();
+                                        } else if (state == State.End
                                                 || state == State.Released
                                                 || state == State.Error) {
                                             destroyOverlay();
-                                        }
 
-                                        if (state == State.Released
-                                                && call.getCallLog().getStatus()
-                                                        == Call.Status.Missed) {
-                                            mNotificationManager.displayMissedCallNotification(
-                                                    call);
+                                            if (state == State.Released
+                                                    && call.getCallLog().getStatus()
+                                                            == Call.Status.Missed) {
+                                                mNotificationManager.displayMissedCallNotification(
+                                                        call);
+                                            }
                                         }
                                     }
 
@@ -436,13 +437,16 @@ public final class LinphoneService extends Service {
 
     private void onIncomingReceived() {
         Intent intent = new Intent().setClass(this, mIncomingReceivedActivity);
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().startActivity(intent);
-        } else {
-            // This flag is required to start an Activity from a Service context
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
+        // This flag is required to start an Activity from a Service context
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void onOutgoingStarted() {
+        Intent intent = new Intent(LinphoneService.this, CallOutgoingActivity.class);
+        // This flag is required to start an Activity from a Service context
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     /*Believe me or not, but knowing the application visibility state on Android is a nightmare.

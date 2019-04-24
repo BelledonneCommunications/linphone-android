@@ -156,6 +156,10 @@ public abstract class MainActivity extends ThemableActivity
                 (SideMenuFragment)
                         getSupportFragmentManager().findFragmentById(R.id.side_menu_fragment);
         mSideMenuFragment.setDrawer(mSideMenu, mSideMenuContent);
+
+        if (getResources().getBoolean(R.bool.disable_chat)) {
+            mChat.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -355,6 +359,29 @@ public abstract class MainActivity extends ThemableActivity
                 LinphonePreferences.instance().enableDeviceRingtone(enableRingtone);
                 LinphoneManager.getInstance().enableDeviceRingtone(enableRingtone);
             }
+        }
+    }
+
+    // Missed calls & chat indicators
+
+    public void displayMissedCalls(final int missedCallsCount) {
+        if (missedCallsCount > 0) {
+            mMissedCalls.setText(missedCallsCount + "");
+            mMissedCalls.setVisibility(View.VISIBLE);
+        } else {
+            if (LinphoneManager.isInstanciated()) LinphoneManager.getLc().resetMissedCallsCount();
+            mMissedCalls.clearAnimation();
+            mMissedCalls.setVisibility(View.GONE);
+        }
+    }
+
+    public void displayMissedChats(final int missedChatCount) {
+        if (missedChatCount > 0) {
+            mMissedMessages.setText(missedChatCount + "");
+            mMissedMessages.setVisibility(View.VISIBLE);
+        } else {
+            mMissedMessages.clearAnimation();
+            mMissedMessages.setVisibility(View.GONE);
         }
     }
 }

@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +28,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.fragment.app.Fragment;
 import java.util.Arrays;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -47,7 +46,6 @@ import org.linphone.core.Factory;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
@@ -109,7 +107,8 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                 new ChatRoomListenerStub() {
                     @Override
                     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-                        if (newState == ChatRoom.State.Created) {
+                        // TODO FIXME
+                        /*if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
                             LinphoneActivity.instance()
                                     .goToChat(
@@ -123,7 +122,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                                     "Group mChat room for address "
                                             + cr.getPeerAddress()
                                             + " has failed !");
-                        }
+                        }*/
                     }
                 };
 
@@ -143,8 +142,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                             .getCallHistoryForAddress(lAddress);
             List<CallLog> logsList = Arrays.asList(logs);
             mLogsList.setAdapter(
-                    new HistoryLogAdapter(
-                            LinphoneActivity.instance(), R.layout.history_detail_cell, logsList));
+                    new HistoryLogAdapter(getActivity(), R.layout.history_detail_cell, logsList));
 
             mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
             mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
@@ -198,15 +196,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.HISTORY_DETAIL);
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         int id = v.getId();
 
@@ -214,7 +203,7 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             getFragmentManager().popBackStackImmediate();
         }
         if (id == R.id.call) {
-            LinphoneActivity.instance().setAddresGoToDialerAndCall(mSipUri, mDisplayName);
+            LinphoneManager.getInstance().newOutgoingCall(mSipUri, mDisplayName);
         } else if (id == R.id.chat || id == R.id.chat_secured) {
             boolean isSecured = id == R.id.chat_secured;
             Core lc = LinphoneManager.getLc();
@@ -223,11 +212,12 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                     lc.findOneToOneChatRoom(
                             lc.getDefaultProxyConfig().getContact(), participant, isSecured);
             if (room != null) {
-                LinphoneActivity.instance()
-                        .goToChat(
-                                room.getLocalAddress().asStringUriOnly(),
-                                room.getPeerAddress().asStringUriOnly(),
-                                null);
+                // TODO FIXME
+                /*LinphoneActivity.instance()
+                .goToChat(
+                        room.getLocalAddress().asStringUriOnly(),
+                        room.getPeerAddress().asStringUriOnly(),
+                        null);*/
             } else {
                 ProxyConfig lpc = lc.getDefaultProxyConfig();
                 if (lpc != null
@@ -258,11 +248,12 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
                     }
                 } else {
                     room = lc.getChatRoom(participant);
-                    LinphoneActivity.instance()
-                            .goToChat(
-                                    room.getLocalAddress().asStringUriOnly(),
-                                    room.getPeerAddress().asStringUriOnly(),
-                                    null);
+                    // TODO FIXME
+                    /*LinphoneActivity.instance()
+                    .goToChat(
+                            room.getLocalAddress().asStringUriOnly(),
+                            room.getPeerAddress().asStringUriOnly(),
+                            null);*/
                 }
             }
         } else if (id == R.id.add_contact) {
@@ -270,15 +261,16 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             if (addr != null) {
                 String address =
                         "sip:" + addr.getUsername() + "@" + addr.getDomain(); // Clean gruu param
-                if (addr.getDisplayName() != null) {
+                // TODO FIXME
+                /*if (addr.getDisplayName() != null) {
                     LinphoneActivity.instance()
                             .displayContactsForEdition(address, addr.getDisplayName());
                 } else {
                     LinphoneActivity.instance().displayContactsForEdition(address);
-                }
+                }*/
             }
         } else if (id == R.id.goto_contact) {
-            LinphoneActivity.instance().displayContact(mContact, false);
+            // TODO FIXME LinphoneActivity.instance().displayContact(mContact, false);
         }
     }
 }

@@ -104,8 +104,6 @@ import org.linphone.fragments.DialerFragment;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.fragments.StatusFragment;
-import org.linphone.history.HistoryDetailFragment;
-import org.linphone.history.HistoryFragment;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.recording.RecordingsFragment;
 import org.linphone.settings.LinphonePreferences;
@@ -720,12 +718,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
 
         mFragment = null;
         switch (newFragmentType) {
-            case HISTORY_LIST:
-                mFragment = new HistoryFragment();
-                break;
-            case HISTORY_DETAIL:
-                mFragment = new HistoryDetailFragment();
-                break;
+                /*case HISTORY_LIST:
+                    mFragment = new HistoryFragment();
+                    break;
+                case HISTORY_DETAIL:
+                    mFragment = new HistoryDetailFragment();
+                    break;*/
             case CONTACTS_LIST:
                 mFragment = new ContactsFragment();
                 break;
@@ -796,9 +794,9 @@ public class LinphoneActivity extends LinphoneGenericActivity
             if (isTablet()) {
                 changeFragmentForTablets(mFragment, newFragmentType);
                 switch (newFragmentType) {
-                    case HISTORY_LIST:
+                        /*case HISTORY_LIST:
                         ((HistoryFragment) mFragment).displayFirstLog();
-                        break;
+                        break;*/
                     case CONTACTS_LIST:
                         ((ContactsFragment) mFragment).displayFirstContact();
                         break;
@@ -931,8 +929,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         if (fragment2 != null
                 && fragment2.isVisible()
                 && mCurrentFragment == FragmentsAvailable.HISTORY_DETAIL) {
-            HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
-            historyDetailFragment.changeDisplayedHistory(sipUri, displayName);
+            // HistoryDetailFragment historyDetailFragment = (HistoryDetailFragment) fragment2;
+            // historyDetailFragment.changeDisplayedHistory(sipUri, displayName);
         } else {
             Bundle extras = new Bundle();
             extras.putString("SipUri", sipUri);
