@@ -30,7 +30,10 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.chat.ChatActivity;
+import org.linphone.contacts.ContactsActivity;
 import org.linphone.fragments.StatusFragment;
+import org.linphone.history.HistoryActivity;
 import org.linphone.utils.ThemableActivity;
 
 public abstract class MainActivity extends ThemableActivity
@@ -64,25 +67,41 @@ public abstract class MainActivity extends ThemableActivity
         mHistory.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {}
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                 });
         mContacts = findViewById(R.id.contacts);
         mContacts.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {}
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                 });
         mDialer = findViewById(R.id.dialer);
         mDialer.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {}
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, DialerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                 });
         mChat = findViewById(R.id.chat);
         mChat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {}
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                 });
 
         mMissedCalls = findViewById(R.id.missed_calls);
@@ -125,6 +144,12 @@ public abstract class MainActivity extends ThemableActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        mHistorySelected.setVisibility(View.GONE);
+        mContactsSelected.setVisibility(View.GONE);
+        mDialerSelected.setVisibility(View.GONE);
+        mChatSelected.setVisibility(View.GONE);
+
         mStatusFragment.setMenuListener(this);
         mSideMenuFragment.setQuitListener(this);
         mSideMenuFragment.displayAccountsInSideMenu();
@@ -134,6 +159,7 @@ public abstract class MainActivity extends ThemableActivity
     protected void onPause() {
         mStatusFragment.setMenuListener(null);
         mSideMenuFragment.setQuitListener(null);
+
         super.onPause();
     }
 

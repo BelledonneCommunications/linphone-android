@@ -139,6 +139,48 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".main.AboutActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".main.RecordingsActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".chat.ChatActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".contacts.ContactsActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".history.HistoryActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".call.CallIncomingActivity"

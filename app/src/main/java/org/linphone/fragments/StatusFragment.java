@@ -65,10 +65,6 @@ public class StatusFragment extends Fragment {
     private int mDisplayedQuality = -1;
     private MenuClikedListener mMenuListener;
 
-    public void setMenuListener(MenuClikedListener listener) {
-        mMenuListener = listener;
-    }
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -193,6 +189,10 @@ public class StatusFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mIsAttached = false;
+    }
+
+    public void setMenuListener(MenuClikedListener listener) {
+        mMenuListener = listener;
     }
 
     // NORMAL STATUS BAR

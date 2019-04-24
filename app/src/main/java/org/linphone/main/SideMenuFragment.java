@@ -45,6 +45,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.LinphoneUtils;
 
 public class SideMenuFragment extends Fragment {
@@ -118,18 +119,18 @@ public class SideMenuFragment extends Fragment {
                                 getActivity().finish();
                             }
                         } else if (selectedItem.equals(getString(R.string.menu_settings))) {
-                            // TODO
+                            startActivity(new Intent(getActivity(), SettingsActivity.class));
                         } else if (selectedItem.equals(getString(R.string.menu_about))) {
-                            // TODO
+                            startActivity(new Intent(getActivity(), AboutActivity.class));
                         } else if (selectedItem.equals(getString(R.string.menu_assistant))) {
-                            // TODO
+                            startActivity(new Intent(getActivity(), MenuAssistantActivity.class));
                         }
                         if (mSideMenuItemList
                                 .getAdapter()
                                 .getItem(i)
                                 .toString()
                                 .equals(getString(R.string.menu_recordings))) {
-                            // TODO
+                            startActivity(new Intent(getActivity(), RecordingsActivity.class));
                         }
 
                         openOrCloseSideMenu(false);
