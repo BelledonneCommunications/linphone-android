@@ -61,7 +61,7 @@ public class SettingsActivity extends MainActivity {
     }
 
     @Override
-    protected void goBack() {
+    public void goBack() {
         if (!isTablet()) {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStackImmediate();

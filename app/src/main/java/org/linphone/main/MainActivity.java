@@ -243,7 +243,7 @@ public abstract class MainActivity extends ThemableActivity
         quit();
     }
 
-    protected void goBack() {
+    public void goBack() {
         finish();
     }
 

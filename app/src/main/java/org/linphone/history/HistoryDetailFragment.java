@@ -50,7 +50,7 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
-public class HistoryDetailFragment extends Fragment implements OnClickListener {
+public class HistoryDetailFragment extends Fragment {
     private ImageView mDialBack, mChat, mAddToContacts, mGoToContact, mBack;
     private View mView;
     private TextView mContactName, mContactAddress;
@@ -73,20 +73,42 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         mWaitLayout.setVisibility(View.GONE);
 
         mDialBack = mView.findViewById(R.id.call);
-        mDialBack.setOnClickListener(this);
+        mDialBack.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinphoneManager.getInstance().newOutgoingCall(mSipUri, mDisplayName);
+                    }
+                });
 
         mBack = mView.findViewById(R.id.back);
-        if (getResources().getBoolean(R.bool.isTablet)) {
-            mBack.setVisibility(View.INVISIBLE);
-        } else {
-            mBack.setOnClickListener(this);
-        }
+        mBack.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((HistoryActivity) getActivity()).goBack();
+                    }
+                });
+        mBack.setVisibility(
+                getResources().getBoolean(R.bool.isTablet) ? View.INVISIBLE : View.VISIBLE);
 
         mChat = mView.findViewById(R.id.chat);
-        mChat.setOnClickListener(this);
+        mChat.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToChat(false);
+                    }
+                });
 
         mChatSecured = mView.findViewById(R.id.chat_secured);
-        mChatSecured.setOnClickListener(this);
+        mChatSecured.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToChat(true);
+                    }
+                });
 
         if (getResources().getBoolean(R.bool.disable_chat)) {
             mChat.setVisibility(View.GONE);
@@ -94,10 +116,36 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         }
 
         mAddToContacts = mView.findViewById(R.id.add_contact);
-        mAddToContacts.setOnClickListener(this);
+        mAddToContacts.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Address addr = Factory.instance().createAddress(mSipUri);
+                        if (addr != null) {
+                            String address =
+                                    "sip:"
+                                            + addr.getUsername()
+                                            + "@"
+                                            + addr.getDomain(); // Clean gruu param
+                            // TODO FIXME
+                            /*if (addr.getDisplayName() != null) {
+                                LinphoneActivity.instance()
+                                        .displayContactsForEdition(address, addr.getDisplayName());
+                            } else {
+                                LinphoneActivity.instance().displayContactsForEdition(address);
+                            }*/
+                        }
+                    }
+                });
 
         mGoToContact = mView.findViewById(R.id.goto_contact);
-        mGoToContact.setOnClickListener(this);
+        mGoToContact.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO FIXME LinphoneActivity.instance().displayContact(mContact, false);
+                    }
+                });
 
         mAvatarLayout = mView.findViewById(R.id.avatar_layout);
         mContactName = mView.findViewById(R.id.contact_name);
@@ -130,6 +178,14 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         displayHistory();
 
         return mView;
+    }
+
+    @Override
+    public void onPause() {
+        if (mChatRoom != null) {
+            mChatRoom.removeListener(mChatRoomCreationListener);
+        }
+        super.onPause();
     }
 
     private void displayHistory() {
@@ -180,90 +236,53 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
         }
     }
 
-    @Override
-    public void onPause() {
-        if (mChatRoom != null) {
-            mChatRoom.removeListener(mChatRoomCreationListener);
-        }
-        super.onPause();
-    }
+    private void goToChat(boolean isSecured) {
+        Core lc = LinphoneManager.getLc();
+        Address participant = Factory.instance().createAddress(mSipUri);
+        ChatRoom room =
+                lc.findOneToOneChatRoom(
+                        lc.getDefaultProxyConfig().getContact(), participant, isSecured);
+        if (room != null) {
+            // TODO FIXME
+            /*LinphoneActivity.instance()
+            .goToChat(
+                    room.getLocalAddress().asStringUriOnly(),
+                    room.getPeerAddress().asStringUriOnly(),
+                    null);*/
+        } else {
+            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            if (lpc != null
+                    && lpc.getConferenceFactoryUri() != null
+                    && (isSecured || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
+                mWaitLayout.setVisibility(View.VISIBLE);
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
+                ChatRoomParams params = lc.createDefaultChatRoomParams();
+                params.enableEncryption(isSecured);
+                params.enableGroup(false);
+                // We don't want a basic chat room
+                params.setBackend(ChatRoomBackend.FlexisipChat);
 
-        if (id == R.id.back) {
-            getFragmentManager().popBackStackImmediate();
-        }
-        if (id == R.id.call) {
-            LinphoneManager.getInstance().newOutgoingCall(mSipUri, mDisplayName);
-        } else if (id == R.id.chat || id == R.id.chat_secured) {
-            boolean isSecured = id == R.id.chat_secured;
-            Core lc = LinphoneManager.getLc();
-            Address participant = Factory.instance().createAddress(mSipUri);
-            ChatRoom room =
-                    lc.findOneToOneChatRoom(
-                            lc.getDefaultProxyConfig().getContact(), participant, isSecured);
-            if (room != null) {
+                Address participants[] = new Address[1];
+                participants[0] = participant;
+
+                mChatRoom =
+                        lc.createChatRoom(
+                                params, getString(R.string.dummy_group_chat_subject), participants);
+                if (mChatRoom != null) {
+                    mChatRoom.addListener(mChatRoomCreationListener);
+                } else {
+                    Log.w("[History Detail Fragment] createChatRoom returned null...");
+                    mWaitLayout.setVisibility(View.GONE);
+                }
+            } else {
+                room = lc.getChatRoom(participant);
                 // TODO FIXME
                 /*LinphoneActivity.instance()
                 .goToChat(
                         room.getLocalAddress().asStringUriOnly(),
                         room.getPeerAddress().asStringUriOnly(),
                         null);*/
-            } else {
-                ProxyConfig lpc = lc.getDefaultProxyConfig();
-                if (lpc != null
-                        && lpc.getConferenceFactoryUri() != null
-                        && (isSecured
-                                || !LinphonePreferences.instance().useBasicChatRoomFor1To1())) {
-                    mWaitLayout.setVisibility(View.VISIBLE);
-
-                    ChatRoomParams params = lc.createDefaultChatRoomParams();
-                    params.enableEncryption(isSecured);
-                    params.enableGroup(false);
-                    // We don't want a basic chat room
-                    params.setBackend(ChatRoomBackend.FlexisipChat);
-
-                    Address participants[] = new Address[1];
-                    participants[0] = participant;
-
-                    mChatRoom =
-                            lc.createChatRoom(
-                                    params,
-                                    getString(R.string.dummy_group_chat_subject),
-                                    participants);
-                    if (mChatRoom != null) {
-                        mChatRoom.addListener(mChatRoomCreationListener);
-                    } else {
-                        Log.w("[History Detail Fragment] createChatRoom returned null...");
-                        mWaitLayout.setVisibility(View.GONE);
-                    }
-                } else {
-                    room = lc.getChatRoom(participant);
-                    // TODO FIXME
-                    /*LinphoneActivity.instance()
-                    .goToChat(
-                            room.getLocalAddress().asStringUriOnly(),
-                            room.getPeerAddress().asStringUriOnly(),
-                            null);*/
-                }
             }
-        } else if (id == R.id.add_contact) {
-            Address addr = Factory.instance().createAddress(mSipUri);
-            if (addr != null) {
-                String address =
-                        "sip:" + addr.getUsername() + "@" + addr.getDomain(); // Clean gruu param
-                // TODO FIXME
-                /*if (addr.getDisplayName() != null) {
-                    LinphoneActivity.instance()
-                            .displayContactsForEdition(address, addr.getDisplayName());
-                } else {
-                    LinphoneActivity.instance().displayContactsForEdition(address);
-                }*/
-            }
-        } else if (id == R.id.goto_contact) {
-            // TODO FIXME LinphoneActivity.instance().displayContact(mContact, false);
         }
     }
 }

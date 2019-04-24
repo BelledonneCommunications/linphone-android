@@ -31,10 +31,13 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
+import org.linphone.core.Factory;
 import org.linphone.main.MainActivity;
 import org.linphone.utils.LinphoneUtils;
 
 public class HistoryActivity extends MainActivity {
+    private Address mDisplayedAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +59,23 @@ public class HistoryActivity extends MainActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(
+                "DisplayedAddress",
+                mDisplayedAddress != null ? mDisplayedAddress.asString() : null);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        String addr = savedInstanceState.getString("DisplayedAddress");
+        if (addr != null) {
+            Address address = Factory.instance().createAddress(addr);
+            if (address != null) {
+                showHistoryDetails(address);
+            }
+        }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -65,6 +83,7 @@ public class HistoryActivity extends MainActivity {
         if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStackImmediate();
+                mDisplayedAddress = null;
                 return true;
             }
         }
@@ -72,10 +91,11 @@ public class HistoryActivity extends MainActivity {
     }
 
     @Override
-    protected void goBack() {
+    public void goBack() {
         if (!isTablet()) {
             if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 getSupportFragmentManager().popBackStackImmediate();
+                mDisplayedAddress = null;
                 return;
             }
         }
@@ -102,6 +122,7 @@ public class HistoryActivity extends MainActivity {
         HistoryDetailFragment fragment = new HistoryDetailFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "History detail", true);
+        mDisplayedAddress = address;
     }
 
     private void changeFragment(Fragment fragment, String name, boolean isChild) {
