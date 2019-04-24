@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="20dp"
+            android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
             <RelativeLayout

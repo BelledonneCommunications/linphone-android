@@ -133,47 +133,50 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
     }
 
     private void displayHistory() {
-        Address lAddress = Factory.instance().createAddress(mSipUri);
-        mChatSecured.setVisibility(View.GONE);
+        if (mSipUri != null) {
+            Address lAddress = Factory.instance().createAddress(mSipUri);
+            mChatSecured.setVisibility(View.GONE);
 
-        if (lAddress != null) {
-            CallLog[] logs =
-                    LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                            .getCallHistoryForAddress(lAddress);
-            List<CallLog> logsList = Arrays.asList(logs);
-            mLogsList.setAdapter(
-                    new HistoryLogAdapter(getActivity(), R.layout.history_detail_cell, logsList));
+            if (lAddress != null) {
+                CallLog[] logs =
+                        LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                                .getCallHistoryForAddress(lAddress);
+                List<CallLog> logsList = Arrays.asList(logs);
+                mLogsList.setAdapter(
+                        new HistoryLogAdapter(
+                                getActivity(), R.layout.history_detail_cell, logsList));
 
-            mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
-            mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
+                mContactAddress.setText(LinphoneUtils.getDisplayableAddress(lAddress));
+                mContact = ContactsManager.getInstance().findContactFromAddress(lAddress);
 
-            if (mContact != null) {
-                mContactName.setText(mContact.getFullName());
-                ContactAvatar.displayAvatar(mContact, mAvatarLayout);
-                mAddToContacts.setVisibility(View.GONE);
-                mGoToContact.setVisibility(View.VISIBLE);
+                if (mContact != null) {
+                    mContactName.setText(mContact.getFullName());
+                    ContactAvatar.displayAvatar(mContact, mAvatarLayout);
+                    mAddToContacts.setVisibility(View.GONE);
+                    mGoToContact.setVisibility(View.VISIBLE);
 
-                if (!getResources().getBoolean(R.bool.disable_chat)
-                        && mContact.hasPresenceModelForUriOrTelCapability(
-                                mSipUri, FriendCapability.LimeX3Dh)) {
-                    mChatSecured.setVisibility(View.VISIBLE);
+                    if (!getResources().getBoolean(R.bool.disable_chat)
+                            && mContact.hasPresenceModelForUriOrTelCapability(
+                                    mSipUri, FriendCapability.LimeX3Dh)) {
+                        mChatSecured.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    mContactName.setText(
+                            mDisplayName == null
+                                    ? LinphoneUtils.getAddressDisplayName(mSipUri)
+                                    : mDisplayName);
+                    ContactAvatar.displayAvatar(
+                            LinphoneUtils.getAddressDisplayName(lAddress), mAvatarLayout);
+                    mAddToContacts.setVisibility(View.VISIBLE);
+                    mGoToContact.setVisibility(View.GONE);
                 }
             } else {
+                mContactAddress.setText(mSipUri);
                 mContactName.setText(
                         mDisplayName == null
                                 ? LinphoneUtils.getAddressDisplayName(mSipUri)
                                 : mDisplayName);
-                ContactAvatar.displayAvatar(
-                        LinphoneUtils.getAddressDisplayName(lAddress), mAvatarLayout);
-                mAddToContacts.setVisibility(View.VISIBLE);
-                mGoToContact.setVisibility(View.GONE);
             }
-        } else {
-            mContactAddress.setText(mSipUri);
-            mContactName.setText(
-                    mDisplayName == null
-                            ? LinphoneUtils.getAddressDisplayName(mSipUri)
-                            : mDisplayName);
         }
     }
 
@@ -183,16 +186,6 @@ public class HistoryDetailFragment extends Fragment implements OnClickListener {
             mChatRoom.removeListener(mChatRoomCreationListener);
         }
         super.onPause();
-    }
-
-    public void changeDisplayedHistory(String sipUri, String displayName) {
-        if (displayName == null) {
-            displayName = LinphoneUtils.getUsernameFromAddress(sipUri);
-        }
-
-        mSipUri = sipUri;
-        mDisplayName = displayName;
-        displayHistory();
     }
 
     @Override
