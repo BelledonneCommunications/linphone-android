@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -360,7 +361,13 @@ public abstract class MainActivity extends ThemableActivity
             String[] permissions = new String[permissionsToAskFor.size()];
             permissions = permissionsToAskFor.toArray(permissions);
 
-            ActivityCompat.requestPermissions(this, permissions, MAIN_PERMISSIONS);
+            KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            boolean locked = km.inKeyguardRestrictedInputMode();
+            if (!locked) {
+                // This is to workaround an infinite loop of pause/start in LinphoneActivity issue
+                // if incoming call ends while screen if off and locked
+                ActivityCompat.requestPermissions(this, permissions, MAIN_PERMISSIONS);
+            }
         }
     }
 
