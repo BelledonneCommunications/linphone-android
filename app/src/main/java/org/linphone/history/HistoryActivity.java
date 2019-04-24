@@ -22,12 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import org.linphone.LinphoneManager;
-import org.linphone.R;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -123,22 +118,5 @@ public class HistoryActivity extends MainActivity {
         fragment.setArguments(extras);
         changeFragment(fragment, "History detail", true);
         mDisplayedAddress = address;
-    }
-
-    private void changeFragment(Fragment fragment, String name, boolean isChild) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        if (isChild) {
-            transaction.addToBackStack(name);
-        }
-
-        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
-        if (isChild && isTablet()) {
-            transaction.replace(R.id.fragmentContainer2, fragment, name);
-        } else {
-            transaction.replace(R.id.fragmentContainer, fragment, name);
-        }
-        transaction.commitAllowingStateLoss();
-        fm.executePendingTransactions();
     }
 }

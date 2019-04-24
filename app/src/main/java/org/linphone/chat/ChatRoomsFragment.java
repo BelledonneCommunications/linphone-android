@@ -1,6 +1,8 @@
+package org.linphone.chat;
+
 /*
 ChatRoomsFragment.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,12 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
-import static org.linphone.fragments.FragmentsAvailable.CHAT_LIST;
-
-import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,15 +29,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.call.CallActivity;
+import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -50,7 +50,6 @@ import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 
@@ -128,8 +127,9 @@ public class ChatRoomsFragment extends Fragment
                             extras = (Bundle) getArguments().clone();
                             getArguments().clear();
                         }
-                        LinphoneActivity.instance()
-                                .goToChatCreator(null, null, null, false, extras, false, false);
+                        // TODO FIXME
+                        /*LinphoneActivity.instance()
+                        .goToChatCreator(null, null, null, false, extras, false, false);*/
                     }
                 });
 
@@ -143,8 +143,9 @@ public class ChatRoomsFragment extends Fragment
                             extras = (Bundle) getArguments().clone();
                             getArguments().clear();
                         }
-                        LinphoneActivity.instance()
-                                .goToChatCreator(null, null, null, false, extras, true, false);
+                        // TODO FIXME
+                        /*LinphoneActivity.instance()
+                        .goToChatCreator(null, null, null, false, extras, true, false);*/
                     }
                 });
 
@@ -152,8 +153,7 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LinphoneActivity.instance()
-                                .resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                        startActivity(new Intent(getActivity(), CallActivity.class));
                     }
                 });
 
@@ -198,7 +198,7 @@ public class ChatRoomsFragment extends Fragment
             String messageSharedUri = getArguments().getString("messageDraft");
             if (fileSharedUri != null || messageSharedUri != null) {
                 Toast.makeText(
-                                LinphoneActivity.instance(),
+                                getActivity(),
                                 R.string.toast_choose_chat_room_for_sharing,
                                 Toast.LENGTH_LONG)
                         .show();
@@ -221,11 +221,8 @@ public class ChatRoomsFragment extends Fragment
                 extras = (Bundle) getArguments().clone();
                 getArguments().clear();
             }
-            LinphoneActivity.instance()
-                    .goToChat(
-                            room.getLocalAddress().asStringUriOnly(),
-                            room.getPeerAddress().asString(),
-                            extras);
+            ((ChatActivity) getActivity())
+                    .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), extras);
         }
     }
 
@@ -248,13 +245,10 @@ public class ChatRoomsFragment extends Fragment
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null && adapter.getItemCount() > 0) {
             ChatRoom room = (ChatRoom) adapter.getItem(0);
-            LinphoneActivity.instance()
-                    .goToChat(
-                            room.getLocalAddress().asStringUriOnly(),
-                            room.getPeerAddress().asStringUriOnly(),
-                            null);
+            ((ChatActivity) getActivity())
+                    .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
         } else {
-            LinphoneActivity.instance().displayEmptyFragment();
+            ((ChatActivity) getActivity()).showChatRoom(null, null);
         }
     }
 
@@ -273,10 +267,6 @@ public class ChatRoomsFragment extends Fragment
             mBackToCallButton.setVisibility(View.VISIBLE);
         } else {
             mBackToCallButton.setVisibility(View.INVISIBLE);
-        }
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.CHAT_LIST);
         }
 
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -328,15 +318,12 @@ public class ChatRoomsFragment extends Fragment
         if (mChatRoomDeletionPendingCount > 0) {
             mWaitLayout.setVisibility(View.VISIBLE);
         }
-        LinphoneActivity.instance()
+        ((ContactsActivity) getActivity())
                 .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 
     @Override
     public void onContactsUpdated() {
-        if (!LinphoneActivity.isInstanciated()
-                || LinphoneActivity.instance().getCurrentFragment() != CHAT_LIST) return;
-
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null) {
             adapter.notifyDataSetChanged();

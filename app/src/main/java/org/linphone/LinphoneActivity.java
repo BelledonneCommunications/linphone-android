@@ -71,18 +71,8 @@ import org.linphone.assistant.MenuAssistantActivity;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
-import org.linphone.chat.ChatMessagesFragment;
-import org.linphone.chat.ChatRoomCreationFragment;
-import org.linphone.chat.ChatRoomsFragment;
-import org.linphone.chat.DevicesFragment;
-import org.linphone.chat.GroupInfoFragment;
-import org.linphone.chat.ImdnFragment;
-import org.linphone.chat.ImdnOldFragment;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
-import org.linphone.contacts.ContactDetailsFragment;
-import org.linphone.contacts.ContactEditorFragment;
-import org.linphone.contacts.ContactsFragment;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -99,13 +89,11 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.Reason;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.AboutFragment;
 import org.linphone.fragments.DialerFragment;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.purchase.InAppPurchaseActivity;
-import org.linphone.recording.RecordingsFragment;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.IntentUtils;
@@ -700,85 +688,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
     }
 
     private void changeCurrentFragment(FragmentsAvailable newFragmentType, Bundle extras) {
-        if (newFragmentType == mCurrentFragment
-                && newFragmentType != FragmentsAvailable.CHAT_LIST
-                && newFragmentType != FragmentsAvailable.CHAT
-                && newFragmentType != FragmentsAvailable.GROUP_CHAT) {
-            return;
-        }
-
-        if (mCurrentFragment == FragmentsAvailable.DIALER) {
-            try {
-                DialerFragment dialerFragment = DialerFragment.instance();
-                mDialerSavedState = getFragmentManager().saveFragmentInstanceState(dialerFragment);
-            } catch (Exception e) {
-                Log.e(e);
-            }
-        }
-
-        mFragment = null;
-        switch (newFragmentType) {
-                /*case HISTORY_LIST:
-                    mFragment = new HistoryFragment();
-                    break;
-                case HISTORY_DETAIL:
-                    mFragment = new HistoryDetailFragment();
-                    break;*/
-            case CONTACTS_LIST:
-                mFragment = new ContactsFragment();
-                break;
-            case CONTACT_DETAIL:
-                mFragment = new ContactDetailsFragment();
-                break;
-            case CONTACT_EDITOR:
-                mFragment = new ContactEditorFragment();
-                break;
-            case DIALER:
-                mFragment = new DialerFragment();
-                if (extras == null) {
-                    mFragment.setInitialSavedState(mDialerSavedState);
-                }
-                break;
-            case SETTINGS:
-                // mFragment = new MenuSettingsFragment();
-                break;
-            case ACCOUNT_SETTINGS:
-                // mFragment = new AccountSettingsFragment();
-                break;
-            case ABOUT:
-                mFragment = new AboutFragment();
-                break;
-            case EMPTY:
-                mFragment = new EmptyFragment();
-                break;
-            case CHAT_LIST:
-                mFragment = new ChatRoomsFragment();
-                break;
-            case CREATE_CHAT:
-                mFragment = new ChatRoomCreationFragment();
-                break;
-            case INFO_GROUP_CHAT:
-                mFragment = new GroupInfoFragment();
-                break;
-            case GROUP_CHAT:
-                mFragment = new ChatMessagesFragment();
-                break;
-            case MESSAGE_IMDN:
-                if (getResources().getBoolean(R.bool.use_new_chat_bubbles_layout)) {
-                    mFragment = new ImdnFragment();
-                } else {
-                    mFragment = new ImdnOldFragment();
-                }
-                break;
-            case CONTACT_DEVICES:
-                mFragment = new DevicesFragment();
-                break;
-            case RECORDING_LIST:
-                mFragment = new RecordingsFragment();
-                break;
-            default:
-                break;
-        }
 
         applyFragmentChanges(newFragmentType, extras);
     }
@@ -797,12 +706,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
                         /*case HISTORY_LIST:
                         ((HistoryFragment) mFragment).displayFirstLog();
                         break;*/
-                    case CONTACTS_LIST:
-                        ((ContactsFragment) mFragment).displayFirstContact();
-                        break;
-                    case CHAT_LIST:
-                        ((ChatRoomsFragment) mFragment).displayFirstChat();
-                        break;
+                        /*case CONTACTS_LIST:
+                            ((ContactsFragment) mFragment).displayFirstContact();
+                            break;
+                        case CHAT_LIST:
+                            ((ChatRoomsFragment) mFragment).displayFirstChat();
+                            break;*/
                 }
             } else {
                 changeFragment(mFragment, newFragmentType);
@@ -868,7 +777,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 if (newFragmentType == FragmentsAvailable.GROUP_CHAT
                         && mLeftFragment != FragmentsAvailable.CHAT_LIST) {
                     mLeftFragment = FragmentsAvailable.CHAT_LIST;
-                    transaction.replace(R.id.fragmentContainer, new ChatRoomsFragment());
                 }
             } else {
                 if (newFragmentType == FragmentsAvailable.EMPTY) {
@@ -952,8 +860,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         if (fragment2 != null
                 && fragment2.isVisible()
                 && mCurrentFragment == FragmentsAvailable.CONTACT_DETAIL) {
-            ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
-            contactFragment.changeDisplayedContact(contact);
+            /*ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
+            contactFragment.changeDisplayedContact(contact);*/
         } else {
             Bundle extras = new Bundle();
             extras.putSerializable("Contact", contact);
@@ -1050,8 +958,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
                     && fragment2.isVisible()
                     && mCurrentFragment == FragmentsAvailable.GROUP_CHAT
                     && !mEmptyFragment) {
-                ChatMessagesFragment chatFragment = (ChatMessagesFragment) fragment2;
-                chatFragment.changeDisplayedChat(localSipUri, remoteSipUri);
             } else {
                 changeCurrentFragment(FragmentsAvailable.GROUP_CHAT, extras);
             }
@@ -1292,10 +1198,6 @@ public class LinphoneActivity extends LinphoneGenericActivity
         } else {
             mMissedChats.clearAnimation();
             mMissedChats.setVisibility(View.GONE);
-        }
-        if (mCurrentFragment == FragmentsAvailable.CHAT_LIST
-                && mFragment instanceof ChatRoomsFragment) {
-            ((ChatRoomsFragment) mFragment).invalidate();
         }
     }
 

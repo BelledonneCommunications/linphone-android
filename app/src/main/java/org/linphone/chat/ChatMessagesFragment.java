@@ -2,7 +2,7 @@ package org.linphone.chat;
 
 /*
 ChatMessagesFragment.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,11 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static org.linphone.fragments.FragmentsAvailable.CHAT;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -47,13 +44,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.view.inputmethod.InputConnectionCompat;
 import androidx.core.view.inputmethod.InputContentInfoCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -61,12 +57,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
-import org.linphone.LinphoneService;
 import org.linphone.R;
+import org.linphone.call.CallActivity;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactAddress;
+import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
@@ -175,34 +171,32 @@ public class ChatMessagesFragment extends Fragment
                                         mChatRoom.getParticipants()[0].getDevices()[0];
                                 CallManager.getInstance().inviteAddress(device.getAddress(), true);
                             } else {
-                                LinphoneActivity.instance()
-                                        .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);
+                                // TODO FIXME
+                                /*LinphoneActivity.instance()
+                                .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);*/
                             }
                         }
                     }
                 });
 
         mBackButton = view.findViewById(R.id.back);
-        if (getResources().getBoolean(R.bool.isTablet)) {
-            mBackButton.setVisibility(View.INVISIBLE);
-        } else {
-            mBackButton.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            LinphoneActivity.instance().goToChatList();
-                        }
-                    });
-        }
+        mBackButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ((ChatActivity) getActivity()).goBack();
+                    }
+                });
+        mBackButton.setVisibility(
+                getResources().getBoolean(R.bool.isTablet) ? View.INVISIBLE : View.VISIBLE);
 
         mCallButton = view.findViewById(R.id.start_call);
         mCallButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LinphoneActivity.instance()
-                                .setAddresGoToDialerAndCall(
-                                        mRemoteParticipantAddress.asString(), null);
+                        LinphoneManager.getInstance()
+                                .newOutgoingCall(mRemoteParticipantAddress.asString(), null);
                     }
                 });
 
@@ -211,8 +205,7 @@ public class ChatMessagesFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LinphoneActivity.instance()
-                                .resetClassicMenuLayoutAndGoBackToCallIfStillRunning();
+                        startActivity(new Intent(getActivity(), CallActivity.class));
                     }
                 });
 
@@ -237,16 +230,17 @@ public class ChatMessagesFragment extends Fragment
                                             c, a.asString(), "", c.isFriend(), p.isAdmin());
                             participants.add(ca);
                         }
-                        LinphoneActivity.instance()
-                                .goToChatGroupInfos(
-                                        mRemoteSipAddress.asString(),
-                                        participants,
-                                        mChatRoom.getSubject(),
-                                        mChatRoom.getMe() != null && mChatRoom.getMe().isAdmin(),
-                                        false,
-                                        null,
-                                        mChatRoom.hasCapability(
-                                                ChatRoomCapabilities.Encrypted.toInt()));
+                        // TODO FIXME
+                        /*LinphoneActivity.instance()
+                        .goToChatGroupInfos(
+                                mRemoteSipAddress.asString(),
+                                participants,
+                                mChatRoom.getSubject(),
+                                mChatRoom.getMe() != null && mChatRoom.getMe().isAdmin(),
+                                false,
+                                null,
+                                mChatRoom.hasCapability(
+                                        ChatRoomCapabilities.Encrypted.toInt()));*/
                     }
                 });
 
@@ -261,7 +255,8 @@ public class ChatMessagesFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
+                        // TODO FIXME
+                        // LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
                         pickFile();
                     }
                 });
@@ -353,9 +348,6 @@ public class ChatMessagesFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(CHAT);
-        }
         ContactsManager.getInstance().addContactsListener(this);
 
         addVirtualKeyboardVisiblityListener();
@@ -554,8 +546,9 @@ public class ChatMessagesFragment extends Fragment
             return true;
         }
         if (item.getItemId() == R.id.imdn_infos) {
-            LinphoneActivity.instance()
-                    .goToChatMessageImdnInfos(mLocalSipUri, mRemoteSipUri, messageId);
+            // TODO FIXME
+            /*LinphoneActivity.instance()
+            .goToChatMessageImdnInfos(mLocalSipUri, mRemoteSipUri, messageId);*/
             return true;
         }
         if (item.getItemId() == R.id.copy_text) {
@@ -578,12 +571,13 @@ public class ChatMessagesFragment extends Fragment
             Address address = message.getFromAddress();
             if (address == null) return true;
             String uri = address.getUsername() + "@" + address.getDomain(); // Get a clean address
-            if (address.getDisplayName() != null) {
+            // TODO FIXME
+            /*if (address.getDisplayName() != null) {
                 LinphoneActivity.instance()
                         .displayContactsForEdition(uri, address.getDisplayName());
             } else {
                 LinphoneActivity.instance().displayContactsForEdition(uri);
-            }
+            }*/
             return true;
         }
         return super.onContextItemSelected(item);
@@ -677,16 +671,16 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void showKeyboardVisibleMode() {
-        LinphoneActivity.instance().hideTabBar(true);
-        LinphoneActivity.instance().hideStatusBar();
+        ((ContactsActivity) getActivity()).hideTabBar();
+        ((ContactsActivity) getActivity()).hideStatusBar();
         mTopBar.setVisibility(View.GONE);
     }
 
     private void hideKeyboardVisibleMode() {
-        LinphoneActivity.instance()
-                .hideTabBar(
-                        getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views));
-        LinphoneActivity.instance().showStatusBar();
+        if (getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+            ((ContactsActivity) getActivity()).showTabBar();
+        }
+        ((ContactsActivity) getActivity()).showStatusBar();
         mTopBar.setVisibility(View.VISIBLE);
     }
 
@@ -752,7 +746,9 @@ public class ChatMessagesFragment extends Fragment
         mChatRoom.addListener(this);
         mChatRoom.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
-        LinphoneActivity.instance().refreshMissedChatCountDisplay();
+
+        ((ContactsActivity) getActivity())
+                .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 
         mRemoteParticipantAddress = mRemoteSipAddress;
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
@@ -887,7 +883,8 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void showSecurityDialog(boolean oneParticipantOneDevice) {
-        final Dialog dialog =
+        // TODO FIXME
+        /*final Dialog dialog =
                 LinphoneActivity.instance().displayDialog(getString(R.string.lime_security_popup));
         Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
@@ -941,7 +938,7 @@ public class ChatMessagesFragment extends Fragment
                         dialog.dismiss();
                     }
                 });
-        dialog.show();
+        dialog.show();*/
     }
 
     private void scrollToBottom() {
@@ -1197,36 +1194,9 @@ public class ChatMessagesFragment extends Fragment
         final Address from = msg.getFromAddress();
         final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 
-        if (LinphoneActivity.instance().isOnBackground()) {
-            if (!getResources().getBoolean(R.bool.disable_chat_message_notification)) {
-                if (contact != null) {
-                    LinphoneService.instance()
-                            .getNotificationManager()
-                            .displayMessageNotification(
-                                    from.asStringUriOnly(),
-                                    contact.getFullName(),
-                                    contact.getThumbnailUri(),
-                                    getString(R.string.message_cant_be_decrypted_notif),
-                                    cr.getLocalAddress(),
-                                    msg.getTime(),
-                                    null,
-                                    null);
-                } else {
-                    LinphoneService.instance()
-                            .getNotificationManager()
-                            .displayMessageNotification(
-                                    from.asStringUriOnly(),
-                                    from.getUsername(),
-                                    null,
-                                    getString(R.string.message_cant_be_decrypted_notif),
-                                    cr.getLocalAddress(),
-                                    msg.getTime(),
-                                    null,
-                                    null);
-                }
-            }
-        } else if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {
-            final Dialog dialog =
+        if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {
+            // TODO FIXME
+            /*final Dialog dialog =
                     LinphoneActivity.instance()
                             .displayDialog(
                                     getString(R.string.message_cant_be_decrypted)
@@ -1260,7 +1230,7 @@ public class ChatMessagesFragment extends Fragment
                             dialog.dismiss();
                         }
                     });
-            dialog.show();
+            dialog.show();*/
         }
     }
 
@@ -1268,7 +1238,8 @@ public class ChatMessagesFragment extends Fragment
     public void onChatMessageReceived(ChatRoom cr, EventLog event) {
         cr.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
-        LinphoneActivity.instance().refreshMissedChatCountDisplay();
+        ((ContactsActivity) getActivity())
+                .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 
         ChatMessage msg = event.getChatMessage();
         if (msg.getErrorInfo() != null
@@ -1285,7 +1256,8 @@ public class ChatMessagesFragment extends Fragment
         String externalBodyUrl = msg.getExternalBodyUrl();
         Content fileTransferContent = msg.getFileTransferInformation();
         if (externalBodyUrl != null || fileTransferContent != null) {
-            LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+            // TODO FIXME
+            // LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
         }
 
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(event);

@@ -33,6 +33,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
@@ -259,23 +262,40 @@ public abstract class MainActivity extends ThemableActivity
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
+    protected void changeFragment(Fragment fragment, String name, boolean isChild) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        if (isChild) {
+            transaction.addToBackStack(name);
+        }
+
+        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
+        if (isChild && isTablet()) {
+            transaction.replace(R.id.fragmentContainer2, fragment, name);
+        } else {
+            transaction.replace(R.id.fragmentContainer, fragment, name);
+        }
+        transaction.commitAllowingStateLoss();
+        fm.executePendingTransactions();
+    }
+
     // Tab, Top and Status bars
 
-    protected void hideStatusBar() {
+    public void hideStatusBar() {
         findViewById(R.id.status).setVisibility(View.GONE);
     }
 
-    protected void showStatusBar() {
+    public void showStatusBar() {
         findViewById(R.id.status).setVisibility(View.VISIBLE);
     }
 
-    protected void hideTabBar() {
+    public void hideTabBar() {
         if (!isTablet()) { // do not hide if tablet, otherwise won't be able to navigate...
             mTabBar.setVisibility(View.GONE);
         }
     }
 
-    protected void showTabBar() {
+    public void showTabBar() {
         mTabBar.setVisibility(View.VISIBLE);
     }
 

@@ -20,13 +20,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import org.linphone.core.Address;
+import org.linphone.core.Factory;
 import org.linphone.main.MainActivity;
 
 public class ChatActivity extends MainActivity {
+    private Address mDisplayRoomLocalAddress, mDisplayRoomPeerAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ChatRoomsFragment fragment = new ChatRoomsFragment();
+        changeFragment(fragment, "Chat rooms", false);
+        if (isTablet()) {
+            fragment.displayFirstChat();
+        }
     }
 
     @Override
@@ -37,7 +48,78 @@ public class ChatActivity extends MainActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(
+                "DisplayedRoomLocalAddress",
+                mDisplayRoomLocalAddress != null
+                        ? mDisplayRoomLocalAddress.asStringUriOnly()
+                        : null);
+        outState.putSerializable(
+                "DisplayedRoomPeerAddress",
+                mDisplayRoomPeerAddress != null ? mDisplayRoomPeerAddress.asStringUriOnly() : null);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        String localAddr = savedInstanceState.getString("DisplayedRoomLocalAddress");
+        String peerAddr = savedInstanceState.getString("DisplayedRoomPeerAddress");
+        Address localAddress = null;
+        Address peerAddress = null;
+        if (localAddr != null) {
+            localAddress = Factory.instance().createAddress(localAddr);
+        }
+        if (peerAddr != null) {
+            peerAddress = Factory.instance().createAddress(peerAddr);
+        }
+        showChatRoom(localAddress, peerAddress);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+                mDisplayRoomLocalAddress = null;
+                mDisplayRoomPeerAddress = null;
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void goBack() {
+        if (!isTablet()) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+                mDisplayRoomLocalAddress = null;
+                mDisplayRoomPeerAddress = null;
+                return;
+            }
+        }
+        super.goBack();
+    }
+
+    public void showChatRoom(Address localAddress, Address peerAddress, Bundle extras) {
+        if (extras == null) {
+            extras = new Bundle();
+        }
+        if (localAddress != null) {
+            extras.putSerializable("LocalAddress", localAddress.asStringUriOnly());
+            mDisplayRoomLocalAddress = localAddress;
+        }
+        if (peerAddress != null) {
+            extras.putSerializable("PeerAddress", peerAddress.asStringUriOnly());
+            mDisplayRoomPeerAddress = peerAddress;
+        }
+        ChatMessagesFragment fragment = new ChatMessagesFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Chat room", true);
+    }
+
+    public void showChatRoom(Address localAddress, Address peerAddress) {
+        showChatRoom(localAddress, peerAddress, null);
     }
 }

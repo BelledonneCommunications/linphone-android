@@ -85,7 +85,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new TunnelSettingsFragment(),
                                         getString(R.string.pref_tunnel_title));
                     }
@@ -96,7 +96,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new AudioSettingsFragment(),
                                         getString(R.string.pref_audio_title));
                     }
@@ -107,7 +107,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new VideoSettingsFragment(),
                                         getString(R.string.pref_video_title));
                     }
@@ -118,7 +118,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new CallSettingsFragment(),
                                         getString(R.string.pref_call_title));
                     }
@@ -129,7 +129,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new ChatSettingsFragment(),
                                         getString(R.string.pref_chat_title));
                     }
@@ -140,7 +140,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new NetworkSettingsFragment(),
                                         getString(R.string.pref_network_title));
                     }
@@ -151,7 +151,7 @@ public class MenuSettingsFragment extends SettingsFragment {
                     @Override
                     public void onClicked() {
                         ((SettingsActivity) getActivity())
-                                .changeFragment(
+                                .showSettings(
                                         new AdvancedSettingsFragment(),
                                         getString(R.string.pref_advanced_title));
                     }
