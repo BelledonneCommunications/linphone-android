@@ -27,6 +27,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import org.linphone.assistant.MenuAssistantActivity;
+import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
 
 /** Launch Linphone main activity when Service is ready. */
@@ -68,7 +69,7 @@ public class LinphoneLauncherActivity extends Activity {
         if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
             classToStart = MenuAssistantActivity.class;
         } else {
-            classToStart = LinphoneActivity.class;
+            classToStart = DialerActivity.class;
         }
 
         mHandler.postDelayed(

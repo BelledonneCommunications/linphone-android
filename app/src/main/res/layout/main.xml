@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/status"
+        android:id="@+id/status_fragment"
         android:name="org.linphone.fragments.StatusFragment"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -15,7 +15,7 @@
         android:id="@+id/side_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/status">
+        android:layout_below="@id/status_fragment">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -223,63 +223,12 @@
             android:layout_height="match_parent"
             android:layout_gravity="left">
 
-            <RelativeLayout
-                android:id="@+id/side_menu_quit"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
-                android:gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/quit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:padding="5dp"
-                    android:src="@drawable/quit" />
-
-                <TextView
-                    android:id="@+id/quit"
-                    style="@style/quit_button_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toRightOf="@id/quit_button"
-                    android:gravity="center_vertical"
-                    android:text="@string/quit" />
-
-            </RelativeLayout>
-
-            <LinearLayout
+            <fragment
+                android:id="@+id/side_menu_fragment"
+                android:name="org.linphone.main.SideMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/side_menu_quit"
-                android:background="?attr/backgroundColor"
-                android:orientation="vertical">
-
-                <include layout="@layout/side_menu_main_account" />
-
-                <ListView
-                    android:id="@+id/accounts_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:cacheColorHint="@color/transparent_color"
-                    android:choiceMode="singleChoice"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp" />
-
-                <ListView
-                    android:id="@+id/item_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:choiceMode="singleChoice"
-                    android:divider="?dividerColor"
-                    android:dividerHeight="1dp"
-                    android:footerDividersEnabled="true" />
-
-            </LinearLayout>
+                tools:layout="@layout/side_menu" />
 
         </RelativeLayout>
 

@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.AccountCreator;
@@ -36,6 +35,7 @@ import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
+import org.linphone.main.DialerActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ThemableActivity;
 
@@ -144,7 +144,7 @@ public abstract class AssistantActivity extends ThemableActivity
             if (openH264 && abiSupported && androidVersionOk && !codecFound) {
                 intent = new Intent(this, OpenH264DownloadAssistantActivity.class);
             } else {*/
-            intent = new Intent(this, LinphoneActivity.class);
+            intent = new Intent(this, DialerActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             // }
         }

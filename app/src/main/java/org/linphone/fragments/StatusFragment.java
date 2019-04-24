@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
@@ -63,6 +63,11 @@ public class StatusFragment extends Fragment {
     private CoreListenerStub mListener;
     private Dialog mZrtpDialog = null;
     private int mDisplayedQuality = -1;
+    private MenuClikedListener mMenuListener;
+
+    public void setMenuListener(MenuClikedListener listener) {
+        mMenuListener = listener;
+    }
 
     @Override
     public View onCreateView(
@@ -76,6 +81,17 @@ public class StatusFragment extends Fragment {
         mMenu = view.findViewById(R.id.side_menu_button);
         mVoicemail = view.findViewById(R.id.voicemail);
         mVoicemailCount = view.findViewById(R.id.voicemail_count);
+
+        mMenuListener = null;
+        mMenu.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mMenuListener != null) {
+                            mMenuListener.onMenuCliked();
+                        }
+                    }
+                });
 
         // We create it once to not delay the first display
         populateSliderContent();
@@ -490,5 +506,9 @@ public class StatusFragment extends Fragment {
                     });
             mZrtpDialog.show();
         }
+    }
+
+    public interface MenuClikedListener {
+        void onMenuCliked();
     }
 }

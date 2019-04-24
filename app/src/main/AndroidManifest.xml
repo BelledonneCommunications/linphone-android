@@ -133,6 +133,14 @@
         </activity>
 
         <activity
+            android:name=".main.DialerActivity"
+            android:theme="@style/LinphoneStyleLight">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".call.CallIncomingActivity"
             android:launchMode="singleTop"
             android:noHistory="true"
