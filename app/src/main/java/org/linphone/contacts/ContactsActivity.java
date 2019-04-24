@@ -21,13 +21,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import org.linphone.main.MainActivity;
 
 public class ContactsActivity extends MainActivity {
+    private LinphoneContact mDisplayedContact;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mPermissionsToHave =
+                new String[] {
+                    Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS
+                };
+
+        ContactsFragment fragment = new ContactsFragment();
+        changeFragment(fragment, "Contacts", false);
+        if (isTablet()) {
+            fragment.displayFirstContact();
+        }
     }
 
     @Override
@@ -35,15 +49,56 @@ public class ContactsActivity extends MainActivity {
         super.onResume();
 
         mContactsSelected.setVisibility(View.VISIBLE);
-
-        mPermissionsToHave =
-                new String[] {
-                    Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS
-                };
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(
+                "DisplayedContact", mDisplayedContact != null ? mDisplayedContact : null);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        LinphoneContact contact = (LinphoneContact) savedInstanceState.get("DisplayedContact");
+        if (contact != null) {
+            showContactDetails(contact);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+                mDisplayedContact = null;
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void goBack() {
+        if (!isTablet()) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+                mDisplayedContact = null;
+                return;
+            }
+        }
+        super.goBack();
+    }
+
+    public void showContactDetails(LinphoneContact contact) {
+        Bundle extras = new Bundle();
+        if (contact != null) {
+            extras.putSerializable("Contact", contact);
+        }
+        ContactDetailsFragment fragment = new ContactDetailsFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Contact detail", true);
+        mDisplayedContact = contact;
     }
 }

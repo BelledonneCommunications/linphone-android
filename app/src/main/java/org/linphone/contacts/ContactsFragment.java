@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,16 +31,15 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.SelectableHelper;
 
 public class ContactsFragment extends Fragment
@@ -55,7 +53,7 @@ public class ContactsFragment extends Fragment
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
     private int mLastKnownPosition;
-    private boolean mEditOnClick = false, mEditConsumed = false, mOnlyDisplayChatAddress = false;
+    private boolean mEditOnClick = false, mEditConsumed = false;
     private String mSipAddressToAdd, mDisplayName = null;
     private SearchView mSearchView;
     private ProgressBar mContactsFetchInProgress;
@@ -79,11 +77,11 @@ public class ContactsFragment extends Fragment
             if (getArguments().getString("DisplayName") != null) {
                 mDisplayName = getArguments().getString("DisplayName");
             }
-            mOnlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
+            // TODO FIXME ? mOnlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
 
             if (getArguments().getBoolean("EditOnClick")) {
                 Toast.makeText(
-                                LinphoneActivity.instance(),
+                                getActivity(),
                                 R.string.toast_choose_contact_for_edition,
                                 Toast.LENGTH_LONG)
                         .show();
@@ -164,8 +162,6 @@ public class ContactsFragment extends Fragment
         if (!ContactsManager.getInstance().contactsFetchedOnce()) {
             if (ContactsManager.getInstance().hasReadContactsAccess()) {
                 mContactsFetchInProgress.setVisibility(View.VISIBLE);
-            } else {
-                LinphoneActivity.instance().checkAndRequestReadContactsPermission();
             }
         } else {
             if (!mOnlyDisplayLinphoneContacts
@@ -210,9 +206,10 @@ public class ContactsFragment extends Fragment
                 && mContactsList.getAdapter() != null
                 && mContactsList.getAdapter().getItemCount() > 0) {
             ContactsAdapter mAdapt = (ContactsAdapter) mContactsList.getAdapter();
-            LinphoneActivity.instance().displayContact((LinphoneContact) mAdapt.getItem(0), false);
+            ((ContactsActivity) getActivity())
+                    .showContactDetails((LinphoneContact) mAdapt.getItem(0));
         } else {
-            LinphoneActivity.instance().displayEmptyFragment();
+            ((ContactsActivity) getActivity()).showContactDetails(null);
         }
     }
 
@@ -314,7 +311,7 @@ public class ContactsFragment extends Fragment
             ContactsManager.getInstance().editContact(getActivity(), contact, mSipAddressToAdd);
         } else {
             mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
-            LinphoneActivity.instance().displayContact(contact, mOnlyDisplayChatAddress);
+            ((ContactsActivity) getActivity()).showContactDetails(contact);
         }
     }
 
@@ -330,7 +327,7 @@ public class ContactsFragment extends Fragment
             ContactsManager.getInstance().editContact(getActivity(), contact, mSipAddressToAdd);
         } else {
             mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
-            LinphoneActivity.instance().displayContact(contact, mOnlyDisplayChatAddress);
+            ((ContactsActivity) getActivity()).showContactDetails(contact);
         }
     }
 
@@ -353,12 +350,9 @@ public class ContactsFragment extends Fragment
             mSipAddressToAdd = null;
         }
 
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACTS_LIST);
-            mOnlyDisplayLinphoneContacts =
-                    ContactsManager.getInstance().isLinphoneContactsPrefered()
-                            || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
-        }
+        mOnlyDisplayLinphoneContacts =
+                ContactsManager.getInstance().isLinphoneContactsPrefered()
+                        || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
         changeContactsToggle();
         invalidate();
     }
@@ -371,10 +365,6 @@ public class ContactsFragment extends Fragment
 
     @Override
     public void onContactsUpdated() {
-        if (!LinphoneActivity.isInstanciated()
-                || (LinphoneActivity.instance().getCurrentFragment()
-                                != FragmentsAvailable.CONTACTS_LIST
-                        && !LinphoneActivity.instance().isTablet())) return;
         if (mContactAdapter != null) {
             mContactAdapter.updateDataSet(
                     mOnlyDisplayLinphoneContacts

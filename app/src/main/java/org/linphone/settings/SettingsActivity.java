@@ -21,10 +21,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
 import org.linphone.R;
-import org.linphone.compatibility.Compatibility;
 import org.linphone.main.MainActivity;
 
 public class SettingsActivity extends MainActivity {
@@ -71,22 +69,7 @@ public class SettingsActivity extends MainActivity {
         super.goBack();
     }
 
-    private void changeFragment(SettingsFragment fragment, String name, boolean addToBackStack) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        if (addToBackStack) {
-            transaction.addToBackStack(name);
-        }
-
-        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
-        transaction.replace(R.id.fragmentContainer, fragment, name);
-        transaction.commitAllowingStateLoss();
-        fm.executePendingTransactions();
-
-        showTopBarWithTitle(name);
-    }
-
-    public void changeFragment(SettingsFragment fragment, String name) {
+    public void showSettings(Fragment fragment, String name) {
         changeFragment(fragment, name, true);
     }
 }

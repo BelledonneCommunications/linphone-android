@@ -80,9 +80,6 @@ import org.linphone.chat.ImdnFragment;
 import org.linphone.chat.ImdnOldFragment;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactAddress;
-import org.linphone.contacts.ContactDetailsFragment;
-import org.linphone.contacts.ContactEditorFragment;
-import org.linphone.contacts.ContactsFragment;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
@@ -724,15 +721,15 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 case HISTORY_DETAIL:
                     mFragment = new HistoryDetailFragment();
                     break;*/
-            case CONTACTS_LIST:
-                mFragment = new ContactsFragment();
-                break;
-            case CONTACT_DETAIL:
-                mFragment = new ContactDetailsFragment();
-                break;
-            case CONTACT_EDITOR:
-                mFragment = new ContactEditorFragment();
-                break;
+                /*case CONTACTS_LIST:
+                    mFragment = new ContactsFragment();
+                    break;
+                case CONTACT_DETAIL:
+                    mFragment = new ContactDetailsFragment();
+                    break;
+                case CONTACT_EDITOR:
+                    mFragment = new ContactEditorFragment();
+                    break;*/
             case DIALER:
                 mFragment = new DialerFragment();
                 if (extras == null) {
@@ -797,12 +794,12 @@ public class LinphoneActivity extends LinphoneGenericActivity
                         /*case HISTORY_LIST:
                         ((HistoryFragment) mFragment).displayFirstLog();
                         break;*/
-                    case CONTACTS_LIST:
-                        ((ContactsFragment) mFragment).displayFirstContact();
-                        break;
-                    case CHAT_LIST:
-                        ((ChatRoomsFragment) mFragment).displayFirstChat();
-                        break;
+                        /*case CONTACTS_LIST:
+                            ((ContactsFragment) mFragment).displayFirstContact();
+                            break;
+                        case CHAT_LIST:
+                            ((ChatRoomsFragment) mFragment).displayFirstChat();
+                            break;*/
                 }
             } else {
                 changeFragment(mFragment, newFragmentType);
@@ -952,8 +949,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         if (fragment2 != null
                 && fragment2.isVisible()
                 && mCurrentFragment == FragmentsAvailable.CONTACT_DETAIL) {
-            ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
-            contactFragment.changeDisplayedContact(contact);
+            /*ContactDetailsFragment contactFragment = (ContactDetailsFragment) fragment2;
+            contactFragment.changeDisplayedContact(contact);*/
         } else {
             Bundle extras = new Bundle();
             extras.putSerializable("Contact", contact);

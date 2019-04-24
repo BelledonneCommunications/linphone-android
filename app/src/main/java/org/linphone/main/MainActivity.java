@@ -33,6 +33,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
@@ -257,6 +260,23 @@ public abstract class MainActivity extends ThemableActivity
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(getString(R.string.sync_account_type));
         android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    protected void changeFragment(Fragment fragment, String name, boolean isChild) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        if (isChild) {
+            transaction.addToBackStack(name);
+        }
+
+        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
+        if (isChild && isTablet()) {
+            transaction.replace(R.id.fragmentContainer2, fragment, name);
+        } else {
+            transaction.replace(R.id.fragmentContainer, fragment, name);
+        }
+        transaction.commitAllowingStateLoss();
+        fm.executePendingTransactions();
     }
 
     // Tab, Top and Status bars
