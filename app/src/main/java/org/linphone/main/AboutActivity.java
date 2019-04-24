@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -53,7 +54,10 @@ public class AboutActivity extends MainActivity {
         // Uses the fragment container layout to inflate the about view instead of using a fragment
         View aboutView = LayoutInflater.from(this).inflate(R.layout.about, null, false);
         LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
-        fragmentContainer.addView(aboutView);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        fragmentContainer.addView(aboutView, params);
 
         TextView aboutVersion = findViewById(R.id.about_android_version);
         TextView aboutLiblinphoneVersion = findViewById(R.id.about_liblinphone_sdk_version);

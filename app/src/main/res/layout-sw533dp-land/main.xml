@@ -62,41 +62,29 @@
                 android:layout_below="@id/top_bar"
                 android:layout_toEndOf="@+id/footer"
                 android:layout_toRightOf="@+id/footer"
+                android:baselineAligned="false"
                 android:orientation="vertical">
 
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/fragmentContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/fragmentContainer2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
+                        android:background="?attr/dividerColor" />
 
-                        <LinearLayout
-                            android:id="@+id/fragmentContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal" />
-
-                        <LinearLayout
-                            android:id="@+id/fragmentContainer2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent"
-                                android:background="?attr/dividerColor" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </FrameLayout>
+                </LinearLayout>
 
             </LinearLayout>
 

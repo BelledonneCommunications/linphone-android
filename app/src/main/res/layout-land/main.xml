@@ -57,24 +57,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/top_bar"
                 android:layout_toRightOf="@+id/footer"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:id="@+id/fragmentContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" />
-                </FrameLayout>
-
-            </LinearLayout>
+                android:orientation="horizontal" />
 
             <LinearLayout
                 android:id="@+id/footer"

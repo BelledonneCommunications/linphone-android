@@ -23,6 +23,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,7 +58,10 @@ public class RecordingsActivity extends MainActivity
         View recordingsView =
                 LayoutInflater.from(this).inflate(R.layout.recordings_list, null, false);
         LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
-        fragmentContainer.addView(recordingsView);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        fragmentContainer.addView(recordingsView, params);
 
         mBackButton = findViewById(R.id.back);
         mBackButton.setOnClickListener(

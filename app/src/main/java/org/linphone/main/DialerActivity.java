@@ -25,6 +25,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import org.linphone.LinphoneManager;
@@ -55,7 +56,10 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         // Uses the fragment container layout to inflate the dialer view instead of using a fragment
         View dialerView = LayoutInflater.from(this).inflate(R.layout.dialer, null, false);
         LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
-        fragmentContainer.addView(dialerView);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        fragmentContainer.addView(dialerView, params);
 
         mAddress = findViewById(R.id.address);
         mAddress.setAddressListener(this);
