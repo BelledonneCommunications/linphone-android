@@ -1,6 +1,8 @@
+package org.linphone.chat;
+
 /*
 DevicesFragment.java
-Copyright (C) 2010-2018  Belledonne Communications, Grenoble, France
+Copyright (C) 2018 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,8 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,28 +29,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import java.util.Arrays;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
-import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.ParticipantDevice;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.LinphoneUtils;
 
 public class DevicesFragment extends Fragment {
-    private LayoutInflater mInflater;
-    private ImageView mBackButton;
     private TextView mTitle;
     private ExpandableListView mExpandableList;
     private DevicesAdapter mAdapter;
 
-    private String mLocalSipUri, mRoomUri;
     private Address mLocalSipAddr, mRoomAddr;
     private ChatRoom mRoom;
     private boolean mOnlyDisplayChilds;
@@ -62,14 +57,13 @@ public class DevicesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mLocalSipUri = getArguments().getString("LocalSipUri");
-            mLocalSipAddr = LinphoneManager.getLc().createAddress(mLocalSipUri);
-            mRoomUri = getArguments().getString("RemoteSipUri");
-            mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
+            String localSipUri = getArguments().getString("LocalSipUri");
+            mLocalSipAddr = Factory.instance().createAddress(localSipUri);
+            String roomUri = getArguments().getString("RemoteSipUri");
+            mRoomAddr = Factory.instance().createAddress(roomUri);
         }
 
-        mInflater = inflater;
-        View view = mInflater.inflate(R.layout.chat_devices, container, false);
+        View view = inflater.inflate(R.layout.chat_devices, container, false);
 
         mOnlyDisplayChilds = false;
 
@@ -85,7 +79,7 @@ public class DevicesFragment extends Fragment {
                             long l) {
                         ParticipantDevice device =
                                 (ParticipantDevice) mAdapter.getChild(groupPosition, childPosition);
-                        CallManager.getInstance().inviteAddress(device.getAddress(), true);
+                        LinphoneManager.getCallManager().inviteAddress(device.getAddress(), true);
                         return false;
                     }
                 });
@@ -101,13 +95,15 @@ public class DevicesFragment extends Fragment {
                             // in this case groups are childs, so call on click
                             ParticipantDevice device =
                                     (ParticipantDevice) mAdapter.getGroup(groupPosition);
-                            CallManager.getInstance().inviteAddress(device.getAddress(), true);
+                            LinphoneManager.getCallManager()
+                                    .inviteAddress(device.getAddress(), true);
                             return true;
                         } else {
                             if (mAdapter.getChildrenCount(groupPosition) == 1) {
                                 ParticipantDevice device =
                                         (ParticipantDevice) mAdapter.getChild(groupPosition, 0);
-                                CallManager.getInstance().inviteAddress(device.getAddress(), true);
+                                LinphoneManager.getCallManager()
+                                        .inviteAddress(device.getAddress(), true);
                                 return true;
                             }
                         }
@@ -120,16 +116,12 @@ public class DevicesFragment extends Fragment {
         mTitle = view.findViewById(R.id.title);
         initHeader();
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().goToChat(mLocalSipUri, mRoomUri, null);
-                        } else {
-                            LinphoneActivity.instance().onBackPressed();
-                        }
+                        ((ChatActivity) getActivity()).goBack();
                     }
                 });
 
@@ -140,15 +132,11 @@ public class DevicesFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DEVICES);
-        }
-
         initValues();
     }
 
     private void initChatRoom() {
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
     }
 

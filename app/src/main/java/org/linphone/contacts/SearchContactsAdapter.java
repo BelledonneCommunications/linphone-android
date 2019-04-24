@@ -26,8 +26,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
+import java.util.Objects;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.FriendCapability;
@@ -41,7 +42,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
     private List<SearchResult> mContacts;
     private ArrayList<ContactAddress> mContactsSelected;
     private boolean mOnlySipContact = false;
-    private SearchContactViewHolder.ClickListener mListener;
+    private final SearchContactViewHolder.ClickListener mListener;
     private final boolean mIsOnlyOnePersonSelection;
     private String mPreviousSearch;
     private boolean mSecurityEnabled;
@@ -116,12 +117,6 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                 holder.name.setVisibility(View.VISIBLE);
                 holder.name.setText(searchResult.getAddress().getDisplayName());
             }
-        } else if (searchResult.getAddress() != null) {
-            holder.name.setVisibility(View.VISIBLE);
-            holder.name.setText(
-                    (searchResult.getAddress().getDisplayName() != null)
-                            ? searchResult.getAddress().getDisplayName()
-                            : searchResult.getAddress().getUsername());
         }
 
         holder.disabled.setVisibility(View.GONE);
@@ -144,7 +139,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                 holder.disabled.setVisibility(View.VISIBLE);
             } else if (mSecurityEnabled || !mIsOnlyOnePersonSelection) {
                 ProxyConfig lpc =
-                        LinphoneManager.getLcIfManagerNotDestroyedOrNull().getDefaultProxyConfig();
+                        Objects.requireNonNull(LinphoneManager.getCore()).getDefaultProxyConfig();
                 if (lpc != null
                         && searchResult.getAddress() != null
                         && lpc.getIdentityAddress().weakEqual(searchResult.getAddress())) {
@@ -182,7 +177,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         return position;
     }
 
-    public synchronized boolean isContactSelected(SearchResult sr) {
+    private synchronized boolean isContactSelected(SearchResult sr) {
         for (ContactAddress c : mContactsSelected) {
             Address addr = c.getAddress();
             if (addr != null && sr.getAddress() != null) {
@@ -240,7 +235,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
         mPreviousSearch = search;
 
         String domain = "";
-        ProxyConfig prx = LinphoneManager.getLc().getDefaultProxyConfig();
+        ProxyConfig prx = Objects.requireNonNull(LinphoneManager.getCore()).getDefaultProxyConfig();
         if (prx != null) domain = prx.getDomain();
         SearchResult[] searchResults =
                 ContactsManager.getInstance()
@@ -248,7 +243,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                         .getContactListFromFilter(search, mOnlySipContact ? domain : "");
 
         for (SearchResult sr : searchResults) {
-            if (LinphoneActivity.instance()
+            if (LinphoneService.instance()
                     .getResources()
                     .getBoolean(R.bool.hide_sip_contacts_without_presence)) {
                 if (sr.getFriend() != null) {

@@ -31,28 +31,24 @@ import android.widget.ListView;
 import org.linphone.R;
 import org.linphone.core.DialPlan;
 
-public class CountryPicker {
-    private Context mContext;
-    private LayoutInflater mInflater;
-    private CountryAdapter mAdapter;
-    private ListView mList;
+class CountryPicker {
+    private final LayoutInflater mInflater;
+    private final CountryAdapter mAdapter;
     private EditText mSearch;
-    private ImageView mClear;
-    private CountryPickedListener mListener;
+    private final CountryPickedListener mListener;
 
     public CountryPicker(Context context, CountryPickedListener listener) {
-        mContext = context;
         mListener = listener;
-        mInflater = LayoutInflater.from(mContext);
-        mAdapter = new CountryAdapter(mContext, mInflater);
+        mInflater = LayoutInflater.from(context);
+        mAdapter = new CountryAdapter(context, mInflater);
     }
 
     private View createView() {
         View view = mInflater.inflate(R.layout.assistant_country_list, null, false);
 
-        mList = view.findViewById(R.id.countryList);
-        mList.setAdapter(mAdapter);
-        mList.setOnItemClickListener(
+        ListView list = view.findViewById(R.id.countryList);
+        list.setAdapter(mAdapter);
+        list.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(
@@ -85,8 +81,8 @@ public class CountryPicker {
                 });
         mSearch.setText("");
 
-        mClear = view.findViewById(R.id.clear_field);
-        mClear.setOnClickListener(
+        ImageView clear = view.findViewById(R.id.clear_field);
+        clear.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -98,8 +94,7 @@ public class CountryPicker {
     }
 
     public View getView() {
-        View view = createView();
-        return view;
+        return createView();
     }
 
     public interface CountryPickedListener {

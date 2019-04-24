@@ -2,7 +2,7 @@ package org.linphone;
 
 /*
 LinphoneService.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -26,13 +26,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.view.WindowManager;
-import java.util.ArrayList;
 import org.linphone.call.CallIncomingActivity;
+import org.linphone.call.CallOutgoingActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Call.State;
@@ -50,6 +49,7 @@ import org.linphone.mediastream.Version;
 import org.linphone.notifications.NotificationsManager;
 import org.linphone.receivers.BluetoothManager;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.utils.ActivityMonitor;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.LinphoneGL2JNIViewOverlay;
 import org.linphone.views.LinphoneOverlay;
@@ -67,25 +67,15 @@ import org.linphone.views.LinphoneTextureViewOverlay;
  *   <li>Delegating GUI state change actions to GUI listener
  */
 public final class LinphoneService extends Service {
-    /* Listener needs to be implemented in the Service as it calls
-     * setLatestEventInfo and startActivity() which needs a context.
-     */
     private static final String START_LINPHONE_LOGS = " ==== Phone information dump ====";
-
     private static LinphoneService sInstance;
 
     public final Handler handler = new Handler();
-
-    private boolean mTestDelayElapsed = true;
-    private CoreListenerStub mListener;
-    private WindowManager mWindowManager;
     private LinphoneOverlay mOverlay;
+    private WindowManager mWindowManager;
     private Application.ActivityLifecycleCallbacks mActivityCallbacks;
-    private NotificationsManager mNotificationManager;
-    private String mIncomingReceivedActivityName;
-    private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
 
-    private LoggingServiceListener mJavaLoggingService =
+    private final LoggingServiceListener mJavaLoggingService =
             new LoggingServiceListener() {
                 @Override
                 public void onLogMessageWritten(
@@ -110,57 +100,88 @@ public final class LinphoneService extends Service {
                     }
                 }
             };
+    private CoreListenerStub mListener;
+    private NotificationsManager mNotificationManager;
+    private LinphoneManager mLinphoneManager;
+    private ContactsManager mContactsManager;
+    private BluetoothManager mBluetoothManager;
 
-    public LoggingServiceListener getJavaLoggingService() {
-        return mJavaLoggingService;
-    }
+    private Class<? extends Activity> mIncomingReceivedActivity = CallIncomingActivity.class;
 
-    public static boolean isReady() {
-        return sInstance != null && sInstance.mTestDelayElapsed;
-    }
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    public static LinphoneService instance() {
-        if (isReady()) return sInstance;
+        setupActivityMonitor();
 
-        throw new RuntimeException("LinphoneService not instantiated yet");
-    }
-
-    public NotificationsManager getNotificationManager() {
-        return mNotificationManager;
-    }
-
-    public void removeForegroundServiceNotificationIfPossible() {
-        mNotificationManager.removeForegroundServiceNotificationIfPossible();
-    }
-
-    public Class<? extends Activity> getIncomingReceivedActivity() {
-        return mIncomingReceivedActivity;
-    }
-
-    public void setCurrentlyDisplayedChatRoom(String address) {
-        if (address != null) {
-            mNotificationManager.resetMessageNotifCount(address);
+        // Needed in order for the two next calls to succeed, libraries must have been loaded first
+        LinphonePreferences.instance().setContext(this);
+        Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
+        boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
+        LinphoneUtils.configureLoggingService(isDebugEnabled, getString(R.string.app_name));
+        // LinphoneService isn't ready yet so we have to manually set up the Java logging service
+        if (LinphonePreferences.instance().useJavaLogger()) {
+            Factory.instance().getLoggingService().addListener(mJavaLoggingService);
         }
-    }
 
-    private void onBackgroundMode() {
-        Log.i("[Service] App has entered background mode");
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterBackground();
+        // Dump some debugging information to the logs
+        Log.i(START_LINPHONE_LOGS);
+        dumpDeviceInformation();
+        dumpInstalledLinphoneInformation();
+
+        String incomingReceivedActivityName =
+                LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
+        try {
+            mIncomingReceivedActivity =
+                    (Class<? extends Activity>) Class.forName(incomingReceivedActivityName);
+        } catch (ClassNotFoundException e) {
+            Log.e(e);
         }
-    }
 
-    private void onForegroundMode() {
-        Log.i("[Service] App has left background mode");
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            LinphoneManager.getLcIfManagerNotDestroyedOrNull().enterForeground();
-        }
-    }
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-    private void setupActivityMonitor() {
-        if (mActivityCallbacks != null) return;
-        getApplication()
-                .registerActivityLifecycleCallbacks(mActivityCallbacks = new ActivityMonitor());
+        mListener =
+                new CoreListenerStub() {
+                    @Override
+                    public void onCallStateChanged(
+                            Core core, Call call, Call.State state, String message) {
+                        if (sInstance == null) {
+                            Log.i(
+                                    "[Service] Service not ready, discarding call state change to ",
+                                    state.toString());
+                            return;
+                        }
+
+                        if (getResources().getBoolean(R.bool.enable_call_notification)) {
+                            mNotificationManager.displayCallNotification(call);
+                        }
+
+                        if (state == Call.State.IncomingReceived
+                                || state == State.IncomingEarlyMedia) {
+                            if (!mLinphoneManager.getCallGsmON()) onIncomingReceived();
+                        } else if (state == State.OutgoingInit) {
+                            onOutgoingStarted();
+                        } else if (state == State.End
+                                || state == State.Released
+                                || state == State.Error) {
+                            destroyOverlay();
+
+                            if (state == State.Released
+                                    && call.getCallLog().getStatus() == Call.Status.Missed) {
+                                mNotificationManager.displayMissedCallNotification(call);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onGlobalStateChanged(
+                            Core core, GlobalState state, String message) {}
+
+                    @Override
+                    public void onRegistrationStateChanged(
+                            Core core, ProxyConfig cfg, RegistrationState state, String smessage) {}
+                };
     }
 
     @Override
@@ -178,64 +199,12 @@ public final class LinphoneService extends Service {
             return START_STICKY;
         }
 
-        LinphoneManager.createAndStart(this, isPush);
-
+        mLinphoneManager = new LinphoneManager(this);
         sInstance = this; // sInstance is ready once linphone manager has been created
+        mLinphoneManager.startLibLinphone(isPush);
+        LinphoneManager.getCore().addListener(mListener);
+
         mNotificationManager = new NotificationsManager(this);
-        LinphoneManager.getLc()
-                .addListener(
-                        mListener =
-                                new CoreListenerStub() {
-                                    @Override
-                                    public void onCallStateChanged(
-                                            Core lc, Call call, Call.State state, String message) {
-                                        if (sInstance == null) {
-                                            Log.i(
-                                                    "[Service] Service not ready, discarding call state change to ",
-                                                    state.toString());
-                                            return;
-                                        }
-
-                                        if (getResources()
-                                                .getBoolean(R.bool.enable_call_notification)) {
-                                            mNotificationManager.displayCallNotification(call);
-                                        }
-
-                                        if (state == Call.State.IncomingReceived
-                                                || state == State.IncomingEarlyMedia) {
-                                            if (!LinphoneManager.getInstance().getCallGsmON())
-                                                onIncomingReceived();
-                                        }
-
-                                        if (state == State.End
-                                                || state == State.Released
-                                                || state == State.Error) {
-                                            destroyOverlay();
-                                        }
-
-                                        if (state == State.Released
-                                                && call.getCallLog().getStatus()
-                                                        == Call.Status.Missed) {
-                                            mNotificationManager.displayMissedCallNotification(
-                                                    call);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onGlobalStateChanged(
-                                            Core lc, GlobalState state, String message) {
-                                        // TODO global state if ON
-                                    }
-
-                                    @Override
-                                    public void onRegistrationStateChanged(
-                                            Core lc,
-                                            ProxyConfig cfg,
-                                            RegistrationState state,
-                                            String smessage) {
-                                        // TODO registration status
-                                    }
-                                });
 
         if (Version.sdkAboveOrEqual(Version.API26_O_80)
                 && intent != null
@@ -243,71 +212,114 @@ public final class LinphoneService extends Service {
             mNotificationManager.startForeground();
         }
 
+        mContactsManager = new ContactsManager(this, handler);
         if (!Version.sdkAboveOrEqual(Version.API26_O_80)
-                || (ContactsManager.getInstance() != null
-                        && ContactsManager.getInstance().hasReadContactsAccess())) {
+                || (mContactsManager.hasReadContactsAccess())) {
             getContentResolver()
                     .registerContentObserver(
-                            ContactsContract.Contacts.CONTENT_URI,
-                            true,
-                            ContactsManager.getInstance());
+                            ContactsContract.Contacts.CONTENT_URI, true, mContactsManager);
         }
 
-        if (!mTestDelayElapsed) {
-            // Only used when testing. Simulates a 5 seconds delay for launching service
-            handler.postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            mTestDelayElapsed = true;
-                        }
-                    },
-                    5000);
-        }
-
-        BluetoothManager.getInstance().initBluetooth();
+        mBluetoothManager = new BluetoothManager();
 
         return START_STICKY;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public void onTaskRemoved(Intent rootIntent) {
+        boolean serviceNotif = LinphonePreferences.instance().getServiceNotificationVisibility();
+        if (serviceNotif) {
+            Log.i("[Service] Service is running in foreground, don't stop it");
+        } else if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
+            Log.i("[Service] Task removed, stop service");
+            Core core = LinphoneManager.getCore();
+            if (core != null) {
+                core.terminateAllCalls();
+            }
 
-        setupActivityMonitor();
+            // If push is enabled, don't unregister account, otherwise do unregister
+            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
+                if (core != null) core.setNetworkReachable(false);
+            }
+            stopSelf();
+        }
+        super.onTaskRemoved(rootIntent);
+    }
 
-        // Needed in order for the two next calls to succeed, libraries must have been loaded first
-        LinphonePreferences.instance().setContext(getBaseContext());
-        Factory.instance().setLogCollectionPath(getFilesDir().getAbsolutePath());
-        boolean isDebugEnabled = LinphonePreferences.instance().isDebugEnabled();
-        LinphoneUtils.configureLoggingService(isDebugEnabled, getString(R.string.app_name));
-        // LinphoneService isn't ready yet so we have to manually set up the Java logging service
+    @SuppressWarnings("UnusedAssignment")
+    @Override
+    public synchronized void onDestroy() {
+        if (mActivityCallbacks != null) {
+            getApplication().unregisterActivityLifecycleCallbacks(mActivityCallbacks);
+            mActivityCallbacks = null;
+        }
+        destroyOverlay();
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
+            core = null; // To allow the gc calls below to free the Core
+        }
+
+        mLinphoneManager.destroy();
+        sInstance = null;
+
+        // Make sure our notification is gone.
+        if (mNotificationManager != null) {
+            mNotificationManager.destroy();
+        }
+        mContactsManager.destroy();
+        mBluetoothManager.destroy();
+
         if (LinphonePreferences.instance().useJavaLogger()) {
-            Factory.instance().getLoggingService().addListener(mJavaLoggingService);
+            Factory.instance().getLoggingService().removeListener(mJavaLoggingService);
         }
+        LinphonePreferences.instance().destroy();
 
-        // Dump some debugging information to the logs
-        Log.i(START_LINPHONE_LOGS);
-        dumpDeviceInformation();
-        dumpInstalledLinphoneInformation();
+        super.onDestroy();
+    }
 
-        mIncomingReceivedActivityName =
-                LinphonePreferences.instance().getActivityToLaunchOnIncomingReceived();
-        try {
-            mIncomingReceivedActivity =
-                    (Class<? extends Activity>) Class.forName(mIncomingReceivedActivityName);
-        } catch (ClassNotFoundException e) {
-            Log.e(e);
-        }
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+    public static boolean isReady() {
+        return sInstance != null;
+    }
+
+    public static LinphoneService instance() {
+        if (isReady()) return sInstance;
+
+        throw new RuntimeException("LinphoneService not instantiated yet");
+    }
+
+    /* Managers accessors */
+
+    public LoggingServiceListener getJavaLoggingService() {
+        return mJavaLoggingService;
+    }
+
+    public NotificationsManager getNotificationManager() {
+        return mNotificationManager;
+    }
+
+    public LinphoneManager getLinphoneManager() {
+        return mLinphoneManager;
+    }
+
+    public ContactsManager getContactsManager() {
+        return mContactsManager;
+    }
+
+    public BluetoothManager getBluetoothManager() {
+        return mBluetoothManager;
     }
 
     public void createOverlay() {
         if (mOverlay != null) destroyOverlay();
 
-        Core core = LinphoneManager.getLc();
+        Core core = LinphoneManager.getCore();
         Call call = core.getCurrentCall();
         if (call == null || !call.getCurrentParams().videoEnabled()) return;
 
@@ -328,6 +340,12 @@ public final class LinphoneService extends Service {
             mOverlay.destroy();
         }
         mOverlay = null;
+    }
+
+    private void setupActivityMonitor() {
+        if (mActivityCallbacks != null) return;
+        getApplication()
+                .registerActivityLifecycleCallbacks(mActivityCallbacks = new ActivityMonitor());
     }
 
     private void dumpDeviceInformation() {
@@ -361,183 +379,17 @@ public final class LinphoneService extends Service {
         }
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        boolean serviceNotif = LinphonePreferences.instance().getServiceNotificationVisibility();
-        if (serviceNotif) {
-            Log.i("[Service] Service is running in foreground, don't stop it");
-        } else if (getResources().getBoolean(R.bool.kill_service_with_task_manager)) {
-            Log.i("[Service] Task removed, stop service");
-            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-            if (lc != null) {
-                lc.terminateAllCalls();
-            }
-
-            // If push is enabled, don't unregister account, otherwise do unregister
-            if (LinphonePreferences.instance().isPushNotificationEnabled()) {
-                if (lc != null) lc.setNetworkReachable(false);
-            }
-            stopSelf();
-        }
-        super.onTaskRemoved(rootIntent);
-    }
-
-    @Override
-    public synchronized void onDestroy() {
-        if (mActivityCallbacks != null) {
-            getApplication().unregisterActivityLifecycleCallbacks(mActivityCallbacks);
-            mActivityCallbacks = null;
-        }
-        destroyOverlay();
-
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
-            lc = null; // To allow the gc calls below to free the Core
-        }
-
-        sInstance = null;
-        LinphoneManager.destroy();
-
-        // Make sure our notification is gone.
-        if (mNotificationManager != null) {
-            mNotificationManager.destroy();
-        }
-
-        // This will prevent the app from crashing if the service gets killed in background mode
-        if (LinphoneActivity.isInstanciated()) {
-            Log.w("[Service] Service is getting destroyed, finish LinphoneActivity");
-            LinphoneActivity.instance().finish();
-        }
-
-        if (LinphonePreferences.instance().useJavaLogger()) {
-            Factory.instance().getLoggingService().removeListener(mJavaLoggingService);
-        }
-
-        super.onDestroy();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setActivityToLaunchOnIncomingReceived(String activityName) {
-        try {
-            mIncomingReceivedActivity = (Class<? extends Activity>) Class.forName(activityName);
-            mIncomingReceivedActivityName = activityName;
-            LinphonePreferences.instance()
-                    .setActivityToLaunchOnIncomingReceived(mIncomingReceivedActivityName);
-        } catch (ClassNotFoundException e) {
-            Log.e(e);
-        }
-    }
-
     private void onIncomingReceived() {
         Intent intent = new Intent().setClass(this, mIncomingReceivedActivity);
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().startActivity(intent);
-        } else {
-            // This flag is required to start an Activity from a Service context
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
+        // This flag is required to start an Activity from a Service context
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
-    /*Believe me or not, but knowing the application visibility state on Android is a nightmare.
-    After two days of hard work I ended with the following class, that does the job more or less reliabily.
-    */
-    class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
-        private final ArrayList<Activity> activities = new ArrayList<>();
-        private boolean mActive = false;
-        private int mRunningActivities = 0;
-        private InactivityChecker mLastChecker;
-
-        @Override
-        public synchronized void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            Log.i("[Service] Activity created:" + activity);
-            if (!activities.contains(activity)) activities.add(activity);
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-            Log.i("Activity started:" + activity);
-        }
-
-        @Override
-        public synchronized void onActivityResumed(Activity activity) {
-            Log.i("[Service] Activity resumed:" + activity);
-            if (activities.contains(activity)) {
-                mRunningActivities++;
-                Log.i("[Service] runningActivities=" + mRunningActivities);
-                checkActivity();
-            }
-        }
-
-        @Override
-        public synchronized void onActivityPaused(Activity activity) {
-            Log.i("[Service] Activity paused:" + activity);
-            if (activities.contains(activity)) {
-                mRunningActivities--;
-                Log.i("[Service] runningActivities=" + mRunningActivities);
-                checkActivity();
-            }
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            Log.i("[Service] Activity stopped:" + activity);
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
-
-        @Override
-        public synchronized void onActivityDestroyed(Activity activity) {
-            Log.i("[Service] Activity destroyed:" + activity);
-            activities.remove(activity);
-        }
-
-        void startInactivityChecker() {
-            if (mLastChecker != null) mLastChecker.cancel();
-            LinphoneService.this.handler.postDelayed(
-                    (mLastChecker = new InactivityChecker()), 2000);
-        }
-
-        void checkActivity() {
-            if (mRunningActivities == 0) {
-                if (mActive) startInactivityChecker();
-            } else if (mRunningActivities > 0) {
-                if (!mActive) {
-                    mActive = true;
-                    LinphoneService.this.onForegroundMode();
-                }
-                if (mLastChecker != null) {
-                    mLastChecker.cancel();
-                    mLastChecker = null;
-                }
-            }
-        }
-
-        class InactivityChecker implements Runnable {
-            private boolean isCanceled;
-
-            void cancel() {
-                isCanceled = true;
-            }
-
-            @Override
-            public void run() {
-                synchronized (LinphoneService.this) {
-                    if (!isCanceled) {
-                        if (ActivityMonitor.this.mRunningActivities == 0 && mActive) {
-                            mActive = false;
-                            LinphoneService.this.onBackgroundMode();
-                        }
-                    }
-                }
-            }
-        }
+    private void onOutgoingStarted() {
+        Intent intent = new Intent(LinphoneService.this, CallOutgoingActivity.class);
+        // This flag is required to start an Activity from a Service context
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

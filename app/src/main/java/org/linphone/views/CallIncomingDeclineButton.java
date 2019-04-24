@@ -29,7 +29,6 @@ import org.linphone.R;
 
 public class CallIncomingDeclineButton extends LinearLayout
         implements View.OnClickListener, View.OnTouchListener {
-    private LinearLayout mRoot;
     private boolean mUseSliderMode = false;
     private CallIncomingButtonListener mListener;
     private View mAnswerButton;
@@ -68,9 +67,9 @@ public class CallIncomingDeclineButton extends LinearLayout
 
     private void init() {
         inflate(getContext(), R.layout.call_incoming_decline_button, this);
-        mRoot = findViewById(R.id.root);
-        mRoot.setOnClickListener(this);
-        mRoot.setOnTouchListener(this);
+        LinearLayout root = findViewById(R.id.root);
+        root.setOnClickListener(this);
+        root.setOnTouchListener(this);
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
     }
 

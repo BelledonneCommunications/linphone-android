@@ -36,7 +36,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -63,6 +62,7 @@ public class StatusFragment extends Fragment {
     private CoreListenerStub mListener;
     private Dialog mZrtpDialog = null;
     private int mDisplayedQuality = -1;
+    private MenuClikedListener mMenuListener;
 
     @Override
     public View onCreateView(
@@ -77,6 +77,17 @@ public class StatusFragment extends Fragment {
         mVoicemail = view.findViewById(R.id.voicemail);
         mVoicemailCount = view.findViewById(R.id.voicemail_count);
 
+        mMenuListener = null;
+        mMenu.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mMenuListener != null) {
+                            mMenuListener.onMenuCliked();
+                        }
+                    }
+                });
+
         // We create it once to not delay the first display
         populateSliderContent();
 
@@ -84,7 +95,7 @@ public class StatusFragment extends Fragment {
                 new CoreListenerStub() {
                     @Override
                     public void onRegistrationStateChanged(
-                            final Core lc,
+                            final Core core,
                             final ProxyConfig proxy,
                             final RegistrationState state,
                             String smessage) {
@@ -92,18 +103,18 @@ public class StatusFragment extends Fragment {
                             return;
                         }
 
-                        if (lc.getProxyConfigList() == null) {
+                        if (core.getProxyConfigList() == null) {
                             mStatusLed.setImageResource(R.drawable.led_disconnected);
                             mStatusText.setText(getString(R.string.no_account));
                         } else {
                             mStatusLed.setVisibility(View.VISIBLE);
                         }
 
-                        if (lc.getDefaultProxyConfig() != null
-                                && lc.getDefaultProxyConfig().equals(proxy)) {
+                        if (core.getDefaultProxyConfig() != null
+                                && core.getDefaultProxyConfig().equals(proxy)) {
                             mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
-                        } else if (lc.getDefaultProxyConfig() == null) {
+                        } else if (core.getDefaultProxyConfig() == null) {
                             mStatusLed.setImageResource(getStatusIconResource(state));
                             mStatusText.setText(getStatusIconText(state));
                         }
@@ -113,9 +124,7 @@ public class StatusFragment extends Fragment {
                                     new OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Core core =
-                                                    LinphoneManager
-                                                            .getLcIfManagerNotDestroyedOrNull();
+                                            Core core = LinphoneManager.getCore();
                                             if (core != null) {
                                                 core.refreshRegisters();
                                             }
@@ -128,7 +137,7 @@ public class StatusFragment extends Fragment {
 
                     @Override
                     public void onNotifyReceived(
-                            Core lc, Event ev, String eventName, Content content) {
+                            Core core, Event ev, String eventName, Content content) {
 
                         if (!content.getType().equals("application")) return;
                         if (!content.getSubtype().equals("simple-message-summary")) return;
@@ -143,7 +152,7 @@ public class StatusFragment extends Fragment {
                             try {
                                 unreadCount = Integer.parseInt(intToParse[0]);
                             } catch (NumberFormatException nfe) {
-
+                                Log.e("[Status Fragment] " + nfe);
                             }
                             if (unreadCount > 0) {
                                 mVoicemailCount.setText(String.valueOf(unreadCount));
@@ -160,9 +169,7 @@ public class StatusFragment extends Fragment {
         mIsAttached = true;
         Activity activity = getActivity();
 
-        if (activity instanceof LinphoneActivity) {
-            ((LinphoneActivity) activity).updateStatusFragment(this);
-        } else if (activity instanceof CallActivity) {
+        if (activity instanceof CallActivity) {
             ((CallActivity) activity).updateStatusFragment(this);
         }
         mIsInCall =
@@ -179,44 +186,35 @@ public class StatusFragment extends Fragment {
         mIsAttached = false;
     }
 
+    public void setMenuListener(MenuClikedListener listener) {
+        mMenuListener = listener;
+    }
+
     // NORMAL STATUS BAR
 
     private void populateSliderContent() {
-        if (LinphoneManager.isInstanciated() && LinphoneManager.getLc() != null) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
             mVoicemailCount.setVisibility(View.GONE);
 
-            if (mIsInCall && mIsAttached) {
-                // Call call = LinphoneManager.getLc().getCurrentCall();
-                // initCallStatsRefresher(call, callStats);
-            } else if (!mIsInCall) {
+            if (!mIsInCall) {
                 mVoicemailCount.setVisibility(View.VISIBLE);
             }
 
-            if (LinphoneManager.getLc().getProxyConfigList().length == 0) {
+            if (core.getProxyConfigList().length == 0) {
                 mStatusLed.setImageResource(R.drawable.led_disconnected);
                 mStatusText.setText(getString(R.string.no_account));
             }
         }
     }
 
-    public void resetAccountStatus() {
-        if (LinphoneManager.getLc().getProxyConfigList().length == 0) {
-            mStatusLed.setImageResource(R.drawable.led_disconnected);
-            mStatusText.setText(getString(R.string.no_account));
-        }
-    }
-
-    public void enableSideMenu(boolean enabled) {
-        mMenu.setEnabled(enabled);
-    }
-
     private int getStatusIconResource(RegistrationState state) {
         try {
-            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+            Core core = LinphoneManager.getCore();
             boolean defaultAccountConnected =
-                    (lc != null
-                            && lc.getDefaultProxyConfig() != null
-                            && lc.getDefaultProxyConfig().getState() == RegistrationState.Ok);
+                    (core != null
+                            && core.getDefaultProxyConfig() != null
+                            && core.getDefaultProxyConfig().getState() == RegistrationState.Ok);
             if (state == RegistrationState.Ok && defaultAccountConnected) {
                 return R.drawable.led_connected;
             } else if (state == RegistrationState.Progress) {
@@ -235,15 +233,11 @@ public class StatusFragment extends Fragment {
 
     private String getStatusIconText(RegistrationState state) {
         Context context = getActivity();
-        if (!mIsAttached && LinphoneActivity.isInstanciated())
-            context = LinphoneActivity.instance();
-        else if (!mIsAttached && LinphoneService.isReady()) context = LinphoneService.instance();
+        if (!mIsAttached && LinphoneService.isReady()) context = LinphoneService.instance();
 
         try {
             if (state == RegistrationState.Ok
-                    && LinphoneManager.getLcIfManagerNotDestroyedOrNull()
-                                    .getDefaultProxyConfig()
-                                    .getState()
+                    && LinphoneManager.getCore().getDefaultProxyConfig().getState()
                             == RegistrationState.Ok) {
                 return context.getString(R.string.status_connected);
             } else if (state == RegistrationState.Progress) {
@@ -266,7 +260,7 @@ public class StatusFragment extends Fragment {
         mRefreshHandler.postDelayed(
                 mCallQualityUpdater =
                         new Runnable() {
-                            final Call mCurrentCall = LinphoneManager.getLc().getCurrentCall();
+                            final Call mCurrentCall = LinphoneManager.getCore().getCurrentCall();
 
                             public void run() {
                                 if (mCurrentCall == null) {
@@ -311,16 +305,17 @@ public class StatusFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.addListener(mListener);
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
-                mListener.onRegistrationStateChanged(lc, lpc, lpc.getState(), null);
+                mListener.onRegistrationStateChanged(core, lpc, lpc.getState(), null);
             }
 
-            Call call = lc.getCurrentCall();
-            if (mIsInCall && (call != null || lc.getConferenceSize() > 1 || lc.getCallsNb() > 0)) {
+            Call call = core.getCurrentCall();
+            if (mIsInCall
+                    && (call != null || core.getConferenceSize() > 1 || core.getCallsNb() > 0)) {
                 if (call != null) {
                     startCallQuality();
                     refreshStatusItems(call);
@@ -329,13 +324,13 @@ public class StatusFragment extends Fragment {
                 mCallQuality.setVisibility(View.VISIBLE);
 
                 // We are obviously connected
-                if (lc.getDefaultProxyConfig() == null) {
+                if (core.getDefaultProxyConfig() == null) {
                     mStatusLed.setImageResource(R.drawable.led_disconnected);
                     mStatusText.setText(getString(R.string.no_account));
                 } else {
                     mStatusLed.setImageResource(
-                            getStatusIconResource(lc.getDefaultProxyConfig().getState()));
-                    mStatusText.setText(getStatusIconText(lc.getDefaultProxyConfig().getState()));
+                            getStatusIconResource(core.getDefaultProxyConfig().getState()));
+                    mStatusText.setText(getStatusIconText(core.getDefaultProxyConfig().getState()));
                 }
             }
         } else {
@@ -348,9 +343,9 @@ public class StatusFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
         }
 
         if (mCallQualityUpdater != null) {
@@ -397,7 +392,7 @@ public class StatusFragment extends Fragment {
 
     public void showZRTPDialog(final Call call) {
         if (getActivity() == null) {
-            Log.w("Can't display ZRTP popup, no Activity");
+            Log.w("[Status Fragment] Can't display ZRTP popup, no Activity");
             return;
         }
 
@@ -405,11 +400,14 @@ public class StatusFragment extends Fragment {
             String token = call.getAuthenticationToken();
 
             if (token == null) {
-                Log.w("Can't display ZRTP popup, no token !");
+                Log.w("[Status Fragment] Can't display ZRTP popup, no token !");
                 return;
             }
             if (token.length() < 4) {
-                Log.w("Can't display ZRTP popup, token is invalid (" + token + ")");
+                Log.w(
+                        "[Status Fragment] Can't display ZRTP popup, token is invalid ("
+                                + token
+                                + ")");
                 return;
             }
 
@@ -490,5 +488,9 @@ public class StatusFragment extends Fragment {
                     });
             mZrtpDialog.show();
         }
+    }
+
+    public interface MenuClikedListener {
+        void onMenuCliked();
     }
 }

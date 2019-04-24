@@ -23,44 +23,23 @@ import java.util.ArrayList;
 
 public class InAppPurchaseListenerBase implements InAppPurchaseListener {
     @Override
-    public void onServiceAvailableForQueries() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onServiceAvailableForQueries() {}
 
     @Override
-    public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAvailableItemsForPurchaseQueryFinished(ArrayList<Purchasable> items) {}
 
     @Override
-    public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onPurchasedItemsQueryFinished(ArrayList<Purchasable> items) {}
 
     @Override
-    public void onPurchasedItemConfirmationQueryFinished(boolean success) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onPurchasedItemConfirmationQueryFinished(boolean success) {}
 
     @Override
-    public void onRecoverAccountSuccessful() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onRecoverAccountSuccessful() {}
 
     @Override
-    public void onActivateAccountSuccessful(boolean success) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onActivateAccountSuccessful(boolean success) {}
 
     @Override
-    public void onError(String error) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onError(String error) {}
 }

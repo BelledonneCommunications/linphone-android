@@ -19,7 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -28,21 +29,19 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.MediaEncryption;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
-public class CallSettingsFragment extends Fragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+public class CallSettingsFragment extends SettingsFragment {
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mDeviceRingtone,
             mVibrateIncomingCall,
@@ -68,17 +67,11 @@ public class CallSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_call_title));
-        }
 
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mDeviceRingtone = mRootView.findViewById(R.id.pref_device_ringtone);
 
         mVibrateIncomingCall = mRootView.findViewById(R.id.pref_vibrate_on_incoming_calls);
@@ -102,12 +95,24 @@ public class CallSettingsFragment extends Fragment {
         mAutoAnswerTime.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mDeviceRingtone.setListener(
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.enableDeviceRingtone(newValue);
+                        int readExternalStorage =
+                                getActivity()
+                                        .getPackageManager()
+                                        .checkPermission(
+                                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                getActivity().getPackageName());
+                        if (readExternalStorage == PackageManager.PERMISSION_GRANTED) {
+                            mPrefs.enableDeviceRingtone(newValue);
+                        } else {
+                            ((SettingsActivity) getActivity())
+                                    .requestPermissionIfNotGranted(
+                                            Manifest.permission.READ_EXTERNAL_STORAGE);
+                        }
                     }
                 });
 
@@ -193,7 +198,7 @@ public class CallSettingsFragment extends Fragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mDeviceRingtone.setChecked(mPrefs.isDeviceRingtoneEnabled());
 
         mVibrateIncomingCall.setChecked(mPrefs.isIncomingCallVibrationEnabled());
@@ -223,7 +228,7 @@ public class CallSettingsFragment extends Fragment {
         entries.add(getString(R.string.pref_none));
         values.add(String.valueOf(MediaEncryption.None.toInt()));
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null
                 && !getResources().getBoolean(R.bool.disable_all_security_features_for_markets)) {
             boolean hasZrtp = core.mediaEncryptionSupported(MediaEncryption.ZRTP);

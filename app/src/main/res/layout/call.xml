@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/topLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black_color">
+    android:layout_height="match_parent">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/side_menu"

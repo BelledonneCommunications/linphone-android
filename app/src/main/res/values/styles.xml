@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="LinphoneLauncherStyle" parent="LinphoneStyleLight">
+        <!-- Prevent a white screen while app is loading -->
+        <!-- http://www.tothenew.com/blog/disabling-the-preview-or-start-window-in-android/ -->
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
 
     <style name="LinphoneStyleLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Disable animations between activities -->

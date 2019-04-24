@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
@@ -38,15 +36,14 @@ import org.linphone.core.Factory;
 import org.linphone.core.PayloadType;
 import org.linphone.core.VideoDefinition;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
-public class VideoSettingsFragment extends Fragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+public class VideoSettingsFragment extends SettingsFragment {
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mEnable, mAutoInitiate, mAutoAccept, mOverlay;
     private ListSetting mPreset, mSize, mFps;
@@ -70,17 +67,11 @@ public class VideoSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_video_title));
-        }
 
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mEnable = mRootView.findViewById(R.id.pref_video_enable);
 
         mAutoInitiate = mRootView.findViewById(R.id.pref_video_initiate_call_with_video);
@@ -104,7 +95,7 @@ public class VideoSettingsFragment extends Fragment {
         mVideoCodecsHeader = mRootView.findViewById(R.id.pref_video_codecs_header);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mEnable.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -138,7 +129,10 @@ public class VideoSettingsFragment extends Fragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.enableOverlay(newValue);
+                        mPrefs.enableOverlay(
+                                newValue
+                                        && ((SettingsActivity) getActivity())
+                                                .checkAndRequestOverlayPermission());
                     }
                 });
 
@@ -186,7 +180,7 @@ public class VideoSettingsFragment extends Fragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mEnable.setChecked(mPrefs.isVideoEnabled());
         updateVideoSettingsVisibility(mPrefs.isVideoEnabled());
 
@@ -241,7 +235,7 @@ public class VideoSettingsFragment extends Fragment {
 
     private void populateVideoCodecs() {
         mVideoCodecs.removeAllViews();
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             for (final PayloadType pt : core.getVideoPayloadTypes()) {
                 final SwitchSetting codec = new SwitchSetting(getActivity());

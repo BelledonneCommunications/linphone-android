@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.PayloadType;
 import org.linphone.core.tools.Log;
 import org.linphone.core.tools.OpenH264DownloadHelper;
@@ -45,7 +46,7 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.assistant_openh264_codec_download);
-        mHelper = LinphoneManager.getInstance().getOpenH264DownloadHelper();
+        mHelper = Factory.instance().createOpenH264DownloadHelper(this);
         LinphonePreferences.instance().setOpenH264CodecDownloadEnabled(false);
 
         mProgress = findViewById(R.id.progress_bar);
@@ -83,7 +84,7 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
                             mProgress.setMax(max);
                             mProgress.setProgress(current);
                         } else {
-                            Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                            Core core = LinphoneManager.getCore();
                             if (core != null) {
                                 core.reloadMsPlugins(getApplicationInfo().nativeLibraryDir);
                                 enableH264();
@@ -115,7 +116,7 @@ public class OpenH264DownloadAssistantActivity extends AssistantActivity {
     }
 
     private void enableH264() {
-        for (PayloadType pt : LinphoneManager.getLc().getVideoPayloadTypes()) {
+        for (PayloadType pt : LinphoneManager.getCore().getVideoPayloadTypes()) {
             if (pt.getMimeType().equals("H264")) {
                 pt.enable(true);
                 break;

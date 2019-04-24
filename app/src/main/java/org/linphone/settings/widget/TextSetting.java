@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class TextSetting extends BasicSetting implements TextWatcher {
-    protected EditText mInput;
+    private EditText mInput;
 
     public TextSetting(Context context) {
         super(context);

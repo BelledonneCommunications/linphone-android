@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/status"
+        android:id="@+id/status_fragment"
         android:name="org.linphone.fragments.StatusFragment"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -15,7 +15,7 @@
         android:id="@+id/side_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/status">
+        android:layout_below="@id/status_fragment">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -61,42 +61,29 @@
                 android:layout_height="match_parent"
                 android:layout_above="@id/footer"
                 android:layout_below="@id/top_bar"
-                android:orientation="vertical">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <FrameLayout
+                <LinearLayout
+                    android:id="@+id/fragmentContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/fragmentContainer2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
+                        android:background="?attr/dividerColor" />
 
-                        <LinearLayout
-                            android:id="@+id/fragmentContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal" />
-
-                        <LinearLayout
-                            android:id="@+id/fragmentContainer2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent"
-                                android:background="?attr/dividerColor" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </FrameLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -142,7 +129,7 @@
                         android:layout_margin="20dp"
                         android:background="@drawable/unread_message_count_bg"
                         android:gravity="center"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
@@ -242,61 +229,12 @@
             android:layout_height="match_parent"
             android:layout_gravity="left">
 
-            <LinearLayout
+            <fragment
+                android:id="@+id/side_menu_fragment"
+                android:name="org.linphone.menu.SideMenuFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?attr/backgroundColor"
-                android:orientation="vertical">
-
-                <include layout="@layout/side_menu_main_account" />
-
-                <ListView
-                    android:id="@+id/accounts_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:cacheColorHint="@color/transparent_color"
-                    android:choiceMode="singleChoice"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp" />
-
-                <ListView
-                    android:id="@+id/item_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:choiceMode="singleChoice"
-                    android:divider="?attr/dividerColor"
-                    android:dividerHeight="1dp" />
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/side_menu_quit"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:background="?attr/accentColor"
-                android:gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/quit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:padding="5dp"
-                    android:src="@drawable/quit" />
-
-                <TextView
-                    android:id="@+id/quit"
-                    style="@style/quit_button_font"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toRightOf="@id/quit_button"
-                    android:gravity="center_vertical"
-                    android:text="@string/quit" />
-
-            </RelativeLayout>
+                tools:layout="@layout/side_menu" />
 
         </RelativeLayout>
 

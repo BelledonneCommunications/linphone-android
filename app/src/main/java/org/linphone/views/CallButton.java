@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import org.linphone.LinphoneManager;
 import org.linphone.core.Call;
 import org.linphone.core.CallLog;
+import org.linphone.core.Core;
 import org.linphone.core.ProxyConfig;
 import org.linphone.settings.LinphonePreferences;
 
@@ -45,20 +46,13 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
         mAddress = a;
     }
 
-    public void setExternalClickListener(OnClickListener e) {
-        setOnClickListener(e);
-    }
-
-    public void resetClickListener() {
-        setOnClickListener(this);
-    }
-
     public void onClick(View v) {
         if (mAddress.getText().length() > 0) {
-            LinphoneManager.getInstance().newOutgoingCall(mAddress);
+            LinphoneManager.getCallManager().newOutgoingCall(mAddress);
         } else {
             if (LinphonePreferences.instance().isBisFeatureEnabled()) {
-                CallLog[] logs = LinphoneManager.getLc().getCallLogs();
+                Core core = LinphoneManager.getCore();
+                CallLog[] logs = core.getCallLogs();
                 CallLog log = null;
                 for (CallLog l : logs) {
                     if (l.getDir() == Call.Dir.Outgoing) {
@@ -70,7 +64,7 @@ public class CallButton extends ImageView implements OnClickListener, AddressAwa
                     return;
                 }
 
-                ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+                ProxyConfig lpc = core.getDefaultProxyConfig();
                 if (lpc != null && log.getToAddress().getDomain().equals(lpc.getDomain())) {
                     mAddress.setText(log.getToAddress().getUsername());
                 } else {

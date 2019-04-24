@@ -38,7 +38,7 @@ import org.linphone.core.CallLog;
 import org.linphone.utils.LinphoneUtils;
 
 class HistoryLogAdapter extends ArrayAdapter<CallLog> {
-    private Context mContext;
+    private final Context mContext;
     private final List<CallLog> mItems;
     private final int mResource;
 
@@ -74,7 +74,10 @@ class HistoryLogAdapter extends ArrayAdapter<CallLog> {
         LayoutInflater inflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(mResource, parent, false);
+        View rowView = convertView;
+        if (rowView == null) {
+            rowView = inflater.inflate(mResource, parent, false);
+        }
         CallLog callLog = getItem(position);
 
         String callTime = secondsToDisplayableString(callLog.getDuration());
@@ -103,7 +106,7 @@ class HistoryLogAdapter extends ArrayAdapter<CallLog> {
         }
 
         time.setText(callTime == null ? "" : callTime);
-        Long longDate = Long.parseLong(callDate);
+        long longDate = Long.parseLong(callDate);
         date.setText(
                 LinphoneUtils.timestampToHumanDate(
                         mContext,

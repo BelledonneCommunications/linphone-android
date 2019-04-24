@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -30,19 +29,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.mediastream.Version;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.TextSetting;
 
-public class ChatSettingsFragment extends Fragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+public class ChatSettingsFragment extends SettingsFragment {
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private TextSetting mSharingServer, mMaxSizeForAutoDownloadIncomingFiles;
     private BasicSetting mAndroidNotificationSettings;
@@ -64,17 +61,11 @@ public class ChatSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_chat_title));
-        }
 
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mSharingServer = mRootView.findViewById(R.id.pref_image_sharing_server);
         mSharingServer.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
 
@@ -86,7 +77,7 @@ public class ChatSettingsFragment extends Fragment {
         mAndroidNotificationSettings = mRootView.findViewById(R.id.pref_android_app_notif_settings);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mSharingServer.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -126,7 +117,7 @@ public class ChatSettingsFragment extends Fragment {
                     @Override
                     public void onClicked() {
                         if (Build.VERSION.SDK_INT >= Version.API26_O_80) {
-                            Context context = LinphoneActivity.instance();
+                            Context context = getActivity();
                             Intent i = new Intent();
                             i.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
                             i.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
@@ -143,7 +134,7 @@ public class ChatSettingsFragment extends Fragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mSharingServer.setValue(mPrefs.getSharingPictureServerUrl());
 
         updateAutoDownloadSettingsFromValue(mPrefs.getAutoDownloadFileMaxSize());
