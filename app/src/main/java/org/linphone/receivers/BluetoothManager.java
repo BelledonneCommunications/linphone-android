@@ -31,7 +31,6 @@ import android.media.AudioManager;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
-import org.linphone.call.CallActivity;
 import org.linphone.core.tools.Log;
 
 public class BluetoothManager extends BroadcastReceiver {
@@ -134,9 +133,10 @@ public class BluetoothManager extends BroadcastReceiver {
     }
 
     private void refreshCallView() {
-        if (CallActivity.isInstanciated()) {
+        /*if (CallActivity.isInstanciated()) {
             CallActivity.instance().refreshInCallActions();
-        }
+        }*/
+        // TODO FIXME
     }
 
     private boolean ensureInit() {

@@ -34,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import org.linphone.BuildConfig;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
@@ -179,7 +178,7 @@ public class AboutActivity extends MainActivity {
         }
         mUploadInProgress = true;
 
-        mProgress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
+        mProgress = ProgressDialog.show(this, null, null);
         Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.light_grey_color));
         d.setAlpha(200);
         mProgress

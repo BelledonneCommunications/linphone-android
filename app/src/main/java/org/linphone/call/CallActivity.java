@@ -102,7 +102,6 @@ public class CallActivity extends LinphoneGenericActivity
     private static final int PERMISSIONS_ENABLED_MIC = 204;
     private static final int PERMISSIONS_EXTERNAL_STORAGE = 205;
 
-    private static CallActivity sInstance;
     private static long sTimeRemind = 0;
     private Handler mControlsHandler = new Handler();
     private Runnable mControls;
@@ -158,18 +157,9 @@ public class CallActivity extends LinphoneGenericActivity
 
     private boolean mOldIsSpeakerEnabled = false;
 
-    public static CallActivity instance() {
-        return sInstance;
-    }
-
-    public static boolean isInstanciated() {
-        return sInstance != null;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sInstance = this;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Compatibility.setShowWhenLocked(this, true);
@@ -1246,7 +1236,7 @@ public class CallActivity extends LinphoneGenericActivity
                                                 : "denied"));
 
                         if (camera == PackageManager.PERMISSION_GRANTED) {
-                            CallActivity.instance().acceptCallUpdate(true);
+                            acceptCallUpdate(true);
                         } else {
                             checkAndRequestPermission(
                                     Manifest.permission.CAMERA, PERMISSIONS_REQUEST_CAMERA);
@@ -1261,9 +1251,7 @@ public class CallActivity extends LinphoneGenericActivity
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (CallActivity.isInstanciated()) {
-                            CallActivity.instance().acceptCallUpdate(false);
-                        }
+                        acceptCallUpdate(false);
                         mIsVideoAsk = false;
                         mDialog.dismiss();
                         mDialog = null;
@@ -1274,8 +1262,6 @@ public class CallActivity extends LinphoneGenericActivity
 
     @Override
     protected void onResume() {
-
-        sInstance = this;
         super.onResume();
 
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
@@ -1361,9 +1347,8 @@ public class CallActivity extends LinphoneGenericActivity
         if (mTimer != null) {
             mTimer.cancel();
         }
-        sInstance = null;
+
         super.onDestroy();
-        System.gc();
     }
 
     private void unbindDrawables(View view) {

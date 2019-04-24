@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
@@ -74,7 +74,7 @@ public class LinphonePreferences {
 
     private String getString(int key) {
         if (mContext == null && LinphoneManager.isInstanciated()) {
-            mContext = LinphoneManager.getInstance().getContext();
+            mContext = LinphoneService.instance();
         }
 
         return mContext.getString(key);
@@ -935,13 +935,14 @@ public class LinphonePreferences {
     }
 
     public void enableOverlay(boolean enable) {
-        getConfig()
-                .setBool(
-                        "app",
-                        "display_overlay",
-                        enable
-                                && LinphoneActivity.isInstanciated()
-                                && LinphoneActivity.instance().checkAndRequestOverlayPermission());
+        // TODO FIXME
+        /*getConfig()
+        .setBool(
+                "app",
+                "display_overlay",
+                enable
+                        && LinphoneActivity.isInstanciated()
+                        && LinphoneActivity.instance().checkAndRequestOverlayPermission());*/
     }
 
     public boolean isDeviceRingtoneEnabled() {
@@ -1025,9 +1026,6 @@ public class LinphonePreferences {
 
     public void enableDarkMode(boolean enable) {
         getConfig().setBool("app", "dark_mode", enable);
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().recreate();
-        }
     }
 
     public String getDeviceName(Context context) {

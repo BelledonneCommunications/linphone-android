@@ -29,7 +29,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import java.util.Arrays;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.call.CallManager;
@@ -40,7 +39,6 @@ import org.linphone.core.ChatRoom;
 import org.linphone.core.ChatRoomCapabilities;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantDevice;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.LinphoneUtils;
 
 public class DevicesFragment extends Fragment {
@@ -125,11 +123,12 @@ public class DevicesFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (LinphoneActivity.instance().isTablet()) {
+                        // TODO FIXME
+                        /*if (LinphoneActivity.instance().isTablet()) {
                             LinphoneActivity.instance().goToChat(mLocalSipUri, mRoomUri, null);
                         } else {
                             LinphoneActivity.instance().onBackPressed();
-                        }
+                        }*/
                     }
                 });
 
@@ -139,10 +138,6 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.CONTACT_DEVICES);
-        }
 
         initValues();
     }

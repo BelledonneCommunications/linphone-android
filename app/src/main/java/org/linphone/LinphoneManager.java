@@ -69,8 +69,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
-import org.linphone.call.CallActivity;
-import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -345,7 +343,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             return;
         }
 
-        mCodecDownloader = Factory.instance().createOpenH264DownloadHelper(getContext());
+        mCodecDownloader = Factory.instance().createOpenH264DownloadHelper(mServiceContext);
         mCodecListener =
                 new OpenH264DownloadHelperListener() {
                     ProgressDialog progress;
@@ -814,11 +812,11 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             mHandsetON = true;
             acceptCall(mCore.getCurrentCall());
             LinphoneActivity.instance().startIncallActivity();
-        } else if (on && CallActivity.isInstanciated()) {
-            mHandsetON = true;
-            CallActivity.instance().setSpeakerEnabled(true);
-            CallActivity.instance().refreshInCallActions();
-        } else if (!on) {
+        } /*else if (on && CallActivity.isInstanciated()) { // TODO FIXME
+              mHandsetON = true;
+              CallActivity.instance().setSpeakerEnabled(true);
+              CallActivity.instance().refreshInCallActions();
+          } */ else if (!on) {
             mHandsetON = false;
             LinphoneManager.getInstance().terminateCall();
         }
@@ -1088,7 +1086,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
     @Override
     public void onEcCalibrationResult(Core lc, EcCalibratorStatus status, int delay_ms) {
-        ((AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE))
+        ((AudioManager) mServiceContext.getSystemService(Context.AUDIO_SERVICE))
                 .setMode(AudioManager.MODE_NORMAL);
         mAudioManager.abandonAudioFocus(null);
         Log.i("[Manager] Set audio mode on 'Normal'");
@@ -1133,20 +1131,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                             + " / "
                             + activeNetworkInfo.getDetailedState());
         }
-    }
-
-    public Context getContext() {
-        try {
-            if (LinphoneActivity.isInstanciated()) return LinphoneActivity.instance();
-            else if (CallActivity.isInstanciated()) return CallActivity.instance();
-            else if (CallIncomingActivity.isInstanciated()) return CallIncomingActivity.instance();
-            else if (mServiceContext != null) return mServiceContext;
-            else if (LinphoneService.isReady())
-                return LinphoneService.instance().getApplicationContext();
-        } catch (Exception e) {
-            Log.e(e);
-        }
-        return null;
     }
 
     public void setAudioManagerModeNormal() {
@@ -1239,7 +1223,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             if (mCore.getCallsNb() == 0) {
                 // Disabling proximity sensor
                 enableProximitySensing(false);
-                Context activity = getContext();
+                Context activity = mServiceContext;
                 if (mAudioFocused) {
                     int res = mAudioManager.abandonAudioFocus(null);
                     Log.d(
@@ -1337,7 +1321,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mEchoTesterIsRunning = false;
         mCore.stopEchoTester();
         routeAudioToReceiver();
-        ((AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE))
+        ((AudioManager) mServiceContext.getSystemService(Context.AUDIO_SERVICE))
                 .setMode(AudioManager.MODE_NORMAL);
         Log.i("[Manager] Set audio mode on 'Normal'");
         return 1; // status;
@@ -1467,7 +1451,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (params != null) {
             params.enableLowBandwidth(isLowBandwidthConnection);
             params.setRecordFile(
-                    FileUtils.getCallRecordingFilename(getContext(), call.getRemoteAddress()));
+                    FileUtils.getCallRecordingFilename(mServiceContext, call.getRemoteAddress()));
         } else {
             Log.e("[Manager] Could not create call params for call");
             return false;
@@ -1685,7 +1669,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     new Runnable() {
                         @Override
                         public void run() {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mServiceContext);
                             builder.setMessage(
                                     getString(R.string.update_available) + ": " + versionAv);
                             builder.setCancelable(false);
@@ -1698,7 +1682,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                                             if (urlToUse != null) {
                                                 Intent urlIntent = new Intent(Intent.ACTION_VIEW);
                                                 urlIntent.setData(Uri.parse(urlToUse));
-                                                getContext().startActivity(urlIntent);
+                                                mServiceContext.startActivity(urlIntent);
                                             }
                                         }
                                     });

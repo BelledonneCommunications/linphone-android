@@ -40,7 +40,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
@@ -56,7 +55,6 @@ import org.linphone.core.Core;
 import org.linphone.core.EventLog;
 import org.linphone.core.Participant;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.LinphoneUtils;
 
 public class GroupInfoFragment extends Fragment implements ChatRoomListener {
@@ -161,7 +159,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     @Override
                     public void onClick(View view) {
                         if (mIsAlreadyCreatedGroup) {
-                            if (LinphoneActivity.instance().isTablet()) {
+                            // TODO FIXME
+                            /*if (LinphoneActivity.instance().isTablet()) {
                                 LinphoneActivity.instance()
                                         .goToChat(
                                                 mChatRoom.getLocalAddress().asStringUriOnly(),
@@ -169,17 +168,18 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                                 mShareInfos);
                             } else {
                                 getFragmentManager().popBackStack();
-                            }
+                            }*/
                         } else {
-                            LinphoneActivity.instance()
-                                    .goToChatCreator(
-                                            null,
-                                            mParticipants,
-                                            null,
-                                            true,
-                                            mShareInfos,
-                                            true,
-                                            mIsEncryptionEnabled);
+                            // TODO FIXME
+                            /*LinphoneActivity.instance()
+                            .goToChatCreator(
+                                    null,
+                                    mParticipants,
+                                    null,
+                                    true,
+                                    mShareInfos,
+                                    true,
+                                    mIsEncryptionEnabled);*/
                         }
                     }
                 });
@@ -191,7 +191,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final Dialog dialog =
+                        // TODO FIXME
+                        /*final Dialog dialog =
                                 LinphoneActivity.instance()
                                         .displayDialog(getString(R.string.chat_room_leave_dialog));
                         Button delete = dialog.findViewById(R.id.dialog_delete_button);
@@ -204,13 +205,14 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                     public void onClick(View view) {
                                         if (mChatRoom != null) {
                                             mChatRoom.leave();
+                                            // TODO FIXME
                                             LinphoneActivity.instance()
-                                                    .goToChat(
-                                                            mChatRoom
-                                                                    .getLocalAddress()
-                                                                    .asStringUriOnly(),
-                                                            mGroupChatRoomAddress.asString(),
-                                                            null);
+                                            .goToChat(
+                                                    mChatRoom
+                                                            .getLocalAddress()
+                                                            .asStringUriOnly(),
+                                                    mGroupChatRoomAddress.asString(),
+                                                    null);
                                         } else {
                                             Log.e(
                                                     "Can't leave, chatRoom for address "
@@ -228,7 +230,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                         dialog.dismiss();
                                     }
                                 });
-                        dialog.show();
+                        dialog.show();*/
                     }
                 });
         mLeaveGroupButton.setVisibility(
@@ -242,17 +244,18 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     @Override
                     public void onClick(View view) {
                         if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
-                            LinphoneActivity.instance()
-                                    .goToChatCreator(
-                                            mGroupChatRoomAddress != null
-                                                    ? mGroupChatRoomAddress.asString()
-                                                    : null,
-                                            mParticipants,
-                                            mSubject,
-                                            !mIsAlreadyCreatedGroup,
-                                            null,
-                                            true,
-                                            mIsEncryptionEnabled);
+                            // TODO FIXME
+                            /*LinphoneActivity.instance()
+                            .goToChatCreator(
+                                    mGroupChatRoomAddress != null
+                                            ? mGroupChatRoomAddress.asString()
+                                            : null,
+                                    mParticipants,
+                                    mSubject,
+                                    !mIsAlreadyCreatedGroup,
+                                    null,
+                                    true,
+                                    mIsEncryptionEnabled);*/
                         }
                     }
                 });
@@ -262,17 +265,18 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                     @Override
                     public void onClick(View view) {
                         if (mIsEditionEnabled && mIsAlreadyCreatedGroup) {
-                            LinphoneActivity.instance()
-                                    .goToChatCreator(
-                                            mGroupChatRoomAddress != null
-                                                    ? mGroupChatRoomAddress.asString()
-                                                    : null,
-                                            mParticipants,
-                                            mSubject,
-                                            !mIsAlreadyCreatedGroup,
-                                            null,
-                                            true,
-                                            mIsEncryptionEnabled);
+                            // TODO FIXME
+                            /*LinphoneActivity.instance()
+                            .goToChatCreator(
+                                    mGroupChatRoomAddress != null
+                                            ? mGroupChatRoomAddress.asString()
+                                            : null,
+                                    mParticipants,
+                                    mSubject,
+                                    !mIsAlreadyCreatedGroup,
+                                    null,
+                                    true,
+                                    mIsEncryptionEnabled);*/
                         }
                     }
                 });
@@ -306,14 +310,16 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             // fragment from the back stack
                             getFragmentManager().popBackStack();
                             getFragmentManager().popBackStack();
-                            LinphoneActivity.instance()
-                                    .goToChat(
-                                            cr.getLocalAddress().asStringUriOnly(),
-                                            cr.getPeerAddress().asStringUriOnly(),
-                                            mShareInfos);
+                            // TODO FIXME
+                            /*LinphoneActivity.instance()
+                            .goToChat(
+                                    cr.getLocalAddress().asStringUriOnly(),
+                                    cr.getPeerAddress().asStringUriOnly(),
+                                    mShareInfos);*/
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
-                            LinphoneActivity.instance().displayChatRoomError();
+                            // TODO FIXME
+                            // LinphoneActivity.instance().displayChatRoomError();
                             Log.e(
                                     "Group chat room for address "
                                             + cr.getPeerAddress()
@@ -404,11 +410,12 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             toAdd.toArray(participantsToAdd);
                             mChatRoom.addParticipants(participantsToAdd);
 
-                            LinphoneActivity.instance()
-                                    .goToChat(
-                                            mChatRoom.getLocalAddress().asStringUriOnly(),
-                                            mGroupChatRoomAddress.asString(),
-                                            null);
+                            // TODO FIXME
+                            /*LinphoneActivity.instance()
+                            .goToChat(
+                                    mChatRoom.getLocalAddress().asStringUriOnly(),
+                                    mGroupChatRoomAddress.asString(),
+                                    null);*/
                         }
                     }
                 });
@@ -433,10 +440,6 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.INFO_GROUP_CHAT);
-        }
 
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
@@ -492,13 +495,14 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private void displayMeAdminStatusUpdated() {
         if (mAdminStateChangedDialog != null) mAdminStateChangedDialog.dismiss();
 
-        mAdminStateChangedDialog =
-                LinphoneActivity.instance()
-                        .displayDialog(
-                                getString(
-                                        mIsEditionEnabled
-                                                ? R.string.chat_room_you_are_now_admin
-                                                : R.string.chat_room_you_are_no_longer_admin));
+        // TODO FIXME
+        /*mAdminStateChangedDialog =
+        LinphoneActivity.instance()
+                .displayDialog(
+                        getString(
+                                mIsEditionEnabled
+                                        ? R.string.chat_room_you_are_now_admin
+                                        : R.string.chat_room_you_are_no_longer_admin));*/
         Button cancel = mAdminStateChangedDialog.findViewById(R.id.dialog_cancel_button);
         mAdminStateChangedDialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
         cancel.setText(getString(R.string.ok));

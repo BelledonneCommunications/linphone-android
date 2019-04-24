@@ -36,7 +36,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.assistant.MenuAssistantActivity;
@@ -45,7 +44,6 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.recording.RecordingsActivity;
-import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.LinphoneUtils;
 
@@ -115,7 +113,7 @@ public class SideMenuFragment extends Fragment {
                                 startActivity(
                                         new Intent()
                                                 .setClass(
-                                                        LinphoneManager.getInstance().getContext(),
+                                                        getActivity(),
                                                         MenuAssistantActivity.class));
                                 getActivity().finish();
                             }
@@ -198,10 +196,11 @@ public class SideMenuFragment extends Fragment {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                LinphoneActivity.instance()
-                                        .displayAccountSettings(
-                                                LinphonePreferences.instance()
-                                                        .getDefaultAccountIndex());
+                                // TODO FIXME
+                                /*LinphoneActivity.instance()
+                                .displayAccountSettings(
+                                        LinphonePreferences.instance()
+                                                .getDefaultAccountIndex());*/
                             }
                         });
             }
@@ -238,7 +237,8 @@ public class SideMenuFragment extends Fragment {
                                 AdapterView<?> adapterView, View view, int i, long l) {
                             if (view != null && view.getTag() != null) {
                                 int position = Integer.parseInt(view.getTag().toString());
-                                LinphoneActivity.instance().displayAccountSettings(position);
+                                // TODO FIXME
+                                // LinphoneActivity.instance().displayAccountSettings(position);
                             }
                         }
                     });

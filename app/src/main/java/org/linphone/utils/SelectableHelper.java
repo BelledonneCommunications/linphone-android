@@ -19,14 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package org.linphone.utils;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 
 public class SelectableHelper {
@@ -98,7 +95,8 @@ public class SelectableHelper {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final Dialog dialog =
+                        // TODO FIXME
+                        /*final Dialog dialog =
                                 LinphoneActivity.instance()
                                         .displayDialog(
                                                 mContext.getString(mDialogDeleteMessageResourceId));
@@ -124,7 +122,7 @@ public class SelectableHelper {
                                         quitEditionMode();
                                     }
                                 });
-                        dialog.show();
+                        dialog.show();*/
                     }
                 });
 

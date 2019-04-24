@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -41,7 +40,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,8 +50,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
@@ -201,9 +197,10 @@ public class ContactEditorFragment extends Fragment {
                         }
 
                         getFragmentManager().popBackStackImmediate();
-                        if (mIsNewContact || LinphoneActivity.instance().isTablet()) {
+                        /*if (mIsNewContact || LinphoneActivity.instance().isTablet()) {
                             LinphoneActivity.instance().displayContact(mContact, false);
-                        }
+                        }*/
+                        // TODO FIXME
                     }
                 });
 
@@ -216,7 +213,7 @@ public class ContactEditorFragment extends Fragment {
                         public void onClick(View v) {
                             InputMethodManager imm =
                                     (InputMethodManager)
-                                            LinphoneActivity.instance()
+                                            getActivity()
                                                     .getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         }
@@ -283,7 +280,8 @@ public class ContactEditorFragment extends Fragment {
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            final Dialog dialog =
+                            // TODO FIXME
+                            /*final Dialog dialog =
                                     LinphoneActivity.instance()
                                             .displayDialog(getString(R.string.delete_text));
                             Button delete = dialog.findViewById(R.id.dialog_delete_button);
@@ -306,7 +304,7 @@ public class ContactEditorFragment extends Fragment {
                                             dialog.dismiss();
                                         }
                                     });
-                            dialog.show();
+                            dialog.show();*/
                         }
                     });
         } else {
@@ -325,7 +323,7 @@ public class ContactEditorFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         pickImage();
-                        LinphoneActivity.instance().checkAndRequestCameraPermission();
+                        // TODO FIXME LinphoneActivity.instance().checkAndRequestCameraPermission();
                     }
                 });
 
@@ -393,7 +391,7 @@ public class ContactEditorFragment extends Fragment {
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file =
                 new File(
-                        FileUtils.getStorageDirectory(LinphoneActivity.instance()),
+                        FileUtils.getStorageDirectory(getActivity()),
                         getString(R.string.temp_photo_name));
         mPickedPhotoForContactUri = Uri.fromFile(file);
         captureIntent.putExtra("outputX", PHOTO_SIZE);
@@ -428,8 +426,7 @@ public class ContactEditorFragment extends Fragment {
                 try {
                     Bitmap selectedImage =
                             MediaStore.Images.Media.getBitmap(
-                                    LinphoneManager.getInstance().getContext().getContentResolver(),
-                                    selectedImageUri);
+                                    getActivity().getContentResolver(), selectedImageUri);
                     selectedImage =
                             Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
                     editContactPicture(null, selectedImage);
@@ -442,7 +439,7 @@ public class ContactEditorFragment extends Fragment {
             } else {
                 File file =
                         new File(
-                                FileUtils.getStorageDirectory(LinphoneActivity.instance()),
+                                FileUtils.getStorageDirectory(getActivity()),
                                 getString(R.string.temp_photo_name));
                 if (file.exists()) {
                     mPickedPhotoForContactUri = Uri.fromFile(file);
@@ -478,7 +475,7 @@ public class ContactEditorFragment extends Fragment {
     private int getThumbnailSize() {
         int value = -1;
         Cursor c =
-                LinphoneActivity.instance()
+                getActivity()
                         .getContentResolver()
                         .query(
                                 DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,

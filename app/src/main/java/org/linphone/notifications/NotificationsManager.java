@@ -30,19 +30,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import java.util.HashMap;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallIncomingActivity;
 import org.linphone.call.CallOutgoingActivity;
+import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.tools.Log;
+import org.linphone.history.HistoryActivity;
+import org.linphone.main.DialerActivity;
+import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.ImageUtils;
 import org.linphone.utils.LinphoneUtils;
@@ -80,7 +83,7 @@ public class NotificationsManager {
             Log.e(e);
         }
 
-        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
+        Intent notifIntent = new Intent(mContext, DialerActivity.class);
         notifIntent.putExtra("Notification", true);
 
         PendingIntent pendingIntent =
@@ -181,9 +184,8 @@ public class NotificationsManager {
         notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
         notif.setLocalIdentity(localIdentity.asString());
 
-        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
-        notifIntent.putExtra("GoToChat", true);
-        notifIntent.putExtra("ChatContactSipUri", conferenceAddress);
+        Intent notifIntent = new Intent(mContext, ChatActivity.class);
+        notifIntent.putExtra("RemoteSipUri", conferenceAddress);
         notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
@@ -234,9 +236,8 @@ public class NotificationsManager {
         notif.setMyself(LinphoneUtils.getAddressDisplayName(localIdentity));
         notif.setLocalIdentity(localIdentity.asString());
 
-        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
-        notifIntent.putExtra("GoToChat", true);
-        notifIntent.putExtra("ChatContactSipUri", fromSipUri);
+        Intent notifIntent = new Intent(mContext, ChatActivity.class);
+        notifIntent.putExtra("RemoteSipUri", fromSipUri);
         notifIntent.putExtra("LocalSipUri", localIdentity.asStringUriOnly());
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
@@ -252,8 +253,7 @@ public class NotificationsManager {
     }
 
     public void displayMissedCallNotification(Call call) {
-        Intent missedCallNotifIntent = new Intent(mContext, LinphoneActivity.class);
-        missedCallNotifIntent.putExtra("GoToHistory", true);
+        Intent missedCallNotifIntent = new Intent(mContext, HistoryActivity.class);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext,
@@ -412,8 +412,7 @@ public class NotificationsManager {
     }
 
     public void displayInappNotification(String message) {
-        Intent notifIntent = new Intent(mContext, LinphoneActivity.class);
-        notifIntent.putExtra("GoToInapp", true);
+        Intent notifIntent = new Intent(mContext, InAppPurchaseActivity.class);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(
                         mContext, IN_APP_NOTIF_ID, notifIntent, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -36,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -172,9 +171,7 @@ public class StatusFragment extends Fragment {
         mIsAttached = true;
         Activity activity = getActivity();
 
-        if (activity instanceof LinphoneActivity) {
-            ((LinphoneActivity) activity).updateStatusFragment(this);
-        } else if (activity instanceof CallActivity) {
+        if (activity instanceof CallActivity) {
             ((CallActivity) activity).updateStatusFragment(this);
         }
         mIsInCall =
@@ -251,9 +248,7 @@ public class StatusFragment extends Fragment {
 
     private String getStatusIconText(RegistrationState state) {
         Context context = getActivity();
-        if (!mIsAttached && LinphoneActivity.isInstanciated())
-            context = LinphoneActivity.instance();
-        else if (!mIsAttached && LinphoneService.isReady()) context = LinphoneService.instance();
+        if (!mIsAttached && LinphoneService.isReady()) context = LinphoneService.instance();
 
         try {
             if (state == RegistrationState.Ok

@@ -1518,7 +1518,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                                 startActivity(
                                         new Intent()
                                                 .setClass(
-                                                        LinphoneManager.getInstance().getContext(),
+                                                        LinphoneActivity.this,
                                                         MenuAssistantActivity.class));
                                 finish();
                             }

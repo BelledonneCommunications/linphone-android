@@ -110,7 +110,6 @@ public class ChatMessagesFragment extends Fragment
     private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener;
     private Uri mImageToUploadUri;
     private ChatMessagesAdapter mEventsAdapter;
-    private ChatMessagesOldAdapter mOldEventsAdapter;
     private String mLocalSipUri, mRemoteSipUri;
     private Address mLocalSipAddress, mRemoteSipAddress, mRemoteParticipantAddress;
     private ChatRoom mChatRoom;
@@ -478,13 +477,8 @@ public class ChatMessagesFragment extends Fragment
             ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        if (mContext.getResources().getBoolean(R.bool.use_new_chat_bubbles_layout)) {
-            ChatMessageViewHolder holder = (ChatMessageViewHolder) v.getTag();
-            mContextMenuMessagePosition = holder.getAdapterPosition();
-        } else {
-            ChatMessageOldViewHolder holder = (ChatMessageOldViewHolder) v.getTag();
-            mContextMenuMessagePosition = holder.getAdapterPosition();
-        }
+        ChatMessageViewHolder holder = (ChatMessageViewHolder) v.getTag();
+        mContextMenuMessagePosition = holder.getAdapterPosition();
 
         EventLog event =
                 (EventLog)
@@ -845,14 +839,6 @@ public class ChatMessagesFragment extends Fragment
                             mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE),
                             mParticipants,
                             this);
-            mOldEventsAdapter =
-                    new ChatMessagesOldAdapter(
-                            this,
-                            mSelectionHelper,
-                            R.layout.chat_bubble_old,
-                            mChatRoom.getHistoryMessageEvents(MESSAGES_PER_PAGE),
-                            mParticipants,
-                            this);
         } else {
             mEventsAdapter =
                     new ChatMessagesAdapter(
@@ -862,22 +848,9 @@ public class ChatMessagesFragment extends Fragment
                             mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE),
                             mParticipants,
                             this);
-            mOldEventsAdapter =
-                    new ChatMessagesOldAdapter(
-                            this,
-                            mSelectionHelper,
-                            R.layout.chat_bubble_old,
-                            mChatRoom.getHistoryEvents(MESSAGES_PER_PAGE),
-                            mParticipants,
-                            this);
         }
-        if (mContext.getResources().getBoolean(R.bool.use_new_chat_bubbles_layout)) {
-            mSelectionHelper.setAdapter(mEventsAdapter);
-            mChatEventsList.setAdapter(mEventsAdapter);
-        } else {
-            mSelectionHelper.setAdapter(mOldEventsAdapter);
-            mChatEventsList.setAdapter(mOldEventsAdapter);
-        }
+        mSelectionHelper.setAdapter(mEventsAdapter);
+        mChatEventsList.setAdapter(mEventsAdapter);
         scrollToBottom();
     }
 

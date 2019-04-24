@@ -277,10 +277,7 @@ public final class LinphoneUtils {
                     return username.split("@")[0];
                 }
             } else {
-                if (domain.equals(
-                        LinphoneManager.getInstance()
-                                .getContext()
-                                .getString(R.string.default_domain))) {
+                if (domain.equals(LinphoneService.instance().getString(R.string.default_domain))) {
                     return username.split("@")[0];
                 }
             }
@@ -305,9 +302,7 @@ public final class LinphoneUtils {
                 sipAddress =
                         sipAddress
                                 + "@"
-                                + LinphoneManager.getInstance()
-                                        .getContext()
-                                        .getString(R.string.default_domain);
+                                + LinphoneService.instance().getString(R.string.default_domain);
             }
         }
         return sipAddress;

@@ -26,8 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.FriendCapability;
@@ -248,7 +248,7 @@ public class SearchContactsAdapter extends RecyclerView.Adapter<SearchContactVie
                         .getContactListFromFilter(search, mOnlySipContact ? domain : "");
 
         for (SearchResult sr : searchResults) {
-            if (LinphoneActivity.instance()
+            if (LinphoneService.instance()
                     .getResources()
                     .getBoolean(R.bool.hide_sip_contacts_without_presence)) {
                 if (sr.getFriend() != null) {

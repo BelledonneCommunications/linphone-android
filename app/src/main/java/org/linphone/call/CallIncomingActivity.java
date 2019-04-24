@@ -33,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import java.util.ArrayList;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
@@ -54,8 +53,6 @@ import org.linphone.views.CallIncomingDeclineButton;
 import org.linphone.views.ContactAvatar;
 
 public class CallIncomingActivity extends LinphoneGenericActivity {
-    private static CallIncomingActivity sInstance;
-
     private TextView mName, mNumber;
     private ImageView mAcceptIcon;
     private CallIncomingAnswerButton mAccept;
@@ -65,14 +62,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     private boolean mAlreadyAcceptedOrDeniedCall;
     private KeyguardManager mKeyguardManager;
     private TextureView mVideoDisplay;
-
-    public static CallIncomingActivity instance() {
-        return sInstance;
-    }
-
-    public static boolean isInstanciated() {
-        return sInstance != null;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,14 +140,11 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
                         }
                     }
                 };
-
-        sInstance = this;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        sInstance = this;
         Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (lc != null) {
             lc.addListener(mListener);
@@ -214,7 +200,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        sInstance = null;
     }
 
     @Override
@@ -258,12 +243,6 @@ public class CallIncomingActivity extends LinphoneGenericActivity {
         if (!LinphoneManager.getInstance().acceptCall(mCall)) {
             // the above method takes care of Samsung Galaxy S
             Toast.makeText(this, R.string.couldnt_accept_call, Toast.LENGTH_LONG).show();
-        } else {
-            if (!LinphoneActivity.isInstanciated()) {
-                return;
-            }
-            LinphoneManager.getInstance().routeAudioToReceiver();
-            LinphoneActivity.instance().startIncallActivity();
         }
     }
 

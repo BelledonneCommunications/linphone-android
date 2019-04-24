@@ -150,6 +150,7 @@ public class AdvancedSettingsFragment extends SettingsFragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enableDarkMode(newValue);
+                        getActivity().recreate();
                     }
                 });
 

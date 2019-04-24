@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import java.util.ArrayList;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -84,13 +83,7 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                     @Override
                     public void onCallStateChanged(
                             Core lc, Call call, Call.State state, String message) {
-                        if (call == mCall && State.Connected == state) {
-                            if (!LinphoneActivity.isInstanciated()) {
-                                return;
-                            }
-                            LinphoneActivity.instance().startIncallActivity();
-                            return;
-                        } else if (state == State.Error) {
+                        if (state == State.Error) {
                             // Convert Core message for internalization
                             if (call.getErrorInfo().getReason() == Reason.Declined) {
                                 displayCustomToast(
@@ -154,13 +147,6 @@ public class CallOutgoingActivity extends LinphoneGenericActivity implements OnC
                         || State.OutgoingEarlyMedia == cstate) {
                     mCall = call;
                     break;
-                }
-                if (State.StreamsRunning == cstate) {
-                    if (!LinphoneActivity.isInstanciated()) {
-                        return;
-                    }
-                    LinphoneActivity.instance().startIncallActivity();
-                    return;
                 }
             }
         }

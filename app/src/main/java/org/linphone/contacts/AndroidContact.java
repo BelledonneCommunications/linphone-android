@@ -32,7 +32,6 @@ import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import java.io.Serializable;
 import java.util.ArrayList;
-import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
@@ -124,10 +123,7 @@ class AndroidContact implements Serializable {
     }
 
     protected void createAndroidContact() {
-        if (LinphoneManager.getInstance()
-                .getContext()
-                .getResources()
-                .getBoolean(R.bool.use_linphone_tag)) {
+        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
             Log.i("[Contact] Creating contact using linphone account type");
             addChangesToCommit(
                     ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
@@ -565,10 +561,7 @@ class AndroidContact implements Serializable {
     }
 
     protected void createRawLinphoneContactFromExistingAndroidContactIfNeeded(String fullName) {
-        if (LinphoneManager.getInstance()
-                .getContext()
-                .getResources()
-                .getBoolean(R.bool.use_linphone_tag)) {
+        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
             if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
                 if (mAndroidRawId == null) {
                     Log.i("[Contact] RAW ID not found for contact " + mAndroidId);

@@ -81,8 +81,7 @@ public class CallManager {
         }
 
         String recordFile =
-                FileUtils.getCallRecordingFilename(
-                        LinphoneManager.getInstance().getContext(), lAddress);
+                FileUtils.getCallRecordingFilename(LinphoneService.instance(), lAddress);
         params.setRecordFile(recordFile);
 
         lc.inviteAddressWithParams(lAddress, params);

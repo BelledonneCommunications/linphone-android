@@ -32,9 +32,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.call.CallActivity;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
@@ -108,7 +108,7 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
                     @Override
                     public void onClick(View v) {
                         Context context = LinphoneService.instance();
-                        Intent intent = new Intent(context, LinphoneActivity.class);
+                        Intent intent = new Intent(context, CallActivity.class);
                         context.startActivity(intent);
                     }
                 });

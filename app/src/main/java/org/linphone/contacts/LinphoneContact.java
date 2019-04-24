@@ -27,8 +27,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Core;
@@ -523,8 +523,7 @@ public class LinphoneContact extends AndroidContact
         if (ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mime)) {
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, data4));
         } else if (ContactsContract.CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE.equals(mime)
-                || LinphoneManager.getInstance()
-                        .getContext()
+                || LinphoneService.instance()
                         .getString(R.string.linphone_address_mime_type)
                         .equals(mime)) {
             addNumberOrAddress(new LinphoneNumberOrAddress(data1, true));
@@ -537,7 +536,7 @@ public class LinphoneContact extends AndroidContact
 
     public void save() {
         saveChangesCommited();
-        syncValuesFromAndroidContact(LinphoneActivity.instance());
+        syncValuesFromAndroidContact(LinphoneService.instance());
         createOrUpdateFriend();
     }
 

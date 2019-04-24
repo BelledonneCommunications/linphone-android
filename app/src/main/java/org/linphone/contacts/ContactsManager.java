@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -170,7 +169,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             }
             context.startActivity(intent);
         } else {
-            LinphoneActivity.instance().editContact(contact, valueToAdd);
+            // TODO FIXME LinphoneActivity.instance().editContact(contact, valueToAdd);
         }
     }
 
@@ -188,7 +187,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             }
             context.startActivity(intent);
         } else {
-            LinphoneActivity.instance().addContact(name, valueToAdd);
+            // TODO FIXME LinphoneActivity.instance().addContact(name, valueToAdd);
         }
     }
 

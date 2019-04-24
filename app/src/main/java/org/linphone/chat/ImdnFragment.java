@@ -28,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -39,7 +38,6 @@ import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
 import org.linphone.core.ParticipantImdnState;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
@@ -89,11 +87,12 @@ public class ImdnFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (LinphoneActivity.instance().isTablet()) {
+                        // TODO FIXME
+                        /*if (LinphoneActivity.instance().isTablet()) {
                             LinphoneActivity.instance().goToChat(mLocalSipuri, mRoomUri, null);
                         } else {
                             LinphoneActivity.instance().onBackPressed();
-                        }
+                        }*/
                     }
                 });
 
@@ -124,10 +123,6 @@ public class ImdnFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.MESSAGE_IMDN);
-        }
 
         refreshInfo();
         if (mMessage != null) {
@@ -197,9 +192,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {
@@ -249,9 +242,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {
@@ -301,9 +292,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {
@@ -347,9 +336,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {

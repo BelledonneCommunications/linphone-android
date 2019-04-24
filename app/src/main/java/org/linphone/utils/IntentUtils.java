@@ -23,10 +23,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import java.util.ArrayList;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.tools.Log;
+import org.linphone.main.DialerActivity;
 
 public class IntentUtils {
     private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
@@ -34,7 +34,7 @@ public class IntentUtils {
     public static void handleIntent(Context context, Intent intent) {
         if (intent == null) return;
 
-        Intent newIntent = new Intent(context, LinphoneActivity.class);
+        Intent newIntent = new Intent(context, DialerActivity.class); // TODO FIXME
         String stringFileShared;
         String stringUriFileShared;
         Uri fileUri;

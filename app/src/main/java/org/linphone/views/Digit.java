@@ -31,7 +31,6 @@ import android.widget.Toast;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.call.CallActivity;
 import org.linphone.core.Core;
 import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
@@ -175,9 +174,10 @@ public class Digit extends Button implements AddressAware {
             if (!mPlayDtmf) return false;
             if (!linphoneServiceReady()) return true;
 
-            if (CallActivity.isInstanciated()) {
+            /*if (CallActivity.isInstanciated()) {
                 CallActivity.instance().resetControlsHidingCallBack();
-            }
+            }*/
+            // TODO FIXME
 
             Core lc = LinphoneManager.getLc();
             if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {
