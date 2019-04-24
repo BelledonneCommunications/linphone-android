@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
@@ -30,6 +29,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
 import android.widget.TextView;
+import androidx.fragment.app.FragmentTransaction;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.Notifiable;
 

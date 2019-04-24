@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -27,10 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
@@ -38,7 +35,7 @@ import org.linphone.settings.widget.TextSetting;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.PushNotificationUtils;
 
-public class NetworkSettingsFragment extends Fragment {
+public class NetworkSettingsFragment extends SettingsFragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
 
@@ -62,12 +59,6 @@ public class NetworkSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_network_title));
-        }
 
         updateValues();
     }
@@ -205,9 +196,7 @@ public class NetworkSettingsFragment extends Fragment {
                     @Override
                     public void onClicked() {
                         mPrefs.powerSaverDialogPrompted(true);
-                        Intent intent =
-                                DeviceUtils.getDevicePowerManagerIntent(
-                                        LinphoneActivity.instance());
+                        Intent intent = DeviceUtils.getDevicePowerManagerIntent(getActivity());
                         if (intent != null) {
                             startActivity(intent);
                         }
@@ -242,9 +231,7 @@ public class NetworkSettingsFragment extends Fragment {
         mTurnPassword.setEnabled(mPrefs.isTurnEnabled());
 
         mAndroidBatterySaverSettings.setVisibility(
-                DeviceUtils.hasDevicePowerManager(LinphoneActivity.instance())
-                        ? View.VISIBLE
-                        : View.GONE);
+                DeviceUtils.hasDevicePowerManager(getActivity()) ? View.VISIBLE : View.GONE);
 
         setListeners();
     }

@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -29,7 +28,6 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
@@ -42,7 +40,6 @@ import org.linphone.core.NatPolicy;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.TransportType;
 import org.linphone.core.tools.Log;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
@@ -50,7 +47,7 @@ import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 import org.linphone.utils.PushNotificationUtils;
 
-public class AccountSettingsFragment extends Fragment {
+public class AccountSettingsFragment extends SettingsFragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
     private int mAccountIndex;
@@ -118,12 +115,6 @@ public class AccountSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_sipaccount));
-        }
 
         updateValues();
     }
@@ -420,7 +411,8 @@ public class AccountSettingsFragment extends Fragment {
                                 core.setDefaultProxyConfig(mProxyConfig);
                                 mUseAsDefault.setEnabled(false);
                             }
-                            LinphoneActivity.instance().refreshAccounts();
+                            // FIXME TODO
+                            // LinphoneActivity.instance().refreshAccounts();
                         } else {
                             Log.e("[Account Settings] No proxy config !");
                         }
@@ -536,8 +528,9 @@ public class AccountSettingsFragment extends Fragment {
                                 core.removeAuthInfo(mAuthInfo);
                             }
                         }
-                        LinphoneActivity.instance().displaySettings();
-                        LinphoneActivity.instance().refreshAccounts();
+                        // FIXME TODO
+                        /*LinphoneActivity.instance().displaySettings();
+                        LinphoneActivity.instance().refreshAccounts();*/
                     }
                 });
 
@@ -547,8 +540,7 @@ public class AccountSettingsFragment extends Fragment {
                     public void onClicked() {
                         Intent assistant = new Intent();
                         assistant.setClass(
-                                LinphoneActivity.instance(),
-                                PhoneAccountLinkingAssistantActivity.class);
+                                getActivity(), PhoneAccountLinkingAssistantActivity.class);
                         assistant.putExtra("AccountNumber", mAccountIndex);
                         startActivity(assistant);
                     }

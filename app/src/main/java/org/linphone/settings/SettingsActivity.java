@@ -20,6 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
+import android.view.KeyEvent;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
 import org.linphone.main.MainActivity;
 
 public class SettingsActivity extends MainActivity {
@@ -27,15 +32,61 @@ public class SettingsActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOnBackPressGoHome = false;
+
+        changeFragment(new MenuSettingsFragment(), getString(R.string.settings), false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        hideTabBar();
+        showTopBarWithTitle(getString(R.string.settings));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void goBack() {
+        if (!isTablet()) {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStackImmediate();
+                return;
+            }
+        }
+        super.goBack();
+    }
+
+    private void changeFragment(SettingsFragment fragment, String name, boolean addToBackStack) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        if (addToBackStack) {
+            transaction.addToBackStack(name);
+        }
+
+        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
+        transaction.replace(R.id.fragmentContainer, fragment, name);
+        transaction.commitAllowingStateLoss();
+        fm.executePendingTransactions();
+
+        showTopBarWithTitle(name);
+    }
+
+    public void changeFragment(SettingsFragment fragment, String name) {
+        changeFragment(fragment, name, true);
     }
 }

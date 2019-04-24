@@ -129,7 +129,7 @@ public abstract class MainActivity extends ThemableActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        finish();
+                        goBack();
                     }
                 });
 
@@ -187,6 +187,7 @@ public abstract class MainActivity extends ThemableActivity
         super.onPause();
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (mOnBackPressGoHome && keyCode == KeyEvent.KEYCODE_BACK) {
             if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
@@ -194,6 +195,10 @@ public abstract class MainActivity extends ThemableActivity
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    protected void goBack() {
+        finish();
     }
 
     protected boolean isTablet() {

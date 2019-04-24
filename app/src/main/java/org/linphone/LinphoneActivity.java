@@ -108,10 +108,7 @@ import org.linphone.history.HistoryDetailFragment;
 import org.linphone.history.HistoryFragment;
 import org.linphone.purchase.InAppPurchaseActivity;
 import org.linphone.recording.RecordingsFragment;
-import org.linphone.settings.AccountSettingsFragment;
-import org.linphone.settings.AudioSettingsFragment;
 import org.linphone.settings.LinphonePreferences;
-import org.linphone.settings.SettingsFragment;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.IntentUtils;
 import org.linphone.utils.LinphoneGenericActivity;
@@ -501,8 +498,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
         super.onNewIntent(intent);
 
         /*if (getCurrentFragment() == FragmentsAvailable.SETTINGS) {
-            if (mFragment instanceof SettingsFragment) {
-                ((SettingsFragment) mFragment).closePreferenceScreen();
+            if (mFragment instanceof MenuSettingsFragment) {
+                ((MenuSettingsFragment) mFragment).closePreferenceScreen();
             }
         }*/
 
@@ -617,7 +614,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_CANCELLER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ((AudioSettingsFragment) mFragment).startEchoCancellerCalibration();
+                    // ((AudioSettingsFragment) mFragment).startEchoCancellerCalibration();
                 }
                 break;
             case PERMISSIONS_READ_EXTERNAL_STORAGE_DEVICE_RINGTONE:
@@ -628,8 +625,8 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 break;
             case PERMISSIONS_RECORD_AUDIO_ECHO_TESTER:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    ((AudioSettingsFragment) mFragment).startEchoTester();
-                break;
+                    // ((AudioSettingsFragment) mFragment).startEchoTester();
+                    break;
         }
     }
 
@@ -745,10 +742,10 @@ public class LinphoneActivity extends LinphoneGenericActivity
                 }
                 break;
             case SETTINGS:
-                mFragment = new SettingsFragment();
+                // mFragment = new MenuSettingsFragment();
                 break;
             case ACCOUNT_SETTINGS:
-                mFragment = new AccountSettingsFragment();
+                // mFragment = new AccountSettingsFragment();
                 break;
             case ABOUT:
                 mFragment = new AboutFragment();
@@ -831,7 +828,7 @@ public class LinphoneActivity extends LinphoneGenericActivity
             }
         }
 
-        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
+        // Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
         transaction.replace(R.id.fragmentContainer, newFragment, newFragmentType.toString());
         transaction.commitAllowingStateLoss();
         fm.executePendingTransactions();

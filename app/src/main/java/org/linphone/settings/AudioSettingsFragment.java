@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -31,21 +30,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.PayloadType;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
-public class AudioSettingsFragment extends Fragment {
+public class AudioSettingsFragment extends SettingsFragment {
     protected View mRootView;
     protected LinphonePreferences mPrefs;
 
@@ -71,12 +68,6 @@ public class AudioSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_audio_title));
-        }
 
         updateValues();
     }
@@ -165,8 +156,9 @@ public class AudioSettingsFragment extends Fragment {
                         if (recordAudio == PackageManager.PERMISSION_GRANTED) {
                             startEchoCancellerCalibration();
                         } else {
-                            LinphoneActivity.instance()
-                                    .checkAndRequestRecordAudioPermissionForEchoCanceller();
+                            // FIXME TODO
+                            /*LinphoneActivity.instance()
+                            .checkAndRequestRecordAudioPermissionForEchoCanceller();*/
                         }
                     }
                 });
@@ -188,8 +180,9 @@ public class AudioSettingsFragment extends Fragment {
                                 startEchoTester();
                             }
                         } else {
-                            LinphoneActivity.instance()
-                                    .checkAndRequestRecordAudioPermissionsForEchoTester();
+                            // FIXME TODO
+                            /*LinphoneActivity.instance()
+                            .checkAndRequestRecordAudioPermissionsForEchoTester();*/
                         }
                     }
                 });

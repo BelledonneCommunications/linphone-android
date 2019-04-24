@@ -82,7 +82,7 @@ public class RecordingsActivity extends ThemableActivity
     protected void onResume() {
         super.onResume();
 
-        //TODO: permission check for external storage
+        // TODO: permission check for external storage
 
         LinphoneManager.getInstance().setAudioManagerModeNormal();
         LinphoneManager.getInstance().routeAudioToSpeaker();
