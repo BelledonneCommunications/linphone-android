@@ -147,7 +147,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.RecordingsActivity"
+            android:name=".recording.RecordingsActivity"
             android:theme="@style/LinphoneStyleLight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
