@@ -39,7 +39,6 @@ import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
-import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.core.ChatMessage;
@@ -252,12 +251,6 @@ public class ChatRoomsFragment extends Fragment
         }
     }
 
-    public void invalidate() {
-        if (mChatRoomsAdapter != null) {
-            mChatRoomsAdapter.notifyDataSetChanged();
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -318,7 +311,7 @@ public class ChatRoomsFragment extends Fragment
         if (mChatRoomDeletionPendingCount > 0) {
             mWaitLayout.setVisibility(View.VISIBLE);
         }
-        ((ContactsActivity) getActivity())
+        ((ChatActivity) getActivity())
                 .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
     }
 

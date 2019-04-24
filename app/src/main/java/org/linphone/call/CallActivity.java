@@ -356,13 +356,13 @@ public class CallActivity extends LinphoneGenericActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putBoolean("Speaker", LinphoneManager.getInstance().isSpeakerEnabled());
         outState.putBoolean("Mic", !LinphoneManager.getLc().micEnabled());
         outState.putBoolean("VideoCallPaused", mIsVideoCallPaused);
         outState.putBoolean("AskingVideo", mIsVideoAsk);
         outState.putLong("sTimeRemind", sTimeRemind);
         if (mDialog != null) mDialog.dismiss();
-        super.onSaveInstanceState(outState);
     }
 
     private boolean isTablet() {

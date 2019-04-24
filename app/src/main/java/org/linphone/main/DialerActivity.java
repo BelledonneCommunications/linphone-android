@@ -186,14 +186,14 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable("isTransfer", mIsTransfer);
         super.onSaveInstanceState(outState);
+        outState.putSerializable("isTransfer", mIsTransfer);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mIsTransfer = savedInstanceState.getBoolean("isTransfer");
         super.onRestoreInstanceState(savedInstanceState);
+        mIsTransfer = savedInstanceState.getBoolean("isTransfer");
     }
 
     public void updateLayout() {

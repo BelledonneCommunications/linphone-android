@@ -53,18 +53,18 @@ public class ContactsActivity extends MainActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putSerializable(
                 "DisplayedContact", mDisplayedContact != null ? mDisplayedContact : null);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         LinphoneContact contact = (LinphoneContact) savedInstanceState.get("DisplayedContact");
         if (contact != null) {
             showContactDetails(contact);
         }
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

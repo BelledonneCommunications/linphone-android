@@ -49,6 +49,7 @@ public class ChatActivity extends MainActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putSerializable(
                 "DisplayedRoomLocalAddress",
                 mDisplayRoomLocalAddress != null
@@ -57,11 +58,11 @@ public class ChatActivity extends MainActivity {
         outState.putSerializable(
                 "DisplayedRoomPeerAddress",
                 mDisplayRoomPeerAddress != null ? mDisplayRoomPeerAddress.asStringUriOnly() : null);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         String localAddr = savedInstanceState.getString("DisplayedRoomLocalAddress");
         String peerAddr = savedInstanceState.getString("DisplayedRoomPeerAddress");
         Address localAddress = null;
@@ -73,7 +74,6 @@ public class ChatActivity extends MainActivity {
             peerAddress = Factory.instance().createAddress(peerAddr);
         }
         showChatRoom(localAddress, peerAddress);
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -107,11 +107,11 @@ public class ChatActivity extends MainActivity {
             extras = new Bundle();
         }
         if (localAddress != null) {
-            extras.putSerializable("LocalAddress", localAddress.asStringUriOnly());
+            extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
             mDisplayRoomLocalAddress = localAddress;
         }
         if (peerAddress != null) {
-            extras.putSerializable("PeerAddress", peerAddress.asStringUriOnly());
+            extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
             mDisplayRoomPeerAddress = peerAddress;
         }
         ChatMessagesFragment fragment = new ChatMessagesFragment();

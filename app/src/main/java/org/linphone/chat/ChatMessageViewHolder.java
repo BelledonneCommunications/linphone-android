@@ -45,7 +45,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -174,8 +173,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             background.setBackgroundResource(R.drawable.chat_bubble_incoming_full);
 
             // Can't anchor incoming messages, setting this to align max width with LIME icon
-            bubbleLayout.setPadding(
-                    0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 18), 0);
+            bubbleLayout.setPadding(0, 0, (int) ImageUtils.dpToPixels(mContext, 18), 0);
 
             if (status == ChatMessage.State.FileTransferInProgress) {
                 downloadInProgress.setVisibility(View.VISIBLE);
@@ -325,7 +323,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             } else {
                 Log.w(
                         "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-                LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+                // TODO FIXME
+                // LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
             }
         }
     }

@@ -55,14 +55,15 @@ public class HistoryActivity extends MainActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putSerializable(
                 "DisplayedAddress",
                 mDisplayedAddress != null ? mDisplayedAddress.asString() : null);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         String addr = savedInstanceState.getString("DisplayedAddress");
         if (addr != null) {
             Address address = Factory.instance().createAddress(addr);
@@ -70,7 +71,6 @@ public class HistoryActivity extends MainActivity {
                 showHistoryDetails(address);
             }
         }
-        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

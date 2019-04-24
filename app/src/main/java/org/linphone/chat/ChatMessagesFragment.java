@@ -62,7 +62,6 @@ import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactAddress;
-import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.ContactsUpdatedListener;
 import org.linphone.contacts.LinphoneContact;
@@ -671,16 +670,16 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void showKeyboardVisibleMode() {
-        ((ContactsActivity) getActivity()).hideTabBar();
-        ((ContactsActivity) getActivity()).hideStatusBar();
+        ((ChatActivity) getActivity()).hideTabBar();
+        ((ChatActivity) getActivity()).hideStatusBar();
         mTopBar.setVisibility(View.GONE);
     }
 
     private void hideKeyboardVisibleMode() {
         if (getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
-            ((ContactsActivity) getActivity()).showTabBar();
+            ((ChatActivity) getActivity()).showTabBar();
         }
-        ((ContactsActivity) getActivity()).showStatusBar();
+        ((ChatActivity) getActivity()).showStatusBar();
         mTopBar.setVisibility(View.VISIBLE);
     }
 
@@ -747,7 +746,7 @@ public class ChatMessagesFragment extends Fragment
         mChatRoom.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
 
-        ((ContactsActivity) getActivity())
+        ((ChatActivity) getActivity())
                 .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 
         mRemoteParticipantAddress = mRemoteSipAddress;
@@ -953,8 +952,9 @@ public class ChatMessagesFragment extends Fragment
     }
 
     /** File transfer related */
-    @Override
+    /*@Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         if (mFilesUploadLayout != null) {
             String files[] = new String[mFilesUploadLayout.getChildCount()];
             for (int i = 0; i < mFilesUploadLayout.getChildCount(); i++) {
@@ -972,8 +972,7 @@ public class ChatMessagesFragment extends Fragment
         }
         mCurrentInputContentInfo = null;
         mCurrentFlags = 0;
-        super.onSaveInstanceState(outState);
-    }
+    }*/
 
     private void onRestoreInstanceState(Bundle savedInstanceState) {
         String files[] = savedInstanceState.getStringArray("Files");
@@ -1238,7 +1237,7 @@ public class ChatMessagesFragment extends Fragment
     public void onChatMessageReceived(ChatRoom cr, EventLog event) {
         cr.markAsRead();
         LinphoneManager.getInstance().updateUnreadCountForChatRoom(mChatRoom, 0);
-        ((ContactsActivity) getActivity())
+        ((ChatActivity) getActivity())
                 .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
 
         ChatMessage msg = event.getChatMessage();

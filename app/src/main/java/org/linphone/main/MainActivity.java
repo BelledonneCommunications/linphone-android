@@ -223,6 +223,24 @@ public abstract class MainActivity extends ThemableActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        try {
+            super.onSaveInstanceState(outState);
+        } catch (IllegalStateException ise) {
+            // Do not log this exception
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        try {
+            super.onRestoreInstanceState(savedInstanceState);
+        } catch (IllegalStateException ise) {
+            // Do not log this exception
+        }
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (mOnBackPressGoHome && keyCode == KeyEvent.KEYCODE_BACK) {
             if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
@@ -282,11 +300,11 @@ public abstract class MainActivity extends ThemableActivity
     // Tab, Top and Status bars
 
     public void hideStatusBar() {
-        findViewById(R.id.status).setVisibility(View.GONE);
+        findViewById(R.id.status_fragment).setVisibility(View.GONE);
     }
 
     public void showStatusBar() {
-        findViewById(R.id.status).setVisibility(View.VISIBLE);
+        findViewById(R.id.status_fragment).setVisibility(View.VISIBLE);
     }
 
     public void hideTabBar() {
@@ -315,7 +333,7 @@ public abstract class MainActivity extends ThemableActivity
 
     // Permissions
 
-    private boolean checkPermission(String permission) {
+    protected boolean checkPermission(String permission) {
         int granted = getPackageManager().checkPermission(permission, getPackageName());
         Log.i(
                 "[Permission] "
@@ -343,22 +361,12 @@ public abstract class MainActivity extends ThemableActivity
             permissions = permissionsToAskFor.toArray(permissions);
 
             ActivityCompat.requestPermissions(this, permissions, MAIN_PERMISSIONS);
-        } else {
-            if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
-                LinphoneManager.getInstance().checkForUpdate();
-            }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(
             int requestCode, String[] permissions, int[] grantResults) {
-
-        // If permission was asked we wait here for the results so dialogs won't conflict
-        if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
-            LinphoneManager.getInstance().checkForUpdate();
-        }
-
         if (permissions.length <= 0) return;
 
         for (int i = 0; i < permissions.length; i++) {
