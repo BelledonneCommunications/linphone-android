@@ -1,7 +1,8 @@
-package org.linphone.fragments;
+package org.linphone.activities;
+
 /*
-AboutFragment.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+AboutActivity.java
+Copyright (C) 2019 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -27,34 +27,43 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import org.linphone.BuildConfig;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
-import org.linphone.core.Core.LogCollectionUploadState;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.settings.LinphonePreferences;
 
-public class AboutFragment extends Fragment implements OnClickListener {
-    private View mSendLogButton = null;
-    private View mResetLogButton = null;
+public class AboutActivity extends MainActivity {
     private CoreListenerStub mListener;
     private ProgressDialog mProgress;
     private boolean mUploadInProgress;
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.about, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mOnBackPressGoHome = false;
 
-        TextView aboutVersion = view.findViewById(R.id.about_android_version);
-        TextView aboutLiblinphoneVersion = view.findViewById(R.id.about_liblinphone_sdk_version);
+        // Uses the fragment container layout to inflate the about view instead of using a fragment
+        View aboutView = LayoutInflater.from(this).inflate(R.layout.about, null, false);
+        LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        fragmentContainer.addView(aboutView, params);
+
+        if (isTablet()) {
+            findViewById(R.id.fragmentContainer2).setVisibility(View.GONE);
+        }
+
+        TextView aboutVersion = findViewById(R.id.about_android_version);
+        TextView aboutLiblinphoneVersion = findViewById(R.id.about_liblinphone_sdk_version);
         aboutLiblinphoneVersion.setText(
                 String.format(
                         getString(R.string.about_liblinphone_sdk_version),
@@ -68,9 +77,9 @@ public class AboutFragment extends Fragment implements OnClickListener {
                         getString(R.string.about_version),
                         BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"));
 
-        TextView privacyPolicy = view.findViewById(R.id.privacy_policy_link);
+        TextView privacyPolicy = findViewById(R.id.privacy_policy_link);
         privacyPolicy.setOnClickListener(
-                new OnClickListener() {
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent browserIntent =
@@ -81,9 +90,9 @@ public class AboutFragment extends Fragment implements OnClickListener {
                     }
                 });
 
-        TextView license = view.findViewById(R.id.about_text);
+        TextView license = findViewById(R.id.about_text);
         license.setOnClickListener(
-                new OnClickListener() {
+                new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent browserIntent =
@@ -94,36 +103,77 @@ public class AboutFragment extends Fragment implements OnClickListener {
                     }
                 });
 
-        mSendLogButton = view.findViewById(R.id.send_log);
-        mSendLogButton.setOnClickListener(this);
-        mSendLogButton.setVisibility(
+        Button sendLogs = findViewById(R.id.send_log);
+        sendLogs.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Core core = LinphoneManager.getCore();
+                        if (core != null) {
+                            core.uploadLogCollection();
+                        }
+                    }
+                });
+        sendLogs.setVisibility(
                 LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
-        mResetLogButton = view.findViewById(R.id.reset_log);
-        mResetLogButton.setOnClickListener(this);
-        mResetLogButton.setVisibility(
+        Button resetLogs = findViewById(R.id.reset_log);
+        resetLogs.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Core core = LinphoneManager.getCore();
+                        if (core != null) {
+                            core.resetLogCollection();
+                        }
+                    }
+                });
+        resetLogs.setVisibility(
                 LinphonePreferences.instance().isDebugEnabled() ? View.VISIBLE : View.GONE);
 
         mListener =
                 new CoreListenerStub() {
                     @Override
                     public void onLogCollectionUploadProgressIndication(
-                            Core lc, int offset, int total) {}
+                            Core core, int offset, int total) {}
 
                     @Override
                     public void onLogCollectionUploadStateChanged(
-                            Core lc, LogCollectionUploadState state, String info) {
-                        if (state == LogCollectionUploadState.InProgress) {
+                            Core core, Core.LogCollectionUploadState state, String info) {
+                        if (state == Core.LogCollectionUploadState.InProgress) {
                             displayUploadLogsInProgress();
-                        } else if (state == LogCollectionUploadState.Delivered
-                                || state == LogCollectionUploadState.NotDelivered) {
+                        } else if (state == Core.LogCollectionUploadState.Delivered
+                                || state == Core.LogCollectionUploadState.NotDelivered) {
                             mUploadInProgress = false;
                             if (mProgress != null) mProgress.dismiss();
                         }
                     }
                 };
+    }
 
-        return view;
+    @Override
+    public void onPause() {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.removeListener(mListener);
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showTopBarWithTitle(getString(R.string.about));
+        if (getResources().getBoolean(R.bool.hide_bottom_bar_on_second_level_views)) {
+            hideTabBar();
+        }
+
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            core.addListener(mListener);
+        }
     }
 
     private void displayUploadLogsInProgress() {
@@ -132,9 +182,8 @@ public class AboutFragment extends Fragment implements OnClickListener {
         }
         mUploadInProgress = true;
 
-        mProgress = ProgressDialog.show(LinphoneActivity.instance(), null, null);
-        Drawable d =
-                new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.light_grey_color));
+        mProgress = ProgressDialog.show(this, null, null);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(this, R.color.light_grey_color));
         d.setAlpha(200);
         mProgress
                 .getWindow()
@@ -144,45 +193,5 @@ public class AboutFragment extends Fragment implements OnClickListener {
         mProgress.getWindow().setBackgroundDrawable(d);
         mProgress.setContentView(R.layout.wait_layout);
         mProgress.show();
-    }
-
-    @Override
-    public void onPause() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
-        }
-
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
-        }
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.ABOUT);
-        }
-
-        super.onResume();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (LinphoneActivity.isInstanciated()) {
-            Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-            if (v == mSendLogButton) {
-                if (lc != null) {
-                    lc.uploadLogCollection();
-                }
-            } else if (v == mResetLogButton) {
-                if (lc != null) {
-                    lc.resetLogCollection();
-                }
-            }
-        }
     }
 }

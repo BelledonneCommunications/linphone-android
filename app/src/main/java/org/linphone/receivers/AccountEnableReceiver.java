@@ -34,12 +34,7 @@ public class AccountEnableReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int prefsAccountIndex = (int) (long) intent.getLongExtra(FIELD_ID, -1);
         boolean enable = intent.getBooleanExtra(FIELD_ACTIVE, true);
-        Log.i(
-                TAG,
-                "Received broadcast for index="
-                        + Integer.toString(prefsAccountIndex)
-                        + ",enable="
-                        + Boolean.toString(enable));
+        Log.i(TAG, "Received broadcast for index=" + prefsAccountIndex + ",enable=" + enable);
         if (prefsAccountIndex < 0
                 || prefsAccountIndex >= LinphonePreferences.instance().getAccountCount()) return;
         LinphonePreferences.instance().setAccountEnabled(prefsAccountIndex, enable);

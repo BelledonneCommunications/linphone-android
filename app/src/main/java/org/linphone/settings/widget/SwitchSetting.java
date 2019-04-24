@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class SwitchSetting extends BasicSetting {
-    protected Switch mSwitch;
+    private Switch mSwitch;
 
     public SwitchSetting(Context context) {
         super(context);
@@ -91,7 +91,7 @@ public class SwitchSetting extends BasicSetting {
         return mSwitch.isChecked();
     }
 
-    public void toggle() {
+    private void toggle() {
         mSwitch.toggle();
     }
 }

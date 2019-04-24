@@ -32,9 +32,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.call.CallActivity;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
@@ -47,7 +47,6 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
     private final DisplayMetrics mMetrics;
     private float mX, mY, mTouchX, mTouchY;
     private boolean mDragEnabled;
-    private TextureView mRemoteVideo, mLocalPreview;
 
     public LinphoneTextureViewOverlay(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
@@ -71,20 +70,21 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
         mMetrics = new DisplayMetrics();
         mWindowManager.getDefaultDisplay().getMetrics(mMetrics);
 
-        Call call = LinphoneManager.getLc().getCurrentCall();
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
         CallParams callParams = call.getCurrentParams();
         mParams.width = callParams.getReceivedVideoDefinition().getWidth();
         mParams.height = callParams.getReceivedVideoDefinition().getHeight();
 
-        mRemoteVideo = new TextureView(context);
-        addView(mRemoteVideo);
-        mLocalPreview = new TextureView(context);
-        addView(mLocalPreview);
+        TextureView remoteVideo = new TextureView(context);
+        addView(remoteVideo);
+        TextureView localPreview = new TextureView(context);
+        addView(localPreview);
 
         RelativeLayout.LayoutParams remoteVideoParams =
                 new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mRemoteVideo.setLayoutParams(remoteVideoParams);
+        remoteVideo.setLayoutParams(remoteVideoParams);
 
         VideoDefinition videoSize = call.getCurrentParams().getSentVideoDefinition();
         int localPreviewWidth = videoSize.getWidth();
@@ -97,18 +97,17 @@ public class LinphoneTextureViewOverlay extends RelativeLayout implements Linpho
                 new RelativeLayout.LayoutParams(localPreviewWidth, localPreviewHeight);
         localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, TRUE);
         localPreviewParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-        mLocalPreview.setLayoutParams(localPreviewParams);
+        localPreview.setLayoutParams(localPreviewParams);
 
-        Core lc = LinphoneManager.getLc();
-        lc.setNativeVideoWindowId(mRemoteVideo);
-        lc.setNativePreviewWindowId(mLocalPreview);
+        core.setNativeVideoWindowId(remoteVideo);
+        core.setNativePreviewWindowId(localPreview);
 
         setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Context context = LinphoneService.instance();
-                        Intent intent = new Intent(context, LinphoneActivity.class);
+                        Intent intent = new Intent(context, CallActivity.class);
                         context.startActivity(intent);
                     }
                 });

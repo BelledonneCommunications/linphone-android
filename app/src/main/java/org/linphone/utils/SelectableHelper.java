@@ -26,7 +26,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 
 public class SelectableHelper {
@@ -34,7 +33,6 @@ public class SelectableHelper {
     private final ImageView mSelectAllButton;
     private final ImageView mDeselectAllButton;
     private final ImageView mDeleteSelectionButton;
-    private final ImageView mCancelButton;
     private final LinearLayout mEditTopBar;
     private final LinearLayout mTopBar;
     private SelectableAdapter<RecyclerView.ViewHolder> mAdapter;
@@ -49,8 +47,8 @@ public class SelectableHelper {
         mEditTopBar = view.findViewById(R.id.edit_list);
         mTopBar = view.findViewById(R.id.top_bar);
 
-        mCancelButton = view.findViewById(R.id.cancel);
-        mCancelButton.setOnClickListener(
+        ImageView cancelButton = view.findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -99,9 +97,9 @@ public class SelectableHelper {
                     @Override
                     public void onClick(View v) {
                         final Dialog dialog =
-                                LinphoneActivity.instance()
-                                        .displayDialog(
-                                                mContext.getString(mDialogDeleteMessageResourceId));
+                                LinphoneUtils.getDialog(
+                                        mContext,
+                                        mContext.getString(mDialogDeleteMessageResourceId));
                         Button delete = dialog.findViewById(R.id.dialog_delete_button);
                         Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
 
@@ -179,7 +177,7 @@ public class SelectableHelper {
     }
 
     private Object[] getSelectedObjects() {
-        Object objects[] = new Object[mAdapter.getSelectedItemCount()];
+        Object[] objects = new Object[mAdapter.getSelectedItemCount()];
         int index = 0;
         for (Integer i : mAdapter.getSelectedItems()) {
             objects[index] = mAdapter.getItem(i);

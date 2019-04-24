@@ -2,7 +2,7 @@ package org.linphone.call;
 
 /*
 CallManager.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,31 +19,42 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.provider.Settings;
+import android.widget.Toast;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
+import org.linphone.R;
+import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
 import org.linphone.core.Call;
 import org.linphone.core.CallParams;
 import org.linphone.core.Core;
 import org.linphone.core.MediaEncryption;
+import org.linphone.core.ProxyConfig;
 import org.linphone.core.tools.Log;
+import org.linphone.mediastream.Version;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.LinphoneUtils;
+import org.linphone.views.AddressType;
 
 /** Handle call updating, reinvites. */
 public class CallManager {
+    private Context mContext;
+    private boolean mHandsetON = false;
+    private CallActivity.CallActivityInterface mCallInterface;
+    private BandwidthManager mBandwidthManager;
 
-    private static CallManager sInstance;
-
-    public static synchronized CallManager getInstance() {
-        if (sInstance == null) sInstance = new CallManager();
-        return sInstance;
+    public CallManager(Context context) {
+        mContext = context;
+        mBandwidthManager = new BandwidthManager();
     }
 
-    private CallManager() {}
-
-    private BandwidthManager getBandwidthManager() {
-        return BandwidthManager.getInstance();
+    public void destroy() {
+        mBandwidthManager.destroy();
     }
 
     public void inviteAddress(Address lAddress, boolean forceZRTP) {
@@ -54,16 +65,12 @@ public class CallManager {
         inviteAddress(lAddress, false, isLowBandwidthConnection, forceZRTP);
     }
 
-    public void inviteAddress(Address lAddress) {
-        inviteAddress(lAddress, false);
-    }
-
-    public void inviteAddress(
+    private void inviteAddress(
             Address lAddress, boolean videoEnabled, boolean lowBandwidth, boolean forceZRTP) {
-        Core lc = LinphoneManager.getLc();
+        Core core = LinphoneManager.getCore();
 
-        CallParams params = lc.createCallParams(null);
-        getBandwidthManager().updateWithProfileSettings(params);
+        CallParams params = core.createCallParams(null);
+        mBandwidthManager.updateWithProfileSettings(params);
 
         if (videoEnabled && params.videoEnabled()) {
             params.enableVideo(true);
@@ -73,7 +80,7 @@ public class CallManager {
 
         if (lowBandwidth) {
             params.enableLowBandwidth(true);
-            Log.d("Low bandwidth enabled in call params");
+            Log.d("[Call Manager] Low bandwidth enabled in call params");
         }
 
         if (forceZRTP) {
@@ -81,11 +88,10 @@ public class CallManager {
         }
 
         String recordFile =
-                FileUtils.getCallRecordingFilename(
-                        LinphoneManager.getInstance().getContext(), lAddress);
+                FileUtils.getCallRecordingFilename(LinphoneService.instance(), lAddress);
         params.setRecordFile(recordFile);
 
-        lc.inviteAddressWithParams(lAddress, params);
+        core.inviteAddressWithParams(lAddress, params);
     }
 
     public void inviteAddress(Address lAddress, boolean videoEnabled, boolean lowBandwidth) {
@@ -99,18 +105,18 @@ public class CallManager {
      * @return if updateCall called
      */
     public boolean reinviteWithVideo() {
-        Core lc = LinphoneManager.getLc();
-        Call lCall = lc.getCurrentCall();
-        if (lCall == null) {
-            Log.e("Trying to reinviteWithVideo while not in call: doing nothing");
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        if (call == null) {
+            Log.e("[Call Manager] Trying to reinviteWithVideo while not in call: doing nothing");
             return false;
         }
-        CallParams params = lc.createCallParams(lCall);
+        CallParams params = core.createCallParams(call);
 
         if (params.videoEnabled()) return false;
 
         // Check if video possible regarding bandwidth limitations
-        getBandwidthManager().updateWithProfileSettings(params);
+        mBandwidthManager.updateWithProfileSettings(params);
 
         // Abort if not enough bandwidth...
         if (!params.videoEnabled()) {
@@ -118,7 +124,7 @@ public class CallManager {
         }
 
         // Not yet in video call: try to re-invite with video
-        lc.updateCall(lCall, params);
+        core.updateCall(call, params);
         return true;
     }
 
@@ -128,14 +134,174 @@ public class CallManager {
      * is recreated and setParameters is called.
      */
     public void updateCall() {
-        Core lc = LinphoneManager.getLc();
-        Call lCall = lc.getCurrentCall();
-        if (lCall == null) {
-            Log.e("Trying to updateCall while not in call: doing nothing");
+        Core core = LinphoneManager.getCore();
+        Call call = core.getCurrentCall();
+        if (call == null) {
+            Log.e("[Call Manager] Trying to updateCall while not in call: doing nothing");
             return;
         }
-        CallParams params = lc.createCallParams(lCall);
-        getBandwidthManager().updateWithProfileSettings(params);
-        lc.updateCall(lCall, null);
+        CallParams params = core.createCallParams(call);
+        mBandwidthManager.updateWithProfileSettings(params);
+        core.updateCall(call, null);
+    }
+
+    public void newOutgoingCall(AddressType address) {
+        String to = address.getText().toString();
+        newOutgoingCall(to, address.getDisplayedName());
+    }
+
+    public void newOutgoingCall(String to, String displayName) {
+        //		if (mCore.inCall()) {
+        //			listenerDispatcher.tryingNewOutgoingCallButAlreadyInCall();
+        //			return;
+        //		}
+        if (to == null) return;
+
+        // If to is only a username, try to find the contact to get an alias if existing
+        if (!to.startsWith("sip:") || !to.contains("@")) {
+            LinphoneContact contact = ContactsManager.getInstance().findContactFromPhoneNumber(to);
+            if (contact != null) {
+                String alias = contact.getContactFromPresenceModelForUriOrTel(to);
+                if (alias != null) {
+                    to = alias;
+                }
+            }
+        }
+
+        LinphonePreferences preferences = LinphonePreferences.instance();
+        Core core = LinphoneManager.getCore();
+        Address address;
+        address = core.interpretUrl(to); // InterpretUrl does normalizePhoneNumber
+        if (address == null) {
+            Log.e("[Call Manager] Couldn't convert to String to Address : " + to);
+            return;
+        }
+
+        ProxyConfig lpc = core.getDefaultProxyConfig();
+        if (mContext.getResources().getBoolean(R.bool.forbid_self_call)
+                && lpc != null
+                && address.weakEqual(lpc.getIdentityAddress())) {
+            return;
+        }
+        address.setDisplayName(displayName);
+
+        boolean isLowBandwidthConnection =
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneService.instance().getApplicationContext());
+
+        if (core.isNetworkReachable()) {
+            if (Version.isVideoCapable()) {
+                boolean prefVideoEnable = preferences.isVideoEnabled();
+                boolean prefInitiateWithVideo = preferences.shouldInitiateVideoCall();
+                inviteAddress(
+                        address,
+                        prefVideoEnable && prefInitiateWithVideo,
+                        isLowBandwidthConnection);
+            } else {
+                inviteAddress(address, false, isLowBandwidthConnection);
+            }
+        } else {
+            Toast.makeText(
+                            mContext,
+                            mContext.getString(R.string.error_network_unreachable),
+                            Toast.LENGTH_LONG)
+                    .show();
+            Log.e(
+                    "[Call Manager] Error: "
+                            + mContext.getString(R.string.error_network_unreachable));
+        }
+    }
+
+    private void enableCamera(Call call, boolean enable) {
+        if (call != null) {
+            call.enableCamera(enable);
+            if (mContext.getResources().getBoolean(R.bool.enable_call_notification))
+                LinphoneService.instance()
+                        .getNotificationManager()
+                        .displayCallNotification(LinphoneManager.getCore().getCurrentCall());
+        }
+    }
+
+    public void playDtmf(ContentResolver r, char dtmf) {
+        try {
+            if (Settings.System.getInt(r, Settings.System.DTMF_TONE_WHEN_DIALING) == 0) {
+                // audible touch disabled: don't play on speaker, only send in outgoing stream
+                return;
+            }
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e("[Call Manager] playDtmf exception: " + e);
+        }
+
+        LinphoneManager.getCore().playDtmf(dtmf, -1);
+    }
+
+    private void terminateCall() {
+        Core core = LinphoneManager.getCore();
+        if (core.inCall()) {
+            core.terminateCall(core.getCurrentCall());
+        }
+    }
+
+    /** @return false if already in video call. */
+    public boolean addVideo() {
+        Call call = LinphoneManager.getCore().getCurrentCall();
+        enableCamera(call, true);
+        return reinviteWithVideo();
+    }
+
+    public boolean acceptCall(Call call) {
+        if (call == null) return false;
+
+        Core core = LinphoneManager.getCore();
+        CallParams params = core.createCallParams(call);
+
+        boolean isLowBandwidthConnection =
+                !LinphoneUtils.isHighBandwidthConnection(
+                        LinphoneService.instance().getApplicationContext());
+
+        if (params != null) {
+            params.enableLowBandwidth(isLowBandwidthConnection);
+            params.setRecordFile(
+                    FileUtils.getCallRecordingFilename(mContext, call.getRemoteAddress()));
+        } else {
+            Log.e("[Call Manager] Could not create call params for call");
+            return false;
+        }
+
+        core.acceptCallWithParams(call, params);
+        return true;
+    }
+
+    public void setCallInterface(CallActivity.CallActivityInterface callInterface) {
+        mCallInterface = callInterface;
+    }
+
+    public void resetCallControlsHidingTimer() {
+        if (mCallInterface != null) {
+            mCallInterface.resetCallControlsHidingTimer();
+        }
+    }
+
+    public void refreshInCallActions() {
+        if (mCallInterface != null) {
+            mCallInterface.refreshInCallActions();
+        }
+    }
+
+    public void setHandsetMode(Boolean on) {
+        if (mHandsetON == on) return;
+        Core core = LinphoneManager.getCore();
+
+        if (core.isIncomingInvitePending() && on) {
+            mHandsetON = true;
+            acceptCall(core.getCurrentCall());
+        } else if (on && mCallInterface != null) {
+            mHandsetON = true;
+            mCallInterface.setSpeakerEnabled(true);
+            mCallInterface.refreshInCallActions();
+        } else if (!on) {
+            mHandsetON = false;
+            terminateCall();
+        }
     }
 }

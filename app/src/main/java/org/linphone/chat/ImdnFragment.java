@@ -1,6 +1,8 @@
+package org.linphone.chat;
+
 /*
-ImdnOldFragment.java
-Copyright (C) 2010-2018  Belledonne Communications, Grenoble, France
+ImdnFragment.java
+Copyright (C) 2018 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,8 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-package org.linphone.chat;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
@@ -38,8 +37,8 @@ import org.linphone.core.ChatMessage;
 import org.linphone.core.ChatMessageListenerStub;
 import org.linphone.core.ChatRoom;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.ParticipantImdnState;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
@@ -53,13 +52,11 @@ public class ImdnFragment extends Fragment {
             mSentHeader,
             mUndelivered,
             mUndeliveredHeader;
-    private ImageView mBackButton;
     private ChatMessageViewHolder mBubble;
     private ViewGroup mContainer;
 
-    private String mLocalSipuri, mRoomUri, mMessageId;
+    private String mMessageId;
     private Address mLocalSipAddr, mRoomAddr;
-    private ChatRoom mRoom;
     private ChatMessage mMessage;
     private ChatMessageListenerStub mListener;
 
@@ -70,29 +67,29 @@ public class ImdnFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mLocalSipuri = getArguments().getString("LocalSipUri");
-            mLocalSipAddr = LinphoneManager.getLc().createAddress(mLocalSipuri);
-            mRoomUri = getArguments().getString("RemoteSipUri");
-            mRoomAddr = LinphoneManager.getLc().createAddress(mRoomUri);
+            String localSipuri = getArguments().getString("LocalSipUri");
+            mLocalSipAddr = Factory.instance().createAddress(localSipuri);
+            String roomUri = getArguments().getString("RemoteSipUri");
+            mRoomAddr = Factory.instance().createAddress(roomUri);
             mMessageId = getArguments().getString("MessageId");
         }
 
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        mRoom = core.getChatRoom(mRoomAddr, mLocalSipAddr);
+        Core core = LinphoneManager.getCore();
+        ChatRoom room = core.getChatRoom(mRoomAddr, mLocalSipAddr);
 
         mInflater = inflater;
         mContainer = container;
         View view = mInflater.inflate(R.layout.chat_imdn, container, false);
 
-        mBackButton = view.findViewById(R.id.back);
-        mBackButton.setOnClickListener(
+        ImageView backButton = view.findViewById(R.id.back);
+        backButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().goToChat(mLocalSipuri, mRoomUri, null);
+                        if (getResources().getBoolean(R.bool.isTablet)) {
+                            ((ChatActivity) getActivity()).showChatRoom(mLocalSipAddr, mRoomAddr);
                         } else {
-                            LinphoneActivity.instance().onBackPressed();
+                            ((ChatActivity) getActivity()).popBackStack();
                         }
                     }
                 });
@@ -108,7 +105,7 @@ public class ImdnFragment extends Fragment {
 
         mBubble = new ChatMessageViewHolder(getActivity(), view.findViewById(R.id.bubble), null);
 
-        mMessage = mRoom.findMessage(mMessageId);
+        mMessage = room.findMessage(mMessageId);
         mListener =
                 new ChatMessageListenerStub() {
                     @Override
@@ -124,10 +121,6 @@ public class ImdnFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().selectMenu(FragmentsAvailable.MESSAGE_IMDN);
-        }
 
         refreshInfo();
         if (mMessage != null) {
@@ -197,9 +190,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {
@@ -249,9 +240,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {
@@ -301,9 +290,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {
@@ -347,9 +334,7 @@ public class ImdnFragment extends Fragment {
 
             final TextView sipUri = v.findViewById(R.id.sipUri);
             sipUri.setText(address.asStringUriOnly());
-            if (!LinphoneActivity.instance()
-                    .getResources()
-                    .getBoolean(R.bool.show_sip_uri_in_chat)) {
+            if (!getResources().getBoolean(R.bool.show_sip_uri_in_chat)) {
                 sipUri.setVisibility(View.GONE);
                 name.setOnClickListener(
                         new View.OnClickListener() {

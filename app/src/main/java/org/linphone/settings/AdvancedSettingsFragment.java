@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,18 +30,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneService;
 import org.linphone.R;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
-public class AdvancedSettingsFragment extends Fragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+public class AdvancedSettingsFragment extends SettingsFragment {
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mDebug,
             mJavaLogger,
@@ -69,17 +66,11 @@ public class AdvancedSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_advanced_title));
-        }
 
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mDebug = mRootView.findViewById(R.id.pref_debug);
 
         mJavaLogger = mRootView.findViewById(R.id.pref_java_debug);
@@ -108,7 +99,7 @@ public class AdvancedSettingsFragment extends Fragment {
         mDeviceName = mRootView.findViewById(R.id.pref_device_name);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mDebug.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -159,6 +150,7 @@ public class AdvancedSettingsFragment extends Fragment {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
                         mPrefs.enableDarkMode(newValue);
+                        getActivity().recreate();
                     }
                 });
 
@@ -190,7 +182,7 @@ public class AdvancedSettingsFragment extends Fragment {
                 new SettingListenerBase() {
                     @Override
                     public void onClicked() {
-                        Context context = LinphoneActivity.instance();
+                        Context context = getActivity();
                         Intent i = new Intent();
                         i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         i.addCategory(Intent.CATEGORY_DEFAULT);
@@ -198,7 +190,10 @@ public class AdvancedSettingsFragment extends Fragment {
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                        startActivityForResult(i, LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
+                        // FIXME TODO
+                        // startActivityForResult(i,
+                        // LinphoneActivity.ANDROID_APP_SETTINGS_ACTIVITY);
+                        startActivity(i);
                     }
                 });
 
@@ -211,7 +206,7 @@ public class AdvancedSettingsFragment extends Fragment {
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mDebug.setChecked(mPrefs.isDebugEnabled());
 
         mJavaLogger.setChecked(mPrefs.useJavaLogger());
@@ -230,7 +225,7 @@ public class AdvancedSettingsFragment extends Fragment {
 
         mUsername.setValue(mPrefs.getDefaultUsername());
 
-        mDeviceName.setValue(mPrefs.getDeviceName(LinphoneActivity.instance()));
+        mDeviceName.setValue(mPrefs.getDeviceName(getActivity()));
 
         setListeners();
     }

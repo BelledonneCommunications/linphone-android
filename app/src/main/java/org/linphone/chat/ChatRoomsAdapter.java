@@ -1,6 +1,8 @@
+package org.linphone.chat;
+
 /*
 ChatRoomsAdapter.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-
-package org.linphone.chat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -68,11 +68,12 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
                         ? View.INVISIBLE
                         : (room.getUnreadMessagesCount() > 0 ? View.VISIBLE : View.INVISIBLE));
         holder.delete.setChecked(isSelected(position));
+        room.setUserData(holder);
         holder.bindChatRoom(room);
     }
 
     public void refresh() {
-        ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
+        ChatRoom[] rooms = LinphoneManager.getCore().getChatRooms();
         if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
             mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
         } else {
@@ -95,7 +96,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
     public void clear() {
         mRooms.clear();
-        notifyDataSetChanged();
+        // Do not notify data set changed, we don't want the list to empty when fragment is paused
     }
 
     /** Adapter's methods */

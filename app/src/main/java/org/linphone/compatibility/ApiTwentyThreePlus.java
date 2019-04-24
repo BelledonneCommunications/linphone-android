@@ -22,13 +22,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.PowerManager;
-import android.widget.TextView;
 
 @TargetApi(23)
 class ApiTwentyThreePlus {
-    public static void setTextAppearance(TextView textview, int style) {
-        textview.setTextAppearance(style);
-    }
 
     public static boolean isAppIdleMode(Context context) {
         return ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).isDeviceIdleMode();

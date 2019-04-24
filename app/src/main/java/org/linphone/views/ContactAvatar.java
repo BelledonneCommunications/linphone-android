@@ -99,7 +99,7 @@ public class ContactAvatar {
         }
     }
 
-    public static void displayAvatar(
+    private static void displayAvatar(
             String displayName, View v, boolean showBorder, int maskResource) {
         if (displayName == null || v == null) return;
 
@@ -145,7 +145,7 @@ public class ContactAvatar {
         setSecurityLevel(securityLevel, v);
     }
 
-    public static void displayAvatar(
+    private static void displayAvatar(
             LinphoneContact contact, View v, boolean showBorder, int maskResource) {
         if (contact == null || v == null) return;
 

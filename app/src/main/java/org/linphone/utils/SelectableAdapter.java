@@ -96,7 +96,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
     }
 
     public void selectAll() {
-        for (Integer i = 0; i < getItemCount(); i++) {
+        for (int i = 0; i < getItemCount(); i++) {
             mSelectedItems.put(i, true);
             notifyDataSetChanged();
         }

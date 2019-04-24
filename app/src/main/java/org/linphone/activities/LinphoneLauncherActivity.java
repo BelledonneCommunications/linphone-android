@@ -1,8 +1,8 @@
-package org.linphone;
+package org.linphone.activities;
 
 /*
 LinphoneLauncherActivity.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,44 +19,42 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-import static android.content.Intent.ACTION_MAIN;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
+import org.linphone.R;
 import org.linphone.assistant.MenuAssistantActivity;
+import org.linphone.chat.ChatActivity;
 import org.linphone.settings.LinphonePreferences;
 
-/** Launch Linphone main activity when Service is ready. */
+/** Creates LinphoneService and wait until Core is ready to start main Activity */
 public class LinphoneLauncherActivity extends Activity {
-
     private Handler mHandler;
-    private ServiceWaitThread mServiceThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Hack to avoid to draw twice LinphoneActivity on tablets
-        if (getResources().getBoolean(R.bool.orientation_portrait_only)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-        if (getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
-            setContentView(R.layout.launch_screen_full_image);
-        } else {
+
+        if (!getResources().getBoolean(R.bool.use_full_screen_image_splashscreen)) {
             setContentView(R.layout.launch_screen);
-        }
+        } // Otherwise use drawable/launch_screen layer list up until first activity starts
 
         mHandler = new Handler();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         if (LinphoneService.isReady()) {
             onServiceReady();
         } else {
-            // start linphone as background
-            startService(new Intent(ACTION_MAIN).setClass(this, LinphoneService.class));
-            mServiceThread = new ServiceWaitThread();
-            mServiceThread.start();
+            startService(
+                    new Intent().setClass(LinphoneLauncherActivity.this, LinphoneService.class));
+            new ServiceWaitThread().start();
         }
     }
 
@@ -68,7 +66,16 @@ public class LinphoneLauncherActivity extends Activity {
         if (useFirstLoginActivity && LinphonePreferences.instance().isFirstLaunch()) {
             classToStart = MenuAssistantActivity.class;
         } else {
-            classToStart = LinphoneActivity.class;
+            if (getIntent().getExtras() != null
+                    && "Chat".equals(getIntent().getExtras().getString("Activity", null))) {
+                classToStart = ChatActivity.class;
+            } else {
+                classToStart = DialerActivity.class;
+            }
+        }
+
+        if (getResources().getBoolean(R.bool.check_for_update_when_app_starts)) {
+            LinphoneManager.getInstance().checkForUpdate();
         }
 
         mHandler.postDelayed(
@@ -80,10 +87,16 @@ public class LinphoneLauncherActivity extends Activity {
                         if (getIntent() != null && getIntent().getExtras() != null) {
                             intent.putExtras(getIntent().getExtras());
                         }
+                        intent.setAction(getIntent().getAction());
+                        intent.setType(getIntent().getType());
                         startActivity(intent);
+
+                        LinphoneService.instance()
+                                .getNotificationManager()
+                                .removeForegroundServiceNotificationIfPossible();
                     }
                 },
-                500);
+                100);
 
         LinphoneManager.getInstance().changeStatusToOnline();
     }
@@ -104,7 +117,6 @@ public class LinphoneLauncherActivity extends Activity {
                             onServiceReady();
                         }
                     });
-            mServiceThread = null;
         }
     }
 }

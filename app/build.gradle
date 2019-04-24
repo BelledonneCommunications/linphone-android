@@ -30,6 +30,9 @@ if (!firebaseEnabled()) {
     excludeFiles.add('**/Firebase*')
     println '[Push Notification] Firebase disabled'
 }
+// Remove or comment if you want to use those
+excludeFiles.add('**/XmlRpc*')
+excludeFiles.add('**/InAppPurchase*')
 
 def excludePackage = []
 

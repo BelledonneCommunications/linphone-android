@@ -71,7 +71,7 @@ class Recording implements PlayerListener, Comparable<Recording> {
                     }
                 };
 
-        mPlayer = LinphoneManager.getLc().createLocalPlayer(null, null, null);
+        mPlayer = LinphoneManager.getCore().createLocalPlayer(null, null, null);
         mPlayer.addListener(this);
     }
 

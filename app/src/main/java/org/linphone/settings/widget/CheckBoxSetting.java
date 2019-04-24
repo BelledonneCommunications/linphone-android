@@ -30,7 +30,7 @@ import androidx.annotation.Nullable;
 import org.linphone.R;
 
 public class CheckBoxSetting extends BasicSetting {
-    protected CheckBox mCheckBox;
+    private CheckBox mCheckBox;
 
     public CheckBoxSetting(Context context) {
         super(context);
@@ -93,7 +93,7 @@ public class CheckBoxSetting extends BasicSetting {
         return mCheckBox.isChecked();
     }
 
-    public void toggle() {
+    private void toggle() {
         mCheckBox.toggle();
     }
 }

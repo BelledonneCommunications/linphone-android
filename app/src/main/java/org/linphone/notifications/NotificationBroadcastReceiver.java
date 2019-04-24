@@ -2,7 +2,7 @@ package org.linphone.notifications;
 
 /*
 NotificationBroadcastReceiver.java
-Copyright (C) 2018  Belledonne Communications, Grenoble, France
+Copyright (C) 2018 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,7 +25,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -51,7 +50,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                             .getNotificationManager()
                             .getSipUriForNotificationId(notifId);
 
-            Core core = LinphoneManager.getLc();
+            Core core = LinphoneManager.getCore();
             if (core == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 onError(context, notifId);
@@ -88,10 +87,6 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
             }
 
             room.markAsRead();
-            if (LinphoneActivity.isInstanciated()) {
-                LinphoneActivity.instance()
-                        .displayMissedChats(LinphoneManager.getInstance().getUnreadMessageCount());
-            }
 
             if (intent.getAction().equals(Compatibility.INTENT_REPLY_NOTIF_ACTION)) {
                 final String reply = getMessageText(intent).toString();
@@ -131,7 +126,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                             .getNotificationManager()
                             .getSipUriForCallNotificationId(notifId);
 
-            Core core = LinphoneManager.getLc();
+            Core core = LinphoneManager.getCore();
             if (core == null) {
                 Log.e("[Notification Broadcast Receiver] Couldn't get Core instance");
                 return;

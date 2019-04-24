@@ -30,7 +30,7 @@ import org.linphone.core.AccountCreatorListenerStub;
 import org.linphone.core.tools.Log;
 
 public class EmailAccountValidationAssistantActivity extends AssistantActivity {
-    private TextView mEmail, mFinishCreation;
+    private TextView mFinishCreation;
 
     private AccountCreatorListenerStub mListener;
 
@@ -40,8 +40,8 @@ public class EmailAccountValidationAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_email_account_validation);
 
-        mEmail = findViewById(R.id.send_email);
-        mEmail.setText(mAccountCreator.getEmail());
+        TextView email = findViewById(R.id.send_email);
+        email.setText(mAccountCreator.getEmail());
 
         mFinishCreation = findViewById(R.id.assistant_check);
         mFinishCreation.setOnClickListener(

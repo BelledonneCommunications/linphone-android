@@ -48,7 +48,7 @@ public class ContactSelectView extends View {
         if (ca.getContact() != null) {
             mContactName.setText(ca.getContact().getFirstName());
         } else {
-            LinphoneManager.getLc()
+            LinphoneManager.getCore()
                     .createFriendWithAddress(ca.getAddressAsDisplayableString())
                     .getName();
             mContactName.setText(ca.getAddressAsDisplayableString());

@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
+import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.core.Address;
@@ -67,32 +67,37 @@ public class LinphonePreferences {
         return sInstance;
     }
 
+    public void destroy() {
+        mContext = null;
+        sInstance = null;
+    }
+
     public void setContext(Context c) {
         mContext = c;
         mBasePath = mContext.getFilesDir().getAbsolutePath();
     }
 
     private String getString(int key) {
-        if (mContext == null && LinphoneManager.isInstanciated()) {
-            mContext = LinphoneManager.getInstance().getContext();
+        if (mContext == null && LinphoneService.isReady()) {
+            mContext = LinphoneService.instance();
         }
 
         return mContext.getString(key);
     }
 
     private Core getLc() {
-        if (!LinphoneManager.isInstanciated()) return null;
+        if (!LinphoneService.isReady()) return null;
 
-        return LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        return LinphoneManager.getCore();
     }
 
     public Config getConfig() {
-        Core lc = getLc();
-        if (lc != null) {
-            return lc.getConfig();
+        Core core = getLc();
+        if (core != null) {
+            return core.getConfig();
         }
 
-        if (!LinphoneManager.isInstanciated()) {
+        if (!LinphoneService.isReady()) {
             File linphonerc = new File(mBasePath + "/.linphonerc");
             if (linphonerc.exists()) {
                 return Factory.instance().createConfig(linphonerc.getAbsolutePath());
@@ -114,7 +119,7 @@ public class LinphonePreferences {
                 return Factory.instance().createConfigFromString(text.toString());
             }
         } else {
-            return Factory.instance().createConfig(LinphoneManager.getInstance().configFile);
+            return Factory.instance().createConfig(LinphoneManager.getInstance().getConfigFile());
         }
         return null;
     }
@@ -225,7 +230,7 @@ public class LinphonePreferences {
         }
     }
 
-    public boolean isAccountEnabled(int n) {
+    private boolean isAccountEnabled(int n) {
         return getProxyConfig(n).registerEnabled();
     }
     // End of accounts settings
@@ -575,8 +580,8 @@ public class LinphonePreferences {
     public void setPushNotificationEnabled(boolean enable) {
         getConfig().setBool("app", "push_notification", enable);
 
-        Core lc = getLc();
-        if (lc == null) {
+        Core core = getLc();
+        if (core == null) {
             return;
         }
 
@@ -584,8 +589,8 @@ public class LinphonePreferences {
             // Add push infos to exisiting proxy configs
             String regId = getPushNotificationRegistrationID();
             String appId = getString(R.string.gcm_defaultSenderId);
-            if (regId != null && lc.getProxyConfigList().length > 0) {
-                for (ProxyConfig lpc : lc.getProxyConfigList()) {
+            if (regId != null && core.getProxyConfigList().length > 0) {
+                for (ProxyConfig lpc : core.getProxyConfigList()) {
                     if (lpc == null) continue;
                     if (!lpc.isPushNotificationAllowed()) {
                         lpc.edit();
@@ -621,11 +626,11 @@ public class LinphonePreferences {
                 Log.i(
                         "[Push Notification] Refreshing registers to ensure token is up to date: "
                                 + regId);
-                lc.refreshRegisters();
+                core.refreshRegisters();
             }
         } else {
-            if (lc.getProxyConfigList().length > 0) {
-                for (ProxyConfig lpc : lc.getProxyConfigList()) {
+            if (core.getProxyConfigList().length > 0) {
+                for (ProxyConfig lpc : core.getProxyConfigList()) {
                     lpc.edit();
                     lpc.setContactUriParameters(null);
                     lpc.done();
@@ -634,7 +639,7 @@ public class LinphonePreferences {
                                 "[Push Notification] infos removed from proxy config "
                                         + lpc.getIdentityAddress().asStringUriOnly());
                 }
-                lc.refreshRegisters();
+                core.refreshRegisters();
             }
         }
     }
@@ -742,7 +747,7 @@ public class LinphonePreferences {
         if (getLc().tunnelAvailable()) {
             Tunnel tunnel = getLc().getTunnel();
             if (mTunnelConfig == null) {
-                TunnelConfig servers[] = tunnel.getServers();
+                TunnelConfig[] servers = tunnel.getServers();
                 if (servers.length > 0) {
                     mTunnelConfig = servers[0];
                 } else {
@@ -799,10 +804,6 @@ public class LinphonePreferences {
     }
 
     // End of tunnel settings
-
-    public boolean isFirstRemoteProvisioning() {
-        return getConfig().getBool("app", "first_remote_provisioning", true);
-    }
 
     public boolean adaptiveRateControlEnabled() {
         if (getLc() == null) return false;
@@ -935,13 +936,7 @@ public class LinphonePreferences {
     }
 
     public void enableOverlay(boolean enable) {
-        getConfig()
-                .setBool(
-                        "app",
-                        "display_overlay",
-                        enable
-                                && LinphoneActivity.isInstanciated()
-                                && LinphoneActivity.instance().checkAndRequestOverlayPermission());
+        getConfig().setBool("app", "display_overlay", enable);
     }
 
     public boolean isDeviceRingtoneEnabled() {
@@ -1025,9 +1020,6 @@ public class LinphonePreferences {
 
     public void enableDarkMode(boolean enable) {
         getConfig().setBool("app", "dark_mode", enable);
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance().recreate();
-        }
     }
 
     public String getDeviceName(Context context) {

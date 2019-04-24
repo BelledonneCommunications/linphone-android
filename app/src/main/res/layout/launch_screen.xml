@@ -38,7 +38,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
-        android:indeterminateTint="@color/primary_color"
         android:layout_marginBottom="20dp" />
 
     <View

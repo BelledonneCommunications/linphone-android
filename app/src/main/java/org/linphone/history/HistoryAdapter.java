@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import androidx.annotation.NonNull;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -42,17 +40,17 @@ import org.linphone.views.ContactAvatar;
 
 public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private final List<CallLog> mLogs;
-    private final Context mContext;
+    private final HistoryActivity mActivity;
     private final HistoryViewHolder.ClickListener mClickListener;
 
     public HistoryAdapter(
-            Context aContext,
+            HistoryActivity activity,
             List<CallLog> logs,
             HistoryViewHolder.ClickListener listener,
             SelectableHelper helper) {
         super(helper);
         mLogs = logs;
-        mContext = aContext;
+        mActivity = activity;
         mClickListener = listener;
     }
 
@@ -71,9 +69,9 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final HistoryViewHolder holder, final int position) {
-        final CallLog log = mLogs.get(position);
+        CallLog log = mLogs.get(position);
         long timestamp = log.getStartDate() * 1000;
-        Address address;
+        final Address address;
 
         holder.contact.setSelected(true); // For automated horizontal scrolling of long texts
         Calendar logTime = Calendar.getInstance();
@@ -111,7 +109,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
 
         LinphoneContact c = ContactsManager.getInstance().findContactFromAddress(address);
         String displayName = null;
-        final String sipUri = (address != null) ? address.asString() : "";
+        String sipUri = (address != null) ? address.asString() : "";
 
         if (c != null) {
             displayName = c.getFullName();
@@ -134,9 +132,7 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
                         ? new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (LinphoneActivity.isInstanciated()) {
-                                    LinphoneActivity.instance().displayHistoryDetail(sipUri, log);
-                                }
+                                mActivity.showHistoryDetails(address);
                             }
                         }
                         : null);
@@ -151,13 +147,13 @@ public class HistoryAdapter extends SelectableAdapter<HistoryViewHolder> {
     private String timestampToHumanDate(Calendar cal) {
         SimpleDateFormat dateFormat;
         if (isToday(cal)) {
-            return mContext.getString(R.string.today);
+            return mActivity.getString(R.string.today);
         } else if (isYesterday(cal)) {
-            return mContext.getString(R.string.yesterday);
+            return mActivity.getString(R.string.yesterday);
         } else {
             dateFormat =
                     new SimpleDateFormat(
-                            mContext.getResources().getString(R.string.history_date_format));
+                            mActivity.getResources().getString(R.string.history_date_format));
         }
 
         return dateFormat.format(cal.getTime());

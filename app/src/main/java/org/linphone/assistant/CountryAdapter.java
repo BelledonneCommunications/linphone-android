@@ -34,9 +34,9 @@ import org.linphone.R;
 import org.linphone.core.DialPlan;
 import org.linphone.core.Factory;
 
-public class CountryAdapter extends BaseAdapter implements Filterable {
-    private Context mContext;
-    private LayoutInflater mInflater;
+class CountryAdapter extends BaseAdapter implements Filterable {
+    private final Context mContext;
+    private final LayoutInflater mInflater;
     private final DialPlan[] mAllCountries;
     private List<DialPlan> mFilteredCountries;
 

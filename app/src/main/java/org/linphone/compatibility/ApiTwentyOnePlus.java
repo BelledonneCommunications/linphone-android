@@ -33,7 +33,6 @@ import org.linphone.R;
 @TargetApi(21)
 class ApiTwentyOnePlus {
 
-    @SuppressWarnings("deprecation")
     public static Notification createMessageNotification(
             Context context,
             int msgCount,

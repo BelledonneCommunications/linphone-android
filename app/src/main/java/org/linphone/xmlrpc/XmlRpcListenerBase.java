@@ -21,92 +21,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 public class XmlRpcListenerBase implements XmlRpcListener {
     @Override
-    public void onError() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onError() {}
 
     @Override
-    public void onAccountCreated() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountCreated() {}
 
     @Override
-    public void onAccountExpireFetched(String result) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountExpireFetched(String result) {}
 
     @Override
-    public void onAccountActivated() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountActivated() {}
 
     @Override
-    public void onAccountActivatedFetched() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountActivatedFetched() {}
 
     @Override
-    public void onTrialAccountFetched(boolean isTrial) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onTrialAccountFetched(boolean isTrial) {}
 
     @Override
-    public void onAccountFetched() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountFetched() {}
 
     @Override
-    public void onAccountEmailChanged() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountEmailChanged() {}
 
     @Override
-    public void onAccountPasswordChanged() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountPasswordChanged() {}
 
     @Override
-    public void onRecoverPasswordLinkSent() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onRecoverPasswordLinkSent() {}
 
     @Override
-    public void onActivateAccountLinkSent() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onActivateAccountLinkSent() {}
 
     @Override
-    public void onAccountExpireUpdated() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onAccountExpireUpdated() {}
 
     @Override
-    public void onSignatureVerified(boolean success) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onSignatureVerified(boolean success) {}
 
     @Override
-    public void onUsernameSent() {
-        // TODO Auto-generated method stub
-
-    }
+    public void onUsernameSent() {}
 
     @Override
-    public void onRemoteProvisioningFilenameSent(String result) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onRemoteProvisioningFilenameSent(String result) {}
 }

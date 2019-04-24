@@ -36,12 +36,10 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.settings.LinphonePreferences;
 
 public class InAppPurchaseFragment extends Fragment implements View.OnClickListener {
-    private LinearLayout mUsernameLayout;
-    private EditText mUsername, mEmail;
+    private EditText mUsername;
     private TextView mErrorMessage;
 
     private boolean mUsernameOk = false, mEmailOk = false;
-    private String mDefaultUsername, mDefaultEmail;
     private Button mBuyItemButton;
 
     @Override
@@ -58,13 +56,13 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
         displayBuySubscriptionButton(item);
 
-        mDefaultEmail = InAppPurchaseActivity.instance().getGmailAccount();
-        mDefaultUsername =
+        String mDefaultEmail = InAppPurchaseActivity.instance().getGmailAccount();
+        String mDefaultUsername =
                 LinphonePreferences.instance()
                         .getAccountUsername(
                                 LinphonePreferences.instance().getDefaultAccountIndex());
 
-        mUsernameLayout = view.findViewById(R.id.username_layout);
+        LinearLayout mUsernameLayout = view.findViewById(R.id.username_layout);
         mUsername = view.findViewById(R.id.username);
         if (!getResources().getBoolean(R.bool.hide_username_in_inapp)) {
             mUsernameLayout.setVisibility(View.VISIBLE);
@@ -81,7 +79,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
             }
         }
 
-        mEmail = view.findViewById(R.id.email);
+        EditText mEmail = view.findViewById(R.id.email);
         if (mDefaultEmail != null) {
             mEmail.setText(mDefaultEmail);
             mEmailOk = true;
@@ -116,7 +114,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
     }
 
     private boolean isUsernameCorrect(String username) {
-        ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().createProxyConfig();
         return lpc.isPhoneNumber(username);
     }
 
@@ -135,7 +133,7 @@ public class InAppPurchaseFragment extends Fragment implements View.OnClickListe
 
     private String getUsername() {
         String username = this.mUsername.getText().toString();
-        ProxyConfig lpc = LinphoneManager.getLc().createProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().createProxyConfig();
         username = lpc.normalizePhoneNumber(username);
         return username.toLowerCase(Locale.getDefault());
     }

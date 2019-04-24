@@ -29,17 +29,15 @@ public class ContactAddress implements Serializable {
     private LinphoneContact mContact;
     private String mAddress;
     private String mPhoneNumber;
-    private boolean mIsLinphoneContact;
-    private boolean mIsSelect = false;
     private boolean mIsAdmin = false;
     private transient View mView;
 
-    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC) {
-        init(c, a, pn, isLC);
+    public ContactAddress(LinphoneContact c, String a, String pn) {
+        init(c, a, pn);
     }
 
-    public ContactAddress(LinphoneContact c, String a, String pn, boolean isLC, boolean isAdmin) {
-        init(c, a, pn, isLC);
+    public ContactAddress(LinphoneContact c, String a, String pn, boolean isAdmin) {
+        init(c, a, pn);
         mIsAdmin = isAdmin;
     }
 
@@ -49,14 +47,6 @@ public class ContactAddress implements Serializable {
 
     public void setAdmin(boolean admin) {
         mIsAdmin = admin;
-    }
-
-    public boolean isSelect() {
-        return mIsSelect;
-    }
-
-    public void setSelect(boolean select) {
-        mIsSelect = select;
     }
 
     public View getView() {
@@ -122,11 +112,10 @@ public class ContactAddress implements Serializable {
         return mContact != null && mContact.hasFriendCapability(capability);
     }
 
-    private void init(LinphoneContact c, String a, String pn, boolean isLC) {
+    private void init(LinphoneContact c, String a, String pn) {
         mContact = c;
         mAddress = a;
         mPhoneNumber = pn;
-        mIsLinphoneContact = isLC;
     }
 
     @Override

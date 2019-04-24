@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -31,23 +30,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EcCalibratorStatus;
 import org.linphone.core.PayloadType;
-import org.linphone.fragments.FragmentsAvailable;
 import org.linphone.settings.widget.BasicSetting;
 import org.linphone.settings.widget.ListSetting;
 import org.linphone.settings.widget.SettingListenerBase;
 import org.linphone.settings.widget.SwitchSetting;
 import org.linphone.settings.widget.TextSetting;
 
-public class AudioSettingsFragment extends Fragment {
-    protected View mRootView;
-    protected LinphonePreferences mPrefs;
+public class AudioSettingsFragment extends SettingsFragment {
+    private View mRootView;
+    private LinphonePreferences mPrefs;
 
     private SwitchSetting mEchoCanceller, mAdaptiveRateControl;
     private TextSetting mMicGain, mSpeakerGain;
@@ -71,17 +68,11 @@ public class AudioSettingsFragment extends Fragment {
         super.onResume();
 
         mPrefs = LinphonePreferences.instance();
-        if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .selectMenu(
-                            FragmentsAvailable.SETTINGS_SUBLEVEL,
-                            getString(R.string.pref_audio_title));
-        }
 
         updateValues();
     }
 
-    protected void loadSettings() {
+    private void loadSettings() {
         mEchoCanceller = mRootView.findViewById(R.id.pref_echo_cancellation);
 
         mAdaptiveRateControl = mRootView.findViewById(R.id.pref_adaptive_rate_control);
@@ -101,7 +92,7 @@ public class AudioSettingsFragment extends Fragment {
         mAudioCodecs = mRootView.findViewById(R.id.pref_audio_codecs);
     }
 
-    protected void setListeners() {
+    private void setListeners() {
         mEchoCanceller.setListener(
                 new SettingListenerBase() {
                     @Override
@@ -141,7 +132,7 @@ public class AudioSettingsFragment extends Fragment {
                         int bitrate = Integer.valueOf(newValue);
                         mPrefs.setCodecBitrateLimit(bitrate);
 
-                        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+                        Core core = LinphoneManager.getCore();
                         for (final PayloadType pt : core.getAudioPayloadTypes()) {
                             if (pt.isVbr()) {
                                 pt.setNormalBitrate(bitrate);
@@ -165,8 +156,9 @@ public class AudioSettingsFragment extends Fragment {
                         if (recordAudio == PackageManager.PERMISSION_GRANTED) {
                             startEchoCancellerCalibration();
                         } else {
-                            LinphoneActivity.instance()
-                                    .checkAndRequestRecordAudioPermissionForEchoCanceller();
+                            ((SettingsActivity) getActivity())
+                                    .requestPermissionIfNotGranted(
+                                            Manifest.permission.RECORD_AUDIO);
                         }
                     }
                 });
@@ -182,20 +174,21 @@ public class AudioSettingsFragment extends Fragment {
                                                 Manifest.permission.RECORD_AUDIO,
                                                 getActivity().getPackageName());
                         if (recordAudio == PackageManager.PERMISSION_GRANTED) {
-                            if (LinphoneManager.getInstance().getEchoTesterStatus()) {
+                            if (LinphoneManager.getAudioManager().getEchoTesterStatus()) {
                                 stopEchoTester();
                             } else {
                                 startEchoTester();
                             }
                         } else {
-                            LinphoneActivity.instance()
-                                    .checkAndRequestRecordAudioPermissionsForEchoTester();
+                            ((SettingsActivity) getActivity())
+                                    .requestPermissionIfNotGranted(
+                                            Manifest.permission.RECORD_AUDIO);
                         }
                     }
                 });
     }
 
-    protected void updateValues() {
+    private void updateValues() {
         mEchoCanceller.setChecked(mPrefs.echoCancellationEnabled());
 
         mAdaptiveRateControl.setChecked(mPrefs.adaptiveRateControlEnabled());
@@ -220,7 +213,7 @@ public class AudioSettingsFragment extends Fragment {
 
     private void populateAudioCodecs() {
         mAudioCodecs.removeAllViews();
-        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         if (core != null) {
             for (final PayloadType pt : core.getAudioPayloadTypes()) {
                 final SwitchSetting codec = new SwitchSetting(getActivity());
@@ -248,21 +241,19 @@ public class AudioSettingsFragment extends Fragment {
         }
     }
 
-    public void startEchoTester() {
-        if (LinphoneManager.getInstance().startEchoTester() > 0) {
-            mEchoTester.setSubtitle("Is running");
-        }
+    private void startEchoTester() {
+        LinphoneManager.getAudioManager().startEchoTester();
+        mEchoTester.setSubtitle("Is running");
     }
 
     private void stopEchoTester() {
-        if (LinphoneManager.getInstance().stopEchoTester() > 0) {
-            mEchoTester.setSubtitle("Is stopped");
-        }
+        LinphoneManager.getAudioManager().stopEchoTester();
+        mEchoTester.setSubtitle("Is stopped");
     }
 
-    public void startEchoCancellerCalibration() {
-        if (LinphoneManager.getInstance().getEchoTesterStatus()) stopEchoTester();
-        LinphoneManager.getLc()
+    private void startEchoCancellerCalibration() {
+        if (LinphoneManager.getAudioManager().getEchoTesterStatus()) stopEchoTester();
+        LinphoneManager.getCore()
                 .addListener(
                         new CoreListenerStub() {
                             @Override
@@ -270,7 +261,7 @@ public class AudioSettingsFragment extends Fragment {
                                     Core core, EcCalibratorStatus status, int delayMs) {
                                 if (status == EcCalibratorStatus.InProgress) return;
                                 core.removeListener(this);
-                                LinphoneManager.getInstance().routeAudioToReceiver();
+                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
 
                                 if (status == EcCalibratorStatus.DoneNoEcho) {
                                     mEchoCalibration.setSubtitle(getString(R.string.no_echo));
@@ -289,6 +280,6 @@ public class AudioSettingsFragment extends Fragment {
                                         .setMode(AudioManager.MODE_NORMAL);
                             }
                         });
-        LinphoneManager.getInstance().startEcCalibration();
+        LinphoneManager.getAudioManager().startEcCalibration();
     }
 }

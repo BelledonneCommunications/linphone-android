@@ -26,11 +26,9 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import org.linphone.R;
-import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class MenuAssistantActivity extends AssistantActivity {
-    private TextView mAccountCreation, mAccountConnection, mGenericConnection, mRemoteConfiguration;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,10 +36,8 @@ public class MenuAssistantActivity extends AssistantActivity {
 
         setContentView(R.layout.assistant_menu);
 
-        Log.e("###");
-
-        mAccountCreation = findViewById(R.id.account_creation);
-        mAccountCreation.setOnClickListener(
+        TextView accountCreation = findViewById(R.id.account_creation);
+        accountCreation.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -62,8 +58,8 @@ public class MenuAssistantActivity extends AssistantActivity {
                     }
                 });
 
-        mAccountConnection = findViewById(R.id.account_connection);
-        mAccountConnection.setOnClickListener(
+        TextView accountConnection = findViewById(R.id.account_connection);
+        accountConnection.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -74,11 +70,11 @@ public class MenuAssistantActivity extends AssistantActivity {
                     }
                 });
         if (getResources().getBoolean(R.bool.hide_linphone_accounts_in_assistant)) {
-            mAccountConnection.setVisibility(View.GONE);
+            accountConnection.setVisibility(View.GONE);
         }
 
-        mGenericConnection = findViewById(R.id.generic_connection);
-        mGenericConnection.setOnClickListener(
+        TextView genericConnection = findViewById(R.id.generic_connection);
+        genericConnection.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -89,11 +85,11 @@ public class MenuAssistantActivity extends AssistantActivity {
                     }
                 });
         if (getResources().getBoolean(R.bool.hide_generic_accounts_in_assistant)) {
-            mGenericConnection.setVisibility(View.GONE);
+            genericConnection.setVisibility(View.GONE);
         }
 
-        mRemoteConfiguration = findViewById(R.id.remote_configuration);
-        mRemoteConfiguration.setOnClickListener(
+        TextView remoteConfiguration = findViewById(R.id.remote_configuration);
+        remoteConfiguration.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -104,7 +100,7 @@ public class MenuAssistantActivity extends AssistantActivity {
                     }
                 });
         if (getResources().getBoolean(R.bool.hide_remote_provisioning_in_assistant)) {
-            mRemoteConfiguration.setVisibility(View.GONE);
+            remoteConfiguration.setVisibility(View.GONE);
         }
 
         if (getResources().getBoolean(R.bool.assistant_use_linphone_login_as_first_fragment)) {

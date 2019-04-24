@@ -42,7 +42,6 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
     private Switch mUsernameConnectionSwitch;
     private EditText mPrefix, mPhoneNumber, mUsername, mPassword;
     private TextView mCountryPicker, mError, mConnect;
-    private ImageView mPhoneNumberInfos;
 
     private AccountCreatorListenerStub mListener;
 
@@ -157,8 +156,8 @@ public class AccountConnectionAssistantActivity extends AssistantActivity {
                     }
                 });
 
-        mPhoneNumberInfos = findViewById(R.id.info_phone_number);
-        mPhoneNumberInfos.setOnClickListener(
+        ImageView phoneNumberInfos = findViewById(R.id.info_phone_number);
+        phoneNumberInfos.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

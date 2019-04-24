@@ -76,14 +76,12 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
                                     : "denied"));
         }
 
-        switch (requestCode) {
-            case RECORD_AUDIO_PERMISSION_RESULT:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startEchoCancellerCalibration();
-                } else {
-                    // TODO: permission denied, display something to the user
-                }
-                break;
+        if (requestCode == RECORD_AUDIO_PERMISSION_RESULT) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startEchoCancellerCalibration();
+            } else {
+                // TODO: permission denied, display something to the user
+            }
         }
     }
 
@@ -111,7 +109,7 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
     }
 
     private void startEchoCancellerCalibration() {
-        LinphoneManager.getLc()
+        LinphoneManager.getCore()
                 .addListener(
                         new CoreListenerStub() {
                             @Override
@@ -119,13 +117,13 @@ public class EchoCancellerCalibrationAssistantActivity extends AssistantActivity
                                     Core core, EcCalibratorStatus status, int delayMs) {
                                 if (status == EcCalibratorStatus.InProgress) return;
                                 core.removeListener(this);
-                                LinphoneManager.getInstance().routeAudioToReceiver();
+                                LinphoneManager.getAudioManager().routeAudioToEarPiece();
                                 goToLinphoneActivity();
 
                                 ((AudioManager) getSystemService(Context.AUDIO_SERVICE))
                                         .setMode(AudioManager.MODE_NORMAL);
                             }
                         });
-        LinphoneManager.getInstance().startEcCalibration();
+        LinphoneManager.getAudioManager().startEcCalibration();
     }
 }
