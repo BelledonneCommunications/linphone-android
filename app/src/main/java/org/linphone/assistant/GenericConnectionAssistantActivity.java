@@ -67,7 +67,7 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         mTransport = findViewById(R.id.assistant_transports);
 
         mAccountCreator =
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                LinphoneManager.getCore()
                         .createAccountCreator(LinphonePreferences.instance().getXmlrpcUrl());
     }
 
@@ -76,7 +76,7 @@ public class GenericConnectionAssistantActivity extends AssistantActivity implem
         mAccountCreator.setDomain(mDomain.getText().toString());
         mAccountCreator.setPassword(mPassword.getText().toString());
         mAccountCreator.setDisplayName(mDisplayName.getText().toString());
-        // TODO: mUserId
+        // TODO: add support for user-id in account creator
 
         switch (mTransport.getCheckedRadioButtonId()) {
             case R.id.transport_udp:

@@ -46,7 +46,7 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
         mListener =
                 new CoreListenerStub() {
                     @Override
-                    public void onQrcodeFound(Core lc, String result) {
+                    public void onQrcodeFound(Core core, String result) {
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("URL", result);
                         setResult(Activity.RESULT_OK, resultIntent);
@@ -56,32 +56,40 @@ public class QrCodeConfigurationAssistantActivity extends AssistantActivity {
     }
 
     private void enableQrcodeReader(boolean enable) {
-        LinphoneManager.getLc().enableQrcodeVideoPreview(enable);
-        LinphoneManager.getLc().enableVideoPreview(enable);
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
+        core.enableQrcodeVideoPreview(enable);
+        core.enableVideoPreview(enable);
 
         if (enable) {
-            LinphoneManager.getLc().addListener(mListener);
+            core.addListener(mListener);
         } else {
-            LinphoneManager.getLc().removeListener(mListener);
+            core.removeListener(mListener);
         }
     }
 
     private void setBackCamera() {
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
+
         int camId = 0;
         AndroidCameraConfiguration.AndroidCamera[] cameras =
                 AndroidCameraConfiguration.retrieveCameras();
         for (AndroidCameraConfiguration.AndroidCamera androidCamera : cameras) {
             if (!androidCamera.frontFacing) camId = androidCamera.id;
         }
-        String[] devices = LinphoneManager.getLc().getVideoDevicesList();
+        String[] devices = core.getVideoDevicesList();
         String newDevice = devices[camId];
-        LinphoneManager.getLc().setVideoDevice(newDevice);
+        core.setVideoDevice(newDevice);
     }
 
     private void launchQrcodeReader() {
-        LinphoneManager.getLc().setNativePreviewWindowId(mQrcodeView);
-        setBackCamera();
+        Core core = LinphoneManager.getCore();
+        if (core == null) return;
 
+        core.setNativePreviewWindowId(mQrcodeView);
+        setBackCamera();
         enableQrcodeReader(true);
     }
 

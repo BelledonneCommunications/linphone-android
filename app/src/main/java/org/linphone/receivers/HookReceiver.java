@@ -2,7 +2,7 @@ package org.linphone.receivers;
 
 /*
 HookReceiver.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -31,19 +31,14 @@ public class HookReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (isOrderedBroadcast()) abortBroadcast();
         Bundle extras = intent.getExtras();
-        boolean b = extras.getBoolean("hookoff");
-        if (b) {
-            // handset on
-            Log.i(" ======>>>>>> HookReceiver - handset ON");
-            LinphoneManager.getInstance().enableSpeaker(false);
-            if (!LinphoneManager.getInstance().isHansetModeOn())
-                LinphoneManager.getInstance().setHandsetMode(true);
+        boolean handsetOn = extras.getBoolean("hookoff");
+        Log.i("[Hook Receiver] Handset " + handsetOn);
 
+        LinphoneManager.getCallManager().setHandsetMode(handsetOn);
+        if (handsetOn) {
+            LinphoneManager.getAudioManager().routeAudioToEarPiece();
         } else {
-            // handset off
-            Log.i(" ======>>>>>> HookReceiver - handset OFF");
-            LinphoneManager.getInstance().enableSpeaker(true);
-            LinphoneManager.getInstance().setHandsetMode(false);
+            LinphoneManager.getAudioManager().routeAudioToSpeaker();
         }
     }
 }

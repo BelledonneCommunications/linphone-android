@@ -37,7 +37,6 @@ import org.linphone.core.tools.Log;
 public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
     private TextView mCountryPicker, mError, mSipUri, mCreate;
     private EditText mPrefix, mPhoneNumber;
-    private ImageView mPhoneNumberInfos;
 
     private AccountCreatorListenerStub mListener;
 
@@ -122,8 +121,8 @@ public class PhoneAccountCreationAssistantActivity extends AssistantActivity {
                     }
                 });
 
-        mPhoneNumberInfos = findViewById(R.id.info_phone_number);
-        mPhoneNumberInfos.setOnClickListener(
+        ImageView phoneNumberInfos = findViewById(R.id.info_phone_number);
+        phoneNumberInfos.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

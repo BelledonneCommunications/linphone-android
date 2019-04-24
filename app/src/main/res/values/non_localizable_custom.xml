@@ -37,7 +37,7 @@
 
     <!-- Time -->
     <string name="history_date_format" translatable="false">EEE d MMM</string>
-    <string name="history_detail_date_format" translatable="false">yyyy/MM/dd - HH:mm - </string>
+    <string name="history_detail_date_format" translatable="false">yyyy/MM/dd - HH:mm</string>
     <string name="inapp_popup_date_format" translatable="false">yyyy/MM/dd</string>
     <string name="inapp_popup_date_day" translatable="false">dd</string>
     <string name="messages_date_format" translatable="false">dd/MM, HH:mm</string>
@@ -93,7 +93,6 @@
     <bool name="allow_multiple_images_and_text">true</bool>
     <bool name="send_text_and_images_as_different_messages">false</bool>
     <bool name="send_multiple_images_as_different_messages">true</bool>
-    <bool name="use_new_chat_bubbles_layout">true</bool>
     <bool name="use_big_pictures_to_preview_images_file_transfers">true</bool>
     <bool name="show_sip_uri_in_chat">false</bool>
     <bool name="hide_empty_one_to_one_chat_rooms">true</bool>

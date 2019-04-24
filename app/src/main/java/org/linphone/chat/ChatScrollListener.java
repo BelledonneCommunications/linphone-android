@@ -2,7 +2,7 @@ package org.linphone.chat;
 
 /*
 ChatScrollListener.java
-Copyright (C) 2010-2018  Belledonne Communications, Grenoble, France
+Copyright (C) 2018 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 abstract class ChatScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before mLoading more.
-    private final int mVisibleThreshold = 5;
+    private static final int mVisibleThreshold = 5;
     // The total number of items in the dataset after the last load
     private int mPreviousTotalItemCount = 0;
     // True if we are still waiting for the last set of data to load.

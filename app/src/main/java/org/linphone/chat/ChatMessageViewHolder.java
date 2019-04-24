@@ -2,7 +2,7 @@ package org.linphone.chat;
 
 /*
 ChatMessageViewHolder.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -45,7 +45,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
 import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -71,13 +70,14 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
     public final LinearLayout background;
     public final RelativeLayout avatarLayout;
 
-    public final ProgressBar downloadInProgress, sendInProgress;
+    private final ProgressBar downloadInProgress;
+    public final ProgressBar sendInProgress;
     public final TextView timeText;
-    public final ImageView outgoingImdn;
-    public final TextView messageText;
+    private final ImageView outgoingImdn;
+    private final TextView messageText;
 
-    public final FlexboxLayout multiFileContents;
-    public final RelativeLayout singleFileContent;
+    private final FlexboxLayout multiFileContents;
+    private final RelativeLayout singleFileContent;
 
     public final CheckBox delete;
 
@@ -92,7 +92,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
         view.setOnClickListener(this);
     }
 
-    public ChatMessageViewHolder(View view) {
+    private ChatMessageViewHolder(View view) {
         super(view);
         eventLayout = view.findViewById(R.id.event);
         eventMessage = view.findViewById(R.id.event_text);
@@ -174,8 +174,7 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             background.setBackgroundResource(R.drawable.chat_bubble_incoming_full);
 
             // Can't anchor incoming messages, setting this to align max width with LIME icon
-            bubbleLayout.setPadding(
-                    0, 0, (int) ImageUtils.dpToPixels(LinphoneActivity.instance(), 18), 0);
+            bubbleLayout.setPadding(0, 0, (int) ImageUtils.dpToPixels(mContext, 18), 0);
 
             if (status == ChatMessage.State.FileTransferInProgress) {
                 downloadInProgress.setVisibility(View.VISIBLE);
@@ -325,7 +324,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             } else {
                 Log.w(
                         "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-                LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+                ((ChatActivity) mContext)
+                        .requestPermissionIfNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
         }
     }

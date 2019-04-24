@@ -53,25 +53,18 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         "data4", // Normalized phone number
     };
 
-    private Context mContext;
-
-    public AsyncContactsLoader(Context context) {
-        mContext = context;
-    }
+    public AsyncContactsLoader() {}
 
     @Override
     protected void onPreExecute() {
         Log.i("[Contacts Manager] Synchronization started");
-        if (mContext == null) {
-            mContext = LinphoneService.instance().getApplicationContext();
-        }
+        Context context = LinphoneService.instance().getApplicationContext();
 
         if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            String rls = mContext.getString(R.string.rls_uri);
-            for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
-                if (rls != null
-                        && (list.getRlsAddress() == null
-                                || !list.getRlsAddress().asStringUriOnly().equals(rls))) {
+            String rls = context.getString(R.string.rls_uri);
+            for (FriendList list : LinphoneManager.getCore().getFriendsLists()) {
+                if (list.getRlsAddress() == null
+                        || !list.getRlsAddress().asStringUriOnly().equals(rls)) {
                     list.setRlsUri(rls);
                 }
                 list.addListener(ContactsManager.getInstance());
@@ -82,8 +75,9 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
     @Override
     protected AsyncContactsData doInBackground(Void... params) {
         Log.i("[Contacts Manager] Background synchronization started");
+        Context context = LinphoneService.instance().getApplicationContext();
         Cursor c =
-                mContext.getContentResolver()
+                context.getContentResolver()
                         .query(
                                 ContactsContract.Data.CONTENT_URI,
                                 PROJECTION,
@@ -95,9 +89,9 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         AsyncContactsData data = new AsyncContactsData();
         List<String> nativeIds = new ArrayList<>();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            for (FriendList list : lc.getFriendsLists()) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            for (FriendList list : core.getFriendsLists()) {
                 for (Friend friend : list.getFriends()) {
                     if (isCancelled()) return data;
 
@@ -139,7 +133,6 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                     nativeIds.add(id);
                     contact = new LinphoneContact();
                     contact.setAndroidId(id);
-                    contact.setAndroidLookupKey(lookupKey);
                     androidContactsCache.put(id, contact);
                 }
 
@@ -147,7 +140,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
             }
             c.close();
 
-            for (FriendList list : lc.getFriendsLists()) {
+            for (FriendList list : core.getFriendsLists()) {
                 for (Friend friend : list.getFriends()) {
                     if (isCancelled()) return data;
 
@@ -191,7 +184,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
                 }
             }
 
-            if (!mContext.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
+            if (!context.getResources().getBoolean(R.bool.hide_sip_contacts_without_presence)) {
                 if (contact.hasAddress() && !data.sipContacts.contains(contact)) {
                     data.sipContacts.add(contact);
                 }
@@ -217,7 +210,7 @@ class AsyncContactsLoader extends AsyncTask<Void, Void, AsyncContactsLoader.Asyn
         // Now that contact fetching is asynchronous, this is required to ensure
         // presence subscription event will be sent with all friends
         if (LinphonePreferences.instance().isFriendlistsubscriptionEnabled()) {
-            for (FriendList list : LinphoneManager.getLc().getFriendsLists()) {
+            for (FriendList list : LinphoneManager.getCore().getFriendsLists()) {
                 list.updateSubscriptions();
             }
         }

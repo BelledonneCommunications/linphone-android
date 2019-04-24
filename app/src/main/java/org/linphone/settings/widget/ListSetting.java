@@ -33,9 +33,9 @@ import java.util.List;
 import org.linphone.R;
 
 public class ListSetting extends BasicSetting implements AdapterView.OnItemSelectedListener {
-    protected Spinner mSpinner;
-    protected List<String> mItems;
-    protected List<String> mItemsValues;
+    private Spinner mSpinner;
+    private List<String> mItems;
+    private List<String> mItemsValues;
 
     public ListSetting(Context context) {
         super(context);

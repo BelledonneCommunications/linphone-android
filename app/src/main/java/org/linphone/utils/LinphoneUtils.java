@@ -2,7 +2,7 @@ package org.linphone.utils;
 
 /*
 LinphoneUtils.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -37,7 +37,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,12 +61,10 @@ import org.linphone.core.Core;
 import org.linphone.core.Factory;
 import org.linphone.core.LogCollectionState;
 import org.linphone.core.ProxyConfig;
-import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 /** Helpers. */
 public final class LinphoneUtils {
-    private static Context sContext = null;
     private static final Handler sHandler = new Handler(Looper.getMainLooper());
 
     private LinphoneUtils() {}
@@ -96,18 +97,13 @@ public final class LinphoneUtils {
         sHandler.post(r);
     }
 
-    // private static final String sipAddressRegExp =
-    // "^(sip:)?(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}(:[0-9]{2,5})?$";
-    // private static final String strictSipAddressRegExp =
-    // "^sip:(\\+)?[a-z0-9]+([_\\.-][a-z0-9]+)*@([a-z0-9]+([\\.-][a-z0-9]+)*)+\\.[a-z]{2,}$";
-
     private static boolean isSipAddress(String numberOrAddress) {
         Factory.instance().createAddress(numberOrAddress);
         return true;
     }
 
     public static boolean isNumberAddress(String numberOrAddress) {
-        ProxyConfig proxy = LinphoneManager.getLc().createProxyConfig();
+        ProxyConfig proxy = LinphoneManager.getCore().createProxyConfig();
         return proxy.normalizePhoneNumber(numberOrAddress) != null;
     }
 
@@ -136,14 +132,6 @@ public final class LinphoneUtils {
             displayName = address.asStringUriOnly();
         }
         return displayName;
-    }
-
-    public static String getUsernameFromAddress(String address) {
-        if (address.contains("sip:")) address = address.replace("sip:", "");
-
-        if (address.contains("@")) address = address.split("@")[0];
-
-        return address;
     }
 
     public static boolean onKeyBackGoHome(Activity activity, int keyCode, KeyEvent event) {
@@ -195,21 +183,9 @@ public final class LinphoneUtils {
                 && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
     }
 
-    public static boolean onKeyVolumeAdjust(int keyCode) {
-        if (!LinphoneService.isReady()) {
-            Log.i("Couldn't change softvolume has service is not running");
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-            LinphoneManager.getInstance().adjustVolume(1);
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            LinphoneManager.getInstance().adjustVolume(-1);
-        }
-        return true;
-    }
-
-    public static List<Call> getCallsInState(Core lc, Collection<State> states) {
+    public static List<Call> getCallsInState(Core core, Collection<State> states) {
         List<Call> foundCalls = new ArrayList<>();
-        for (Call call : lc.getCalls()) {
+        for (Call call : core.getCalls()) {
             if (states.contains(call.getState())) {
                 foundCalls.add(call);
             }
@@ -268,8 +244,8 @@ public final class LinphoneUtils {
 
     public static String getDisplayableUsernameFromAddress(String sipAddress) {
         String username = sipAddress;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc == null) return username;
+        Core core = LinphoneManager.getCore();
+        if (core == null) return username;
 
         if (username.startsWith("sip:")) {
             username = username.substring(4);
@@ -277,16 +253,13 @@ public final class LinphoneUtils {
 
         if (username.contains("@")) {
             String domain = username.split("@")[1];
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
                 if (domain.equals(lpc.getDomain())) {
                     return username.split("@")[0];
                 }
             } else {
-                if (domain.equals(
-                        LinphoneManager.getInstance()
-                                .getContext()
-                                .getString(R.string.default_domain))) {
+                if (domain.equals(LinphoneService.instance().getString(R.string.default_domain))) {
                     return username.split("@")[0];
                 }
             }
@@ -296,24 +269,22 @@ public final class LinphoneUtils {
 
     public static String getFullAddressFromUsername(String username) {
         String sipAddress = username;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc == null || username == null) return sipAddress;
+        Core core = LinphoneManager.getCore();
+        if (core == null || username == null) return sipAddress;
 
         if (!sipAddress.startsWith("sip:")) {
             sipAddress = "sip:" + sipAddress;
         }
 
         if (!sipAddress.contains("@")) {
-            ProxyConfig lpc = lc.getDefaultProxyConfig();
+            ProxyConfig lpc = core.getDefaultProxyConfig();
             if (lpc != null) {
                 sipAddress = sipAddress + "@" + lpc.getDomain();
             } else {
                 sipAddress =
                         sipAddress
                                 + "@"
-                                + LinphoneManager.getInstance()
-                                        .getContext()
-                                        .getString(R.string.default_domain);
+                                + LinphoneService.instance().getString(R.string.default_domain);
             }
         }
         return sipAddress;
@@ -371,23 +342,12 @@ public final class LinphoneUtils {
         return Html.fromHtml(text);
     }
 
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm =
-                (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = activity.getCurrentFocus();
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
     public static ArrayList<ChatRoom> removeEmptyOneToOneChatRooms(ChatRoom[] rooms) {
         ArrayList<ChatRoom> newRooms = new ArrayList<>();
         for (ChatRoom room : rooms) {
-            if (room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
-                    && room.getHistorySize() == 0) {
-                // Hide 1-1 chat rooms without messages
-            } else {
+            // Hide 1-1 chat rooms without messages
+            if (!(room.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
+                    && room.getHistorySize() == 0)) {
                 newRooms.add(room);
             }
         }
@@ -397,9 +357,6 @@ public final class LinphoneUtils {
     public static void showTrustDeniedDialog(Context context) {
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Drawable d = new ColorDrawable(ContextCompat.getColor(context, R.color.dark_grey_color));
         d.setAlpha(200);
         dialog.setContentView(R.layout.dialog);
@@ -440,18 +397,34 @@ public final class LinphoneUtils {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        CallLog[] logs =
-                                LinphoneManager.getLcIfManagerNotDestroyedOrNull().getCallLogs();
+                        CallLog[] logs = LinphoneManager.getCore().getCallLogs();
                         CallLog lastLog = logs[0];
                         Address addressToCall =
                                 lastLog.getDir() == Call.Dir.Incoming
                                         ? lastLog.getFromAddress()
                                         : lastLog.getToAddress();
-                        LinphoneManager.getInstance()
+                        LinphoneManager.getCallManager()
                                 .newOutgoingCall(addressToCall.asString(), null);
                         dialog.dismiss();
                     }
                 });
         dialog.show();
+    }
+
+    public static Dialog getDialog(Context context, String text) {
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(context, R.color.dark_grey_color));
+        d.setAlpha(200);
+        dialog.setContentView(R.layout.dialog);
+        dialog.getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setBackgroundDrawable(d);
+
+        TextView customText = dialog.findViewById(R.id.dialog_message);
+        customText.setText(text);
+        return dialog;
     }
 }

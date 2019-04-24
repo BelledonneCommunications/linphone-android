@@ -43,33 +43,33 @@ import org.linphone.xmlrpc.XmlRpcHelper;
 import org.linphone.xmlrpc.XmlRpcListenerBase;
 
 class InAppPurchaseHelper {
-    public static final int API_VERSION = 3;
-    public static final int ACTIVITY_RESULT_CODE_PURCHASE_ITEM = 11089;
+    private static final int API_VERSION = 3;
+    private static final int ACTIVITY_RESULT_CODE_PURCHASE_ITEM = 11089;
 
-    public static final String SKU_DETAILS_ITEM_LIST = "ITEM_ID_LIST";
-    public static final String SKU_DETAILS_LIST = "DETAILS_LIST";
-    public static final String SKU_DETAILS_PRODUCT_ID = "productId";
-    public static final String SKU_DETAILS_PRICE = "price";
-    public static final String SKU_DETAILS_TITLE = "title";
-    public static final String SKU_DETAILS_DESC = "description";
+    private static final String SKU_DETAILS_ITEM_LIST = "ITEM_ID_LIST";
+    private static final String SKU_DETAILS_LIST = "DETAILS_LIST";
+    private static final String SKU_DETAILS_PRODUCT_ID = "productId";
+    private static final String SKU_DETAILS_PRICE = "price";
+    private static final String SKU_DETAILS_TITLE = "title";
+    private static final String SKU_DETAILS_DESC = "description";
 
     public static final String ITEM_TYPE_INAPP = "inapp";
-    public static final String ITEM_TYPE_SUBS = "subs";
+    private static final String ITEM_TYPE_SUBS = "subs";
 
-    public static final int RESPONSE_RESULT_OK = 0;
-    public static final int RESULT_USER_CANCELED = 1;
-    public static final int RESULT_SERVICE_UNAVAILABLE = 2;
-    public static final int RESULT_BILLING_UNAVAILABLE = 3;
-    public static final int RESULT_ITEM_UNAVAILABLE = 4;
-    public static final int RESULT_DEVELOPER_ERROR = 5;
-    public static final int RESULT_ERROR = 6;
-    public static final int RESULT_ITEM_ALREADY_OWNED = 7;
-    public static final int RESULT_ITEM_NOT_OWNED = 8;
+    private static final int RESPONSE_RESULT_OK = 0;
+    private static final int RESULT_USER_CANCELED = 1;
+    private static final int RESULT_SERVICE_UNAVAILABLE = 2;
+    private static final int RESULT_BILLING_UNAVAILABLE = 3;
+    private static final int RESULT_ITEM_UNAVAILABLE = 4;
+    private static final int RESULT_DEVELOPER_ERROR = 5;
+    private static final int RESULT_ERROR = 6;
+    private static final int RESULT_ITEM_ALREADY_OWNED = 7;
+    private static final int RESULT_ITEM_NOT_OWNED = 8;
 
-    public static final String RESPONSE_CODE = "RESPONSE_CODE";
-    public static final String RESPONSE_BUY_INTENT = "BUY_INTENT";
-    public static final String RESPONSE_INAPP_PURCHASE_DATA = "INAPP_PURCHASE_DATA";
-    public static final String RESPONSE_INAPP_SIGNATURE = "INAPP_DATA_SIGNATURE";
+    private static final String RESPONSE_CODE = "RESPONSE_CODE";
+    private static final String RESPONSE_BUY_INTENT = "BUY_INTENT";
+    private static final String RESPONSE_INAPP_PURCHASE_DATA = "INAPP_PURCHASE_DATA";
+    private static final String RESPONSE_INAPP_SIGNATURE = "INAPP_DATA_SIGNATURE";
     public static final String RESPONSE_INAPP_ITEM_LIST = "INAPP_PURCHASE_ITEM_LIST";
     public static final String RESPONSE_INAPP_PURCHASE_DATA_LIST = "INAPP_PURCHASE_DATA_LIST";
     public static final String RESPONSE_INAPP_SIGNATURE_LIST = "INAPP_DATA_SIGNATURE_LIST";
@@ -83,11 +83,11 @@ class InAppPurchaseHelper {
     public static final String PURCHASE_DETAILS_PAYLOAD = "developerPayload";
     public static final String PURCHASE_DETAILS_PURCHASE_TOKEN = "purchaseToken";
 
-    public static final String CLIENT_ERROR_SUBSCRIPTION_PURCHASE_NOT_AVAILABLE =
+    private static final String CLIENT_ERROR_SUBSCRIPTION_PURCHASE_NOT_AVAILABLE =
             "SUBSCRIPTION_PURCHASE_NOT_AVAILABLE";
-    public static final String CLIENT_ERROR_BIND_TO_BILLING_SERVICE_FAILED =
+    private static final String CLIENT_ERROR_BIND_TO_BILLING_SERVICE_FAILED =
             "BIND_TO_BILLING_SERVICE_FAILED";
-    public static final String CLIENT_ERROR_BILLING_SERVICE_UNAVAILABLE =
+    private static final String CLIENT_ERROR_BILLING_SERVICE_UNAVAILABLE =
             "BILLING_SERVICE_UNAVAILABLE";
 
     private final Context mContext;
@@ -333,7 +333,7 @@ class InAppPurchaseHelper {
     }
 
     private Purchasable verifySignature() {
-        // TODO FIXME rework to be async
+        // TODO rework to be async
         /*XmlRpcHelper helper = new XmlRpcHelper();
         if (helper.verifySignature(payload, signature)) {
         	try {

@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
-import android.widget.TextView;
 import org.linphone.mediastream.Version;
 import org.linphone.notifications.Notifiable;
 
@@ -165,14 +164,6 @@ public class Compatibility {
             return Settings.canDrawOverlays(context);
         }
         return true;
-    }
-
-    public static void setTextAppearance(TextView textview, Context context, int style) {
-        if (Version.sdkAboveOrEqual(Version.API23_MARSHMALLOW_60)) {
-            ApiTwentyThreePlus.setTextAppearance(textview, style);
-        } else {
-            textview.setTextAppearance(context, style);
-        }
     }
 
     public static void startService(Context context, Intent intent) {

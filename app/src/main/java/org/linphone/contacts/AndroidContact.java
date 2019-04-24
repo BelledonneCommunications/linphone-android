@@ -32,53 +32,40 @@ import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import java.io.Serializable;
 import java.util.ArrayList;
-import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
 
 class AndroidContact implements Serializable {
-    protected String mAndroidId, mAndroidRawId, mAndroidLookupKey;
-    protected boolean isAndroidRawIdLinphone;
+    String mAndroidId;
+    private String mAndroidRawId;
+    private boolean isAndroidRawIdLinphone;
 
-    private transient ArrayList<ContentProviderOperation> mChangesToCommit;
+    private final transient ArrayList<ContentProviderOperation> mChangesToCommit;
 
-    protected AndroidContact() {
+    AndroidContact() {
         mChangesToCommit = new ArrayList<>();
         isAndroidRawIdLinphone = false;
     }
 
-    protected String getAndroidId() {
+    String getAndroidId() {
         return mAndroidId;
     }
 
-    protected void setAndroidId(String id) {
+    void setAndroidId(String id) {
         mAndroidId = id;
     }
 
-    protected String getAndroidLookupKey() {
-        return mAndroidLookupKey;
-    }
-
-    protected void setAndroidLookupKey(String lookupKey) {
-        mAndroidLookupKey = lookupKey;
-    }
-
-    protected Uri getAndroidLookupUri() {
-        return ContactsContract.Contacts.getLookupUri(
-                Long.parseLong(mAndroidId), getAndroidLookupKey());
-    }
-
-    protected boolean isAndroidContact() {
+    boolean isAndroidContact() {
         return mAndroidId != null;
     }
 
-    protected void addChangesToCommit(ContentProviderOperation operation) {
+    private void addChangesToCommit(ContentProviderOperation operation) {
         Log.i("[Contact] Added operation " + operation);
         mChangesToCommit.add(operation);
     }
 
-    protected void saveChangesCommited() {
+    void saveChangesCommited() {
         if (ContactsManager.getInstance().hasReadContactsAccess() && mChangesToCommit.size() > 0) {
             try {
                 ContentResolver contentResolver = LinphoneService.instance().getContentResolver();
@@ -123,11 +110,8 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void createAndroidContact() {
-        if (LinphoneManager.getInstance()
-                .getContext()
-                .getResources()
-                .getBoolean(R.bool.use_linphone_tag)) {
+    void createAndroidContact() {
+        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
             Log.i("[Contact] Creating contact using linphone account type");
             addChangesToCommit(
                     ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
@@ -157,21 +141,21 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void deleteAndroidContact() {
+    void deleteAndroidContact() {
         ContactsManager.getInstance().delete(mAndroidId);
     }
 
-    protected Uri getContactThumbnailPictureUri() {
+    Uri getContactThumbnailPictureUri() {
         Uri person = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(mAndroidId));
         return Uri.withAppendedPath(person, Contacts.Photo.CONTENT_DIRECTORY);
     }
 
-    protected Uri getContactPictureUri() {
+    Uri getContactPictureUri() {
         Uri person = ContentUris.withAppendedId(Contacts.CONTENT_URI, Long.parseLong(mAndroidId));
         return Uri.withAppendedPath(person, Contacts.Photo.DISPLAY_PHOTO);
     }
 
-    protected void setName(String fn, String ln) {
+    void setName(String fn, String ln) {
         if ((fn == null || fn.isEmpty()) && (ln == null || ln.isEmpty())) {
             Log.e("[Contact] Can't set both first and last name to null or empty");
             return;
@@ -224,7 +208,7 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void addNumberOrAddress(String value, String oldValueToReplace, boolean isSIP) {
+    void addNumberOrAddress(String value, String oldValueToReplace, boolean isSIP) {
         if (value == null || value.isEmpty()) {
             Log.e("[Contact] Can't add null or empty number or address");
             return;
@@ -373,7 +357,7 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void removeNumberOrAddress(String noa, boolean isSIP) {
+    void removeNumberOrAddress(String noa, boolean isSIP) {
         if (noa == null || noa.isEmpty()) {
             Log.e("[Contact] Can't remove null or empty number or address.");
             return;
@@ -381,7 +365,6 @@ class AndroidContact implements Serializable {
 
         if (mAndroidId == null) {
             Log.e("[Contact] Can't remove a number or address from non existing contact");
-            return;
         } else {
             Log.i(
                     "[Contact] Removing number or address "
@@ -433,7 +416,7 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void setOrganization(String org, String previousValue) {
+    void setOrganization(String org, String previousValue) {
         if (org == null || org.isEmpty()) {
             if (mAndroidId == null) {
                 Log.e("[Contact] Can't set organization to null or empty for new contact");
@@ -506,7 +489,7 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected void setPhoto(byte[] photo) {
+    void setPhoto(byte[] photo) {
         if (photo == null) {
             Log.e("[Contact] Can't set null picture.");
             return;
@@ -542,7 +525,7 @@ class AndroidContact implements Serializable {
         }
     }
 
-    protected String findRawContactID() {
+    private String findRawContactID() {
         ContentResolver resolver = LinphoneService.instance().getContentResolver();
         String result = null;
         String[] projection = {ContactsContract.RawContacts._ID};
@@ -564,11 +547,8 @@ class AndroidContact implements Serializable {
         return result;
     }
 
-    protected void createRawLinphoneContactFromExistingAndroidContactIfNeeded(String fullName) {
-        if (LinphoneManager.getInstance()
-                .getContext()
-                .getResources()
-                .getBoolean(R.bool.use_linphone_tag)) {
+    void createRawLinphoneContactFromExistingAndroidContactIfNeeded() {
+        if (LinphoneService.instance().getResources().getBoolean(R.bool.use_linphone_tag)) {
             if (mAndroidId != null && (mAndroidRawId == null || !isAndroidRawIdLinphone)) {
                 if (mAndroidRawId == null) {
                     Log.i("[Contact] RAW ID not found for contact " + mAndroidId);

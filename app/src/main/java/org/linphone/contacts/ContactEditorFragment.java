@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -49,11 +50,8 @@ import android.widget.LinearLayout;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.linphone.LinphoneActivity;
-import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.core.tools.Log;
 import org.linphone.mediastream.Version;
@@ -66,9 +64,8 @@ public class ContactEditorFragment extends Fragment {
     private static final int PHOTO_SIZE = 128;
 
     private View mView;
-    private ImageView mCancel, mDeleteContact, mOk;
-    private ImageView mAddNumber, mAddSipAddress, mContactPicture;
-    private LinearLayout mPhoneNumbersSection, mSipAddressesSection;
+    private ImageView mOk;
+    private ImageView mContactPicture;
     private EditText mFirstName, mLastName, mOrganization;
     private LayoutInflater mInflater;
     private boolean mIsNewContact;
@@ -88,48 +85,45 @@ public class ContactEditorFragment extends Fragment {
         mIsNewContact = true;
 
         if (getArguments() != null) {
-            Serializable obj = getArguments().getSerializable("Contact");
-            if (obj != null) {
-                mContact = (LinphoneContact) obj;
-                mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded(
-                        mContact.getFullName());
-                mIsNewContact = false;
-                if (getArguments().getString("NewSipAdress") != null) {
-                    mNewSipOrNumberToAdd = getArguments().getString("NewSipAdress");
-                }
-                if (getArguments().getString("NewDisplayName") != null) {
-                    mNewDisplayName = getArguments().getString("NewDisplayName");
-                }
-            } else if (getArguments().getString("NewSipAdress") != null) {
-                mNewSipOrNumberToAdd = getArguments().getString("NewSipAdress");
-                if (getArguments().getString("NewDisplayName") != null) {
-                    mNewDisplayName = getArguments().getString("NewDisplayName");
-                }
+            mContact = (LinphoneContact) getArguments().getSerializable("Contact");
+            if (getArguments().containsKey("SipUri")) {
+                mNewSipOrNumberToAdd = getArguments().getString("SipUri");
             }
+            if (getArguments().containsKey("DisplayName")) {
+                mNewDisplayName = getArguments().getString("DisplayName");
+            }
+        } else if (savedInstanceState != null) {
+            mContact = (LinphoneContact) savedInstanceState.get("Contact");
+            mNewSipOrNumberToAdd = savedInstanceState.getString("SipUri");
+            mNewDisplayName = savedInstanceState.getString("DisplayName");
+        }
+        if (mContact != null) {
+            mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded();
+            mIsNewContact = false;
         }
 
         mView = inflater.inflate(R.layout.contact_edit, container, false);
 
-        mPhoneNumbersSection = mView.findViewById(R.id.phone_numbers);
+        LinearLayout phoneNumbersSection = mView.findViewById(R.id.phone_numbers);
         if (getResources().getBoolean(R.bool.hide_phone_numbers_in_editor)
                 || !ContactsManager.getInstance().hasReadContactsAccess()) {
             // Currently linphone friends don't support phone mNumbers, so hide them
-            mPhoneNumbersSection.setVisibility(View.GONE);
+            phoneNumbersSection.setVisibility(View.GONE);
         }
 
-        mSipAddressesSection = mView.findViewById(R.id.sip_addresses);
+        LinearLayout sipAddressesSection = mView.findViewById(R.id.sip_addresses);
         if (getResources().getBoolean(R.bool.hide_sip_addresses_in_editor)) {
-            mSipAddressesSection.setVisibility(View.GONE);
+            sipAddressesSection.setVisibility(View.GONE);
         }
 
-        mDeleteContact = mView.findViewById(R.id.delete_contact);
+        ImageView deleteContact = mView.findViewById(R.id.delete_contact);
 
-        mCancel = mView.findViewById(R.id.cancel);
-        mCancel.setOnClickListener(
+        ImageView cancel = mView.findViewById(R.id.cancel);
+        cancel.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getFragmentManager().popBackStackImmediate();
+                        ((ContactsActivity) getActivity()).goBack();
                     }
                 });
 
@@ -201,8 +195,8 @@ public class ContactEditorFragment extends Fragment {
                         }
 
                         getFragmentManager().popBackStackImmediate();
-                        if (mIsNewContact || LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().displayContact(mContact, false);
+                        if (mIsNewContact || getResources().getBoolean(R.bool.isTablet)) {
+                            ((ContactsActivity) getActivity()).showContactDetails(mContact);
                         }
                     }
                 });
@@ -216,7 +210,7 @@ public class ContactEditorFragment extends Fragment {
                         public void onClick(View v) {
                             InputMethodManager imm =
                                     (InputMethodManager)
-                                            LinphoneActivity.instance()
+                                            getActivity()
                                                     .getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         }
@@ -258,15 +252,6 @@ public class ContactEditorFragment extends Fragment {
                 });
 
         mOrganization = mView.findViewById(R.id.contactOrganization);
-        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
-        if (!isOrgVisible) {
-            mOrganization.setVisibility(View.GONE);
-            mView.findViewById(R.id.contactOrganizationTitle).setVisibility(View.GONE);
-        } else {
-            if (!mIsNewContact) {
-                mOrganization.setText(mContact.getOrganization());
-            }
-        }
 
         if (!mIsNewContact) {
             String fn = mContact.getFirstName();
@@ -279,12 +264,12 @@ public class ContactEditorFragment extends Fragment {
                 mFirstName.setText("");
             }
 
-            mDeleteContact.setOnClickListener(
+            deleteContact.setOnClickListener(
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             final Dialog dialog =
-                                    LinphoneActivity.instance()
+                                    ((ContactsActivity) getActivity())
                                             .displayDialog(getString(R.string.delete_text));
                             Button delete = dialog.findViewById(R.id.dialog_delete_button);
                             Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
@@ -294,7 +279,7 @@ public class ContactEditorFragment extends Fragment {
                                         @Override
                                         public void onClick(View view) {
                                             mContact.delete();
-                                            LinphoneActivity.instance().displayContacts(false);
+                                            ((ContactsActivity) getActivity()).goBack();
                                             dialog.dismiss();
                                         }
                                     });
@@ -310,34 +295,27 @@ public class ContactEditorFragment extends Fragment {
                         }
                     });
         } else {
-            mDeleteContact.setVisibility(View.INVISIBLE);
+            deleteContact.setVisibility(View.INVISIBLE);
         }
 
         mContactPicture = mView.findViewById(R.id.contact_picture);
-        if (mContact != null) {
-            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
-        } else {
-            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
-        }
-
         mContactPicture.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         pickImage();
-                        LinphoneActivity.instance().checkAndRequestCameraPermission();
+                        ((ContactsActivity) getActivity())
+                                .requestPermissionIfNotGranted(Manifest.permission.CAMERA);
                     }
                 });
 
         mNumbersAndAddresses = new ArrayList<>();
-        mSipAddresses = initSipAddressFields(mContact);
-        mNumbers = initNumbersFields(mContact);
 
-        mAddSipAddress = mView.findViewById(R.id.add_address_field);
+        ImageView addSipAddress = mView.findViewById(R.id.add_address_field);
         if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
-            mAddSipAddress.setVisibility(View.GONE);
+            addSipAddress.setVisibility(View.GONE);
         }
-        mAddSipAddress.setOnClickListener(
+        addSipAddress.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -345,11 +323,11 @@ public class ContactEditorFragment extends Fragment {
                     }
                 });
 
-        mAddNumber = mView.findViewById(R.id.add_number_field);
+        ImageView addNumber = mView.findViewById(R.id.add_number_field);
         if (getResources().getBoolean(R.bool.allow_only_one_phone_number)) {
-            mAddNumber.setVisibility(View.GONE);
+            addNumber.setVisibility(View.GONE);
         }
-        mAddNumber.setOnClickListener(
+        addNumber.setOnClickListener(
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -363,8 +341,18 @@ public class ContactEditorFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("Contact", mContact);
+        outState.putString("SipUri", mNewSipOrNumberToAdd);
+        outState.putString("DisplayName", mNewDisplayName);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        displayContact();
 
         // Force hide keyboard
         getActivity()
@@ -387,13 +375,71 @@ public class ContactEditorFragment extends Fragment {
         super.onPause();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.getExtras() != null && data.getExtras().get("data") != null) {
+                Bitmap bm = (Bitmap) data.getExtras().get("data");
+                editContactPicture(null, bm);
+            } else if (data != null && data.getData() != null) {
+                Uri selectedImageUri = data.getData();
+                try {
+                    Bitmap selectedImage =
+                            MediaStore.Images.Media.getBitmap(
+                                    getActivity().getContentResolver(), selectedImageUri);
+                    selectedImage =
+                            Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
+                    editContactPicture(null, selectedImage);
+                } catch (IOException e) {
+                    Log.e(e);
+                }
+            } else if (mPickedPhotoForContactUri != null) {
+                String filePath = mPickedPhotoForContactUri.getPath();
+                editContactPicture(filePath, null);
+            } else {
+                File file =
+                        new File(
+                                FileUtils.getStorageDirectory(getActivity()),
+                                getString(R.string.temp_photo_name));
+                if (file.exists()) {
+                    mPickedPhotoForContactUri = Uri.fromFile(file);
+                    String filePath = mPickedPhotoForContactUri.getPath();
+                    editContactPicture(filePath, null);
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void displayContact() {
+        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+        if (!isOrgVisible) {
+            mOrganization.setVisibility(View.GONE);
+            mView.findViewById(R.id.contactOrganizationTitle).setVisibility(View.GONE);
+        } else {
+            if (!mIsNewContact) {
+                mOrganization.setText(mContact.getOrganization());
+            }
+        }
+
+        if (mContact != null) {
+            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
+        } else {
+            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
+        }
+
+        mSipAddresses = initSipAddressFields(mContact);
+        mNumbers = initNumbersFields(mContact);
+    }
+
     private void pickImage() {
         mPickedPhotoForContactUri = null;
         final List<Intent> cameraIntents = new ArrayList<>();
         final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File file =
                 new File(
-                        FileUtils.getStorageDirectory(LinphoneActivity.instance()),
+                        FileUtils.getStorageDirectory(getActivity()),
                         getString(R.string.temp_photo_name));
         mPickedPhotoForContactUri = Uri.fromFile(file);
         captureIntent.putExtra("outputX", PHOTO_SIZE);
@@ -415,44 +461,6 @@ public class ContactEditorFragment extends Fragment {
                 Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[] {}));
 
         startActivityForResult(chooserIntent, ADD_PHOTO);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_PHOTO && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getExtras() != null && data.getExtras().get("data") != null) {
-                Bitmap bm = (Bitmap) data.getExtras().get("data");
-                editContactPicture(null, bm);
-            } else if (data != null && data.getData() != null) {
-                Uri selectedImageUri = data.getData();
-                try {
-                    Bitmap selectedImage =
-                            MediaStore.Images.Media.getBitmap(
-                                    LinphoneManager.getInstance().getContext().getContentResolver(),
-                                    selectedImageUri);
-                    selectedImage =
-                            Bitmap.createScaledBitmap(selectedImage, PHOTO_SIZE, PHOTO_SIZE, false);
-                    editContactPicture(null, selectedImage);
-                } catch (IOException e) {
-                    Log.e(e);
-                }
-            } else if (mPickedPhotoForContactUri != null) {
-                String filePath = mPickedPhotoForContactUri.getPath();
-                editContactPicture(filePath, null);
-            } else {
-                File file =
-                        new File(
-                                FileUtils.getStorageDirectory(LinphoneActivity.instance()),
-                                getString(R.string.temp_photo_name));
-                if (file.exists()) {
-                    mPickedPhotoForContactUri = Uri.fromFile(file);
-                    String filePath = mPickedPhotoForContactUri.getPath();
-                    editContactPicture(filePath, null);
-                }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     private void editContactPicture(String filePath, Bitmap image) {
@@ -478,7 +486,7 @@ public class ContactEditorFragment extends Fragment {
     private int getThumbnailSize() {
         int value = -1;
         Cursor c =
-                LinphoneActivity.instance()
+                getActivity()
                         .getContentResolver()
                         .query(
                                 DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,

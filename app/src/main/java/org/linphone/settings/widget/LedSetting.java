@@ -34,7 +34,7 @@ public class LedSetting extends BasicSetting {
         RED
     }
 
-    protected ImageView mLed;
+    private ImageView mLed;
 
     public LedSetting(Context context) {
         super(context);

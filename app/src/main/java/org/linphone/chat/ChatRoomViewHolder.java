@@ -1,6 +1,8 @@
+package org.linphone.chat;
+
 /*
 ChatRoomViewHolder.java
-Copyright (C) 2017  Belledonne Communications, Grenoble, France
+Copyright (C) 2017 Belledonne Communications, Grenoble, France
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -16,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-
-package org.linphone.chat;
 
 import android.content.Context;
 import android.view.View;
@@ -39,12 +39,12 @@ import org.linphone.views.ContactAvatar;
 
 public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         implements View.OnClickListener, View.OnLongClickListener {
-    public final TextView lastMessageView;
-    public final TextView date;
-    public final TextView displayName;
+    private final TextView lastMessageView;
+    private final TextView date;
+    private final TextView displayName;
     public final TextView unreadMessages;
     public final CheckBox delete;
-    public final RelativeLayout avatarLayout;
+    private final RelativeLayout avatarLayout;
 
     private final Context mContext;
     private final ClickListener mListener;
@@ -77,7 +77,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
                     messageContent.insert(0, c.getStringBuffer() + " ");
                 }
             }
-            lastMessageView.setText(getSender(room) + messageContent);
+            lastMessageView.setText(getSender(lastMessage) + messageContent);
             date.setText(
                     LinphoneUtils.timestampToHumanDate(
                             mContext,
@@ -106,23 +106,21 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         return false;
     }
 
-    public String getSender(ChatRoom mRoom) {
-        if (mRoom.getLastMessageInHistory() != null) {
+    private String getSender(ChatMessage lastMessage) {
+        if (lastMessage != null) {
             LinphoneContact contact =
                     ContactsManager.getInstance()
-                            .findContactFromAddress(
-                                    mRoom.getLastMessageInHistory().getFromAddress());
+                            .findContactFromAddress(lastMessage.getFromAddress());
             if (contact != null) {
                 return (contact.getFullName() + mContext.getString(R.string.separator));
             }
-            return (LinphoneUtils.getAddressDisplayName(
-                            mRoom.getLastMessageInHistory().getFromAddress())
+            return (LinphoneUtils.getAddressDisplayName(lastMessage.getFromAddress())
                     + mContext.getString(R.string.separator));
         }
         return null;
     }
 
-    public String getContact(ChatRoom mRoom) {
+    private String getContact(ChatRoom mRoom) {
         Address contactAddress = mRoom.getPeerAddress();
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())
                 && mRoom.getParticipants().length > 0) {
@@ -140,7 +138,7 @@ public class ChatRoomViewHolder extends RecyclerView.ViewHolder
         return mRoom.getSubject();
     }
 
-    public void getAvatar(ChatRoom mRoom) {
+    private void getAvatar(ChatRoom mRoom) {
         if (mRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
             LinphoneContact contact = null;
             if (mRoom.hasCapability(ChatRoomCapabilities.Basic.toInt())) {

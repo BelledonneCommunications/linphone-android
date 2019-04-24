@@ -36,8 +36,8 @@ public class CompatibilityScaleGestureDetector
         listener = newListener;
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        return detector.onTouchEvent(event);
+    public void onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
     }
 
     @Override

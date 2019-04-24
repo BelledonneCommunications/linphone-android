@@ -29,18 +29,17 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import org.linphone.LinphoneActivity;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
 import org.linphone.R;
@@ -56,10 +55,8 @@ import org.linphone.core.tools.Log;
 import org.linphone.settings.LinphonePreferences;
 
 public class ContactsManager extends ContentObserver implements FriendListListener {
-    private static ContactsManager sInstance;
-
     private List<LinphoneContact> mContacts, mSipContacts;
-    private ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
+    private final ArrayList<ContactsUpdatedListener> mContactsUpdatedListeners;
     private MagicSearch mMagicSearch;
     private boolean mContactsFetchedOnce = false;
     private Context mContext;
@@ -67,18 +64,18 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     private boolean mInitialized = false;
 
     public static ContactsManager getInstance() {
-        if (sInstance == null) sInstance = new ContactsManager();
-        return sInstance;
+        return LinphoneService.instance().getContactsManager();
     }
 
-    private ContactsManager() {
-        super(LinphoneService.instance().handler);
+    public ContactsManager(Context context, Handler handler) {
+        super(handler);
+        mContext = context;
         mContactsUpdatedListeners = new ArrayList<>();
         mContacts = new ArrayList<>();
         mSipContacts = new ArrayList<>();
 
-        if (LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null) {
-            mMagicSearch = LinphoneManager.getLcIfManagerNotDestroyedOrNull().createMagicSearch();
+        if (LinphoneManager.getCore() != null) {
+            mMagicSearch = LinphoneManager.getCore().createMagicSearch();
             mMagicSearch.setLimitedSearch(false); // Do not limit the number of results
         }
     }
@@ -122,6 +119,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public void destroy() {
+        mContext.getContentResolver().unregisterContentObserver(ContactsManager.getInstance());
+
         if (mLoadContactTask != null) {
             mLoadContactTask.cancel(true);
         }
@@ -136,13 +135,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
         mSipContacts.clear();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            for (FriendList list : lc.getFriendsLists()) {
+        Core core = LinphoneManager.getCore();
+        if (core != null) {
+            for (FriendList list : core.getFriendsLists()) {
                 list.removeListener(this);
             }
         }
-        sInstance = null;
     }
 
     public void fetchContactsAsync() {
@@ -153,43 +151,9 @@ public class ContactsManager extends ContentObserver implements FriendListListen
             Log.w("[Contacts Manager] Can't fetch contact without READ permission");
             return;
         }
-        mLoadContactTask = new AsyncContactsLoader(mContext);
+        mLoadContactTask = new AsyncContactsLoader();
         mContactsFetchedOnce = true;
         mLoadContactTask.executeOnExecutor(THREAD_POOL_EXECUTOR);
-    }
-
-    public void editContact(Context context, LinphoneContact contact, String valueToAdd) {
-        if (context.getResources().getBoolean(R.bool.use_native_contact_editor)) {
-            Intent intent = new Intent(Intent.ACTION_EDIT);
-            Uri contactUri = contact.getAndroidLookupUri();
-            intent.setDataAndType(contactUri, ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-            intent.putExtra(
-                    "finishActivityOnSaveCompleted", true); // So after save will go back here
-            if (valueToAdd != null) {
-                intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
-            }
-            context.startActivity(intent);
-        } else {
-            LinphoneActivity.instance().editContact(contact, valueToAdd);
-        }
-    }
-
-    public void createContact(Context context, String name, String valueToAdd) {
-        if (context.getResources().getBoolean(R.bool.use_native_contact_editor)) {
-            Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
-            intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
-            intent.putExtra(
-                    "finishActivityOnSaveCompleted", true); // So after save will go back here
-            if (name != null) {
-                intent.putExtra(ContactsContract.Intents.Insert.NAME, name);
-            }
-            if (valueToAdd != null) {
-                intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
-            }
-            context.startActivity(intent);
-        } else {
-            LinphoneActivity.instance().addContact(name, valueToAdd);
-        }
     }
 
     public MagicSearch getMagicSearch() {
@@ -256,7 +220,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 && !mContext.getResources().getBoolean(R.bool.force_use_of_linphone_friends);
     }
 
-    public boolean hasWriteContactsAccess() {
+    private boolean hasWriteContactsAccess() {
         if (mContext == null) {
             return false;
         }
@@ -266,7 +230,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                                 Manifest.permission.WRITE_CONTACTS, mContext.getPackageName()));
     }
 
-    public boolean hasWriteSyncPermission() {
+    private boolean hasWriteSyncPermission() {
         if (mContext == null) {
             return false;
         }
@@ -278,16 +242,14 @@ public class ContactsManager extends ContentObserver implements FriendListListen
     }
 
     public boolean isLinphoneContactsPrefered() {
-        ProxyConfig lpc = LinphoneManager.getLc().getDefaultProxyConfig();
+        ProxyConfig lpc = LinphoneManager.getCore().getDefaultProxyConfig();
         return lpc != null
                 && lpc.getIdentityAddress()
                         .getDomain()
                         .equals(mContext.getString(R.string.default_domain));
     }
 
-    public void initializeContactManager(Context context) {
-        mContext = context;
-
+    public void initializeContactManager() {
         if (!mInitialized) {
             if (mContext.getResources().getBoolean(R.bool.use_linphone_tag)) {
                 if (hasReadContactsAccess()
@@ -352,12 +314,12 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 Log.e("[Contacts Manager] Couldn't initialize sync account: " + e);
             }
         } else if (accounts != null) {
-            for (int i = 0; i < accounts.length; i++) {
+            for (Account account : accounts) {
                 Log.i(
                         "[Contacts Manager] Found account with name \""
-                                + accounts[i].name
+                                + account.name
                                 + "\" and type \""
-                                + accounts[i].type
+                                + account.type
                                 + "\"");
                 makeContactAccountVisible();
             }
@@ -377,8 +339,8 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public synchronized LinphoneContact findContactFromAddress(Address address) {
         if (address == null) return null;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        Friend lf = lc.findFriend(address);
+        Core core = LinphoneManager.getCore();
+        Friend lf = core.findFriend(address);
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();
         }
@@ -387,10 +349,10 @@ public class ContactsManager extends ContentObserver implements FriendListListen
 
     public synchronized LinphoneContact findContactFromPhoneNumber(String phoneNumber) {
         if (phoneNumber == null) return null;
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        Core core = LinphoneManager.getCore();
         ProxyConfig lpc = null;
-        if (lc != null) {
-            lpc = lc.getDefaultProxyConfig();
+        if (core != null) {
+            lpc = core.getDefaultProxyConfig();
         }
         if (lpc == null) return null;
         String normalized = lpc.normalizePhoneNumber(phoneNumber);
@@ -402,7 +364,7 @@ public class ContactsManager extends ContentObserver implements FriendListListen
         }
         addr.setUriParam("user", "phone");
         Friend lf =
-                lc.findFriend(
+                core.findFriend(
                         addr); // Without this, the hashmap inside liblinphone won't find it...
         if (lf != null) {
             return (LinphoneContact) lf.getUserData();

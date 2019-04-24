@@ -48,7 +48,7 @@ public class XmlRpcHelper {
 
     public XmlRpcHelper() {
         mXmlRpcSession =
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull()
+                LinphoneManager.getCore()
                         .createXmlRpcSession(
                                 LinphonePreferences.instance()
                                         .getInAppPurchaseValidatingServerUrl());
