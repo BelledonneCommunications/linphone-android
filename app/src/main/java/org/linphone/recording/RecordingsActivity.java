@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,11 +34,11 @@ import java.util.Collections;
 import java.util.List;
 import org.linphone.LinphoneManager;
 import org.linphone.R;
+import org.linphone.main.MainActivity;
 import org.linphone.utils.FileUtils;
 import org.linphone.utils.SelectableHelper;
-import org.linphone.utils.ThemableActivity;
 
-public class RecordingsActivity extends ThemableActivity
+public class RecordingsActivity extends MainActivity
         implements SelectableHelper.DeleteListener, RecordingViewHolder.ClickListener {
     private RecyclerView mRecordingList;
     private List<Recording> mRecordings;
@@ -50,14 +52,18 @@ public class RecordingsActivity extends ThemableActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.recordings_list);
+        // Uses the fragment container layout to inflate the about view instead of using a fragment
+        View recordingsView =
+                LayoutInflater.from(this).inflate(R.layout.recordings_list, null, false);
+        LinearLayout fragmentContainer = findViewById(R.id.fragmentContainer);
+        fragmentContainer.addView(recordingsView);
 
         mBackButton = findViewById(R.id.back);
         mBackButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        finish();
+                        goBack();
                     }
                 });
 
@@ -81,6 +87,9 @@ public class RecordingsActivity extends ThemableActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        hideTopBar();
+        hideTabBar();
 
         // TODO: permission check for external storage
 
