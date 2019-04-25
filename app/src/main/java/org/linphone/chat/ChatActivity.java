@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.view.View;
 import java.util.ArrayList;
 import org.linphone.R;
+import org.linphone.contacts.ContactAddress;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
@@ -179,7 +180,7 @@ public class ChatActivity extends MainActivity {
 
         ImdnFragment fragment = new ImdnFragment();
         fragment.setArguments(extras);
-        changeFragment(fragment, "Chat message imdn", true);
+        changeFragment(fragment, "Chat message IMDN", true);
     }
 
     public void showDevices(Address localAddress, Address peerAddress) {
@@ -204,6 +205,24 @@ public class ChatActivity extends MainActivity {
         Bundle extras = new Bundle();
         ImdnFragment fragment = new ImdnFragment();
         fragment.setArguments(extras);
-        changeFragment(fragment, "Chatroom creation", true);
+        changeFragment(fragment, "Chat room creation", true);
+    }
+
+    public void showChatRoomGroupInfo(
+            Address peerAddress,
+            ArrayList<ContactAddress> participants,
+            String subject,
+            boolean encrypted) {
+        Bundle extras = new Bundle();
+        if (peerAddress != null) {
+            extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        extras.putSerializable("Participants", participants);
+        extras.putString("Subject", subject);
+        extras.putBoolean("Encrypted", encrypted);
+
+        GroupInfoFragment fragment = new GroupInfoFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Chat room group info", true);
     }
 }

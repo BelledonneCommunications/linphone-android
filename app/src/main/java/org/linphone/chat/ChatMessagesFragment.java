@@ -231,17 +231,15 @@ public class ChatMessagesFragment extends Fragment
                                             c, a.asString(), "", c.isFriend(), p.isAdmin());
                             participants.add(ca);
                         }
-                        // TODO FIXME
-                        /*LinphoneActivity.instance()
-                        .goToChatGroupInfos(
-                                mRemoteSipAddress.asString(),
-                                participants,
-                                mChatRoom.getSubject(),
-                                mChatRoom.getMe() != null && mChatRoom.getMe().isAdmin(),
-                                false,
-                                null,
-                                mChatRoom.hasCapability(
-                                        ChatRoomCapabilities.Encrypted.toInt()));*/
+
+                        boolean encrypted =
+                                mChatRoom.hasCapability(ChatRoomCapabilities.Encrypted.toInt());
+                        ((ChatActivity) getActivity())
+                                .showChatRoomGroupInfo(
+                                        mRemoteSipAddress,
+                                        participants,
+                                        mChatRoom.getSubject(),
+                                        encrypted);
                     }
                 });
 

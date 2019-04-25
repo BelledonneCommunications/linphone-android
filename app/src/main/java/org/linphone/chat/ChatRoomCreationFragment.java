@@ -55,6 +55,7 @@ import org.linphone.core.ChatRoomBackend;
 import org.linphone.core.ChatRoomListenerStub;
 import org.linphone.core.ChatRoomParams;
 import org.linphone.core.Core;
+import org.linphone.core.Factory;
 import org.linphone.core.FriendCapability;
 import org.linphone.core.ProxyConfig;
 import org.linphone.core.SearchResult;
@@ -316,28 +317,14 @@ public class ChatRoomCreationFragment extends Fragment
         } else if (id == R.id.next) {
             if (mChatRoomAddress == null && mChatRoomSubject == null) {
                 mContactsSelectedLayout.removeAllViews();
-                // TODO FIXME
-                /*LinphoneActivity.instance()
-                .goToChatGroupInfos(
-                        null,
-                        mSearchAdapter.getContactsSelectedList(),
-                        null,
-                        true,
-                        false,
-                        mShareInfos,
-                        mSecurityToggle.isChecked());*/
-            } else {
-                // TODO FIXME
-                /*LinphoneActivity.instance()
-                .goToChatGroupInfos(
-                        mChatRoomAddress,
-                        mSearchAdapter.getContactsSelectedList(),
-                        mChatRoomSubject,
-                        true,
-                        true,
-                        mShareInfos,
-                        mSecurityToggle.isChecked());*/
             }
+            Address roomAddress = Factory.instance().createAddress(mChatRoomAddress);
+            ((ChatActivity) getActivity())
+                    .showChatRoomGroupInfo(
+                            roomAddress,
+                            mSearchAdapter.getContactsSelectedList(),
+                            mChatRoomSubject,
+                            mSecurityToggle.isChecked());
         } else if (id == R.id.contactChatDelete) {
             ContactAddress ca = (ContactAddress) view.getTag();
             addOrRemoveContactFromSelection(ca);
