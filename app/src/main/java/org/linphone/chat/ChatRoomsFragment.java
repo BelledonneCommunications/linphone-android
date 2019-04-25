@@ -216,6 +216,7 @@ public class ChatRoomsFragment extends Fragment
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
             Bundle extras = null;
             if (getArguments() != null) {
+                // TODO FIXME handle this in ChatActivity
                 Log.i("[ChatRooms] Forwarding arguments to existing chat room");
                 extras = (Bundle) getArguments().clone();
                 getArguments().clear();
