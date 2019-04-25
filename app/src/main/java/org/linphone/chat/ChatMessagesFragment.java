@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -255,8 +256,10 @@ public class ChatMessagesFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO FIXME
-                        // LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
+                        String[] permissions = {
+                            Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+                        };
+                        ((ChatActivity) getActivity()).requestPermissionsIfNotGranted(permissions);
                         pickFile();
                     }
                 });
@@ -1221,8 +1224,8 @@ public class ChatMessagesFragment extends Fragment
         String externalBodyUrl = msg.getExternalBodyUrl();
         Content fileTransferContent = msg.getFileTransferInformation();
         if (externalBodyUrl != null || fileTransferContent != null) {
-            // TODO FIXME
-            // LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+            ((ChatActivity) getActivity())
+                    .requestPermissionIfNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
         ((ChatMessagesGenericAdapter) mChatEventsList.getAdapter()).addToHistory(event);

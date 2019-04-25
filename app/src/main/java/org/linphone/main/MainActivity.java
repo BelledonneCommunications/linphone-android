@@ -63,6 +63,7 @@ import org.linphone.utils.ThemableActivity;
 public abstract class MainActivity extends ThemableActivity
         implements StatusFragment.MenuClikedListener, SideMenuFragment.QuitClikedListener {
     private static final int MAIN_PERMISSIONS = 1;
+    private static final int FRAGMENT_SPECIFIC_PERMISSION = 2;
 
     protected LinearLayout mFragment, mChildFragment;
     protected RelativeLayout mHistory, mContacts, mDialer, mChat;
@@ -176,7 +177,7 @@ public abstract class MainActivity extends ThemableActivity
     protected void onStart() {
         super.onStart();
 
-        askRequiredPermissions();
+        requestRequiredPermissions();
 
         if (checkPermission(Manifest.permission.READ_CONTACTS)) {
             ContactsManager.getInstance().enableContactsAccess();
@@ -340,10 +341,29 @@ public abstract class MainActivity extends ThemableActivity
         return granted == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void askRequiredPermissions() {
+    public void requestPermissionIfNotGranted(String permission) {
+        if (!checkPermission(permission)) {
+            Log.i("[Permission] Requesting " + permission + " permission");
+
+            String[] permissions = new String[] {permission};
+            KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            boolean locked = km.inKeyguardRestrictedInputMode();
+            if (!locked) {
+                // This is to workaround an infinite loop of pause/start in Activity issue
+                // if incoming call ends while screen if off and locked
+                ActivityCompat.requestPermissions(this, permissions, FRAGMENT_SPECIFIC_PERMISSION);
+            }
+        }
+    }
+
+    public void requestPermissionsIfNotGranted(String[] perms) {
+        requestPermissionsIfNotGranted(perms, FRAGMENT_SPECIFIC_PERMISSION);
+    }
+
+    private void requestPermissionsIfNotGranted(String[] perms, int resultCode) {
         ArrayList<String> permissionsToAskFor = new ArrayList<>();
-        if (mPermissionsToHave != null) { // This is created (or not) by the child activity
-            for (String permissionToHave : mPermissionsToHave) {
+        if (perms != null) { // This is created (or not) by the child activity
+            for (String permissionToHave : perms) {
                 if (!checkPermission(permissionToHave)) {
                     permissionsToAskFor.add(permissionToHave);
                 }
@@ -352,7 +372,7 @@ public abstract class MainActivity extends ThemableActivity
 
         if (permissionsToAskFor.size() > 0) {
             for (String permission : permissionsToAskFor) {
-                Log.i("[Permission] Asking for " + permission + " permission");
+                Log.i("[Permission] Requesting " + permission + " permission");
             }
             String[] permissions = new String[permissionsToAskFor.size()];
             permissions = permissionsToAskFor.toArray(permissions);
@@ -360,11 +380,15 @@ public abstract class MainActivity extends ThemableActivity
             KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             boolean locked = km.inKeyguardRestrictedInputMode();
             if (!locked) {
-                // This is to workaround an infinite loop of pause/start in LinphoneActivity issue
+                // This is to workaround an infinite loop of pause/start in Activity issue
                 // if incoming call ends while screen if off and locked
-                ActivityCompat.requestPermissions(this, permissions, MAIN_PERMISSIONS);
+                ActivityCompat.requestPermissions(this, permissions, resultCode);
             }
         }
+    }
+
+    private void requestRequiredPermissions() {
+        requestPermissionsIfNotGranted(mPermissionsToHave, MAIN_PERMISSIONS);
     }
 
     @Override

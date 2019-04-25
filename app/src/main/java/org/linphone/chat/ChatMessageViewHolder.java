@@ -323,8 +323,8 @@ public class ChatMessageViewHolder extends RecyclerView.ViewHolder implements Vi
             } else {
                 Log.w(
                         "WRITE_EXTERNAL_STORAGE permission not granted, won't be able to store the downloaded file");
-                // TODO FIXME
-                // LinphoneActivity.instance().checkAndRequestExternalStoragePermission();
+                ((ChatActivity) mContext)
+                        .requestPermissionIfNotGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
         }
     }
