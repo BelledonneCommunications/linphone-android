@@ -21,6 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -34,9 +37,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import java.util.ArrayList;
 import org.linphone.LinphoneManager;
 import org.linphone.LinphoneService;
@@ -46,6 +46,7 @@ import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.core.tools.Log;
+import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
@@ -152,7 +153,7 @@ public abstract class MainActivity extends ThemableActivity
                 });
 
         mStatusFragment =
-                (StatusFragment) getSupportFragmentManager().findFragmentById(R.id.status_fragment);
+                (StatusFragment) getFragmentManager().findFragmentById(R.id.status_fragment);
 
         mSideMenu = findViewById(R.id.side_menu);
         mSideMenuContent = findViewById(R.id.side_menu_content);
@@ -265,6 +266,14 @@ public abstract class MainActivity extends ThemableActivity
         quit();
     }
 
+    public boolean popBackStack() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
+            return true;
+        }
+        return false;
+    }
+
     public void goBack() {
         finish();
     }
@@ -281,8 +290,12 @@ public abstract class MainActivity extends ThemableActivity
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
+    public void showEmptyFragment() {
+        changeFragment(new EmptyFragment(), "Empty", true);
+    }
+
     protected void changeFragment(Fragment fragment, String name, boolean isChild) {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         if (isChild) {
             transaction.addToBackStack(name);

@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -247,7 +247,7 @@ public class ChatRoomsFragment extends Fragment
             ((ChatActivity) getActivity())
                     .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
         } else {
-            ((ChatActivity) getActivity()).showChatRoom(null, null);
+            ((ChatActivity) getActivity()).showEmptyFragment();
         }
     }
 

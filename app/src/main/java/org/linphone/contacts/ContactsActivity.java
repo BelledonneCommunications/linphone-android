@@ -70,8 +70,7 @@ public class ContactsActivity extends MainActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 mDisplayedContact = null;
                 return true;
             }
@@ -82,8 +81,7 @@ public class ContactsActivity extends MainActivity {
     @Override
     public void goBack() {
         if (!isTablet()) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 mDisplayedContact = null;
                 return;
             }

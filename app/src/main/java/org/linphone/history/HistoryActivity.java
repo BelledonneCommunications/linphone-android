@@ -76,8 +76,7 @@ public class HistoryActivity extends MainActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 mDisplayedAddress = null;
                 return true;
             }
@@ -88,8 +87,7 @@ public class HistoryActivity extends MainActivity {
     @Override
     public void goBack() {
         if (!isTablet()) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 mDisplayedAddress = null;
                 return;
             }

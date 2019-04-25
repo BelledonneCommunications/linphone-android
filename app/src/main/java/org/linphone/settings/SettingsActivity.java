@@ -19,9 +19,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import androidx.fragment.app.Fragment;
 import org.linphone.R;
 import org.linphone.main.MainActivity;
 
@@ -50,8 +50,7 @@ public class SettingsActivity extends MainActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 return true;
             }
         }
@@ -61,8 +60,7 @@ public class SettingsActivity extends MainActivity {
     @Override
     public void goBack() {
         if (!isTablet()) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 return;
             }
         }

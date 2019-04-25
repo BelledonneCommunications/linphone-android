@@ -73,14 +73,15 @@ public class ChatActivity extends MainActivity {
         if (peerAddr != null) {
             peerAddress = Factory.instance().createAddress(peerAddr);
         }
-        showChatRoom(localAddress, peerAddress);
+        if (peerAddress != null) {
+            showChatRoom(localAddress, peerAddress);
+        }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 mDisplayRoomLocalAddress = null;
                 mDisplayRoomPeerAddress = null;
                 return true;
@@ -92,8 +93,7 @@ public class ChatActivity extends MainActivity {
     @Override
     public void goBack() {
         if (!isTablet()) {
-            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStackImmediate();
+            if (popBackStack()) {
                 mDisplayRoomLocalAddress = null;
                 mDisplayRoomPeerAddress = null;
                 return;

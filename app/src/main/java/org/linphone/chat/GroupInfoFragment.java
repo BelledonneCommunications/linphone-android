@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,7 +36,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;

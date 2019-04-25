@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,7 +30,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -112,8 +112,10 @@ public class HistoryFragment extends Fragment
             } else {
                 addr = log.getToAddress();
             }
+            ((HistoryActivity) getActivity()).showHistoryDetails(addr);
+        } else {
+            ((HistoryActivity) getActivity()).showEmptyFragment();
         }
-        ((HistoryActivity) getActivity()).showHistoryDetails(addr);
     }
 
     private void removeNotMissedCallsFromLogs() {

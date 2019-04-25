@@ -19,6 +19,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -209,7 +209,7 @@ public class ContactsFragment extends Fragment
             ((ContactsActivity) getActivity())
                     .showContactDetails((LinphoneContact) mAdapt.getItem(0));
         } else {
-            ((ContactsActivity) getActivity()).showContactDetails(null);
+            ((ContactsActivity) getActivity()).showEmptyFragment();
         }
     }
 

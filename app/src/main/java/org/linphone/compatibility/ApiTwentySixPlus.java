@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static org.linphone.compatibility.Compatibility.CHAT_NOTIFICATIONS_GROUP;
 
 import android.annotation.TargetApi;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -32,7 +33,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.fragment.app.FragmentTransaction;
 import org.linphone.R;
 import org.linphone.notifications.Notifiable;
 import org.linphone.notifications.NotifiableMessage;
