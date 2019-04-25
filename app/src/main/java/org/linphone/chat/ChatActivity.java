@@ -122,4 +122,40 @@ public class ChatActivity extends MainActivity {
     public void showChatRoom(Address localAddress, Address peerAddress) {
         showChatRoom(localAddress, peerAddress, null);
     }
+
+    public void showImdn(Address localAddress, Address peerAddress, String messageId) {
+        Bundle extras = new Bundle();
+        if (localAddress != null) {
+            extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
+        }
+        if (peerAddress != null) {
+            extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        extras.putString("MessageId", messageId);
+
+        ImdnFragment fragment = new ImdnFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Chat message imdn", true);
+    }
+
+    public void showDevices(Address localAddress, Address peerAddress) {
+        Bundle extras = new Bundle();
+        if (localAddress != null) {
+            extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
+        }
+        if (peerAddress != null) {
+            extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+
+        DevicesFragment fragment = new DevicesFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Chat room devices", true);
+    }
+
+    public void showChatRoomCreation() {
+        Bundle extras = new Bundle();
+        ImdnFragment fragment = new ImdnFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Chatroom creation", true);
+    }
 }

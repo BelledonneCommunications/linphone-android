@@ -210,10 +210,8 @@ public class MenuSettingsFragment extends SettingsFragment {
                         new SettingListenerBase() {
                             @Override
                             public void onClicked() {
-                                // getString(R.string.pref_sipaccount);
-                                AccountSettingsFragment accountSettingsFragment =
-                                        new AccountSettingsFragment();
-                                // TODO
+                                ((SettingsActivity) getActivity())
+                                        .showAccountSettings(accountIndex, true);
                             }
                         });
 

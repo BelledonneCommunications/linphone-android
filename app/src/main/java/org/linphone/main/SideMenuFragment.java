@@ -44,6 +44,7 @@ import org.linphone.core.ProxyConfig;
 import org.linphone.core.RegistrationState;
 import org.linphone.core.tools.Log;
 import org.linphone.recording.RecordingsActivity;
+import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.LinphoneUtils;
 
@@ -196,11 +197,10 @@ public class SideMenuFragment extends Fragment {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                // TODO FIXME
-                                /*LinphoneActivity.instance()
-                                .displayAccountSettings(
-                                        LinphonePreferences.instance()
-                                                .getDefaultAccountIndex());*/
+                                ((MainActivity) getActivity())
+                                        .showAccountSettings(
+                                                LinphonePreferences.instance()
+                                                        .getDefaultAccountIndex());
                             }
                         });
             }
@@ -237,8 +237,7 @@ public class SideMenuFragment extends Fragment {
                                 AdapterView<?> adapterView, View view, int i, long l) {
                             if (view != null && view.getTag() != null) {
                                 int position = Integer.parseInt(view.getTag().toString());
-                                // TODO FIXME
-                                // LinphoneActivity.instance().displayAccountSettings(position);
+                                ((MainActivity) getActivity()).showAccountSettings(position);
                             }
                         }
                     });

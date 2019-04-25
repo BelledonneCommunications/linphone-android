@@ -51,6 +51,7 @@ import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
+import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.DeviceUtils;
 import org.linphone.utils.PushNotificationUtils;
 import org.linphone.utils.ThemableActivity;
@@ -427,6 +428,13 @@ public abstract class MainActivity extends ThemableActivity
 
     public void showEmptyChildFragment() {
         changeFragment(new EmptyFragment(), "Empty", true);
+    }
+
+    public void showAccountSettings(int accountIndex) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        addFlagsToIntent(intent);
+        intent.putExtra("Account", accountIndex);
+        startActivity(intent);
     }
 
     public void showContactDetails(LinphoneContact contact) {

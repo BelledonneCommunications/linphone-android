@@ -158,29 +158,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (mIsAlreadyCreatedGroup) {
-                            // TODO FIXME
-                            /*if (LinphoneActivity.instance().isTablet()) {
-                                LinphoneActivity.instance()
-                                        .goToChat(
-                                                mChatRoom.getLocalAddress().asStringUriOnly(),
-                                                mGroupChatRoomAddress.asStringUriOnly(),
-                                                mShareInfos);
-                            } else {
-                                getFragmentManager().popBackStack();
-                            }*/
-                        } else {
-                            // TODO FIXME
-                            /*LinphoneActivity.instance()
-                            .goToChatCreator(
-                                    null,
-                                    mParticipants,
-                                    null,
-                                    true,
-                                    mShareInfos,
-                                    true,
-                                    mIsEncryptionEnabled);*/
-                        }
+                        ((ChatActivity) getActivity()).goBack();
                     }
                 });
 
@@ -310,12 +288,9 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             // fragment from the back stack
                             getFragmentManager().popBackStack();
                             getFragmentManager().popBackStack();
-                            // TODO FIXME
-                            /*LinphoneActivity.instance()
-                            .goToChat(
-                                    cr.getLocalAddress().asStringUriOnly(),
-                                    cr.getPeerAddress().asStringUriOnly(),
-                                    mShareInfos);*/
+                            ((ChatActivity) getActivity())
+                                    .showChatRoom(
+                                            cr.getLocalAddress(), cr.getPeerAddress(), mShareInfos);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             // TODO FIXME
@@ -409,13 +384,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                             Address[] participantsToAdd = new Address[toAdd.size()];
                             toAdd.toArray(participantsToAdd);
                             mChatRoom.addParticipants(participantsToAdd);
-
-                            // TODO FIXME
-                            /*LinphoneActivity.instance()
-                            .goToChat(
-                                    mChatRoom.getLocalAddress().asStringUriOnly(),
-                                    mGroupChatRoomAddress.asString(),
-                                    null);*/
+                            ((ChatActivity) getActivity())
+                                    .showChatRoom(
+                                            mChatRoom.getLocalAddress(),
+                                            mChatRoom.getPeerAddress(),
+                                            null);
                         }
                     }
                 });

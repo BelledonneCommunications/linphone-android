@@ -123,12 +123,7 @@ public class DevicesFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO FIXME
-                        /*if (LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().goToChat(mLocalSipUri, mRoomUri, null);
-                        } else {
-                            LinphoneActivity.instance().onBackPressed();
-                        }*/
+                        ((ChatActivity) getActivity()).goBack();
                     }
                 });
 

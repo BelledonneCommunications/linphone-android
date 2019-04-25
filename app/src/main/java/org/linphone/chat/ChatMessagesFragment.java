@@ -169,9 +169,8 @@ public class ChatMessagesFragment extends Fragment
                                         mChatRoom.getParticipants()[0].getDevices()[0];
                                 CallManager.getInstance().inviteAddress(device.getAddress(), true);
                             } else {
-                                // TODO FIXME
-                                /*LinphoneActivity.instance()
-                                .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);*/
+                                ((ChatActivity) getActivity())
+                                        .showDevices(mLocalSipAddress, mRemoteSipAddress);
                             }
                         }
                     }
@@ -539,9 +538,7 @@ public class ChatMessagesFragment extends Fragment
             return true;
         }
         if (item.getItemId() == R.id.imdn_infos) {
-            // TODO FIXME
-            /*LinphoneActivity.instance()
-            .goToChatMessageImdnInfos(mLocalSipUri, mRemoteSipUri, messageId);*/
+            ((ChatActivity) getActivity()).showImdn(mLocalSipAddress, mRemoteSipAddress, messageId);
             return true;
         }
         if (item.getItemId() == R.id.copy_text) {
@@ -563,14 +560,8 @@ public class ChatMessagesFragment extends Fragment
         if (item.getItemId() == R.id.add_to_contacts) {
             Address address = message.getFromAddress();
             if (address == null) return true;
-            String uri = address.getUsername() + "@" + address.getDomain(); // Get a clean address
-            // TODO FIXME
-            /*if (address.getDisplayName() != null) {
-                LinphoneActivity.instance()
-                        .displayContactsForEdition(uri, address.getDisplayName());
-            } else {
-                LinphoneActivity.instance().displayContactsForEdition(uri);
-            }*/
+            address.clean();
+            ((ChatActivity) getActivity()).showContactsListForCreationOrEdition(address);
             return true;
         }
         return super.onContextItemSelected(item);
