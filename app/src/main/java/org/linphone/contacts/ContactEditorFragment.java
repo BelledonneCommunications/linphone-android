@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -267,9 +269,8 @@ public class ContactEditorFragment extends Fragment {
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO FIXME
-                            /*final Dialog dialog =
-                                    LinphoneActivity.instance()
+                            final Dialog dialog =
+                                    ((ContactsActivity) getActivity())
                                             .displayDialog(getString(R.string.delete_text));
                             Button delete = dialog.findViewById(R.id.dialog_delete_button);
                             Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
@@ -279,7 +280,7 @@ public class ContactEditorFragment extends Fragment {
                                         @Override
                                         public void onClick(View view) {
                                             mContact.delete();
-                                            LinphoneActivity.instance().displayContacts(false);
+                                            ((ContactsActivity) getActivity()).goBack();
                                             dialog.dismiss();
                                         }
                                     });
@@ -291,7 +292,7 @@ public class ContactEditorFragment extends Fragment {
                                             dialog.dismiss();
                                         }
                                     });
-                            dialog.show();*/
+                            dialog.show();
                         }
                     });
         } else {

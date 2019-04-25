@@ -152,7 +152,7 @@ public class HistoryDetailFragment extends Fragment {
                                     .showChatRoom(cr.getLocalAddress(), cr.getPeerAddress());
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // TODO FIXME LinphoneActivity.instance().displayChatRoomError();
+                            ((HistoryActivity) getActivity()).displayChatRoomError();
                             Log.e(
                                     "Group mChat room for address "
                                             + cr.getPeerAddress()

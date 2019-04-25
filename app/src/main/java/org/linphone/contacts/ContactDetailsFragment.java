@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -50,8 +52,7 @@ import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.views.ContactAvatar;
 
-public class ContactDetailsFragment extends Fragment
-        implements OnClickListener, ContactsUpdatedListener {
+public class ContactDetailsFragment extends Fragment implements ContactsUpdatedListener {
     private LinphoneContact mContact;
     private ImageView mEditContact, mDeleteContact, mBack;
     private TextView mOrganization;
@@ -95,7 +96,33 @@ public class ContactDetailsFragment extends Fragment
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO FIXME
+                        final Dialog dialog =
+                                ((ContactsActivity) getActivity())
+                                        .displayDialog(getString(R.string.delete_text));
+                        Button delete = dialog.findViewById(R.id.dialog_delete_button);
+                        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+
+                        delete.setOnClickListener(
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        mContact.delete();
+                                        // To ensure removed contact won't appear in the contacts
+                                        // list anymore
+                                        ContactsManager.getInstance().fetchContactsAsync();
+                                        ((ContactsActivity) getActivity()).goBack();
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                        cancel.setOnClickListener(
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        dialog.show();
                     }
                 });
 
@@ -122,8 +149,7 @@ public class ContactDetailsFragment extends Fragment
                                     .showChatRoom(cr.getLocalAddress(), cr.getPeerAddress());
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // TODO FIXME
-                            // LinphoneActivity.instance().displayChatRoomError();
+                            ((ContactsActivity) getActivity()).displayChatRoomError();
                             Log.e(
                                     "Group chat room for address "
                                             + cr.getPeerAddress()
@@ -159,44 +185,6 @@ public class ContactDetailsFragment extends Fragment
         }
         ContactsManager.getInstance().removeContactsListener(this);
         super.onPause();
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-
-        if (id == R.id.editContact) {
-            ContactsManager.getInstance().editContact(getActivity(), mContact, null);
-        } else if (id == R.id.deleteContact) {
-            // TODO FIXME
-            /*final Dialog dialog =
-                    LinphoneActivity.instance().displayDialog(getString(R.string.delete_text));
-            Button delete = dialog.findViewById(R.id.dialog_delete_button);
-            Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
-
-            delete.setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mContact.delete();
-                            // To ensure removed contact won't appear in the contacts list anymore
-                            ContactsManager.getInstance().fetchContactsAsync();
-                            LinphoneActivity.instance().displayContacts(false);
-                            dialog.dismiss();
-                        }
-                    });
-
-            cancel.setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-            dialog.show();*/
-        } else if (id == R.id.back) {
-            getFragmentManager().popBackStackImmediate();
-        }
     }
 
     @Override

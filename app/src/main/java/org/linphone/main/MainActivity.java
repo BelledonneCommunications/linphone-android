@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -30,6 +31,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -53,6 +55,7 @@ import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.settings.SettingsActivity;
 import org.linphone.utils.DeviceUtils;
+import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.PushNotificationUtils;
 import org.linphone.utils.ThemableActivity;
 
@@ -467,5 +470,40 @@ public abstract class MainActivity extends ThemableActivity
             intent.putExtra("RemoteSipUri", peerAddress.asStringUriOnly());
         }
         startActivity(intent);
+    }
+
+    public void showChatRoomDevices(Address localAddress, Address peerAddress) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        addFlagsToIntent(intent);
+        if (localAddress != null) {
+            intent.putExtra("LocalSipUri", localAddress.asStringUriOnly());
+        }
+        if (peerAddress != null) {
+            intent.putExtra("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        intent.putExtra("Devices", true);
+        startActivity(intent);
+    }
+
+    // Dialogs
+
+    public Dialog displayDialog(String text) {
+        return LinphoneUtils.getDialog(this, text);
+    }
+
+    public void displayChatRoomError() {
+        final Dialog dialog = displayDialog(getString(R.string.chat_room_creation_failed));
+        dialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
+        Button cancel = dialog.findViewById(R.id.dialog_cancel_button);
+        cancel.setText(getString(R.string.ok));
+        cancel.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
     }
 }

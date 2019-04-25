@@ -21,11 +21,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import androidx.annotation.Nullable;
 import org.linphone.R;
+import org.linphone.compatibility.Compatibility;
+import org.linphone.core.tools.Log;
 import org.linphone.main.MainActivity;
 
 public class SettingsActivity extends MainActivity {
+    private static final int PERMISSIONS_REQUEST_OVERLAY = 206;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +87,16 @@ public class SettingsActivity extends MainActivity {
         super.goBack();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == PERMISSIONS_REQUEST_OVERLAY) {
+            if (Compatibility.canDrawOverlays(this)) {
+                LinphonePreferences.instance().enableOverlay(true);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void showSettingsMenu() {
         Bundle extras = new Bundle();
         MenuSettingsFragment menuSettingsFragment = new MenuSettingsFragment();
@@ -99,5 +117,21 @@ public class SettingsActivity extends MainActivity {
         accountSettingsFragment.setArguments(extras);
         changeFragment(accountSettingsFragment, getString(R.string.pref_sipaccount), isChild);
         showTopBarWithTitle(getString(R.string.pref_sipaccount));
+    }
+
+    public boolean checkAndRequestOverlayPermission() {
+        Log.i(
+                "[Permission] Draw overlays permission is "
+                        + (Compatibility.canDrawOverlays(this) ? "granted" : "denied"));
+        if (!Compatibility.canDrawOverlays(this)) {
+            Log.i("[Permission] Asking for overlay");
+            Intent intent =
+                    new Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, PERMISSIONS_REQUEST_OVERLAY);
+            return false;
+        }
+        return true;
     }
 }

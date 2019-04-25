@@ -333,7 +333,7 @@ class InAppPurchaseHelper {
     }
 
     private Purchasable verifySignature() {
-        // TODO FIXME rework to be async
+        // TODO rework to be async
         /*XmlRpcHelper helper = new XmlRpcHelper();
         if (helper.verifySignature(payload, signature)) {
         	try {

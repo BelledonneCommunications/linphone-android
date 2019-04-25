@@ -247,8 +247,7 @@ public class ChatRoomCreationFragment extends Fragment
                                             mShareInfos);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // TODO FIXME
-                            // LinphoneActivity.instance().displayChatRoomError();
+                            ((ChatActivity) getActivity()).displayChatRoomError();
                             Log.e(
                                     "[Chat Room Creation] Group chat room for address "
                                             + cr.getPeerAddress()
@@ -482,13 +481,7 @@ public class ChatRoomCreationFragment extends Fragment
             updateList();
             resetAndResearch();
         } else if (id == R.id.back) {
-            // TODO FIXME
-            /*if (LinphoneActivity.instance().isTablet()) {
-                LinphoneActivity.instance().goToChatList();
-            } else {
-                mContactsSelectedLayout.removeAllViews();
-                LinphoneActivity.instance().popBackStack();
-            }*/
+            ((ChatActivity) getActivity()).goBack();
         } else if (id == R.id.next) {
             if (mChatRoomAddress == null && mChatRoomSubject == null) {
                 mContactsSelectedLayout.removeAllViews();

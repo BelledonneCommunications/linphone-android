@@ -43,7 +43,12 @@ public class ChatActivity extends MainActivity {
                 if (extras.containsKey("RemoteSipUri")) {
                     String remoteSipUri = extras.getString("RemoteSipUri", null);
                     String localSipUri = extras.getString("LocalSipUri", null);
-                    showChatRoom(localSipUri, remoteSipUri);
+
+                    if (getIntent().getBooleanExtra("Devices", false)) {
+                        showDevices(localSipUri, remoteSipUri);
+                    } else {
+                        showChatRoom(localSipUri, remoteSipUri);
+                    }
                 }
             } else {
                 ChatRoomsFragment fragment = new ChatRoomsFragment();
@@ -99,6 +104,18 @@ public class ChatActivity extends MainActivity {
         showChatRoom(localAddress, remoteAddress, null, false);
     }
 
+    private void showDevices(String localSipUri, String remoteSipUri) {
+        Address localAddress = null;
+        Address remoteAddress = null;
+        if (localSipUri != null) {
+            localAddress = Factory.instance().createAddress(localSipUri);
+        }
+        if (remoteSipUri != null) {
+            remoteAddress = Factory.instance().createAddress(remoteSipUri);
+        }
+        showDevices(localAddress, remoteAddress, false);
+    }
+
     public void showChatRoom(
             Address localAddress, Address peerAddress, Bundle extras, boolean isChild) {
         if (extras == null) {
@@ -139,6 +156,10 @@ public class ChatActivity extends MainActivity {
     }
 
     public void showDevices(Address localAddress, Address peerAddress) {
+        showDevices(localAddress, peerAddress, true);
+    }
+
+    public void showDevices(Address localAddress, Address peerAddress, boolean isChild) {
         Bundle extras = new Bundle();
         if (localAddress != null) {
             extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
@@ -149,7 +170,7 @@ public class ChatActivity extends MainActivity {
 
         DevicesFragment fragment = new DevicesFragment();
         fragment.setArguments(extras);
-        changeFragment(fragment, "Chat room devices", true);
+        changeFragment(fragment, "Chat room devices", isChild);
     }
 
     public void showChatRoomCreation() {

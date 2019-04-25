@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -45,6 +46,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -846,9 +849,9 @@ public class ChatMessagesFragment extends Fragment
     }
 
     private void showSecurityDialog(boolean oneParticipantOneDevice) {
-        // TODO FIXME
-        /*final Dialog dialog =
-                LinphoneActivity.instance().displayDialog(getString(R.string.lime_security_popup));
+        final Dialog dialog =
+                ((ChatActivity) getActivity())
+                        .displayDialog(getString(R.string.lime_security_popup));
         Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
         Button ok = dialog.findViewById(R.id.dialog_ok_button);
@@ -883,8 +886,8 @@ public class ChatMessagesFragment extends Fragment
                                     mChatRoom.getParticipants()[0].getDevices()[0];
                             CallManager.getInstance().inviteAddress(device.getAddress(), true);
                         } else {
-                            LinphoneActivity.instance()
-                                    .goToContactDevicesInfos(mLocalSipUri, mRemoteSipUri);
+                            ((ChatActivity) getActivity())
+                                    .showChatRoomDevices(mLocalSipAddress, mRemoteSipAddress);
                         }
 
                         dialog.dismiss();
@@ -901,7 +904,7 @@ public class ChatMessagesFragment extends Fragment
                         dialog.dismiss();
                     }
                 });
-        dialog.show();*/
+        dialog.show();
     }
 
     private void scrollToBottom() {
@@ -1158,9 +1161,8 @@ public class ChatMessagesFragment extends Fragment
         final LinphoneContact contact = ContactsManager.getInstance().findContactFromAddress(from);
 
         if (LinphoneManager.getLc().limeEnabled() == LimeState.Mandatory) {
-            // TODO FIXME
-            /*final Dialog dialog =
-                    LinphoneActivity.instance()
+            final Dialog dialog =
+                    ((ChatActivity) getActivity())
                             .displayDialog(
                                     getString(R.string.message_cant_be_decrypted)
                                             .replace(
@@ -1193,7 +1195,7 @@ public class ChatMessagesFragment extends Fragment
                             dialog.dismiss();
                         }
                     });
-            dialog.show();*/
+            dialog.show();
         }
     }
 

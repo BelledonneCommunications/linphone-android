@@ -169,9 +169,8 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO FIXME
-                        /*final Dialog dialog =
-                                LinphoneActivity.instance()
+                        final Dialog dialog =
+                                ((ChatActivity) getActivity())
                                         .displayDialog(getString(R.string.chat_room_leave_dialog));
                         Button delete = dialog.findViewById(R.id.dialog_delete_button);
                         delete.setText(getString(R.string.chat_room_leave_button));
@@ -183,14 +182,11 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                     public void onClick(View view) {
                                         if (mChatRoom != null) {
                                             mChatRoom.leave();
-                                            // TODO FIXME
-                                            LinphoneActivity.instance()
-                                            .goToChat(
-                                                    mChatRoom
-                                                            .getLocalAddress()
-                                                            .asStringUriOnly(),
-                                                    mGroupChatRoomAddress.asString(),
-                                                    null);
+                                            ((ChatActivity) getActivity())
+                                                    .showChatRoom(
+                                                            mChatRoom.getLocalAddress(),
+                                                            mChatRoom.getPeerAddress(),
+                                                            null);
                                         } else {
                                             Log.e(
                                                     "Can't leave, chatRoom for address "
@@ -208,7 +204,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                         dialog.dismiss();
                                     }
                                 });
-                        dialog.show();*/
+                        dialog.show();
                     }
                 });
         mLeaveGroupButton.setVisibility(
@@ -293,8 +289,7 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
                                             cr.getLocalAddress(), cr.getPeerAddress(), mShareInfos);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // TODO FIXME
-                            // LinphoneActivity.instance().displayChatRoomError();
+                            ((ChatActivity) getActivity()).displayChatRoomError();
                             Log.e(
                                     "Group chat room for address "
                                             + cr.getPeerAddress()
@@ -468,14 +463,13 @@ public class GroupInfoFragment extends Fragment implements ChatRoomListener {
     private void displayMeAdminStatusUpdated() {
         if (mAdminStateChangedDialog != null) mAdminStateChangedDialog.dismiss();
 
-        // TODO FIXME
-        /*mAdminStateChangedDialog =
-        LinphoneActivity.instance()
-                .displayDialog(
-                        getString(
-                                mIsEditionEnabled
-                                        ? R.string.chat_room_you_are_now_admin
-                                        : R.string.chat_room_you_are_no_longer_admin));*/
+        mAdminStateChangedDialog =
+                ((ChatActivity) getActivity())
+                        .displayDialog(
+                                getString(
+                                        mIsEditionEnabled
+                                                ? R.string.chat_room_you_are_now_admin
+                                                : R.string.chat_room_you_are_no_longer_admin));
         Button cancel = mAdminStateChangedDialog.findViewById(R.id.dialog_cancel_button);
         mAdminStateChangedDialog.findViewById(R.id.dialog_delete_button).setVisibility(View.GONE);
         cancel.setText(getString(R.string.ok));

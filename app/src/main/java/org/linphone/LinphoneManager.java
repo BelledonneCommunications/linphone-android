@@ -539,11 +539,12 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             } else {
                 CallManager.getInstance().inviteAddress(lAddress, false, isLowBandwidthConnection);
             }
-        } else if (LinphoneActivity.isInstanciated()) {
-            LinphoneActivity.instance()
-                    .displayCustomToast(
-                            getString(R.string.error_network_unreachable), Toast.LENGTH_LONG);
         } else {
+            Toast.makeText(
+                            mServiceContext,
+                            getString(R.string.error_network_unreachable),
+                            Toast.LENGTH_LONG)
+                    .show();
             Log.e("[Manager] Error: " + getString(R.string.error_network_unreachable));
         }
     }
@@ -811,7 +812,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         if (mCore.isIncomingInvitePending() && on) {
             mHandsetON = true;
             acceptCall(mCore.getCurrentCall());
-            LinphoneActivity.instance().startIncallActivity();
         } /*else if (on && CallActivity.isInstanciated()) { // TODO FIXME
               mHandsetON = true;
               CallActivity.instance().setSpeakerEnabled(true);
@@ -1176,8 +1176,6 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                                     acceptCall(call);
                                     if (LinphoneManager.getInstance() != null) {
                                         LinphoneManager.getInstance().routeAudioToReceiver();
-                                        if (LinphoneActivity.instance() != null)
-                                            LinphoneActivity.instance().startIncallActivity();
                                     }
                                 }
                             }
@@ -1495,7 +1493,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
 
         long future =
                 new Timestamp(
-                                LinphoneActivity.instance()
+                                mServiceContext
                                         .getResources()
                                         .getInteger(
                                                 R.integer.phone_number_linking_popup_time_interval))
@@ -1505,14 +1503,14 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         LinphonePreferences.instance().setLinkPopupTime(String.valueOf(newDate));
 
         final Dialog dialog =
-                LinphoneActivity.instance()
-                        .displayDialog(
-                                String.format(
-                                        getString(R.string.link_account_popup),
-                                        LinphoneManager.getLc()
-                                                .getDefaultProxyConfig()
-                                                .getIdentityAddress()
-                                                .asStringUriOnly()));
+                LinphoneUtils.getDialog(
+                        mServiceContext,
+                        String.format(
+                                getString(R.string.link_account_popup),
+                                LinphoneManager.getLc()
+                                        .getDefaultProxyConfig()
+                                        .getIdentityAddress()
+                                        .asStringUriOnly()));
         Button delete = dialog.findViewById(R.id.dialog_delete_button);
         delete.setVisibility(View.GONE);
         Button ok = dialog.findViewById(R.id.dialog_ok_button);
@@ -1538,8 +1536,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
                     public void onClick(View view) {
                         Intent assistant = new Intent();
                         assistant.setClass(
-                                LinphoneActivity.instance(),
-                                PhoneAccountLinkingAssistantActivity.class);
+                                mServiceContext, PhoneAccountLinkingAssistantActivity.class);
                         mServiceContext.startActivity(assistant);
                         dialog.dismiss();
                     }
@@ -1697,7 +1694,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     public void onEcCalibrationAudioUninit(Core lc) {}
 
     private void sendLogs(String info) {
-        Context context = LinphoneActivity.instance();
+        Context context = mServiceContext;
         final String appName = context.getString(R.string.app_name);
 
         Intent i = new Intent(Intent.ACTION_SEND);
@@ -1725,7 +1722,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
             ClipData clip = ClipData.newPlainText("Logs url", info);
             clipboard.setPrimaryClip(clip);
             Toast.makeText(
-                            LinphoneActivity.instance(),
+                            mServiceContext,
                             getString(R.string.logs_url_copied_to_clipboard),
                             Toast.LENGTH_SHORT)
                     .show();

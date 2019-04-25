@@ -168,8 +168,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
             }
             context.startActivity(intent);
-        } else {
-            // TODO FIXME LinphoneActivity.instance().editContact(contact, valueToAdd);
         }
     }
 
@@ -186,8 +184,6 @@ public class ContactsManager extends ContentObserver implements FriendListListen
                 intent.putExtra(ContactsContract.Intents.Insert.IM_HANDLE, valueToAdd);
             }
             context.startActivity(intent);
-        } else {
-            // TODO FIXME LinphoneActivity.instance().addContact(name, valueToAdd);
         }
     }
 

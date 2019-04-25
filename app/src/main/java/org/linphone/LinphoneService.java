@@ -396,10 +396,10 @@ public final class LinphoneService extends Service {
         }
         destroyOverlay();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
-            lc = null; // To allow the gc calls below to free the Core
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.removeListener(mListener);
+            core = null; // To allow the gc calls below to free the Core
         }
 
         sInstance = null;
@@ -411,10 +411,10 @@ public final class LinphoneService extends Service {
         }
 
         // This will prevent the app from crashing if the service gets killed in background mode
-        if (LinphoneActivity.isInstanciated()) {
+        /*if (LinphoneActivity.isInstanciated()) {
             Log.w("[Service] Service is getting destroyed, finish LinphoneActivity");
             LinphoneActivity.instance().finish();
-        }
+        }*/
 
         if (LinphonePreferences.instance().useJavaLogger()) {
             Factory.instance().getLoggingService().removeListener(mJavaLoggingService);

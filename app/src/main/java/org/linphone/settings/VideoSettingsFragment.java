@@ -129,7 +129,10 @@ public class VideoSettingsFragment extends SettingsFragment {
                 new SettingListenerBase() {
                     @Override
                     public void onBoolValueChanged(boolean newValue) {
-                        mPrefs.enableOverlay(newValue);
+                        mPrefs.enableOverlay(
+                                newValue
+                                        && ((SettingsActivity) getActivity())
+                                                .checkAndRequestOverlayPermission());
                     }
                 });
 

@@ -935,14 +935,7 @@ public class LinphonePreferences {
     }
 
     public void enableOverlay(boolean enable) {
-        // TODO FIXME
-        /*getConfig()
-        .setBool(
-                "app",
-                "display_overlay",
-                enable
-                        && LinphoneActivity.isInstanciated()
-                        && LinphoneActivity.instance().checkAndRequestOverlayPermission());*/
+        getConfig().setBool("app", "display_overlay", enable);
     }
 
     public boolean isDeviceRingtoneEnabled() {

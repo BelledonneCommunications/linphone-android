@@ -21,8 +21,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -32,7 +35,11 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+import androidx.core.content.ContextCompat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +64,6 @@ import org.linphone.settings.LinphonePreferences;
 
 /** Helpers. */
 public final class LinphoneUtils {
-    private static Context sContext = null;
     private static final Handler sHandler = new Handler(Looper.getMainLooper());
 
     private LinphoneUtils() {}
@@ -381,5 +387,22 @@ public final class LinphoneUtils {
             }
         }
         return newRooms;
+    }
+
+    public static Dialog getDialog(Context context, String text) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Drawable d = new ColorDrawable(ContextCompat.getColor(context, R.color.dark_grey_color));
+        d.setAlpha(200);
+        dialog.setContentView(R.layout.dialog);
+        dialog.getWindow()
+                .setLayout(
+                        WindowManager.LayoutParams.MATCH_PARENT,
+                        WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setBackgroundDrawable(d);
+
+        TextView customText = dialog.findViewById(R.id.dialog_message);
+        customText.setText(text);
+        return dialog;
     }
 }
