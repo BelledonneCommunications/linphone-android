@@ -32,15 +32,19 @@ import org.linphone.LinphoneManager;
 import org.linphone.R;
 import org.linphone.call.CallActivity;
 import org.linphone.contacts.ContactsActivity;
+import org.linphone.contacts.ContactsManager;
 import org.linphone.core.Call;
 import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
+import org.linphone.core.tools.Log;
 import org.linphone.views.AddressAware;
 import org.linphone.views.AddressText;
 import org.linphone.views.CallButton;
 import org.linphone.views.EraseButton;
 
 public class DialerActivity extends MainActivity implements AddressText.AddressChangedListener {
+    private static final String ACTION_CALL_LINPHONE = "org.linphone.intent.action.CallLaunched";
+
     private AddressAware mNumpad;
     private AddressText mAddress;
     private CallButton mStartCall, mAddCall, mTransferCall;
@@ -157,6 +161,14 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                     Manifest.permission.WRITE_CONTACTS,
                     Manifest.permission.READ_CONTACTS
                 };
+
+        handleIntentParams(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntentParams(intent);
     }
 
     @Override
@@ -204,6 +216,14 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         mIsTransfer = savedInstanceState.getBoolean("isTransfer");
     }
 
+    @Override
+    public void onAddressChanged() {
+        mAddContact.setEnabled(
+                LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
+                                && LinphoneManager.getLc().getCallsNb() > 0
+                        || !mAddress.getText().toString().equals(""));
+    }
+
     public void updateLayout() {
         Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
         if (core == null) {
@@ -226,11 +246,38 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
         mTransferCall.setVisibility(atLeastOneCall && mIsTransfer ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void onAddressChanged() {
-        mAddContact.setEnabled(
-                LinphoneManager.getLcIfManagerNotDestroyedOrNull() != null
-                                && LinphoneManager.getLc().getCallsNb() > 0
-                        || !mAddress.getText().toString().equals(""));
+    private void handleIntentParams(Intent intent) {
+        if (intent == null) return;
+
+        String action = intent.getAction();
+        String addressToCall = null;
+        if (ACTION_CALL_LINPHONE.equals(action)
+                && (intent.getStringExtra("NumberToCall") != null)) {
+            String numberToCall = intent.getStringExtra("NumberToCall");
+            Log.i("[Dialer] ACTION_CALL_LINPHONE with number: " + numberToCall);
+            LinphoneManager.getInstance().newOutgoingCall(numberToCall, null);
+        } else if (Intent.ACTION_CALL.equals(action)) {
+            if (intent.getData() != null) {
+                addressToCall = intent.getData().toString();
+                addressToCall = addressToCall.replace("%40", "@");
+                addressToCall = addressToCall.replace("%3A", ":");
+                if (addressToCall.startsWith("sip:")) {
+                    addressToCall = addressToCall.substring("sip:".length());
+                } else if (addressToCall.startsWith("tel:")) {
+                    addressToCall = addressToCall.substring("tel:".length());
+                }
+                Log.i("[Dialer] ACTION_CALL with number: " + addressToCall);
+            }
+        } else if (Intent.ACTION_VIEW.equals(action)) {
+            addressToCall =
+                    ContactsManager.getInstance()
+                            .getAddressOrNumberForAndroidContact(
+                                    getContentResolver(), intent.getData());
+            Log.i("[Dialer] ACTION_VIEW with number: " + addressToCall);
+        }
+
+        if (addressToCall != null) {
+            mAddress.setText(addressToCall);
+        }
     }
 }

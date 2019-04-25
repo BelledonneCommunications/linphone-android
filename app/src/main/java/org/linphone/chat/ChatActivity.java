@@ -20,14 +20,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+import java.util.ArrayList;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.core.tools.Log;
 import org.linphone.main.MainActivity;
+import org.linphone.utils.FileUtils;
 
 public class ChatActivity extends MainActivity {
     @Override
@@ -40,21 +43,6 @@ public class ChatActivity extends MainActivity {
                 Bundle extras = getIntent().getExtras();
                 if (isTablet() || !extras.containsKey("RemoteSipUri")) {
                     showChatRooms();
-                }
-
-                String fileSharedUri = extras.getString("fileSharedUri", null);
-                String messageSharedUri = extras.getString("messageDraft", null);
-                if (fileSharedUri != null || messageSharedUri != null) {
-                    Toast.makeText(
-                                    this,
-                                    R.string.toast_choose_chat_room_for_sharing,
-                                    Toast.LENGTH_LONG)
-                            .show();
-                    Log.i(
-                            "[Chat Activity] Sharing arguments found: "
-                                    + messageSharedUri
-                                    + " / "
-                                    + fileSharedUri);
                 }
 
                 if (extras.containsKey("RemoteSipUri")) {
@@ -79,6 +67,8 @@ public class ChatActivity extends MainActivity {
                 }
             }
         }
+
+        handleIntentParams(getIntent());
     }
 
     @Override
@@ -107,6 +97,45 @@ public class ChatActivity extends MainActivity {
             }
         }
         super.goBack();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntentParams(intent);
+    }
+
+    private void handleIntentParams(Intent intent) {
+        if (intent == null) return;
+
+        String stringFileShared;
+        String stringUriFileShared;
+        Uri fileUri;
+
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (("text/plain").equals(type) && intent.getStringExtra(Intent.EXTRA_TEXT) != null) {
+                stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
+                Log.i("[Chat Activity] ACTION_SEND with text/plain data: " + stringFileShared);
+            } else {
+                fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                stringUriFileShared = FileUtils.getFilePath(this, fileUri);
+                Log.i("[Chat Activity] ACTION_SEND with file: " + stringUriFileShared);
+            }
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                String filePaths = "";
+                for (Uri uri : imageUris) {
+                    filePaths += FileUtils.getFilePath(this, uri);
+                    filePaths += ":";
+                }
+                Log.i("[Chat Activity] ACTION_SEND_MULTIPLE with files: " + filePaths);
+            }
+        }
+
+        // TODO
     }
 
     private void showChatRooms() {
