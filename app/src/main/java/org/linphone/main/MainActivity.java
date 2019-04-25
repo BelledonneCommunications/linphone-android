@@ -422,6 +422,7 @@ public abstract class MainActivity extends ThemableActivity
         Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
         if (isChild && isTablet()) {
             transaction.replace(R.id.fragmentContainer2, fragment, name);
+            findViewById(R.id.fragmentContainer2).setVisibility(View.VISIBLE);
         } else {
             transaction.replace(R.id.fragmentContainer, fragment, name);
         }

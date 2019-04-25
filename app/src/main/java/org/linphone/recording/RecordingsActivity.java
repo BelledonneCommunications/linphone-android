@@ -63,6 +63,10 @@ public class RecordingsActivity extends MainActivity
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         fragmentContainer.addView(recordingsView, params);
 
+        if (isTablet()) {
+            findViewById(R.id.fragmentContainer2).setVisibility(View.GONE);
+        }
+
         mBackButton = findViewById(R.id.back);
         mBackButton.setOnClickListener(
                 new View.OnClickListener() {

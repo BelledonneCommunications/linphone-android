@@ -54,7 +54,7 @@ public class ChatActivity extends MainActivity {
                 ChatRoomsFragment fragment = new ChatRoomsFragment();
                 changeFragment(fragment, "Chat rooms", false);
                 if (isTablet()) {
-                    fragment.displayFirstChat();
+                    showEmptyChildFragment();
                 }
             }
         }

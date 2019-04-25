@@ -58,6 +58,10 @@ public class AboutActivity extends MainActivity {
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         fragmentContainer.addView(aboutView, params);
 
+        if (isTablet()) {
+            findViewById(R.id.fragmentContainer2).setVisibility(View.GONE);
+        }
+
         TextView aboutVersion = findViewById(R.id.about_android_version);
         TextView aboutLiblinphoneVersion = findViewById(R.id.about_liblinphone_sdk_version);
         aboutLiblinphoneVersion.setText(

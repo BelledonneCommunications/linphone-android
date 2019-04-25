@@ -61,6 +61,10 @@ public class DialerActivity extends MainActivity implements AddressText.AddressC
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         fragmentContainer.addView(dialerView, params);
 
+        if (isTablet()) {
+            findViewById(R.id.fragmentContainer2).setVisibility(View.GONE);
+        }
+
         mAddress = findViewById(R.id.address);
         mAddress.setAddressListener(this);
 

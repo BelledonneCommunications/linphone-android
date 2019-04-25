@@ -129,7 +129,7 @@
                         android:layout_margin="20dp"
                         android:background="@drawable/unread_message_count_bg"
                         android:gravity="center"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 

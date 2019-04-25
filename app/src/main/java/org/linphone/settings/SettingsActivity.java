@@ -44,18 +44,17 @@ public class SettingsActivity extends MainActivity {
                 Bundle extras = getIntent().getExtras();
                 if (extras.containsKey("Account")) {
                     int accountIndex = extras.getInt("Account");
-                    showAccountSettings(accountIndex, false);
+                    if (isTablet()) {
+                        showSettingsMenu();
+                        showAccountSettings(accountIndex, true);
+                    } else {
+                        showAccountSettings(accountIndex, false);
+                    }
                 } else {
                     showSettingsMenu();
-                    if (isTablet()) {
-                        showEmptyChildFragment();
-                    }
                 }
             } else {
                 showSettingsMenu();
-                if (isTablet()) {
-                    showEmptyChildFragment();
-                }
             }
         }
     }

@@ -63,7 +63,7 @@
                 android:layout_toEndOf="@+id/footer"
                 android:layout_toRightOf="@+id/footer"
                 android:baselineAligned="false"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/fragmentContainer"
