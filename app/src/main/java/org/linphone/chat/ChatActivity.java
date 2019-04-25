@@ -22,9 +22,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
+import org.linphone.core.tools.Log;
 import org.linphone.main.MainActivity;
 
 public class ChatActivity extends MainActivity {
@@ -40,15 +42,34 @@ public class ChatActivity extends MainActivity {
                     showChatRooms();
                 }
 
+                String fileSharedUri = extras.getString("fileSharedUri", null);
+                String messageSharedUri = extras.getString("messageDraft", null);
+                if (fileSharedUri != null || messageSharedUri != null) {
+                    Toast.makeText(
+                                    this,
+                                    R.string.toast_choose_chat_room_for_sharing,
+                                    Toast.LENGTH_LONG)
+                            .show();
+                    Log.i(
+                            "[Chat Activity] Sharing arguments found: "
+                                    + messageSharedUri
+                                    + " / "
+                                    + fileSharedUri);
+                }
+
                 if (extras.containsKey("RemoteSipUri")) {
                     String remoteSipUri = extras.getString("RemoteSipUri", null);
                     String localSipUri = extras.getString("LocalSipUri", null);
 
-                    if (getIntent().getBooleanExtra("Devices", false)) {
-                        showDevices(localSipUri, remoteSipUri);
-                    } else {
-                        showChatRoom(localSipUri, remoteSipUri);
+                    Address localAddress = null;
+                    Address remoteAddress = null;
+                    if (localSipUri != null) {
+                        localAddress = Factory.instance().createAddress(localSipUri);
                     }
+                    if (remoteSipUri != null) {
+                        remoteAddress = Factory.instance().createAddress(remoteSipUri);
+                    }
+                    showChatRoom(localAddress, remoteAddress, null, isTablet());
                 }
             } else {
                 ChatRoomsFragment fragment = new ChatRoomsFragment();
@@ -90,30 +111,6 @@ public class ChatActivity extends MainActivity {
     private void showChatRooms() {
         ChatRoomsFragment fragment = new ChatRoomsFragment();
         changeFragment(fragment, "Chat rooms", false);
-    }
-
-    private void showChatRoom(String localSipUri, String remoteSipUri) {
-        Address localAddress = null;
-        Address remoteAddress = null;
-        if (localSipUri != null) {
-            localAddress = Factory.instance().createAddress(localSipUri);
-        }
-        if (remoteSipUri != null) {
-            remoteAddress = Factory.instance().createAddress(remoteSipUri);
-        }
-        showChatRoom(localAddress, remoteAddress, null, false);
-    }
-
-    private void showDevices(String localSipUri, String remoteSipUri) {
-        Address localAddress = null;
-        Address remoteAddress = null;
-        if (localSipUri != null) {
-            localAddress = Factory.instance().createAddress(localSipUri);
-        }
-        if (remoteSipUri != null) {
-            remoteAddress = Factory.instance().createAddress(remoteSipUri);
-        }
-        showDevices(localAddress, remoteAddress, false);
     }
 
     public void showChatRoom(

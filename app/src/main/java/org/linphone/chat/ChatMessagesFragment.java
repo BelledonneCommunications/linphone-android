@@ -887,7 +887,7 @@ public class ChatMessagesFragment extends Fragment
                             CallManager.getInstance().inviteAddress(device.getAddress(), true);
                         } else {
                             ((ChatActivity) getActivity())
-                                    .showChatRoomDevices(mLocalSipAddress, mRemoteSipAddress);
+                                    .showDevices(mLocalSipAddress, mRemoteSipAddress);
                         }
 
                         dialog.dismiss();

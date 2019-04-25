@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,7 +62,6 @@ public class ChatRoomsFragment extends Fragment
     private RelativeLayout mWaitLayout;
     private int mChatRoomDeletionPendingCount;
     private ChatRoomListenerStub mChatRoomListener;
-    private Context mContext;
     private List<ChatRoom> mRooms;
     private SelectableHelper mSelectionHelper;
     private TextView mNoChatHistory;
@@ -74,7 +71,6 @@ public class ChatRoomsFragment extends Fragment
             final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mContext = getActivity().getApplicationContext();
         View view = inflater.inflate(R.layout.chatlist, container, false);
 
         mChatRoomsList = view.findViewById(R.id.chatList);
@@ -85,7 +81,7 @@ public class ChatRoomsFragment extends Fragment
         mNoChatHistory = view.findViewById(R.id.noChatHistory);
 
         ChatRoom[] rooms = LinphoneManager.getLc().getChatRooms();
-        if (mContext.getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
+        if (getResources().getBoolean(R.bool.hide_empty_one_to_one_chat_rooms)) {
             mRooms = LinphoneUtils.removeEmptyOneToOneChatRooms(rooms);
         } else {
             mRooms = Arrays.asList(rooms);
@@ -94,13 +90,13 @@ public class ChatRoomsFragment extends Fragment
         mSelectionHelper = new SelectableHelper(view, this);
         mChatRoomsAdapter =
                 new ChatRoomsAdapter(
-                        mContext, R.layout.chatlist_cell, mRooms, this, mSelectionHelper);
+                        getActivity(), R.layout.chatlist_cell, mRooms, this, mSelectionHelper);
 
         mChatRoomsList.setAdapter(mChatRoomsAdapter);
         mSelectionHelper.setAdapter(mChatRoomsAdapter);
         mSelectionHelper.setDialogMessage(R.string.chat_room_delete_dialog);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mChatRoomsList.setLayoutManager(layoutManager);
 
         DividerItemDecoration dividerItemDecoration =
@@ -163,6 +159,8 @@ public class ChatRoomsFragment extends Fragment
                         refreshChatRoomsList();
                     }
 
+                    // TODO: refresh chat rooms list when message is sent (for tablets)
+
                     @Override
                     public void onChatRoomStateChanged(Core lc, ChatRoom cr, ChatRoom.State state) {
                         if (state == ChatRoom.State.Created) {
@@ -190,20 +188,17 @@ public class ChatRoomsFragment extends Fragment
                             }
                         }
                     }
-                };
 
-        if (getArguments() != null) {
-            String fileSharedUri = getArguments().getString("fileSharedUri");
-            String messageSharedUri = getArguments().getString("messageDraft");
-            if (fileSharedUri != null || messageSharedUri != null) {
-                Toast.makeText(
-                                getActivity(),
-                                R.string.toast_choose_chat_room_for_sharing,
-                                Toast.LENGTH_LONG)
-                        .show();
-            }
-            Log.i("[ChatRooms] Arguments found: " + messageSharedUri + " / " + fileSharedUri);
-        }
+                    @Override
+                    public void onChatMessageReceived(ChatRoom cr, EventLog eventLog) {
+                        refreshChatRoomsList();
+                    }
+
+                    @Override
+                    public void onChatMessageSent(ChatRoom cr, EventLog eventLog) {
+                        refreshChatRoomsList();
+                    }
+                };
 
         return view;
     }
@@ -214,16 +209,9 @@ public class ChatRoomsFragment extends Fragment
             mChatRoomsAdapter.toggleSelection(position);
         } else {
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
-            Bundle extras = null;
-            if (getArguments() != null) {
-                // TODO FIXME handle this in ChatActivity
-                Log.i("[ChatRooms] Forwarding arguments to existing chat room");
-                extras = (Bundle) getArguments().clone();
-                getArguments().clear();
-            }
             if (room != null) {
                 ((ChatActivity) getActivity())
-                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), extras, true);
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), null, true);
             }
         }
     }
@@ -237,25 +225,6 @@ public class ChatRoomsFragment extends Fragment
         return true;
     }
 
-    private void refreshChatRoomsList() {
-        mChatRoomsAdapter.refresh();
-        mNoChatHistory.setVisibility(
-                mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
-    }
-
-    public void displayFirstChat() {
-        ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
-        if (adapter != null && adapter.getItemCount() > 0) {
-            ChatRoom room = (ChatRoom) adapter.getItem(0);
-            if (room != null) {
-                ((ChatActivity) getActivity())
-                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), null, true);
-            }
-        } else {
-            ((ChatActivity) getActivity()).showEmptyChildFragment();
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -267,23 +236,23 @@ public class ChatRoomsFragment extends Fragment
             mBackToCallButton.setVisibility(View.INVISIBLE);
         }
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.addListener(mListener);
         }
 
         refreshChatRoomsList();
 
-        ProxyConfig lpc = lc.getDefaultProxyConfig();
+        ProxyConfig lpc = core.getDefaultProxyConfig();
         mNewGroupDiscussionButton.setVisibility(
                 (lpc != null && lpc.getConferenceFactoryUri() != null) ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onPause() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.removeListener(mListener);
         }
         ContactsManager.getInstance().removeContactsListener(this);
         mChatRoomsAdapter.clear();
@@ -326,5 +295,11 @@ public class ChatRoomsFragment extends Fragment
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void refreshChatRoomsList() {
+        mChatRoomsAdapter.refresh();
+        mNoChatHistory.setVisibility(
+                mChatRoomsAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 }

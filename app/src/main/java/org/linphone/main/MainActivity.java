@@ -473,19 +473,6 @@ public abstract class MainActivity extends ThemableActivity
         startActivity(intent);
     }
 
-    public void showChatRoomDevices(Address localAddress, Address peerAddress) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        addFlagsToIntent(intent);
-        if (localAddress != null) {
-            intent.putExtra("LocalSipUri", localAddress.asStringUriOnly());
-        }
-        if (peerAddress != null) {
-            intent.putExtra("RemoteSipUri", peerAddress.asStringUriOnly());
-        }
-        intent.putExtra("Devices", true);
-        startActivity(intent);
-    }
-
     // Dialogs
 
     public Dialog displayDialog(String text) {

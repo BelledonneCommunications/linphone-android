@@ -256,24 +256,6 @@ public class ChatRoomCreationFragment extends Fragment
                     }
                 };
 
-        if (getArguments() != null) {
-            String fileSharedUri = getArguments().getString("fileSharedUri");
-            String messageDraft = getArguments().getString("messageDraft");
-
-            if (fileSharedUri != null || messageDraft != null) {
-                Log.i("[ChatRoomCreation] Forwarding arguments to new chat room");
-                mShareInfos = new Bundle();
-            }
-
-            if (fileSharedUri != null) {
-                // TODO FIXME
-                // LinphoneActivity.instance().checkAndRequestPermissionsToSendImage();
-                mShareInfos.putString("fileSharedUri", fileSharedUri);
-            }
-
-            if (messageDraft != null) mShareInfos.putString("messageDraft", messageDraft);
-        }
-
         return view;
     }
 
@@ -297,157 +279,6 @@ public class ChatRoomCreationFragment extends Fragment
         }
         ContactsManager.getInstance().removeContactsListener(this);
         super.onPause();
-    }
-
-    private void setSecurityEnabled(boolean enabled) {
-        mChatRoomEncrypted = enabled;
-        mSecurityToggle.setChecked(mChatRoomEncrypted);
-        mSearchAdapter.setSecurityEnabled(mChatRoomEncrypted);
-
-        if (enabled) {
-            // Remove all contacts added before LIME switch was set
-            // and that can stay because they don't have the capability
-            mContactsSelectedLayout.removeAllViews();
-            List<ContactAddress> toToggle = new ArrayList<>();
-            for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
-                // If the ContactAddress doesn't have a contact keep it anyway
-                if (ca.getContact() != null && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
-                    toToggle.add(ca);
-                } else {
-                    if (ca.getView() != null) {
-                        mContactsSelectedLayout.addView(ca.getView());
-                    }
-                }
-            }
-            for (ContactAddress ca : toToggle) {
-                mSearchAdapter.toggleContactSelection(ca);
-            }
-            mContactsSelectedLayout.invalidate();
-        }
-    }
-
-    private void displayChatCreation() {
-        mNextButton.setVisibility(View.VISIBLE);
-        mNextButton.setEnabled(mSearchAdapter.getContactsSelectedList().size() > 0);
-
-        mContactsList.setVisibility(View.VISIBLE);
-        mSearchLayout.setVisibility(View.VISIBLE);
-
-        if (mCreateGroupChatRoom) {
-            mLinphoneContactsToggle.setVisibility(View.GONE);
-            mAllContactsToggle.setVisibility(View.GONE);
-            mContactsSelectLayout.setVisibility(View.VISIBLE);
-            mNextButton.setVisibility(View.VISIBLE);
-        } else {
-            mLinphoneContactsToggle.setVisibility(View.VISIBLE);
-            mAllContactsToggle.setVisibility(View.VISIBLE);
-            mContactsSelectLayout.setVisibility(View.GONE);
-            mNextButton.setVisibility(View.GONE);
-        }
-
-        if (getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
-            mLinphoneContactsToggle.setVisibility(View.GONE);
-            mLinphoneContactsButton.setVisibility(View.INVISIBLE);
-
-            mAllContactsButton.setEnabled(false);
-            mLinphoneContactsButton.setEnabled(false);
-
-            mOnlyDisplayLinphoneContacts = true;
-
-            mAllContactsButton.setOnClickListener(null);
-            mLinphoneContactsButton.setOnClickListener(null);
-
-            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
-            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
-        } else {
-            mAllContactsButton.setVisibility(View.VISIBLE);
-            mLinphoneContactsButton.setVisibility(View.VISIBLE);
-
-            if (mOnlyDisplayLinphoneContacts) {
-                mAllContactsSelected.setVisibility(View.INVISIBLE);
-                mLinphoneContactsSelected.setVisibility(View.VISIBLE);
-            } else {
-                mAllContactsSelected.setVisibility(View.VISIBLE);
-                mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
-            }
-
-            mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
-            mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
-        }
-
-        mContactsSelectedLayout.removeAllViews();
-        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
-            for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
-                addSelectedContactAddress(ca);
-            }
-        }
-    }
-
-    private void updateList() {
-        mSearchAdapter.searchContacts(mSearchField.getQuery().toString());
-        mSearchAdapter.notifyDataSetChanged();
-    }
-
-    private void updateListSelected() {
-        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
-            mContactsSelectLayout.invalidate();
-            mNextButton.setEnabled(true);
-        } else {
-            mNextButton.setEnabled(false);
-        }
-    }
-
-    private void resetAndResearch() {
-        ContactsManager.getInstance().getMagicSearch().resetSearchCache();
-        mSearchAdapter.searchContacts(mSearchField.getQuery().toString());
-    }
-
-    private void addSelectedContactAddress(ContactAddress ca) {
-        View viewContact =
-                LayoutInflater.from(getActivity()).inflate(R.layout.contact_selected, null);
-        if (ca.getContact() != null) {
-            String name =
-                    (ca.getContact().getFullName() != null
-                                    && !ca.getContact().getFullName().isEmpty())
-                            ? ca.getContact().getFullName()
-                            : (ca.getDisplayName() != null)
-                                    ? ca.getDisplayName()
-                                    : (ca.getUsername() != null) ? ca.getUsername() : "";
-            ((TextView) viewContact.findViewById(R.id.sipUri)).setText(name);
-        } else {
-            ((TextView) viewContact.findViewById(R.id.sipUri))
-                    .setText(ca.getAddressAsDisplayableString());
-        }
-        View removeContact = viewContact.findViewById(R.id.contactChatDelete);
-        removeContact.setTag(ca);
-        removeContact.setOnClickListener(this);
-        viewContact.setOnClickListener(this);
-        ca.setView(viewContact);
-        mContactsSelectedLayout.addView(viewContact);
-        mContactsSelectedLayout.invalidate();
-    }
-
-    private void updateContactsClick(ContactAddress ca) {
-        boolean isSelected = mSearchAdapter.toggleContactSelection(ca);
-        if (isSelected) {
-            ContactSelectView csv = new ContactSelectView(getActivity());
-            csv.setListener(this);
-            csv.setContactName(ca);
-            addSelectedContactAddress(ca);
-        } else {
-            mContactsSelectedLayout.removeAllViews();
-            for (ContactAddress contactAddress : mSearchAdapter.getContactsSelectedList()) {
-                if (contactAddress.getView() != null)
-                    mContactsSelectedLayout.addView(contactAddress.getView());
-            }
-        }
-        mContactsSelectedLayout.invalidate();
-    }
-
-    private void addOrRemoveContactFromSelection(ContactAddress ca) {
-        updateContactsClick(ca);
-        mSearchAdapter.notifyDataSetChanged();
-        updateListSelected();
     }
 
     @Override
@@ -651,5 +482,156 @@ public class ChatRoomCreationFragment extends Fragment
     @Override
     public void onContactsUpdated() {
         updateList();
+    }
+
+    private void setSecurityEnabled(boolean enabled) {
+        mChatRoomEncrypted = enabled;
+        mSecurityToggle.setChecked(mChatRoomEncrypted);
+        mSearchAdapter.setSecurityEnabled(mChatRoomEncrypted);
+
+        if (enabled) {
+            // Remove all contacts added before LIME switch was set
+            // and that can stay because they don't have the capability
+            mContactsSelectedLayout.removeAllViews();
+            List<ContactAddress> toToggle = new ArrayList<>();
+            for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
+                // If the ContactAddress doesn't have a contact keep it anyway
+                if (ca.getContact() != null && !ca.hasCapability(FriendCapability.LimeX3Dh)) {
+                    toToggle.add(ca);
+                } else {
+                    if (ca.getView() != null) {
+                        mContactsSelectedLayout.addView(ca.getView());
+                    }
+                }
+            }
+            for (ContactAddress ca : toToggle) {
+                mSearchAdapter.toggleContactSelection(ca);
+            }
+            mContactsSelectedLayout.invalidate();
+        }
+    }
+
+    private void displayChatCreation() {
+        mNextButton.setVisibility(View.VISIBLE);
+        mNextButton.setEnabled(mSearchAdapter.getContactsSelectedList().size() > 0);
+
+        mContactsList.setVisibility(View.VISIBLE);
+        mSearchLayout.setVisibility(View.VISIBLE);
+
+        if (mCreateGroupChatRoom) {
+            mLinphoneContactsToggle.setVisibility(View.GONE);
+            mAllContactsToggle.setVisibility(View.GONE);
+            mContactsSelectLayout.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
+        } else {
+            mLinphoneContactsToggle.setVisibility(View.VISIBLE);
+            mAllContactsToggle.setVisibility(View.VISIBLE);
+            mContactsSelectLayout.setVisibility(View.GONE);
+            mNextButton.setVisibility(View.GONE);
+        }
+
+        if (getResources().getBoolean(R.bool.hide_non_linphone_contacts)) {
+            mLinphoneContactsToggle.setVisibility(View.GONE);
+            mLinphoneContactsButton.setVisibility(View.INVISIBLE);
+
+            mAllContactsButton.setEnabled(false);
+            mLinphoneContactsButton.setEnabled(false);
+
+            mOnlyDisplayLinphoneContacts = true;
+
+            mAllContactsButton.setOnClickListener(null);
+            mLinphoneContactsButton.setOnClickListener(null);
+
+            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
+            mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
+        } else {
+            mAllContactsButton.setVisibility(View.VISIBLE);
+            mLinphoneContactsButton.setVisibility(View.VISIBLE);
+
+            if (mOnlyDisplayLinphoneContacts) {
+                mAllContactsSelected.setVisibility(View.INVISIBLE);
+                mLinphoneContactsSelected.setVisibility(View.VISIBLE);
+            } else {
+                mAllContactsSelected.setVisibility(View.VISIBLE);
+                mLinphoneContactsSelected.setVisibility(View.INVISIBLE);
+            }
+
+            mAllContactsButton.setEnabled(mOnlyDisplayLinphoneContacts);
+            mLinphoneContactsButton.setEnabled(!mAllContactsButton.isEnabled());
+        }
+
+        mContactsSelectedLayout.removeAllViews();
+        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
+            for (ContactAddress ca : mSearchAdapter.getContactsSelectedList()) {
+                addSelectedContactAddress(ca);
+            }
+        }
+    }
+
+    private void updateList() {
+        mSearchAdapter.searchContacts(mSearchField.getQuery().toString());
+        mSearchAdapter.notifyDataSetChanged();
+    }
+
+    private void updateListSelected() {
+        if (mSearchAdapter.getContactsSelectedList().size() > 0) {
+            mContactsSelectLayout.invalidate();
+            mNextButton.setEnabled(true);
+        } else {
+            mNextButton.setEnabled(false);
+        }
+    }
+
+    private void resetAndResearch() {
+        ContactsManager.getInstance().getMagicSearch().resetSearchCache();
+        mSearchAdapter.searchContacts(mSearchField.getQuery().toString());
+    }
+
+    private void addSelectedContactAddress(ContactAddress ca) {
+        View viewContact =
+                LayoutInflater.from(getActivity()).inflate(R.layout.contact_selected, null);
+        if (ca.getContact() != null) {
+            String name =
+                    (ca.getContact().getFullName() != null
+                                    && !ca.getContact().getFullName().isEmpty())
+                            ? ca.getContact().getFullName()
+                            : (ca.getDisplayName() != null)
+                                    ? ca.getDisplayName()
+                                    : (ca.getUsername() != null) ? ca.getUsername() : "";
+            ((TextView) viewContact.findViewById(R.id.sipUri)).setText(name);
+        } else {
+            ((TextView) viewContact.findViewById(R.id.sipUri))
+                    .setText(ca.getAddressAsDisplayableString());
+        }
+        View removeContact = viewContact.findViewById(R.id.contactChatDelete);
+        removeContact.setTag(ca);
+        removeContact.setOnClickListener(this);
+        viewContact.setOnClickListener(this);
+        ca.setView(viewContact);
+        mContactsSelectedLayout.addView(viewContact);
+        mContactsSelectedLayout.invalidate();
+    }
+
+    private void updateContactsClick(ContactAddress ca) {
+        boolean isSelected = mSearchAdapter.toggleContactSelection(ca);
+        if (isSelected) {
+            ContactSelectView csv = new ContactSelectView(getActivity());
+            csv.setListener(this);
+            csv.setContactName(ca);
+            addSelectedContactAddress(ca);
+        } else {
+            mContactsSelectedLayout.removeAllViews();
+            for (ContactAddress contactAddress : mSearchAdapter.getContactsSelectedList()) {
+                if (contactAddress.getView() != null)
+                    mContactsSelectedLayout.addView(contactAddress.getView());
+            }
+        }
+        mContactsSelectedLayout.invalidate();
+    }
+
+    private void addOrRemoveContactFromSelection(ContactAddress ca) {
+        updateContactsClick(ca);
+        mSearchAdapter.notifyDataSetChanged();
+        updateListSelected();
     }
 }
