@@ -118,12 +118,8 @@ public class ContactDetailsFragment extends Fragment
                     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
                         if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // TODO FIXME
-                            /*LinphoneActivity.instance()
-                            .goToChat(
-                                    cr.getLocalAddress().asStringUriOnly(),
-                                    cr.getPeerAddress().asStringUriOnly(),
-                                    null);*/
+                            ((ContactsActivity) getActivity())
+                                    .showChatRoom(cr.getLocalAddress(), cr.getPeerAddress());
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             // TODO FIXME
@@ -380,12 +376,8 @@ public class ContactDetailsFragment extends Fragment
                     lc.findOneToOneChatRoom(
                             defaultProxyConfig.getContact(), participant, isSecured);
             if (room != null) {
-                // TODO FIXME
-                /*LinphoneActivity.instance()
-                .goToChat(
-                        room.getLocalAddress().asStringUriOnly(),
-                        room.getPeerAddress().asStringUriOnly(),
-                        null);*/
+                ((ContactsActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
             } else {
                 if (defaultProxyConfig.getConferenceFactoryUri() != null
                         && (isSecured
@@ -415,12 +407,10 @@ public class ContactDetailsFragment extends Fragment
                     }
                 } else {
                     room = lc.getChatRoom(participant);
-                    // TODO FIXME
-                    /*LinphoneActivity.instance()
-                    .goToChat(
-                            room.getLocalAddress().asStringUriOnly(),
-                            room.getPeerAddress().asStringUriOnly(),
-                            null);*/
+                    if (room != null) {
+                        ((ContactsActivity) getActivity())
+                                .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
+                    }
                 }
             }
         }

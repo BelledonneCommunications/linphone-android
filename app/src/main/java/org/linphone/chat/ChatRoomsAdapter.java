@@ -95,7 +95,7 @@ public class ChatRoomsAdapter extends SelectableAdapter<ChatRoomViewHolder> {
 
     public void clear() {
         mRooms.clear();
-        notifyDataSetChanged();
+        // Do not notify data set changed, we don't want the list to empty when fragment is paused
     }
 
     /** Adapter's methods */

@@ -146,22 +146,18 @@ public class HistoryDetailFragment extends Fragment {
                 new ChatRoomListenerStub() {
                     @Override
                     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
-                        // TODO FIXME
-                        /*if (newState == ChatRoom.State.Created) {
+                        if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
-                            LinphoneActivity.instance()
-                                    .goToChat(
-                                            cr.getLocalAddress().asStringUriOnly(),
-                                            cr.getPeerAddress().asStringUriOnly(),
-                                            null);
+                            ((HistoryActivity) getActivity())
+                                    .showChatRoom(cr.getLocalAddress(), cr.getPeerAddress());
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
-                            LinphoneActivity.instance().displayChatRoomError();
+                            // TODO FIXME LinphoneActivity.instance().displayChatRoomError();
                             Log.e(
                                     "Group mChat room for address "
                                             + cr.getPeerAddress()
                                             + " has failed !");
-                        }*/
+                        }
                     }
                 };
 
@@ -234,12 +230,8 @@ public class HistoryDetailFragment extends Fragment {
                 lc.findOneToOneChatRoom(
                         lc.getDefaultProxyConfig().getContact(), participant, isSecured);
         if (room != null) {
-            // TODO FIXME
-            /*LinphoneActivity.instance()
-            .goToChat(
-                    room.getLocalAddress().asStringUriOnly(),
-                    room.getPeerAddress().asStringUriOnly(),
-                    null);*/
+            ((HistoryActivity) getActivity())
+                    .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
         } else {
             ProxyConfig lpc = lc.getDefaultProxyConfig();
             if (lpc != null
@@ -267,12 +259,10 @@ public class HistoryDetailFragment extends Fragment {
                 }
             } else {
                 room = lc.getChatRoom(participant);
-                // TODO FIXME
-                /*LinphoneActivity.instance()
-                .goToChat(
-                        room.getLocalAddress().asStringUriOnly(),
-                        room.getPeerAddress().asStringUriOnly(),
-                        null);*/
+                if (room != null) {
+                    ((HistoryActivity) getActivity())
+                            .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
+                }
             }
         }
     }

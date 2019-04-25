@@ -87,12 +87,11 @@ public class ImdnFragment extends Fragment {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO FIXME
-                        /*if (LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().goToChat(mLocalSipuri, mRoomUri, null);
+                        if (getResources().getBoolean(R.bool.isTablet)) {
+                            ((ChatActivity) getActivity()).showChatRoom(mLocalSipAddr, mRoomAddr);
                         } else {
-                            LinphoneActivity.instance().onBackPressed();
-                        }*/
+                            ((ChatActivity) getActivity()).popBackStack();
+                        }
                     }
                 });
 

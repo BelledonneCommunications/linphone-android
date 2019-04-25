@@ -19,23 +19,39 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import org.linphone.R;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
 import org.linphone.main.MainActivity;
 
 public class ChatActivity extends MainActivity {
-    private Address mDisplayRoomLocalAddress, mDisplayRoomPeerAddress;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ChatRoomsFragment fragment = new ChatRoomsFragment();
-        changeFragment(fragment, "Chat rooms", false);
-        if (isTablet()) {
-            fragment.displayFirstChat();
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment == null) {
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                Bundle extras = getIntent().getExtras();
+                if (isTablet() || !extras.containsKey("RemoteSipUri")) {
+                    showChatRooms();
+                }
+
+                if (extras.containsKey("RemoteSipUri")) {
+                    String remoteSipUri = extras.getString("RemoteSipUri", null);
+                    String localSipUri = extras.getString("LocalSipUri", null);
+                    showChatRoom(localSipUri, remoteSipUri);
+                }
+            } else {
+                ChatRoomsFragment fragment = new ChatRoomsFragment();
+                changeFragment(fragment, "Chat rooms", false);
+                if (isTablet()) {
+                    fragment.displayFirstChat();
+                }
+            }
         }
     }
 
@@ -49,61 +65,58 @@ public class ChatActivity extends MainActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(
-                "DisplayedRoomLocalAddress",
-                mDisplayRoomLocalAddress != null
-                        ? mDisplayRoomLocalAddress.asStringUriOnly()
-                        : null);
-        outState.putSerializable(
-                "DisplayedRoomPeerAddress",
-                mDisplayRoomPeerAddress != null ? mDisplayRoomPeerAddress.asStringUriOnly() : null);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String localAddr = savedInstanceState.getString("DisplayedRoomLocalAddress");
-        String peerAddr = savedInstanceState.getString("DisplayedRoomPeerAddress");
-        Address localAddress = null;
-        Address peerAddress = null;
-        if (localAddr != null) {
-            localAddress = Factory.instance().createAddress(localAddr);
-        }
-        if (peerAddr != null) {
-            peerAddress = Factory.instance().createAddress(peerAddr);
-        }
-        if (peerAddress != null) {
-            showChatRoom(localAddress, peerAddress);
-        }
     }
 
     @Override
     public void goBack() {
         if (!isTablet()) {
             if (popBackStack()) {
-                mDisplayRoomLocalAddress = null;
-                mDisplayRoomPeerAddress = null;
                 return;
             }
         }
         super.goBack();
     }
 
-    public void showChatRoom(Address localAddress, Address peerAddress, Bundle extras) {
+    private void showChatRooms() {
+        ChatRoomsFragment fragment = new ChatRoomsFragment();
+        changeFragment(fragment, "Chat rooms", false);
+    }
+
+    private void showChatRoom(String localSipUri, String remoteSipUri) {
+        Address localAddress = null;
+        Address remoteAddress = null;
+        if (localSipUri != null) {
+            localAddress = Factory.instance().createAddress(localSipUri);
+        }
+        if (remoteSipUri != null) {
+            remoteAddress = Factory.instance().createAddress(remoteSipUri);
+        }
+        showChatRoom(localAddress, remoteAddress, null, false);
+    }
+
+    public void showChatRoom(
+            Address localAddress, Address peerAddress, Bundle extras, boolean isChild) {
         if (extras == null) {
             extras = new Bundle();
         }
         if (localAddress != null) {
             extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
-            mDisplayRoomLocalAddress = localAddress;
         }
         if (peerAddress != null) {
             extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
-            mDisplayRoomPeerAddress = peerAddress;
         }
         ChatMessagesFragment fragment = new ChatMessagesFragment();
         fragment.setArguments(extras);
-        changeFragment(fragment, "Chat room", true);
+        changeFragment(fragment, "Chat room", isChild);
+    }
+
+    public void showChatRoom(Address localAddress, Address peerAddress, Bundle extras) {
+        showChatRoom(localAddress, peerAddress, extras, false);
     }
 
     public void showChatRoom(Address localAddress, Address peerAddress) {

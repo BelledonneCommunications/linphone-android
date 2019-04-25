@@ -240,12 +240,11 @@ public class ChatRoomCreationFragment extends Fragment
                     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
                         if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // TODO FIXME
-                            /*LinphoneActivity.instance()
-                            .goToChat(
-                                    cr.getLocalAddress().asStringUriOnly(),
-                                    cr.getPeerAddress().asStringUriOnly(),
-                                    mShareInfos);*/
+                            ((ChatActivity) getActivity())
+                                    .showChatRoom(
+                                            mChatRoom.getLocalAddress(),
+                                            mChatRoom.getPeerAddress(),
+                                            mShareInfos);
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             // TODO FIXME
@@ -562,12 +561,11 @@ public class ChatRoomCreationFragment extends Fragment
             if (createEncryptedChatRoom && lpc != null && lpc.getConferenceFactoryUri() != null) {
                 mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, true);
                 if (mChatRoom != null) {
-                    // TODO FIXME
-                    /*LinphoneActivity.instance()
-                    .goToChat(
-                            mChatRoom.getLocalAddress().asStringUriOnly(),
-                            mChatRoom.getPeerAddress().asStringUriOnly(),
-                            mShareInfos);*/
+                    ((ChatActivity) getActivity())
+                            .showChatRoom(
+                                    mChatRoom.getLocalAddress(),
+                                    mChatRoom.getPeerAddress(),
+                                    mShareInfos);
                 } else {
                     ChatRoomParams params = lc.createDefaultChatRoomParams();
                     // This will set the backend to FlexisipChat automatically
@@ -617,22 +615,22 @@ public class ChatRoomCreationFragment extends Fragment
                             Log.w("[Chat Room Creation Fragment] createChatRoom returned null...");
                             mWaitLayout.setVisibility(View.GONE);
                         }
-                    } else {
-                        // TODO FIXME
-                        /*LinphoneActivity.instance()
-                        .goToChat(
-                                mChatRoom.getLocalAddress().asStringUriOnly(),
-                                mChatRoom.getPeerAddress().asStringUriOnly(),
-                                mShareInfos);*/
+                    } else if (mChatRoom != null) {
+                        ((ChatActivity) getActivity())
+                                .showChatRoom(
+                                        mChatRoom.getLocalAddress(),
+                                        mChatRoom.getPeerAddress(),
+                                        mShareInfos);
                     }
                 } else {
-                    // TODO FIXME
                     ChatRoom chatRoom = lc.getChatRoom(address);
-                    /*LinphoneActivity.instance()
-                    .goToChat(
-                            chatRoom.getLocalAddress().asStringUriOnly(),
-                            chatRoom.getPeerAddress().asStringUriOnly(),
-                            mShareInfos);*/
+                    if (chatRoom != null) {
+                        ((ChatActivity) getActivity())
+                                .showChatRoom(
+                                        chatRoom.getLocalAddress(),
+                                        chatRoom.getPeerAddress(),
+                                        mShareInfos);
+                    }
                 }
             }
         } else {

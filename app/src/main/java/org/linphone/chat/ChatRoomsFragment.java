@@ -220,8 +220,10 @@ public class ChatRoomsFragment extends Fragment
                 extras = (Bundle) getArguments().clone();
                 getArguments().clear();
             }
-            ((ChatActivity) getActivity())
-                    .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), extras);
+            if (room != null) {
+                ((ChatActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), extras, true);
+            }
         }
     }
 
@@ -244,8 +246,10 @@ public class ChatRoomsFragment extends Fragment
         ChatRoomsAdapter adapter = (ChatRoomsAdapter) mChatRoomsList.getAdapter();
         if (adapter != null && adapter.getItemCount() > 0) {
             ChatRoom room = (ChatRoom) adapter.getItem(0);
-            ((ChatActivity) getActivity())
-                    .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
+            if (room != null) {
+                ((ChatActivity) getActivity())
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), null, true);
+            }
         } else {
             ((ChatActivity) getActivity()).showEmptyChildFragment();
         }
