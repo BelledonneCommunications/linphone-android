@@ -80,9 +80,9 @@ public class ChatRoomCreationFragment extends Fragment
     private String mChatRoomSubject, mChatRoomAddress;
     private ChatRoom mChatRoom;
     private ChatRoomListenerStub mChatRoomCreationListener;
-    private Bundle mShareInfos;
     private ImageView mSecurityToggleOff, mSecurityToggleOn;
     private Switch mSecurityToggle;
+    private ArrayList<ContactAddress> mParticipants;
     private boolean mCreateGroupChatRoom;
     private boolean mChatRoomEncrypted;
 
@@ -91,22 +91,22 @@ public class ChatRoomCreationFragment extends Fragment
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.chat_create, container, false);
+        setRetainInstance(true);
 
-        ArrayList<ContactAddress> selectedContacts = new ArrayList<>();
+        mParticipants = new ArrayList<>();
         mChatRoomSubject = null;
         mChatRoomAddress = null;
         mCreateGroupChatRoom = false;
 
         if (getArguments() != null) {
-            if (getArguments().getSerializable("selectedContacts") != null) {
-                selectedContacts =
-                        (ArrayList<ContactAddress>)
-                                getArguments().getSerializable("selectedContacts");
+            if (getArguments().getSerializable("Participants") != null) {
+                mParticipants =
+                        (ArrayList<ContactAddress>) getArguments().getSerializable("Participants");
             }
-            mChatRoomSubject = getArguments().getString("subject");
-            mChatRoomAddress = getArguments().getString("groupChatRoomAddress");
-            mCreateGroupChatRoom = getArguments().getBoolean("createGroupChatRoom", false);
-            mChatRoomEncrypted = getArguments().getBoolean("encrypted", false);
+            mChatRoomSubject = getArguments().getString("Subject");
+            mChatRoomAddress = getArguments().getString("RemoteSipUri");
+            mCreateGroupChatRoom = getArguments().getBoolean("IsGroupChatRoom", false);
+            mChatRoomEncrypted = getArguments().getBoolean("Encrypted", false);
         }
 
         mWaitLayout = view.findViewById(R.id.waitScreen);
@@ -208,32 +208,22 @@ public class ChatRoomCreationFragment extends Fragment
 
         mContactsList.setLayoutManager(layoutManager);
 
-        if (savedInstanceState != null
-                && savedInstanceState.getStringArrayList("selectedContacts") != null) {
-            mContactsSelectedLayout.removeAllViews();
-            // We need to get all contacts not only sip
-            selectedContacts =
-                    (ArrayList<ContactAddress>)
-                            savedInstanceState.getSerializable("selectedContacts");
-        }
-
-        if (selectedContacts.size() != 0) {
-            mSearchAdapter.setContactsSelectedList(selectedContacts);
-            updateList();
-            updateListSelected();
-        }
-
         mOnlyDisplayLinphoneContacts =
                 ContactsManager.getInstance().isLinphoneContactsPrefered()
                         || getResources().getBoolean(R.bool.hide_non_linphone_contacts);
+
         if (savedInstanceState != null) {
+            if (mParticipants.isEmpty()
+                    && savedInstanceState.getStringArrayList("Participants") != null) {
+                mContactsSelectedLayout.removeAllViews();
+                // We need to get all contacts not only sip
+                mParticipants =
+                        (ArrayList<ContactAddress>)
+                                savedInstanceState.getSerializable("Participants");
+            }
             mOnlyDisplayLinphoneContacts =
                     savedInstanceState.getBoolean("onlySipContact", mOnlyDisplayLinphoneContacts);
         }
-        mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts);
-        updateList();
-
-        displayChatCreation();
 
         mChatRoomCreationListener =
                 new ChatRoomListenerStub() {
@@ -241,11 +231,12 @@ public class ChatRoomCreationFragment extends Fragment
                     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
                         if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
+                            // Pop back stack so back button takes to the chat rooms list
+                            getFragmentManager().popBackStack();
                             ((ChatActivity) getActivity())
                                     .showChatRoom(
                                             mChatRoom.getLocalAddress(),
-                                            mChatRoom.getPeerAddress(),
-                                            mShareInfos);
+                                            mChatRoom.getPeerAddress());
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             ((ChatActivity) getActivity()).displayChatRoomError();
@@ -262,8 +253,10 @@ public class ChatRoomCreationFragment extends Fragment
 
     @Override
     public void onResume() {
-        ContactsManager.getInstance().addContactsListener(this);
         super.onResume();
+        ContactsManager.getInstance().addContactsListener(this);
+
+        updateLayout();
 
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
@@ -286,7 +279,7 @@ public class ChatRoomCreationFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mSearchAdapter.getContactsSelectedList().size() > 0) {
-            outState.putSerializable("selectedContacts", mSearchAdapter.getContactsSelectedList());
+            outState.putSerializable("Participants", mSearchAdapter.getContactsSelectedList());
         }
         outState.putBoolean("onlySipContact", mOnlyDisplayLinphoneContacts);
     }
@@ -317,6 +310,10 @@ public class ChatRoomCreationFragment extends Fragment
         } else if (id == R.id.next) {
             if (mChatRoomAddress == null && mChatRoomSubject == null) {
                 mContactsSelectedLayout.removeAllViews();
+            } else {
+                // Pop the back stack twice so we don't have in stack Group -> Creation -> Group
+                getFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
             }
             Address roomAddress = Factory.instance().createAddress(mChatRoomAddress);
             ((ChatActivity) getActivity())
@@ -373,10 +370,7 @@ public class ChatRoomCreationFragment extends Fragment
                 mChatRoom = lc.findOneToOneChatRoom(lpc.getIdentityAddress(), address, true);
                 if (mChatRoom != null) {
                     ((ChatActivity) getActivity())
-                            .showChatRoom(
-                                    mChatRoom.getLocalAddress(),
-                                    mChatRoom.getPeerAddress(),
-                                    mShareInfos);
+                            .showChatRoom(mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                 } else {
                     ChatRoomParams params = lc.createDefaultChatRoomParams();
                     // This will set the backend to FlexisipChat automatically
@@ -426,21 +420,21 @@ public class ChatRoomCreationFragment extends Fragment
                             Log.w("[Chat Room Creation Fragment] createChatRoom returned null...");
                             mWaitLayout.setVisibility(View.GONE);
                         }
-                    } else if (mChatRoom != null) {
+                    } else {
+                        // Pop back stack so back button takes to the chat rooms list
+                        getFragmentManager().popBackStack();
                         ((ChatActivity) getActivity())
                                 .showChatRoom(
-                                        mChatRoom.getLocalAddress(),
-                                        mChatRoom.getPeerAddress(),
-                                        mShareInfos);
+                                        mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress());
                     }
                 } else {
                     ChatRoom chatRoom = lc.getChatRoom(address);
                     if (chatRoom != null) {
+                        // Pop back stack so back button takes to the chat rooms list
+                        getFragmentManager().popBackStack();
                         ((ChatActivity) getActivity())
                                 .showChatRoom(
-                                        chatRoom.getLocalAddress(),
-                                        chatRoom.getPeerAddress(),
-                                        mShareInfos);
+                                        chatRoom.getLocalAddress(), chatRoom.getPeerAddress());
                     }
                 }
             }
@@ -469,6 +463,19 @@ public class ChatRoomCreationFragment extends Fragment
     @Override
     public void onContactsUpdated() {
         updateList();
+    }
+
+    private void updateLayout() {
+        if (mParticipants.size() != 0) {
+            mSearchAdapter.setContactsSelectedList(mParticipants);
+            updateList();
+            updateListSelected();
+        }
+
+        mSearchAdapter.setOnlySipContact(mOnlyDisplayLinphoneContacts);
+        updateList();
+
+        displayChatCreation();
     }
 
     private void setSecurityEnabled(boolean enabled) {

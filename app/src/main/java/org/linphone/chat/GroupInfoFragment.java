@@ -23,6 +23,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
@@ -74,7 +75,6 @@ public class GroupInfoFragment extends Fragment {
     private ChatRoom mChatRoom, mTempChatRoom;
     private Dialog mAdminStateChangedDialog;
     private ChatRoomListenerStub mChatRoomCreationListener;
-    private Bundle mShareInfos;
     private Context mContext;
     private LinearLayoutManager layoutManager;
     private boolean mIsEncryptionEnabled;
@@ -222,13 +222,12 @@ public class GroupInfoFragment extends Fragment {
                     public void onStateChanged(ChatRoom cr, ChatRoom.State newState) {
                         if (newState == ChatRoom.State.Created) {
                             mWaitLayout.setVisibility(View.GONE);
-                            // This will remove both the creation fragment and the group info
-                            // fragment from the back stack
+                            // Pop the back stack twice so we don't have in stack Creation -> Group
+                            // Behind the chat room, so a back press will take us back to the rooms
                             getFragmentManager().popBackStack();
                             getFragmentManager().popBackStack();
                             ((ChatActivity) getActivity())
-                                    .showChatRoom(
-                                            cr.getLocalAddress(), cr.getPeerAddress(), mShareInfos);
+                                    .showChatRoom(cr.getLocalAddress(), cr.getPeerAddress());
                         } else if (newState == ChatRoom.State.CreationFailed) {
                             mWaitLayout.setVisibility(View.GONE);
                             ((ChatActivity) getActivity()).displayChatRoomError();
@@ -304,18 +303,26 @@ public class GroupInfoFragment extends Fragment {
     }
 
     private void goBackToChatCreationFragment() {
-        // TODO FIXME
-        /*LinphoneActivity.instance()
-        .goToChatCreator(
-                mGroupChatRoomAddress != null
-                        ? mGroupChatRoomAddress.asString()
-                        : null,
-                mParticipants,
-                mSubject,
-                !mIsAlreadyCreatedGroup,
-                null,
-                true,
-                mIsEncryptionEnabled);*/
+        boolean previousFragmentInBackStackIsChatRoomCreation = false;
+        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        int count = fragmentManager.getBackStackEntryCount();
+        if (count > 1) {
+            FragmentManager.BackStackEntry entry = fragmentManager.getBackStackEntryAt(count - 1);
+            if ("Chat room creation".equals(entry.getName())) {
+                previousFragmentInBackStackIsChatRoomCreation = true;
+                ((ChatActivity) getActivity()).goBack();
+            }
+        }
+
+        if (!previousFragmentInBackStackIsChatRoomCreation) {
+            ((ChatActivity) getActivity())
+                    .showChatRoomCreation(
+                            mGroupChatRoomAddress,
+                            mParticipants,
+                            mSubject,
+                            mIsEncryptionEnabled,
+                            true);
+        }
     }
 
     private void refreshParticipantsList() {
@@ -386,8 +393,7 @@ public class GroupInfoFragment extends Fragment {
                             ((ChatActivity) getActivity())
                                     .showChatRoom(
                                             mChatRoom.getLocalAddress(),
-                                            mChatRoom.getPeerAddress(),
-                                            null);
+                                            mChatRoom.getPeerAddress());
                         } else {
                             Log.e(
                                     "[Group Info] Can't leave, chatRoom for address "
@@ -483,8 +489,8 @@ public class GroupInfoFragment extends Fragment {
             Address[] participantsToAdd = new Address[toAdd.size()];
             toAdd.toArray(participantsToAdd);
             mChatRoom.addParticipants(participantsToAdd);
-            ((ChatActivity) getActivity())
-                    .showChatRoom(mChatRoom.getLocalAddress(), mChatRoom.getPeerAddress(), null);
+            // Pop back stack to go back to the Messages fragment
+            getFragmentManager().popBackStack();
         }
     }
 }

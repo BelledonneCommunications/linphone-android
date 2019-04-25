@@ -46,7 +46,6 @@ import org.linphone.core.Core;
 import org.linphone.core.CoreListenerStub;
 import org.linphone.core.EventLog;
 import org.linphone.core.ProxyConfig;
-import org.linphone.core.tools.Log;
 import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.SelectableHelper;
 
@@ -116,15 +115,8 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle extras = null;
-                        if (getArguments() != null) {
-                            Log.i("[ChatRooms] Forwarding arguments to new chat room");
-                            extras = (Bundle) getArguments().clone();
-                            getArguments().clear();
-                        }
-                        // TODO FIXME
-                        /*LinphoneActivity.instance()
-                        .goToChatCreator(null, null, null, false, extras, false, false);*/
+                        ((ChatActivity) getActivity())
+                                .showChatRoomCreation(null, null, null, false, false);
                     }
                 });
 
@@ -132,15 +124,8 @@ public class ChatRoomsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle extras = null;
-                        if (getArguments() != null) {
-                            Log.i("[ChatRooms] Forwarding arguments to new group chat room");
-                            extras = (Bundle) getArguments().clone();
-                            getArguments().clear();
-                        }
-                        // TODO FIXME
-                        /*LinphoneActivity.instance()
-                        .goToChatCreator(null, null, null, false, extras, true, false);*/
+                        ((ChatActivity) getActivity())
+                                .showChatRoomCreation(null, null, null, false, true);
                     }
                 });
 
@@ -211,7 +196,7 @@ public class ChatRoomsFragment extends Fragment
             ChatRoom room = (ChatRoom) mChatRoomsAdapter.getItem(position);
             if (room != null) {
                 ((ChatActivity) getActivity())
-                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress(), null, true);
+                        .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
             }
         }
     }

@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 import java.util.ArrayList;
 import org.linphone.R;
 import org.linphone.contacts.ContactAddress;
@@ -46,20 +47,7 @@ public class ChatActivity extends MainActivity {
                     showChatRooms();
                 }
 
-                if (extras.containsKey("RemoteSipUri")) {
-                    String remoteSipUri = extras.getString("RemoteSipUri", null);
-                    String localSipUri = extras.getString("LocalSipUri", null);
-
-                    Address localAddress = null;
-                    Address remoteAddress = null;
-                    if (localSipUri != null) {
-                        localAddress = Factory.instance().createAddress(localSipUri);
-                    }
-                    if (remoteSipUri != null) {
-                        remoteAddress = Factory.instance().createAddress(remoteSipUri);
-                    }
-                    showChatRoom(localAddress, remoteAddress, null, isTablet());
-                }
+                handleRemoteSipUriInIntentExtras(extras);
             } else {
                 ChatRoomsFragment fragment = new ChatRoomsFragment();
                 changeFragment(fragment, "Chat rooms", false);
@@ -109,9 +97,8 @@ public class ChatActivity extends MainActivity {
     private void handleIntentParams(Intent intent) {
         if (intent == null) return;
 
-        String stringFileShared;
-        String stringUriFileShared;
-        Uri fileUri;
+        String stringFileShared = null;
+        String stringUriFileShared = null;
 
         String action = intent.getAction();
         String type = intent.getType();
@@ -120,7 +107,7 @@ public class ChatActivity extends MainActivity {
                 stringFileShared = intent.getStringExtra(Intent.EXTRA_TEXT);
                 Log.i("[Chat Activity] ACTION_SEND with text/plain data: " + stringFileShared);
             } else {
-                fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                Uri fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                 stringUriFileShared = FileUtils.getFilePath(this, fileUri);
                 Log.i("[Chat Activity] ACTION_SEND with file: " + stringUriFileShared);
             }
@@ -134,9 +121,41 @@ public class ChatActivity extends MainActivity {
                 }
                 Log.i("[Chat Activity] ACTION_SEND_MULTIPLE with files: " + filePaths);
             }
+        } else {
+            if (intent.getExtras() != null) {
+                Bundle extras = intent.getExtras();
+                handleRemoteSipUriInIntentExtras(extras);
+            }
         }
 
-        // TODO
+        if (stringFileShared != null || stringUriFileShared != null) {
+            // TODO do something about it
+            Toast.makeText(this, R.string.toast_choose_chat_room_for_sharing, Toast.LENGTH_LONG)
+                    .show();
+            Log.i(
+                    "[Chat Activity] Sharing arguments found: "
+                            + stringFileShared
+                            + " / "
+                            + stringUriFileShared);
+        }
+    }
+
+    private void handleRemoteSipUriInIntentExtras(Bundle extras) {
+        if (extras.containsKey("RemoteSipUri")) {
+            String remoteSipUri = extras.getString("RemoteSipUri", null);
+            String localSipUri = extras.getString("LocalSipUri", null);
+
+            Address localAddress = null;
+            Address remoteAddress = null;
+            if (localSipUri != null) {
+                localAddress = Factory.instance().createAddress(localSipUri);
+            }
+            if (remoteSipUri != null) {
+                remoteAddress = Factory.instance().createAddress(remoteSipUri);
+            }
+            // Don't make it a child on smartphones to have a working back button
+            showChatRoom(localAddress, remoteAddress, isTablet());
+        }
     }
 
     private void showChatRooms() {
@@ -144,11 +163,8 @@ public class ChatActivity extends MainActivity {
         changeFragment(fragment, "Chat rooms", false);
     }
 
-    public void showChatRoom(
-            Address localAddress, Address peerAddress, Bundle extras, boolean isChild) {
-        if (extras == null) {
-            extras = new Bundle();
-        }
+    private void showChatRoom(Address localAddress, Address peerAddress, boolean isChild) {
+        Bundle extras = new Bundle();
         if (localAddress != null) {
             extras.putSerializable("LocalSipUri", localAddress.asStringUriOnly());
         }
@@ -160,12 +176,8 @@ public class ChatActivity extends MainActivity {
         changeFragment(fragment, "Chat room", isChild);
     }
 
-    public void showChatRoom(Address localAddress, Address peerAddress, Bundle extras) {
-        showChatRoom(localAddress, peerAddress, extras, false);
-    }
-
     public void showChatRoom(Address localAddress, Address peerAddress) {
-        showChatRoom(localAddress, peerAddress, null);
+        showChatRoom(localAddress, peerAddress, true);
     }
 
     public void showImdn(Address localAddress, Address peerAddress, String messageId) {
@@ -201,9 +213,22 @@ public class ChatActivity extends MainActivity {
         changeFragment(fragment, "Chat room devices", isChild);
     }
 
-    public void showChatRoomCreation() {
+    public void showChatRoomCreation(
+            Address peerAddress,
+            ArrayList<ContactAddress> participants,
+            String subject,
+            boolean encrypted,
+            boolean isGroupChatRoom) {
         Bundle extras = new Bundle();
-        ImdnFragment fragment = new ImdnFragment();
+        if (peerAddress != null) {
+            extras.putSerializable("RemoteSipUri", peerAddress.asStringUriOnly());
+        }
+        extras.putSerializable("Participants", participants);
+        extras.putString("Subject", subject);
+        extras.putBoolean("Encrypted", encrypted);
+        extras.putBoolean("IsGroupChatRoom", isGroupChatRoom);
+
+        ChatRoomCreationFragment fragment = new ChatRoomCreationFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "Chat room creation", true);
     }

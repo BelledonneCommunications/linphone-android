@@ -449,16 +449,24 @@ public abstract class MainActivity extends ThemableActivity
     protected void changeFragment(Fragment fragment, String name, boolean isChild) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if (isChild && transaction.isAddToBackStackAllowed()) {
+        if (transaction.isAddToBackStackAllowed()) {
             int count = fragmentManager.getBackStackEntryCount();
             if (count > 0) {
                 FragmentManager.BackStackEntry entry =
                         fragmentManager.getBackStackEntryAt(count - 1);
                 if (entry != null && name.equals(entry.getName())) {
                     fragmentManager.popBackStack();
+                    if (!isChild) {
+                        // We just removed it's duplicate from the back stack
+                        // And we want at least one in it
+                        transaction.addToBackStack(name);
+                    }
                 }
             }
-            transaction.addToBackStack(name);
+
+            if (isChild) {
+                transaction.addToBackStack(name);
+            }
         }
 
         Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
