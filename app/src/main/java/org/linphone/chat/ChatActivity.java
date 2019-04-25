@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import org.linphone.core.Address;
 import org.linphone.core.Factory;
@@ -76,18 +75,6 @@ public class ChatActivity extends MainActivity {
         if (peerAddress != null) {
             showChatRoom(localAddress, peerAddress);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (popBackStack()) {
-                mDisplayRoomLocalAddress = null;
-                mDisplayRoomPeerAddress = null;
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override

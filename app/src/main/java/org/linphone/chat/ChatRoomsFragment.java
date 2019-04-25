@@ -247,7 +247,7 @@ public class ChatRoomsFragment extends Fragment
             ((ChatActivity) getActivity())
                     .showChatRoom(room.getLocalAddress(), room.getPeerAddress());
         } else {
-            ((ChatActivity) getActivity()).showEmptyFragment();
+            ((ChatActivity) getActivity()).showEmptyChildFragment();
         }
     }
 

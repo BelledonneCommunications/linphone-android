@@ -65,6 +65,11 @@ public class ContactDetailsFragment extends Fragment
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContact = (LinphoneContact) getArguments().getSerializable("Contact");
+        if (mContact == null) {
+            if (savedInstanceState != null) {
+                mContact = (LinphoneContact) savedInstanceState.get("Contact");
+            }
+        }
 
         mInflater = inflater;
         mView = inflater.inflate(R.layout.contact, container, false);
@@ -81,7 +86,7 @@ public class ContactDetailsFragment extends Fragment
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO
+                        ((ContactsActivity) getActivity()).showContactEdit(mContact);
                     }
                 });
 
@@ -90,20 +95,11 @@ public class ContactDetailsFragment extends Fragment
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO
+                        // TODO FIXME
                     }
                 });
 
         mOrganization = mView.findViewById(R.id.contactOrganization);
-        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
-        if (mContact != null
-                && mContact.getOrganization() != null
-                && !mContact.getOrganization().isEmpty()
-                && isOrgVisible) {
-            mOrganization.setText(mContact.getOrganization());
-        } else {
-            mOrganization.setVisibility(View.GONE);
-        }
 
         mBack = mView.findViewById(R.id.back);
         mBack.setOnClickListener(
@@ -207,6 +203,12 @@ public class ContactDetailsFragment extends Fragment
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("Contact", mContact);
+    }
+
     public void changeDisplayedContact(LinphoneContact newContact) {
         mContact = newContact;
         displayContact(mInflater, mView);
@@ -216,6 +218,16 @@ public class ContactDetailsFragment extends Fragment
     private void displayContact(LayoutInflater inflater, View view) {
         if (mContact == null) return;
         ContactAvatar.displayAvatar(mContact, view.findViewById(R.id.avatar_layout));
+
+        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+        if (mContact != null
+                && mContact.getOrganization() != null
+                && !mContact.getOrganization().isEmpty()
+                && isOrgVisible) {
+            mOrganization.setText(mContact.getOrganization());
+        } else {
+            mOrganization.setVisibility(View.GONE);
+        }
 
         TextView contactName = view.findViewById(R.id.contact_name);
         contactName.setText(mContact.getFullName());

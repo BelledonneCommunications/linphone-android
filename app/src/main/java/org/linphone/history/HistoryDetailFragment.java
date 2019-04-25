@@ -122,18 +122,9 @@ public class HistoryDetailFragment extends Fragment {
                     public void onClick(View v) {
                         Address addr = Factory.instance().createAddress(mSipUri);
                         if (addr != null) {
-                            String address =
-                                    "sip:"
-                                            + addr.getUsername()
-                                            + "@"
-                                            + addr.getDomain(); // Clean gruu param
-                            // TODO FIXME
-                            /*if (addr.getDisplayName() != null) {
-                                LinphoneActivity.instance()
-                                        .displayContactsForEdition(address, addr.getDisplayName());
-                            } else {
-                                LinphoneActivity.instance().displayContactsForEdition(address);
-                            }*/
+                            addr.clean();
+                            ((HistoryActivity) getActivity())
+                                    .showContactsListForCreationOrEdition(addr);
                         }
                     }
                 });
@@ -143,7 +134,7 @@ public class HistoryDetailFragment extends Fragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO FIXME LinphoneActivity.instance().displayContact(mContact, false);
+                        ((HistoryActivity) getActivity()).showContactDetails(mContact);
                     }
                 });
 

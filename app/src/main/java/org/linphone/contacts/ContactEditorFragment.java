@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -43,11 +44,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import androidx.fragment.app.Fragment;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.linphone.R;
@@ -84,24 +83,22 @@ public class ContactEditorFragment extends Fragment {
         mIsNewContact = true;
 
         if (getArguments() != null) {
-            Serializable obj = getArguments().getSerializable("Contact");
-            if (obj != null) {
-                mContact = (LinphoneContact) obj;
-                mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded(
-                        mContact.getFullName());
-                mIsNewContact = false;
-                if (getArguments().getString("NewSipAdress") != null) {
-                    mNewSipOrNumberToAdd = getArguments().getString("NewSipAdress");
-                }
-                if (getArguments().getString("NewDisplayName") != null) {
-                    mNewDisplayName = getArguments().getString("NewDisplayName");
-                }
-            } else if (getArguments().getString("NewSipAdress") != null) {
-                mNewSipOrNumberToAdd = getArguments().getString("NewSipAdress");
-                if (getArguments().getString("NewDisplayName") != null) {
-                    mNewDisplayName = getArguments().getString("NewDisplayName");
-                }
+            mContact = (LinphoneContact) getArguments().getSerializable("Contact");
+            if (getArguments().containsKey("SipUri")) {
+                mNewSipOrNumberToAdd = getArguments().getString("SipUri");
             }
+            if (getArguments().containsKey("DisplayName")) {
+                mNewDisplayName = getArguments().getString("DisplayName");
+            }
+        } else if (savedInstanceState != null) {
+            mContact = (LinphoneContact) savedInstanceState.get("Contact");
+            mNewSipOrNumberToAdd = savedInstanceState.getString("SipUri");
+            mNewDisplayName = savedInstanceState.getString("DisplayName");
+        }
+        if (mContact != null) {
+            mContact.createRawLinphoneContactFromExistingAndroidContactIfNeeded(
+                    mContact.getFullName());
+            mIsNewContact = false;
         }
 
         mView = inflater.inflate(R.layout.contact_edit, container, false);
@@ -125,7 +122,7 @@ public class ContactEditorFragment extends Fragment {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getFragmentManager().popBackStackImmediate();
+                        ((ContactsActivity) getActivity()).goBack();
                     }
                 });
 
@@ -197,10 +194,9 @@ public class ContactEditorFragment extends Fragment {
                         }
 
                         getFragmentManager().popBackStackImmediate();
-                        /*if (mIsNewContact || LinphoneActivity.instance().isTablet()) {
-                            LinphoneActivity.instance().displayContact(mContact, false);
-                        }*/
-                        // TODO FIXME
+                        if (mIsNewContact || getResources().getBoolean(R.bool.isTablet)) {
+                            ((ContactsActivity) getActivity()).showContactDetails(mContact);
+                        }
                     }
                 });
 
@@ -255,15 +251,6 @@ public class ContactEditorFragment extends Fragment {
                 });
 
         mOrganization = mView.findViewById(R.id.contactOrganization);
-        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
-        if (!isOrgVisible) {
-            mOrganization.setVisibility(View.GONE);
-            mView.findViewById(R.id.contactOrganizationTitle).setVisibility(View.GONE);
-        } else {
-            if (!mIsNewContact) {
-                mOrganization.setText(mContact.getOrganization());
-            }
-        }
 
         if (!mIsNewContact) {
             String fn = mContact.getFirstName();
@@ -312,12 +299,6 @@ public class ContactEditorFragment extends Fragment {
         }
 
         mContactPicture = mView.findViewById(R.id.contact_picture);
-        if (mContact != null) {
-            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
-        } else {
-            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
-        }
-
         mContactPicture.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -328,8 +309,6 @@ public class ContactEditorFragment extends Fragment {
                 });
 
         mNumbersAndAddresses = new ArrayList<>();
-        mSipAddresses = initSipAddressFields(mContact);
-        mNumbers = initNumbersFields(mContact);
 
         mAddSipAddress = mView.findViewById(R.id.add_address_field);
         if (getResources().getBoolean(R.bool.allow_only_one_sip_address)) {
@@ -361,8 +340,18 @@ public class ContactEditorFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("Contact", mContact);
+        outState.putString("SipUri", mNewSipOrNumberToAdd);
+        outState.putString("DisplayName", mNewDisplayName);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        displayContact();
 
         // Force hide keyboard
         getActivity()
@@ -383,36 +372,6 @@ public class ContactEditorFragment extends Fragment {
         }
 
         super.onPause();
-    }
-
-    private void pickImage() {
-        mPickedPhotoForContactUri = null;
-        final List<Intent> cameraIntents = new ArrayList<>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File file =
-                new File(
-                        FileUtils.getStorageDirectory(getActivity()),
-                        getString(R.string.temp_photo_name));
-        mPickedPhotoForContactUri = Uri.fromFile(file);
-        captureIntent.putExtra("outputX", PHOTO_SIZE);
-        captureIntent.putExtra("outputY", PHOTO_SIZE);
-        captureIntent.putExtra("aspectX", 0);
-        captureIntent.putExtra("aspectY", 0);
-        captureIntent.putExtra("scale", true);
-        captureIntent.putExtra("return-data", false);
-        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPickedPhotoForContactUri);
-        cameraIntents.add(captureIntent);
-
-        final Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        final Intent chooserIntent =
-                Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
-        chooserIntent.putExtra(
-                Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[] {}));
-
-        startActivityForResult(chooserIntent, ADD_PHOTO);
     }
 
     @Override
@@ -450,6 +409,57 @@ public class ContactEditorFragment extends Fragment {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void displayContact() {
+        boolean isOrgVisible = getResources().getBoolean(R.bool.display_contact_organization);
+        if (!isOrgVisible) {
+            mOrganization.setVisibility(View.GONE);
+            mView.findViewById(R.id.contactOrganizationTitle).setVisibility(View.GONE);
+        } else {
+            if (!mIsNewContact) {
+                mOrganization.setText(mContact.getOrganization());
+            }
+        }
+
+        if (mContact != null) {
+            ContactAvatar.displayAvatar(mContact, mView.findViewById(R.id.avatar_layout));
+        } else {
+            ContactAvatar.displayAvatar("", mView.findViewById(R.id.avatar_layout));
+        }
+
+        mSipAddresses = initSipAddressFields(mContact);
+        mNumbers = initNumbersFields(mContact);
+    }
+
+    private void pickImage() {
+        mPickedPhotoForContactUri = null;
+        final List<Intent> cameraIntents = new ArrayList<>();
+        final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File file =
+                new File(
+                        FileUtils.getStorageDirectory(getActivity()),
+                        getString(R.string.temp_photo_name));
+        mPickedPhotoForContactUri = Uri.fromFile(file);
+        captureIntent.putExtra("outputX", PHOTO_SIZE);
+        captureIntent.putExtra("outputY", PHOTO_SIZE);
+        captureIntent.putExtra("aspectX", 0);
+        captureIntent.putExtra("aspectY", 0);
+        captureIntent.putExtra("scale", true);
+        captureIntent.putExtra("return-data", false);
+        captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPickedPhotoForContactUri);
+        cameraIntents.add(captureIntent);
+
+        final Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+        final Intent chooserIntent =
+                Intent.createChooser(galleryIntent, getString(R.string.image_picker_title));
+        chooserIntent.putExtra(
+                Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[] {}));
+
+        startActivityForResult(chooserIntent, ADD_PHOTO);
     }
 
     private void editContactPicture(String filePath, Bitmap image) {

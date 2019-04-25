@@ -20,13 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.Manifest;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
+import org.linphone.R;
 import org.linphone.main.MainActivity;
 
 public class ContactsActivity extends MainActivity {
-    private LinphoneContact mDisplayedContact;
+    private boolean mEditOnClick;
+    private String mEditSipUri, mEditDisplayName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +40,38 @@ public class ContactsActivity extends MainActivity {
                     Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS
                 };
 
-        ContactsFragment fragment = new ContactsFragment();
-        changeFragment(fragment, "Contacts", false);
-        if (isTablet()) {
-            fragment.displayFirstContact();
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment == null) {
+            if (getIntent() != null && getIntent().getExtras() != null) {
+                Bundle extras = getIntent().getExtras();
+                if (isTablet() || !extras.containsKey("Contact")) {
+                    showContactsList();
+                }
+
+                if (extras.containsKey("Contact")) {
+                    LinphoneContact contact = (LinphoneContact) extras.get("Contact");
+                    if (extras.containsKey("Edit")) {
+                        showContactEdit(contact, extras, false);
+                    } else {
+                        showContactDetails(contact, false);
+                    }
+                } else if (extras.containsKey("CreateOrEdit")) {
+                    mEditOnClick = extras.getBoolean("CreateOrEdit");
+                    mEditSipUri = extras.getString("SipUri", null);
+                    mEditDisplayName = extras.getString("DisplayName", null);
+
+                    Toast.makeText(
+                                    this,
+                                    R.string.toast_choose_contact_for_edition,
+                                    Toast.LENGTH_LONG)
+                            .show();
+                }
+            } else {
+                showContactsList();
+                if (isTablet()) {
+                    showEmptyChildFragment();
+                }
+            }
         }
     }
 
@@ -54,35 +85,24 @@ public class ContactsActivity extends MainActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(
-                "DisplayedContact", mDisplayedContact != null ? mDisplayedContact : null);
+        outState.putString("EditSipUri", mEditSipUri);
+        outState.putString("EditDisplayName", mEditDisplayName);
+        outState.putBoolean("EditOnClick", mEditOnClick);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        LinphoneContact contact = (LinphoneContact) savedInstanceState.get("DisplayedContact");
-        if (contact != null) {
-            showContactDetails(contact);
-        }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (popBackStack()) {
-                mDisplayedContact = null;
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
+        mEditOnClick = savedInstanceState.getBoolean("EditOnClick", false);
+        mEditSipUri = savedInstanceState.getString("EditSipUri", null);
+        mEditDisplayName = savedInstanceState.getString("EditDisplayName", null);
     }
 
     @Override
     public void goBack() {
         if (!isTablet()) {
             if (popBackStack()) {
-                mDisplayedContact = null;
+                mEditOnClick = false;
                 return;
             }
         }
@@ -90,13 +110,50 @@ public class ContactsActivity extends MainActivity {
     }
 
     public void showContactDetails(LinphoneContact contact) {
+        showContactDetails(contact, true);
+    }
+
+    public void showContactEdit(LinphoneContact contact) {
+        showContactEdit(contact, true);
+    }
+
+    private void showContactsList() {
+        ContactsFragment fragment = new ContactsFragment();
+        changeFragment(fragment, "Contacts", false);
+    }
+
+    private void showContactDetails(LinphoneContact contact, boolean isChild) {
+        if (mEditOnClick) {
+            showContactEdit(contact, isChild);
+            return;
+        }
+
         Bundle extras = new Bundle();
         if (contact != null) {
             extras.putSerializable("Contact", contact);
         }
         ContactDetailsFragment fragment = new ContactDetailsFragment();
         fragment.setArguments(extras);
-        changeFragment(fragment, "Contact detail", true);
-        mDisplayedContact = contact;
+        changeFragment(fragment, "Contact detail", isChild);
+    }
+
+    private void showContactEdit(LinphoneContact contact, boolean isChild) {
+        showContactEdit(contact, new Bundle(), isChild);
+    }
+
+    private void showContactEdit(LinphoneContact contact, Bundle extras, boolean isChild) {
+        if (contact != null) {
+            extras.putSerializable("Contact", contact);
+        }
+        if (mEditOnClick) {
+            mEditOnClick = false;
+            extras.putString("SipUri", mEditSipUri);
+            extras.putString("DisplayName", mEditDisplayName);
+            mEditSipUri = null;
+            mEditDisplayName = null;
+        }
+        ContactEditorFragment fragment = new ContactEditorFragment();
+        fragment.setArguments(extras);
+        changeFragment(fragment, "Contact editor", isChild);
     }
 }

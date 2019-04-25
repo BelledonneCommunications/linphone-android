@@ -31,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,8 +52,6 @@ public class ContactsFragment extends Fragment
     private boolean mOnlyDisplayLinphoneContacts;
     private View mAllContactsSelected, mLinphoneContactsSelected;
     private int mLastKnownPosition;
-    private boolean mEditOnClick = false, mEditConsumed = false;
-    private String mSipAddressToAdd, mDisplayName = null;
     private SearchView mSearchView;
     private ProgressBar mContactsFetchInProgress;
     private LinearLayoutManager mLayoutManager;
@@ -70,24 +67,6 @@ public class ContactsFragment extends Fragment
         mContext = getActivity().getApplicationContext();
         mSelectionHelper = new SelectableHelper(view, this);
         mSelectionHelper.setDialogMessage(R.string.delete_contacts_text);
-
-        if (getArguments() != null) {
-            mEditOnClick = getArguments().getBoolean("EditOnClick");
-            mSipAddressToAdd = getArguments().getString("SipAddress");
-            if (getArguments().getString("DisplayName") != null) {
-                mDisplayName = getArguments().getString("DisplayName");
-            }
-            // TODO FIXME ? mOnlyDisplayChatAddress = getArguments().getBoolean("ChatAddressOnly");
-
-            if (getArguments().getBoolean("EditOnClick")) {
-                Toast.makeText(
-                                getActivity(),
-                                R.string.toast_choose_contact_for_edition,
-                                Toast.LENGTH_LONG)
-                        .show();
-            }
-            getArguments().clear();
-        }
 
         mNoSipContact = view.findViewById(R.id.noSipContact);
         mNoContact = view.findViewById(R.id.noContact);
@@ -139,9 +118,7 @@ public class ContactsFragment extends Fragment
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mEditConsumed = true;
-                        ContactsManager.getInstance()
-                                .createContact(getActivity(), mDisplayName, mSipAddressToAdd);
+                        ((ContactsActivity) getActivity()).showContactEdit(null);
                     }
                 });
 
@@ -201,16 +178,10 @@ public class ContactsFragment extends Fragment
         return view;
     }
 
-    public void displayFirstContact() {
-        if (mContactsList != null
-                && mContactsList.getAdapter() != null
-                && mContactsList.getAdapter().getItemCount() > 0) {
-            ContactsAdapter mAdapt = (ContactsAdapter) mContactsList.getAdapter();
-            ((ContactsActivity) getActivity())
-                    .showContactDetails((LinphoneContact) mAdapt.getItem(0));
-        } else {
-            ((ContactsActivity) getActivity()).showEmptyFragment();
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // TODO: contacts filter to save and restore
     }
 
     private void searchContacts(String search) {
@@ -306,13 +277,8 @@ public class ContactsFragment extends Fragment
     @Override
     public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
         LinphoneContact contact = (LinphoneContact) adapter.getItemAtPosition(position);
-        if (mEditOnClick) {
-            mEditConsumed = true;
-            ContactsManager.getInstance().editContact(getActivity(), contact, mSipAddressToAdd);
-        } else {
-            mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
-            ((ContactsActivity) getActivity()).showContactDetails(contact);
-        }
+        mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
+        ((ContactsActivity) getActivity()).showContactDetails(contact);
     }
 
     @Override
@@ -321,10 +287,6 @@ public class ContactsFragment extends Fragment
 
         if (mContactAdapter.isEditionEnabled()) {
             mContactAdapter.toggleSelection(position);
-
-        } else if (mEditOnClick) {
-            mEditConsumed = true;
-            ContactsManager.getInstance().editContact(getActivity(), contact, mSipAddressToAdd);
         } else {
             mLastKnownPosition = mLayoutManager.findFirstVisibleItemPosition();
             ((ContactsActivity) getActivity()).showContactDetails(contact);
@@ -344,11 +306,6 @@ public class ContactsFragment extends Fragment
     public void onResume() {
         super.onResume();
         ContactsManager.getInstance().addContactsListener(this);
-
-        if (mEditConsumed) {
-            mEditOnClick = false;
-            mSipAddressToAdd = null;
-        }
 
         mOnlyDisplayLinphoneContacts =
                 ContactsManager.getInstance().isLinphoneContactsPrefered()

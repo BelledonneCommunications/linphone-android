@@ -19,28 +19,29 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import org.linphone.LinphoneManager;
+import org.linphone.R;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
 import org.linphone.core.Address;
-import org.linphone.core.Factory;
 import org.linphone.main.MainActivity;
 import org.linphone.utils.LinphoneUtils;
 
 public class HistoryActivity extends MainActivity {
-    private Address mDisplayedAddress;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        HistoryFragment fragment = new HistoryFragment();
-        changeFragment(fragment, "History", false);
-        if (isTablet()) {
-            fragment.displayFirstLog();
+        Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (currentFragment == null) {
+            HistoryFragment fragment = new HistoryFragment();
+            changeFragment(fragment, "History", false);
+            if (isTablet()) {
+                fragment.displayFirstLog();
+            }
         }
     }
 
@@ -56,39 +57,17 @@ public class HistoryActivity extends MainActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(
-                "DisplayedAddress",
-                mDisplayedAddress != null ? mDisplayedAddress.asString() : null);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String addr = savedInstanceState.getString("DisplayedAddress");
-        if (addr != null) {
-            Address address = Factory.instance().createAddress(addr);
-            if (address != null) {
-                showHistoryDetails(address);
-            }
-        }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (!isTablet() && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (popBackStack()) {
-                mDisplayedAddress = null;
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
     public void goBack() {
         if (!isTablet()) {
             if (popBackStack()) {
-                mDisplayedAddress = null;
                 return;
             }
         }
@@ -115,6 +94,5 @@ public class HistoryActivity extends MainActivity {
         HistoryDetailFragment fragment = new HistoryDetailFragment();
         fragment.setArguments(extras);
         changeFragment(fragment, "History detail", true);
-        mDisplayedAddress = address;
     }
 }

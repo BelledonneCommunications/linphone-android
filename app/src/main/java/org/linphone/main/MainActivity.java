@@ -29,7 +29,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,13 +44,14 @@ import org.linphone.chat.ChatActivity;
 import org.linphone.compatibility.Compatibility;
 import org.linphone.contacts.ContactsActivity;
 import org.linphone.contacts.ContactsManager;
+import org.linphone.contacts.LinphoneContact;
+import org.linphone.core.Address;
 import org.linphone.core.tools.Log;
 import org.linphone.fragments.EmptyFragment;
 import org.linphone.fragments.StatusFragment;
 import org.linphone.history.HistoryActivity;
 import org.linphone.settings.LinphonePreferences;
 import org.linphone.utils.DeviceUtils;
-import org.linphone.utils.LinphoneUtils;
 import org.linphone.utils.PushNotificationUtils;
 import org.linphone.utils.ThemableActivity;
 
@@ -96,7 +96,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        addFlagsToIntent(intent);
                         startActivity(intent);
                     }
                 });
@@ -106,7 +106,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        addFlagsToIntent(intent);
                         startActivity(intent);
                     }
                 });
@@ -116,7 +116,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, DialerActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        addFlagsToIntent(intent);
                         startActivity(intent);
                     }
                 });
@@ -126,7 +126,7 @@ public abstract class MainActivity extends ThemableActivity
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        addFlagsToIntent(intent);
                         startActivity(intent);
                     }
                 });
@@ -243,16 +243,6 @@ public abstract class MainActivity extends ThemableActivity
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mOnBackPressGoHome && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (LinphoneUtils.onKeyBackGoHome(this, keyCode, event)) {
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public void onMenuCliked() {
         if (mSideMenuFragment.isOpened()) {
             mSideMenuFragment.openOrCloseSideMenu(false, true);
@@ -288,27 +278,6 @@ public abstract class MainActivity extends ThemableActivity
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         am.killBackgroundProcesses(getString(R.string.sync_account_type));
         android.os.Process.killProcess(android.os.Process.myPid());
-    }
-
-    public void showEmptyFragment() {
-        changeFragment(new EmptyFragment(), "Empty", true);
-    }
-
-    protected void changeFragment(Fragment fragment, String name, boolean isChild) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        if (isChild) {
-            transaction.addToBackStack(name);
-        }
-
-        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
-        if (isChild && isTablet()) {
-            transaction.replace(R.id.fragmentContainer2, fragment, name);
-        } else {
-            transaction.replace(R.id.fragmentContainer, fragment, name);
-        }
-        transaction.commitAllowingStateLoss();
-        fm.executePendingTransactions();
     }
 
     // Tab, Top and Status bars
@@ -431,5 +400,52 @@ public abstract class MainActivity extends ThemableActivity
             mMissedMessages.clearAnimation();
             mMissedMessages.setVisibility(View.GONE);
         }
+    }
+
+    // Navigation between actvities
+
+    private void addFlagsToIntent(Intent intent) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    }
+
+    protected void changeFragment(Fragment fragment, String name, boolean isChild) {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        if (isChild) {
+            transaction.addToBackStack(name);
+        }
+
+        Compatibility.setFragmentTransactionReorderingAllowed(transaction, false);
+        if (isChild && isTablet()) {
+            transaction.replace(R.id.fragmentContainer2, fragment, name);
+        } else {
+            transaction.replace(R.id.fragmentContainer, fragment, name);
+        }
+        transaction.commitAllowingStateLoss();
+        fm.executePendingTransactions();
+    }
+
+    public void showEmptyChildFragment() {
+        changeFragment(new EmptyFragment(), "Empty", true);
+    }
+
+    public void showContactDetails(LinphoneContact contact) {
+        Intent intent = new Intent(this, ContactsActivity.class);
+        addFlagsToIntent(intent);
+        intent.putExtra("Contact", contact);
+        startActivity(intent);
+    }
+
+    public void showContactsListForCreationOrEdition(Address address) {
+        if (address == null) return;
+
+        Intent intent = new Intent(this, ContactsActivity.class);
+        addFlagsToIntent(intent);
+        intent.putExtra("CreateOrEdit", true);
+        intent.putExtra("SipUri", address.asStringUriOnly());
+        if (address.getDisplayName() != null) {
+            intent.putExtra("DisplayName", address.getDisplayName());
+        }
+        startActivity(intent);
     }
 }

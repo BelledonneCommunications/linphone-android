@@ -99,56 +99,6 @@ public class HistoryFragment extends Fragment
         return view;
     }
 
-    private void refresh() {
-        mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
-    }
-
-    public void displayFirstLog() {
-        Address addr = null;
-        if (mLogs != null && mLogs.size() > 0) {
-            CallLog log = mLogs.get(0); // More recent one is 0
-            if (log.getDir() == Call.Dir.Incoming) {
-                addr = log.getFromAddress();
-            } else {
-                addr = log.getToAddress();
-            }
-            ((HistoryActivity) getActivity()).showHistoryDetails(addr);
-        } else {
-            ((HistoryActivity) getActivity()).showEmptyFragment();
-        }
-    }
-
-    private void removeNotMissedCallsFromLogs() {
-        if (mOnlyDisplayMissedCalls) {
-            List<CallLog> missedCalls = new ArrayList<>();
-            for (CallLog log : mLogs) {
-                if (log.getStatus() == Call.Status.Missed) {
-                    missedCalls.add(log);
-                }
-            }
-            mLogs = missedCalls;
-        }
-    }
-
-    private void hideHistoryListAndDisplayMessageIfEmpty() {
-        removeNotMissedCallsFromLogs();
-        mNoCallHistory.setVisibility(View.GONE);
-        mNoMissedCallHistory.setVisibility(View.GONE);
-
-        if (mLogs.isEmpty()) {
-            if (mOnlyDisplayMissedCalls) {
-                mNoMissedCallHistory.setVisibility(View.VISIBLE);
-            } else {
-                mNoCallHistory.setVisibility(View.VISIBLE);
-            }
-            mHistoryList.setVisibility(View.GONE);
-        } else {
-            mNoCallHistory.setVisibility(View.GONE);
-            mNoMissedCallHistory.setVisibility(View.GONE);
-            mHistoryList.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -248,5 +198,55 @@ public class HistoryFragment extends Fragment
         }
         mHistoryAdapter.toggleSelection(position);
         return true;
+    }
+
+    private void refresh() {
+        mLogs = Arrays.asList(LinphoneManager.getLc().getCallLogs());
+    }
+
+    public void displayFirstLog() {
+        Address addr = null;
+        if (mLogs != null && mLogs.size() > 0) {
+            CallLog log = mLogs.get(0); // More recent one is 0
+            if (log.getDir() == Call.Dir.Incoming) {
+                addr = log.getFromAddress();
+            } else {
+                addr = log.getToAddress();
+            }
+            ((HistoryActivity) getActivity()).showHistoryDetails(addr);
+        } else {
+            ((HistoryActivity) getActivity()).showEmptyChildFragment();
+        }
+    }
+
+    private void removeNotMissedCallsFromLogs() {
+        if (mOnlyDisplayMissedCalls) {
+            List<CallLog> missedCalls = new ArrayList<>();
+            for (CallLog log : mLogs) {
+                if (log.getStatus() == Call.Status.Missed) {
+                    missedCalls.add(log);
+                }
+            }
+            mLogs = missedCalls;
+        }
+    }
+
+    private void hideHistoryListAndDisplayMessageIfEmpty() {
+        removeNotMissedCallsFromLogs();
+        mNoCallHistory.setVisibility(View.GONE);
+        mNoMissedCallHistory.setVisibility(View.GONE);
+
+        if (mLogs.isEmpty()) {
+            if (mOnlyDisplayMissedCalls) {
+                mNoMissedCallHistory.setVisibility(View.VISIBLE);
+            } else {
+                mNoCallHistory.setVisibility(View.VISIBLE);
+            }
+            mHistoryList.setVisibility(View.GONE);
+        } else {
+            mNoCallHistory.setVisibility(View.GONE);
+            mNoMissedCallHistory.setVisibility(View.GONE);
+            mHistoryList.setVisibility(View.VISIBLE);
+        }
     }
 }
