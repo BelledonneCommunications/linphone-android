@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -260,6 +261,15 @@ public abstract class MainActivity extends ThemableActivity
         quit();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     public boolean popBackStack() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStackImmediate();
@@ -413,9 +423,17 @@ public abstract class MainActivity extends ThemableActivity
     }
 
     protected void changeFragment(Fragment fragment, String name, boolean isChild) {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        if (isChild) {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (isChild && transaction.isAddToBackStackAllowed()) {
+            int count = fragmentManager.getBackStackEntryCount();
+            if (count > 0) {
+                FragmentManager.BackStackEntry entry =
+                        fragmentManager.getBackStackEntryAt(count - 1);
+                if (entry != null && name.equals(entry.getName())) {
+                    fragmentManager.popBackStack();
+                }
+            }
             transaction.addToBackStack(name);
         }
 
@@ -427,7 +445,7 @@ public abstract class MainActivity extends ThemableActivity
             transaction.replace(R.id.fragmentContainer, fragment, name);
         }
         transaction.commitAllowingStateLoss();
-        fm.executePendingTransactions();
+        fragmentManager.executePendingTransactions();
     }
 
     public void showEmptyChildFragment() {

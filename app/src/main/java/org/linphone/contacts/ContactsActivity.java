@@ -100,7 +100,8 @@ public class ContactsActivity extends MainActivity {
 
     @Override
     public void goBack() {
-        if (!isTablet()) {
+        // 1 is for the empty fragment on tablets
+        if (!isTablet() || getFragmentManager().getBackStackEntryCount() > 1) {
             if (popBackStack()) {
                 mEditOnClick = false;
                 return;
