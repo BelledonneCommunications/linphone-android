@@ -441,16 +441,6 @@ public class ChatMessagesFragment extends Fragment
     public void onDeleteSelection(Object[] objectsToDelete) {
         for (Object obj : objectsToDelete) {
             EventLog eventLog = (EventLog) obj;
-            if (eventLog.getType() == EventLog.Type.ConferenceChatMessage) {
-                ChatMessage message = eventLog.getChatMessage();
-                if (message.getAppdata() != null && !message.isOutgoing()) {
-                    File file = new File(message.getAppdata());
-                    if (file.exists()) {
-                        // Delete downloaded file from incoming message that will be deleted
-                        file.delete();
-                    }
-                }
-            }
             eventLog.deleteFromDatabase();
         }
         if (mChatRoom.hasCapability(ChatRoomCapabilities.OneToOne.toInt())) {
