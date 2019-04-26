@@ -157,6 +157,8 @@ public class CallActivity extends LinphoneGenericActivity
 
     private boolean mOldIsSpeakerEnabled = false;
 
+    private CallActivityInterface mCallInterface;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -318,6 +320,24 @@ public class CallActivity extends LinphoneGenericActivity
                     .add(R.id.fragmentContainer, callFragment)
                     .commitAllowingStateLoss();
         }
+
+        mCallInterface =
+                new CallActivityInterface() {
+                    @Override
+                    public void setSpeakerEnabled(boolean enable) {
+                        CallActivity.this.setSpeakerEnabled(enable);
+                    }
+
+                    @Override
+                    public void refreshInCallActions() {
+                        CallActivity.this.refreshInCallActions();
+                    }
+
+                    @Override
+                    public void resetCallControlsHidingTimer() {
+                        CallActivity.this.resetCallControlsHidingTimer();
+                    }
+                };
     }
 
     private void createTimerForDialog(long time) {
@@ -1037,11 +1057,11 @@ public class CallActivity extends LinphoneGenericActivity
             if (mControlsLayout.getVisibility() != View.VISIBLE) {
                 displayVideoCall(true);
             }
-            resetControlsHidingCallBack();
+            resetCallControlsHidingTimer();
         }
     }
 
-    public void resetControlsHidingCallBack() {
+    public void resetCallControlsHidingTimer() {
         if (mControlsHandler != null && mControls != null) {
             mControlsHandler.removeCallbacks(mControls);
         }
@@ -1264,17 +1284,18 @@ public class CallActivity extends LinphoneGenericActivity
     protected void onResume() {
         super.onResume();
 
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.addListener(mListener);
+        LinphoneManager.getInstance().setCallInterface(mCallInterface);
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.addListener(mListener);
         }
         mIsSpeakerEnabled = LinphoneManager.getInstance().isSpeakerEnabled();
 
         refreshIncallUi();
         handleViewIntent();
 
-        if (mStatus != null && lc != null) {
-            Call currentCall = lc.getCurrentCall();
+        if (mStatus != null && core != null) {
+            Call currentCall = core.getCurrentCall();
             if (currentCall != null && !currentCall.getAuthenticationTokenVerified()) {
                 mStatus.showZRTPDialog(currentCall);
             }
@@ -1317,10 +1338,11 @@ public class CallActivity extends LinphoneGenericActivity
 
     @Override
     protected void onPause() {
-        Core lc = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
-        if (lc != null) {
-            lc.removeListener(mListener);
+        Core core = LinphoneManager.getLcIfManagerNotDestroyedOrNull();
+        if (core != null) {
+            core.removeListener(mListener);
         }
+        LinphoneManager.getInstance().setCallInterface(null);
 
         super.onPause();
 
@@ -1971,6 +1993,14 @@ public class CallActivity extends LinphoneGenericActivity
                 };
         call.addListener(mCallListener);
         mTimer.scheduleAtFixedRate(mTask, 0, 1000);
+    }
+
+    public interface CallActivityInterface {
+        void setSpeakerEnabled(boolean enable);
+
+        void refreshInCallActions();
+
+        void resetCallControlsHidingTimer();
     }
 
     //// Earset Connectivity Broadcast innerClass

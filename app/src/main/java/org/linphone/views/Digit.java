@@ -174,10 +174,7 @@ public class Digit extends Button implements AddressAware {
             if (!mPlayDtmf) return false;
             if (!linphoneServiceReady()) return true;
 
-            /*if (CallActivity.isInstanciated()) {
-                CallActivity.instance().resetControlsHidingCallBack();
-            }*/
-            // TODO FIXME
+            LinphoneManager.getInstance().resetCallControlsHidingTimer();
 
             Core lc = LinphoneManager.getLc();
             if (event.getAction() == MotionEvent.ACTION_DOWN && !mIsDtmfStarted) {

@@ -69,6 +69,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.linphone.assistant.PhoneAccountLinkingAssistantActivity;
+import org.linphone.call.CallActivity;
 import org.linphone.call.CallManager;
 import org.linphone.contacts.ContactsManager;
 import org.linphone.contacts.LinphoneContact;
@@ -190,6 +191,7 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
     private MediaPlayer mRingerPlayer;
     private final Vibrator mVibrator;
     private boolean mIsRinging;
+    private CallActivity.CallActivityInterface mCallInterface;
 
     private LinphoneManager(Context c) {
         mUnreadChatsPerRoom = new HashMap();
@@ -806,15 +808,25 @@ public class LinphoneManager implements CoreListener, SensorEventListener, Accou
         mCallGsmON = false;
     }
 
+    public void setCallInterface(CallActivity.CallActivityInterface callInterface) {
+        mCallInterface = callInterface;
+    }
+
+    public void resetCallControlsHidingTimer() {
+        if (mCallInterface != null) {
+            mCallInterface.resetCallControlsHidingTimer();
+        }
+    }
+
     public void setHandsetMode(Boolean on) {
         if (mCore.isIncomingInvitePending() && on) {
             mHandsetON = true;
             acceptCall(mCore.getCurrentCall());
-        } /*else if (on && CallActivity.isInstanciated()) { // TODO FIXME
-              mHandsetON = true;
-              CallActivity.instance().setSpeakerEnabled(true);
-              CallActivity.instance().refreshInCallActions();
-          } */ else if (!on) {
+        } else if (on && mCallInterface != null) {
+            mHandsetON = true;
+            mCallInterface.setSpeakerEnabled(true);
+            mCallInterface.refreshInCallActions();
+        } else if (!on) {
             mHandsetON = false;
             LinphoneManager.getInstance().terminateCall();
         }
