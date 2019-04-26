@@ -441,7 +441,7 @@ public abstract class MainActivity extends LinphoneGenericActivity
     // Navigation between actvities
 
     private void addFlagsToIntent(Intent intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
     }
 
     protected void changeFragment(Fragment fragment, String name, boolean isChild) {

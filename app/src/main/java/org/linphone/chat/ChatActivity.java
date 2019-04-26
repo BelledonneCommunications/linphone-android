@@ -63,7 +63,7 @@ public class ChatActivity extends MainActivity {
             }
         }
 
-        handleIntentParams(getIntent());
+        handleIntentExtras(getIntent());
     }
 
     @Override
@@ -97,10 +97,16 @@ public class ChatActivity extends MainActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        handleIntentParams(intent);
+
+        // Clean fragments stack upon return
+        while (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
+        }
+
+        handleIntentExtras(intent);
     }
 
-    private void handleIntentParams(Intent intent) {
+    private void handleIntentExtras(Intent intent) {
         if (intent == null) return;
 
         String stringFileShared = null;
@@ -147,6 +153,8 @@ public class ChatActivity extends MainActivity {
     }
 
     private void handleRemoteSipUriInIntentExtras(Bundle extras) {
+        if (extras == null) return;
+
         if (extras.containsKey("RemoteSipUri")) {
             String remoteSipUri = extras.getString("RemoteSipUri", null);
             String localSipUri = extras.getString("LocalSipUri", null);

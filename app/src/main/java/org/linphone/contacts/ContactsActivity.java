@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -39,6 +40,11 @@ public class ContactsActivity extends MainActivity {
                 new String[] {
                     Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS
                 };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (currentFragment == null) {
@@ -47,25 +53,7 @@ public class ContactsActivity extends MainActivity {
                 if (isTablet() || !extras.containsKey("Contact")) {
                     showContactsList();
                 }
-
-                if (extras.containsKey("Contact")) {
-                    LinphoneContact contact = (LinphoneContact) extras.get("Contact");
-                    if (extras.containsKey("Edit")) {
-                        showContactEdit(contact, extras, false);
-                    } else {
-                        showContactDetails(contact, false);
-                    }
-                } else if (extras.containsKey("CreateOrEdit")) {
-                    mEditOnClick = extras.getBoolean("CreateOrEdit");
-                    mEditSipUri = extras.getString("SipUri", null);
-                    mEditDisplayName = extras.getString("DisplayName", null);
-
-                    Toast.makeText(
-                                    this,
-                                    R.string.toast_choose_contact_for_edition,
-                                    Toast.LENGTH_LONG)
-                            .show();
-                }
+                handleIntentExtras(extras);
             } else {
                 showContactsList();
                 if (isTablet()) {
@@ -73,6 +61,18 @@ public class ContactsActivity extends MainActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // Clean fragments stack upon return
+        while (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
+        }
+
+        handleIntentExtras(intent.getExtras());
     }
 
     @Override
@@ -108,6 +108,26 @@ public class ContactsActivity extends MainActivity {
             }
         }
         super.goBack();
+    }
+
+    private void handleIntentExtras(Bundle extras) {
+        if (extras == null) return;
+
+        if (extras.containsKey("Contact")) {
+            LinphoneContact contact = (LinphoneContact) extras.get("Contact");
+            if (extras.containsKey("Edit")) {
+                showContactEdit(contact, extras, false);
+            } else {
+                showContactDetails(contact, false);
+            }
+        } else if (extras.containsKey("CreateOrEdit")) {
+            mEditOnClick = extras.getBoolean("CreateOrEdit");
+            mEditSipUri = extras.getString("SipUri", null);
+            mEditDisplayName = extras.getString("DisplayName", null);
+
+            Toast.makeText(this, R.string.toast_choose_contact_for_edition, Toast.LENGTH_LONG)
+                    .show();
+        }
     }
 
     public void showContactDetails(LinphoneContact contact) {

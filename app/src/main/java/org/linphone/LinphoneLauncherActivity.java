@@ -51,6 +51,11 @@ public class LinphoneLauncherActivity extends Activity {
         }
 
         mHandler = new Handler();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         if (LinphoneService.isReady()) {
             onServiceReady();

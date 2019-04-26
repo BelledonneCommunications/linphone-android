@@ -37,26 +37,36 @@ public class SettingsActivity extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (currentFragment == null) {
             if (getIntent() != null && getIntent().getExtras() != null) {
                 Bundle extras = getIntent().getExtras();
-                if (extras.containsKey("Account")) {
-                    int accountIndex = extras.getInt("Account");
-                    if (isTablet()) {
-                        showSettingsMenu();
-                        showAccountSettings(accountIndex, true);
-                    } else {
-                        showAccountSettings(accountIndex, false);
-                    }
-                } else {
+                if (isTablet() || !extras.containsKey("Account")) {
                     showSettingsMenu();
                 }
+                handleIntentExtras(extras);
             } else {
                 showSettingsMenu();
             }
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // Clean fragments stack upon return
+        while (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
+        }
+
+        handleIntentExtras(intent.getExtras());
     }
 
     @Override
@@ -78,7 +88,7 @@ public class SettingsActivity extends MainActivity {
     @Override
     public void goBack() {
         // 1 is for the empty fragment on tablets
-        if (!isTablet() || getFragmentManager().getBackStackEntryCount() > 1) {
+        if (!isTablet()) {
             if (popBackStack()) {
                 showTopBarWithTitle(getString(R.string.settings));
                 return;
@@ -95,6 +105,13 @@ public class SettingsActivity extends MainActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleIntentExtras(Bundle extras) {
+        if (extras != null && extras.containsKey("Account")) {
+            int accountIndex = extras.getInt("Account");
+            showAccountSettings(accountIndex, isTablet());
+        }
     }
 
     private void showSettingsMenu() {

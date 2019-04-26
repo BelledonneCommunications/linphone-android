@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import org.linphone.LinphoneManager;
@@ -34,6 +35,11 @@ public class HistoryActivity extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         Fragment currentFragment = getFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (currentFragment == null) {
@@ -42,6 +48,16 @@ public class HistoryActivity extends MainActivity {
             if (isTablet()) {
                 fragment.displayFirstLog();
             }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // Clean fragments stack upon return
+        while (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStackImmediate();
         }
     }
 
